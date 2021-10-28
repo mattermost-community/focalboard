@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/cardDetail/CardDetailProperties cancel btn in TypeorNameChange dialog should do nothing 1`] = `
+exports[`components/cardDetail/CardDetailProperties cancel button in TypeorNameChange dialog should do nothing 1`] = `
 <div>
   <div
     class="octo-propertylist CardDetailProperties"
@@ -64,12 +64,12 @@ exports[`components/cardDetail/CardDetailProperties cancel btn in TypeorNameChan
         </div>
       </div>
       <input
-        class="Editable error octo-propertyvalue"
+        class="Editable octo-propertyvalue"
         placeholder="Empty"
         spellcheck="false"
         style="width: 5px;"
-        title="property_value_id_2"
-        value="property_value_id_2"
+        title="1234"
+        value="1234"
       />
     </div>
     <div
@@ -158,12 +158,12 @@ exports[`components/cardDetail/CardDetailProperties cancel on delete dialog shou
         </div>
       </div>
       <input
-        class="Editable error octo-propertyvalue"
+        class="Editable octo-propertyvalue"
         placeholder="Empty"
         spellcheck="false"
         style="width: 5px;"
-        title="property_value_id_2"
-        value="property_value_id_2"
+        title="1234"
+        value="1234"
       />
     </div>
     <div
@@ -252,12 +252,12 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
         </div>
       </div>
       <input
-        class="Editable error octo-propertyvalue"
+        class="Editable octo-propertyvalue"
         placeholder="Empty"
         spellcheck="false"
         style="width: 5px;"
-        title="property_value_id_2"
-        value="property_value_id_2"
+        title="1234"
+        value="1234"
       />
     </div>
     <div
@@ -346,12 +346,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
         </div>
       </div>
       <input
-        class="Editable error octo-propertyvalue"
+        class="Editable octo-propertyvalue"
         placeholder="Empty"
         spellcheck="false"
         style="width: 5px;"
-        title="property_value_id_2"
-        value="property_value_id_2"
+        title="1234"
+        value="1234"
       />
     </div>
     <div
