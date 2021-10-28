@@ -64,10 +64,10 @@ const KanbanCard = React.memo((props: Props) => {
     }
 
     const handleDeleteButtonOnClick = () => {
-        // use may be renaming a card title 
+        // use may be renaming a card title
         // and accidently delete the card
         // so adding des
-        if (card?.title === '' && card?.fields.contentOrder.length===0) {
+        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
             handleDeleteCard()
             return
         }
@@ -85,14 +85,14 @@ const KanbanCard = React.memo((props: Props) => {
 
     return (
         <>
-        <div
-            ref={props.readonly ? () => null : cardRef}
-            className={className}
-            draggable={!props.readonly}
-            style={{opacity: isDragging ? 0.5 : 1}}
-            onClick={props.onClick}
-        >
-            {!props.readonly &&
+            <div
+                ref={props.readonly ? () => null : cardRef}
+                className={className}
+                draggable={!props.readonly}
+                style={{opacity: isDragging ? 0.5 : 1}}
+                onClick={props.onClick}
+            >
+                {!props.readonly &&
                 <MenuWrapper
                     className='optionsMenu'
                     stopPropagationOnToggle={true}
@@ -103,7 +103,7 @@ const KanbanCard = React.memo((props: Props) => {
                             icon={<DeleteIcon/>}
                             id='delete'
                             name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deleteBlock(card, 'delete card')}
+                            onClick={handleDeleteButtonOnClick}
                         />
                         <Menu.Text
                             icon={<DuplicateIcon/>}
@@ -141,7 +141,7 @@ const KanbanCard = React.memo((props: Props) => {
                         />
                     </Menu>
                 </MenuWrapper>
-            }
+                }
 
                 <div className='octo-icontitle'>
                     { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }

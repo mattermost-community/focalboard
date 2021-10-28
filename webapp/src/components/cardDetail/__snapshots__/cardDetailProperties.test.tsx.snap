@@ -75,14 +75,20 @@ exports[`components/cardDetail/CardDetailProperties cancel btn in TypeorNameChan
     <div
       class="octo-propertyname add-property"
     >
-      <button
-        class="Button"
-        type="button"
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
       >
-        <span>
-          + Add a property
-        </span>
-      </button>
+        <button
+          class="Button"
+          type="button"
+        >
+          <span>
+            + Add a property
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -163,14 +169,20 @@ exports[`components/cardDetail/CardDetailProperties cancel on delete dialog shou
     <div
       class="octo-propertyname add-property"
     >
-      <button
-        class="Button"
-        type="button"
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
       >
-        <span>
-          + Add a property
-        </span>
-      </button>
+        <button
+          class="Button"
+          type="button"
+        >
+          <span>
+            + Add a property
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -311,6 +323,36 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
           </span>
         </span>
       </div>
+    </div>
+    <div
+      class="octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              MockStatus
+            </span>
+          </button>
+        </div>
+      </div>
+      <input
+        class="Editable error octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="false"
+        style="width: 5px;"
+        title="property_value_id_2"
+        value="property_value_id_2"
+      />
     </div>
     <div
       class="octo-propertyname add-property"

@@ -15,9 +15,9 @@ import {propertyTypesList, typeDisplayName} from '../../widgets/propertyMenu'
 
 import {IPropertyTemplate, PropertyType} from '../../blocks/board'
 
-import CardDetailProperties from './cardDetailProperties'
 import {FetchMock} from '../../test/fetchMock'
 
+import CardDetailProperties from './cardDetailProperties'
 
 jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)
@@ -85,7 +85,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         const result = render(component)
         return result
     }
-    
+
     const cards = [card]
 
     const cardDetailProps = {

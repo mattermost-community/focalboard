@@ -17,11 +17,6 @@ import DeleteIcon from '../widgets/icons/delete'
 import LinkIcon from '../widgets/icons/Link'
 import Menu from '../widgets/menu'
 
-import {useAppSelector} from '../store/hooks'
-import {getCard} from '../store/cards'
-import {getCardContents} from '../store/contents'
-import {getCardComments} from '../store/comments'
-
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/confirmationDialogBox'
 
 import CardDetail from './cardDetail/cardDetail'
@@ -79,10 +74,10 @@ const CardDialog = (props: Props): JSX.Element => {
     }
 
     const handleDeleteButtonOnClick = () => {
-        // use may be renaming a card title 
+        // use may be renaming a card title
         // and accidently delete the card
         // so adding des
-        if (card?.title === '' && card?.fields.contentOrder.length===0) {
+        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
             handleDeleteCard()
             return
         }
