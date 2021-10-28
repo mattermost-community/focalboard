@@ -93,26 +93,6 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(container).toMatchSnapshot()
     })
 
-    // it('should rename existing select property', async () => {
-    //     const result = renderComponent()
-
-    //     const menuElement = screen.getByRole('button', {name: 'Owner'})
-    //     userEvent.click(menuElement)
-
-    //     const newName = 'Owner - Renamed'
-    //     const propertyNameInput = screen.getByRole('textbox')
-    //     userEvent.type(propertyNameInput, `${newName}{enter}`)
-
-    //     const propertyTemplate = board.fields.cardProperties[0]
-
-    //     const confirmButton = result.getByTitle('Change Property')
-    //     expect(confirmButton).toBeDefined()
-
-    //     userEvent.click(confirmButton!)
-    //     expect(mockedMutator.changePropertyTypeAndName).toHaveBeenCalledTimes(1)
-    //     expect(mockedMutator.changePropertyTypeAndName).toHaveBeenCalledWith(board, cards, propertyTemplate, 'select', newName)
-    // })
-
     it('should show confirmation dialog when deleting existing select property', () => {
         renderComponent()
 
