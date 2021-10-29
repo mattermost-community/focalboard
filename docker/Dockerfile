@@ -13,7 +13,11 @@ FROM golang:1.16.5 as gobuild
 WORKDIR /go/src/focalboard
 ADD . /go/src/focalboard
 
-RUN  make server-linux
+# get Target Architekture 
+ARG TARGETOS
+ARG TARGETARCH  
+
+RUN  make server-docker os=${TARGETOS} arch=${TARGETARCH}
 RUN mkdir /data
 
 ## Final image
