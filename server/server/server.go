@@ -373,6 +373,13 @@ func (s *Server) startLocalModeServer() error {
 		ConnContext: api.SetContextConn,
 	}
 
+	// If the socket file doesn't exist, create it, or append to the file
+	f, err := os.OpenFile(s.config.LocalModeSocketLocation, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		s.logger.Error("Unable to create Socket File:", mlog.Err(err))
+	}
+	f.Close()
+
 	// TODO: Close and delete socket file on shutdown
 	if err := syscall.Unlink(s.config.LocalModeSocketLocation); err != nil {
 		s.logger.Error("Unable to unlink socket.", mlog.Err(err))
