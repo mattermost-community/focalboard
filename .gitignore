@@ -10,6 +10,7 @@ npm-debug.log*
 pids
 *.pid
 *.seed
+*.socket
 
 # OS Files
 .DS_Store
