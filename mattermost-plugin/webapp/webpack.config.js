@@ -8,12 +8,20 @@ const webpack = require('webpack');
 
 const tsTransformer = require('@formatjs/ts-transformer');
 
+const {GitRevisionPlugin} = require('git-revision-webpack-plugin');
+const gitRevisionPlugin = new GitRevisionPlugin();
+
 const PLUGIN_ID = require('../plugin.json').id;
 
 const NPM_TARGET = process.env.npm_lifecycle_event; //eslint-disable-line no-process-env
 let mode = 'production';
 let devtool;
-const plugins = [];
+const plugins = [
+    new webpack.DefinePlugin({
+        COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
+        LASTCOMMITDATETIME: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
+    }),
+];
 if (NPM_TARGET === 'debug' || NPM_TARGET === 'debug:watch') {
     mode = 'development';
     devtool = 'source-map';
