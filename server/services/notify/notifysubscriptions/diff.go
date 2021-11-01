@@ -20,6 +20,9 @@ type Diff struct {
 	OldBlock  *model.Block
 	NewBlock  *model.Block
 
+	schemaDiffs []SchemaDiff
+	propDiffs   []PropDiff
+
 	Diffs []*Diff // Diffs for child blocks
 }
 
@@ -107,6 +110,9 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.
 	}
 
 	var diffs []*Diff
+
+	// TODO: detect board deleted, generate schema diffs
+
 	for _, b := range blocks {
 		block := b
 		if block.Type == model.TypeCard {
@@ -117,8 +123,7 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.
 			diffs = append(diffs, cardDiffs)
 		}
 	}
-
-	return nil, fmt.Errorf("not implemented yet")
+	return diffs, nil
 }
 
 func (dg *diffGenerator) generateDiffsForCard(board, card *model.Block, schema model.PropSchema, hint *model.NotificationHint) (*Diff, error) {
