@@ -134,6 +134,7 @@
   "TableRow.open": "Ouvrir",
   "TopBar.give-feedback": "Donner un avis",
   "ValueSelector.valueSelector": "Sélecteur de value",
+  "ValueSelector.noOptions": "Aucune option. Commencez à taper pour ajouter la première !",
   "ValueSelectorLabel.openMenu": "Ouvrir le menu",
   "View.AddView": "Ajouter une vue",
   "View.Board": "Tableau",
