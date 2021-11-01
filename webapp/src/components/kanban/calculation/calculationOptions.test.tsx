@@ -60,4 +60,35 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
         userEvent.hover(countUniqueValuesOption)
         expect(container).toMatchSnapshot()
     })
+
+    test('duplicate property types', () => {
+        const boardWithProps = TestBlockFactory.createBoard()
+        boardWithProps.fields.cardProperties.push({
+            id: 'number-property-1',
+            name: 'A Number Property - 1',
+            type: 'number',
+            options: [],
+        })
+        boardWithProps.fields.cardProperties.push({
+            id: 'number-property-2',
+            name: 'A Number Propert - 2y',
+            type: 'number',
+            options: [],
+        })
+
+        const component = (
+            <KanbanCalculationOptions
+                value={'count'}
+                property={boardWithProps.fields.cardProperties[1]}
+                menuOpen={true}
+                onChange={() => {}}
+                cardProperties={boardWithProps.fields.cardProperties}
+            />
+        )
+
+        const {getAllByText} = render(component)
+        const sumOptions = getAllByText('Sum')
+        expect(sumOptions).toBeDefined()
+        expect(sumOptions.length).toBe(1)
+    })
 })

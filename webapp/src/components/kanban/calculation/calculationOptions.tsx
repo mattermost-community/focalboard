@@ -34,10 +34,15 @@ export const KanbanCalculationOptions = (props: Props): JSX.Element => {
         }
     })
 
-    props.cardProperties.
-        map((property) => optionsByType.get(property.type) || []).
-        forEach((typeOptions) => {
-            typeOptions.forEach((typeOption) => {
+    const seen: Record<string, boolean> = {}
+    props.cardProperties.forEach((property) => {
+        // skip already processed property types
+        if (seen[property.type]) {
+            return
+        }
+
+        (optionsByType.get(property.type) || []).
+            forEach((typeOption) => {
                 options.push({
                     ...typeOption,
                     cardProperties: props.cardProperties,
@@ -46,7 +51,9 @@ export const KanbanCalculationOptions = (props: Props): JSX.Element => {
                     activeProperty: props.property!,
                 })
             })
-        })
+
+        seen[property.type] = true
+    })
 
     return (
         <CalculationOptions
