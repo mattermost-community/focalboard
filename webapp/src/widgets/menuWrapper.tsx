@@ -10,11 +10,12 @@ type Props = {
     stopPropagationOnToggle?: boolean;
     className?: string
     disabled?: boolean
+    isOpen?: boolean
 }
 
 const MenuWrapper = React.memo((props: Props) => {
     const node = useRef<HTMLDivElement>(null)
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(Boolean(props.isOpen))
 
     if (!Array.isArray(props.children) || props.children.length !== 2) {
         throw new Error('MenuWrapper needs exactly 2 children')
