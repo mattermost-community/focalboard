@@ -22,8 +22,6 @@ type Props = {
     onAccept?: (text: string) => void
 }
 
-const linkTagName = 'a'
-
 const MarkdownEditor = (props: Props): JSX. Element => {
     const {placeholderText, onFocus, onBlur, onChange, text, id} = props
     const [isEditing, setIsEditing] = useState(false)
@@ -113,7 +111,9 @@ const MarkdownEditor = (props: Props): JSX. Element => {
             style={{display: isEditing ? 'none' : undefined}}
             dangerouslySetInnerHTML={{__html: html}}
             onClick={(e) => {
-                if ((e.target as Element).tagName.toLowerCase() === linkTagName) {
+                const LINK_TAG_NAME = 'a'
+                const element = e.target as Element
+                if (element.tagName.toLowerCase() === LINK_TAG_NAME) {
                     e.stopPropagation()
                     return
                 }
