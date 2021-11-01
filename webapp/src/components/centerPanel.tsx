@@ -202,7 +202,12 @@ class CenterPanel extends React.Component<Props, State> {
                         cards={this.props.cards}
                         dateDisplayProperty={this.props.dateDisplayProperty}
                         showCard={this.showCard}
-                        addCard={() => this.addCard('', true)}
+
+                        // addCard={() => this.addCard('', true)}
+
+                        addCard={(properties: Record<string, string>) => {
+                            this.addCard('', true, properties)
+                        }}
                     />}
 
                 {activeView.fields.viewType === 'gallery' &&
@@ -247,7 +252,7 @@ class CenterPanel extends React.Component<Props, State> {
         })
     }
 
-    addCard = async (groupByOptionId?: string, show = false): Promise<void> => {
+    addCard = async (groupByOptionId?: string, show = false, properties: Record<string, string> = {}): Promise<void> => {
         const {activeView, board, groupByProperty} = this.props
 
         const card = createCard()
@@ -264,7 +269,7 @@ class CenterPanel extends React.Component<Props, State> {
                 delete propertiesThatMeetFilters[groupByProperty.id]
             }
         }
-        card.fields.properties = {...card.fields.properties, ...propertiesThatMeetFilters}
+        card.fields.properties = {...card.fields.properties, ...properties, ...propertiesThatMeetFilters}
         if (!card.fields.icon && UserSettings.prefillRandomIcons) {
             card.fields.icon = BlockIcons.shared.randomIcon()
         }
