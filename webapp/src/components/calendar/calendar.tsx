@@ -1,14 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {DragEvent, ComponentType, useState, useLayoutEffect, useRef} from 'react'
+import React, {DragEvent, ComponentType, useState, useRef} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Calendar, CalendarProps, momentLocalizer, SlotInfo} from 'react-big-calendar'
 
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 
-import moment, {now} from 'moment'
+import moment from 'moment'
 
 import mutator from '../../mutator'
 
@@ -78,10 +78,6 @@ function createDatePropertyFromCalendarDates(start: Date, end: Date, timeZoneOff
     if (dateTo !== dateFrom) {
         dateProperty.to = dateTo
     }
-
-    console.log('createDateProperty')
-    console.log(new Date(dateFrom))
-    console.log(new Date(dateTo))
     return dateProperty
 }
 
@@ -118,7 +114,6 @@ const CalendarView = (props: Props): JSX.Element|null => {
             const dateToNumber = dateProperty.to ? dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset) : dateFrom.getTime()
             const dateTo = new Date(dateToNumber + (60 * 60 * 24 * 1000)) // Add one day.+ (60 * 60 * 24 * 1000)
             dateTo.setHours(0, 0, 0, 0)
-            dateTo.setTime(dateTo.getTime() - 1000)
 
             return [{
                 id: card.id,
@@ -144,9 +139,6 @@ const CalendarView = (props: Props): JSX.Element|null => {
     })
 
     const onNewEvent = (slots: SlotInfo) => {
-        console.log('onNewEvent')
-        console.log(slots)
-
         const startDate = new Date(slots.start)
         const endDate = new Date(slots.end)
         const dateProperty = createDatePropertyFromCalendarDates(startDate, endDate, timeZoneOffset)
@@ -160,14 +152,10 @@ const CalendarView = (props: Props): JSX.Element|null => {
     }
 
     const onSelectCard = (event: CalendarEvent) => {
-        console.log('onSelectCard')
-
         props.showCard(event.id)
     }
 
     const onEventResize = (args: any) => {
-        console.log('onEventResize')
-
         const startDate = new Date(args.start.getTime())
         const endDate = new Date(args.end.getTime())
         const dateProperty = createDatePropertyFromCalendarDates(startDate, endDate, timeZoneOffset)
@@ -179,7 +167,6 @@ const CalendarView = (props: Props): JSX.Element|null => {
     }
 
     const onEventDrop = (args: {event: CalendarEvent, start: Date|string, end: Date|string, isAllDay: boolean}) => {
-        console.log('onEventDrop')
         const startDate = new Date(args.start)
         const endDate = new Date(args.end)
         const dateProperty = createDatePropertyFromCalendarDates(startDate, endDate, timeZoneOffset)
@@ -191,8 +178,6 @@ const CalendarView = (props: Props): JSX.Element|null => {
     }
 
     const handleDragStart = (event: CalendarEvent) => {
-        console.log('handleDragStart')
-
         setDragEvent(event)
     }
 
@@ -206,22 +191,12 @@ const CalendarView = (props: Props): JSX.Element|null => {
     }
 
     const onDragOver = (event: DragEvent) => {
-        console.log('onDragOver')
-
         if (dragEvent) {
-            console.log(dragEvent)
             event.preventDefault()
         }
     }
 
-    const onDragStart = (event: any) => {
-        console.log('onDragStart')
-        console.log(event)
-    }
-
     const onDropFromOutside = (args: {start: Date|string, end: Date|string, allDay: boolean}) => {
-        console.log('onDropFromOutside')
-
         const startDate = new Date(args.start)
         const endDate = new Date(args.end)
         if (dragEvent) {
@@ -270,7 +245,6 @@ const CalendarView = (props: Props): JSX.Element|null => {
                 handleDragStart={handleDragStart}
                 onDropFromOutside={onDropFromOutside}
                 onDragOver={onDragOver}
-                onDragStart={onDragStart}
             />
         </div>
     )

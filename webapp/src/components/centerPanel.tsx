@@ -21,7 +21,7 @@ import {updateView} from '../store/views'
 
 import './centerPanel.scss'
 
-import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
