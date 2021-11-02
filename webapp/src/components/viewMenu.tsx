@@ -39,9 +39,9 @@ const ViewMenu = React.memo((props: Props) => {
     }, [match, history])
 
     const handleDuplicateView = useCallback(() => {
-        const {activeView} = props
+        const {board, activeView} = props
         Utils.log('duplicateView')
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoardView, {board: props.board.id, view: activeView.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoardView, {board: board.id, view: activeView.id})
         const currentViewId = activeView.id
         const newView = createBoardView(activeView)
         newView.title = `${activeView.title} copy`
@@ -62,9 +62,9 @@ const ViewMenu = React.memo((props: Props) => {
     }, [props.activeView, showView])
 
     const handleDeleteView = useCallback(() => {
-        const {activeView, views} = props
+        const {board, activeView, views} = props
         Utils.log('deleteView')
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardView, {board: props.board.id, view: activeView.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardView, {board: board.id, view: activeView.id})
         const view = activeView
         const nextView = views.find((o) => o !== view)
         mutator.deleteBlock(view, 'delete view')
@@ -86,7 +86,7 @@ const ViewMenu = React.memo((props: Props) => {
     const handleAddViewBoard = useCallback(() => {
         const {board, activeView, intl} = props
         Utils.log('addview-board')
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardView, {board: props.board.id, view: activeView.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardView, {board: board.id, view: activeView.id})
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
         view.fields.viewType = 'board'
