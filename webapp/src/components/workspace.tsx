@@ -65,6 +65,7 @@ function CenterContent(props: Props) {
         const displayProperty = dateDisplayProperty
         return (
             <CenterPanel
+                clientConfig={clientConfig}
                 readonly={props.readonly}
                 board={board}
                 cards={cards}

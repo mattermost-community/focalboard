@@ -6,6 +6,8 @@ import {injectIntl, IntlShape} from 'react-intl'
 import {connect} from 'react-redux'
 import Hotkeys from 'react-hot-keys'
 
+import {ClientConfig} from '../config/clientConfig'
+
 import {BlockIcons} from '../blockIcons'
 import {Card, createCard} from '../blocks/card'
 import {Board, IPropertyTemplate, IPropertyOption, BoardGroup} from '../blocks/board'
@@ -19,7 +21,7 @@ import {updateView} from '../store/views'
 
 import './centerPanel.scss'
 
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
+import TelemetryClient from '../../../webapp/src/telemetry/telemetryClient'
 
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
@@ -36,6 +38,7 @@ import CalendarFullView from './calendar/fullCalendar'
 import Gallery from './gallery/gallery'
 
 type Props = {
+    clientConfig?: ClientConfig
     board: Board
     cards: Card[]
     activeView: BoardView
@@ -192,11 +195,18 @@ class CenterPanel extends React.Component<Props, State> {
                         addCard={this.addCard}
                         onCardClicked={this.cardClicked}
                     />}
-                {activeView.fields.viewType === 'calendar' &&
-
-                    // <CalendarFullView
-                    //     boardTree={boardTree}
-                    // />}
+                {activeView.fields.viewType === 'calendar' && this.props.clientConfig?.featureFlags.CalendarView &&
+                    <CalendarView
+                        board={this.props.board}
+                        activeView={this.props.activeView}
+                        cards={this.props.cards}
+                        dateDisplayProperty={this.props.dateDisplayProperty}
+                        showCard={this.showCard}
+                        addCard={(properties: Record<string, string>) => {
+                            this.addCard('', true, properties)
+                        }}
+                    />}
+                {activeView.fields.viewType === 'calendar' && this.props.clientConfig?.featureFlags.FullCalendar &&
                     <CalendarFullView
                         board={this.props.board}
                         activeView={this.props.activeView}
