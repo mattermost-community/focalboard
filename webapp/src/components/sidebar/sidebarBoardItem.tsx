@@ -167,7 +167,8 @@ const SidebarBoardItem = React.memo((props: Props) => {
                         id='Sidebar.no-views-in-board'
                         defaultMessage='No pages inside'
                     />
-                </button>}
+                </div>
+            }
             {!collapsed && boardViews.map((view) => (
                 <button
                     key={view.id}
