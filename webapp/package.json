@@ -60,7 +60,10 @@
 		"globals": {
 			"ts-jest": {
 				"tsconfig": "./src/tsconfig.json"
-			}
+			},
+			"COMMITHASH": "",
+			"LASTCOMMITDATETIME": ""
+			
 		},
 		"transform": {
 			"^.+\\.tsx?$": "ts-jest"
