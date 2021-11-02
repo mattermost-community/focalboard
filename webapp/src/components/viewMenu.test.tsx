@@ -56,7 +56,6 @@ describe('/components/viewMenu', () => {
             current: 'boardView',
         },
         clientConfig: {
-            featureFlags: {},
         },
     }
 

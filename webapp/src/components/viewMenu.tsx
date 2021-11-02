@@ -33,6 +33,7 @@ const ViewMenu = React.memo((props: Props) => {
     const history = useHistory()
     const match = useRouteMatch()
     const clientConfig = useAppSelector(getClientConfig)
+    Utils.log(typeof clientConfig)
 
     const showView = useCallback((viewId) => {
         let newPath = generatePath(match.path, {...match.params, viewId: viewId || ''})
@@ -286,7 +287,7 @@ const ViewMenu = React.memo((props: Props) => {
                         icon={<GalleryIcon/>}
                         onClick={handleAddViewGallery}
                     />
-                    {(clientConfig.featureFlags.CalendarView || clientConfig.featureFlags.FullCalendar) &&
+                    {(clientConfig?.featureFlags.CalendarView || clientConfig?.featureFlags.FullCalendar) &&
                     <Menu.Text
                         id='calendar'
                         name='Calendar'
