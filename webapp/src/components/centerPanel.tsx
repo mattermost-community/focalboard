@@ -32,7 +32,7 @@ import Kanban from './kanban/kanban'
 
 import Table from './table/table'
 
-import CalendarView from './calendar/calendar'
+// import CalendarView from './calendar/calendar'
 import CalendarFullView from './calendar/fullCalendar'
 
 import Gallery from './gallery/gallery'
@@ -195,7 +195,7 @@ class CenterPanel extends React.Component<Props, State> {
                         addCard={this.addCard}
                         onCardClicked={this.cardClicked}
                     />}
-                {activeView.fields.viewType === 'calendar' && this.props.clientConfig?.featureFlags.CalendarView &&
+                {/* {activeView.fields.viewType === 'calendar' && this.props.clientConfig?.featureFlags.CalendarView &&
                     <CalendarView
                         board={this.props.board}
                         activeView={this.props.activeView}
@@ -205,7 +205,7 @@ class CenterPanel extends React.Component<Props, State> {
                         addCard={(properties: Record<string, string>) => {
                             this.addCard('', true, properties)
                         }}
-                    />}
+                    />} */}
                 {activeView.fields.viewType === 'calendar' && this.props.clientConfig?.featureFlags.FullCalendar &&
                     <CalendarFullView
                         board={this.props.board}
