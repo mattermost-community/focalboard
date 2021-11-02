@@ -2,9 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {FormattedMessage, useIntl} from 'react-intl'
-
-import {Utils} from '../../utils'
+import {FormattedMessage} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'

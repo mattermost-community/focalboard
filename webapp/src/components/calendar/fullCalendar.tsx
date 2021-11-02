@@ -42,10 +42,6 @@ function createDatePropertyFromCalendarDates(start: Date, end: Date, timeZoneOff
     if (dateTo !== dateFrom) {
         dateProperty.to = dateTo
     }
-
-    console.log('createDateProperty')
-    console.log(new Date(dateFrom))
-    console.log(new Date(dateTo))
     return dateProperty
 }
 
@@ -121,19 +117,11 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const eventClick = (eventProps: EventClickArg) => {
         const {event} = eventProps
-        console.log('onSelectCard')
-
         props.showCard(event.id)
     }
 
-    // const eventDrop = (eventProps: EventClickArg) => {
-    //     const {event} = eventProps
-    //     console.log('eventDrop')
-    // }
     const eventChange = (eventProps: EventChangeArg) => {
         const {event} = eventProps
-        console.log('eventChange')
-
         if (!event.start) {
             return
         }
@@ -150,10 +138,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         }
     }
 
-    // const eventResize = (eventProps: EventClickArg) => {
-    //     const {event} = eventProps
-    //     console.log('eventResize')
-    // }
     const toolbar = {
         left: 'title',
         center: '',
@@ -169,8 +153,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     return (
         <div
             className='CalendarContainer'
-
-            // style={{height: '100vh'}}
         >
             <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin]}
@@ -181,12 +163,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 buttonText={buttonText}
                 eventClick={eventClick}
                 eventContent={renderEventContent}
-
-                // eventDrop={eventDrop}
                 eventChange={eventChange}
-
-                // eventResize={eventResize}
-
             />
         </div>
     )

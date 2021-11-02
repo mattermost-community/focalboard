@@ -3,7 +3,7 @@
 }
 
 .CalendarContainer {
-    height:100%;
+    height: 100%;
     margin-right: 80px;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -33,7 +33,8 @@
             background-color: rgb(var(--center-channel-bg-rgb));
             // border-radius: $event-border-radius;
             color: rgb(var(--center-channel-color-rgb));
-            margin: 0px 0px 5px;
+            margin: 0 0 5px;
+
             &:hover {
                 background-color: rgba(var(--center-channel-color-rgb), 0.1);
             }
@@ -45,13 +46,13 @@
 
         .rbc-toolbar {
             .rbc-toolbar-label {
-                padding-left: 0px;
+                padding-left: 0;
                 text-align: left;
             }
 
             .rbc-btn-group {
                 button {
-                    border: none
+                    border: 0;
                 }
 
                 .rbc-btn-view {
@@ -60,19 +61,21 @@
                     color: rgb(var(--button-bg-rgb));
                     margin: 2px;
                     font-weight: 600;
-                    &.rbc-active{
-                        background-color: rgb(var(--button-bg-rgb));
-                        color: rgb(var(--button-color-rgb));
-                        font-weight: normal
-                    }
+                }
+
+                .rbc-btn-view &.rbc-active {
+                    background-color: rgb(var(--button-bg-rgb));
+                    color: rgb(var(--button-color-rgb));
+                    font-weight: normal;
                 }
             }
         }
+
         .rbc-month-row {
             overflow: unset;
         }
         
-        .rbc-addons-dnd-drag-row{
+        .rbc-addons-dnd-drag-row {
             .rbc-event {
                 background-color: rgb(var(--center-channel-color-rgb), 0.1);
 
