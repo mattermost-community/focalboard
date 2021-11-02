@@ -55,7 +55,6 @@ const loadedLocales: Record<string, any> = {}
 function DateRange(props: Props): JSX.Element {
     const {className, value, showEmptyPlaceholder, onChange} = props
     const intl = useIntl()
-    const timeZoneOffset = new Date().getTimezoneOffset() * 60 * 1000
 
     const getDisplayDate = (date: Date | null | undefined) => {
         let displayDate = ''
@@ -65,14 +64,18 @@ function DateRange(props: Props): JSX.Element {
         return displayDate
     }
 
+    const timeZoneOffset = (date: number): number => {
+        return new Date(date).getTimezoneOffset() * 60 * 1000
+    }
+
     const [dateProperty, setDateProperty] = useState<DateProperty>(createDatePropertyFromString(value as string))
     const [showDialog, setShowDialog] = useState(false)
 
     // Keep dateProperty as UTC,
     // dateFrom / dateTo will need converted to local time, to ensure date stays consistent
     // dateFrom / dateTo will be used for input and calendar dates
-    const dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset)) : undefined
-    const dateTo = dateProperty.to ? new Date(dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset)) : undefined
+    const dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : undefined
+    const dateTo = dateProperty.to ? new Date(dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to))) : undefined
     const [fromInput, setFromInput] = useState<string>(getDisplayDate(dateFrom))
     const [toInput, setToInput] = useState<string>(getDisplayDate(dateTo))
 
@@ -119,10 +122,10 @@ function DateRange(props: Props): JSX.Element {
     const saveRangeValue = (range: DateProperty) => {
         const rangeUTC = {...range}
         if (rangeUTC.from) {
-            rangeUTC.from -= dateProperty.includeTime ? 0 : timeZoneOffset
+            rangeUTC.from -= dateProperty.includeTime ? 0 : timeZoneOffset(rangeUTC.from)
         }
         if (rangeUTC.to) {
-            rangeUTC.to -= dateProperty.includeTime ? 0 : timeZoneOffset
+            rangeUTC.to -= dateProperty.includeTime ? 0 : timeZoneOffset(rangeUTC.to)
         }
 
         setDateProperty(rangeUTC)
