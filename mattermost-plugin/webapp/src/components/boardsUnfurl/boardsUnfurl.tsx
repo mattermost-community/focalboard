@@ -19,6 +19,7 @@ const Timestamp = (window as any).Components.Timestamp
 const imageURLForUser = (window as any).Components.imageURLForUser
 
 import './boardsUnfurl.scss'
+import '../../../../../webapp/src/styles/labels.scss'
 
 type Props = {
     embed: {
@@ -52,6 +53,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
     const [card, setCard] = useState<Card>()
     const [content, setContent] = useState<ContentBlock>()
     const [board, setBoard] = useState<Board>()
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -64,6 +66,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
             const [firstCard] = cards as Card[]
             const [firstBoard] = boards as Board[]
             if (!firstCard || !firstBoard) {
+                setLoading(false)
                 return null
             }
             setCard(firstCard)
@@ -79,137 +82,155 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                 const contentBlock = await octoClient.getBlocksWithBlockID(firstContentBlockID, workspaceID, readToken) as ContentBlock[]
                 const [firstContentBlock] = contentBlock
                 if (!firstContentBlock) {
+                    setLoading(false)
                     return null
                 }
                 setContent(firstContentBlock)
             }
 
+            setLoading(false)
             return null
         }
         fetchData()
     }, [originalPath])
 
-    if (!card || !board) {
-        return <></>
-    }
-
-    const propertyKeyArray = Object.keys(card.fields.properties)
-    const propertyValueArray = Object.values(card.fields.properties)
-    const options = board.fields.cardProperties
+    let remainder = 0
+    let html = ''
     const propertiesToDisplay: Array<Record<string, string>> = []
+    if (card && board) {
+        // Checkboxes need to be accounted for if they are off or on, if they are on they show up in the card properties so we don't want to count it twice
+        // Therefore we keep track how many checkboxes there are and subtract it at the end
+        let totalNumberOfCheckBoxes = 0
 
-    // We will just display the first 3 or less select/multi-select properties and do a +n for remainder if any remainder
-    if (propertyKeyArray.length > 0) {
-        for (let i = 0; i < propertyKeyArray.length && propertiesToDisplay.length < 3; i++) {
-            const keyToLookUp = propertyKeyArray[i]
-            const correspondingOption = options.find((option) => option.id === keyToLookUp)
+        // We will just display the first 3 or less select/multi-select properties and do a +n for remainder if any remainder
+        for (let i = 0; i < board.fields.cardProperties.length; i++) {
+            const optionInBoard = board.fields.cardProperties[i]
+            let valueToLookUp = card.fields.properties[optionInBoard.id]
 
-            if (!correspondingOption) {
+            // Since these are always set and not included in the card properties
+            if (['createdTime', 'createdBy', 'updatedTime', 'updatedBy', 'checkbox'].includes(optionInBoard.type)) {
+                if (valueToLookUp && optionInBoard.type === 'checkbox') {
+                    totalNumberOfCheckBoxes += 1
+                }
+
+                remainder += 1
                 continue
             }
 
-            let valueToLookUp = propertyValueArray[i]
+            // Check to see if this property is set in the Card or if we have max properties to display
+            if (propertiesToDisplay.length === 3 || !valueToLookUp) {
+                continue
+            }
+
             if (Array.isArray(valueToLookUp)) {
                 valueToLookUp = valueToLookUp[0]
             }
 
-            const optionSelected = correspondingOption.options.find((option) => option.id === valueToLookUp)
+            const optionSelected = optionInBoard.options.find((option) => option.id === valueToLookUp)
 
             if (!optionSelected) {
                 continue
             }
 
-            propertiesToDisplay.push({optionName: correspondingOption.name, optionValue: optionSelected.value, optionValueColour: optionSelected.color})
+            propertiesToDisplay.push({optionName: optionInBoard.name, optionValue: optionSelected.value, optionValueColour: optionSelected.color})
         }
+        remainder += (Object.keys(card.fields.properties).length - propertiesToDisplay.length - totalNumberOfCheckBoxes)
+        html = Utils.htmlFromMarkdown(content?.title || '')
     }
-    const remainder = propertyKeyArray.length - propertiesToDisplay.length
-    const html: string = Utils.htmlFromMarkdown(content?.title || '')
+
     return (
         <IntlProvider
             messages={getMessages(locale)}
             locale={locale}
         >
-            <a
-                className='FocalboardUnfurl'
-                href={`${baseURL}${originalPath}`}
-                rel='noopener noreferrer'
-                target='_blank'
-            >
+            {!loading && (!card || !board) && <></>}
+            {!loading && card && board &&
+                <a
+                    className='FocalboardUnfurl'
+                    href={`${baseURL}${originalPath}`}
+                    rel='noopener noreferrer'
+                    target='_blank'
+                >
 
-                {/* Header of the Card*/}
-                <div className='header'>
-                    <span className='icon'>{card.fields?.icon}</span>
-                    <div className='information'>
-                        <span className='card_title'>{card.title}</span>
-                        <span className='board_title'>{board.title}</span>
-                    </div>
-                </div>
-
-                {/* Body of the Card*/}
-                {html !== '' &&
-                    <div className='body'>
-                        <div
-                            dangerouslySetInnerHTML={{__html: html}}
-                        />
-                    </div>
-                }
-
-                {/* Footer of the Card*/}
-                <div className='footer'>
-                    <div className='avatar'>
-                        <Avatar
-                            size={'md'}
-                            url={imageURLForUser(card.createdBy)}
-                            className={'avatar-post-preview'}
-                        />
-                    </div>
-                    <div className='timestamp_properties'>
-                        <div className='properties'>
-                            {propertiesToDisplay.map((property) => (
-                                <div
-                                    key={property.optionValue}
-                                    className={`property ${property.optionValueColour}`}
-                                    title={`${property.optionName}`}
-                                >
-                                    {property.optionValue}
-                                </div>
-                            ))}
-                            {remainder > 0 &&
-                                <span className='remainder'>
-                                    <FormattedMessage
-                                        id='BoardsUnfurl.Remainder'
-                                        defaultMessage='+{remainder} more'
-                                        values={{
-                                            remainder,
-                                        }}
-                                    />
-                                </span>
-                            }
+                    {/* Header of the Card*/}
+                    <div className='header'>
+                        <span className='icon'>{card.fields?.icon}</span>
+                        <div className='information'>
+                            <span className='card_title'>{card.title}</span>
+                            <span className='board_title'>{board.title}</span>
                         </div>
-                        <span className='post-preview__time'>
-                            <FormattedMessage
-                                id='BoardsUnfurl.Updated'
-                                defaultMessage='Updated {time}'
-                                values={{
-                                    time: (
-                                        <Timestamp
-                                            value={card.updateAt}
-                                            units={[
-                                                'now',
-                                                'minute',
-                                                'hour',
-                                                'day',
-                                            ]}
-                                            useTime={false}
-                                            day={'numeric'}
-                                        />
-                                    ),
-                                }}
-                            />
-                        </span>
                     </div>
-                </div>
-            </a>
+
+                    {/* Body of the Card*/}
+                    {html !== '' &&
+                        <div className='body'>
+                            <div
+                                dangerouslySetInnerHTML={{__html: html}}
+                            />
+                        </div>
+                    }
+
+                    {/* Footer of the Card*/}
+                    <div className='footer'>
+                        <div className='avatar'>
+                            <Avatar
+                                size={'md'}
+                                url={imageURLForUser(card.createdBy)}
+                                className={'avatar-post-preview'}
+                            />
+                        </div>
+                        <div className='timestamp_properties'>
+                            <div className='properties'>
+                                {propertiesToDisplay.map((property) => (
+                                    <div
+                                        key={property.optionValue}
+                                        className={`property ${property.optionValueColour}`}
+                                        title={`${property.optionName}`}
+                                        style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
+                                    >
+                                        {property.optionValue}
+                                    </div>
+                                ))}
+                                {remainder > 0 &&
+                                    <span className='remainder'>
+                                        <FormattedMessage
+                                            id='BoardsUnfurl.Remainder'
+                                            defaultMessage='+{remainder} more'
+                                            values={{
+                                                remainder,
+                                            }}
+                                        />
+                                    </span>
+                                }
+                            </div>
+                            <span className='post-preview__time'>
+                                <FormattedMessage
+                                    id='BoardsUnfurl.Updated'
+                                    defaultMessage='Updated {time}'
+                                    values={{
+                                        time: (
+                                            <Timestamp
+                                                value={card.updateAt}
+                                                units={[
+                                                    'now',
+                                                    'minute',
+                                                    'hour',
+                                                    'day',
+                                                ]}
+                                                useTime={false}
+                                                day={'numeric'}
+                                            />
+                                        ),
+                                    }}
+                                />
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            }
+            {loading &&
+                <div style={{height: '302px'}}/>
+            }
         </IntlProvider>
     )
 }
