@@ -409,7 +409,7 @@ class Mutator {
             delete newCard.fields.properties[propertyId]
         }
         await this.updateBlock(newCard, card, description)
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {card: card.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {board: card.rootId, card: card.id})
     }
 
     async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyType, newName: string) {

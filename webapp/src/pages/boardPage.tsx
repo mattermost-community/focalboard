@@ -169,7 +169,7 @@ const BoardPage = (props: Props): JSX.Element => {
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
             token = token || queryString.get('r') || ''
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: board.id})
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: board.id, view: activeView.id})
         }
 
         dispatch(loadAction(match.params.boardId))
