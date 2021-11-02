@@ -49,7 +49,8 @@ func (da *pluginAPIAdapter) GetDirectChannel(userID1, userID2 string) (*model.Ch
 }
 
 func (da *pluginAPIAdapter) CreatePost(post *model.Post) error {
-	return da.client.Post.CreatePost(post)
+	postEmbed := postWithBoardsEmbed(post, da.client.Configuration.GetConfig().FeatureFlags.BoardsUnfurl)
+	return da.client.Post.CreatePost(postEmbed)
 }
 
 func (da *pluginAPIAdapter) GetUserByID(userID string) (*model.User, error) {
