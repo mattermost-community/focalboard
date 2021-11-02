@@ -92,9 +92,16 @@ func getFirstLink(str string) string {
 	firstLink := ""
 
 	markdown.Inspect(str, func(blockOrInline interface{}) bool {
-		if _, ok := blockOrInline.(*markdown.Autolink); ok {
-			if link := blockOrInline.(*markdown.Autolink).Destination(); firstLink == "" {
+		if autoLink, ok := blockOrInline.(*markdown.Autolink); ok {
+			if link := autoLink.Destination(); firstLink == "" {
 				firstLink = link
+				return false
+			}
+		}
+		if autoLink, ok := blockOrInline.(*markdown.InlineLink); ok {
+			if link := autoLink.Destination(); firstLink == "" {
+				firstLink = link
+				return false
 			}
 		}
 		return true
