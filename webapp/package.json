@@ -24,11 +24,16 @@
 		"updatesnapshots": "jest --updateSnapshot"
 	},
 	"dependencies": {
+		"@fullcalendar/core": "^5.10.0",
+		"@fullcalendar/daygrid": "^5.10.0",
+		"@fullcalendar/interaction": "^5.10.0",
+		"@fullcalendar/react": "^5.10.0",
 		"@mattermost/compass-icons": "^0.1.10",
 		"@reduxjs/toolkit": "^1.6.0",
 		"color": "^4.0.0",
 		"easymde": "^2.15.0",
 		"emoji-mart": "^3.0.1",
+		"fullcalendar": "^5.10.0",
 		"imagemin-gifsicle": "^7.0.0",
 		"imagemin-mozjpeg": "^9.0.0",
 		"imagemin-optipng": "^8.0.0",
