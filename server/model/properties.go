@@ -10,25 +10,46 @@ import (
 var ErrInvalidBoardBlock = errors.New("invalid board block")
 var ErrInvalidPropSchema = errors.New("invalid property schema")
 
-// PropDef represents a property definition as defined in a board's Fields member.
-type PropDef struct {
-	ID      string                `json:"id"`
-	Index   int                   `json:"index"`
-	Name    string                `json:"name"`
-	Type    string                `json:"type"`
-	Options map[string]PropOption `json:"options"`
+// Properties is a map of Prop's keyed by property id.
+type Properties map[string]Prop
+
+// Prop represent a property attached to a block (typically a card).
+type Prop struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Value string `json:"value"`
 }
 
-// PropOption represents an option within a property definition.
-type PropOption struct {
+// PropSchema is a map of PropDef's keyed by property id.
+type PropSchema map[string]PropDef
+
+// PropDefOption represents an option within a property definition.
+type PropDefOption struct {
 	ID    string `json:"id"`
 	Index int    `json:"index"`
 	Color string `json:"color"`
 	Value string `json:"value"`
 }
 
-// PropSchema is a map of PropDef's keyed by property id.
-type PropSchema map[string]PropDef
+// PropDef represents a property definition as defined in a board's Fields member.
+type PropDef struct {
+	ID      string                   `json:"id"`
+	Index   int                      `json:"index"`
+	Name    string                   `json:"name"`
+	Type    string                   `json:"type"`
+	Options map[string]PropDefOption `json:"options"`
+}
+
+// GetValue resolves the value of a property if the passed value is an ID for an option,
+// otherwise returns the original value.
+func (pd PropDef) GetValue(v string) string {
+	// v may be an id to an option.
+	opt, ok := pd.Options[v]
+	if ok {
+		return opt.Value
+	}
+	return v
+}
 
 // ParsePropertySchema parses a board block's `Fields` to extract the properties
 // schema for all cards within the board.
@@ -63,7 +84,7 @@ func ParsePropertySchema(board *Block) (PropSchema, error) {
 			Index:   i,
 			Name:    getMapString("name", prop),
 			Type:    getMapString("type", prop),
-			Options: make(map[string]PropOption),
+			Options: make(map[string]PropDefOption),
 		}
 		optsIface, ok := prop["options"]
 		if ok {
@@ -76,7 +97,7 @@ func ParsePropertySchema(board *Block) (PropSchema, error) {
 				if !ok {
 					return nil, ErrInvalidPropSchema
 				}
-				po := PropOption{
+				po := PropDefOption{
 					ID:    getMapString("id", propOpt),
 					Index: j,
 					Value: getMapString("value", propOpt),
@@ -101,4 +122,41 @@ func getMapString(key string, m map[string]interface{}) string {
 		return ""
 	}
 	return s
+}
+
+// ParseProperties parses a block's `Fields` to extract the properties. Properties typically exist on
+// card blocks.
+func ParseProperties(block *Block, schema PropSchema) Properties {
+	props := make(map[string]Prop)
+
+	if block == nil {
+		return props
+	}
+
+	// `properties` contains a map (untyped at this point).
+	propsIface, ok := block.Fields["properties"]
+	if !ok {
+		return props
+	}
+
+	blockProps, ok := propsIface.(map[string]string)
+	if !ok || len(blockProps) == 0 {
+		return props
+	}
+
+	for k, v := range blockProps {
+		prop := Prop{
+			ID:    k,
+			Name:  k,
+			Value: v,
+		}
+
+		def, ok := schema[k]
+		if ok {
+			prop.Name = def.Name
+			prop.Value = def.GetValue(v)
+		}
+		props[k] = prop
+	}
+	return props
 }

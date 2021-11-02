@@ -38,6 +38,8 @@ const (
 	defModifyCardNotify = "{{.Username}} has modified the card {{.Card.Title}}"
 
 	defDeleteCardNotify = "{{.Username}} has deleted the card {{.Card.Title}}"
+
+	defModifyCardPropsNotify = "{{.Name}}:\t\t\t{{.NewValue}}  ~~{{.OldValue}}~~\n"
 )
 
 var (
@@ -134,7 +136,7 @@ func boardDiff2Markdown(w io.Writer, boardDiff *Diff, opts MarkdownOpts) error {
 	}
 
 	// board deleted
-	if boardDiff.NewBlock == nil && boardDiff.OldBlock != nil {
+	if (boardDiff.NewBlock == nil || boardDiff.NewBlock.DeleteAt != 0) && boardDiff.OldBlock != nil {
 		return execTemplate(w, "DeleteBoardNotify", opts, defDeleteBoardNotify, boardDiff)
 	}
 
@@ -155,9 +157,8 @@ func boardDiff2Markdown(w io.Writer, boardDiff *Diff, opts MarkdownOpts) error {
 		}
 	}
 
-	// property schema changes
+	// TODO: property schema changes
 
-	// TODO
 	return nil
 }
 
@@ -172,7 +173,7 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 		return execTemplate(w, "AddCardNotify", opts, defAddCardNotify, cardDiff)
 	}
 
-	// board deleted
+	// card deleted
 	if cardDiff.NewBlock == nil && cardDiff.OldBlock != nil {
 		return execTemplate(w, "DeleteCardNotify", opts, defDeleteCardNotify, cardDiff)
 	}
@@ -193,6 +194,9 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 	}
 
 	// property changes
+	for _, propDiff := range cardDiff.PropDiffs {
+
+	}
 
 	// comment add/delete
 

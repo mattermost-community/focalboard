@@ -162,8 +162,8 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	}
 
 	opts := MarkdownOpts{
-		Language: "en", // TODO: use correct language with i18n available on server.
-		MakeLink: nil,  // TODO: provide func to make URL links to blocks.
+		Language: "en",                                                   // TODO: use correct language with i18n available on server.
+		MakeLink: func(block *model.Block) string { return block.Title }, // TODO: provide func to make URL links to blocks.
 	}
 
 	markdown, err := Diffs2Markdown(diffs, opts)

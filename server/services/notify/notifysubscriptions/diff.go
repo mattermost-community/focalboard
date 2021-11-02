@@ -21,7 +21,7 @@ type Diff struct {
 	NewBlock  *model.Block
 
 	schemaDiffs []SchemaDiff
-	propDiffs   []PropDiff
+	PropDiffs   []PropDiff
 
 	Diffs []*Diff // Diffs for child blocks
 }
@@ -111,7 +111,15 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.
 
 	var diffs []*Diff
 
-	// TODO: detect board deleted, generate schema diffs
+	boardDiff, err := dg.generateDiffForBlock(board, nil, board, schema, hint)
+	if err != nil {
+		return nil, fmt.Errorf("could not generate diff for board %s: %w", board.ID, err)
+	}
+
+	if boardDiff != nil {
+		// TODO: generate schema diffs and add to board diff
+		diffs = append(diffs, boardDiff)
+	}
 
 	for _, b := range blocks {
 		block := b
@@ -173,32 +181,61 @@ func (dg *diffGenerator) generateDiffForBlock(board, card, block *model.Block, s
 	oldBlock := history[0]
 	newBlock := history[len(history)-1]
 
+	propDiffs := dg.generatePropDiffs(&oldBlock, &newBlock, schema)
+
 	diff := &Diff{
-		Board:     board,
-		Card:      card,
-		Username:  hint.Username,
-		BlockType: block.Type,
-		OldBlock:  &oldBlock,
-		NewBlock:  &newBlock,
+		Board:       board,
+		Card:        card,
+		Username:    hint.Username,
+		BlockType:   block.Type,
+		OldBlock:    &oldBlock,
+		NewBlock:    &newBlock,
+		PropDiffs:   propDiffs,
+		schemaDiffs: nil,
 	}
 	return diff, nil
 }
 
-/*
-func generatePropDiffs(board, oldBlock, newBlock *model.Block) []PropDiff {
+func (dg *diffGenerator) generatePropDiffs(oldBlock, newBlock *model.Block, schema model.PropSchema) []PropDiff {
 	var propDiffs []PropDiff
 
-	boardProps, ok := board.Fields["cardProperties"]
-	oldProps, ok2 := oldBlock.Fields["properties"]
-	newProps, ok3 := newBlock.Fields["properties"]
+	oldProps := model.ParseProperties(oldBlock, schema)
+	newProps := model.ParseProperties(newBlock, schema)
 
-	if !ok || !ok2 || !ok3 {
-		return propDiffs
+	// look for new or changed properties.
+	for k, prop := range newProps {
+		oldP, ok := oldProps[k]
+		if !ok {
+			// prop changed
+			propDiffs = append(propDiffs, PropDiff{
+				ID:       prop.ID,
+				Name:     prop.Name,
+				NewValue: prop.Value,
+				OldValue: oldP.Value,
+			})
+		} else {
+			// prop added
+			propDiffs = append(propDiffs, PropDiff{
+				ID:       prop.ID,
+				Name:     prop.Name,
+				NewValue: prop.Value,
+				OldValue: "",
+			})
+		}
 	}
 
-	for k, v := range newProps {
-
+	// look for deleted properties
+	for k, prop := range oldProps {
+		_, ok := newProps[k]
+		if !ok {
+			// prop deleted
+			propDiffs = append(propDiffs, PropDiff{
+				ID:       prop.ID,
+				Name:     prop.Name,
+				NewValue: "",
+				OldValue: prop.Value,
+			})
+		}
 	}
-
+	return propDiffs
 }
-*/
