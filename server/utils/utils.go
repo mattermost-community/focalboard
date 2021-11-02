@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/mattermost/focalboard/server/model"
+
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -27,6 +29,21 @@ const (
 // type of entity or a `7` if unknown type.
 func NewID(idType IDType) string {
 	return string(idType) + mm_model.NewId()
+}
+
+// BlockType2IDType returns an appropriate IDType for the specified BlockType.
+func BlockType2IDType(blockType model.BlockType) IDType {
+	switch blockType {
+	case model.TypeBoard:
+		return IDTypeBoard
+	case model.TypeCard:
+		return IDTypeCard
+	case model.TypeView:
+		return IDTypeView
+	case model.TypeText, model.TypeComment:
+		return IDTypeBlock
+	}
+	return IDTypeNone
 }
 
 // GetMillis is a convenience method to get milliseconds since epoch.
