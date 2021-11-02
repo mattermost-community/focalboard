@@ -6,27 +6,26 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {ContentBlock} from '../../blocks/contentBlock'
+import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
+import {getCardComments} from '../../store/comments'
+import {getCardContents} from '../../store/contents'
+import {useAppSelector} from '../../store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {Utils} from '../../utils'
-
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import DuplicateIcon from '../../widgets/icons/duplicate'
-import OptionsIcon from '../../widgets/icons/options'
 import LinkIcon from '../../widgets/icons/Link'
+import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {useSortable} from '../../hooks/sortable'
-
-import ImageElement from '../content/imageElement'
-import ContentElement from '../content/contentElement'
-import PropertyValueElement from '../propertyValueElement'
-import {sendFlashMessage} from '../flashMessages'
 import Tooltip from '../../widgets/tooltip'
-import {useAppSelector} from '../../store/hooks'
-import {getCardContents} from '../../store/contents'
-import {getCardComments} from '../../store/comments'
-
+import {CardDetailProvider} from '../cardDetail/cardDetailContext'
+import ContentElement from '../content/contentElement'
+import ImageElement from '../content/imageElement'
+import {sendFlashMessage} from '../flashMessages'
+import PropertyValueElement from '../propertyValueElement'
 import './galleryCard.scss'
 
 type Props = {
@@ -93,6 +92,7 @@ const GalleryCard = React.memo((props: Props) => {
                             id='duplicate'
                             name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: props.board.id, card: card.id})
                                 mutator.duplicateCard(card.id)
                             }}
                         />
@@ -120,29 +120,31 @@ const GalleryCard = React.memo((props: Props) => {
                     <ImageElement block={image}/>
                 </div>}
             {!image &&
-                <div className='gallery-item'>
-                    {contents.map((block) => {
-                        if (Array.isArray(block)) {
-                            return block.map((b) => (
+                <CardDetailProvider card={card}>
+                    <div className='gallery-item'>
+                        {contents.map((block) => {
+                            if (Array.isArray(block)) {
+                                return block.map((b) => (
+                                    <ContentElement
+                                        key={b.id}
+                                        block={b}
+                                        readonly={true}
+                                        cords={{x: 0}}
+                                    />
+                                ))
+                            }
+
+                            return (
                                 <ContentElement
-                                    key={b.id}
-                                    block={b}
+                                    key={block.id}
+                                    block={block}
                                     readonly={true}
                                     cords={{x: 0}}
                                 />
-                            ))
-                        }
-
-                        return (
-                            <ContentElement
-                                key={block.id}
-                                block={block}
-                                readonly={true}
-                                cords={{x: 0}}
-                            />
-                        )
-                    })}
-                </div>}
+                            )
+                        })}
+                    </div>
+                </CardDetailProvider>}
             {props.visibleTitle &&
                 <div className='gallery-title'>
                     { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }

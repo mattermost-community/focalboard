@@ -19,6 +19,10 @@ type Option = {
 export const Options:Record<string, Option> = {
     none: {value: 'none', label: 'None', displayName: 'Calculate'},
     count: {value: 'count', label: 'Count', displayName: 'Count'},
+    countEmpty: {value: 'countEmpty', label: 'Count Empty', displayName: 'Empty'},
+    countNotEmpty: {value: 'countNotEmpty', label: 'Count Not Empty', displayName: 'Not Empty'},
+    percentEmpty: {value: 'percentEmpty', label: 'Percent Empty', displayName: 'Empty'},
+    percentNotEmpty: {value: 'percentNotEmpty', label: 'Percent Not Empty', displayName: 'Not Empty'},
     countValue: {value: 'countValue', label: 'Count Value', displayName: 'Values'},
     countChecked: {value: 'countChecked', label: 'Count Checked', displayName: 'Checked'},
     percentChecked: {value: 'percentChecked', label: 'Percent Checked', displayName: 'Checked'},
@@ -37,7 +41,8 @@ export const Options:Record<string, Option> = {
 }
 
 export const optionsByType: Map<string, Option[]> = new Map([
-    ['common', [Options.none, Options.count, Options.countValue, Options.countUniqueValue]],
+    ['common', [Options.none, Options.count, Options.countEmpty, Options.countNotEmpty, Options.percentEmpty,
+        Options.percentNotEmpty, Options.countValue, Options.countUniqueValue]],
     ['checkbox', [Options.countChecked, Options.countUnchecked, Options.percentChecked, Options.percentUnchecked]],
     ['number', [Options.sum, Options.average, Options.median, Options.min, Options.max, Options.range]],
     ['date', [Options.earliest, Options.latest, Options.dateRange]],

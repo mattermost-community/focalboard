@@ -70,6 +70,7 @@ const ViewHeader = React.memo((props: Props) => {
                 saveOnEsc={true}
                 readonly={props.readonly}
                 spellCheck={true}
+                autoExpand={false}
             />
             <MenuWrapper>
                 <IconButton icon={<DropdownIcon/>}/>

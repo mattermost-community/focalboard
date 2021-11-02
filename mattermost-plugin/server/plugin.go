@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"path"
+	"strings"
 	"sync"
 
 	"github.com/mattermost/focalboard/server/auth"
@@ -19,8 +22,24 @@ import (
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
+	"github.com/mattermost/mattermost-server/v6/shared/markdown"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+const (
+	boardsFeatureFlagName = "BoardsFeatureFlags"
+	pluginName            = "focalboard"
+	sharedBoardsName      = "enablepublicsharedboards"
+)
+
+type BoardsEmbed struct {
+	OriginalPath string `json:"originalPath"`
+	WorkspaceID  string `json:"workspaceID"`
+	ViewID       string `json:"viewID"`
+	BoardID      string `json:"boardID"`
+	CardID       string `json:"cardID"`
+	ReadToken    string `json:"readToken,omitempty"`
+}
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
 type Plugin struct {
@@ -39,6 +58,72 @@ type Plugin struct {
 
 func (p *Plugin) OnActivate() error {
 	mmconfig := p.API.GetUnsanitizedConfig()
+
+	client := pluginapi.NewClient(p.API, p.Driver)
+	sqlDB, err := client.Store.GetMasterDB()
+	if err != nil {
+		return fmt.Errorf("error initializing the DB: %w", err)
+	}
+
+	logger, _ := mlog.NewLogger()
+	pluginTargetFactory := newPluginTargetFactory(&client.Log)
+	factories := &mlog.Factories{
+		TargetFactory: pluginTargetFactory.createTarget,
+	}
+	cfgJSON := defaultLoggingConfig()
+	err = logger.Configure("", cfgJSON, factories)
+	if err != nil {
+		return err
+	}
+
+	baseURL := ""
+	if mmconfig.ServiceSettings.SiteURL != nil {
+		baseURL = *mmconfig.ServiceSettings.SiteURL
+	}
+	serverID := client.System.GetDiagnosticID()
+	cfg := p.createBoardsConfig(*mmconfig, baseURL, serverID)
+
+	var db store.Store
+	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB, true)
+	if err != nil {
+		return fmt.Errorf("error initializing the DB: %w", err)
+	}
+	if cfg.AuthMode == server.MattermostAuthMod {
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger)
+		if err2 != nil {
+			return fmt.Errorf("error initializing the DB: %w", err2)
+		}
+		db = layeredStore
+	}
+
+	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
+
+	mentionsBackend, err := createMentionsNotifyBackend(client, baseURL+"/boards", logger)
+	if err != nil {
+		return fmt.Errorf("error creating mentions notifications backend: %w", err)
+	}
+
+	params := server.Params{
+		Cfg:             cfg,
+		SingleUserToken: "",
+		DBStore:         db,
+		Logger:          logger,
+		ServerID:        serverID,
+		WSAdapter:       p.wsPluginAdapter,
+		NotifyBackends:  []notify.Backend{mentionsBackend},
+	}
+
+	server, err := server.New(params)
+	if err != nil {
+		fmt.Println("ERROR INITIALIZING THE SERVER", err)
+		return err
+	}
+
+	p.server = server
+	return server.Start()
+}
+
+func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, serverID string) *config.Configuration {
 	filesS3Config := config.AmazonS3Config{}
 	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
 		filesS3Config.AccessKeyID = *mmconfig.FileSettings.AmazonS3AccessKeyId
@@ -71,41 +156,29 @@ func (p *Plugin) OnActivate() error {
 		filesS3Config.Trace = *mmconfig.FileSettings.AmazonS3Trace
 	}
 
-	client := pluginapi.NewClient(p.API, p.Driver)
-	sqlDB, err := client.Store.GetMasterDB()
-	if err != nil {
-		return fmt.Errorf("error initializing the DB: %w", err)
-	}
-
-	logger, _ := mlog.NewLogger()
-	pluginTargetFactory := newPluginTargetFactory(&client.Log)
-	factories := &mlog.Factories{
-		TargetFactory: pluginTargetFactory.createTarget,
-	}
-	cfgJSON := defaultLoggingConfig()
-	err = logger.Configure("", cfgJSON, factories)
-	if err != nil {
-		return err
-	}
-
-	baseURL := ""
-	if mmconfig.ServiceSettings.SiteURL != nil {
-		baseURL = *mmconfig.ServiceSettings.SiteURL
-	}
-
-	serverID := client.System.GetDiagnosticID()
-
 	enableTelemetry := false
 	if mmconfig.LogSettings.EnableDiagnostics != nil {
 		enableTelemetry = *mmconfig.LogSettings.EnableDiagnostics
 	}
 
 	enablePublicSharedBoards := false
-	if mmconfig.PluginSettings.Plugins["focalboard"]["enablepublicsharedboards"] == true {
+	if mmconfig.PluginSettings.Plugins[pluginName][sharedBoardsName] == true {
 		enablePublicSharedBoards = true
 	}
 
-	cfg := &config.Configuration{
+	featureFlags := make(map[string]string)
+	for key, value := range mmconfig.FeatureFlags.ToMap() {
+		// Break out FeatureFlags and pass remaining
+		if key == boardsFeatureFlagName {
+			for _, flag := range strings.Split(value, "-") {
+				featureFlags[flag] = "true"
+			}
+		} else {
+			featureFlags[key] = value
+		}
+	}
+
+	return &config.Configuration{
 		ServerRoot:               baseURL + "/plugins/focalboard",
 		Port:                     -1,
 		DBType:                   *mmconfig.SqlSettings.DriverName,
@@ -127,45 +200,8 @@ func (p *Plugin) OnActivate() error {
 		LocalModeSocketLocation:  "",
 		AuthMode:                 "mattermost",
 		EnablePublicSharedBoards: enablePublicSharedBoards,
+		FeatureFlags:             featureFlags,
 	}
-	var db store.Store
-	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB, true)
-	if err != nil {
-		return fmt.Errorf("error initializing the DB: %w", err)
-	}
-	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger)
-		if err2 != nil {
-			return fmt.Errorf("error initializing the DB: %w", err2)
-		}
-		db = layeredStore
-	}
-
-	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
-
-	mentionsBackend, err := createMentionsNotifyBackend(client, cfg.ServerRoot, logger)
-	if err != nil {
-		return fmt.Errorf("error creating mentions notifications backend: %w", err)
-	}
-
-	params := server.Params{
-		Cfg:             cfg,
-		SingleUserToken: "",
-		DBStore:         db,
-		Logger:          logger,
-		ServerID:        serverID,
-		WSAdapter:       p.wsPluginAdapter,
-		NotifyBackends:  []notify.Backend{mentionsBackend},
-	}
-
-	server, err := server.New(params)
-	if err != nil {
-		fmt.Println("ERROR INITIALIZING THE SERVER", err)
-		return err
-	}
-
-	p.server = server
-	return server.Start()
 }
 
 func (p *Plugin) OnWebSocketConnect(webConnID, userID string) {
@@ -218,4 +254,131 @@ func defaultLoggingConfig() string {
 			]
 		}
 	}`
+}
+
+func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) {
+	return postWithBoardsEmbed(post, p.API.GetConfig().FeatureFlags.BoardsUnfurl), ""
+}
+
+func (p *Plugin) MessageWillBeUpdated(_ *plugin.Context, newPost, _ *mmModel.Post) (*mmModel.Post, string) {
+	return postWithBoardsEmbed(newPost, p.API.GetConfig().FeatureFlags.BoardsUnfurl), ""
+}
+
+func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) *mmModel.Post {
+	if _, ok := post.GetProps()["boards"]; ok {
+		post.AddProp("boards", nil)
+	}
+
+	if !showBoardsUnfurl {
+		return post
+	}
+
+	firstLink := getFirstLink(post.Message)
+
+	if firstLink == "" {
+		return post
+	}
+
+	u, err := url.Parse(firstLink)
+
+	if err != nil {
+		return post
+	}
+
+	// Trim away the first / because otherwise after we split the string, the first element in the array is a empty element
+	urlPath := u.Path
+	if strings.HasPrefix(urlPath, "/") {
+		urlPath = u.Path[1:]
+	}
+	pathSplit := strings.Split(strings.ToLower(urlPath), "/")
+	queryParams := u.Query()
+
+	if len(pathSplit) == 0 {
+		return post
+	}
+
+	workspaceID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
+
+	if workspaceID != "" && boardID != "" && viewID != "" && cardID != "" {
+		b, _ := json.Marshal(BoardsEmbed{
+			WorkspaceID:  workspaceID,
+			BoardID:      boardID,
+			ViewID:       viewID,
+			CardID:       cardID,
+			ReadToken:    queryParams.Get("r"),
+			OriginalPath: u.RequestURI(),
+		})
+
+		BoardsPostEmbed := &mmModel.PostEmbed{
+			Type: mmModel.PostEmbedBoards,
+			Data: string(b),
+		}
+
+		if post.Metadata == nil {
+			post.Metadata = &mmModel.PostMetadata{}
+		}
+
+		post.Metadata.Embeds = []*mmModel.PostEmbed{BoardsPostEmbed}
+		post.AddProp("boards", string(b))
+	}
+
+	return post
+}
+
+func getFirstLink(str string) string {
+	firstLink := ""
+
+	markdown.Inspect(str, func(blockOrInline interface{}) bool {
+		if _, ok := blockOrInline.(*markdown.Autolink); ok {
+			if link := blockOrInline.(*markdown.Autolink).Destination(); firstLink == "" {
+				firstLink = link
+			}
+		}
+		return true
+	})
+
+	return firstLink
+}
+
+func returnBoardsParams(pathArray []string) (workspaceID, boardID, viewID, cardID string) {
+	// The reason we are doing this search for the first instance of boards or plugins is to take into account URL subpaths
+	index := -1
+	for i := 0; i < len(pathArray); i++ {
+		if pathArray[i] == "boards" || pathArray[i] == "plugins" {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return workspaceID, boardID, viewID, cardID
+	}
+
+	// If at index, the parameter in the path is boards,
+	// then we've copied this directly as logged in user of that board
+
+	// If at index, the parameter in the path is plugins,
+	// then we've copied this from a shared board
+
+	// For card links copied on a non-shared board, the path looks like {...Mattermost Url}.../boards/workspace/workspaceID/boardID/viewID/cardID
+
+	// For card links copied on a shared board, the path looks like
+	// {...Mattermost Url}.../plugins/focalboard/workspace/workspaceID/shared/boardID/viewID/cardID?r=read_token
+
+	// This is a non-shared board card link
+	if len(pathArray)-index == 6 && pathArray[index] == "boards" && pathArray[index+1] == "workspace" {
+		workspaceID = pathArray[index+2]
+		boardID = pathArray[index+3]
+		viewID = pathArray[index+4]
+		cardID = pathArray[index+5]
+	} else if len(pathArray)-index == 8 && pathArray[index] == "plugins" &&
+		pathArray[index+1] == "focalboard" &&
+		pathArray[index+2] == "workspace" &&
+		pathArray[index+4] == "shared" { // This is a shared board card link
+		workspaceID = pathArray[index+3]
+		boardID = pathArray[index+5]
+		viewID = pathArray[index+6]
+		cardID = pathArray[index+7]
+	}
+	return workspaceID, boardID, viewID, cardID
 }

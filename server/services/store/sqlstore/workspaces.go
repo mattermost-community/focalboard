@@ -17,10 +17,10 @@ var (
 	errUnsupportedOperation = errors.New("unsupported operation")
 )
 
-func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
+func (s *SQLStore) upsertWorkspaceSignupToken(db sq.BaseRunner, workspace model.Workspace) error {
 	now := utils.GetMillis()
 
-	query := s.getQueryBuilder().
+	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"workspaces").
 		Columns(
 			"id",
@@ -48,7 +48,7 @@ func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
 	return err
 }
 
-func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
+func (s *SQLStore) upsertWorkspaceSettings(db sq.BaseRunner, workspace model.Workspace) error {
 	now := utils.GetMillis()
 	signupToken := utils.NewID(utils.IDTypeToken)
 
@@ -57,7 +57,7 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 		return err
 	}
 
-	query := s.getQueryBuilder().
+	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"workspaces").
 		Columns(
 			"id",
@@ -86,10 +86,10 @@ func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
 	return err
 }
 
-func (s *SQLStore) GetWorkspace(id string) (*model.Workspace, error) {
+func (s *SQLStore) getWorkspace(db sq.BaseRunner, id string) (*model.Workspace, error) {
 	var settingsJSON string
 
-	query := s.getQueryBuilder().
+	query := s.getQueryBuilder(db).
 		Select(
 			"id",
 			"signup_token",
@@ -122,12 +122,12 @@ func (s *SQLStore) GetWorkspace(id string) (*model.Workspace, error) {
 	return &workspace, nil
 }
 
-func (s *SQLStore) HasWorkspaceAccess(userID string, workspaceID string) (bool, error) {
+func (s *SQLStore) hasWorkspaceAccess(db sq.BaseRunner, userID string, workspaceID string) (bool, error) {
 	return true, nil
 }
 
-func (s *SQLStore) GetWorkspaceCount() (int64, error) {
-	query := s.getQueryBuilder().
+func (s *SQLStore) getWorkspaceCount(db sq.BaseRunner) (int64, error) {
+	query := s.getQueryBuilder(db).
 		Select(
 			"COUNT(*) AS count",
 		).
@@ -151,6 +151,6 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 	return count, nil
 }
 
-func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
+func (s *SQLStore) getUserWorkspaces(_ sq.BaseRunner, _ string) ([]model.UserWorkspace, error) {
 	return nil, fmt.Errorf("GetUserWorkspaces %w", errUnsupportedOperation)
 }

@@ -13,7 +13,7 @@ Follow the steps in the [Mattermost admin guide to enable custom plugins](https:
 1. Manually set `PluginSettings > EnableUploads` to `true` in your `config.json`
 2. Restart the Mattermost server
 
-Download `mattermost-plugin-focalboard.tar.gz` from the build or release, e.g. the [Focalboard 0.7.3 release](https://github.com/mattermost/focalboard/releases/tag/v0.7.3).
+Download `mattermost-plugin-focalboard.tar.gz` from the latest build or [release](https://github.com/mattermost/focalboard/releases).
 
 Then upload the Focalboard plugin:
 1. Navigate to **System Console > Plugins > Plugin Management**
