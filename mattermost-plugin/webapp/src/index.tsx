@@ -188,6 +188,7 @@ export default class Plugin {
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`plugin_statuses_changed`, (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
     }
 
     uninitialize(): void {
