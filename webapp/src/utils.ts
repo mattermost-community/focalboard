@@ -9,12 +9,9 @@ import {createBoard} from './blocks/board'
 import {createBoardView} from './blocks/boardView'
 import {createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
+import {IAppWindow} from './types'
 
-declare global {
-    interface Window {
-        msCrypto: Crypto
-    }
-}
+declare let window: IAppWindow
 
 const IconClass = 'octo-icon'
 const OpenButtonClass = 'open-button'
@@ -222,7 +219,7 @@ class Utils {
                 'rel="noreferrer" ' +
                 `href="${encodeURI(href || '')}" ` +
                 `title="${title ? encodeURI(title) : ''}" ` +
-                `onclick="event.stopPropagation();${((window as any).openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
+                `onclick="${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
 
@@ -465,7 +462,7 @@ class Utils {
     }
 
     static getBaseURL(absolute?: boolean): string {
-        let baseURL = (window as any).baseURL || ''
+        let baseURL = window.baseURL || ''
         baseURL = baseURL.replace(/\/+$/, '')
         if (baseURL.indexOf('/') === 0) {
             baseURL = baseURL.slice(1)
@@ -477,7 +474,7 @@ class Utils {
     }
 
     static getFrontendBaseURL(absolute?: boolean): string {
-        let frontendBaseURL = (window as any).frontendBaseURL || this.getBaseURL(absolute)
+        let frontendBaseURL = window.frontendBaseURL || this.getBaseURL(absolute)
         frontendBaseURL = frontendBaseURL.replace(/\/+$/, '')
         if (frontendBaseURL.indexOf('/') === 0) {
             frontendBaseURL = frontendBaseURL.slice(1)
@@ -508,7 +505,7 @@ class Utils {
     }
 
     static isFocalboardPlugin(): boolean {
-        return Boolean((window as any).isFocalboardPlugin)
+        return Boolean(window.isFocalboardPlugin)
     }
 
     static fixBlock(block: Block): Block {
@@ -587,6 +584,28 @@ class Utils {
 
     static generateClassName(conditions: Record<string, boolean>): string {
         return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
+    }
+
+    static buildOriginalPath(workspaceId = '', boardId = '', viewId = '', cardId = ''): string {
+        let originalPath = ''
+
+        if (workspaceId) {
+            originalPath += `${workspaceId}/`
+        }
+
+        if (boardId) {
+            originalPath += `${boardId}/`
+        }
+
+        if (viewId) {
+            originalPath += `${viewId}/`
+        }
+
+        if (cardId) {
+            originalPath += `${cardId}/`
+        }
+
+        return originalPath
     }
 }
 
