@@ -54,6 +54,8 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
                     >
                       <div
                         class="version"
+                        title="Commit 
+Date: 12/31/1969"
                       >
                         v0.10.0
                       </div>
