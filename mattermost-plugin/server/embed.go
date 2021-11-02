@@ -98,8 +98,8 @@ func getFirstLink(str string) string {
 				return false
 			}
 		}
-		if autoLink, ok := blockOrInline.(*markdown.InlineLink); ok {
-			if link := autoLink.Destination(); firstLink == "" {
+		if inlineLink, ok := blockOrInline.(*markdown.InlineLink); ok {
+			if link := inlineLink.Destination(); firstLink == "" {
 				firstLink = link
 				return false
 			}
