@@ -102,7 +102,7 @@ describe('components/addContentMenuItem', () => {
         await waitFor(() => expect(mockedMutator.performAsUndoGroup).toBeCalled())
     })
 
-    test('return an error and empty element from unknow type', () => {
+    test('return an error and empty element from unknown type', () => {
         const {container} = render(
             wrap(
                 <AddContentMenuItem

@@ -219,7 +219,7 @@ class Utils {
                 'rel="noreferrer" ' +
                 `href="${encodeURI(href || '')}" ` +
                 `title="${title ? encodeURI(title) : ''}" ` +
-                `onclick="event.stopPropagation();${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
+                `onclick="${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
 
@@ -584,6 +584,28 @@ class Utils {
 
     static generateClassName(conditions: Record<string, boolean>): string {
         return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
+    }
+
+    static buildOriginalPath(workspaceId = '', boardId = '', viewId = '', cardId = ''): string {
+        let originalPath = ''
+
+        if (workspaceId) {
+            originalPath += `${workspaceId}/`
+        }
+
+        if (boardId) {
+            originalPath += `${boardId}/`
+        }
+
+        if (viewId) {
+            originalPath += `${viewId}/`
+        }
+
+        if (cardId) {
+            originalPath += `${cardId}/`
+        }
+
+        return originalPath
     }
 }
 
