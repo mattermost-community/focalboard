@@ -68,7 +68,11 @@ const WelcomePage = React.memo(() => {
                     onClick={goForward}
                     filled={true}
                     size='large'
-                    icon={<CompassIcon icon='chevron-right' className='Icon Icon--right' />}
+                    icon={
+                        <CompassIcon
+                            icon='chevron-right'
+                            className='Icon Icon--right'
+                        />}
                     rightIcon={true}
                 >
                     <FormattedMessage
