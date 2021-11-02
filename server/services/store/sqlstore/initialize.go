@@ -43,7 +43,7 @@ func (s *SQLStore) importInitialTemplates() error {
 	for i := range archive.Blocks {
 		s.logger.Trace("insert block",
 			mlog.String("blockID", archive.Blocks[i].ID),
-			mlog.String("block_type", archive.Blocks[i].Type),
+			mlog.String("block_type", archive.Blocks[i].Type.String()),
 			mlog.String("block_title", archive.Blocks[i].Title),
 		)
 		err := s.InsertBlock(globalContainer, &archive.Blocks[i], "system")
