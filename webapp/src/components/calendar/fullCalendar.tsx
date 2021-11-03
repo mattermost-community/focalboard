@@ -9,9 +9,6 @@ import FullCalendar, {EventClickArg, EventChangeArg, EventInput, EventContentArg
 import interactionPlugin from '@fullcalendar/interaction'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
-// import timeGridPlugin from '@fullcalendar/timegrid'
-// import listPlugin from '@fullcalendar/list'
-
 import mutator from '../../mutator'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
