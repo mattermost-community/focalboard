@@ -200,8 +200,8 @@ function sortCards(cards: Card[], board: Board, activeView: BoardView, usersById
                     aValue = usersById[a.modifiedBy]?.username || ''
                     bValue = usersById[b.modifiedBy]?.username || ''
                 } else if (template.type === 'date') {
-                    aValue = (aValue === '') ? '' : JSON.parse(aValue).from
-                    bValue = (bValue === '') ? '' : JSON.parse(bValue).from
+                    aValue = (aValue === '') ? '' : JSON.parse(aValue as string).from
+                    bValue = (bValue === '') ? '' : JSON.parse(bValue as string).from
                 }
 
                 let result = 0
