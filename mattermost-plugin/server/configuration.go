@@ -2,9 +2,6 @@ package main
 
 import (
 	"reflect"
-
-	"github.com/mattermost/focalboard/server/utils"
-	"github.com/pkg/errors"
 )
 
 // configuration captures the plugin's external configuration as exposed in the Mattermost server
@@ -19,7 +16,6 @@ import (
 // If you add non-reference types to your configuration struct, be sure to rewrite Clone as a deep
 // copy appropriate for your types.
 type configuration struct {
-	EnablePublicSharedBoards bool
 }
 
 // Clone shallow copies the configuration. Your implementation may require a deep copy if
@@ -77,14 +73,18 @@ func (p *Plugin) OnConfigurationChange() error {
 		return nil
 	}
 
-	configuration := &configuration{}
-	// Load the public configuration fields from the Mattermost server configuration.
-	if err := p.API.LoadPluginConfiguration(&configuration); err != nil {
-		return errors.Wrap(err, "failed to load plugin configuration")
-	}
+	mmconfig := p.API.GetUnsanitizedConfig()
 
-	p.setConfiguration(configuration)
-	p.server.UpdateClientConfig(utils.StructToMap(configuration))
+	// handle plugin configuration settings
+	enableShareBoards := false
+	if mmconfig.PluginSettings.Plugins[pluginName][sharedBoardsName] == true {
+		enableShareBoards = true
+	}
+	p.server.Config().EnablePublicSharedBoards = enableShareBoards
+
+	// handle feature flags
+	p.server.Config().FeatureFlags = parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
+	p.server.UpdateAppConfig()
 	p.wsPluginAdapter.BroadcastConfigChange(*p.server.App().GetClientConfig())
 
 	return nil

@@ -166,17 +166,7 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		enablePublicSharedBoards = true
 	}
 
-	featureFlags := make(map[string]string)
-	for key, value := range mmconfig.FeatureFlags.ToMap() {
-		// Break out FeatureFlags and pass remaining
-		if key == boardsFeatureFlagName {
-			for _, flag := range strings.Split(value, "-") {
-				featureFlags[flag] = "true"
-			}
-		} else {
-			featureFlags[key] = value
-		}
-	}
+	featureFlags := parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 
 	return &config.Configuration{
 		ServerRoot:               baseURL + "/plugins/focalboard",
@@ -202,6 +192,21 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		EnablePublicSharedBoards: enablePublicSharedBoards,
 		FeatureFlags:             featureFlags,
 	}
+}
+
+func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {
+	featureFlags := make(map[string]string)
+	for key, value := range configFeatureFlags {
+		// Break out FeatureFlags and pass remaining
+		if key == boardsFeatureFlagName {
+			for _, flag := range strings.Split(value, "-") {
+				featureFlags[flag] = "true"
+			}
+		} else {
+			featureFlags[key] = value
+		}
+	}
+	return featureFlags
 }
 
 func (p *Plugin) OnWebSocketConnect(webConnID, userID string) {
