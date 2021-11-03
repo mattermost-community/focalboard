@@ -39,6 +39,7 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                 name={intl.formatMessage({id: 'TableHeaderMenu.insert-left', defaultMessage: 'Insert left'})}
                 onClick={() => {
                     if (props.templateId === Constants.titleColumnId) {
+                        // eslint-disable-next-line no-warning-comments
                         // TODO: Handle name column
                     } else {
                         const index = board.fields.cardProperties.findIndex((o: IPropertyTemplate) => o.id === templateId)
@@ -51,6 +52,7 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                 name={intl.formatMessage({id: 'TableHeaderMenu.insert-right', defaultMessage: 'Insert right'})}
                 onClick={() => {
                     if (templateId === Constants.titleColumnId) {
+                        // eslint-disable-next-line no-warning-comments
                         // TODO: Handle title column
                     } else {
                         const index = board.fields.cardProperties.findIndex((o: IPropertyTemplate) => o.id === templateId) + 1

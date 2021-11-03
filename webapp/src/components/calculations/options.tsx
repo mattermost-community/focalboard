@@ -35,9 +35,9 @@ export const Options:Record<string, Option> = {
     min: {value: 'min', label: 'Min', displayName: 'Min'},
     max: {value: 'max', label: 'Max', displayName: 'Max'},
     range: {value: 'range', label: 'Range', displayName: 'Range'},
-    earliest: {value: 'earliest', label: 'Earliest', displayName: 'Earliest'},
-    latest: {value: 'latest', label: 'Latest', displayName: 'Latest'},
-    dateRange: {value: 'dateRange', label: 'Range', displayName: 'Range'},
+    earliest: {value: 'earliest', label: 'Earliest Date', displayName: 'Earliest'},
+    latest: {value: 'latest', label: 'Latest Date', displayName: 'Latest'},
+    dateRange: {value: 'dateRange', label: 'Date Range', displayName: 'Range'},
 }
 
 export const optionsByType: Map<string, Option[]> = new Map([

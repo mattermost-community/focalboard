@@ -24,9 +24,6 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div
-            class="octo-spacer"
-          />
         </div>
         <div
           class="CardDetail content"
@@ -123,9 +120,6 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div
-            class="octo-spacer"
-          />
           <div
             aria-label="menuwrapper"
             class="MenuWrapper"
@@ -628,9 +622,6 @@ exports[`components/cardDialog should match snapshot 1`] = `
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div
-            class="octo-spacer"
-          />
           <div
             aria-label="menuwrapper"
             class="MenuWrapper"
