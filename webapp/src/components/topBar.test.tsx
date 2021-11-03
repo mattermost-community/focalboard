@@ -23,7 +23,7 @@ describe('src/components/topBar', () => {
         ))
         expect(container).toMatchSnapshot()
     })
-    test('should match snapshot for non focalboardPlugin', () => {
+    test('should match snapshot for none focalboardPlugin', () => {
         mockedUtils.isFocalboardPlugin.mockReturnValue(false)
         const {container} = render(wrapDNDIntl(
             <TopBar/>,
