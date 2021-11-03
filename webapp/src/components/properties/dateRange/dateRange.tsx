@@ -95,10 +95,8 @@ function DateRange(props: Props): JSX.Element {
             range.from = newRange.from?.getTime()
             range.to = newRange.to?.getTime()
         } else {
-            Utils.log(day.toString())
             range.from = day.getTime()
             range.to = undefined
-            Utils.log(new Date(range.from).toString())
         }
         saveRangeValue(range)
     }
