@@ -81,6 +81,13 @@ You can build standalone apps that package the server to run locally against SQL
     * `make win-wpf-app`
     * run `cd win-wpf/msix && focalboard.exe`
     * *Requires: Windows 10*
+* Docker:
+    * To run it localy from Offical Image
+    * `docker run -it -p 80:8000 mattermost/focalboard`
+    * To Build it for your Current Architekture
+    * `docker build -f docker/Dockerfile .`
+    * To Build it for a custom Architekture (Expiremental)
+    * `docker build -f docker/Dockerfile --platform linux/arm64 .`
 
 Cross-compilation currently isn't fully supported, so please build on the appropriate platform. Refer to the GitHub Actions workflows (build-mac.yml, build-win.yml, build-ubuntu.yml) for the detailed list of steps on each platform.
 
