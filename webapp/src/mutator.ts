@@ -224,10 +224,10 @@ class Mutator {
 
     // Property Templates
 
-    async insertPropertyTemplate(board: Board, activeView: BoardView, index = -1, template?: IPropertyTemplate) {
+    async insertPropertyTemplate(board: Board, activeView: BoardView, index = -1, template?: IPropertyTemplate): Promise<string> {
         if (!activeView) {
             Utils.assertFailure('insertPropertyTemplate: no activeView')
-            return
+            return ''
         }
 
         const newTemplate = template || {
@@ -257,6 +257,7 @@ class Mutator {
         }
 
         await this.updateBlocks(changedBlocks, oldBlocks, description)
+        return newTemplate.id
     }
 
     async duplicatePropertyTemplate(board: Board, activeView: BoardView, propertyId: string) {
@@ -408,7 +409,7 @@ class Mutator {
             delete newCard.fields.properties[propertyId]
         }
         await this.updateBlock(newCard, card, description)
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {card: card.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {board: card.rootId, card: card.id})
     }
 
     async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyType, newName: string) {

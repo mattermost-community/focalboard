@@ -12,7 +12,7 @@ import './dialog.scss'
 
 type Props = {
     children: React.ReactNode
-    toolsMenu: React.ReactNode
+    toolsMenu?: React.ReactNode // some dialogs may not  require a toolmenu
     hideCloseButton?: boolean
     className?: string
     onClose: () => void,
@@ -50,7 +50,6 @@ const Dialog = React.memo((props: Props) => {
                                 className='IconButton--large'
                             />
                         }
-                        <div className='octo-spacer'/>
                         {toolsMenu && <MenuWrapper>
                             <IconButton
                                 className='IconButton--large'

@@ -1927,9 +1927,9 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
               class="octo-table-cell"
               style="width: 100px;"
             >
-              <div
+              <button
                 class="Button IconButton"
-                role="button"
+                type="button"
               >
                 <svg
                   class="DisclosureTriangleIcon Icon"
@@ -1940,7 +1940,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
                     points="37,35 37,65 63,50"
                   />
                 </svg>
-              </div>
+              </button>
               <span
                 class="Label empty "
                 title="Items with an empty Property 1 property will go here. This column cannot be removed."
@@ -1962,23 +1962,23 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
               class="MenuWrapper"
               role="button"
             >
-              <div
+              <button
                 class="Button IconButton"
-                role="button"
+                type="button"
               >
                 <i
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-              </div>
+              </button>
             </div>
-            <div
+            <button
               class="Button IconButton"
-              role="button"
+              type="button"
             >
               <i
                 class="CompassIcon icon-plus AddIcon"
               />
-            </div>
+            </button>
           </div>
         </div>
       </div>

@@ -1,0 +1,148 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/emptyCenterPanel a focalboard Plugin should match snapshot 1`] = `
+<div>
+  <div
+    class="EmptyCenterPanel"
+  >
+    <div
+      class="content"
+    >
+      <span
+        class="title"
+      >
+        Create a Board in Workspace 1
+      </span>
+      <span
+        class="description"
+      >
+        Add a board to the sidebar using any of the templates defined below or start from scratch.
+        <br />
+         Members of "
+        <b>
+          Workspace 1
+        </b>
+        " will have access to boards created here.
+      </span>
+      <span
+        class="choose-template-text"
+      >
+        Choose a template
+      </span>
+      <div
+        class="button-container"
+      >
+        <div
+          class="button "
+        >
+          <span>
+            🚴🏻‍♂️
+          </span>
+          <span
+            class="button-title"
+          >
+            Template 1
+          </span>
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              class="Button IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="button "
+        >
+          <span>
+            🚴🏻‍♂️
+          </span>
+          <span
+            class="button-title"
+          >
+            Template Global
+          </span>
+        </div>
+        <div
+          class="button new-template"
+        >
+          <span>
+            <i
+              class="CompassIcon icon-plus AddIcon"
+            />
+          </span>
+          <span
+            class="button-title"
+          >
+            New template
+          </span>
+        </div>
+      </div>
+      <span
+        class="choose-template-text"
+      >
+        or
+      </span>
+      <div
+        class="button "
+      >
+        <span>
+          <svg
+            class="BoardIcon Icon"
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              height="80"
+              rx="5"
+              ry="5"
+              width="80"
+              x="10"
+              y="10"
+            />
+            <polyline
+              points="28,25 28,55"
+              style="stroke-width: 15px;"
+            />
+            <polyline
+              points="50,25 50,70"
+              style="stroke-width: 15px;"
+            />
+            <polyline
+              points="72,25 72,45"
+              style="stroke-width: 15px;"
+            />
+          </svg>
+        </span>
+        <span
+          class="button-title"
+        >
+          Start with an Empty Board
+        </span>
+      </div>
+      You can change the channel using the switcher in the sidebar.
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/emptyCenterPanel not a focalboard Plugin should match snapshot 1`] = `
+<div>
+  <div
+    class="EmptyCenterPanel"
+  >
+    <div
+      class="Hint"
+    >
+      Add or select a board from the sidebar to get started.
+    </div>
+  </div>
+</div>
+`;

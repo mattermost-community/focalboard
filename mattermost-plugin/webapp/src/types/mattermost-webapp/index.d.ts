@@ -7,6 +7,7 @@ export interface PluginRegistry {
     registerProductRoute(route: string, component: React.ElementType)
     unregisterComponent(componentId: string)
     registerProduct(baseURL: string, switcherIcon: string, switcherText: string, switcherLinkURL: string, mainComponent: React.ElementType, headerCompoent: React.ElementType)
+    registerPostWillRenderEmbedComponent(match: (embed: {type: string, data: any}) => void, component: any, toggleable: boolean)
     registerWebSocketEventHandler(event: string, handler: (e: any) => void)
     unregisterWebSocketEventHandler(event: string)
 

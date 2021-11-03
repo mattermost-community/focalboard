@@ -99,7 +99,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
       <span
         id="aria-context"
       >
-         3 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+         7 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
       </span>
     </span>
     <div
@@ -173,6 +173,50 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
           class="KanbanCalculationOptions_CustomOption "
         >
           <span>
+            Count Empty
+             
+            <i
+              class="CompassIcon icon-chevron-right ChevronRightIcon"
+            />
+          </span>
+        </div>
+        <div
+          class="KanbanCalculationOptions_CustomOption "
+        >
+          <span>
+            Count Not Empty
+             
+            <i
+              class="CompassIcon icon-chevron-right ChevronRightIcon"
+            />
+          </span>
+        </div>
+        <div
+          class="KanbanCalculationOptions_CustomOption "
+        >
+          <span>
+            Percent Empty
+             
+            <i
+              class="CompassIcon icon-chevron-right ChevronRightIcon"
+            />
+          </span>
+        </div>
+        <div
+          class="KanbanCalculationOptions_CustomOption "
+        >
+          <span>
+            Percent Not Empty
+             
+            <i
+              class="CompassIcon icon-chevron-right ChevronRightIcon"
+            />
+          </span>
+        </div>
+        <div
+          class="KanbanCalculationOptions_CustomOption "
+        >
+          <span>
             Count Value
              
             <i
@@ -219,7 +263,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
       <span
         id="aria-context"
       >
-         3 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+         7 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
       </span>
     </span>
     <div
@@ -287,6 +331,50 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
           <span>
             Count
              
+          </span>
+        </div>
+        <div
+          class="KanbanCalculationOptions_CustomOption "
+        >
+          <span>
+            Count Empty
+             
+            <i
+              class="CompassIcon icon-chevron-right ChevronRightIcon"
+            />
+          </span>
+        </div>
+        <div
+          class="KanbanCalculationOptions_CustomOption "
+        >
+          <span>
+            Count Not Empty
+             
+            <i
+              class="CompassIcon icon-chevron-right ChevronRightIcon"
+            />
+          </span>
+        </div>
+        <div
+          class="KanbanCalculationOptions_CustomOption "
+        >
+          <span>
+            Percent Empty
+             
+            <i
+              class="CompassIcon icon-chevron-right ChevronRightIcon"
+            />
+          </span>
+        </div>
+        <div
+          class="KanbanCalculationOptions_CustomOption "
+        >
+          <span>
+            Percent Not Empty
+             
+            <i
+              class="CompassIcon icon-chevron-right ChevronRightIcon"
+            />
           </span>
         </div>
         <div

@@ -33,7 +33,6 @@ const MarkdownEditor = (props: Props): JSX. Element => {
         autoDownloadFontAwesome: true,
         toolbar: false,
         status: false,
-        autofocus: true,
         spellChecker: true,
         nativeSpellcheck: true,
         minHeight: '10px',
@@ -111,7 +110,14 @@ const MarkdownEditor = (props: Props): JSX. Element => {
             className={text ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
             style={{display: isEditing ? 'none' : undefined}}
             dangerouslySetInnerHTML={{__html: html}}
-            onClick={() => {
+            onClick={(e) => {
+                const LINK_TAG_NAME = 'a'
+                const element = e.target as Element
+                if (element.tagName.toLowerCase() === LINK_TAG_NAME) {
+                    e.stopPropagation()
+                    return
+                }
+
                 if (!props.readonly && !isEditing) {
                     showEditor()
                 }

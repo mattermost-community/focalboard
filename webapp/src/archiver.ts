@@ -1,11 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+
+import {IAppWindow} from './types'
 import {ArchiveUtils, ArchiveHeader, ArchiveLine, BlockArchiveLine} from './blocks/archive'
 import {Block} from './blocks/block'
 import {Board} from './blocks/board'
 import {LineReader} from './lineReader'
 import mutator from './mutator'
 import {Utils} from './utils'
+
+declare let window: IAppWindow
 
 class Archiver {
     static async exportBoardArchive(board: Board): Promise<void> {
@@ -35,8 +39,8 @@ class Archiver {
         link.click()
 
         // TODO: Review if this is needed in the future, this is to fix the problem with linux webview links
-        if ((window as any).openInNewBrowser) {
-            (window as any).openInNewBrowser(link.href)
+        if (window.openInNewBrowser) {
+            window.openInNewBrowser(link.href)
         }
 
         // TODO: Remove or reuse link

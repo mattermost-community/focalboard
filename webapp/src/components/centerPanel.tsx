@@ -84,7 +84,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {viewType: this.props.activeView.fields.viewType})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: this.props.board.id, view: this.props.activeView.id, viewType: this.props.activeView.fields.viewType})
     }
 
     constructor(props: Props) {
@@ -100,7 +100,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     componentDidUpdate(): void {
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {viewType: this.props.activeView.fields.viewType})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: this.props.board.id, view: this.props.activeView.id, viewType: this.props.activeView.fields.viewType})
     }
 
     render(): JSX.Element {
@@ -211,6 +211,7 @@ class CenterPanel extends React.Component<Props, State> {
 
     private addCardFromTemplate = async (cardTemplateId: string) => {
         const {activeView} = this.props
+
         mutator.performAsUndoGroup(async () => {
             const [, newCardId] = await mutator.duplicateCard(
                 cardTemplateId,
@@ -218,6 +219,7 @@ class CenterPanel extends React.Component<Props, State> {
                 false,
                 async (cardId) => {
                     this.props.updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, cardId]}})
+                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardViaTemplate, {board: this.props.board.id, view: this.props.activeView.id, card: cardId, cardTemplateId})
                     this.showCard(cardId)
                 },
                 async () => {
@@ -232,6 +234,8 @@ class CenterPanel extends React.Component<Props, State> {
         const {activeView, board, groupByProperty} = this.props
 
         const card = createCard()
+
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCard, {board: board.id, view: this.props.activeView.id, card: card.id})
 
         card.parentId = board.id
         card.rootId = board.rootId
@@ -277,10 +281,12 @@ class CenterPanel extends React.Component<Props, State> {
         cardTemplate.fields.isTemplate = true
         cardTemplate.parentId = board.id
         cardTemplate.rootId = board.rootId
+
         await mutator.insertBlock(
             cardTemplate,
             'add card template',
             async () => {
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: this.props.activeView.id, card: cardTemplate.id})
                 this.props.addTemplate(cardTemplate)
                 this.showCard(cardTemplate.id)
             }, async () => {

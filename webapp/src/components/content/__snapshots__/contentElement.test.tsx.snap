@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/content/contentElement return an element 1`] = `
+exports[`components/content/contentElement should match snapshot for checkbox type 1`] = `
 <div>
   <div
     class="CheckboxElement"

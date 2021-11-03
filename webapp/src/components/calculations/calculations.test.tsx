@@ -151,12 +151,42 @@ describe('components/calculations/calculation logic', () => {
         updatedBy: {id: 'property_lastUpdatedBy', type: 'updatedBy', name: '', options: []},
     }
 
+    const autofilledProperties = new Set([properties.createdBy, properties.createdTime, properties.updatedBy, properties.updatedTime])
+
     const intl = createIntl({locale: 'en-us'})
 
     // testing count
     Object.values(properties).forEach((property) => {
         it(`should correctly count for property type "${property.type}"`, function() {
             expect(Calculations.count(cards, property, intl)).toBe('4')
+        })
+    })
+
+    // testing count empty
+    Object.values(properties).filter((p) => !autofilledProperties.has(p)).forEach((property) => {
+        it(`should correctly count empty for property type "${property.type}"`, function() {
+            expect(Calculations.countEmpty(cards, property, intl)).toBe('1')
+        })
+    })
+
+    // testing percent empty
+    Object.values(properties).filter((p) => !autofilledProperties.has(p)).forEach((property) => {
+        it(`should correctly compute empty percent for property type "${property.type}"`, function() {
+            expect(Calculations.percentEmpty(cards, property, intl)).toBe('25%')
+        })
+    })
+
+    // testing count not empty
+    Object.values(properties).filter((p) => !autofilledProperties.has(p)).forEach((property) => {
+        it(`should correctly count not empty for property type "${property.type}"`, function() {
+            expect(Calculations.countNotEmpty(cards, property, intl)).toBe('3')
+        })
+    })
+
+    // testing percent not empty
+    Object.values(properties).filter((p) => !autofilledProperties.has(p)).forEach((property) => {
+        it(`should correctly compute not empty percent for property type "${property.type}"`, function() {
+            expect(Calculations.percentNotEmpty(cards, property, intl)).toBe('75%')
         })
     })
 

@@ -17,9 +17,13 @@ import {Utils} from '../../utils'
 
 import ModalWrapper from '../modalWrapper'
 
+import {IAppWindow} from '../../types'
+
 import RegistrationLink from './registrationLink'
 
 import './sidebarUserMenu.scss'
+
+declare let window: IAppWindow
 
 const SidebarUserMenu = React.memo(() => {
     const history = useHistory()
@@ -81,8 +85,8 @@ const SidebarUserMenu = React.memo(() => {
                                 window.open('https://www.focalboard.com?utm_source=webapp', '_blank')
 
                                 // TODO: Review if this is needed in the future, this is to fix the problem with linux webview links
-                                if ((window as any).openInNewBrowser) {
-                                    (window as any).openInNewBrowser('https://www.focalboard.com?utm_source=webapp')
+                                if (window.openInNewBrowser) {
+                                    window.openInNewBrowser('https://www.focalboard.com?utm_source=webapp')
                                 }
                             }}
                         />

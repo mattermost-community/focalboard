@@ -3,14 +3,15 @@
 exports[`components/content/TextElement return a textElement 1`] = `
 <div>
   <div
-    class="MarkdownEditor octo-editor  "
+    class="MarkdownEditor octo-editor  active"
   >
     <div
       class="octo-editor-preview octo-placeholder"
+      style="display: none;"
     />
     <div
       class="octo-editor-active Editor"
-      style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+      style=""
     >
       <div
         id="test-id-wrapper"
@@ -140,6 +141,7 @@ exports[`components/content/TextElement return a textElement and do a blur event
   >
     <div
       class="octo-editor-preview octo-placeholder"
+      style=""
     />
     <div
       class="octo-editor-active Editor"

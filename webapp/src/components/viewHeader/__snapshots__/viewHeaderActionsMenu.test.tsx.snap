@@ -10,14 +10,14 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
       <div
         class="Menu noselect bottom"
       >
@@ -120,14 +120,14 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
       <div
         class="Menu noselect bottom"
       >
@@ -230,14 +230,14 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu with Share Boar
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
       <div
         class="Menu noselect bottom"
       >
@@ -340,14 +340,14 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu without Share B
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
       <div
         class="Menu noselect bottom"
       >

@@ -58,7 +58,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
         if (!title) {
             titleRef.current?.focus()
         }
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewCard, {card: card.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewCard, {board: props.board.id, view: props.activeView.id, card: card.id})
     }, [])
 
     useEffect(() => {

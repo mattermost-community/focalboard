@@ -1,4 +1,5 @@
 //go:generate mockgen --build_flags=--mod=mod -destination=mockstore/mockstore.go -package mockstore . Store
+//go:generate go run ./generators/main.go
 package store
 
 import "github.com/mattermost/focalboard/server/model"
@@ -20,10 +21,13 @@ type Store interface {
 	GetAllBlocks(c Container) ([]model.Block, error)
 	GetRootID(c Container, blockID string) (string, error)
 	GetParentID(c Container, blockID string) (string, error)
+	// @withTransaction
 	InsertBlock(c Container, block *model.Block, userID string) error
+	// @withTransaction
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
 	GetBlock(c Container, blockID string) (*model.Block, error)
+	// @withTransaction
 	PatchBlock(c Container, blockID string, blockPatch *model.BlockPatch, userID string) error
 
 	Shutdown() error
