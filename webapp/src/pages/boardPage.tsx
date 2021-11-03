@@ -163,13 +163,20 @@ const BoardPage = (props: Props): JSX.Element => {
         }
     }, [board?.title, activeView?.title])
 
+    if (props.readonly) {
+        useEffect(() => {
+            if (board?.id && activeView?.id) {
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: board?.id, view: activeView?.id})
+            }
+        }, [board?.id, activeView?.id])
+    }
+
     useEffect(() => {
         let loadAction: any = initialLoad /* eslint-disable-line @typescript-eslint/no-explicit-any */
         let token = localStorage.getItem('focalboardSessionId') || ''
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
             token = token || queryString.get('r') || ''
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: board.id, view: activeView.id})
         }
 
         dispatch(loadAction(match.params.boardId))
