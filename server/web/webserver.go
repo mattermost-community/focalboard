@@ -98,7 +98,7 @@ func (ws *Server) registerRoutes() {
 func (ws *Server) Start() {
 	ws.registerRoutes()
 	if ws.port == -1 {
-		ws.logger.Error("server not bind to any port")
+		ws.logger.Debug("server not bind to any port")
 		return
 	}
 
