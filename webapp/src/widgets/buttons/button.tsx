@@ -18,6 +18,7 @@ type Props = {
     size?: string
     danger?: boolean
     className?: string
+    rightIcon?: boolean
 }
 
 function Button(props: Props): JSX.Element {
@@ -39,8 +40,9 @@ function Button(props: Props): JSX.Element {
             title={props.title}
             onBlur={props.onBlur}
         >
-            {props.icon}
+            {!props.rightIcon && props.icon}
             <span>{props.children}</span>
+            {props.rightIcon && props.icon}
         </button>)
 }
 
