@@ -172,11 +172,15 @@
     .DayPicker-Day--start {
         border-top-left-radius: 50% !important;
         border-bottom-left-radius: 50% !important;
+        border-top-right-radius: 50% !important;
+        border-bottom-right-radius: 50% !important;
     }
 
     .DayPicker-Day--end {
         border-top-right-radius: 50% !important;
         border-bottom-right-radius: 50% !important;
+        border-top-left-radius: 50% !important;
+        border-bottom-left-radius: 50% !important;
     }
 
     .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {

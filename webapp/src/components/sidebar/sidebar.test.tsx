@@ -69,6 +69,85 @@ describe('components/sidebarSidebar', () => {
         expect(container).toMatchSnapshot()
     })
 
+    test('sidebar hidden', () => {
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
+            },
+            boards: {
+                boards: [],
+            },
+            views: {
+                views: [],
+            },
+            users: {
+                me: {},
+            },
+        })
+
+        const history = createMemoryHistory()
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <Sidebar isDashboard={true}/>
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+
+        const hideSidebar = container.querySelector('.Button > .HideSidebarIcon')
+        expect(hideSidebar).toBeDefined()
+
+        userEvent.click(hideSidebar as Element)
+        expect(container).toMatchSnapshot()
+
+        const showSidebar = container.querySelector('.Button > .ShowSidebarIcon')
+        expect(showSidebar).toBeDefined()
+    })
+
+    test('sidebar expect hidden', () => {
+        const customGlobal = global as any
+
+        customGlobal.innerWidth = 500
+
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
+            },
+            boards: {
+                boards: [],
+            },
+            views: {
+                views: [],
+            },
+            users: {
+                me: {},
+            },
+        })
+
+        const history = createMemoryHistory()
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <Sidebar isDashboard={true}/>
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+
+        const hideSidebar = container.querySelector('.Button > .HideSidebarIcon')
+        expect(hideSidebar).toBeNull()
+
+        const showSidebar = container.querySelector('.Button > .ShowSidebarIcon')
+        expect(showSidebar).toBeDefined()
+
+        customGlobal.innerWidth = 1024
+    })
+
     test('global templates', () => {
         const store = mockStore({
             workspace: {
@@ -104,6 +183,8 @@ describe('components/sidebarSidebar', () => {
             </ReduxProvider>,
         )
         const {container} = render(component)
+        expect(container).toMatchSnapshot()
+
         const addBoardButton = container.querySelector('.SidebarAddBoardMenu > .MenuWrapper')
         expect(addBoardButton).toBeDefined()
         userEvent.click(addBoardButton as Element)
