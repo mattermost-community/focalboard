@@ -1,6 +1,7 @@
 .SidebarSettingsMenu {
     .menu-entry {
         display: flex;
+        cursor: pointer;
         flex-direction: row;
         padding: 0 16px 0 8px;
         height: 36px;
