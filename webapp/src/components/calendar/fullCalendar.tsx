@@ -24,7 +24,7 @@ type Props = {
     board: Board
     activeView: BoardView
     cards: Card[]
-
+    initialDate?: Date
     dateDisplayProperty?: IPropertyTemplate
     showCard: (cardId: string) => void
     addCard: (properties: Record<string, string>) => void
@@ -51,6 +51,10 @@ const timeZoneOffset = (date: number): number => {
 const CalendarFullView = (props: Props): JSX.Element|null => {
     const intl = useIntl()
     const {cards, board, activeView} = props
+    let {initialDate} = props
+    if (!initialDate) {
+        initialDate = new Date()
+    }
 
     let dateDisplayProperty = props.dateDisplayProperty
 
@@ -78,9 +82,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
             const dateToNumber = dateProperty.to ? dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to)) : dateFrom.getTime()
             dateTo = new Date(dateToNumber + oneDay) // Add one day.
             dateTo.setHours(0, 0, 0, 0)
-
-            return [{
-            }]
         }
         return [{
             id: card.id,
@@ -157,6 +158,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
             className='CalendarContainer'
         >
             <FullCalendar
+                initialDate={initialDate}
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView='dayGridMonth'
                 events={myEventsList}
