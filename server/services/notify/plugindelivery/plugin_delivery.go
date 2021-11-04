@@ -89,6 +89,9 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 		CardID:       evt.Card.ID,
 	}
 	post, err = embedLinkInPost(post, embed)
+	if err != nil {
+		return err
+	}
 
 	return pd.api.CreatePost(post)
 }
