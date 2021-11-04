@@ -11,7 +11,6 @@ import (
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 type TestHelper struct {
@@ -72,8 +71,7 @@ func TestOnConfigurationChange(t *testing.T) {
 		p.server = th.Server
 		p.wsPluginAdapter = &FakePluginAdapter{}
 
-		err := p.OnConfigurationChange()
-		require.NoError(t, err)
+		p.OnConfigurationChange()
 		assert.Equal(t, 1, count)
 
 		// make sure both App and Server got updated
