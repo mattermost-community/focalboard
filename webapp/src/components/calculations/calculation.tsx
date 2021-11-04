@@ -9,7 +9,7 @@ import {IPropertyTemplate} from '../../blocks/board'
 
 import ChevronUp from '../../widgets/icons/chevronUp'
 
-import {CommonCalculationOptionProps, Options} from './options'
+import {CommonCalculationOptionProps, Options, optionDisplayNameString} from './options'
 
 import Calculations from './calculations'
 import './calculation.scss'
@@ -64,7 +64,7 @@ const Calculation = (props: Props): JSX.Element => {
             }
 
             <span className='calculationLabel'>
-                {valueOption!.displayName}
+                {optionDisplayNameString(valueOption!, intl)}
             </span>
 
             {
