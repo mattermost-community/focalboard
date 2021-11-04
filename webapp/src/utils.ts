@@ -437,6 +437,13 @@ class Utils {
         return Boolean((window as any).isFocalboardPlugin)
     }
 
+    // this is a temporary solution while we're using legacy routes
+    // for shared boards as a way to check if we're accessing the
+    // legacy routes inside the plugin
+    static isFocalboardLegacy(): boolean {
+        return window.location.pathname.includes('/plugins/focalboard')
+    }
+
     static userAgent(): string {
         return window.navigator.userAgent
     }

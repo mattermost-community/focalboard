@@ -51,6 +51,12 @@ const BoardPage = (props: Props) => {
 
     let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
 
+    // if we're in a legacy route and not showing a shared board,
+    // redirect to the new URL schema equivalent
+    if (Utils.isFocalboardLegacy() && !props.readonly) {
+        window.location.href = window.location.href.replace('/plugins/focalboard', '/boards')
+    }
+
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
         workspaceId = match.params.workspaceId || workspaceId
