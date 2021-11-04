@@ -1,12 +1,11 @@
 package main
 
 import (
-	"errors"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/integrationtests"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
+	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/ws"
 	serverModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
@@ -15,20 +14,20 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var errGetUnsanitizedConfig = errors.New("GetUnsanitizedConfig Error")
-
 type TestHelper struct {
 	Server *server.Server
 }
 
 func SetupTestHelper() *TestHelper {
 	th := &TestHelper{}
-	th.Server = newTestServer("")
+	th.Server = newTestServer()
 	return th
 }
 
-func newTestServer(singleUserToken string) *server.Server {
-	srv, err := server.New(server.Params{})
+func newTestServer() *server.Server {
+	srv, err := server.New(server.Params{
+		Cfg: &config.Configuration{},
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -64,7 +63,7 @@ func TestOnConfigurationChange(t *testing.T) {
 	}
 
 	t.Run("Test Load Plugin Success", func(t *testing.T) {
-		th := integrationtests.SetupTestHelperWithoutToken()
+		th := SetupTestHelper()
 		api := &plugintest.API{}
 		api.On("GetUnsanitizedConfig").Return(baseConfig)
 
