@@ -1,23 +1,23 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useCallback} from 'react'
-import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
+import React, {useCallback, useEffect} from 'react'
+import {FormattedMessage, IntlShape, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board, createBoard} from '../../blocks/board'
 import {createBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
+import {getSortedTemplates} from '../../store/boards'
+import {fetchGlobalTemplates, getGlobalTemplates} from '../../store/globalTemplates'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import AddIcon from '../../widgets/icons/add'
 import BoardIcon from '../../widgets/icons/board'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {getGlobalTemplates, fetchGlobalTemplates} from '../../store/globalTemplates'
-import {getSortedTemplates} from '../../store/boards'
 
 import BoardTemplateMenuItem from './boardTemplateMenuItem'
-
 import './sidebarAddBoardMenu.scss'
 
 type Props = {
@@ -40,6 +40,7 @@ export const addBoardClicked = async (showBoard: (id: string) => void, intl: Int
         [board, view],
         'add board',
         async () => {
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: board.id})
             showBoard(board.id)
         },
         async () => {
@@ -66,6 +67,7 @@ export const addBoardTemplateClicked = async (showBoard: (id: string) => void, i
         [boardTemplate, view],
         'add board template',
         async () => {
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardTemplate, {board: boardTemplate.id})
             showBoard(boardTemplate.id)
         }, async () => {
             if (activeBoardId) {

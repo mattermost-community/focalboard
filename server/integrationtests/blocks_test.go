@@ -26,14 +26,14 @@ func TestGetBlocks(t *testing.T) {
 			RootID:   initialID1,
 			CreateAt: 1,
 			UpdateAt: 1,
-			Type:     "board",
+			Type:     model.TypeBoard,
 		},
 		{
 			ID:       initialID2,
 			RootID:   initialID2,
 			CreateAt: 1,
 			UpdateAt: 1,
-			Type:     "board",
+			Type:     model.TypeBoard,
 		},
 	}
 	newBlocks, resp = th.Client.InsertBlocks(newBlocks)
@@ -73,7 +73,7 @@ func TestPostBlock(t *testing.T) {
 			RootID:   initialID1,
 			CreateAt: 1,
 			UpdateAt: 1,
-			Type:     "board",
+			Type:     model.TypeBoard,
 			Title:    "New title",
 		}
 
@@ -102,14 +102,14 @@ func TestPostBlock(t *testing.T) {
 				RootID:   initialID2,
 				CreateAt: 1,
 				UpdateAt: 1,
-				Type:     "board",
+				Type:     model.TypeBoard,
 			},
 			{
 				ID:       initialID3,
 				RootID:   initialID3,
 				CreateAt: 1,
 				UpdateAt: 1,
-				Type:     "board",
+				Type:     model.TypeBoard,
 			},
 		}
 
@@ -140,7 +140,7 @@ func TestPostBlock(t *testing.T) {
 			RootID:   blockID1,
 			CreateAt: 1,
 			UpdateAt: 20,
-			Type:     "board",
+			Type:     model.TypeBoard,
 			Title:    "Updated title",
 		}
 
@@ -176,7 +176,7 @@ func TestPatchBlock(t *testing.T) {
 		RootID:   initialID,
 		CreateAt: 1,
 		UpdateAt: 1,
-		Type:     "board",
+		Type:     model.TypeBoard,
 		Title:    "New title",
 		Fields:   map[string]interface{}{"test": "test value", "test2": "test value 2"},
 	}
@@ -280,7 +280,7 @@ func TestDeleteBlock(t *testing.T) {
 			RootID:   initialID,
 			CreateAt: 1,
 			UpdateAt: 1,
-			Type:     "board",
+			Type:     model.TypeBoard,
 			Title:    "New title",
 		}
 
@@ -337,7 +337,7 @@ func TestGetSubtree(t *testing.T) {
 				RootID:   parentBlockID,
 				CreateAt: 1,
 				UpdateAt: 1,
-				Type:     "board",
+				Type:     model.TypeBoard,
 			},
 			{
 				ID:       childBlockID1,
@@ -345,7 +345,7 @@ func TestGetSubtree(t *testing.T) {
 				ParentID: parentBlockID,
 				CreateAt: 2,
 				UpdateAt: 2,
-				Type:     "card",
+				Type:     model.TypeCard,
 			},
 			{
 				ID:       childBlockID2,
@@ -353,7 +353,7 @@ func TestGetSubtree(t *testing.T) {
 				ParentID: parentBlockID,
 				CreateAt: 2,
 				UpdateAt: 2,
-				Type:     "card",
+				Type:     model.TypeCard,
 			},
 		}
 

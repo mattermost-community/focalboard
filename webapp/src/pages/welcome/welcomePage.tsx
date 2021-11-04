@@ -8,6 +8,7 @@ import {useLocation, useHistory} from 'react-router-dom'
 import BoardWelcomePNG from '../../../static/boards-welcome.png'
 import BoardWelcomeSmallPNG from '../../../static/boards-welcome-small.png'
 
+import Button from '../../widgets/buttons/button'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import {UserSettings} from '../../userSettings'
 
@@ -63,19 +64,22 @@ const WelcomePage = React.memo(() => {
                     alt='Boards Welcome Image'
                 />
 
-                <button
+                <Button
                     onClick={goForward}
-                    className='Button filled size--large'
+                    filled={true}
+                    size='large'
+                    icon={
+                        <CompassIcon
+                            icon='chevron-right'
+                            className='Icon Icon--right'
+                        />}
+                    rightIcon={true}
                 >
                     <FormattedMessage
                         id='WelcomePage.Explore.Button'
                         defaultMessage='Explore'
                     />
-                    <CompassIcon
-                        icon='chevron-right'
-                        className='Icon Icon--right'
-                    />
-                </button>
+                </Button>
             </div>
         </div>
     )

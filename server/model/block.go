@@ -34,7 +34,7 @@ type Block struct {
 
 	// The block type
 	// required: true
-	Type string `json:"type"`
+	Type BlockType `json:"type"`
 
 	// The display title
 	// required: false
@@ -78,7 +78,7 @@ type BlockPatch struct {
 
 	// The block type
 	// required: false
-	Type *string `json:"type"`
+	Type *BlockType `json:"type"`
 
 	// The display title
 	// required: false
@@ -112,7 +112,7 @@ func (b Block) LogClone() interface{} {
 		ID       string
 		ParentID string
 		RootID   string
-		Type     string
+		Type     BlockType
 	}{
 		ID:       b.ID,
 		ParentID: b.ParentID,

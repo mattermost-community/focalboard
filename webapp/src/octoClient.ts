@@ -214,6 +214,15 @@ class OctoClient {
         return this.getBlocksWithPath(path)
     }
 
+    async getBlocksWithBlockID(blockID: string, workspaceID?: string, optionalReadToken?: string): Promise<Block[]> {
+        let path = this.workspacePath(workspaceID) + `/blocks?block_id=${blockID}`
+        const readToken = optionalReadToken || Utils.getReadToken()
+        if (readToken) {
+            path += `&read_token=${readToken}`
+        }
+        return this.getBlocksWithPath(path)
+    }
+
     async getAllBlocks(): Promise<Block[]> {
         const path = this.workspacePath() + '/blocks?all=true'
         return this.getBlocksWithPath(path)
