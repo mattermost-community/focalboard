@@ -28,4 +28,4 @@ Follow the [steps here](../#with-nginx) to configure your web proxy (NGINX, Apac
 
 ## Enable Reliable Websockets
 
-The Focalboard plugin requires [the Reliable Websockets feature](https://docs.mattermost.com/configure/configuration-settings.html?highlight=enablereliablewebsockets#enable-reliable-websockets) to work properly. Check in your configuration if the property `ServiceSettings.EnableReliableWebSockets` is set to `true` and if it's not, enable it, restart the server and reload the clients before using the Focalboard plugin.
+The Focalboard plugin requires [the Reliable Websockets feature](https://docs.mattermost.com/configure/configuration-settings.html?highlight=enablereliablewebsockets#enable-reliable-websockets) to be enabled. Check in the Mattermost server configuration that the property `ServiceSettings.EnableReliableWebSockets` is set to `true`. If it's not, enable it, restart the server and reload the clients before using the Focalboard plugin.
