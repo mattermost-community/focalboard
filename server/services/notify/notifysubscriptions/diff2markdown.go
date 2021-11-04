@@ -11,11 +11,12 @@ import (
 	"text/template"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/wiggin77/merror"
 )
 
 const (
-	// board notifications.
+	// board change notifications.
 	defAddBoardNotify = "{{.Username}} has added the board {{.NewBlock | makeLink}}"
 
 	defDeleteBoardNotify = "{{.Username}} has deleted the board {{.NewBlock | makeLink}}"
@@ -26,20 +27,29 @@ const (
 	defModifyBoardDescriptionNotify = "{{.Username}} has updated the description for the board {{.Board | makeLink}}\n" +
 		"```Description:\n~~{{.OldBlock | getBoardDescription }}~~\n{{.NewBlock | getBoardDescription}}```"
 
-	// card notifications.
+	// card change notifications.
 	defAddCardNotify = "{{.Username}} has added the card {{.NewBlock | makeLink}}"
 
-	defAddCardTitleNotify = "{{.Username}} has added a title for card {{.OldBlock | makeLink}}\n" +
-		"```Title:\n{{.NewBlock.Title}}```"
-
-	defModifyCardTitleNotify = "{{.Username}} has modified the title for card {{.OldBlock | makeLink}}\n" +
-		"```Title:\n~~{{.OldBlock.Title}}~~\n{{.NewBlock.Title}}```"
+	defModifyCardTitleNotify = "Title:\t\t\t{{.NewBlock.Title}}  ~~{{.OldBlock.Title}}~~\n"
 
 	defModifyCardNotify = "{{.Username}} has modified the card {{.Card.Title}}"
 
 	defDeleteCardNotify = "{{.Username}} has deleted the card {{.Card.Title}}"
 
 	defModifyCardPropsNotify = "{{.Name}}:\t\t\t{{.NewValue}}  ~~{{.OldValue}}~~\n"
+
+	defModifyCardContentNotify = "{{.NewValue}}  ~~{{.OldValue}}~~\n"
+
+	defModifyCardAddCommentNotify = "Comment: {{.NewValue}}\n"
+
+	defModifyCardRemoveCommentNotify = "Comment: ~~{{.OldValue}}~~\n"
+
+	// block change notifications
+	defAddBlockNotify = "Added: {{.NewValue}}\n"
+
+	defModifyBlockNotify = "{{.NewValue}} ~~{{.OldValue}}~~\n"
+
+	defDeleteBlockNotify = "Removed: ~~{{.OldValue}}~~\n"
 )
 
 var (
@@ -180,29 +190,65 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 
 	// at this point new and old block are non-nil
 
+	if err := execTemplate(w, "ModifyCardNotify", opts, defModifyCardNotify, cardDiff); err != nil {
+		return fmt.Errorf("cannot write notification for card %s: %w", cardDiff.NewBlock.ID, err)
+	}
+
+	pairWriter := utils.NewPairWriter(w)
+	defer func() { _, _ = pairWriter.WriteCloseIfOpened("```") }()
+
 	// title changes
 	if cardDiff.NewBlock.Title != cardDiff.OldBlock.Title {
-		var err error
-		if cardDiff.OldBlock.Title == "" {
-			err = execTemplate(w, "AddCardTitleNotify", opts, defAddCardTitleNotify, cardDiff)
-		} else {
-			err = execTemplate(w, "ModifyCardTitleNotify", opts, defModifyCardTitleNotify, cardDiff)
-		}
-		if err != nil {
-			return err
+		_, _ = pairWriter.WriteOpen("```")
+		if err := execTemplate(w, "ModifyCardTitleNotify", opts, defModifyCardTitleNotify, cardDiff); err != nil {
+			return fmt.Errorf("cannot write title change for card %s: %w", cardDiff.NewBlock.ID, err)
 		}
 	}
 
 	// property changes
-	for _, propDiff := range cardDiff.PropDiffs {
+	if len(cardDiff.PropDiffs) > 0 {
+		_, _ = pairWriter.WriteOpen("```")
 
+		for _, propDiff := range cardDiff.PropDiffs {
+			if err := execTemplate(w, "ModifyCardPropsNotify", opts, defModifyCardPropsNotify, propDiff); err != nil {
+				return fmt.Errorf("cannot write property changes for card %s: %w", cardDiff.NewBlock.ID, err)
+			}
+		}
+	}
+
+	// content/description changes
+	for _, child := range cardDiff.Diffs {
+		if child.BlockType != model.TypeComment {
+			_, _ = pairWriter.WriteOpen("```")
+
+			if err := execTemplate(w, "ModifyCardContentNotify", opts, defModifyCardContentNotify, child); err != nil {
+				return fmt.Errorf("cannot write content change for card %s: %w", cardDiff.NewBlock.ID, err)
+			}
+		}
 	}
 
 	// comment add/delete
+	for _, child := range cardDiff.Diffs {
+		if child.BlockType == model.TypeComment {
+			if child.NewBlock != nil && child.OldBlock == nil {
+				_, _ = pairWriter.WriteOpen("```")
+				// added comment
+				if err := execTemplate(w, "ModifyCardAddCommentNotify", opts, defModifyCardAddCommentNotify, child); err != nil {
+					return fmt.Errorf("cannot write comment for card %s: %w", cardDiff.NewBlock.ID, err)
+				}
+			}
 
-	// description changes
+			if child.NewBlock == nil && child.OldBlock != nil {
+				_, _ = pairWriter.WriteOpen("```")
+				// deleted comment
+				if err := execTemplate(w, "ModifyCardRemoveCommentNotify", opts, defModifyCardRemoveCommentNotify, child); err != nil {
+					return fmt.Errorf("cannot write removed comment for card %s: %w", cardDiff.NewBlock.ID, err)
+				}
+			}
+		}
+	}
 
-	return fmt.Errorf("not implemented yet")
+	return nil
 }
 
 func blockDiff2Markdown(w io.Writer, diff *Diff, opts MarkdownOpts) error {
