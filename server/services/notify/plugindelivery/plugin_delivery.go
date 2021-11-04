@@ -80,7 +80,6 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 		ChannelId: channel.Id,
 		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),
 	}
-
 	return pd.api.CreatePost(post)
 }
 
