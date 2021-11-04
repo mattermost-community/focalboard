@@ -77,14 +77,14 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
             options: [],
         })
 
-        const component = (
+        const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
                 property={boardWithProps.fields.cardProperties[1]}
                 menuOpen={true}
                 onChange={() => {}}
                 cardProperties={boardWithProps.fields.cardProperties}
-            />
+            />,
         )
 
         const {getAllByText} = render(component)
