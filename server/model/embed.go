@@ -1,4 +1,4 @@
-package main
+package model
 
 import (
 	"encoding/json"
@@ -18,7 +18,7 @@ type BoardsEmbed struct {
 	ReadToken    string `json:"readToken,omitempty"`
 }
 
-func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) (*mmModel.Post, error) {
+func PostWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) (*mmModel.Post, error) {
 	if _, ok := post.GetProps()["boards"]; ok {
 		post.AddProp("boards", nil)
 	}
@@ -63,7 +63,6 @@ func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) (*mmModel.Po
 		ReadToken:    queryParams.Get("r"),
 		OriginalPath: u.RequestURI(),
 	}
-
 	return embedLinkInPost(post, embed)
 }
 

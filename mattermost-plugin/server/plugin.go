@@ -18,6 +18,7 @@ import (
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
+	boardsModel "github.com/mattermost/focalboard/server/model"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -245,7 +246,7 @@ func defaultLoggingConfig() string {
 }
 
 func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) {
-	post, err := postWithBoardsEmbed(post, p.API.GetConfig().FeatureFlags.BoardsUnfurl)
+	post, err := boardsModel.PostWithBoardsEmbed(post, p.API.GetConfig().FeatureFlags.BoardsUnfurl)
 	if err != nil {
 		p.server.Logger().Warn("Error embedding link in post", mlog.Err(err))
 	}
@@ -253,7 +254,7 @@ func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mm
 }
 
 func (p *Plugin) MessageWillBeUpdated(_ *plugin.Context, newPost, _ *mmModel.Post) (*mmModel.Post, string) {
-	post, err := postWithBoardsEmbed(newPost, p.API.GetConfig().FeatureFlags.BoardsUnfurl)
+	post, err := boardsModel.PostWithBoardsEmbed(newPost, p.API.GetConfig().FeatureFlags.BoardsUnfurl)
 	if err != nil {
 		p.server.Logger().Warn("Error embedding link in post", mlog.Err(err))
 	}
