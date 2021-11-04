@@ -4,6 +4,7 @@
 package plugindelivery
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/services/notify"
@@ -80,6 +81,15 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 		ChannelId: channel.Id,
 		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),
 	}
+
+	embed := cardEmbed{
+		OriginalPath: link,
+		WorkspaceID:  evt.Workspace,
+		BoardID:      evt.Board.ID,
+		CardID:       evt.Card.ID,
+	}
+	post, err = embedLinkInPost(post, embed)
+
 	return pd.api.CreatePost(post)
 }
 
@@ -90,4 +100,32 @@ func (pd *PluginDelivery) getTeamID(evt notify.BlockChangeEvent) (string, error)
 		return "", err
 	}
 	return channel.TeamId, nil
+}
+
+type cardEmbed struct {
+	OriginalPath string `json:"originalPath"`
+	WorkspaceID  string `json:"workspaceID"`
+	BoardID      string `json:"boardID"`
+	CardID       string `json:"cardID"`
+}
+
+func embedLinkInPost(post *model.Post, embed cardEmbed) (*model.Post, error) {
+	b, err := json.Marshal(embed)
+	if err != nil {
+		return post, fmt.Errorf("could not marshal BoardsEmbed: %w", err)
+	}
+
+	cardPostEmbed := &model.PostEmbed{
+		Type: model.PostEmbedBoards,
+		Data: string(b),
+	}
+
+	if post.Metadata == nil {
+		post.Metadata = &model.PostMetadata{}
+	}
+
+	post.Metadata.Embeds = []*model.PostEmbed{cardPostEmbed}
+	post.AddProp("boards", string(b))
+
+	return post, nil
 }

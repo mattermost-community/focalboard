@@ -1573,6 +1573,20 @@ func (mr *MockAPIMockRecorder) InstallPlugin(arg0, arg1 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallPlugin", reflect.TypeOf((*MockAPI)(nil).InstallPlugin), arg0, arg1)
 }
 
+// IsEnterpriseReady mocks base method.
+func (m *MockAPI) IsEnterpriseReady() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsEnterpriseReady")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsEnterpriseReady indicates an expected call of IsEnterpriseReady.
+func (mr *MockAPIMockRecorder) IsEnterpriseReady() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsEnterpriseReady", reflect.TypeOf((*MockAPI)(nil).IsEnterpriseReady))
+}
+
 // KVCompareAndDelete mocks base method.
 func (m *MockAPI) KVCompareAndDelete(arg0 string, arg1 []byte) (bool, *model.AppError) {
 	m.ctrl.T.Helper()
