@@ -52,6 +52,22 @@ func (da *pluginAPIAdapter) CreatePost(post *model.Post) error {
 	return da.client.Post.CreatePost(post)
 }
 
+func (da *pluginAPIAdapter) CreatePostWithEmbededCard(post *model.Post, workspaceID, boardID, cardID, requestURI string) error {
+	embed := BoardsEmbed{
+		OriginalPath: requestURI,
+		WorkspaceID:  workspaceID,
+		BoardID:      boardID,
+		CardID:       cardID,
+	}
+
+	post, err := embedLinkInPost(post, embed)
+	if err != nil {
+		return err
+	}
+
+	return da.client.Post.CreatePost(post)
+}
+
 func (da *pluginAPIAdapter) GetUserByID(userID string) (*model.User, error) {
 	return da.client.User.Get(userID)
 }
