@@ -33,7 +33,7 @@ export type DateProperty = {
     timeZone?: string
 }
 
-const loadedLocales: Record<string, any> = {}
+const loadedLocales: Record<string, moment.Locale> = {}
 
 function DateRange(props: Props): JSX.Element {
     const {className, value, showEmptyPlaceholder, onChange} = props
@@ -80,9 +80,8 @@ function DateRange(props: Props): JSX.Element {
 
     const locale = intl.locale.toLowerCase()
     if (locale && locale !== 'en' && !loadedLocales[locale]) {
-        /* eslint-disable global-require */
+        // eslint-disable-next-line global-require
         loadedLocales[locale] = require(`moment/locale/${locale}`)
-        /* eslint-disable global-require */
     }
 
     const handleDayClick = (day: Date) => {
