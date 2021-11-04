@@ -6,6 +6,8 @@ package model
 import (
 	"errors"
 	"strings"
+
+	"github.com/mattermost/focalboard/server/utils"
 )
 
 // BlockType represents a block type.
@@ -24,6 +26,7 @@ func (bt BlockType) String() string {
 	return string(bt)
 }
 
+// BlockTypeFromString returns an appropriate BlockType for the specified string.
 func BlockTypeFromString(s string) (BlockType, error) {
 	switch strings.ToLower(s) {
 	case "board":
@@ -38,6 +41,21 @@ func BlockTypeFromString(s string) (BlockType, error) {
 		return TypeComment, nil
 	}
 	return TypeUnknown, ErrInvalidBlockType{s}
+}
+
+// BlockType2IDType returns an appropriate IDType for the specified BlockType.
+func BlockType2IDType(blockType BlockType) utils.IDType {
+	switch blockType {
+	case TypeBoard:
+		return utils.IDTypeBoard
+	case TypeCard:
+		return utils.IDTypeCard
+	case TypeView:
+		return utils.IDTypeView
+	case TypeText, TypeComment:
+		return utils.IDTypeBlock
+	}
+	return utils.IDTypeNone
 }
 
 // ErrInvalidBlockType is returned wherever an invalid block type was provided.

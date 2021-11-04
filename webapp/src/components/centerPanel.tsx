@@ -235,7 +235,7 @@ class CenterPanel extends React.Component<Props, State> {
 
         const card = createCard()
 
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCard, {board: board.id, view: this.props.activeView.id, card: card.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCard, {board: board.id, view: activeView.id, card: card.id})
 
         card.parentId = board.id
         card.rootId = board.rootId
@@ -275,7 +275,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private addCardTemplate = async () => {
-        const {board} = this.props
+        const {board, activeView} = this.props
 
         const cardTemplate = createCard()
         cardTemplate.fields.isTemplate = true
@@ -286,7 +286,7 @@ class CenterPanel extends React.Component<Props, State> {
             cardTemplate,
             'add card template',
             async () => {
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: this.props.activeView.id, card: cardTemplate.id})
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: activeView.id, card: cardTemplate.id})
                 this.props.addTemplate(cardTemplate)
                 this.showCard(cardTemplate.id)
             }, async () => {
