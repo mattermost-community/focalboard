@@ -6,6 +6,7 @@ package plugindelivery
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 
 	"github.com/mattermost/focalboard/server/services/notify"
 
@@ -83,7 +84,7 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 	}
 
 	embed := cardEmbed{
-		OriginalPath: link,
+		OriginalPath: getRequestURI(link),
 		WorkspaceID:  evt.Workspace,
 		BoardID:      evt.Board.ID,
 		CardID:       evt.Card.ID,
@@ -131,4 +132,12 @@ func embedLinkInPost(post *model.Post, embed cardEmbed) (*model.Post, error) {
 	post.AddProp("boards", string(b))
 
 	return post, nil
+}
+
+func getRequestURI(rawURL string) string {
+	url, err := url.Parse(rawURL)
+	if err != nil {
+		return ""
+	}
+	return url.RequestURI()
 }
