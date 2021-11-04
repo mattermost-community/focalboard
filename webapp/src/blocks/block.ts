@@ -15,6 +15,7 @@ interface BlockPatch {
     schema?: number
     type?: BlockTypes
     title?: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updatedFields?: Record<string, any>
     deletedFields?: string[]
     deleteAt?: number
@@ -31,6 +32,7 @@ interface Block {
     schema: number
     type: BlockTypes
     title: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fields: Record<string, any>
 
     createAt: number

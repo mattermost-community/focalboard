@@ -7,6 +7,7 @@ import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import {TestBlockFactory} from '../../../test/testBlockFactory'
+import {wrapIntl} from '../../../testUtils'
 
 import {KanbanCalculationOptions} from './calculationOptions'
 
@@ -14,14 +15,14 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
     const board = TestBlockFactory.createBoard()
 
     test('base case', () => {
-        const component = (
+        const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
                 property={board.fields.cardProperties[1]}
                 menuOpen={false}
                 onChange={() => {}}
                 cardProperties={board.fields.cardProperties}
-            />
+            />,
         )
 
         const {container} = render(component)
@@ -29,14 +30,14 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
     })
 
     test('with menu open', () => {
-        const component = (
+        const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
                 property={board.fields.cardProperties[1]}
                 menuOpen={true}
                 onChange={() => {}}
                 cardProperties={board.fields.cardProperties}
-            />
+            />,
         )
 
         const {container} = render(component)
@@ -44,14 +45,14 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
     })
 
     test('with submenu open', () => {
-        const component = (
+        const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
                 property={board.fields.cardProperties[1]}
                 menuOpen={true}
                 onChange={() => {}}
                 cardProperties={board.fields.cardProperties}
-            />
+            />,
         )
 
         const {container, getByText} = render(component)
@@ -59,5 +60,36 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
         expect(countUniqueValuesOption).toBeDefined()
         userEvent.hover(countUniqueValuesOption)
         expect(container).toMatchSnapshot()
+    })
+
+    test('duplicate property types', () => {
+        const boardWithProps = TestBlockFactory.createBoard()
+        boardWithProps.fields.cardProperties.push({
+            id: 'number-property-1',
+            name: 'A Number Property - 1',
+            type: 'number',
+            options: [],
+        })
+        boardWithProps.fields.cardProperties.push({
+            id: 'number-property-2',
+            name: 'A Number Propert - 2y',
+            type: 'number',
+            options: [],
+        })
+
+        const component = (
+            <KanbanCalculationOptions
+                value={'count'}
+                property={boardWithProps.fields.cardProperties[1]}
+                menuOpen={true}
+                onChange={() => {}}
+                cardProperties={boardWithProps.fields.cardProperties}
+            />
+        )
+
+        const {getAllByText} = render(component)
+        const sumOptions = getAllByText('Sum')
+        expect(sumOptions).toBeDefined()
+        expect(sumOptions.length).toBe(1)
     })
 })
