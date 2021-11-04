@@ -50,6 +50,7 @@ class WSClient {
     ws: WebSocket|null = null
     client: MMWebSocketClient|null = null
     pluginId = ''
+    onAppVersionChangeHandler: ((versionHasChanged: boolean) => void) | null = null
     clientPrefix = ''
     serverUrl: string | undefined
     state: 'init'|'open'|'close' = 'init'
@@ -301,14 +302,18 @@ class WSClient {
         }
     }
 
+    setOnAppVersionChangeHandler(fn: (versionHasChanged: boolean) => void): void {
+        this.onAppVersionChangeHandler = fn
+    }
+
     pluginStatusesChangedHandler(data: any): void {
-        if (this.pluginId === '') {
+        if (this.pluginId === '' || !this.onAppVersionChangeHandler) {
             return
         }
 
         if (data.plugin_statuses.some((s: any) => s.plugin_id === this.pluginId)) {
-            Utils.log('Boards plugin has been updated, reloading...')
-            location.reload()
+            Utils.log('Boards plugin has been updated')
+            this.onAppVersionChangeHandler(true)
         }
     }
 
