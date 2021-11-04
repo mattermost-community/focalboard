@@ -1,13 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
-import wsClient from '../wsclient'
 import {FormattedMessage} from 'react-intl'
+
+import wsClient from '../wsclient'
 
 import './newVersionBanner.scss'
 
 const NewVersionBanner = () => {
-    const [ appVersionChanged, setAppVersionChanged ] = useState(false)
+    const [appVersionChanged, setAppVersionChanged] = useState(false)
     useEffect(() => {
         wsClient.onAppVersionChangeHandler = setAppVersionChanged
     }, [])
