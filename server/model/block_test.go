@@ -1,17 +1,17 @@
-package utils
+package model
 
 import (
 	"testing"
 
-	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/stretchr/testify/require"
 )
 
 func TestGenerateBlockIDs(t *testing.T) {
 	t.Run("Should generate a new ID for a single block with no references", func(t *testing.T) {
-		blockID := NewID(IDTypeBlock)
-		blocks := []model.Block{{ID: blockID}}
+		blockID := utils.NewID(utils.IDTypeBlock)
+		blocks := []Block{{ID: blockID}}
 
 		blocks = GenerateBlockIDs(blocks)
 
@@ -21,10 +21,10 @@ func TestGenerateBlockIDs(t *testing.T) {
 	})
 
 	t.Run("Should generate a new ID for a single block with references", func(t *testing.T) {
-		blockID := NewID(IDTypeBlock)
-		rootID := NewID(IDTypeBlock)
-		parentID := NewID(IDTypeBlock)
-		blocks := []model.Block{{ID: blockID, RootID: rootID, ParentID: parentID}}
+		blockID := utils.NewID(utils.IDTypeBlock)
+		rootID := utils.NewID(utils.IDTypeBlock)
+		parentID := utils.NewID(utils.IDTypeBlock)
+		blocks := []Block{{ID: blockID, RootID: rootID, ParentID: parentID}}
 
 		blocks = GenerateBlockIDs(blocks)
 
@@ -34,17 +34,17 @@ func TestGenerateBlockIDs(t *testing.T) {
 	})
 
 	t.Run("Should generate IDs and link multiple blocks with existing references", func(t *testing.T) {
-		blockID1 := NewID(IDTypeBlock)
-		rootID1 := NewID(IDTypeBlock)
-		parentID1 := NewID(IDTypeBlock)
-		block1 := model.Block{ID: blockID1, RootID: rootID1, ParentID: parentID1}
+		blockID1 := utils.NewID(utils.IDTypeBlock)
+		rootID1 := utils.NewID(utils.IDTypeBlock)
+		parentID1 := utils.NewID(utils.IDTypeBlock)
+		block1 := Block{ID: blockID1, RootID: rootID1, ParentID: parentID1}
 
-		blockID2 := NewID(IDTypeBlock)
+		blockID2 := utils.NewID(utils.IDTypeBlock)
 		rootID2 := blockID1
-		parentID2 := NewID(IDTypeBlock)
-		block2 := model.Block{ID: blockID2, RootID: rootID2, ParentID: parentID2}
+		parentID2 := utils.NewID(utils.IDTypeBlock)
+		block2 := Block{ID: blockID2, RootID: rootID2, ParentID: parentID2}
 
-		blocks := []model.Block{block1, block2}
+		blocks := []Block{block1, block2}
 
 		blocks = GenerateBlockIDs(blocks)
 
@@ -62,17 +62,17 @@ func TestGenerateBlockIDs(t *testing.T) {
 	})
 
 	t.Run("Should generate new IDs but not modify nonexisting references", func(t *testing.T) {
-		blockID1 := NewID(IDTypeBlock)
+		blockID1 := utils.NewID(utils.IDTypeBlock)
 		rootID1 := ""
-		parentID1 := NewID(IDTypeBlock)
-		block1 := model.Block{ID: blockID1, RootID: rootID1, ParentID: parentID1}
+		parentID1 := utils.NewID(utils.IDTypeBlock)
+		block1 := Block{ID: blockID1, RootID: rootID1, ParentID: parentID1}
 
-		blockID2 := NewID(IDTypeBlock)
-		rootID2 := NewID(IDTypeBlock)
+		blockID2 := utils.NewID(utils.IDTypeBlock)
+		rootID2 := utils.NewID(utils.IDTypeBlock)
 		parentID2 := ""
-		block2 := model.Block{ID: blockID2, RootID: rootID2, ParentID: parentID2}
+		block2 := Block{ID: blockID2, RootID: rootID2, ParentID: parentID2}
 
-		blocks := []model.Block{block1, block2}
+		blocks := []Block{block1, block2}
 
 		blocks = GenerateBlockIDs(blocks)
 
@@ -87,31 +87,31 @@ func TestGenerateBlockIDs(t *testing.T) {
 	})
 
 	t.Run("Should modify correctly multiple blocks with existing and nonexisting references", func(t *testing.T) {
-		blockID1 := NewID(IDTypeBlock)
-		rootID1 := NewID(IDTypeBlock)
-		parentID1 := NewID(IDTypeBlock)
-		block1 := model.Block{ID: blockID1, RootID: rootID1, ParentID: parentID1}
+		blockID1 := utils.NewID(utils.IDTypeBlock)
+		rootID1 := utils.NewID(utils.IDTypeBlock)
+		parentID1 := utils.NewID(utils.IDTypeBlock)
+		block1 := Block{ID: blockID1, RootID: rootID1, ParentID: parentID1}
 
 		// linked to 1
-		blockID2 := NewID(IDTypeBlock)
+		blockID2 := utils.NewID(utils.IDTypeBlock)
 		rootID2 := blockID1
-		parentID2 := NewID(IDTypeBlock)
-		block2 := model.Block{ID: blockID2, RootID: rootID2, ParentID: parentID2}
+		parentID2 := utils.NewID(utils.IDTypeBlock)
+		block2 := Block{ID: blockID2, RootID: rootID2, ParentID: parentID2}
 
 		// linked to 2
-		blockID3 := NewID(IDTypeBlock)
+		blockID3 := utils.NewID(utils.IDTypeBlock)
 		rootID3 := blockID2
-		parentID3 := NewID(IDTypeBlock)
-		block3 := model.Block{ID: blockID3, RootID: rootID3, ParentID: parentID3}
+		parentID3 := utils.NewID(utils.IDTypeBlock)
+		block3 := Block{ID: blockID3, RootID: rootID3, ParentID: parentID3}
 
 		// linked to 1
-		blockID4 := NewID(IDTypeBlock)
+		blockID4 := utils.NewID(utils.IDTypeBlock)
 		rootID4 := blockID1
-		parentID4 := NewID(IDTypeBlock)
-		block4 := model.Block{ID: blockID4, RootID: rootID4, ParentID: parentID4}
+		parentID4 := utils.NewID(utils.IDTypeBlock)
+		block4 := Block{ID: blockID4, RootID: rootID4, ParentID: parentID4}
 
 		// blocks are shuffled
-		blocks := []model.Block{block4, block2, block1, block3}
+		blocks := []Block{block4, block2, block1, block3}
 
 		blocks = GenerateBlockIDs(blocks)
 

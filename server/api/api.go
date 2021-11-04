@@ -404,7 +404,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	blocks = utils.GenerateBlockIDs(blocks)
+	blocks = model.GenerateBlockIDs(blocks)
 
 	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
@@ -927,7 +927,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
-	_, err = a.app.InsertBlocks(*container, utils.GenerateBlockIDs(blocks), session.UserID, false)
+	_, err = a.app.InsertBlocks(*container, model.GenerateBlockIDs(blocks), session.UserID, false)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

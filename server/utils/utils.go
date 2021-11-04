@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/mattermost/focalboard/server/model"
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -54,60 +53,4 @@ func StructToMap(v interface{}) (m map[string]interface{}) {
 	b, _ := json.Marshal(v)
 	_ = json.Unmarshal(b, &m)
 	return
-}
-
-// GenerateBlockIDs generates new IDs for all the blocks of the list,
-// keeping consistent any references that other blocks would made to
-// the original IDs, so a tree of blocks can get new IDs and maintain
-// its shape.
-func GenerateBlockIDs(blocks []model.Block) []model.Block {
-	blockIDs := map[string]bool{}
-	referenceIDs := map[string]bool{}
-	for _, block := range blocks {
-		if _, ok := blockIDs[block.ID]; !ok {
-			blockIDs[block.ID] = true
-		}
-
-		if _, ok := referenceIDs[block.RootID]; !ok {
-			referenceIDs[block.RootID] = true
-		}
-		if _, ok := referenceIDs[block.ParentID]; !ok {
-			referenceIDs[block.ParentID] = true
-		}
-	}
-
-	newIDs := map[string]string{}
-	for id := range blockIDs {
-		for referenceID := range referenceIDs {
-			if id == referenceID {
-				newIDs[id] = NewID(IDTypeBlock)
-				continue
-			}
-		}
-	}
-
-	getExistingOrOldID := func(id string) string {
-		if existingID, ok := newIDs[id]; ok {
-			return existingID
-		}
-		return id
-	}
-
-	getExistingOrNewID := func(id string) string {
-		if existingID, ok := newIDs[id]; ok {
-			return existingID
-		}
-		return NewID(IDTypeBlock)
-	}
-
-	newBlocks := make([]model.Block, len(blocks))
-	for i, block := range blocks {
-		block.ID = getExistingOrNewID(block.ID)
-		block.RootID = getExistingOrOldID(block.RootID)
-		block.ParentID = getExistingOrOldID(block.ParentID)
-
-		newBlocks[i] = block
-	}
-
-	return newBlocks
 }
