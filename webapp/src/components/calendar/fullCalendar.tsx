@@ -28,12 +28,12 @@ type Props = {
     addCard: (properties: Record<string, string>) => void
 }
 
-function createDatePropertyFromCalendarDates(start: Date, end: Date, timeZoneOffset: number) : DateProperty {
+function createDatePropertyFromCalendarDates(start: Date, end: Date) : DateProperty {
     // save as noon
     start.setHours(12)
-    const dateFrom = start.getTime() - timeZoneOffset
+    const dateFrom = start.getTime() - timeZoneOffset(start.getTime())
     end.setHours(12)
-    const dateTo = end.getTime() - timeZoneOffset - (60 * 60 * 24 * 1000) // subtract one day. Calendar is date exclusive
+    const dateTo = end.getTime() - timeZoneOffset(end.getTime()) - (60 * 60 * 24 * 1000) // subtract one day. Calendar is date exclusive
 
     const dateProperty : DateProperty = {from: dateFrom}
     if (dateTo !== dateFrom) {
@@ -42,10 +42,13 @@ function createDatePropertyFromCalendarDates(start: Date, end: Date, timeZoneOff
     return dateProperty
 }
 
+const timeZoneOffset = (date: number): number => {
+    return new Date(date).getTimezoneOffset() * 60 * 1000
+}
+
 const CalendarFullView = (props: Props): JSX.Element|null => {
     const intl = useIntl()
     const {cards, board, activeView} = props
-    const timeZoneOffset = new Date().getTimezoneOffset() * 60 * 1000
 
     let dateDisplayProperty = props.dateDisplayProperty
 
@@ -68,9 +71,9 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
             // console.log(dateProperty)
             // date properties are stored as 12 pm UTC, convert to 12 am (00) UTC for calendar
-            const dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset)) : new Date()
+            const dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : new Date()
             dateFrom.setHours(0)
-            const dateToNumber = dateProperty.to ? dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset) : dateFrom.getTime()
+            const dateToNumber = dateProperty.to ? dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to)) : dateFrom.getTime()
             const dateTo = new Date(dateToNumber + (60 * 60 * 24 * 1000)) // Add one day.+ (60 * 60 * 24 * 1000)
             dateTo.setHours(0, 0, 0, 0)
 
@@ -128,11 +131,22 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
         const startDate = new Date(event.start.getTime())
         const endDate = new Date(event.end.getTime())
-        const dateProperty = createDatePropertyFromCalendarDates(startDate, endDate, timeZoneOffset)
+        const dateProperty = createDatePropertyFromCalendarDates(startDate, endDate)
         const card = cards.find((o) => o.id === event.id)
         if (card && dateDisplayProperty) {
             mutator.changePropertyValue(card, dateDisplayProperty.id, JSON.stringify(dateProperty))
         }
+    }
+
+    const onNewEvent = (args: {start: Date, end: Date}) => {
+        const dateProperty = createDatePropertyFromCalendarDates(args.start, args.end)
+
+        const properties: Record<string, string> = {}
+        if (dateDisplayProperty) {
+            properties[dateDisplayProperty.id] = JSON.stringify(dateProperty)
+        }
+
+        props.addCard(properties)
     }
 
     const toolbar = {
@@ -161,6 +175,10 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 eventClick={eventClick}
                 eventContent={renderEventContent}
                 eventChange={eventChange}
+
+                selectable={true}
+                selectMirror={true}
+                select={onNewEvent}
             />
         </div>
     )
