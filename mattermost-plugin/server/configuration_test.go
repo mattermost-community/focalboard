@@ -71,7 +71,8 @@ func TestOnConfigurationChange(t *testing.T) {
 		p.server = th.Server
 		p.wsPluginAdapter = &FakePluginAdapter{}
 
-		p.OnConfigurationChange()
+		err := p.OnConfigurationChange()
+		assert.NoError(t, err)
 		assert.Equal(t, 1, count)
 
 		// make sure both App and Server got updated

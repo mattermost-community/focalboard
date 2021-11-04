@@ -67,7 +67,7 @@ func (p *Plugin) setConfiguration(configuration *configuration) {
 }
 
 // OnConfigurationChange is invoked when configuration changes may have been made.
-func (p *Plugin) OnConfigurationChange() error {
+func (p *Plugin) OnConfigurationChange() error { //nolint
 	// Have we been setup by OnActivate?
 	if p.wsPluginAdapter == nil {
 		return nil
