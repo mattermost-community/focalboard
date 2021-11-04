@@ -18,6 +18,8 @@ import {DateProperty, createDatePropertyFromString} from '../properties/dateRang
 
 import './fullcalendar.scss'
 
+const oneDay = 60 * 60 * 24 * 1000
+
 type Props = {
     board: Board
     activeView: BoardView
@@ -29,11 +31,11 @@ type Props = {
 }
 
 function createDatePropertyFromCalendarDates(start: Date, end: Date) : DateProperty {
-    // save as noon
+    // save as noon local, expected from the date picker
     start.setHours(12)
     const dateFrom = start.getTime() - timeZoneOffset(start.getTime())
     end.setHours(12)
-    const dateTo = end.getTime() - timeZoneOffset(end.getTime()) - (60 * 60 * 24 * 1000) // subtract one day. Calendar is date exclusive
+    const dateTo = end.getTime() - timeZoneOffset(end.getTime()) - oneDay // subtract one day. Calendar is date exclusive
 
     const dateProperty : DateProperty = {from: dateFrom}
     if (dateTo !== dateFrom) {
@@ -54,7 +56,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     if (!dateDisplayProperty) {
         // Find first date property
-        // TODO: Should we look for CreateAt, ModifyAt. Must be a defined property to set.
         // Otherwise don't set and just use createAt below.
         dateDisplayProperty = board.fields.cardProperties.find((o: IPropertyTemplate) => o.type === 'date')
         if (dateDisplayProperty) {
@@ -63,31 +64,22 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     }
 
     const myEventsList = props.cards.flatMap((card): EventInput[] => {
+        let dateFrom = new Date(card.createAt || 0)
+        let dateTo = new Date(card.createAt || 0)
         if (dateDisplayProperty && dateDisplayProperty?.type !== 'createdTime') {
             const dateProperty = createDatePropertyFromString(card.fields.properties[dateDisplayProperty.id || ''] as string)
             if (!dateProperty.from) {
                 return []
             }
 
-            // console.log(dateProperty)
             // date properties are stored as 12 pm UTC, convert to 12 am (00) UTC for calendar
-            const dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : new Date()
-            dateFrom.setHours(0)
+            dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : new Date()
+            dateFrom.setHours(0, 0, 0, 0)
             const dateToNumber = dateProperty.to ? dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to)) : dateFrom.getTime()
-            const dateTo = new Date(dateToNumber + (60 * 60 * 24 * 1000)) // Add one day.+ (60 * 60 * 24 * 1000)
+            dateTo = new Date(dateToNumber + oneDay) // Add one day.
             dateTo.setHours(0, 0, 0, 0)
 
-            // dateTo.setTime(dateTo.getTime() - 1000)
-
             return [{
-                id: card.id,
-                title: card.title,
-                extendedProps: {icon: card.fields.icon},
-                properties: card.fields.properties,
-
-                allDay: true,
-                start: dateFrom,
-                end: dateTo,
             }]
         }
         return [{
@@ -95,10 +87,9 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
             title: card.title,
             extendedProps: [{icon: card.fields.icon}],
             properties: card.fields.properties,
-
             allDay: true,
-            start: new Date(card.createAt || 0),
-            end: new Date(card.createAt || 0),
+            start: dateFrom,
+            end: dateTo,
         }]
     })
 

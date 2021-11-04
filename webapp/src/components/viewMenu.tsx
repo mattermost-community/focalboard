@@ -33,7 +33,6 @@ const ViewMenu = React.memo((props: Props) => {
     const history = useHistory()
     const match = useRouteMatch()
     const clientConfig = useAppSelector(getClientConfig)
-    Utils.log(typeof clientConfig)
 
     const showView = useCallback((viewId) => {
         let newPath = generatePath(match.path, {...match.params, viewId: viewId || ''})
@@ -175,7 +174,7 @@ const ViewMenu = React.memo((props: Props) => {
     const handleAddViewCalendar = useCallback(() => {
         const {board, activeView, intl} = props
 
-        Utils.log('addview-gallery')
+        Utils.log('addview-calendar')
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar View'})
         view.fields.viewType = 'calendar'

@@ -50,7 +50,6 @@ const ViewHeaderDisplayByMenu = React.memo((props: Props) => {
                             if (activeView.fields.dateDisplayPropertyId === id) {
                                 return
                             }
-
                             mutator.changeViewDateDisplayPropertyId(activeView.id, activeView.fields.dateDisplayPropertyId, id)
                         }}
                     />
