@@ -110,6 +110,10 @@ func (m pluginAPIMock) CreatePost(post *mm_model.Post) error {
 	return nil
 }
 
+func (m pluginAPIMock) CreatePostWithEmbededCard(post *mm_model.Post, workspaceID, boardID, cardID, requestURI string) error {
+	return nil
+}
+
 func (m pluginAPIMock) GetUserByID(userID string) (*mm_model.User, error) {
 	for _, user := range m.users {
 		if user.Id == userID {

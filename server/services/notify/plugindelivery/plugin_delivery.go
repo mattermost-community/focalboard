@@ -5,6 +5,7 @@ package plugindelivery
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/mattermost/focalboard/server/services/notify"
 
@@ -18,6 +19,9 @@ type PluginAPI interface {
 
 	// CreatePost creates a post.
 	CreatePost(post *model.Post) error
+
+	// CreatePostWithEmbededCard creates a post with embedded card link metadata.
+	CreatePostWithEmbededCard(post *model.Post, workspaceID, boardID, cardID, requestURI string) error
 
 	// GetUserByID gets a user by their ID.
 	GetUserByID(userID string) (*model.User, error)
@@ -74,13 +78,14 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 		return fmt.Errorf("cannot get direct channel: %w", err)
 	}
 	link := makeLink(pd.serverRoot, evt.Workspace, evt.Board.ID, evt.Card.ID)
+	requestURI := getRequestURI(link)
 
 	post := &model.Post{
 		UserId:    pd.botID,
 		ChannelId: channel.Id,
 		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),
 	}
-	return pd.api.CreatePost(post)
+	return pd.api.CreatePostWithEmbededCard(post, evt.Workspace, evt.Board.ID, evt.Card.ID, requestURI)
 }
 
 func (pd *PluginDelivery) getTeamID(evt notify.BlockChangeEvent) (string, error) {
@@ -90,4 +95,12 @@ func (pd *PluginDelivery) getTeamID(evt notify.BlockChangeEvent) (string, error)
 		return "", err
 	}
 	return channel.TeamId, nil
+}
+
+func getRequestURI(rawURL string) string {
+	url, err := url.Parse(rawURL)
+	if err != nil {
+		return ""
+	}
+	return url.RequestURI()
 }
