@@ -86,7 +86,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         return [{
             id: card.id,
             title: card.title,
-            extendedProps: [{icon: card.fields.icon}],
+            extendedProps: {icon: card.fields.icon},
             properties: card.fields.properties,
             allDay: true,
             start: dateFrom,

@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {render, fireEvent} from '@testing-library/react'
+import {render} from '@testing-library/react'
 import {mocked} from 'ts-jest/utils'
 import userEvent from '@testing-library/user-event'
 
