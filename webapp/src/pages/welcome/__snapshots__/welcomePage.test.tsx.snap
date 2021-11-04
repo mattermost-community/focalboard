@@ -28,8 +28,11 @@ exports[`pages/welcome Welcome Page shows Explore Page 1`] = `
       />
       <button
         class="Button filled size--large"
+        type="button"
       >
-        Explore
+        <span>
+          Explore
+        </span>
         <i
           class="CompassIcon icon-chevron-right Icon Icon--right"
         />
