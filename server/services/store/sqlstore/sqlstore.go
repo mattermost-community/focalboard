@@ -44,11 +44,8 @@ func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *
 		return nil, err
 	}
 
-	err = store.InitializeTemplates()
-	if err != nil {
+	if err := store.InitializeTemplates(); err != nil {
 		logger.Error(`InitializeTemplates failed`, mlog.Err(err))
-
-		return nil, err
 	}
 
 	return store, nil
