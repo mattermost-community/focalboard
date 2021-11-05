@@ -40,8 +40,8 @@ describe('components/calendar/fullCalendar', () => {
 
     const card = TestBlockFactory.createCard(board)
 
-    const fifth = Date.UTC(2021, 9, 5)
-    const twentieth = Date.UTC(2021, 9, 20)
+    const fifth = Date.UTC(2021, 9, 5, 12)
+    const twentieth = Date.UTC(2021, 9, 20, 12)
     card.createAt = fifth
     const rObject = {from: twentieth}
 
