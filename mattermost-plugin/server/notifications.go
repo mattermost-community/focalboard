@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/services/notify/notifymentions"
+	"github.com/mattermost/focalboard/server/services/notify/notifysubscriptions"
 	"github.com/mattermost/focalboard/server/services/notify/plugindelivery"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
@@ -20,6 +21,28 @@ const (
 )
 
 func createMentionsNotifyBackend(client *pluginapi.Client, serverRoot string, logger *mlog.Logger) (*notifymentions.Backend, error) {
+	delivery, err := createDelivery(client, serverRoot)
+	if err != nil {
+		return nil, err
+	}
+
+	backend := notifymentions.New(delivery, logger)
+
+	return backend, nil
+}
+
+func createSubscriptionsNotifyBackend(client *pluginapi.Client, serverRoot string, logger *mlog.Logger) (*notifysubscriptions.Backend, error) {
+	delivery, err := createDelivery(client, serverRoot)
+	if err != nil {
+		return nil, err
+	}
+
+	backend := notifysubscriptions.New(nil, delivery, logger)
+
+	return backend, nil
+}
+
+func createDelivery(client *pluginapi.Client, serverRoot string) (*plugindelivery.PluginDelivery, error) {
 	bot := &model.Bot{
 		Username:    botUsername,
 		DisplayName: botDisplayname,
@@ -32,11 +55,7 @@ func createMentionsNotifyBackend(client *pluginapi.Client, serverRoot string, lo
 
 	pluginAPI := &pluginAPIAdapter{client: client}
 
-	delivery := plugindelivery.New(botID, serverRoot, pluginAPI)
-
-	backend := notifymentions.New(delivery, logger)
-
-	return backend, nil
+	return plugindelivery.New(botID, serverRoot, pluginAPI), nil
 }
 
 type pluginAPIAdapter struct {

@@ -45,7 +45,7 @@ func getBlockUpdateFreq(blockType model.BlockType) time.Duration {
 // blocks.
 type notifier struct {
 	store    Store
-	delivery Delivery
+	delivery SubscriptionDelivery
 	logger   *mlog.Logger
 
 	hints chan *model.NotificationHint
@@ -54,7 +54,7 @@ type notifier struct {
 	done chan struct{}
 }
 
-func newNotifier(store Store, delivery Delivery, logger *mlog.Logger) *notifier {
+func newNotifier(store Store, delivery SubscriptionDelivery, logger *mlog.Logger) *notifier {
 	return &notifier{
 		store:    store,
 		delivery: delivery,
@@ -178,7 +178,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 			continue
 		}
 
-		if err := n.delivery.Deliver(sub.SubscriberID, sub.SubscriberType, markdown); err != nil {
+		if err := n.delivery.SubscriptionDeliver(sub.SubscriberID, sub.SubscriberType, markdown); err != nil {
 			merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
 				sub.SubscriberID, sub.SubscriberType, err))
 		}

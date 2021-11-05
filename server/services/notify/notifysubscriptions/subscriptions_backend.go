@@ -21,12 +21,12 @@ const (
 // Backend provides the notification backend for subscriptions.
 type Backend struct {
 	store    Store
-	delivery Delivery
+	delivery SubscriptionDelivery
 	notifier *notifier
 	logger   *mlog.Logger
 }
 
-func New(store Store, delivery Delivery, logger *mlog.Logger) *Backend {
+func New(store Store, delivery SubscriptionDelivery, logger *mlog.Logger) *Backend {
 	return &Backend{
 		store:    store,
 		delivery: delivery,

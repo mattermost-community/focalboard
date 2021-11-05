@@ -100,7 +100,12 @@ func (p *Plugin) OnActivate() error {
 
 	mentionsBackend, err := createMentionsNotifyBackend(client, baseURL+"/boards", logger)
 	if err != nil {
-		return fmt.Errorf("error creating mentions notifications backend: %w", err)
+		return fmt.Errorf("error creating mention notifications backend: %w", err)
+	}
+
+	subscriptionsBackend, err := createSubscriptionsNotifyBackend(client, baseURL+"/boards", logger)
+	if err != nil {
+		return fmt.Errorf("error creating subscription notifications backend: %w", err)
 	}
 
 	params := server.Params{
@@ -110,7 +115,7 @@ func (p *Plugin) OnActivate() error {
 		Logger:          logger,
 		ServerID:        serverID,
 		WSAdapter:       p.wsPluginAdapter,
-		NotifyBackends:  []notify.Backend{mentionsBackend},
+		NotifyBackends:  []notify.Backend{mentionsBackend, subscriptionsBackend},
 	}
 
 	server, err := server.New(params)
