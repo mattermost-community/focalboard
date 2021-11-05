@@ -44,7 +44,7 @@ const (
 
 	defModifyCardRemoveCommentNotify = "Comment: ~~{{.OldValue}}~~\n"
 
-	// block change notifications
+	// block change notifications.
 	defAddBlockNotify = "Added: {{.NewValue}}\n"
 
 	defModifyBlockNotify = "{{.NewValue}} ~~{{.OldValue}}~~\n"
@@ -252,5 +252,25 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 }
 
 func blockDiff2Markdown(w io.Writer, diff *Diff, opts MarkdownOpts) error {
-	return fmt.Errorf("not implemented yet")
+	// sanity check
+	if diff.NewBlock == nil && diff.OldBlock == nil {
+		return nil
+	}
+
+	// block added
+	if diff.NewBlock != nil && diff.OldBlock == nil {
+		return execTemplate(w, "AddBlockNotify", opts, defAddBlockNotify, diff)
+	}
+
+	// block deleted
+	if diff.NewBlock == nil && diff.OldBlock != nil {
+		return execTemplate(w, "DeleteBlockNotify", opts, defDeleteBlockNotify, diff)
+	}
+
+	// at this point new and old block are non-nil
+
+	if err := execTemplate(w, "ModifyBlockNotify", opts, defModifyBlockNotify, diff); err != nil {
+		return fmt.Errorf("cannot write notification for card %s: %w", diff.NewBlock.ID, err)
+	}
+	return nil
 }
