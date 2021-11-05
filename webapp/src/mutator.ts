@@ -664,8 +664,8 @@ class Mutator {
         await this.insertBlocks(
             newBlocks,
             description,
-            async () => {
-                await afterRedo?.(newCard.id)
+            async (respBlocks: Block[]) => {
+                await afterRedo?.(respBlocks[0].id)
             },
             beforeUndo,
         )
@@ -693,15 +693,15 @@ class Mutator {
             // Board from template
         }
         newBoard.fields.isTemplate = asTemplate
-        await this.insertBlocks(
+        const createdBlocks = await this.insertBlocks(
             newBlocks,
             description,
-            async () => {
-                await afterRedo?.(newBoard.id)
+            async (respBlocks: Block[]) => {
+                await afterRedo?.(respBlocks[0].id)
             },
             beforeUndo,
         )
-        return [newBlocks, newBoard.id]
+        return [createdBlocks, createdBlocks[0].id]
     }
 
     async duplicateFromRootBoard(
@@ -726,15 +726,15 @@ class Mutator {
             // Board from template
         }
         newBoard.fields.isTemplate = asTemplate
-        await this.insertBlocks(
+        const createdBlocks = await this.insertBlocks(
             newBlocks,
             description,
-            async () => {
-                await afterRedo?.(newBoard.id)
+            async (respBlocks: Block[]) => {
+                await afterRedo?.(respBlocks[0].id)
             },
             beforeUndo,
         )
-        return [newBlocks, newBoard.id]
+        return [createdBlocks, createdBlocks[0].id]
     }
 
     // Other methods

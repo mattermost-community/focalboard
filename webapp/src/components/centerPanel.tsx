@@ -286,10 +286,11 @@ class CenterPanel extends React.Component<Props, State> {
         await mutator.insertBlock(
             cardTemplate,
             'add card template',
-            async () => {
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: activeView.id, card: cardTemplate.id})
-                this.props.addTemplate(cardTemplate)
-                this.showCard(cardTemplate.id)
+            async (newBlock: Block) => {
+                const newTemplate = createCard(newBlock)
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: activeView.id, card: newTemplate.id})
+                this.props.addTemplate(newTemplate)
+                this.showCard(newTemplate.id)
             }, async () => {
                 this.showCard(undefined)
             },
