@@ -552,37 +552,6 @@ exports[`components/calendar/fullCalendar return calendar, no date property 1`] 
                                     class="fc-daygrid-day-events"
                                   >
                                     <div
-                                      class="fc-daygrid-event-harness"
-                                      style="margin-top: 0px;"
-                                    >
-                                      <a
-                                        class="fc-daygrid-event fc-daygrid-block-event fc-h-event fc-event fc-event-draggable fc-event-resizable fc-event-start fc-event-end fc-event-past"
-                                        tabindex="0"
-                                      >
-                                        <div
-                                          class="fc-event-main"
-                                        >
-                                          <div
-                                            class="octo-icontitle"
-                                          >
-                                            <div
-                                              class="octo-icon"
-                                            >
-                                              i
-                                            </div>
-                                            <div
-                                              class="fc-event-title"
-                                            >
-                                              title
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div
-                                          class="fc-event-resizer fc-event-resizer-end"
-                                        />
-                                      </a>
-                                    </div>
-                                    <div
                                       class="fc-daygrid-day-bottom"
                                       style="margin-top: 0px;"
                                     />
@@ -615,6 +584,37 @@ exports[`components/calendar/fullCalendar return calendar, no date property 1`] 
                                   <div
                                     class="fc-daygrid-day-events"
                                   >
+                                    <div
+                                      class="fc-daygrid-event-harness"
+                                      style="margin-top: 0px;"
+                                    >
+                                      <a
+                                        class="fc-daygrid-event fc-daygrid-block-event fc-h-event fc-event fc-event-draggable fc-event-resizable fc-event-start fc-event-end fc-event-past"
+                                        tabindex="0"
+                                      >
+                                        <div
+                                          class="fc-event-main"
+                                        >
+                                          <div
+                                            class="octo-icontitle"
+                                          >
+                                            <div
+                                              class="octo-icon"
+                                            >
+                                              i
+                                            </div>
+                                            <div
+                                              class="fc-event-title"
+                                            >
+                                              title
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div
+                                          class="fc-event-resizer fc-event-resizer-end"
+                                        />
+                                      </a>
+                                    </div>
                                     <div
                                       class="fc-daygrid-day-bottom"
                                       style="margin-top: 0px;"
