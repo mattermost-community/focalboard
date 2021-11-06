@@ -6,6 +6,8 @@ import Select, {components, IndicatorProps} from 'react-select'
 
 import {CSSObject} from '@emotion/serialize'
 
+import {useIntl, IntlShape} from 'react-intl'
+
 import {getSelectBaseStyle} from '../../theme'
 import ChevronUp from '../../widgets/icons/chevronUp'
 import {IPropertyTemplate} from '../../blocks/board'
@@ -38,6 +40,52 @@ export const Options:Record<string, Option> = {
     earliest: {value: 'earliest', label: 'Earliest Date', displayName: 'Earliest'},
     latest: {value: 'latest', label: 'Latest Date', displayName: 'Latest'},
     dateRange: {value: 'dateRange', label: 'Date Range', displayName: 'Range'},
+}
+
+export const optionLabelString = (option: Option, intl: IntlShape): string => {
+    switch (option.value) {
+    case 'none': return intl.formatMessage({id: 'Calculations.Options.none.label', defaultMessage: 'None'})
+    case 'count': return intl.formatMessage({id: 'Calculations.Options.count.label', defaultMessage: 'Count'})
+    case 'countValue': return intl.formatMessage({id: 'Calculations.Options.countValue.label', defaultMessage: 'Count Value'})
+    case 'countChecked': return intl.formatMessage({id: 'Calculations.Options.countChecked.label', defaultMessage: 'Count Checked'})
+    case 'percentChecked': return intl.formatMessage({id: 'Calculations.Options.percentChecked.label', defaultMessage: 'Percent Checked'})
+    case 'percentUnchecked': return intl.formatMessage({id: 'Calculations.Options.percentUnchecked.label', defaultMessage: 'Percent Unchecked'})
+    case 'countUnchecked': return intl.formatMessage({id: 'Calculations.Options.countUnchecked.label', defaultMessage: 'Count Unchecked'})
+    case 'countUniqueValue': return intl.formatMessage({id: 'Calculations.Options.countUniqueValue.label', defaultMessage: 'Count Unique Values'})
+    case 'sum': return intl.formatMessage({id: 'Calculations.Options.sum.label', defaultMessage: 'Sum'})
+    case 'average': return intl.formatMessage({id: 'Calculations.Options.average.label', defaultMessage: 'Average'})
+    case 'median': return intl.formatMessage({id: 'Calculations.Options.median.label', defaultMessage: 'Median'})
+    case 'min': return intl.formatMessage({id: 'Calculations.Options.min.label', defaultMessage: 'Min'})
+    case 'max': return intl.formatMessage({id: 'Calculations.Options.max.label', defaultMessage: 'Max'})
+    case 'range': return intl.formatMessage({id: 'Calculations.Options.range.label', defaultMessage: 'Range'})
+    case 'earliest': return intl.formatMessage({id: 'Calculations.Options.earliest.label', defaultMessage: 'Earliest'})
+    case 'latest': return intl.formatMessage({id: 'Calculations.Options.latest.label', defaultMessage: 'Latest'})
+    case 'dateRange': return intl.formatMessage({id: 'Calculations.Options.dateRange.label', defaultMessage: 'Range'})
+    default: return option.label
+    }
+}
+
+export const optionDisplayNameString = (option: Option, intl: IntlShape): string => {
+    switch (option.value) {
+    case 'none': return intl.formatMessage({id: 'Calculations.Options.none.displayName', defaultMessage: 'Calculate'})
+    case 'count': return intl.formatMessage({id: 'Calculations.Options.count.displayName', defaultMessage: 'Count'})
+    case 'countValue': return intl.formatMessage({id: 'Calculations.Options.countValue.displayName', defaultMessage: 'Values'})
+    case 'countChecked': return intl.formatMessage({id: 'Calculations.Options.countChecked.displayName', defaultMessage: 'Checked'})
+    case 'percentChecked': return intl.formatMessage({id: 'Calculations.Options.percentChecked.displayName', defaultMessage: 'Checked'})
+    case 'percentUnchecked': return intl.formatMessage({id: 'Calculations.Options.percentUnchecked.displayName', defaultMessage: 'Unchecked'})
+    case 'countUnchecked': return intl.formatMessage({id: 'Calculations.Options.countUnchecked.displayName', defaultMessage: 'Unchecked'})
+    case 'countUniqueValue': return intl.formatMessage({id: 'Calculations.Options.countUniqueValue.displayName', defaultMessage: 'Unique'})
+    case 'sum': return intl.formatMessage({id: 'Calculations.Options.sum.displayName', defaultMessage: 'Sum'})
+    case 'average': return intl.formatMessage({id: 'Calculations.Options.average.displayName', defaultMessage: 'Average'})
+    case 'median': return intl.formatMessage({id: 'Calculations.Options.median.displayName', defaultMessage: 'Median'})
+    case 'min': return intl.formatMessage({id: 'Calculations.Options.min.displayName', defaultMessage: 'Min'})
+    case 'max': return intl.formatMessage({id: 'Calculations.Options.max.displayName', defaultMessage: 'Max'})
+    case 'range': return intl.formatMessage({id: 'Calculations.Options.range.displayName', defaultMessage: 'Range'})
+    case 'earliest': return intl.formatMessage({id: 'Calculations.Options.earliest.displayName', defaultMessage: 'Earliest'})
+    case 'latest': return intl.formatMessage({id: 'Calculations.Options.latest.displayName', defaultMessage: 'Latest'})
+    case 'dateRange': return intl.formatMessage({id: 'Calculations.Options.dateRange.displayName', defaultMessage: 'Range'})
+    default: return option.displayName
+    }
 }
 
 export const optionsByType: Map<string, Option[]> = new Map([
@@ -127,6 +175,8 @@ type BaseCalculationOptionProps = CommonCalculationOptionProps & {
 }
 
 const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
+    const intl = useIntl()
+
     return (
         <Select
             styles={styles}
@@ -143,7 +193,7 @@ const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
             defaultMenuIsOpen={props.menuOpen}
             autoFocus={true}
             formatOptionLabel={(option: Option, meta) => {
-                return meta.context === 'menu' ? option.label : option.displayName
+                return meta.context === 'menu' ? optionLabelString(option, intl) : optionDisplayNameString(option, intl)
             }}
             onMenuClose={() => {
                 if (props.onClose) {
