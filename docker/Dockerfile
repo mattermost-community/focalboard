@@ -13,7 +13,7 @@ FROM golang:1.16.5 as gobuild
 WORKDIR /go/src/focalboard
 ADD . /go/src/focalboard
 
-# get Target Architekture 
+# Get target architecture 
 ARG TARGETOS
 ARG TARGETARCH  
 
