@@ -74,7 +74,7 @@ func (p *Plugin) OnConfigurationChange() {
 		return
 	}
 
-	mmconfig := p.API.GetUnsanitizedConfig()
+	mmconfig := p.API.GetConfig()
 
 	// handle plugin configuration settings
 	enableShareBoards := false
