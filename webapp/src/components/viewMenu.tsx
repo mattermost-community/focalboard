@@ -9,6 +9,7 @@ import {BoardView, createBoardView, IViewType} from '../blocks/boardView'
 import {Constants} from '../constants'
 import mutator from '../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import {Block} from '../blocks/block'
 import {IDType, Utils} from '../utils'
 import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
@@ -53,10 +54,10 @@ const ViewMenu = React.memo((props: Props) => {
         mutator.insertBlock(
             newView,
             'duplicate view',
-            async () => {
+            async (block: Block) => {
                 // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    showView(newView.id)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
@@ -102,10 +103,10 @@ const ViewMenu = React.memo((props: Props) => {
         mutator.insertBlock(
             view,
             'add view',
-            async () => {
+            async (block: Block) => {
                 // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    showView(view.id)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
@@ -131,11 +132,11 @@ const ViewMenu = React.memo((props: Props) => {
         mutator.insertBlock(
             view,
             'add view',
-            async () => {
+            async (block: Block) => {
                 // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    Utils.log(`showView: ${view.id}`)
-                    showView(view.id)
+                    Utils.log(`showView: ${block.id}`)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
@@ -159,11 +160,11 @@ const ViewMenu = React.memo((props: Props) => {
         mutator.insertBlock(
             view,
             'add view',
-            async () => {
+            async (block: Block) => {
                 // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    Utils.log(`showView: ${view.id}`)
-                    showView(view.id)
+                    Utils.log(`showView: ${block.id}`)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
