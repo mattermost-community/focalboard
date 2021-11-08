@@ -11,8 +11,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 
 import mutator from '../../mutator'
 
-import {Board, IPropertyTemplate} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
+import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {DateProperty, createDatePropertyFromString} from '../properties/dateRange/dateRange'
 
@@ -21,8 +20,6 @@ import './fullcalendar.scss'
 const oneDay = 60 * 60 * 24 * 1000
 
 type Props = {
-    board: Board
-    activeView: BoardView
     cards: Card[]
     initialDate?: Date
     dateDisplayProperty?: IPropertyTemplate
@@ -50,27 +47,26 @@ const timeZoneOffset = (date: number): number => {
 
 const CalendarFullView = (props: Props): JSX.Element|null => {
     const intl = useIntl()
-    const {cards, board, activeView} = props
+    const {cards, dateDisplayProperty} = props
     let {initialDate} = props
     if (!initialDate) {
         initialDate = new Date()
     }
 
-    let dateDisplayProperty = props.dateDisplayProperty
-
-    if (!dateDisplayProperty) {
-        // Find first date property
-        // Otherwise don't set and just use createAt below.
-        dateDisplayProperty = board.fields.cardProperties.find((o: IPropertyTemplate) => o.type === 'date')
-        if (dateDisplayProperty) {
-            mutator.changeViewDateDisplayPropertyId(activeView.id, activeView.fields.dateDisplayPropertyId, dateDisplayProperty.id)
+    const isEditable = () : boolean => {
+        if (!dateDisplayProperty || (dateDisplayProperty.type === 'createdTime' || dateDisplayProperty.type === 'updatedTime')) {
+            return false
         }
+        return true
     }
 
     const myEventsList = props.cards.flatMap((card): EventInput[] => {
         let dateFrom = new Date(card.createAt || 0)
         let dateTo = new Date(card.createAt || 0)
-        if (dateDisplayProperty && dateDisplayProperty?.type !== 'createdTime') {
+        if (dateDisplayProperty && dateDisplayProperty?.type === 'updatedTime') {
+            dateFrom = new Date(card.updateAt || 0)
+            dateTo = new Date(card.updateAt || 0)
+        } else if (dateDisplayProperty && dateDisplayProperty?.type !== 'createdTime') {
             const dateProperty = createDatePropertyFromString(card.fields.properties[dateDisplayProperty.id || ''] as string)
             if (!dateProperty.from) {
                 return []
@@ -162,7 +158,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView='dayGridMonth'
                 events={myEventsList}
-                editable={true}
+                editable={isEditable()}
                 headerToolbar={toolbar}
                 buttonText={buttonText}
                 eventClick={eventClick}

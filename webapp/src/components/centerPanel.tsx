@@ -196,8 +196,6 @@ class CenterPanel extends React.Component<Props, State> {
                     />}
                 {activeView.fields.viewType === 'calendar' && this.props.clientConfig?.featureFlags.CalendarView &&
                     <CalendarFullView
-                        board={this.props.board}
-                        activeView={this.props.activeView}
                         cards={this.props.cards}
                         dateDisplayProperty={this.props.dateDisplayProperty}
                         showCard={this.showCard}

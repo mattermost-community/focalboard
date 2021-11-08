@@ -184,6 +184,9 @@ const ViewMenu = React.memo((props: Props) => {
 
         const oldViewId = activeView.id
 
+        // Find first date property
+        view.fields.dateDisplayPropertyId = board.fields.cardProperties.find((o: IPropertyTemplate) => o.type === 'date')?.id
+
         mutator.insertBlock(
             view,
             'add view',
