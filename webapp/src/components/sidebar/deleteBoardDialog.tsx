@@ -37,7 +37,7 @@ export default function DeleteBoardDialog(props: Props): JSX.Element {
                     <p className='body'>
                         <FormattedMessage
                             id='DeleteBoardDialog.confirm-info'
-                            defaultMessage='Are you sure you want to delete the board “{boardTitle}”? Deleting it will delete the property from all cards in this board.'
+                            defaultMessage='Are you sure you want to delete the board “{boardTitle}”? Deleting it will delete all cards in the board.'
                             values={{
                                 boardTitle: props.boardTitle,
                             }}
