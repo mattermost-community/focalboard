@@ -63,7 +63,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 >
                   <button
                     class="Button IconButton"
-                    role="button"
+                    type="button"
                   >
                     <i
                       class="CompassIcon icon-dots-horizontal OptionsIcon"
@@ -160,16 +160,6 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 class="MenuOption TextOption menu-option bold-menu-text"
                 role="button"
               >
-<<<<<<< HEAD
-                <button
-                  class="Button IconButton"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-=======
                 <svg
                   class="CardIcon Icon"
                   viewBox="0 0 100 100"
@@ -194,16 +184,15 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                   class="MenuWrapper"
                   role="button"
                 >
-                  <div
+                  <button
                     class="Button IconButton"
-                    role="button"
+                    type="button"
                   >
                     <i
                       class="CompassIcon icon-dots-horizontal OptionsIcon"
                     />
-                  </div>
+                  </button>
                 </div>
->>>>>>> 4fa2517b (update snapshots)
               </div>
             </div>
             <div>
@@ -294,16 +283,6 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 class="MenuOption TextOption menu-option bold-menu-text"
                 role="button"
               >
-<<<<<<< HEAD
-                <button
-                  class="Button IconButton"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-=======
                 <svg
                   class="CardIcon Icon"
                   viewBox="0 0 100 100"
@@ -328,16 +307,15 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                   class="MenuWrapper"
                   role="button"
                 >
-                  <div
+                  <button
                     class="Button IconButton"
-                    role="button"
+                    type="button"
                   >
                     <i
                       class="CompassIcon icon-dots-horizontal OptionsIcon"
                     />
-                  </div>
+                  </button>
                 </div>
->>>>>>> 4fa2517b (update snapshots)
               </div>
             </div>
             <div>

@@ -419,7 +419,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option "
+                class="MenuOption SubMenuOption menu-option"
                 id="theme"
               >
                 <div
@@ -578,7 +578,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option "
+                class="MenuOption SubMenuOption menu-option"
                 id="lang"
               >
                 <div
@@ -602,7 +602,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option "
+                class="MenuOption SubMenuOption menu-option"
                 id="theme"
               >
                 <div
@@ -741,7 +741,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option "
+                class="MenuOption SubMenuOption menu-option"
                 id="lang"
               >
                 <div

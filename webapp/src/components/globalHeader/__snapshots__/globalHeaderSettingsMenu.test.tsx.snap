@@ -560,7 +560,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option open-left "
+                class="MenuOption SubMenuOption menu-option open-left"
                 id="lang"
               >
                 <svg

@@ -31,7 +31,7 @@ function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
     return (
         <div
             id={props.id}
-            className={`MenuOption SubMenuOption menu-option${openLeftClass} ${isOpen ? 'menu-option-active' : ''}`}
+            className={`MenuOption SubMenuOption menu-option${openLeftClass}${isOpen ? ' menu-option-active' : ''}`}
             onClick={(e: React.MouseEvent) => {
                 e.preventDefault()
                 e.stopPropagation()
