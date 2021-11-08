@@ -68,10 +68,10 @@ func (p *Plugin) setConfiguration(configuration *configuration) {
 }
 
 // OnConfigurationChange is invoked when configuration changes may have been made.
-func (p *Plugin) OnConfigurationChange() {
+func (p *Plugin) OnConfigurationChange() error { //nolint
 	// Have we been setup by OnActivate?
 	if p.wsPluginAdapter == nil {
-		return
+		return nil
 	}
 
 	mmconfig := p.API.GetConfig()
@@ -91,4 +91,5 @@ func (p *Plugin) OnConfigurationChange() {
 	p.server.Config().FeatureFlags = parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 	p.server.UpdateAppConfig()
 	p.wsPluginAdapter.BroadcastConfigChange(*p.server.App().GetClientConfig())
+	return nil
 }
