@@ -53,8 +53,9 @@ const timeZoneOffset = (date: number): number => {
 
 const CalendarFullView = (props: Props): JSX.Element|null => {
     const intl = useIntl()
-    const {board, cards, activeView, dateDisplayProperty} = props
+    const {board, cards, activeView, dateDisplayProperty, readonly} = props
     const visiblePropertyTemplates = board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+    const isSelectable = !readonly
 
     let {initialDate} = props
     if (!initialDate) {
@@ -62,7 +63,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     }
 
     const isEditable = () : boolean => {
-        if (!dateDisplayProperty || (dateDisplayProperty.type === 'createdTime' || dateDisplayProperty.type === 'updatedTime')) {
+        if (readonly || !dateDisplayProperty || (dateDisplayProperty.type === 'createdTime' || dateDisplayProperty.type === 'updatedTime')) {
             return false
         }
         return true
@@ -191,7 +192,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 eventContent={renderEventContent}
                 eventChange={eventChange}
 
-                selectable={true}
+                selectable={isSelectable}
                 selectMirror={true}
                 select={onNewEvent}
             />
