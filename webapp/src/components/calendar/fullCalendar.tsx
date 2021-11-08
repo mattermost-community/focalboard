@@ -12,6 +12,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import mutator from '../../mutator'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import {DateProperty, createDatePropertyFromString} from '../properties/dateRange/dateRange'
 import Tooltip from '../../widgets/tooltip'
@@ -24,9 +25,10 @@ const oneDay = 60 * 60 * 24 * 1000
 type Props = {
     board: Board
     cards: Card[]
+    activeView: BoardView
+    readonly: boolean
     initialDate?: Date
     dateDisplayProperty?: IPropertyTemplate
-    visiblePropertyTemplates: IPropertyTemplate[]
     showCard: (cardId: string) => void
     addCard: (properties: Record<string, string>) => void
 }
@@ -51,8 +53,8 @@ const timeZoneOffset = (date: number): number => {
 
 const CalendarFullView = (props: Props): JSX.Element|null => {
     const intl = useIntl()
-    const {board, cards, dateDisplayProperty} = props
-    const visiblePropertyTemplates = props.visiblePropertyTemplates || []
+    const {board, cards, activeView, dateDisplayProperty} = props
+    const visiblePropertyTemplates = board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
 
     let {initialDate} = props
     if (!initialDate) {
