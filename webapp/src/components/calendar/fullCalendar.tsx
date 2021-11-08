@@ -11,18 +11,22 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 
 import mutator from '../../mutator'
 
-import {IPropertyTemplate} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {DateProperty, createDatePropertyFromString} from '../properties/dateRange/dateRange'
+import Tooltip from '../../widgets/tooltip'
+import PropertyValueElement from '../propertyValueElement'
 
 import './fullcalendar.scss'
 
 const oneDay = 60 * 60 * 24 * 1000
 
 type Props = {
+    board: Board
     cards: Card[]
     initialDate?: Date
     dateDisplayProperty?: IPropertyTemplate
+    visiblePropertyTemplates: IPropertyTemplate[]
     showCard: (cardId: string) => void
     addCard: (properties: Record<string, string>) => void
 }
@@ -47,7 +51,9 @@ const timeZoneOffset = (date: number): number => {
 
 const CalendarFullView = (props: Props): JSX.Element|null => {
     const intl = useIntl()
-    const {cards, dateDisplayProperty} = props
+    const {board, cards, dateDisplayProperty} = props
+    const visiblePropertyTemplates = props.visiblePropertyTemplates || []
+
     let {initialDate} = props
     if (!initialDate) {
         initialDate = new Date()
@@ -60,7 +66,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         return true
     }
 
-    const myEventsList = props.cards.flatMap((card): EventInput[] => {
+    const myEventsList = cards.flatMap((card): EventInput[] => {
         let dateFrom = new Date(card.createAt || 0)
         let dateTo = new Date(card.createAt || 0)
         if (dateDisplayProperty && dateDisplayProperty?.type === 'updatedTime') {
@@ -93,12 +99,30 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
         return (
-            <div className='octo-icontitle'>
-                { event.extendedProps.icon ? <div className='octo-icon'>{event.extendedProps.icon}</div> : undefined }
-                <div
-                    className='fc-event-title'
-                    key='__title'
-                >{event.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+            <div>
+                <div className='octo-icontitle'>
+                    { event.extendedProps.icon ? <div className='octo-icon'>{event.extendedProps.icon}</div> : undefined }
+                    <div
+                        className='fc-event-title'
+                        key='__title'
+                    >{event.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+                </div>
+                {visiblePropertyTemplates.map((template) => (
+                    <Tooltip
+                        key={template.id}
+                        title={template.name}
+                    >
+                        <PropertyValueElement
+                            board={board}
+                            readOnly={true}
+                            card={cards.find((o) => o.id === event.id) || cards[0]}
+                            contents={[]}
+                            comments={[]}
+                            propertyTemplate={template}
+                            showEmptyPlaceholder={false}
+                        />
+                    </Tooltip>
+                ))}
             </div>
         )
     }
