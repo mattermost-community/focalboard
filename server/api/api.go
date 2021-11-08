@@ -328,7 +328,9 @@ func stampModificationMetadata(r *http.Request, blocks []model.Block, auditRec *
 func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks updateBlocks
 	//
-	// Insert or update blocks
+	// Insert blocks. The specified IDs will only be used to link
+	// blocks with existing ones, the rest will be replaced by server
+	// generated IDs
 	//
 	// ---
 	// produces:
@@ -352,6 +354,10 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	// responses:
 	//   '200':
 	//     description: success
+	//     schema:
+	//       items:
+	//         $ref: '#/definitions/Block'
+	//       type: array
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -398,6 +404,8 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	blocks = model.GenerateBlockIDs(blocks)
+
 	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
@@ -406,14 +414,21 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 
-	err = a.app.InsertBlocks(*container, blocks, session.UserID, true)
+	newBlocks, err := a.app.InsertBlocks(*container, blocks, session.UserID, true)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	a.logger.Debug("POST Blocks", mlog.Int("block_count", len(blocks)))
-	jsonStringResponse(w, http.StatusOK, "{}")
+
+	json, err := json.Marshal(newBlocks)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, json)
 
 	auditRec.AddMeta("blockCount", len(blocks))
 	auditRec.Success()
@@ -912,7 +927,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
-	err = a.app.InsertBlocks(*container, blocks, session.UserID, false)
+	_, err = a.app.InsertBlocks(*container, model.GenerateBlockIDs(blocks), session.UserID, false)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
