@@ -97,6 +97,11 @@ func (s *SQLStore) GetBlocksWithRootID(c store.Container, rootID string) ([]mode
 
 }
 
+func (s *SQLStore) GetBlocksWithSameID() ([]model.Block, error) {
+	return s.getBlocksWithSameID(s.db)
+
+}
+
 func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]model.Block, error) {
 	return s.getBlocksWithType(s.db, c, blockType)
 
@@ -134,6 +139,11 @@ func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block
 
 func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block, error) {
 	return s.getSubTree3(s.db, c, blockID)
+
+}
+
+func (s *SQLStore) GetSystemSetting(key string) (string, error) {
+	return s.getSystemSetting(s.db, key)
 
 }
 
@@ -226,6 +236,27 @@ func (s *SQLStore) PatchBlock(c store.Container, blockID string, blockPatch *mod
 
 func (s *SQLStore) RefreshSession(session *model.Session) error {
 	return s.refreshSession(s.db, session)
+
+}
+
+func (s *SQLStore) ReplaceBlockID(currentID string, newID string, workspaceID string) error {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.replaceBlockID(tx, currentID, newID, workspaceID)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "ReplaceBlockID"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 
 }
 

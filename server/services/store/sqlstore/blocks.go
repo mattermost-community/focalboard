@@ -481,3 +481,74 @@ func (s *SQLStore) getBlock(db sq.BaseRunner, c store.Container, blockID string)
 
 	return &blocks[0], nil
 }
+
+func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]model.Block, error) {
+	subquery, _, _ := s.getQueryBuilder(db).
+		Select("id").
+		From(s.tablePrefix + "blocks").
+		Having("count(id) > 1").
+		GroupBy("id").
+		ToSql()
+
+	rows, err := s.getQueryBuilder(db).
+		Select(s.blockFields()...).
+		From(s.tablePrefix + "blocks").
+		Where(fmt.Sprintf("id IN (%s)", subquery)).
+		Query()
+	if err != nil {
+		s.logger.Error(`getBlocksWithSameID ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.blocksFromRows(rows)
+}
+
+func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceID string) error {
+	runUpdateForBlocksAndHistory := func(query sq.UpdateBuilder) error {
+		if _, err := query.Table(s.tablePrefix + "blocks").Exec(); err != nil {
+			return err
+		}
+
+		if _, err := query.Table(s.tablePrefix + "blocks_history").Exec(); err != nil {
+			return err
+		}
+
+		return nil
+	}
+
+	baseQuery := s.getQueryBuilder(db).
+		Where(sq.Eq{"workspace_id": workspaceID})
+
+	// update ID
+	updateIDQ := baseQuery.Update("").
+		Set("id", newID).
+		Where(sq.Eq{"id": currentID})
+
+	if errID := runUpdateForBlocksAndHistory(updateIDQ); errID != nil {
+		s.logger.Error(`replaceBlockID ERROR`, mlog.Err(errID))
+		return errID
+	}
+
+	// update RootID
+	updateRootIDQ := baseQuery.Update("").
+		Set("root_id", newID).
+		Where(sq.Eq{"root_id": currentID})
+
+	if errRootID := runUpdateForBlocksAndHistory(updateRootIDQ); errRootID != nil {
+		s.logger.Error(`replaceBlockID ERROR`, mlog.Err(errRootID))
+		return errRootID
+	}
+
+	// update ParentID
+	updateParentIDQ := baseQuery.Update("").
+		Set("parent_id", newID).
+		Where(sq.Eq{"parent_id": currentID})
+
+	if errParentID := runUpdateForBlocksAndHistory(updateParentIDQ); errParentID != nil {
+		s.logger.Error(`replaceBlockID ERROR`, mlog.Err(errParentID))
+		return errParentID
+	}
+
+	return nil
+}
