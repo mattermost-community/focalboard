@@ -677,9 +677,9 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 
 //nolint:gosec
 func testGetBlocksWithSameID(t *testing.T, storeInstance store.Store, _ store.Container) {
-	workspaceID1 := store.Container{WorkspaceID: "1"}
-	workspaceID2 := store.Container{WorkspaceID: "2"}
-	workspaceID3 := store.Container{WorkspaceID: "3"}
+	container1 := store.Container{WorkspaceID: "1"}
+	container2 := store.Container{WorkspaceID: "2"}
+	container3 := store.Container{WorkspaceID: "3"}
 
 	block1 := model.Block{ID: "block-id-1", RootID: "root-id-1"}
 	block2 := model.Block{ID: "block-id-2", RootID: "root-id-2"}
@@ -693,19 +693,19 @@ func testGetBlocksWithSameID(t *testing.T, storeInstance store.Store, _ store.Co
 	block8 := model.Block{ID: "block-id-8", RootID: "root-id-8"}
 
 	for _, block := range []model.Block{block1, block2, block3} {
-		err := storeInstance.InsertBlock(workspaceID1, &block, "user-id")
+		err := storeInstance.InsertBlock(container1, &block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	for _, block := range []model.Block{block4, block5} {
-		err := storeInstance.InsertBlock(workspaceID2, &block, "user-id")
+		err := storeInstance.InsertBlock(container2, &block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	for _, block := range []model.Block{block6, block7, block8} {
-		err := storeInstance.InsertBlock(workspaceID3, &block, "user-id")
+		err := storeInstance.InsertBlock(container3, &block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
@@ -727,8 +727,8 @@ func testGetBlocksWithSameID(t *testing.T, storeInstance store.Store, _ store.Co
 
 //nolint:gosec
 func testReplaceBlockID(t *testing.T, storeInstance store.Store, _ store.Container) {
-	workspaceID1 := store.Container{WorkspaceID: "1"}
-	workspaceID2 := store.Container{WorkspaceID: "2"}
+	container1 := store.Container{WorkspaceID: "1"}
+	container2 := store.Container{WorkspaceID: "2"}
 
 	// blocks from workspace1
 	block1 := model.Block{ID: "block-id-1", RootID: "root-id-1"}
@@ -743,13 +743,13 @@ func testReplaceBlockID(t *testing.T, storeInstance store.Store, _ store.Contain
 	block7 := model.Block{ID: "block-id-2", RootID: "root-id-2", ParentID: "block-id-1"}
 
 	for _, block := range []model.Block{block1, block2, block3, block4, block5} {
-		err := storeInstance.InsertBlock(workspaceID1, &block, "user-id")
+		err := storeInstance.InsertBlock(container1, &block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	for _, block := range []model.Block{block6, block7} {
-		err := storeInstance.InsertBlock(workspaceID2, &block, "user-id")
+		err := storeInstance.InsertBlock(container2, &block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
@@ -759,17 +759,17 @@ func testReplaceBlockID(t *testing.T, storeInstance store.Store, _ store.Contain
 	err := storeInstance.ReplaceBlockID(currentID, newID, "1")
 	require.NoError(t, err)
 
-	newBlock1, err := storeInstance.GetBlock(workspaceID1, newID)
+	newBlock1, err := storeInstance.GetBlock(container1, newID)
 	require.NoError(t, err)
-	newBlock2, err := storeInstance.GetBlock(workspaceID1, block2.ID)
+	newBlock2, err := storeInstance.GetBlock(container1, block2.ID)
 	require.NoError(t, err)
-	newBlock3, err := storeInstance.GetBlock(workspaceID1, block3.ID)
+	newBlock3, err := storeInstance.GetBlock(container1, block3.ID)
 	require.NoError(t, err)
-	newBlock5, err := storeInstance.GetBlock(workspaceID1, block5.ID)
+	newBlock5, err := storeInstance.GetBlock(container1, block5.ID)
 	require.NoError(t, err)
-	newBlock6, err := storeInstance.GetBlock(workspaceID2, block6.ID)
+	newBlock6, err := storeInstance.GetBlock(container2, block6.ID)
 	require.NoError(t, err)
-	newBlock7, err := storeInstance.GetBlock(workspaceID2, block7.ID)
+	newBlock7, err := storeInstance.GetBlock(container2, block7.ID)
 	require.NoError(t, err)
 
 	require.Equal(t, newID, newBlock1.ID)

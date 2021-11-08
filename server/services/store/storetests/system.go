@@ -41,4 +41,10 @@ func testSetGetSystemSettings(t *testing.T, store store.Store, _ /*container*/ s
 		require.NoError(t, err)
 		require.Equal(t, map[string]string{"test-1": "test-value-1", "test-2": "test-value-updated-2"}, settings)
 	})
+
+	t.Run("Get a single setting", func(t *testing.T) {
+		value, err := store.GetSystemSetting("test-1")
+		require.NoError(t, err)
+		require.Equal(t, "test-value-1", value)
+	})
 }
