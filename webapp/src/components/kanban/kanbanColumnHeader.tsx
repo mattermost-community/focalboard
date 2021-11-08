@@ -66,6 +66,8 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
     }), [props.onDropToColumn])
 
     useEffect(() => {
+        console.log('UseEffect SetGroupTitle')
+        console.log(group.option.value)
         setGroupTitle(group.option.value)
     }, [group.option.value])
 
@@ -107,14 +109,22 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                     <Editable
                         value={groupTitle}
                         placeholderText='New Select'
-                        onChange={setGroupTitle}
+                        onChange={(value: string) => {
+                            console.log('onChange SetGroupTitle')
+                            console.log(group.option.value)
+                            setGroupTitle(value)
+                        }}
                         onSave={() => {
                             if (groupTitle.trim() === '') {
+                                console.log('Onsave SetGroupTitle')
+                                console.log(group.option.value)
                                 setGroupTitle(group.option.value)
                             }
                             props.propertyNameChanged(group.option, groupTitle)
                         }}
                         onCancel={() => {
+                            console.log('OnCancel SetGroupTitle')
+                            console.log(group.option.value)
                             setGroupTitle(group.option.value)
                         }}
                         readonly={props.readonly}
