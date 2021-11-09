@@ -5,7 +5,7 @@ section: "download"
 weight: 2
 ---
 
-Focalboard is installed with Mattermost v6.0, where it's called Boards. To access and use Boards, [install or upgrade to Mattermost v6.0 or later](https://mattermost.com/get-started/). Then, select the Product menu in the top left corner of Mattermost and choose **Boards**.
+Focalboard is installed with Mattermost v6.0, where it's called Boards. To access and use Boards, [install or upgrade to Mattermost v6.0 or later](https://mattermost.com/get-started/?utm_source=focalboard&utm_campaign=focalboard). Then, select the Product menu in the top left corner of Mattermost and choose **Boards**.
 
 No additional server or web-proxy configuration is required.
 
@@ -28,4 +28,4 @@ Create or join a Private channel, Group Message, or Direct Message. Then, select
 
 You can use the [share board](/guide/user/#sharing-boards) feature to share a read-only board with anyone (incuding unauthenticated users) who has the generated link.
 
-For more information about using Mattermost Boards, refer to the main [product documentation here](https://docs.mattermost.com/guides/boards.html).
+For more information about using Mattermost Boards, refer to the main [product documentation here](https://docs.mattermost.com/guides/boards.html?utm_source=focalboard&utm_campaign=focalboard).

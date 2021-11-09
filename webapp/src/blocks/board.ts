@@ -2,8 +2,6 @@
 // See LICENSE.txt for license information.
 import {Utils, IDType} from '../utils'
 
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../telemetry/telemetryClient'
-
 import {Block, createBlock} from './block'
 import {Card} from './card'
 
@@ -60,7 +58,6 @@ function createBoard(block?: Block): Board {
             }
         })
     }
-    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {isTemplate: block?.fields.isTemplate || false})
 
     return {
         ...createBlock(block),
