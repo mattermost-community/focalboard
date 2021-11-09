@@ -18,6 +18,9 @@ import OptionsIcon from '../../widgets/icons/options'
 import TableIcon from '../../widgets/icons/table'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+
+import DeleteBoardDialog from './deleteBoardDialog'
+
 import './sidebarBoardItem.scss'
 
 type Props = {
@@ -33,6 +36,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const [collapsed, setCollapsed] = useState(false)
     const intl = useIntl()
     const history = useHistory()
+    const [deleteBoardOpen, setDeleteBoardOpen] = useState(false)
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, workspaceId?: string}>()
 
     const showBoard = useCallback((boardId) => {
@@ -127,23 +131,8 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             id='deleteBoard'
                             name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
                             icon={<DeleteIcon/>}
-                            onClick={async () => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: board.id})
-                                mutator.deleteBlock(
-                                    board,
-                                    intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
-                                    async () => {
-                                        if (props.nextBoardId) {
-                                            // This delay is needed because WSClient has a default 100 ms notification delay before updates
-                                            setTimeout(() => {
-                                                showBoard(props.nextBoardId)
-                                            }, 120)
-                                        }
-                                    },
-                                    async () => {
-                                        showBoard(board.id)
-                                    },
-                                )
+                            onClick={() => {
+                                setDeleteBoardOpen(true)
                             }}
                         />
 
@@ -189,6 +178,30 @@ const SidebarBoardItem = React.memo((props: Props) => {
                     </div>
                 </div>
             ))}
+
+            {deleteBoardOpen &&
+            <DeleteBoardDialog
+                boardTitle={props.board.title}
+                onClose={() => setDeleteBoardOpen(false)}
+                onDelete={async () => {
+                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: board.id})
+                    mutator.deleteBlock(
+                        board,
+                        intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
+                        async () => {
+                            if (props.nextBoardId) {
+                                // This delay is needed because WSClient has a default 100 ms notification delay before updates
+                                setTimeout(() => {
+                                    showBoard(props.nextBoardId)
+                                }, 120)
+                            }
+                        },
+                        async () => {
+                            showBoard(board.id)
+                        },
+                    )
+                }}
+            />}
         </div>
     )
 })

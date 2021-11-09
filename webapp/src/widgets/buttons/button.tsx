@@ -16,7 +16,9 @@ type Props = {
     submit?: boolean
     emphasis?: string
     size?: string
+    danger?: boolean
     className?: string
+    rightIcon?: boolean
 }
 
 function Button(props: Props): JSX.Element {
@@ -24,6 +26,7 @@ function Button(props: Props): JSX.Element {
         Button: true,
         active: Boolean(props.active),
         filled: Boolean(props.filled),
+        danger: Boolean(props.danger),
     }
     classNames[`emphasis--${props.emphasis}`] = Boolean(props.emphasis)
     classNames[`size--${props.size}`] = Boolean(props.size)
@@ -37,8 +40,9 @@ function Button(props: Props): JSX.Element {
             title={props.title}
             onBlur={props.onBlur}
         >
-            {props.icon}
+            {!props.rightIcon && props.icon}
             <span>{props.children}</span>
+            {props.rightIcon && props.icon}
         </button>)
 }
 

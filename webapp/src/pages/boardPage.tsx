@@ -53,6 +53,12 @@ const BoardPage = (props: Props): JSX.Element => {
 
     let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
 
+    // if we're in a legacy route and not showing a shared board,
+    // redirect to the new URL schema equivalent
+    if (Utils.isFocalboardLegacy() && !props.readonly) {
+        window.location.href = window.location.href.replace('/plugins/focalboard', '/boards')
+    }
+
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
         workspaceId = match.params.workspaceId || workspaceId
@@ -163,13 +169,20 @@ const BoardPage = (props: Props): JSX.Element => {
         }
     }, [board?.title, activeView?.title])
 
+    if (props.readonly) {
+        useEffect(() => {
+            if (board?.id && activeView?.id) {
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: board?.id, view: activeView?.id})
+            }
+        }, [board?.id, activeView?.id])
+    }
+
     useEffect(() => {
         let loadAction: any = initialLoad /* eslint-disable-line @typescript-eslint/no-explicit-any */
         let token = localStorage.getItem('focalboardSessionId') || ''
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
             token = token || queryString.get('r') || ''
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: board.id, view: activeView.id})
         }
 
         dispatch(loadAction(match.params.boardId))
