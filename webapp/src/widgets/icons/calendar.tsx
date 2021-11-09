@@ -8,21 +8,79 @@ import './calendar.scss'
 export default function CalendarIcon(): JSX.Element {
     return (
         <svg
-            xmlns='http://www.w3.org/2000/svg'
+            width='24'
+            height='24'
+            viewBox='0 0 24 24'
+            fill='none'
             className='CalendarIcon Icon'
-            viewBox='0 0 100 100'
+            xmlns='http://www.w3.org/2000/svg'
         >
-            <rect
-                x='10'
-                y='10'
-                width='80'
-                height='80'
-                rx='5'
-                ry='5'
-            />
-            <polyline points='37,10 37,90'/>
-            <polyline points='10,37 90,37'/>
-            <polyline points='10,63 90,63'/>
+            <g opacity='0.64'>
+                <rect
+                    x='3'
+                    y='3'
+                    width='18'
+                    height='18'
+                    rx='1'
+                    stroke='white'
+                    strokeWidth='2'
+                />
+                <rect
+                    x='20'
+                    y='7'
+                    width='2'
+                    height='16'
+                    transform='rotate(90 20 7)'
+                    fill='white'
+                />
+                <rect
+                    x='6'
+                    y='11'
+                    width='2'
+                    height='2'
+                    fill='white'
+                />
+                <rect
+                    x='8'
+                    y='15'
+                    width='2'
+                    height='2'
+                    transform='rotate(90 8 15)'
+                    fill='white'
+                />
+                <rect
+                    x='13'
+                    y='11'
+                    width='2'
+                    height='2'
+                    transform='rotate(90 13 11)'
+                    fill='white'
+                />
+                <rect
+                    x='13'
+                    y='15'
+                    width='2'
+                    height='2'
+                    transform='rotate(90 13 15)'
+                    fill='white'
+                />
+                <rect
+                    x='18'
+                    y='11'
+                    width='2'
+                    height='2'
+                    transform='rotate(90 18 11)'
+                    fill='white'
+                />
+                <rect
+                    x='18'
+                    y='15'
+                    width='2'
+                    height='2'
+                    transform='rotate(90 18 15)'
+                    fill='white'
+                />
+            </g>
         </svg>
     )
 }
