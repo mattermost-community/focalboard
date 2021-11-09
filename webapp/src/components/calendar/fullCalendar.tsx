@@ -18,8 +18,6 @@ import {DateProperty, createDatePropertyFromString} from '../properties/dateRang
 import Tooltip from '../../widgets/tooltip'
 import PropertyValueElement from '../propertyValueElement'
 
-import {Utils} from '../../utils'
-
 import './fullcalendar.scss'
 
 const oneDay = 60 * 60 * 24 * 1000
@@ -50,8 +48,6 @@ function createDatePropertyFromCalendarDates(start: Date, end: Date) : DatePrope
 }
 
 const timeZoneOffset = (date: number): number => {
-    Utils.log('timezoneoffset')
-    Utils.log(new Date().toString())
     return new Date(date).getTimezoneOffset() * 60 * 1000
 }
 
