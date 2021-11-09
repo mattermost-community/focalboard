@@ -25,6 +25,8 @@ func (a *App) doUniqueIDsMigration() error {
 		return nil
 	}
 
+	a.logger.Debug("Running Unique IDs migration")
+
 	blocks, err := a.store.GetBlocksWithSameID()
 	if err != nil {
 		return fmt.Errorf("cannot get blocks with same ID: %w", err)
@@ -53,14 +55,17 @@ func (a *App) doUniqueIDsMigration() error {
 		return fmt.Errorf("cannot mark migration as completed: %w", err)
 	}
 
+	a.logger.Debug("Unique IDs migration finished successfully")
 	return nil
 }
 
 func (a *App) DoAppMigrations() error {
+	a.logger.Info("Running data migrations")
 	if err := a.doUniqueIDsMigration(); err != nil {
 		a.logger.Error("Error running unique IDs migration", mlog.Err(err))
 		return err
 	}
 
+	a.logger.Info("Data migrations run successfully")
 	return nil
 }
