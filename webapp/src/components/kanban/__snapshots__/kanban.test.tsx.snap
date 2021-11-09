@@ -1,0 +1,862 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`src/component/kanban/kanban do not return a kanban with groupByProperty undefined 1`] = `
+<div>
+  <div />
+</div>
+`;
+
+exports[`src/component/kanban/kanban return kanban and change title on KanbanColumnHeader 1`] = `
+<div>
+  <div
+    class="Kanban"
+  >
+    <div
+      class="octo-board-header"
+      id="mainBoardHeader"
+    >
+      <div
+        class="octo-board-header-cell KanbanColumnHeader"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <span
+          class="Label propColorOrange "
+        >
+          <input
+            class="Editable undefined"
+            placeholder="New Select"
+            spellcheck="true"
+            title="New Q1"
+            value="New Q1"
+          />
+        </span>
+        <div
+          class="KanbanCalculation"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              2
+            </span>
+          </button>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+        <button
+          class="Button IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-plus AddIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="octo-board-header-cell KanbanColumnHeader"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <span
+          class="Label propColorBlue "
+        >
+          <input
+            class="Editable undefined"
+            placeholder="New Select"
+            spellcheck="true"
+            title="Q2"
+            value="Q2"
+          />
+        </span>
+        <div
+          class="KanbanCalculation"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              1
+            </span>
+          </button>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+        <button
+          class="Button IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-plus AddIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="octo-board-header-cell narrow"
+      >
+        Hidden columns
+      </div>
+      <div
+        class="octo-board-header-cell narrow"
+      >
+        <button
+          type="button"
+        >
+          <span>
+            + Add a group
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="octo-board-body"
+      id="mainBoardBody"
+    >
+      <div
+        class="octo-board-column"
+      >
+        <div
+          class="KanbanCard"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper optionsMenu"
+            role="button"
+          >
+            <button
+              class="Button IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <div>
+              title
+            </div>
+          </div>
+        </div>
+        <div
+          class="KanbanCard"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper optionsMenu"
+            role="button"
+          >
+            <button
+              class="Button IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <div>
+              title
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+        >
+          <span>
+            + New
+          </span>
+        </button>
+      </div>
+      <div
+        class="octo-board-column"
+      >
+        <div
+          class="KanbanCard"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper optionsMenu"
+            role="button"
+          >
+            <button
+              class="Button IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <div>
+              title
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+        >
+          <span>
+            + New
+          </span>
+        </button>
+      </div>
+      <div
+        class="octo-board-column narrow"
+      >
+        <div
+          class="octo-board-hidden-item"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <span
+              class="Label propColorDefault "
+            >
+              Q3
+            </span>
+          </div>
+          <button
+            type="button"
+          >
+            <span>
+              0
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/component/kanban/kanban return kanban and click on KanbanCalculationMenu 1`] = `
+<div>
+  <div
+    class="Kanban"
+  >
+    <div
+      class="octo-board-header"
+      id="mainBoardHeader"
+    >
+      <div
+        class="octo-board-header-cell KanbanColumnHeader"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <span
+          class="Label propColorOrange "
+        >
+          <input
+            class="Editable undefined"
+            placeholder="New Select"
+            spellcheck="true"
+            title="Q1"
+            value="Q1"
+          />
+        </span>
+        <div
+          class="KanbanCalculation"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              2
+            </span>
+          </button>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+        <button
+          class="Button IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-plus AddIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="octo-board-header-cell KanbanColumnHeader"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <span
+          class="Label propColorBlue "
+        >
+          <input
+            class="Editable undefined"
+            placeholder="New Select"
+            spellcheck="true"
+            title="Q2"
+            value="Q2"
+          />
+        </span>
+        <div
+          class="KanbanCalculation"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              1
+            </span>
+          </button>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+        <button
+          class="Button IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-plus AddIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="octo-board-header-cell narrow"
+      >
+        Hidden columns
+      </div>
+      <div
+        class="octo-board-header-cell narrow"
+      >
+        <button
+          type="button"
+        >
+          <span>
+            + Add a group
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="octo-board-body"
+      id="mainBoardBody"
+    >
+      <div
+        class="octo-board-column"
+      >
+        <div
+          class="KanbanCard"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper optionsMenu"
+            role="button"
+          >
+            <button
+              class="Button IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <div>
+              title
+            </div>
+          </div>
+        </div>
+        <div
+          class="KanbanCard"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper optionsMenu"
+            role="button"
+          >
+            <button
+              class="Button IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <div>
+              title
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+        >
+          <span>
+            + New
+          </span>
+        </button>
+      </div>
+      <div
+        class="octo-board-column"
+      >
+        <div
+          class="KanbanCard"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper optionsMenu"
+            role="button"
+          >
+            <button
+              class="Button IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <div>
+              title
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+        >
+          <span>
+            + New
+          </span>
+        </button>
+      </div>
+      <div
+        class="octo-board-column narrow"
+      >
+        <div
+          class="octo-board-hidden-item"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <span
+              class="Label propColorDefault "
+            >
+              Q3
+            </span>
+          </div>
+          <button
+            type="button"
+          >
+            <span>
+              0
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/component/kanban/kanban should match snapshot 1`] = `
+<div>
+  <div
+    class="Kanban"
+  >
+    <div
+      class="octo-board-header"
+      id="mainBoardHeader"
+    >
+      <div
+        class="octo-board-header-cell KanbanColumnHeader"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <span
+          class="Label propColorOrange "
+        >
+          <input
+            class="Editable undefined"
+            placeholder="New Select"
+            spellcheck="true"
+            title="Q1"
+            value="Q1"
+          />
+        </span>
+        <div
+          class="KanbanCalculation"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              2
+            </span>
+          </button>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+        <button
+          class="Button IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-plus AddIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="octo-board-header-cell KanbanColumnHeader"
+        draggable="true"
+        style="opacity: 1;"
+      >
+        <span
+          class="Label propColorBlue "
+        >
+          <input
+            class="Editable undefined"
+            placeholder="New Select"
+            spellcheck="true"
+            title="Q2"
+            value="Q2"
+          />
+        </span>
+        <div
+          class="KanbanCalculation"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              1
+            </span>
+          </button>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+        <button
+          class="Button IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-plus AddIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="octo-board-header-cell narrow"
+      >
+        Hidden columns
+      </div>
+      <div
+        class="octo-board-header-cell narrow"
+      >
+        <button
+          type="button"
+        >
+          <span>
+            + Add a group
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="octo-board-body"
+      id="mainBoardBody"
+    >
+      <div
+        class="octo-board-column"
+      >
+        <div
+          class="KanbanCard"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper optionsMenu"
+            role="button"
+          >
+            <button
+              class="Button IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <div>
+              title
+            </div>
+          </div>
+        </div>
+        <div
+          class="KanbanCard"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper optionsMenu"
+            role="button"
+          >
+            <button
+              class="Button IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <div>
+              title
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+        >
+          <span>
+            + New
+          </span>
+        </button>
+      </div>
+      <div
+        class="octo-board-column"
+      >
+        <div
+          class="KanbanCard"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper optionsMenu"
+            role="button"
+          >
+            <button
+              class="Button IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <div
+            class="octo-icontitle"
+          >
+            <div
+              class="octo-icon"
+            >
+              i
+            </div>
+            <div>
+              title
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+        >
+          <span>
+            + New
+          </span>
+        </button>
+      </div>
+      <div
+        class="octo-board-column narrow"
+      >
+        <div
+          class="octo-board-hidden-item"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <span
+              class="Label propColorDefault "
+            >
+              Q3
+            </span>
+          </div>
+          <button
+            type="button"
+          >
+            <span>
+              0
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

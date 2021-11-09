@@ -219,7 +219,7 @@ class Utils {
                 'rel="noreferrer" ' +
                 `href="${encodeURI(href || '')}" ` +
                 `title="${title ? encodeURI(title) : ''}" ` +
-                `onclick="event.stopPropagation();${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
+                `onclick="${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
 
@@ -506,6 +506,13 @@ class Utils {
 
     static isFocalboardPlugin(): boolean {
         return Boolean(window.isFocalboardPlugin)
+    }
+
+    // this is a temporary solution while we're using legacy routes
+    // for shared boards as a way to check if we're accessing the
+    // legacy routes inside the plugin
+    static isFocalboardLegacy(): boolean {
+        return window.location.pathname.includes('/plugins/focalboard')
     }
 
     static fixBlock(block: Block): Block {

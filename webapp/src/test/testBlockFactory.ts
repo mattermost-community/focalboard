@@ -74,6 +74,42 @@ class TestBlockFactory {
         return view
     }
 
+    static createTableView(board?: Board): BoardView {
+        const view = createBoardView()
+        view.parentId = board ? board.id : 'parent'
+        view.rootId = board ? board.rootId : 'root'
+        view.title = 'view title'
+        view.fields.viewType = 'table'
+        view.fields.groupById = 'property1'
+        view.fields.hiddenOptionIds = ['value1']
+        view.fields.cardOrder = ['card1', 'card2', 'card3']
+        view.fields.sortOptions = [
+            {
+                propertyId: 'property1',
+                reversed: true,
+            },
+            {
+                propertyId: 'property2',
+                reversed: false,
+            },
+        ]
+        view.fields.columnWidths = {
+            column1: 100,
+            column2: 200,
+        }
+
+        // Filter
+        const filterGroup = createFilterGroup()
+        const filter = createFilterClause()
+        filter.propertyId = 'property1'
+        filter.condition = 'includes'
+        filter.values = ['value1']
+        filterGroup.filters.push(filter)
+        view.fields.filter = filterGroup
+
+        return view
+    }
+
     static createCard(board?: Board): Card {
         const card = createCard()
         card.parentId = board ? board.id : 'parent'
