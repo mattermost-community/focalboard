@@ -16,8 +16,8 @@ func TestRunUniqueIDsMigration(t *testing.T) {
 	sqlStore := store.(*SQLStore)
 	defer tearDown()
 
-	// we need to mark the migration as undone so we can run it again
-	// with the test data
+	// we need to mark the migration as not done so we can run it
+	// again with the test data
 	keyErr := sqlStore.SetSystemSetting(UniqueIDsMigrationKey, "false")
 	require.NoError(t, keyErr)
 
