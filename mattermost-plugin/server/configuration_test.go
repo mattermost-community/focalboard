@@ -34,11 +34,9 @@ func newTestServer() *server.Server {
 	return srv
 }
 
-func TestConfiguration(t *testing.T) {
-	t.Run("null configuration", func(t *testing.T) {
-		plugin := &Plugin{}
-		assert.NotNil(t, plugin.getConfiguration())
-	})
+func TestConfigurationNullConfiguration(t *testing.T) {
+	plugin := &Plugin{}
+	assert.NotNil(t, plugin.getConfiguration())
 }
 
 func TestOnConfigurationChange(t *testing.T) {

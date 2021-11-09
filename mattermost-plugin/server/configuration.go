@@ -16,6 +16,7 @@ import (
 // If you add non-reference types to your configuration struct, be sure to rewrite Clone as a deep
 // copy appropriate for your types.
 type configuration struct {
+	EnablePublicSharedBoards bool
 }
 
 // Clone shallow copies the configuration. Your implementation may require a deep copy if
@@ -72,19 +73,22 @@ func (p *Plugin) OnConfigurationChange() error { //nolint
 	if p.wsPluginAdapter == nil {
 		return nil
 	}
-	mmconfig := p.API.GetUnsanitizedConfig()
+	mmconfig := p.API.GetConfig()
 
 	// handle plugin configuration settings
 	enableShareBoards := false
 	if mmconfig.PluginSettings.Plugins[pluginName][sharedBoardsName] == true {
 		enableShareBoards = true
 	}
+	configuration := &configuration{
+		EnablePublicSharedBoards: enableShareBoards,
+	}
+	p.setConfiguration(configuration)
 	p.server.Config().EnablePublicSharedBoards = enableShareBoards
 
 	// handle feature flags
 	p.server.Config().FeatureFlags = parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 	p.server.UpdateAppConfig()
 	p.wsPluginAdapter.BroadcastConfigChange(*p.server.App().GetClientConfig())
-
 	return nil
 }
