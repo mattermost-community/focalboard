@@ -4,12 +4,16 @@
 import React, {useCallback, useState} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
+import {Position} from '../cardDetail/cardDetailContents'
+
 import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils, IDType} from '../../utils'
 import Button from '../../widgets/buttons/button'
+
+import {dragAndDropRearrange} from '../cardDetail/cardDetailContentsUtility'
 
 import KanbanCard from './kanbanCard'
 import KanbanColumn from './kanbanColumn'
@@ -110,16 +114,25 @@ const Kanban = (props: Props) => {
         } else if (dstOption) {
             Utils.log(`ondrop. Header option: ${dstOption.value}, column: ${option?.value}`)
 
-            // Move option to new index
             const visibleOptionIds = visibleGroups.map((o) => o.option.id)
+            const srcBlockX = visibleOptionIds.indexOf(option.id)
+            const dstBlockX = visibleOptionIds.indexOf(dstOption.id)
 
-            const srcIndex = visibleOptionIds.indexOf(dstOption.id)
-            const destIndex = visibleOptionIds.indexOf(option.id)
+            // Here aboveRow means to the left while belowRow means to the right
+            const moveTo = (srcBlockX > dstBlockX ? 'aboveRow' : 'belowRow') as Position
 
-            visibleOptionIds[srcIndex] = option.id
-            visibleOptionIds[destIndex] = dstOption.id
+            const visibleOptionIdsRearranged = dragAndDropRearrange({
+                contentOrder: visibleOptionIds,
+                srcBlockX,
+                srcBlockY: -1,
+                dstBlockX,
+                dstBlockY: -1,
+                srcBlockId: option.id,
+                dstBlockId: dstOption.id,
+                moveTo,
+            }) as string[]
 
-            await mutator.changeViewVisibleOptionIds(activeView.id, activeView.fields.visibleOptionIds, visibleOptionIds)
+            await mutator.changeViewVisibleOptionIds(activeView.id, activeView.fields.visibleOptionIds, visibleOptionIdsRearranged)
         }
     }, [cards, visibleGroups, activeView, groupByProperty, props.selectedCardIds])
 
