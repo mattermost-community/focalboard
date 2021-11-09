@@ -48,6 +48,9 @@ function createDatePropertyFromCalendarDates(start: Date, end: Date) : DatePrope
 }
 
 const timeZoneOffset = (date: number): number => {
+    console.log('timezoneoffset')
+    console.log(new Date().toString())
+    console.log(new Date(date).getTimezoneOffset() * 60 * 1000)
     return new Date(date).getTimezoneOffset() * 60 * 1000
 }
 
