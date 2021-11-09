@@ -166,17 +166,7 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		enablePublicSharedBoards = true
 	}
 
-	featureFlags := make(map[string]string)
-	for key, value := range mmconfig.FeatureFlags.ToMap() {
-		// Break out FeatureFlags and pass remaining
-		if key == boardsFeatureFlagName {
-			for _, flag := range strings.Split(value, "-") {
-				featureFlags[flag] = "true"
-			}
-		} else {
-			featureFlags[key] = value
-		}
-	}
+	featureFlags := parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 
 	return &config.Configuration{
 		ServerRoot:               baseURL + "/plugins/focalboard",
@@ -202,6 +192,21 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		EnablePublicSharedBoards: enablePublicSharedBoards,
 		FeatureFlags:             featureFlags,
 	}
+}
+
+func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {
+	featureFlags := make(map[string]string)
+	for key, value := range configFeatureFlags {
+		// Break out FeatureFlags and pass remaining
+		if key == boardsFeatureFlagName {
+			for _, flag := range strings.Split(value, "-") {
+				featureFlags[flag] = "true"
+			}
+		} else {
+			featureFlags[key] = value
+		}
+	}
+	return featureFlags
 }
 
 func (p *Plugin) OnWebSocketConnect(webConnID, userID string) {
@@ -287,9 +292,8 @@ func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) *mmModel.Pos
 
 	// Trim away the first / because otherwise after we split the string, the first element in the array is a empty element
 	urlPath := u.Path
-	if strings.HasPrefix(urlPath, "/") {
-		urlPath = u.Path[1:]
-	}
+	urlPath = strings.TrimPrefix(urlPath, "/")
+	urlPath = strings.TrimSuffix(urlPath, "/")
 	pathSplit := strings.Split(strings.ToLower(urlPath), "/")
 	queryParams := u.Query()
 
@@ -332,6 +336,13 @@ func getFirstLink(str string) string {
 		if _, ok := blockOrInline.(*markdown.Autolink); ok {
 			if link := blockOrInline.(*markdown.Autolink).Destination(); firstLink == "" {
 				firstLink = link
+				return false
+			}
+		}
+		if inlineLink, ok := blockOrInline.(*markdown.InlineLink); ok {
+			if link := inlineLink.Destination(); firstLink == "" {
+				firstLink = link
+				return false
 			}
 		}
 		return true
