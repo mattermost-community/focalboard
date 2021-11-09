@@ -25,6 +25,7 @@ import PropertyValueElement from '../propertyValueElement'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import './kanbanCard.scss'
+import CardBadges from '../cardBadges'
 
 type Props = {
     card: Card
@@ -165,7 +166,8 @@ const KanbanCard = React.memo((props: Props) => {
                         />
                     </Tooltip>
                 ))}
-            </div>
+            <CardBadges card={card}/>
+        </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
 

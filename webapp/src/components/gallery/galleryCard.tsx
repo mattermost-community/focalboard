@@ -27,6 +27,7 @@ import ImageElement from '../content/imageElement'
 import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
 import './galleryCard.scss'
+import CardBadges from '../cardBadges'
 
 type Props = {
     board: Board
@@ -176,6 +177,10 @@ const GalleryCard = React.memo((props: Props) => {
                         </Tooltip>
                     ))}
                 </div>}
+            <CardBadges
+                card={card}
+                className='gallery-badges'
+            />
         </div>
     )
 })
