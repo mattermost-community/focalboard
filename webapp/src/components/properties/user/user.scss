@@ -3,6 +3,7 @@
     min-width: 120px;
     display: flex;
     align-items: center;
+
     &.readonly {
         overflow: hidden;
         text-overflow: ellipsis;
