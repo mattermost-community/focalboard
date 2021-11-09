@@ -598,6 +598,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 class="KanbanCalculation"
               >
                 <button
+                  title="3"
                   type="button"
                 >
                   <span>
@@ -651,6 +652,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 class="KanbanCalculation"
               >
                 <button
+                  title="0"
                   type="button"
                 >
                   <span>
@@ -1120,6 +1122,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 class="KanbanCalculation"
               >
                 <button
+                  title="3"
                   type="button"
                 >
                   <span>
@@ -1152,6 +1155,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 class="KanbanCalculation"
               >
                 <button
+                  title="0"
                   type="button"
                 >
                   <span>
@@ -1887,6 +1891,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 class="KanbanCalculation"
               >
                 <button
+                  title="3"
                   type="button"
                 >
                   <span>
@@ -1940,6 +1945,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 class="KanbanCalculation"
               >
                 <button
+                  title="0"
                   type="button"
                 >
                   <span>
@@ -2409,6 +2415,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 class="KanbanCalculation"
               >
                 <button
+                  title="3"
                   type="button"
                 >
                   <span>
@@ -2441,6 +2448,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 class="KanbanCalculation"
               >
                 <button
+                  title="0"
                   type="button"
                 >
                   <span>

@@ -211,11 +211,12 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private addCardFromTemplate = async (cardTemplateId: string) => {
-        const {activeView} = this.props
+        const {activeView, board} = this.props
 
         mutator.performAsUndoGroup(async () => {
             const [, newCardId] = await mutator.duplicateCard(
                 cardTemplateId,
+                board,
                 this.props.intl.formatMessage({id: 'Mutator.new-card-from-template', defaultMessage: 'new card from template'}),
                 false,
                 async (cardId) => {
@@ -361,6 +362,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private async duplicateSelectedCards() {
+        const {board} = this.props
         const {selectedCardIds} = this.state
         if (selectedCardIds.length < 1) {
             return
@@ -370,7 +372,7 @@ class CenterPanel extends React.Component<Props, State> {
             for (const cardId of selectedCardIds) {
                 const card = this.props.cards.find((o) => o.id === cardId)
                 if (card) {
-                    mutator.duplicateCard(cardId)
+                    mutator.duplicateCard(cardId, board)
                 } else {
                     Utils.assertFailure(`Selected card not found: ${cardId}`)
                 }
