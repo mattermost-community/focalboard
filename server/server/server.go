@@ -153,12 +153,6 @@ func New(params Params) (*Server, error) {
 		return nil, err
 	}
 
-	// Run data migrations
-	if err := app.DoAppMigrations(); err != nil {
-		params.Logger.Error("Unable to run data migrations", mlog.Err(err))
-		return nil, err
-	}
-
 	webServer := web.NewServer(params.Cfg.WebPath, params.Cfg.ServerRoot, params.Cfg.Port,
 		params.Cfg.UseSSL, params.Cfg.LocalOnly, params.Logger)
 	// if the adapter is a routed service, register it before the API

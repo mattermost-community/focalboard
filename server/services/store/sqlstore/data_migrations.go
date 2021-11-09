@@ -1,4 +1,4 @@
-package app
+package sqlstore
 
 import (
 	"fmt"
@@ -6,16 +6,14 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
-
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
 	UniqueIDsMigrationKey = "UniqueIDsMigrationComplete"
 )
 
-func (a *App) doUniqueIDsMigration() error {
-	setting, err := a.store.GetSystemSetting(UniqueIDsMigrationKey)
+func (s *SQLStore) runUniqueIDsMigration() error {
+	setting, err := s.GetSystemSetting(UniqueIDsMigrationKey)
 	if err != nil {
 		return fmt.Errorf("cannot get migration state: %w", err)
 	}
@@ -25,9 +23,9 @@ func (a *App) doUniqueIDsMigration() error {
 		return nil
 	}
 
-	a.logger.Debug("Running Unique IDs migration")
+	s.logger.Debug("Running Unique IDs migration")
 
-	blocks, err := a.store.GetBlocksWithSameID()
+	blocks, err := s.GetBlocksWithSameID()
 	if err != nil {
 		return fmt.Errorf("cannot get blocks with same ID: %w", err)
 	}
@@ -45,27 +43,16 @@ func (a *App) doUniqueIDsMigration() error {
 			}
 
 			newID := utils.NewID(model.BlockType2IDType(block.Type))
-			if err := a.store.ReplaceBlockID(block.ID, newID, block.WorkspaceID); err != nil {
+			if err := s.ReplaceBlockID(block.ID, newID, block.WorkspaceID); err != nil {
 				return fmt.Errorf("cannot replace blockID %s: %w", block.ID, err)
 			}
 		}
 	}
 
-	if err := a.store.SetSystemSetting(UniqueIDsMigrationKey, strconv.FormatBool(true)); err != nil {
+	if err := s.SetSystemSetting(UniqueIDsMigrationKey, strconv.FormatBool(true)); err != nil {
 		return fmt.Errorf("cannot mark migration as completed: %w", err)
 	}
 
-	a.logger.Debug("Unique IDs migration finished successfully")
-	return nil
-}
-
-func (a *App) DoAppMigrations() error {
-	a.logger.Info("Running data migrations")
-	if err := a.doUniqueIDsMigration(); err != nil {
-		a.logger.Error("Error running unique IDs migration", mlog.Err(err))
-		return err
-	}
-
-	a.logger.Info("Data migrations run successfully")
+	s.logger.Debug("Unique IDs migration finished successfully")
 	return nil
 }

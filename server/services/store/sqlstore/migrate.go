@@ -23,6 +23,10 @@ import (
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
 )
 
+const (
+	uniqueIDsMigrationRequiredVersion = 14
+)
+
 type PrefixedMigration struct {
 	*bindata.Bindata
 	prefix   string
@@ -168,8 +172,36 @@ func (s *SQLStore) Migrate() error {
 	if err != nil {
 		return err
 	}
-	err = m.Up()
-	if err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
+
+	if err := ensureMigrationsAppliedUpToVersion(m, uniqueIDsMigrationRequiredVersion); err != nil {
+		return err
+	}
+
+	if err := s.runUniqueIDsMigration(); err != nil {
+		return fmt.Errorf("error running unique IDs migration: %w", err)
+	}
+
+	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
+
+	return nil
+}
+
+func ensureMigrationsAppliedUpToVersion(m *migrate.Migrate, version uint) error {
+	currentVersion, _, err := m.Version()
+	if err != nil && !errors.Is(err, migrate.ErrNilVersion) {
+		return err
+	}
+
+	// if the target version is below or equal to the current one, do
+	// not migrate either because is not needed (both are equal) or
+	// because it would downgrade the database (is below)
+	if version <= currentVersion {
+		return nil
+	}
+
+	if err := m.Migrate(version); err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
 		return err
 	}
 
