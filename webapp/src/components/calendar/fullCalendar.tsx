@@ -131,8 +131,10 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     }
 
     const eventClick = (eventProps: EventClickArg) => {
-        const {event} = eventProps
-        props.showCard(event.id)
+        if (!readonly) {
+            const {event} = eventProps
+            props.showCard(event.id)
+        }
     }
 
     const eventChange = (eventProps: EventChangeArg) => {
@@ -186,6 +188,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 initialView='dayGridMonth'
                 events={myEventsList}
                 editable={isEditable()}
+                eventResizableFromStart={isEditable()}
                 headerToolbar={toolbar}
                 buttonText={buttonText}
                 eventClick={eventClick}
