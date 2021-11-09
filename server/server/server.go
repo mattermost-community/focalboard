@@ -352,16 +352,7 @@ func (s *Server) App() *app.App {
 	return s.app
 }
 
-func (s *Server) UpdateClientConfig(pluginConfig map[string]interface{}) {
-	for index, value := range pluginConfig {
-		if index == "EnablePublicSharedBoards" {
-			b, ok := value.(bool)
-			if !ok {
-				s.logger.Warn("Invalid value for config value", mlog.String(index, value.(string)))
-			}
-			s.config.EnablePublicSharedBoards = b
-		}
-	}
+func (s *Server) UpdateAppConfig() {
 	s.app.SetConfig(s.config)
 }
 
