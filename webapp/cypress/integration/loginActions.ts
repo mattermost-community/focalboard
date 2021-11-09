@@ -71,12 +71,14 @@ describe('Login actions', () => {
         cy.apiLoginUser({username, password})
         cy.visit('/')
 
-        cy.log('Select Log out from menu')
+        // Select Log out from menu
+        cy.log('**Select Log out from menu**')
         cy.get('.SidebarUserMenu').click()
         cy.get('.menu-name').contains('Log out').click()
         cy.location('pathname').should('eq', '/login')
 
-        cy.log('User should not be logged in automatically')
+        // User should not be logged in automatically
+        cy.log('**User should not be logged in automatically**')
         cy.visit('/')
         cy.location('pathname').should('eq', '/login')
     })
@@ -96,18 +98,21 @@ describe('Login actions', () => {
         cy.apiLoginTestUser()
         cy.visit('/')
 
-        cy.log('Copy invite link')
+        // Copy invite link
+        cy.log('**Copy invite link**')
         cy.get('.Sidebar .SidebarUserMenu').click()
         cy.get('.menu-name').contains('Invite users').click()
         cy.get('.Button').contains('Copy link').click()
         cy.get('.Button').contains('Copied').should('exist')
 
         cy.get('a.shareUrl').invoke('attr', 'href').then((inviteLink) => {
-            cy.log('Log out existing user')
+            // Log out existing user
+            cy.log('**Log out existing user**')
             cy.get('.Sidebar .SidebarUserMenu').click()
             cy.get('.menu-name').contains('Log out').click()
 
-            cy.log('Register new user')
+            // Register new user
+            cy.log('**Register new user**')
             cy.visit(inviteLink as string)
             cy.get('#login-email').type(email)
             cy.get('#login-username').type(username)

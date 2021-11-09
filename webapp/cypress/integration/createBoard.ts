@@ -20,24 +20,28 @@ describe('Create and delete board / card', () => {
     it('Can create and delete a board and a card', () => {
         cy.visit('/')
 
-        cy.log('Create new empty board')
+        // Create new empty board
+        cy.log('**Create new empty board**')
         cy.contains('+ Add board').click({force: true})
         cy.contains('Empty board').click({force: true})
         cy.get('.BoardComponent').should('exist')
 
-        cy.log('Change board title')
+        // Change board title
+        cy.log('**Change board title**')
         cy.get('.Editable.title').
             type(boardTitle).
             type('{enter}').
             should('have.value', boardTitle)
 
-        cy.log('Hide and show the sidebar')
+        // Hide and show the sidebar
+        cy.log('**Hide and show the sidebar**')
         cy.get('.sidebarSwitcher').click()
         cy.get('.Sidebar .heading').should('not.exist')
         cy.get('.Sidebar .show-button').click()
         cy.get('.Sidebar .heading').should('exist')
 
-        cy.log('Rename board view')
+        // Rename board view
+        cy.log('**Rename board view**')
         const boardViewTitle = `Test board (${timestamp})`
         cy.get(".ViewHeader>.Editable[title='Board view']").should('exist')
         cy.get('.ViewHeader>.Editable').
@@ -46,20 +50,24 @@ describe('Create and delete board / card', () => {
             type('{esc}')
         cy.get(`.ViewHeader .Editable[title='${boardViewTitle}']`).should('exist')
 
-        cy.log('Create card')
+        // Create card
+        cy.log('**Create card**')
         cy.get('.ViewHeader').contains('New').click()
         cy.get('.CardDetail').should('exist')
 
-        cy.log('Change card title')
+        // Change card title
+        cy.log('**Change card title**')
         cy.get('.CardDetail .EditableArea.title').
             type(cardTitle).
             type('{enter}').
             should('have.value', cardTitle)
 
-        cy.log('Close card dialog')
+        // Close card dialog
+        cy.log('**Close card dialog**')
         cy.get('.Dialog.dialog-back .wrapper').click({force: true})
 
-        cy.log('Create table view')
+        // Create table view
+        cy.log('**Create table view**')
         cy.get('.ViewHeader').get('.DropdownIcon').first().parent().click()
         cy.get('.ViewHeader').contains('Add view').click()
         cy.get('.ViewHeader').contains('Add view').click()
@@ -71,7 +79,8 @@ describe('Create and delete board / card', () => {
         cy.get(".ViewHeader .Editable[title='Table view']").should('exist')
         cy.get(`.TableRow [value='${cardTitle}']`).should('exist')
 
-        cy.log('Rename table view')
+        // Rename table view
+        cy.log('**Rename table view**')
         const tableViewTitle = `Test table (${timestamp})`
         cy.get(".ViewHeader .Editable[title='Table view']").
             clear().
@@ -79,7 +88,8 @@ describe('Create and delete board / card', () => {
             type('{esc}')
         cy.get(`.ViewHeader .Editable[title='${tableViewTitle}']`).should('exist')
 
-        cy.log('Sort the table')
+        // Sort the table
+        cy.log('**Sort the table**')
         cy.get('.ViewHeader').contains('Sort').click()
         cy.get('.ViewHeader').
             contains('Sort').
@@ -87,7 +97,8 @@ describe('Create and delete board / card', () => {
             contains('Name').
             click()
 
-        cy.log('Delete board')
+        // Delete board
+        cy.log('**Delete board**')
         cy.get('.Sidebar .octo-sidebar-list').
             contains(boardTitle).
             first().
@@ -95,6 +106,7 @@ describe('Create and delete board / card', () => {
             find('.Button.IconButton').
             click({force: true})
         cy.contains('Delete board').click({force: true})
+        cy.get('.DeleteBoardDialog button.danger').click({force: true})
         cy.contains(boardTitle).should('not.exist')
     })
 })
