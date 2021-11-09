@@ -396,18 +396,22 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                                 >
                                   <div
                                     class="CodeMirror-measure"
+                                  />
+                                  <div
+                                    class="CodeMirror-measure"
                                   >
                                     <pre
-                                      class="CodeMirror-line-like"
+                                      class="CodeMirror-line"
+                                      role="presentation"
                                     >
-                                      <span>
-                                        xxxxxxxxxx
+                                      <span
+                                        role="presentation"
+                                        style="padding-right: .1px;"
+                                      >
+                                        description
                                       </span>
                                     </pre>
                                   </div>
-                                  <div
-                                    class="CodeMirror-measure"
-                                  />
                                   <div
                                     style="position: relative; z-index: 1;"
                                   />
@@ -1008,18 +1012,22 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                                 >
                                   <div
                                     class="CodeMirror-measure"
+                                  />
+                                  <div
+                                    class="CodeMirror-measure"
                                   >
                                     <pre
-                                      class="CodeMirror-line-like"
+                                      class="CodeMirror-line"
+                                      role="presentation"
                                     >
-                                      <span>
-                                        xxxxxxxxxx
+                                      <span
+                                        role="presentation"
+                                        style="padding-right: .1px;"
+                                      >
+                                        description
                                       </span>
                                     </pre>
                                   </div>
-                                  <div
-                                    class="CodeMirror-measure"
-                                  />
                                   <div
                                     style="position: relative; z-index: 1;"
                                   />
@@ -2293,18 +2301,22 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                                 >
                                   <div
                                     class="CodeMirror-measure"
+                                  />
+                                  <div
+                                    class="CodeMirror-measure"
                                   >
                                     <pre
-                                      class="CodeMirror-line-like"
+                                      class="CodeMirror-line"
+                                      role="presentation"
                                     >
-                                      <span>
-                                        xxxxxxxxxx
+                                      <span
+                                        role="presentation"
+                                        style="padding-right: .1px;"
+                                      >
+                                        description
                                       </span>
                                     </pre>
                                   </div>
-                                  <div
-                                    class="CodeMirror-measure"
-                                  />
                                   <div
                                     style="position: relative; z-index: 1;"
                                   />

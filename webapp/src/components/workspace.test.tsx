@@ -17,6 +17,7 @@ import {Utils} from '../utils'
 import Workspace from './workspace'
 
 Object.defineProperty(Constants, 'versionString', {value: '1.0.0'})
+jest.useFakeTimers()
 jest.mock('../utils')
 const mockedUtils = mocked(Utils, true)
 const workspace1: UserWorkspace = {
@@ -155,6 +156,7 @@ describe('src/components/workspace', () => {
                 </ReduxProvider>,
             ), {wrapper: MemoryRouter})
             container = result.container
+            jest.runOnlyPendingTimers()
         })
         expect(container).toMatchSnapshot()
     })
@@ -167,6 +169,7 @@ describe('src/components/workspace', () => {
                 </ReduxProvider>,
             ), {wrapper: MemoryRouter})
             container = result.container
+            jest.runOnlyPendingTimers()
         })
         expect(container).toMatchSnapshot()
     })
@@ -179,6 +182,7 @@ describe('src/components/workspace', () => {
                 </ReduxProvider>,
             ), {wrapper: MemoryRouter})
             container = result.container
+            jest.runOnlyPendingTimers()
             const cardElements = container!.querySelectorAll('.KanbanCard')
             expect(cardElements).toBeDefined()
             const cardElement = cardElements[0]
@@ -195,6 +199,7 @@ describe('src/components/workspace', () => {
                 </ReduxProvider>,
             ), {wrapper: MemoryRouter})
             container = result.container
+            jest.runOnlyPendingTimers()
             const cardElements = container!.querySelectorAll('.KanbanCard')
             expect(cardElements).toBeDefined()
             const cardElement = cardElements[0]
@@ -246,7 +251,9 @@ describe('src/components/workspace', () => {
                 </ReduxProvider>,
             ), {wrapper: MemoryRouter})
             container = result.container
+            jest.runOnlyPendingTimers()
         })
+
         expect(container).toMatchSnapshot()
     })
 })
