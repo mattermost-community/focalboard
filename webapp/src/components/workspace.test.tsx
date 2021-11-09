@@ -143,6 +143,7 @@ describe('src/components/workspace', () => {
         mockMatchMedia({matches: true})
     })
     beforeEach(() => {
+        jest.clearAllMocks()
         mockedUtils.createGuid.mockReturnValue('test-id')
     })
     test('should match snapshot', async () => {
@@ -178,11 +179,11 @@ describe('src/components/workspace', () => {
                 </ReduxProvider>,
             ), {wrapper: MemoryRouter})
             container = result.container
+            const cardElements = container!.querySelectorAll('.KanbanCard')
+            expect(cardElements).toBeDefined()
+            const cardElement = cardElements[0]
+            userEvent.click(cardElement)
         })
-        const cardElements = container!.querySelectorAll('.KanbanCard')
-        expect(cardElements).toBeDefined()
-        const cardElement = cardElements[0]
-        await act(async () => userEvent.click(cardElement))
         expect(container).toMatchSnapshot()
     })
     test('return workspace readonly and showcard', async () => {
@@ -194,11 +195,11 @@ describe('src/components/workspace', () => {
                 </ReduxProvider>,
             ), {wrapper: MemoryRouter})
             container = result.container
+            const cardElements = container!.querySelectorAll('.KanbanCard')
+            expect(cardElements).toBeDefined()
+            const cardElement = cardElements[0]
+            userEvent.click(cardElement)
         })
-        const cardElements = container!.querySelectorAll('.KanbanCard')
-        expect(cardElements).toBeDefined()
-        const cardElement = cardElements[0]
-        await act(async () => userEvent.click(cardElement))
         expect(container).toMatchSnapshot()
         expect(mockedUtils.getReadToken).toBeCalledTimes(1)
     })
