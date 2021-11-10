@@ -218,31 +218,32 @@ const App = React.memo((): JSX.Element => {
                                     <WelcomePage/>
                                 </Route>
 
-                                <Route
-                                    path='/:boardId?/:viewId?/:cardId?'
-                                    render={({match: {params: {boardId, viewId, cardId}}}) => {
-                                        // Since these 3 path values are optional and they can be anything, we can pass /x/y/z and it will
-                                        // match this route however these values may not be valid so we should at the very least check
-                                        // board id for descisions made below
-                                        const boardIdIsValidUUIDV4 = UUID_REGEX.test(boardId || '')
+                                {!Utils.isFocalboardPlugin() &&
+                                    <Route
+                                        path='/:boardId?/:viewId?/:cardId?'
+                                        render={({match: {params: {boardId, viewId, cardId}}}) => {
+                                            // Since these 3 path values are optional and they can be anything, we can pass /x/y/z and it will
+                                            // match this route however these values may not be valid so we should at the very least check
+                                            // board id for descisions made below
+                                            const boardIdIsValidUUIDV4 = UUID_REGEX.test(boardId || '')
 
-                                        if (loggedIn === false) {
-                                            return <Redirect to='/login'/>
-                                        }
+                                            if (loggedIn === false) {
+                                                return <Redirect to='/login'/>
+                                            }
 
-                                        if (continueToWelcomeScreen()) {
-                                            const originalPath = `/${Utils.buildOriginalPath('', boardId, viewId, cardId)}`
-                                            const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
-                                            return <Redirect to={`/welcome?${queryString}`}/>
-                                        }
+                                            if (continueToWelcomeScreen()) {
+                                                const originalPath = `/${Utils.buildOriginalPath('', boardId, viewId, cardId)}`
+                                                const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
+                                                return <Redirect to={`/welcome?${queryString}`}/>
+                                            }
 
-                                        if (loggedIn === true) {
-                                            return <BoardPage/>
-                                        }
+                                            if (loggedIn === true) {
+                                                return <BoardPage/>
+                                            }
 
-                                        return null
-                                    }}
-                                />
+                                            return null
+                                        }}
+                                    />}
                             </Switch>
                         </div>
                     </div>
