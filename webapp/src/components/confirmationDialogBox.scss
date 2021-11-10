@@ -6,7 +6,6 @@
         top: 30%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: max-content;
         height: max-content;
         z-index: 300;
 
@@ -48,6 +47,6 @@
 .action-buttons {
     display: grid;
     grid-gap: 10px;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
     margin-top: 32px;
 }
