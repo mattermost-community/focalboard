@@ -8,6 +8,7 @@
   "BoardComponent.no-property-title": "Items with an empty {property} property will go here. This column cannot be removed.",
   "BoardComponent.show": "Show",
   "BoardPage.syncFailed": "Board may be deleted or access revoked.",
+  "BoardPage.newVersion": "A new version of Boards is available, click here to reload.",
   "Calculations.Options.average.displayName": "Average",
   "Calculations.Options.average.label": "Average",
   "Calculations.Options.count.displayName": "Count",
