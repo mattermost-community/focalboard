@@ -48,11 +48,6 @@ function cardsWithValue(cards: readonly Card[], property: IPropertyTemplate): Ca
         filter((card) => Boolean(getCardProperty(card, property)))
 }
 
-// return count of card which have this property value as not null \\ undefined \\ ''
-function countCardWithPropValueNotNull(cards: readonly Card[], property: IPropertyTemplate): string {
-    return cardsWithValue(cards, property).length.toString()
-}
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function count(cards: readonly Card[], property: IPropertyTemplate): string {
     return String(cards.length)
@@ -62,6 +57,7 @@ function countEmpty(cards: readonly Card[], property: IPropertyTemplate): string
     return String(cards.length - cardsWithValue(cards, property).length)
 }
 
+// return count of card which have this property value as not null \\ undefined \\ ''
 function countNotEmpty(cards: readonly Card[], property: IPropertyTemplate): string {
     return String(cardsWithValue(cards, property).length)
 }
@@ -306,7 +302,6 @@ const Calculations: Record<string, (cards: readonly Card[], property: IPropertyT
     percentEmpty,
     percentNotEmpty,
     countValue,
-    countCardWithPropValueNotNull,
     countUniqueValue,
     countChecked,
     countUnchecked,

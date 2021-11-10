@@ -59,7 +59,7 @@ const KanbanCard = React.memo((props: Props) => {
             Utils.assertFailure()
             return
         }
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: props.board.id, card: card.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: board.id, card: card.id})
         await mutator.deleteBlock(card, 'delete card')
     }
 
