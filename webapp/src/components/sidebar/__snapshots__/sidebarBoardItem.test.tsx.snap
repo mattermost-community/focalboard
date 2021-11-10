@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/sidebarBoardItem sidebar call hideSidebar 1`] = `
+<div>
+  <div
+    class="SidebarBoardItem"
+  >
+    <div
+      class="octo-sidebar-item ' expanded "
+    >
+      <button
+        class="Button IconButton"
+        type="button"
+      >
+        <svg
+          class="DisclosureTriangleIcon Icon"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polygon
+            points="37,35 37,65 63,50"
+          />
+        </svg>
+      </button>
+      <div
+        class="octo-sidebar-title"
+        title="board title"
+      >
+        i board title
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="Button IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="octo-sidebar-item subitem "
+    >
+      <svg
+        class="BoardIcon Icon"
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          height="80"
+          rx="5"
+          ry="5"
+          width="80"
+          x="10"
+          y="10"
+        />
+        <polyline
+          points="28,25 28,55"
+          style="stroke-width: 15px;"
+        />
+        <polyline
+          points="50,25 50,70"
+          style="stroke-width: 15px;"
+        />
+        <polyline
+          points="72,25 72,45"
+          style="stroke-width: 15px;"
+        />
+      </svg>
+      <div
+        class="octo-sidebar-title"
+        title="view title"
+      >
+        view title
+      </div>
+    </div>
+    <div
+      class="octo-sidebar-item subitem "
+    >
+      <svg
+        class="BoardIcon Icon"
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          height="80"
+          rx="5"
+          ry="5"
+          width="80"
+          x="10"
+          y="10"
+        />
+        <polyline
+          points="28,25 28,55"
+          style="stroke-width: 15px;"
+        />
+        <polyline
+          points="50,25 50,70"
+          style="stroke-width: 15px;"
+        />
+        <polyline
+          points="72,25 72,45"
+          style="stroke-width: 15px;"
+        />
+      </svg>
+      <div
+        class="octo-sidebar-title"
+        title="view title"
+      >
+        view title
+      </div>
+    </div>
+  </div>
+</div>
+`;

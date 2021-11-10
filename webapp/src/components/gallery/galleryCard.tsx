@@ -92,8 +92,8 @@ const GalleryCard = React.memo((props: Props) => {
                             id='duplicate'
                             name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: props.board.id, card: card.id})
-                                mutator.duplicateCard(card.id)
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                                mutator.duplicateCard(card.id, board)
                             }}
                         />
                         <Menu.Text

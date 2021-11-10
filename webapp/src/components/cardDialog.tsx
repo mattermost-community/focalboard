@@ -45,9 +45,10 @@ const CardDialog = (props: Props): JSX.Element => {
             return
         }
 
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromCard, {board: props.board.id, view: activeView.id, card: card.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromCard, {board: props.board.id, view: activeView.id, card: props.cardId})
         await mutator.duplicateCard(
             props.cardId,
+            board,
             intl.formatMessage({id: 'Mutator.new-template-from-card', defaultMessage: 'new template from card'}),
             true,
             async (newCardId) => {
@@ -70,7 +71,7 @@ const CardDialog = (props: Props): JSX.Element => {
                         Utils.assertFailure()
                         return
                     }
-                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: props.board.id, view: props.activeView.id, card: card.id})
+                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: props.board.id, view: props.activeView.id, card: props.cardId})
                     await mutator.deleteBlock(card, 'delete card')
                     props.onClose()
                 }}

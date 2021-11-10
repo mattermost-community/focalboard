@@ -4,6 +4,7 @@ import React, {useCallback, useEffect} from 'react'
 import {FormattedMessage, IntlShape, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
+import {Block} from '../../blocks/block'
 import {Board, createBoard} from '../../blocks/board'
 import {createBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
@@ -39,9 +40,10 @@ export const addBoardClicked = async (showBoard: (id: string) => void, intl: Int
     await mutator.insertBlocks(
         [board, view],
         'add board',
-        async () => {
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: board.id})
-            showBoard(board.id)
+        async (newBlocks: Block[]) => {
+            const newBoardId = newBlocks[0].id
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoardId})
+            showBoard(newBoardId)
         },
         async () => {
             if (oldBoardId) {
@@ -66,9 +68,10 @@ export const addBoardTemplateClicked = async (showBoard: (id: string) => void, i
     await mutator.insertBlocks(
         [boardTemplate, view],
         'add board template',
-        async () => {
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardTemplate, {board: boardTemplate.id})
-            showBoard(boardTemplate.id)
+        async (newBlocks: Block[]) => {
+            const newBoardId = newBlocks[0].id
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardTemplate, {board: newBoardId})
+            showBoard(newBoardId)
         }, async () => {
             if (activeBoardId) {
                 showBoard(activeBoardId)
