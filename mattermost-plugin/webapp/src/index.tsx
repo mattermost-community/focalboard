@@ -188,6 +188,23 @@ export default class Plugin {
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`plugin_statuses_changed`, (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
+        this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
+            let preferences
+            try {
+                preferences = JSON.parse(e.data.preferences)
+            } catch {
+                preferences = []
+            }
+            if (preferences) {
+                for (const preference of preferences) {
+                    if (preference.category === 'theme' && theme !== preference.value) {
+                        setMattermostTheme(JSON.parse(preference.value))
+                        theme = preference.value
+                    }
+                }
+            }
+        })
     }
 
     uninitialize(): void {
