@@ -623,9 +623,6 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
             />
           </button>
           <div
-            class="octo-spacer"
-          />
-          <div
             aria-label="menuwrapper"
             class="MenuWrapper"
             role="button"

@@ -24,29 +24,26 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div
-            class="octo-spacer"
-          />
         </div>
         <div
           class="box-area"
           title="Confirmation Dialog Box"
         >
           <h3
-            class="heading"
+            class="text-heading5"
           >
             test-heading
           </h3>
-          <p
+          <div
             class="sub-text"
           >
             test-sub-text
-          </p>
+          </div>
           <div
             class="action-buttons"
           >
             <button
-              class="Button active"
+              class="Button emphasis--tertiary size--medium"
               title="Cancel"
               type="button"
             >
@@ -55,7 +52,7 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
               </span>
             </button>
             <button
-              class="Button emphasis--danger"
+              class="Button emphasis--danger size--medium"
               title="test-btn-text"
               type="submit"
             >
@@ -95,29 +92,26 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div
-            class="octo-spacer"
-          />
         </div>
         <div
           class="box-area"
           title="Confirmation Dialog Box"
         >
           <h3
-            class="heading"
+            class="text-heading5"
           >
             test-heading
           </h3>
-          <p
+          <div
             class="sub-text"
           >
             test-sub-text
-          </p>
+          </div>
           <div
             class="action-buttons"
           >
             <button
-              class="Button active"
+              class="Button emphasis--tertiary size--medium"
               title="Cancel"
               type="button"
             >
@@ -126,7 +120,7 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
               </span>
             </button>
             <button
-              class="Button emphasis--danger"
+              class="Button emphasis--danger size--medium"
               title="test-btn-text"
               type="submit"
             >
