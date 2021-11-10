@@ -6,6 +6,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/notify/notifymentions"
 	"github.com/mattermost/focalboard/server/services/notify/notifysubscriptions"
 	"github.com/mattermost/focalboard/server/services/notify/plugindelivery"
+	"github.com/mattermost/focalboard/server/services/store"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
@@ -20,24 +21,30 @@ const (
 	botDescription = "Created by Boards plugin."
 )
 
-func createMentionsNotifyBackend(client *pluginapi.Client, serverRoot string, logger *mlog.Logger) (*notifymentions.Backend, error) {
-	delivery, err := createDelivery(client, serverRoot)
+type notifyBackendParams struct {
+	client     *pluginapi.Client
+	serverRoot string
+	logger     *mlog.Logger
+}
+
+func createMentionsNotifyBackend(params notifyBackendParams) (*notifymentions.Backend, error) {
+	delivery, err := createDelivery(params.client, params.serverRoot)
 	if err != nil {
 		return nil, err
 	}
 
-	backend := notifymentions.New(delivery, logger)
+	backend := notifymentions.New(delivery, params.logger)
 
 	return backend, nil
 }
 
-func createSubscriptionsNotifyBackend(client *pluginapi.Client, serverRoot string, logger *mlog.Logger) (*notifysubscriptions.Backend, error) {
-	delivery, err := createDelivery(client, serverRoot)
+func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.Store) (*notifysubscriptions.Backend, error) {
+	delivery, err := createDelivery(params.client, params.serverRoot)
 	if err != nil {
 		return nil, err
 	}
 
-	backend := notifysubscriptions.New(nil, delivery, logger)
+	backend := notifysubscriptions.New(store, delivery, params.logger)
 
 	return backend, nil
 }

@@ -25,8 +25,8 @@ var (
 	// defNotificationFreq provides default frequency for change notifications
 	// for various block types.
 	defNotificationFreq = map[model.BlockType]time.Duration{
-		model.TypeBoard: time.Hour * 24,
-		model.TypeCard:  time.Minute * 1,
+		model.TypeBoard: time.Second * 30, // time.Hour * 24,
+		model.TypeCard:  time.Second * 15, // time.Minute * 1,
 	}
 
 	errEnqueueNotifyHintTimeout = errors.New("enqueue notify hint timed out")
@@ -59,7 +59,7 @@ func newNotifier(store Store, delivery SubscriptionDelivery, logger *mlog.Logger
 		store:    store,
 		delivery: delivery,
 		logger:   logger,
-		done:     make(chan struct{}, 1),
+		done:     nil,
 		hints:    make(chan *model.NotificationHint, 20),
 	}
 }
@@ -89,6 +89,7 @@ func (n *notifier) loop() {
 	nextNotify := n.notify()
 
 	for {
+		n.logger.Debug("subscription notifier loop", mlog.Time("next_notify", nextNotify))
 		select {
 		case hint := <-n.hints:
 			// if this hint suggests a notification is due before the next scheduled notification
@@ -142,6 +143,8 @@ func (n *notifier) notify() time.Time {
 }
 
 func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
+	n.logger.Debug("notifySubscribers", mlog.Any("hint", hint))
+
 	c := store.Container{
 		WorkspaceID: hint.WorkspaceID,
 	}

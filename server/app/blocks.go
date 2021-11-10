@@ -126,7 +126,7 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 	a.wsAdapter.BroadcastBlockDelete(c.WorkspaceID, blockID, block.ParentID)
 	a.metrics.IncrementBlocksDeleted(1)
 	go func() {
-		a.notifyBlockChanged(notify.Update, c, block, block, modifiedBy)
+		a.notifyBlockChanged(notify.Delete, c, block, block, modifiedBy)
 	}()
 	return nil
 }

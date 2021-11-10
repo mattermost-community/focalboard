@@ -4,40 +4,56 @@
 package plugindelivery
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/wiggin77/merror"
 
-	"github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/focalboard/server/model"
+
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
+)
+
+var (
+	ErrUnsupportedSubscriberType = errors.New("invalid subscriber type")
 )
 
 // SubscriptionDeliver notifies a user that changes were made to a block they are subscribed to.
-func (pd *PluginDelivery) SubscriptionDeliver(subscriberID string, subscriberType string, markdown []string) error {
-	user, err := pd.api.GetUserByID(subscriberID)
-	if err != nil {
-		return fmt.Errorf("cannot find user: %w", err)
-	}
+func (pd *PluginDelivery) SubscriptionDeliver(subscriberID string, subscriberType model.SubscriberType, markdown []string) error {
+	var channelID string
 
-	channel, err := pd.api.GetDirectChannel(user.Id, pd.botID)
-	if err != nil {
-		return fmt.Errorf("cannot get direct channel: %w", err)
+	switch subscriberType {
+	case model.SubTypeUser:
+		user, err := pd.api.GetUserByID(subscriberID)
+		if err != nil {
+			return fmt.Errorf("cannot find user: %w", err)
+		}
+		channel, err := pd.api.GetDirectChannel(user.Id, pd.botID)
+		if err != nil {
+			return fmt.Errorf("cannot get direct channel: %w", err)
+		}
+		channelID = channel.Id
+	case model.SubTypeChannel:
+		channelID = subscriberID
+	default:
+		return ErrUnsupportedSubscriberType
 	}
 
 	merr := merror.New()
 
 	for _, md := range markdown {
-		post := &model.Post{
+		post := &mm_model.Post{
 			UserId:    pd.botID,
-			ChannelId: channel.Id,
+			ChannelId: channelID,
 			Message:   md,
 		}
 
-		if err = pd.api.CreatePost(post); err != nil {
+		if err := pd.api.CreatePost(post); err != nil {
 			merr.Append(err)
 		}
 	}
 
-	err = merr.ErrorOrNil()
+	err := merr.ErrorOrNil()
 	if err != nil {
 		return fmt.Errorf("cannot deliver all subscription notifications: %w", err)
 	}

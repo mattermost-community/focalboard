@@ -138,13 +138,17 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID stri
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
-	if opts.InsertAfterAt != 0 {
-		query = query.Where(sq.Gt{"insert_at": opts.InsertAfterAt})
+	if opts.CreateAfterAt != 0 {
+		query = query.Where(sq.Gt{"create_at": opts.CreateAfterAt})
 	}
 
 	if opts.OrderByInsertAt {
 		query = query.OrderBy("insert_at")
 	}
+
+	// TODO: debugging only - remove
+	sql, args, errSQL := query.ToSql()
+	s.logger.Debug("getSubTree2 SQL", mlog.String("sql", sql), mlog.Array("args", args), mlog.Err(errSQL))
 
 	rows, err := query.Query()
 	if err != nil {
@@ -186,8 +190,8 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID})
 
-	if opts.InsertAfterAt != 0 {
-		query = query.Where(sq.Gt{"l3.insert_at": opts.InsertAfterAt})
+	if opts.CreateAfterAt != 0 {
+		query = query.Where(sq.Gt{"l3.create_at": opts.CreateAfterAt})
 	}
 
 	if s.dbType == postgresDBType {
@@ -519,12 +523,12 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID 
 		Where(sq.Eq{"id": blockID}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
-	if opts.InsertAfterAt != 0 {
-		query = query.Where(sq.Gt{"insert_at": opts.InsertAfterAt})
+	if opts.CreateAfterAt != 0 {
+		query = query.Where(sq.Gt{"create_at": opts.CreateAfterAt})
 	}
 
 	if opts.OrderByInsertAt {
-		query = query.OrderBy("insert_at")
+		query = query.OrderBy("create_at")
 	}
 
 	rows, err := query.Query()

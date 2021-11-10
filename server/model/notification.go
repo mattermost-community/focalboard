@@ -1,5 +1,11 @@
 package model
 
+import (
+	"time"
+
+	"github.com/mattermost/mattermost-server/v6/utils"
+)
+
 // NotificationHint provides a hint that a block has been modified and has subscribers that
 // should be notified.
 // swagger:model
@@ -56,6 +62,24 @@ func (s *NotificationHint) Copy() *NotificationHint {
 		UserID:      s.UserID,
 		CreateAt:    s.CreateAt,
 		NotifyAt:    s.NotifyAt,
+	}
+}
+
+func (s *NotificationHint) LogClone() interface{} {
+	return struct {
+		BlockType   BlockType `json:"block_type"`
+		BlockID     string    `json:"block_id"`
+		WorkspaceID string    `json:"workspace_id"`
+		UserID      string    `json:"user_id"`
+		CreateAt    string    `json:"create_at"`
+		NotifyAt    string    `json:"notify_at"`
+	}{
+		BlockType:   s.BlockType,
+		BlockID:     s.BlockID,
+		WorkspaceID: s.WorkspaceID,
+		UserID:      s.UserID,
+		CreateAt:    utils.TimeFromMillis(s.CreateAt).Format(time.StampMilli),
+		NotifyAt:    utils.TimeFromMillis(s.NotifyAt).Format(time.StampMilli),
 	}
 }
 

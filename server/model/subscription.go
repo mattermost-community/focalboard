@@ -5,6 +5,21 @@ import (
 	"io"
 )
 
+const (
+	SubTypeUser    = "user"
+	SubTypeChannel = "channel"
+)
+
+type SubscriberType string
+
+func (st SubscriberType) IsValid() bool {
+	switch st {
+	case SubTypeUser, SubTypeChannel:
+		return true
+	}
+	return false
+}
+
 // Subscription is a subscription to a board, card, etc, for a user or channel.
 // swagger:model
 type Subscription struct {
@@ -22,7 +37,7 @@ type Subscription struct {
 
 	// SubscriberType is the type of the entity (e.g. user, channel) that is subscribing
 	// required: true
-	SubscriberType string `json:"subscriber_type"`
+	SubscriberType SubscriberType `json:"subscriber_type"`
 
 	// SubscriberID is the id of the entity that is subscribing
 	// required: true
@@ -57,8 +72,8 @@ func (s *Subscription) IsValid() error {
 	if s.SubscriberID == "" {
 		return ErrInvalidSubscription{"missing subscriber id"}
 	}
-	if s.SubscriberType == "" {
-		return ErrInvalidSubscription{"missing subscriber type"}
+	if !s.SubscriberType.IsValid() {
+		return ErrInvalidSubscription{"invalid subscriber type"}
 	}
 	return nil
 }
@@ -84,7 +99,7 @@ func (e ErrInvalidSubscription) Error() string {
 type Subscriber struct {
 	// SubscriberType is the type of the entity (e.g. user, channel) that is subscribing
 	// required: true
-	SubscriberType string `json:"subscriber_type"`
+	SubscriberType SubscriberType `json:"subscriber_type"`
 
 	// SubscriberID is the id of the entity that is subscribing
 	// required: true

@@ -51,11 +51,33 @@ func (b *Backend) Name() string {
 }
 
 func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
+	if evt.Board == nil || evt.Card == nil {
+		return nil
+	}
+
 	merr := merror.New()
 	var err error
 
 	c := store.Container{
 		WorkspaceID: evt.Workspace,
+	}
+
+	// if new card added, automatically subscribe the author.
+	if evt.Action == notify.Add && evt.BlockChanged.Type == model.TypeCard {
+		sub := &model.Subscription{
+			BlockType:      model.TypeCard,
+			BlockID:        evt.BlockChanged.ID,
+			WorkspaceID:    evt.Workspace,
+			SubscriberType: model.SubTypeUser,
+			SubscriberID:   evt.UserID,
+		}
+
+		if _, err = b.store.CreateSubscription(sub); err != nil {
+			b.logger.Warn("Cannot subscribe card author to card",
+				mlog.String("card_id", evt.BlockChanged.ID),
+				mlog.Err(err),
+			)
+		}
 	}
 
 	// notify board subscribers
@@ -78,7 +100,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 
 	// notify block subscribers (if/when other types can be subscribed to)
 	if evt.Board.ID != evt.BlockChanged.ID && evt.Card.ID != evt.BlockChanged.ID {
-		subs, err = b.store.GetSubscribersForBlock(c, evt.BlockChanged.ID)
+		subs, err := b.store.GetSubscribersForBlock(c, evt.BlockChanged.ID)
 		if err != nil {
 			merr.Append(fmt.Errorf("cannot fetch subscribers for block %s: %w", evt.BlockChanged.ID, err))
 		}
@@ -102,7 +124,7 @@ func (b *Backend) notifySubscribers(subs []*model.Subscriber, block *model.Block
 		UserID:      userID,
 	}
 
-	_, err := b.store.UpsertNotificationHint(hint)
+	_, err := b.store.UpsertNotificationHint(hint, getBlockUpdateFreq(block.Type))
 	if err != nil {
 		return fmt.Errorf("cannot upsert notification hint: %w", err)
 	}
