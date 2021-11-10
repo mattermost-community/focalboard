@@ -85,15 +85,15 @@ func (p *Plugin) OnActivate() error {
 	cfg := p.createBoardsConfig(*mmconfig, baseURL, serverID)
 
 	storeParams := sqlstore.Params{
-		DBType: cfg.DBType,
+		DBType:           cfg.DBType,
 		ConnectionString: cfg.DBConfigString,
-		TablePrefix: cfg.DBTablePrefix,
-		Logger: logger,
-		DB: sqlDB,
-		IsPlugin: true,
-	    NewMutexFn: func(name string) (*cluster.Mutex, error) {
-		    return cluster.NewMutex(p.API, name)
-	    },
+		TablePrefix:      cfg.DBTablePrefix,
+		Logger:           logger,
+		DB:               sqlDB,
+		IsPlugin:         true,
+		NewMutexFn: func(name string) (*cluster.Mutex, error) {
+			return cluster.NewMutex(p.API, name)
+		},
 	}
 
 	var db store.Store
