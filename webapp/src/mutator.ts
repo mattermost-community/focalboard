@@ -636,6 +636,7 @@ class Mutator {
 
     async duplicateCard(
         cardId: string,
+        board: Board,
         description = 'duplicate card',
         asTemplate = false,
         afterRedo?: (newCardId: string) => Promise<void>,
@@ -661,6 +662,8 @@ class Mutator {
             }
         }
         newCard.fields.isTemplate = asTemplate
+        newCard.rootId = board.id
+        newCard.parentId = board.id
         await this.insertBlocks(
             newBlocks,
             description,
