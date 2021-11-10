@@ -248,22 +248,14 @@ class OctoClient {
         return fixedBlocks
     }
 
-    async updateBlock(block: Block): Promise<Response> {
-        return this.insertBlocks([block])
-    }
-
     async patchBlock(blockId: string, blockPatch: BlockPatch): Promise<Response> {
-        Utils.log(`patchBlocks: ${blockId} block`)
+        Utils.log(`patchBlock: ${blockId} block`)
         const body = JSON.stringify(blockPatch)
         return fetch(this.getBaseURL() + this.workspacePath() + '/blocks/' + blockId, {
             method: 'PATCH',
             headers: this.headers(),
             body,
         })
-    }
-
-    async updateBlocks(blocks: Block[]): Promise<Response> {
-        return this.insertBlocks(blocks)
     }
 
     async deleteBlock(blockId: string): Promise<Response> {
