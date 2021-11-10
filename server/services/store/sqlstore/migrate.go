@@ -20,7 +20,9 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file" // fileystem driver
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	_ "github.com/lib/pq" // postgres driver
+
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
+	"github.com/mattermost/mattermost-plugin-api/cluster"
 )
 
 const (
@@ -162,7 +164,7 @@ func (s *SQLStore) Migrate() error {
 	prefixedData := &PrefixedMigration{
 		Bindata:  d.(*bindata.Bindata),
 		prefix:   s.tablePrefix,
-		plugin:   s.isPlugin,
+		plugin:   s.pluginAPI != nil,
 		postgres: s.dbType == postgresDBType,
 		sqlite:   s.dbType == sqliteDBType,
 		mysql:    s.dbType == mysqlDBType,
@@ -173,12 +175,35 @@ func (s *SQLStore) Migrate() error {
 		return err
 	}
 
+	var mutex *cluster.Mutex
+	if s.pluginAPI != nil {
+		var mutexErr error
+		mutex, mutexErr = cluster.NewMutex(s.pluginAPI, "Boards_dbMutex")
+		if mutexErr != nil {
+			return fmt.Errorf("error creating database mutex: %w", mutexErr)
+		}
+	}
+
 	if err := ensureMigrationsAppliedUpToVersion(m, uniqueIDsMigrationRequiredVersion); err != nil {
 		return err
 	}
 
+	if s.pluginAPI != nil {
+		s.logger.Debug("Acquiring cluster lock for Unique IDs migration")
+		mutex.Lock()
+	}
+
 	if err := s.runUniqueIDsMigration(); err != nil {
+		if s.pluginAPI != nil {
+			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
+			mutex.Unlock()
+		}
 		return fmt.Errorf("error running unique IDs migration: %w", err)
+	}
+
+	if s.pluginAPI != nil {
+		s.logger.Debug("Releasing cluster lock for Unique IDs migration")
+		mutex.Unlock()
 	}
 
 	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {

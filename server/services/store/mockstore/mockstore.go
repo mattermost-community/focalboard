@@ -210,21 +210,6 @@ func (mr *MockStoreMockRecorder) GetBlocksWithRootID(arg0, arg1 interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksWithRootID", reflect.TypeOf((*MockStore)(nil).GetBlocksWithRootID), arg0, arg1)
 }
 
-// GetBlocksWithSameID mocks base method.
-func (m *MockStore) GetBlocksWithSameID() ([]model.Block, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBlocksWithSameID")
-	ret0, _ := ret[0].([]model.Block)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetBlocksWithSameID indicates an expected call of GetBlocksWithSameID.
-func (mr *MockStoreMockRecorder) GetBlocksWithSameID() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksWithSameID", reflect.TypeOf((*MockStore)(nil).GetBlocksWithSameID))
-}
-
 // GetBlocksWithType mocks base method.
 func (m *MockStore) GetBlocksWithType(arg0 store.Container, arg1 string) ([]model.Block, error) {
 	m.ctrl.T.Helper()
@@ -535,20 +520,6 @@ func (m *MockStore) RefreshSession(arg0 *model.Session) error {
 func (mr *MockStoreMockRecorder) RefreshSession(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RefreshSession", reflect.TypeOf((*MockStore)(nil).RefreshSession), arg0)
-}
-
-// ReplaceBlockID mocks base method.
-func (m *MockStore) ReplaceBlockID(arg0, arg1, arg2 string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ReplaceBlockID", arg0, arg1, arg2)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ReplaceBlockID indicates an expected call of ReplaceBlockID.
-func (mr *MockStoreMockRecorder) ReplaceBlockID(arg0, arg1, arg2 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReplaceBlockID", reflect.TypeOf((*MockStore)(nil).ReplaceBlockID), arg0, arg1, arg2)
 }
 
 // SetSystemSetting mocks base method.

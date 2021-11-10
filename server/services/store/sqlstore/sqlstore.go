@@ -5,6 +5,7 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 
+	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -20,12 +21,12 @@ type SQLStore struct {
 	dbType           string
 	tablePrefix      string
 	connectionString string
-	isPlugin         bool
+	pluginAPI        plugin.API
 	logger           *mlog.Logger
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *sql.DB, isPlugin bool) (*SQLStore, error) {
+func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *sql.DB, pluginAPI plugin.API) (*SQLStore, error) {
 	logger.Info("connectDatabase", mlog.String("dbType", dbType))
 	store := &SQLStore{
 		// TODO: add replica DB support too.
@@ -34,7 +35,7 @@ func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *
 		tablePrefix:      tablePrefix,
 		connectionString: connectionString,
 		logger:           logger,
-		isPlugin:         isPlugin,
+		pluginAPI:        pluginAPI,
 	}
 
 	err := store.Migrate()

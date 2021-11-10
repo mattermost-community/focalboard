@@ -84,7 +84,7 @@ func (p *Plugin) OnActivate() error {
 	cfg := p.createBoardsConfig(*mmconfig, baseURL, serverID)
 
 	var db store.Store
-	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB, true)
+	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB, p.API)
 	if err != nil {
 		return fmt.Errorf("error initializing the DB: %w", err)
 	}
