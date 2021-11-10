@@ -104,7 +104,7 @@ func (dg *diffGenerator) generateDiffs(c store.Container, hint *model.Notificati
 func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.PropSchema, hint *model.NotificationHint) ([]*Diff, error) {
 	opts := model.BlockQueryOptions{
 		UseBlocksHistory: true,
-		CreateAfterAt:    hint.NotifyAt,
+		InsertAfterAt:    hint.NotifyAt,
 		OrderByInsertAt:  true,
 	}
 
@@ -146,7 +146,7 @@ func (dg *diffGenerator) generateDiffsForCard(board, card *model.Block, schema m
 
 	opts := model.BlockQueryOptions{
 		UseBlocksHistory: true,
-		CreateAfterAt:    hint.NotifyAt,
+		InsertAfterAt:    hint.NotifyAt,
 		OrderByInsertAt:  true,
 	}
 	blocks, err := dg.store.GetSubTree2(dg.container, card.ID, opts)
@@ -188,7 +188,7 @@ func (dg *diffGenerator) generateDiffForBlock(board, card, block *model.Block, s
 	// find the oldest block in blocks_history that is newer than the hint.NotifyAt.
 	opts := model.BlockQueryOptions{
 		UseBlocksHistory: true,
-		CreateAfterAt:    hint.NotifyAt,
+		InsertAfterAt:    hint.NotifyAt,
 		OrderByInsertAt:  true,
 	}
 	history, err := dg.store.GetBlockHistory(dg.container, block.ID, opts)

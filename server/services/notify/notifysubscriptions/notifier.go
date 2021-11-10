@@ -143,8 +143,6 @@ func (n *notifier) notify() time.Time {
 }
 
 func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
-	n.logger.Debug("notifySubscribers", mlog.Any("hint", hint))
-
 	c := store.Container{
 		WorkspaceID: hint.WorkspaceID,
 	}
@@ -155,13 +153,28 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		return err
 	}
 	if len(subs) == 0 {
+		n.logger.Debug("notifySubscribers - no subscribers", mlog.Any("hint", hint))
 		return nil
 	}
+
+	n.logger.Debug("notifySubscribers - subscribers",
+		mlog.Any("hint", hint),
+		mlog.Int("sub_count", len(subs)),
+	)
 
 	dg := newDiffGenerator(c, n.store)
 	diffs, err := dg.generateDiffs(c, hint)
 	if err != nil {
 		return err
+	}
+
+	n.logger.Debug("notifySubscribers - diffs",
+		mlog.Any("hint", hint),
+		mlog.Int("diff_count", len(diffs)),
+	)
+
+	if len(diffs) == 0 {
+		return nil
 	}
 
 	opts := MarkdownOpts{
@@ -178,6 +191,11 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	for _, sub := range subs {
 		// don't notify the author of their own changes.
 		if sub.SubscriberID == hint.UserID {
+			n.logger.Debug("notifySubscribers - deliver, skipping change author",
+				mlog.Any("hint", hint),
+				mlog.String("user_id", hint.UserID),
+				mlog.String("username", hint.Username),
+			)
 			continue
 		}
 
