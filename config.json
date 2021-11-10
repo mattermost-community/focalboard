@@ -21,6 +21,5 @@
 	"authMode": "native",
 	"logging_cfg_file": "",
 	"audit_cfg_file": "",
-	"enablepublicsharedboards": false,
-	"featureflags": [{"CalendarView": "true"}]
+	"enablepublicsharedboards": false
 }

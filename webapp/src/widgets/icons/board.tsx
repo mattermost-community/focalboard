@@ -10,43 +10,28 @@ export default function BoardIcon(): JSX.Element {
         <svg
             xmlns='http://www.w3.org/2000/svg'
             className='BoardIcon Icon'
-            width='24'
-            height='24'
-            viewBox='0 0 24 24'
-            fill='none'
+            viewBox='0 0 100 100'
         >
-            <g opacity='0.64'>
-                <rect
-                    x='3'
-                    y='3'
-                    width='18'
-                    height='18'
-                    rx='1'
-                    stroke='white'
-                    strokeWidth='2'
-                />
-                <rect
-                    x='6'
-                    y='6'
-                    width='2'
-                    height='6'
-                    fill='white'
-                />
-                <rect
-                    x='11'
-                    y='6'
-                    width='2'
-                    height='10'
-                    fill='white'
-                />
-                <rect
-                    x='16'
-                    y='6'
-                    width='2'
-                    height='3'
-                    fill='white'
-                />
-            </g>
+            <rect
+                x='10'
+                y='10'
+                width='80'
+                height='80'
+                rx='5'
+                ry='5'
+            />
+            <polyline
+                points='28,25 28,55'
+                style={{strokeWidth: '15px'}}
+            />
+            <polyline
+                points='50,25 50,70'
+                style={{strokeWidth: '15px'}}
+            />
+            <polyline
+                points='72,25 72,45'
+                style={{strokeWidth: '15px'}}
+            />
         </svg>
     )
 }

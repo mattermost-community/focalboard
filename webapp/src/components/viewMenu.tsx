@@ -235,7 +235,6 @@ const ViewMenu = React.memo((props: Props) => {
         case 'board': return <BoardIcon/>
         case 'table': return <TableIcon/>
         case 'gallery': return <GalleryIcon/>
-        case 'calendar': return <CalendarIcon/>
         default: return <div/>
         }
     }
