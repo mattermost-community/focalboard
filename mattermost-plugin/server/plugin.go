@@ -26,6 +26,12 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+const (
+	boardsFeatureFlagName = "BoardsFeatureFlags"
+	pluginName            = "focalboard"
+	sharedBoardsName      = "enablepublicsharedboards"
+)
+
 type BoardsEmbed struct {
 	OriginalPath string `json:"originalPath"`
 	WorkspaceID  string `json:"workspaceID"`
@@ -52,37 +58,6 @@ type Plugin struct {
 
 func (p *Plugin) OnActivate() error {
 	mmconfig := p.API.GetUnsanitizedConfig()
-	filesS3Config := config.AmazonS3Config{}
-	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
-		filesS3Config.AccessKeyID = *mmconfig.FileSettings.AmazonS3AccessKeyId
-	}
-	if mmconfig.FileSettings.AmazonS3SecretAccessKey != nil {
-		filesS3Config.SecretAccessKey = *mmconfig.FileSettings.AmazonS3SecretAccessKey
-	}
-	if mmconfig.FileSettings.AmazonS3Bucket != nil {
-		filesS3Config.Bucket = *mmconfig.FileSettings.AmazonS3Bucket
-	}
-	if mmconfig.FileSettings.AmazonS3PathPrefix != nil {
-		filesS3Config.PathPrefix = *mmconfig.FileSettings.AmazonS3PathPrefix
-	}
-	if mmconfig.FileSettings.AmazonS3Region != nil {
-		filesS3Config.Region = *mmconfig.FileSettings.AmazonS3Region
-	}
-	if mmconfig.FileSettings.AmazonS3Endpoint != nil {
-		filesS3Config.Endpoint = *mmconfig.FileSettings.AmazonS3Endpoint
-	}
-	if mmconfig.FileSettings.AmazonS3SSL != nil {
-		filesS3Config.SSL = *mmconfig.FileSettings.AmazonS3SSL
-	}
-	if mmconfig.FileSettings.AmazonS3SignV2 != nil {
-		filesS3Config.SignV2 = *mmconfig.FileSettings.AmazonS3SignV2
-	}
-	if mmconfig.FileSettings.AmazonS3SSE != nil {
-		filesS3Config.SSE = *mmconfig.FileSettings.AmazonS3SSE
-	}
-	if mmconfig.FileSettings.AmazonS3Trace != nil {
-		filesS3Config.Trace = *mmconfig.FileSettings.AmazonS3Trace
-	}
 
 	client := pluginapi.NewClient(p.API, p.Driver)
 	sqlDB, err := client.Store.GetMasterDB()
@@ -105,42 +80,9 @@ func (p *Plugin) OnActivate() error {
 	if mmconfig.ServiceSettings.SiteURL != nil {
 		baseURL = *mmconfig.ServiceSettings.SiteURL
 	}
-
 	serverID := client.System.GetDiagnosticID()
+	cfg := p.createBoardsConfig(*mmconfig, baseURL, serverID)
 
-	enableTelemetry := false
-	if mmconfig.LogSettings.EnableDiagnostics != nil {
-		enableTelemetry = *mmconfig.LogSettings.EnableDiagnostics
-	}
-
-	enablePublicSharedBoards := false
-	if mmconfig.PluginSettings.Plugins["focalboard"]["enablepublicsharedboards"] == true {
-		enablePublicSharedBoards = true
-	}
-
-	cfg := &config.Configuration{
-		ServerRoot:               baseURL + "/plugins/focalboard",
-		Port:                     -1,
-		DBType:                   *mmconfig.SqlSettings.DriverName,
-		DBConfigString:           *mmconfig.SqlSettings.DataSource,
-		DBTablePrefix:            "focalboard_",
-		UseSSL:                   false,
-		SecureCookie:             true,
-		WebPath:                  path.Join(*mmconfig.PluginSettings.Directory, "focalboard", "pack"),
-		FilesDriver:              *mmconfig.FileSettings.DriverName,
-		FilesPath:                *mmconfig.FileSettings.Directory,
-		FilesS3Config:            filesS3Config,
-		Telemetry:                enableTelemetry,
-		TelemetryID:              serverID,
-		WebhookUpdate:            []string{},
-		SessionExpireTime:        2592000,
-		SessionRefreshTime:       18000,
-		LocalOnly:                false,
-		EnableLocalMode:          false,
-		LocalModeSocketLocation:  "",
-		AuthMode:                 "mattermost",
-		EnablePublicSharedBoards: enablePublicSharedBoards,
-	}
 	var db store.Store
 	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB, true)
 	if err != nil {
@@ -179,6 +121,87 @@ func (p *Plugin) OnActivate() error {
 
 	p.server = server
 	return server.Start()
+}
+
+func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, serverID string) *config.Configuration {
+	filesS3Config := config.AmazonS3Config{}
+	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
+		filesS3Config.AccessKeyID = *mmconfig.FileSettings.AmazonS3AccessKeyId
+	}
+	if mmconfig.FileSettings.AmazonS3SecretAccessKey != nil {
+		filesS3Config.SecretAccessKey = *mmconfig.FileSettings.AmazonS3SecretAccessKey
+	}
+	if mmconfig.FileSettings.AmazonS3Bucket != nil {
+		filesS3Config.Bucket = *mmconfig.FileSettings.AmazonS3Bucket
+	}
+	if mmconfig.FileSettings.AmazonS3PathPrefix != nil {
+		filesS3Config.PathPrefix = *mmconfig.FileSettings.AmazonS3PathPrefix
+	}
+	if mmconfig.FileSettings.AmazonS3Region != nil {
+		filesS3Config.Region = *mmconfig.FileSettings.AmazonS3Region
+	}
+	if mmconfig.FileSettings.AmazonS3Endpoint != nil {
+		filesS3Config.Endpoint = *mmconfig.FileSettings.AmazonS3Endpoint
+	}
+	if mmconfig.FileSettings.AmazonS3SSL != nil {
+		filesS3Config.SSL = *mmconfig.FileSettings.AmazonS3SSL
+	}
+	if mmconfig.FileSettings.AmazonS3SignV2 != nil {
+		filesS3Config.SignV2 = *mmconfig.FileSettings.AmazonS3SignV2
+	}
+	if mmconfig.FileSettings.AmazonS3SSE != nil {
+		filesS3Config.SSE = *mmconfig.FileSettings.AmazonS3SSE
+	}
+	if mmconfig.FileSettings.AmazonS3Trace != nil {
+		filesS3Config.Trace = *mmconfig.FileSettings.AmazonS3Trace
+	}
+
+	enableTelemetry := false
+	if mmconfig.LogSettings.EnableDiagnostics != nil {
+		enableTelemetry = *mmconfig.LogSettings.EnableDiagnostics
+	}
+
+	enablePublicSharedBoards := false
+	if mmconfig.PluginSettings.Plugins[pluginName][sharedBoardsName] == true {
+		enablePublicSharedBoards = true
+	}
+
+	featureFlags := make(map[string]string)
+	for key, value := range mmconfig.FeatureFlags.ToMap() {
+		// Break out FeatureFlags and pass remaining
+		if key == boardsFeatureFlagName {
+			for _, flag := range strings.Split(value, "-") {
+				featureFlags[flag] = "true"
+			}
+		} else {
+			featureFlags[key] = value
+		}
+	}
+
+	return &config.Configuration{
+		ServerRoot:               baseURL + "/plugins/focalboard",
+		Port:                     -1,
+		DBType:                   *mmconfig.SqlSettings.DriverName,
+		DBConfigString:           *mmconfig.SqlSettings.DataSource,
+		DBTablePrefix:            "focalboard_",
+		UseSSL:                   false,
+		SecureCookie:             true,
+		WebPath:                  path.Join(*mmconfig.PluginSettings.Directory, "focalboard", "pack"),
+		FilesDriver:              *mmconfig.FileSettings.DriverName,
+		FilesPath:                *mmconfig.FileSettings.Directory,
+		FilesS3Config:            filesS3Config,
+		Telemetry:                enableTelemetry,
+		TelemetryID:              serverID,
+		WebhookUpdate:            []string{},
+		SessionExpireTime:        2592000,
+		SessionRefreshTime:       18000,
+		LocalOnly:                false,
+		EnableLocalMode:          false,
+		LocalModeSocketLocation:  "",
+		AuthMode:                 "mattermost",
+		EnablePublicSharedBoards: enablePublicSharedBoards,
+		FeatureFlags:             featureFlags,
+	}
 }
 
 func (p *Plugin) OnWebSocketConnect(webConnID, userID string) {

@@ -34,13 +34,14 @@ export const ConfirmationDialogBox = (props: Props) => {
                 className='box-area'
                 title='Confirmation Dialog Box'
             >
-                <h3 className='heading'>{props.dialogBox.heading}</h3>
-                <p className='sub-text'>{props.dialogBox.subText}</p>
+                <h3 className='text-heading5'>{props.dialogBox.heading}</h3>
+                <div className='sub-text'>{props.dialogBox.subText}</div>
 
                 <div className='action-buttons'>
                     <Button
                         title='Cancel'
-                        active={true}
+                        size='medium'
+                        emphasis='tertiary'
                         onClick={handleOnClose}
                     >
                         <FormattedMessage
@@ -50,6 +51,7 @@ export const ConfirmationDialogBox = (props: Props) => {
                     </Button>
                     <Button
                         title={props.dialogBox.confirmButtonText || 'Confirm'}
+                        size='medium'
                         submit={true}
                         emphasis='danger'
                         onClick={handleOnConfirm}

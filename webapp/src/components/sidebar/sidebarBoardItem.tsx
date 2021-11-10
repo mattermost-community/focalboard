@@ -26,6 +26,7 @@ type Props = {
     activeBoardId?: string
     activeViewId?: string
     nextBoardId?: string
+    hideSidebar: () => void
 }
 
 const SidebarBoardItem = React.memo((props: Props) => {
@@ -44,11 +45,13 @@ const SidebarBoardItem = React.memo((props: Props) => {
         }
         const newPath = generatePath(match.path, params)
         history.push(newPath)
+        props.hideSidebar()
     }, [match, history])
 
     const showView = useCallback((viewId, boardId) => {
         const newPath = generatePath(match.path, {...match.params, boardId: boardId || '', viewId: viewId || ''})
         history.push(newPath)
+        props.hideSidebar()
     }, [match, history])
 
     const iconForViewType = (viewType: IViewType): JSX.Element => {
