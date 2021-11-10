@@ -21,7 +21,7 @@ type SQLStore struct {
 	dbType           string
 	tablePrefix      string
 	connectionString string
-	IsPlugin         bool
+	isPlugin         bool
 	logger           *mlog.Logger
 	NewMutexFn       MutexFactory
 }
@@ -44,7 +44,7 @@ func New(params Params) (*SQLStore, error) {
 		tablePrefix:      params.TablePrefix,
 		connectionString: params.ConnectionString,
 		logger:           params.Logger,
-		IsPlugin:         params.IsPlugin,
+		isPlugin:         params.IsPlugin,
 		NewMutexFn:       params.NewMutexFn,
 	}
 

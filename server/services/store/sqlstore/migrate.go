@@ -164,7 +164,7 @@ func (s *SQLStore) Migrate() error {
 	prefixedData := &PrefixedMigration{
 		Bindata:  d.(*bindata.Bindata),
 		prefix:   s.tablePrefix,
-		plugin:   s.IsPlugin,
+		plugin:   s.isPlugin,
 		postgres: s.dbType == postgresDBType,
 		sqlite:   s.dbType == sqliteDBType,
 		mysql:    s.dbType == mysqlDBType,
@@ -176,7 +176,7 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	var mutex *cluster.Mutex
-	if s.IsPlugin {
+	if s.isPlugin {
 		var mutexErr error
 		mutex, mutexErr = s.NewMutexFn("Boards_dbMutex")
 		if mutexErr != nil {
@@ -188,20 +188,20 @@ func (s *SQLStore) Migrate() error {
 		return err
 	}
 
-	if s.IsPlugin {
+	if s.isPlugin {
 		s.logger.Debug("Acquiring cluster lock for Unique IDs migration")
 		mutex.Lock()
 	}
 
 	if err := s.runUniqueIDsMigration(); err != nil {
-		if s.IsPlugin {
+		if s.isPlugin {
 			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
 			mutex.Unlock()
 		}
 		return fmt.Errorf("error running unique IDs migration: %w", err)
 	}
 
-	if s.IsPlugin {
+	if s.isPlugin {
 		s.logger.Debug("Releasing cluster lock for Unique IDs migration")
 		mutex.Unlock()
 	}
