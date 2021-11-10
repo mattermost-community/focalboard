@@ -11,6 +11,121 @@ import (
 )
 
 //nolint:gosec
+func TestGetBlocksWithSameID(t *testing.T) {
+	store, tearDown := SetupTests(t)
+	sqlStore := store.(*SQLStore)
+	defer tearDown()
+
+	container1 := st.Container{WorkspaceID: "1"}
+	container2 := st.Container{WorkspaceID: "2"}
+	container3 := st.Container{WorkspaceID: "3"}
+
+	block1 := model.Block{ID: "block-id-1", RootID: "root-id-1"}
+	block2 := model.Block{ID: "block-id-2", RootID: "root-id-2"}
+	block3 := model.Block{ID: "block-id-3", RootID: "root-id-3"}
+
+	block4 := model.Block{ID: "block-id-1", RootID: "root-id-1"}
+	block5 := model.Block{ID: "block-id-2", RootID: "root-id-2"}
+
+	block6 := model.Block{ID: "block-id-1", RootID: "root-id-1"}
+	block7 := model.Block{ID: "block-id-7", RootID: "root-id-7"}
+	block8 := model.Block{ID: "block-id-8", RootID: "root-id-8"}
+
+	for _, block := range []model.Block{block1, block2, block3} {
+		err := sqlStore.InsertBlock(container1, &block, "user-id")
+		require.NoError(t, err)
+		time.Sleep(100 * time.Millisecond)
+	}
+
+	for _, block := range []model.Block{block4, block5} {
+		err := sqlStore.InsertBlock(container2, &block, "user-id")
+		require.NoError(t, err)
+		time.Sleep(100 * time.Millisecond)
+	}
+
+	for _, block := range []model.Block{block6, block7, block8} {
+		err := sqlStore.InsertBlock(container3, &block, "user-id")
+		require.NoError(t, err)
+		time.Sleep(100 * time.Millisecond)
+	}
+
+	blocksWithDuplicatedID := []model.Block{block1, block2, block4, block5, block6}
+
+	blocks, err := sqlStore.getBlocksWithSameID(sqlStore.db)
+	require.NoError(t, err)
+
+	// we process the found blocks to remove extra information and be
+	// able to compare both expected and found sets
+	foundBlocks := []model.Block{}
+	for _, foundBlock := range blocks {
+		foundBlocks = append(foundBlocks, model.Block{ID: foundBlock.ID, RootID: foundBlock.RootID})
+	}
+
+	require.ElementsMatch(t, blocksWithDuplicatedID, foundBlocks)
+}
+
+//nolint:gosec
+func TestReplaceBlockID(t *testing.T) {
+	store, tearDown := SetupTests(t)
+	sqlStore := store.(*SQLStore)
+	defer tearDown()
+
+	container1 := st.Container{WorkspaceID: "1"}
+	container2 := st.Container{WorkspaceID: "2"}
+
+	// blocks from workspace1
+	block1 := model.Block{ID: "block-id-1", RootID: "root-id-1"}
+	block2 := model.Block{ID: "block-id-2", RootID: "root-id-2", ParentID: "block-id-1"}
+	block3 := model.Block{ID: "block-id-3", RootID: "block-id-1"}
+	block4 := model.Block{ID: "block-id-4", RootID: "block-id-2"}
+	block5 := model.Block{ID: "block-id-5", RootID: "block-id-1", ParentID: "block-id-1"}
+
+	// blocks from workspace2. They're identical to blocks 1 and 2,
+	// but they shouldn't change
+	block6 := model.Block{ID: "block-id-1", RootID: "root-id-1"}
+	block7 := model.Block{ID: "block-id-2", RootID: "root-id-2", ParentID: "block-id-1"}
+
+	for _, block := range []model.Block{block1, block2, block3, block4, block5} {
+		err := sqlStore.InsertBlock(container1, &block, "user-id")
+		require.NoError(t, err)
+		time.Sleep(100 * time.Millisecond)
+	}
+
+	for _, block := range []model.Block{block6, block7} {
+		err := sqlStore.InsertBlock(container2, &block, "user-id")
+		require.NoError(t, err)
+		time.Sleep(100 * time.Millisecond)
+	}
+
+	currentID := "block-id-1"
+	newID := "new-id-1"
+	err := sqlStore.replaceBlockID(sqlStore.db, currentID, newID, "1")
+	require.NoError(t, err)
+
+	newBlock1, err := sqlStore.GetBlock(container1, newID)
+	require.NoError(t, err)
+	newBlock2, err := sqlStore.GetBlock(container1, block2.ID)
+	require.NoError(t, err)
+	newBlock3, err := sqlStore.GetBlock(container1, block3.ID)
+	require.NoError(t, err)
+	newBlock5, err := sqlStore.GetBlock(container1, block5.ID)
+	require.NoError(t, err)
+	newBlock6, err := sqlStore.GetBlock(container2, block6.ID)
+	require.NoError(t, err)
+	newBlock7, err := sqlStore.GetBlock(container2, block7.ID)
+	require.NoError(t, err)
+
+	require.Equal(t, newID, newBlock1.ID)
+	require.Equal(t, newID, newBlock2.ParentID)
+	require.Equal(t, newID, newBlock3.RootID)
+	require.Equal(t, newID, newBlock5.RootID)
+	require.Equal(t, newID, newBlock5.ParentID)
+
+	require.Equal(t, currentID, newBlock6.ID)
+	require.Equal(t, currentID, newBlock7.ParentID)
+}
+
+//nolint:gosec
 func TestRunUniqueIDsMigration(t *testing.T) {
 	store, tearDown := SetupTests(t)
 	sqlStore := store.(*SQLStore)

@@ -63,8 +63,4 @@ type Store interface {
 	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
 	GetWorkspaceCount() (int64, error)
 	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
-
-	GetBlocksWithSameID() ([]model.Block, error)
-	// @withTransaction
-	ReplaceBlockID(currentID, newID, workspaceID string) error
 }

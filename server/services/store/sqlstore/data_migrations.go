@@ -1,11 +1,13 @@
 package sqlstore
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -25,8 +27,16 @@ func (s *SQLStore) runUniqueIDsMigration() error {
 
 	s.logger.Debug("Running Unique IDs migration")
 
-	blocks, err := s.GetBlocksWithSameID()
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+
+	blocks, err := s.getBlocksWithSameID(tx)
 	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("unique IDs transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "getBlocksWithSameID"))
+		}
 		return fmt.Errorf("cannot get blocks with same ID: %w", err)
 	}
 
@@ -43,14 +53,24 @@ func (s *SQLStore) runUniqueIDsMigration() error {
 			}
 
 			newID := utils.NewID(model.BlockType2IDType(block.Type))
-			if err := s.ReplaceBlockID(block.ID, newID, block.WorkspaceID); err != nil {
+			if err := s.replaceBlockID(tx, block.ID, newID, block.WorkspaceID); err != nil {
+				if rollbackErr := tx.Rollback(); rollbackErr != nil {
+					s.logger.Error("unique IDs transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "replaceBlockID"))
+				}
 				return fmt.Errorf("cannot replace blockID %s: %w", block.ID, err)
 			}
 		}
 	}
 
-	if err := s.SetSystemSetting(UniqueIDsMigrationKey, strconv.FormatBool(true)); err != nil {
+	if err := s.setSystemSetting(tx, UniqueIDsMigrationKey, strconv.FormatBool(true)); err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("unique IDs transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "setSystemSetting"))
+		}
 		return fmt.Errorf("cannot mark migration as completed: %w", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		return fmt.Errorf("cannot commit unique IDs transaction: %w", err)
 	}
 
 	s.logger.Debug("Unique IDs migration finished successfully")
