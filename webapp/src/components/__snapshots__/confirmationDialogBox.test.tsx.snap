@@ -24,9 +24,6 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div
-            class="octo-spacer"
-          />
         </div>
         <div
           class="box-area"
@@ -94,9 +91,6 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div
-            class="octo-spacer"
-          />
         </div>
         <div
           class="box-area"
