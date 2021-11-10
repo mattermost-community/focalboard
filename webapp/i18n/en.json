@@ -83,7 +83,7 @@
   "DashboardPage.title": "Dashboard",
   "DeleteBoardDialog.confirm-cancel": "Cancel",
   "DeleteBoardDialog.confirm-delete": "Delete",
-  "DeleteBoardDialog.confirm-info": "Are you sure you want to delete the board “{boardTitle}”? Deleting it will delete the property from all cards in this board.",
+  "DeleteBoardDialog.confirm-info": "Are you sure you want to delete the board “{boardTitle}”? Deleting it will delete all cards in the board.",
   "DeleteBoardDialog.confirm-tite": "Confirm Delete Board",
   "Dialog.closeDialog": "Close dialog",
   "EditableDayPicker.today": "Today",

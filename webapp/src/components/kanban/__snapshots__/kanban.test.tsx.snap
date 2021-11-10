@@ -35,6 +35,7 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           class="KanbanCalculation"
         >
           <button
+            title="2"
             type="button"
           >
             <span>
@@ -88,6 +89,7 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           class="KanbanCalculation"
         >
           <button
+            title="1"
             type="button"
           >
             <span>
@@ -320,6 +322,7 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           class="KanbanCalculation"
         >
           <button
+            title="2"
             type="button"
           >
             <span>
@@ -373,6 +376,7 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           class="KanbanCalculation"
         >
           <button
+            title="1"
             type="button"
           >
             <span>
@@ -605,6 +609,7 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           class="KanbanCalculation"
         >
           <button
+            title="2"
             type="button"
           >
             <span>
@@ -658,6 +663,7 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           class="KanbanCalculation"
         >
           <button
+            title="1"
             type="button"
           >
             <span>
