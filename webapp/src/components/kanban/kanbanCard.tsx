@@ -78,6 +78,7 @@ const KanbanCard = React.memo((props: Props) => {
                                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
                                 mutator.duplicateCard(
                                     card.id,
+                                    board,
                                     'duplicate card',
                                     false,
                                     async (newCardId) => {
