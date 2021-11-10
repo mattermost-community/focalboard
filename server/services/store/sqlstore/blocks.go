@@ -424,22 +424,6 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID stri
 	return nil
 }
 
-func (s *SQLStore) deleteAllBlocksPermanently(db sq.BaseRunner, c store.Container) error {
-	tables := []string{"blocks", "blocks_history"}
-
-	for _, t := range tables {
-		deleteQuery := s.getQueryBuilder(db).
-			Delete(s.tablePrefix + t).
-			Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID})
-
-		if _, err := deleteQuery.Exec(); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 func (s *SQLStore) getBlockCountsByType(db sq.BaseRunner) (map[string]int64, error) {
 	query := s.getQueryBuilder(db).
 		Select(

@@ -36,32 +36,6 @@ func (s *SQLStore) CreateUser(user *model.User) error {
 
 }
 
-func (s *SQLStore) DeleteAllBlocksPermanently(c store.Container) error {
-	tx, txErr := s.db.BeginTx(context.Background(), nil)
-	if txErr != nil {
-		return txErr
-	}
-	err := s.deleteAllBlocksPermanently(tx, c)
-	if err != nil {
-		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DeleteAllBlocksPermanently"))
-		}
-		return err
-	}
-
-	if err := tx.Commit(); err != nil {
-		return err
-	}
-
-	return nil
-
-}
-
-func (s *SQLStore) DeleteAllUsers() error {
-	return s.deleteAllUsers(s.db)
-
-}
-
 func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {

@@ -57,8 +57,6 @@ type Configuration struct {
 
 	AuditCfgFile string `json:"audit_cfg_file" mapstructure:"audit_cfg_file"`
 	AuditCfgJSON string `json:"audit_cfg_json" mapstructure:"audit_cfg_json"`
-
-	EnableTestingAPI bool `json:"enableTestingAPI" mapstructure:"enableTestingAPI"`
 }
 
 // ReadConfigFile read the configuration from the filesystem.
@@ -90,8 +88,8 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	viper.SetDefault("LocalModeSocketLocation", "/var/tmp/focalboard_local.socket")
 	viper.SetDefault("EnablePublicSharedBoards", false)
 	viper.SetDefault("FeatureFlags", map[string]string{})
+
 	viper.SetDefault("AuthMode", "native")
-	viper.SetDefault("EnableTestingAPI", false)
 
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {             // Handle errors reading the config file
