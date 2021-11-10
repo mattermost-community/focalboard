@@ -19,6 +19,7 @@ import TelemetryClient from './telemetry/telemetryClient'
 import {IAppWindow} from './types'
 import {getMessages} from './i18n'
 import {FlashMessages} from './components/flashMessages'
+import NewVersionBanner from './components/newVersionBanner'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
 import DashboardPage from './pages/dashboard/dashboardPage'
@@ -141,6 +142,7 @@ const App = React.memo((): JSX.Element => {
                 >
                     <div id='frame'>
                         <div id='main'>
+                            <NewVersionBanner/>
                             <Switch>
                                 {globalErrorRedirect}
                                 <Route path='/error'>
