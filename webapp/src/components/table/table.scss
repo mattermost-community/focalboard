@@ -89,7 +89,7 @@
         border-bottom: 1px solid transparent;
         box-sizing: border-box;
         padding: 8px;
-        min-height: 32px;
+        height: 44px;
         font-size: 14px;
         position: relative;
         text-overflow: ellipsis;
@@ -196,7 +196,7 @@
 
     .table-row-container {
         width: fit-content;
-        
+
         .octo-table-cell {
             align-items: center;
         }
