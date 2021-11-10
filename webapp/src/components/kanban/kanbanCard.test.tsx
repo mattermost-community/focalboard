@@ -105,7 +105,7 @@ describe('src/components/kanban/kanbanCard', () => {
                 />
             </ReduxProvider>,
         ))
-        
+
         const {container} = result
 
         const elementMenuWrapper = screen.getByRole('button', {name: 'menuwrapper'})
@@ -116,7 +116,7 @@ describe('src/components/kanban/kanbanCard', () => {
         expect(elementButtonDelete).not.toBeNull()
         userEvent.click(elementButtonDelete)
 
-        const confirmDialog = screen.getByTitle("Confirmation Dialog Box")
+        const confirmDialog = screen.getByTitle('Confirmation Dialog Box')
         expect(confirmDialog).toBeDefined()
         const confirmButton = within(confirmDialog).getByRole('button', {name: 'Delete'})
         expect(confirmButton).toBeDefined()

@@ -65,7 +65,7 @@ const KanbanCard = React.memo((props: Props) => {
 
     const handleDeleteButtonOnClick = () => {
         // user trying to delete a card with blank name
-        // but content present cannot be deleted without 
+        // but content present cannot be deleted without
         // confirmation dialog
         if (card?.title === '' && card?.fields.contentOrder.length === 0) {
             handleDeleteCard()
