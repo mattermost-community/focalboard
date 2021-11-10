@@ -1,22 +1,49 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-describe('Login actions', () => {
-    const username = 'username'
-    const email = 'username@gmail.com'
-    const password = 'password'
-
-    beforeEach(() => {
-        cy.apiResetServer()
+const resetPassword = (oldPassword: string) => {
+    const headers = {
+        'X-Requested-With': 'XMLHttpRequest',
+        Authorization: `Bearer ${localStorage.getItem('focalboardSessionId')}`,
+    }
+    cy.request({
+        method: 'GET',
+        url: '/api/v1/users/me',
+        headers,
+    }).then((response) => {
+        const userId = response.body.id
+        const body = {oldPassword, newPassword: Cypress.env('password')}
+        cy.request({
+            method: 'POST',
+            url: `/api/v1/users/${encodeURIComponent(userId)}/changepassword`,
+            headers,
+            body,
+        })
     })
+}
+
+describe('Login actions', () => {
+    const username = Cypress.env('username')
+    const email = Cypress.env('email')
+    const password = Cypress.env('password')
 
     const workspaceIsAvailable = () => {
         cy.location('pathname').should('eq', '/')
         cy.get('.Workspace').should('exist')
-        cy.get('.Sidebar').should('exist')
+        return cy.get('.Sidebar').should('exist')
     }
 
-    it('Redirects to login page', () => {
+    const loginUser = (withPassword: string) => {
+        cy.visit('/login')
+        cy.get('#login-username').type(username)
+        cy.get('#login-password').type(withPassword)
+        cy.get('button').contains('Log in').click()
+        return workspaceIsAvailable()
+    }
+
+    it('Can perform login/register actions', () => {
+        // Redirects to login page
+        cy.log('**Redirects to login page**')
         cy.visit('/')
         cy.location('pathname').should('eq', '/login')
         cy.get('.LoginPage').contains('Log in')
@@ -24,9 +51,9 @@ describe('Login actions', () => {
         cy.get('#login-password').should('exist')
         cy.get('button').contains('Log in')
         cy.get('a').contains('create an account')
-    })
 
-    it('Can register user', () => {
+        // Can register a user
+        cy.log('**Can register a user**')
         cy.visit('/login')
         cy.get('a').contains('create an account').click()
         cy.location('pathname').should('eq', '/register')
@@ -36,22 +63,25 @@ describe('Login actions', () => {
         cy.get('#login-password').type(password)
         cy.get('button').contains('Register').click()
         workspaceIsAvailable()
-    })
 
-    it('Can log in user', () => {
-        cy.apiRegisterUser({username, email, password})
-        cy.visit('/login')
-        cy.get('#login-username').type(username)
-        cy.get('#login-password').type(password)
-        cy.get('button').contains('Log in').click()
-        workspaceIsAvailable()
-    })
+        // Can log out user
+        cy.log('**Can log out user**')
+        cy.get('.SidebarUserMenu').click()
+        cy.get('.menu-name').contains('Log out').click()
+        cy.location('pathname').should('eq', '/login')
 
-    it('Can change password', () => {
-        const newPassword = 'new_password'
-        cy.apiRegisterUser({username, email, password})
-        cy.apiLoginUser({username, password})
+        // User should not be logged in automatically
+        cy.log('**User should not be logged in automatically**')
         cy.visit('/')
+        cy.location('pathname').should('eq', '/login')
+
+        // Can log in registered user
+        cy.log('**Can log in registered user**')
+        loginUser(password)
+
+        // Can change password
+        cy.log('**Can change password**')
+        const newPassword = 'new_password'
         cy.get('.SidebarUserMenu').click()
         cy.get('.menu-name').contains('Change password').click()
         cy.location('pathname').should('eq', '/change_password')
@@ -61,45 +91,26 @@ describe('Login actions', () => {
         cy.get('button').contains('Change password').click()
         cy.get('.succeeded').click()
         workspaceIsAvailable()
-        cy.apiLoginUser({username, password: newPassword})
-        cy.visit('/')
-        workspaceIsAvailable()
-    })
 
-    it('Can log out user', () => {
-        cy.apiRegisterUser({username, email, password})
-        cy.apiLoginUser({username, password})
-        cy.visit('/')
+        // Can log in user with new password
+        cy.log('**Can log in user with new password**')
+        loginUser(newPassword).then(() => resetPassword(newPassword))
 
-        // Select Log out from menu
-        cy.log('**Select Log out from menu**')
-        cy.get('.SidebarUserMenu').click()
-        cy.get('.menu-name').contains('Log out').click()
-        cy.location('pathname').should('eq', '/login')
-
-        // User should not be logged in automatically
-        cy.log('**User should not be logged in automatically**')
-        cy.visit('/')
-        cy.location('pathname').should('eq', '/login')
-    })
-
-    it('Can\'t register second user without invite link', () => {
-        cy.apiRegisterTestUser()
+        // Can't register second user without invite link
+        cy.log('**Can\'t register second user without invite link**')
         cy.visit('/register')
         cy.get('#login-email').type(email)
         cy.get('#login-username').type(username)
         cy.get('#login-password').type(password)
         cy.get('button').contains('Register').click()
         cy.get('.error').contains('Invalid registration link').should('exist')
-    })
 
-    it('Can register second user using invite link', () => {
-        cy.apiRegisterTestUser()
-        cy.apiLoginTestUser()
-        cy.visit('/')
+        // Can register second user using invite link
+        cy.log('**Can register second user using invite link**')
 
         // Copy invite link
         cy.log('**Copy invite link**')
+        loginUser(password)
         cy.get('.Sidebar .SidebarUserMenu').click()
         cy.get('.menu-name').contains('Invite users').click()
         cy.get('.Button').contains('Copy link').click()
@@ -111,12 +122,12 @@ describe('Login actions', () => {
             cy.get('.Sidebar .SidebarUserMenu').click()
             cy.get('.menu-name').contains('Log out').click()
 
-            // Register new user
+            // Register a new user
             cy.log('**Register new user**')
             cy.visit(inviteLink as string)
-            cy.get('#login-email').type(email)
-            cy.get('#login-username').type(username)
-            cy.get('#login-password').type(password)
+            cy.get('#login-email').type('new-user@mail.com')
+            cy.get('#login-username').type('new-user')
+            cy.get('#login-password').type('new-password')
             cy.get('button').contains('Register').click()
             workspaceIsAvailable()
         })

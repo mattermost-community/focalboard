@@ -11,9 +11,7 @@ describe('Create and delete board / card', () => {
     const cardTitle = `Test Card (${timestamp})`
 
     beforeEach(() => {
-        cy.apiResetServer()
-        cy.apiRegisterTestUser()
-        cy.apiLoginTestUser()
+        cy.apiInitServer()
         localStorage.setItem('welcomePageViewed', 'true')
     })
 

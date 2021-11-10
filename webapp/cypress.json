@@ -1,6 +1,15 @@
 {
     "chromeWebSecurity": false,
     "baseUrl": "http://localhost:8088",
+    "testFiles": [
+        "**/login*.ts",
+        "**/create*.ts"
+    ],
+    "env": {
+        "username": "test-user",
+        "password": "test-password",
+        "email": "test@mail.com"
+    },
     "video": false,
     "viewportWidth": 1600,
     "viewportHeight": 1200
