@@ -259,6 +259,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="KanbanCalculation"
           >
             <button
+              title="0"
               type="button"
             >
               <span>
@@ -312,6 +313,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="KanbanCalculation"
           >
             <button
+              title="2"
               type="button"
             >
               <span>
@@ -365,6 +367,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="KanbanCalculation"
           >
             <button
+              title="0"
               type="button"
             >
               <span>
@@ -7278,6 +7281,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="KanbanCalculation"
           >
             <button
+              title="0"
               type="button"
             >
               <span>
@@ -7331,6 +7335,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="KanbanCalculation"
           >
             <button
+              title="1"
               type="button"
             >
               <span>
@@ -7384,6 +7389,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="KanbanCalculation"
           >
             <button
+              title="0"
               type="button"
             >
               <span>
