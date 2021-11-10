@@ -1,4 +1,8 @@
 .StandardIcon,
 %standard-icon {
-
+    stroke: rgba(var(--center-channel-color-rgb), 0.5);
+    stroke-width: 4px;
+    fill: none;
+    width: 24px;
+    height: 24px;
 }
