@@ -28,7 +28,16 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 	require.NoError(t, err)
 	err = sqlDB.Ping()
 	require.NoError(t, err)
-	store, err := New(dbType, connectionString, "test_", logger, sqlDB, nil)
+
+	storeParams := Params{
+		DBType:           dbType,
+		ConnectionString: connectionString,
+		TablePrefix:      "test_",
+		Logger:           logger,
+		DB:               sqlDB,
+		IsPlugin:         false,
+	}
+	store, err := New(storeParams)
 	require.Nil(t, err)
 
 	tearDown := func() {
