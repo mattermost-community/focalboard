@@ -8,14 +8,37 @@ export const TelemetryCategory = 'boards'
 
 export const TelemetryActions = {
     ClickChannelHeader: 'clickChannelHeader',
-    CreateBoard: 'createBoard',
-    CreateBoardViaTemplate: 'createBoardViaTemplate',
-    CreateBoardView: 'createBoardView',
-    EditCardProperty: 'editCardProperty',
-    ShareBoard: 'shareBoard',
     ViewBoard: 'viewBoard',
+    CreateBoard: 'createBoard',
+    DuplicateBoard: 'duplicateBoard',
+    DeleteBoard: 'deleteBoard',
+    ShareBoard: 'shareBoard',
+    CreateBoardTemplate: 'createBoardTemplate',
+    CreateBoardViaTemplate: 'createBoardViaTemplate',
+    AddTemplateFromBoard: 'AddTemplateFromBoard',
+    CreateBoardView: 'createBoardView',
+    DuplicateBoardView: 'duplicagteBoardView',
+    DeleteBoardView: 'deleteBoardView',
+    EditCardProperty: 'editCardProperty',
     ViewCard: 'viewCard',
+    CreateCard: 'createCard',
+    CreateCardTemplate: 'createCardTemplate',
+    CreateCardViaTemplate: 'createCardViaTemplate',
+    DuplicateCard: 'duplicateCard',
+    DeleteCard: 'deleteCard',
+    AddTemplateFromCard: 'addTemplateFromCard',
     ViewSharedBoard: 'viewSharedBoard',
+}
+
+interface IEventProps {
+    workspaceID?: string,
+    board?: string,
+    view?: string,
+    viewType?: string,
+    card?: string,
+    cardTemplateId?: string,
+    boardTemplateId?: string,
+    shareBoardEnabled?: boolean,
 }
 
 class TelemetryClient {
@@ -30,7 +53,7 @@ class TelemetryClient {
         this.user = user
     }
 
-    trackEvent(category: string, event: string, props?: unknown): void {
+    trackEvent(category: string, event: string, props?: IEventProps): void {
         if (this.telemetryHandler) {
             const userId = this.user?.id
             this.telemetryHandler.trackEvent(userId || '', '', category, event, props)

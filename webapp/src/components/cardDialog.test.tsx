@@ -85,7 +85,7 @@ describe('components/cardDialog', () => {
                         cardId={card.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}
-                        readonly={false}
+                        readonly={true}
                     />
                 </ReduxProvider>,
             ))

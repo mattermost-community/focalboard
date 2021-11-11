@@ -7,6 +7,13 @@
         padding: 0 6px;
         min-width: 24px;
 
+        span {
+            max-width: 35px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         &:hover {
             background-color: rgba(var(--center-channel-color-rgb), 0.1);
         }

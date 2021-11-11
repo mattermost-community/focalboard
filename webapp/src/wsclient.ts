@@ -49,6 +49,8 @@ type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => v
 class WSClient {
     ws: WebSocket|null = null
     client: MMWebSocketClient|null = null
+    pluginId = ''
+    onAppVersionChangeHandler: ((versionHasChanged: boolean) => void) | null = null
     clientPrefix = ''
     serverUrl: string | undefined
     state: 'init'|'open'|'close' = 'init'
@@ -88,6 +90,7 @@ class WSClient {
     }
 
     initPlugin(pluginId: string, client: MMWebSocketClient): void {
+        this.pluginId = pluginId
         this.clientPrefix = `custom_${pluginId}_`
         this.client = client
         Utils.log(`WSClient initialised for plugin id "${pluginId}"`)
@@ -296,6 +299,21 @@ class WSClient {
     updateClientConfigHandler(config: ClientConfig): void {
         for (const handler of this.onConfigChange) {
             handler(this, config)
+        }
+    }
+
+    setOnAppVersionChangeHandler(fn: (versionHasChanged: boolean) => void): void {
+        this.onAppVersionChangeHandler = fn
+    }
+
+    pluginStatusesChangedHandler(data: any): void {
+        if (this.pluginId === '' || !this.onAppVersionChangeHandler) {
+            return
+        }
+
+        if (data.plugin_statuses.some((s: any) => s.plugin_id === this.pluginId)) {
+            Utils.log('Boards plugin has been updated')
+            this.onAppVersionChangeHandler(true)
         }
     }
 

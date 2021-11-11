@@ -17,7 +17,7 @@ const (
 
 func formatMessage(author string, extract string, card string, link string, block *model.Block) string {
 	template := defDescriptionTemplate
-	if block.Type == "comment" {
+	if block.Type == model.TypeComment {
 		template = defCommentTemplate
 	}
 	return fmt.Sprintf(template, author, card, link, extract)
