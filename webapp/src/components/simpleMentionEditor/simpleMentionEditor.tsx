@@ -14,6 +14,9 @@ import createMentionPlugin, {
     MentionData,
 } from '@draft-js-plugins/mention'
 
+import createEmojiPlugin from '@draft-js-plugins/emoji'
+import '@draft-js-plugins/emoji/lib/plugin.css'
+
 import {getWorkspaceUsersList} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 import '@draft-js-plugins/mention/lib/plugin.css'
@@ -37,14 +40,21 @@ export default function SimpleMentionEditor(props: Props): ReactElement {
     })
     const [open, setOpen] = useState(false)
     const [suggestions, setSuggestions] = useState(mentions)
-    const mentionPlugin = createMentionPlugin({mentionPrefix: '@', entityMutability: 'MUTABLE'})
 
-    const {MentionSuggestions, plugins} = useMemo(() => {
+    const {MentionSuggestions, plugins, EmojiSuggestions} = useMemo(() => {
+        const mentionPlugin = createMentionPlugin({mentionPrefix: '@'})
+        const emojiPlugin = createEmojiPlugin()
+
+        // eslint-disable-next-line no-shadow
+        const {EmojiSuggestions} = emojiPlugin
         // eslint-disable-next-line no-shadow
         const {MentionSuggestions} = mentionPlugin
         // eslint-disable-next-line no-shadow
-        const plugins = [mentionPlugin]
-        return {plugins, MentionSuggestions}
+        const plugins = [
+            mentionPlugin,
+            emojiPlugin,
+        ]
+        return {plugins, MentionSuggestions, EmojiSuggestions}
     }, [])
 
     useEffect(() => {
@@ -85,10 +95,8 @@ export default function SimpleMentionEditor(props: Props): ReactElement {
                 onOpenChange={onOpenChange}
                 suggestions={suggestions}
                 onSearchChange={onSearchChange}
-                onAddMention={() => {
-                    // get the mention object selected
-                }}
             />
+            <EmojiSuggestions/>
         </>
     )
 }
