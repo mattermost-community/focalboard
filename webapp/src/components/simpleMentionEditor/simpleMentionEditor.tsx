@@ -22,6 +22,10 @@ import {useAppSelector} from '../../store/hooks'
 import '@draft-js-plugins/mention/lib/plugin.css'
 import {IUser} from '../../user'
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import createLiveMarkdownPlugin from './draft-js-live-markdown-render'
+
 type Props = {
     onChange?: (text: string) => void
     onFocus?: () => void
@@ -53,6 +57,7 @@ export default function SimpleMentionEditor(props: Props): ReactElement {
         const plugins = [
             mentionPlugin,
             emojiPlugin,
+            createLiveMarkdownPlugin() as any,
         ]
         return {plugins, MentionSuggestions, EmojiSuggestions}
     }, [])
