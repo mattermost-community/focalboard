@@ -42,13 +42,12 @@ const CardDialog = (props: Props): JSX.Element => {
     const intl = useIntl()
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
-
     const makeTemplateClicked = async () => {
         if (!card) {
             Utils.assertFailure('card')
             return
         }
-
+        
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromCard, {board: props.board.id, view: activeView.id, card: props.cardId})
         await mutator.duplicateCard(
             props.cardId,
@@ -61,17 +60,26 @@ const CardDialog = (props: Props): JSX.Element => {
             async () => {
                 props.showCard(undefined)
             },
-        )
-    }
-    const handleDeleteCard = async () => {
-        if (!card) {
-            Utils.assertFailure()
-            return
+            )
         }
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: props.board.id, view: props.activeView.id, card: card.id})
-        await mutator.deleteBlock(card, 'delete card')
-        props.onClose()
-    }
+        const handleDeleteCard = async () => {
+            if (!card) {
+                Utils.assertFailure()
+                return
+            }
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: props.board.id, view: props.activeView.id, card: card.id})
+            await mutator.deleteBlock(card, 'delete card')
+            props.onClose()
+        }
+        
+        const confirmDialogProps: ConfirmationDialogBoxProps = {
+            heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+            confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+            onConfirm: handleDeleteCard,
+            onClose: () => {
+                setShowConfirmationDialogBox(false)
+            },
+        }
 
     const confirmDialogProps: ConfirmationDialogBoxProps = {
         heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
