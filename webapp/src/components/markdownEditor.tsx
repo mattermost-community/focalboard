@@ -1,13 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useRef, useMemo} from 'react'
-import SimpleMdeReact from 'react-simplemde-editor'
 import {Editor} from 'codemirror'
 import SimpleMDE from 'easymde'
 import 'easymde/dist/easymde.min.css'
 
 import {Utils, IDType} from '../utils'
 import './markdownEditor.scss'
+
+import SimpleMentionEditor from './simpleMentionEditor/simpleMentionEditor'
 
 type Props = {
     id?: string
@@ -47,15 +48,15 @@ const MarkdownEditor = (props: Props): JSX. Element => {
     }), [])
 
     const showEditor = (): void => {
-        const cm = editorInstance?.codemirror
-        if (cm) {
-            setTimeout(() => {
-                cm.refresh()
-                cm.focus()
-                cm.getInputField()?.focus()
-                cm.setCursor(cm.lineCount(), 0) // Put cursor at end
-            }, 100)
-        }
+        // const cm = editorInstance?.codemirror
+        // if (cm) {
+        //     setTimeout(() => {
+        //         cm.refresh()
+        //         cm.focus()
+        //         cm.getInputField()?.focus()
+        //         cm.setCursor(cm.lineCount(), 0) // Put cursor at end
+        //     }, 100)
+        // }
 
         setIsEditing(true)
     }
@@ -108,7 +109,6 @@ const MarkdownEditor = (props: Props): JSX. Element => {
     const previewElement = (
         <div
             className={text ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
-            style={{display: isEditing ? 'none' : undefined}}
             dangerouslySetInnerHTML={{__html: html}}
             onClick={(e) => {
                 const LINK_TAG_NAME = 'a'
@@ -124,40 +124,54 @@ const MarkdownEditor = (props: Props): JSX. Element => {
             }}
         />)
 
+    // const editorElement = (
+    //     <div
+    //         className='octo-editor-active Editor'
+
+    //         // Use visibility instead of display here so the editor is pre-rendered, avoiding a flash on showEditor
+    //         style={isEditing ? {} : {visibility: 'hidden', position: 'absolute', top: 0, left: 0}}
+    //         onKeyDown={(e) => {
+    //             // HACKHACK: Need to handle here instad of in CodeMirror because that breaks auto-lists
+    //             if (e.keyCode === 27 && !e.shiftKey && !(e.ctrlKey || e.metaKey) && !e.altKey) { // Esc
+    //                 editorInstance?.codemirror?.getInputField()?.blur()
+    //             } else if (e.keyCode === 13 && !e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) { // Cmd+Enter
+    //                 editorInstance?.codemirror?.getInputField()?.blur()
+
+    //                 // HACKHACK: Call onAccept after visual state change
+    //                 setTimeout(() => {
+    //                     Utils.log('onAccept')
+    //                     props.onAccept?.(text || '')
+    //                 }, 20)
+    //             }
+    //         }}
+    //     >
+    //         <SimpleMdeReact
+    //             id={uniqueId}
+    //             getMdeInstance={setEditorInstance}
+    //             value={text}
+    //             events={editorEvents}
+    //             options={editorOptions}
+    //         />
+    //     </div>)
+
+    const editorOnBlur = (newText: string) => {
+        setIsEditing(false)
+        onBlur && onBlur(newText)
+    }
+
     const editorElement = (
-        <div
-            className='octo-editor-active Editor'
-
-            // Use visibility instead of display here so the editor is pre-rendered, avoiding a flash on showEditor
-            style={isEditing ? {} : {visibility: 'hidden', position: 'absolute', top: 0, left: 0}}
-            onKeyDown={(e) => {
-                // HACKHACK: Need to handle here instad of in CodeMirror because that breaks auto-lists
-                if (e.keyCode === 27 && !e.shiftKey && !(e.ctrlKey || e.metaKey) && !e.altKey) { // Esc
-                    editorInstance?.codemirror?.getInputField()?.blur()
-                } else if (e.keyCode === 13 && !e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) { // Cmd+Enter
-                    editorInstance?.codemirror?.getInputField()?.blur()
-
-                    // HACKHACK: Call onAccept after visual state change
-                    setTimeout(() => {
-                        Utils.log('onAccept')
-                        props.onAccept?.(text || '')
-                    }, 20)
-                }
-            }}
-        >
-            <SimpleMdeReact
-                id={uniqueId}
-                getMdeInstance={setEditorInstance}
-                value={text}
-                events={editorEvents}
-                options={editorOptions}
-            />
-        </div>)
+        <SimpleMentionEditor
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={editorOnBlur}
+            initialText={text}
+        />
+    )
 
     const element = (
         <div className={`MarkdownEditor octo-editor ${props.className || ''} ${active ? 'active' : ''}`}>
-            {previewElement}
-            {editorElement}
+            {!isEditing && previewElement}
+            {isEditing && editorElement}
         </div>)
 
     return element

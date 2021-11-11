@@ -24,6 +24,8 @@
 		"updatesnapshots": "jest --updateSnapshot"
 	},
 	"dependencies": {
+		"@draft-js-plugins/editor": "^4.1.0",
+		"@draft-js-plugins/mention": "^5.0.0",
 		"@mattermost/compass-icons": "^0.1.10",
 		"@reduxjs/toolkit": "^1.6.0",
 		"color": "^4.0.0",
