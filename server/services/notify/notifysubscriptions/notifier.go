@@ -11,6 +11,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -162,8 +163,8 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		mlog.Int("sub_count", len(subs)),
 	)
 
-	dg := newDiffGenerator(c, n.store)
-	diffs, err := dg.generateDiffs(c, hint)
+	dg := newDiffGenerator(c, n.store, hint, subs[0].NotifiedAt) // subs[0] contains the oldest NotifiedAt needed
+	diffs, err := dg.generateDiffs()
 	if err != nil {
 		return err
 	}
@@ -199,10 +200,17 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 			continue
 		}
 
-		if err := n.delivery.SubscriptionDeliver(sub.SubscriberID, sub.SubscriberType, markdown); err != nil {
+		if err = n.delivery.SubscriptionDeliver(sub.SubscriberID, sub.SubscriberType, markdown); err != nil {
 			merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
 				sub.SubscriberID, sub.SubscriberType, err))
 		}
 	}
+
+	// update the last notified_at for all subscribers since we at least attempted to notify all of them.
+	err = dg.store.UpdateSubscribersNotifyAt(dg.container, dg.hint.BlockID, utils.GetMillis())
+	if err != nil {
+		merr.Append(fmt.Errorf("could not update subscribers notify_at for block %s: %w", dg.hint.BlockID, err))
+	}
+
 	return merr.ErrorOrNil()
 }

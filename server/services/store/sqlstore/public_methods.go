@@ -295,6 +295,11 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 
 }
 
+func (s *SQLStore) UpdateSubscribersNotifyAt(c store.Container, blockID string, notifyAt int64) error {
+	return s.updateSubscribersNotifyAt(s.db, c, blockID, notifyAt)
+
+}
+
 func (s *SQLStore) UpdateUser(user *model.User) error {
 	return s.updateUser(s.db, user)
 

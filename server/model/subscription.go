@@ -104,4 +104,7 @@ type Subscriber struct {
 	// SubscriberID is the id of the entity that is subscribing
 	// required: true
 	SubscriberID string `json:"subscriber_id"`
+
+	// NotifiedAt is the timestamp this subscriber was last notified
+	NotifiedAt int64 `json:"notify_at"`
 }

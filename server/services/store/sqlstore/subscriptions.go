@@ -195,11 +195,13 @@ func (s *SQLStore) getSubscribersForBlock(db sq.BaseRunner, c store.Container, b
 		Select(
 			"subscriber_type",
 			"subscriber_id",
+			"notified_at",
 		).
 		From(s.tablePrefix + "subscriptions").
 		Where(sq.Eq{"block_id": blockID}).
 		Where(sq.Eq{"workspace_id": c.WorkspaceID}).
-		Where(sq.Eq{"delete_at": 0})
+		Where(sq.Eq{"delete_at": 0}).
+		OrderBy("notified_at")
 
 	rows, err := query.Query()
 	if err != nil {
@@ -219,6 +221,7 @@ func (s *SQLStore) getSubscribersForBlock(db sq.BaseRunner, c store.Container, b
 		err := rows.Scan(
 			&sub.SubscriberType,
 			&sub.SubscriberID,
+			&sub.NotifiedAt,
 		)
 		if err != nil {
 			return nil, err
@@ -250,4 +253,23 @@ func (s *SQLStore) getSubscribersCountForBlock(db sq.BaseRunner, c store.Contain
 		return 0, err
 	}
 	return count, nil
+}
+
+// updateSubscribersNotifyAt updates the notify_at field of all subscribers for a block.
+func (s *SQLStore) updateSubscribersNotifyAt(db sq.BaseRunner, c store.Container, blockID string, notifyAt int64) error {
+	query := s.getQueryBuilder(db).
+		Update(s.tablePrefix+"subscriptions").
+		Set("notify_at", notifyAt).
+		Where(sq.Eq{"block_id": blockID}).
+		Where(sq.Eq{"workspace_id": c.WorkspaceID}).
+		Where(sq.Eq{"delete_at": 0})
+
+	if _, err := query.Exec(); err != nil {
+		s.logger.Error("UpdateSubscribersNotifyAt error occurred while updating subscriber(s)",
+			mlog.String("blockID", blockID),
+			mlog.Err(err),
+		)
+		return err
+	}
+	return nil
 }

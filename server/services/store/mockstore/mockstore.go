@@ -728,6 +728,20 @@ func (mr *MockStoreMockRecorder) UpdateSession(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSession", reflect.TypeOf((*MockStore)(nil).UpdateSession), arg0)
 }
 
+// UpdateSubscribersNotifyAt mocks base method.
+func (m *MockStore) UpdateSubscribersNotifyAt(arg0 store.Container, arg1 string, arg2 int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateSubscribersNotifyAt", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateSubscribersNotifyAt indicates an expected call of UpdateSubscribersNotifyAt.
+func (mr *MockStoreMockRecorder) UpdateSubscribersNotifyAt(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateSubscribersNotifyAt", reflect.TypeOf((*MockStore)(nil).UpdateSubscribersNotifyAt), arg0, arg1, arg2)
+}
+
 // UpdateUser mocks base method.
 func (m *MockStore) UpdateUser(arg0 *model.User) error {
 	m.ctrl.T.Helper()

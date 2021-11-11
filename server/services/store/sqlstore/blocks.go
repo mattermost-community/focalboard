@@ -138,8 +138,8 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID stri
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
-	if opts.InsertAfterAt != 0 {
-		query = query.Where(sq.Gt{"insert_at": utils.GetTimeForMillis(opts.InsertAfterAt)})
+	if opts.UpdateAfterAt != 0 {
+		query = query.Where(sq.Gt{"update_at": opts.UpdateAfterAt})
 	}
 
 	if opts.OrderByInsertAt {
@@ -190,8 +190,8 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID})
 
-	if opts.InsertAfterAt != 0 {
-		query = query.Where(sq.Gt{"l3.insert_at": utils.GetTimeForMillis(opts.InsertAfterAt)})
+	if opts.UpdateAfterAt != 0 {
+		query = query.Where(sq.Gt{"l3.update_at": opts.UpdateAfterAt})
 	}
 
 	if s.dbType == postgresDBType {
@@ -523,8 +523,8 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID 
 		Where(sq.Eq{"id": blockID}).
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
-	if opts.InsertAfterAt != 0 {
-		query = query.Where(sq.Gt{"insert_at": utils.GetTimeForMillis(opts.InsertAfterAt)})
+	if opts.UpdateAfterAt != 0 {
+		query = query.Where(sq.Gt{"update_at": opts.UpdateAfterAt})
 	}
 
 	if opts.OrderByInsertAt {
