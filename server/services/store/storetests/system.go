@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// this system settings are created when running the data migrations,
+// these system settings are created when running the data migrations,
 // so they will be present after the tests setup.
 var dataMigrationSystemSettings = map[string]string{
 	"UniqueIDsMigrationComplete": "true",
