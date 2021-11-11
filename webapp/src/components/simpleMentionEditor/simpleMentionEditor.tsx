@@ -31,7 +31,6 @@ export default function SimpleMentionEditor(props: Props): ReactElement {
     const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
     const mentions: MentionData[] = workspaceUsers.map((user) => ({name: user.username}))
     const ref = useRef<Editor>(null)
-    console.log('SimpleMentionEditor', initialText)
     const [editorState, setEditorState] = useState(() => {
         const state = EditorState.moveFocusToEnd(EditorState.createWithContent(ContentState.createFromText(initialText || '')))
         return EditorState.moveSelectionToEnd(state)
@@ -59,7 +58,7 @@ export default function SimpleMentionEditor(props: Props): ReactElement {
         onBlur && onBlur(text)
     }
     const onEditorStateChange = (newEditorState: EditorState) => {
-        const newText = editorState.getCurrentContent().getPlainText()
+        const newText = newEditorState.getCurrentContent().getPlainText()
         onChange && onChange(newText)
         setEditorState(newEditorState)
     }
