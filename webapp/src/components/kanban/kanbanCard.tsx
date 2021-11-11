@@ -52,8 +52,7 @@ const KanbanCard = React.memo((props: Props) => {
     const comments = useAppSelector(getCardComments(card.id))
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
-    const [confirmDialogProps, setConfirmDialogProps] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
-
+    
     const handleDeleteCard = async () => {
         if (!card) {
             Utils.assertFailure()
@@ -62,7 +61,16 @@ const KanbanCard = React.memo((props: Props) => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: board.id, card: card.id})
         await mutator.deleteBlock(card, 'delete card')
     }
-
+    
+    const confirmDialogProps: ConfirmationDialogBoxProps = {
+        heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+        confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+        onConfirm: handleDeleteCard,
+        onClose: () => {
+            setShowConfirmationDialogBox(false)
+        },
+    }
+    
     const handleDeleteButtonOnClick = () => {
         // user trying to delete a card with blank name
         // but content present cannot be deleted without
@@ -71,16 +79,7 @@ const KanbanCard = React.memo((props: Props) => {
             handleDeleteCard()
             return
         }
-
         setShowConfirmationDialogBox(true)
-        setConfirmDialogProps({
-            heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
-            confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
-            onConfirm: handleDeleteCard,
-            onClose: () => {
-                setShowConfirmationDialogBox(false)
-            },
-        })
     }
 
     return (
