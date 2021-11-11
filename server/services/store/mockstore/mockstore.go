@@ -495,6 +495,21 @@ func (mr *MockStoreMockRecorder) GetSubscriptions(arg0 interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubscriptions", reflect.TypeOf((*MockStore)(nil).GetSubscriptions), arg0)
 }
 
+// GetSystemSetting mocks base method.
+func (m *MockStore) GetSystemSetting(arg0 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSystemSetting", arg0)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSystemSetting indicates an expected call of GetSystemSetting.
+func (mr *MockStoreMockRecorder) GetSystemSetting(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSystemSetting", reflect.TypeOf((*MockStore)(nil).GetSystemSetting), arg0)
+}
+
 // GetSystemSettings mocks base method.
 func (m *MockStore) GetSystemSettings() (map[string]string, error) {
 	m.ctrl.T.Helper()

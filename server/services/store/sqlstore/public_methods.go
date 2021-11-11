@@ -193,6 +193,11 @@ func (s *SQLStore) GetSubscriptions(subscriberID string) ([]*model.Subscription,
 
 }
 
+func (s *SQLStore) GetSystemSetting(key string) (string, error) {
+	return s.getSystemSetting(s.db, key)
+
+}
+
 func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 	return s.getSystemSettings(s.db)
 

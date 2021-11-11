@@ -20,7 +20,13 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file" // fileystem driver
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	_ "github.com/lib/pq" // postgres driver
+
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
+	"github.com/mattermost/mattermost-plugin-api/cluster"
+)
+
+const (
+	uniqueIDsMigrationRequiredVersion = 14
 )
 
 type PrefixedMigration struct {
@@ -168,8 +174,59 @@ func (s *SQLStore) Migrate() error {
 	if err != nil {
 		return err
 	}
-	err = m.Up()
-	if err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
+
+	var mutex *cluster.Mutex
+	if s.isPlugin {
+		var mutexErr error
+		mutex, mutexErr = s.NewMutexFn("Boards_dbMutex")
+		if mutexErr != nil {
+			return fmt.Errorf("error creating database mutex: %w", mutexErr)
+		}
+	}
+
+	if err := ensureMigrationsAppliedUpToVersion(m, uniqueIDsMigrationRequiredVersion); err != nil {
+		return err
+	}
+
+	if s.isPlugin {
+		s.logger.Debug("Acquiring cluster lock for Unique IDs migration")
+		mutex.Lock()
+	}
+
+	if err := s.runUniqueIDsMigration(); err != nil {
+		if s.isPlugin {
+			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
+			mutex.Unlock()
+		}
+		return fmt.Errorf("error running unique IDs migration: %w", err)
+	}
+
+	if s.isPlugin {
+		s.logger.Debug("Releasing cluster lock for Unique IDs migration")
+		mutex.Unlock()
+	}
+
+	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
+
+	return nil
+}
+
+func ensureMigrationsAppliedUpToVersion(m *migrate.Migrate, version uint) error {
+	currentVersion, _, err := m.Version()
+	if err != nil && !errors.Is(err, migrate.ErrNilVersion) {
+		return err
+	}
+
+	// if the target version is below or equal to the current one, do
+	// not migrate either because is not needed (both are equal) or
+	// because it would downgrade the database (is below)
+	if version <= currentVersion {
+		return nil
+	}
+
+	if err := m.Migrate(version); err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
 		return err
 	}
 
