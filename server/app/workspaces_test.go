@@ -105,12 +105,12 @@ func TestGetWorkspace(t *testing.T) {
 			false,
 		},
 		{
-			"Success, Return nil, when get workspace returns an error",
+			"Success, Return nil, when get workspace returns an sql error",
 			"workspace-not-available-id",
 			false,
 		},
 		{
-			"Fail, Return nil, when get workspace by mockstore an error",
+			"Fail, Return nil, when get workspace by mockstore retruns an error",
 			"invalid-workspace-id",
 			true,
 		},
