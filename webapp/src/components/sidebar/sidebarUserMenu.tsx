@@ -28,7 +28,7 @@ declare let window: IAppWindow
 const SidebarUserMenu = React.memo(() => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
-    const user = useAppSelector<IUser|null>(getMe)
+    const user = useAppSelector<IUser | null>(getMe)
     const intl = useIntl()
 
     if (Utils.isFocalboardPlugin()) {
@@ -43,7 +43,11 @@ const SidebarUserMenu = React.memo(() => {
                             <FocalboardLogoIcon/>
                             <span>{'Focalboard'}</span>
                             <div className='versionFrame'>
-                                <div className='version'>
+                                <div
+                                    className='version'
+                                    title={intl.formatMessage({id: 'Sidebar.buildInfo', defaultMessage: 'Commit {commit}\nDate: {date}'},
+                                        {commit: Constants.versionCommitHash, date: intl.formatDate(Constants.versionCommitDate)})}
+                                >
                                     {`v${Constants.versionString}`}
                                 </div>
                             </div>

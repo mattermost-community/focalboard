@@ -54,6 +54,7 @@
     "eslint-plugin-react": "7.23.2",
     "eslint-plugin-react-hooks": "4.2.0",
     "file-loader": "6.2.0",
+    "git-revision-webpack-plugin": "5.0.0",
     "identity-obj-proxy": "3.0.0",
     "image-webpack-loader": "7.0.1",
     "imagemin-gifsicle": "^7.0.0",
