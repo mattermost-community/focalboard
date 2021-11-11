@@ -81,15 +81,6 @@ const CardDialog = (props: Props): JSX.Element => {
         },
     }
 
-    const confirmDialogProps: ConfirmationDialogBoxProps = {
-        heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
-        confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
-        onConfirm: handleDeleteCard,
-        onClose: () => {
-            setShowConfirmationDialogBox(false)
-        },
-    }
-
     const handleDeleteButtonOnClick = () => {
         // use may be renaming a card title
         // and accidently delete the card
