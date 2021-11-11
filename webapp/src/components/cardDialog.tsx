@@ -42,7 +42,6 @@ const CardDialog = (props: Props): JSX.Element => {
     const intl = useIntl()
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
-    const [confirmDialogProps, setConfirmDialogProps] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
 
     const makeTemplateClicked = async () => {
         if (!card) {
@@ -74,6 +73,15 @@ const CardDialog = (props: Props): JSX.Element => {
         props.onClose()
     }
 
+    const confirmDialogProps: ConfirmationDialogBoxProps = {
+        heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+        confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+        onConfirm: handleDeleteCard,
+        onClose: () => {
+            setShowConfirmationDialogBox(false)
+        },
+    }
+
     const handleDeleteButtonOnClick = () => {
         // use may be renaming a card title
         // and accidently delete the card
@@ -84,14 +92,6 @@ const CardDialog = (props: Props): JSX.Element => {
         }
 
         setShowConfirmationDialogBox(true)
-        setConfirmDialogProps({
-            heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
-            confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
-            onConfirm: handleDeleteCard,
-            onClose: () => {
-                setShowConfirmationDialogBox(false)
-            },
-        })
     }
 
     const menu = (
