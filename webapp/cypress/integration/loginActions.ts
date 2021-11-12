@@ -1,45 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-const resetPassword = (oldPassword: string) => {
-    const headers = {
-        'X-Requested-With': 'XMLHttpRequest',
-        Authorization: `Bearer ${localStorage.getItem('focalboardSessionId')}`,
-    }
-    cy.request({
-        method: 'GET',
-        url: '/api/v1/users/me',
-        headers,
-    }).then((response) => {
-        const userId = response.body.id
-        const body = {oldPassword, newPassword: Cypress.env('password')}
-        cy.request({
-            method: 'POST',
-            url: `/api/v1/users/${encodeURIComponent(userId)}/changepassword`,
-            headers,
-            body,
-        })
-    })
-}
-
 describe('Login actions', () => {
     const username = Cypress.env('username')
     const email = Cypress.env('email')
     const password = Cypress.env('password')
-
-    const workspaceIsAvailable = () => {
-        cy.location('pathname').should('eq', '/')
-        cy.get('.Workspace').should('exist')
-        return cy.get('.Sidebar').should('exist')
-    }
-
-    const loginUser = (withPassword: string) => {
-        cy.visit('/login')
-        cy.get('#login-username').type(username)
-        cy.get('#login-password').type(withPassword)
-        cy.get('button').contains('Log in').click()
-        return workspaceIsAvailable()
-    }
 
     it('Can perform login/register actions', () => {
         // Redirects to login page
@@ -132,4 +97,22 @@ describe('Login actions', () => {
             workspaceIsAvailable()
         })
     })
+
+    const workspaceIsAvailable = () => {
+        cy.location('pathname').should('eq', '/')
+        cy.get('.Workspace').should('exist')
+        return cy.get('.Sidebar').should('exist')
+    }
+
+    const loginUser = (withPassword: string) => {
+        cy.visit('/login')
+        cy.get('#login-username').type(username)
+        cy.get('#login-password').type(withPassword)
+        cy.get('button').contains('Log in').click()
+        return workspaceIsAvailable()
+    }
+
+    const resetPassword = (oldPassword: string) => {
+        cy.apiGetMe().then((userId) => cy.apiChangePassword(userId, oldPassword, password))
+    }
 })
