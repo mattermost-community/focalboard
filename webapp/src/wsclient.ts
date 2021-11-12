@@ -49,7 +49,9 @@ type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => v
 class WSClient {
     ws: WebSocket|null = null
     client: MMWebSocketClient|null = null
+    onPluginReconnect: null|(() => void) = null
     pluginId = ''
+    pluginVersion = ''
     onAppVersionChangeHandler: ((versionHasChanged: boolean) => void) | null = null
     clientPrefix = ''
     serverUrl: string | undefined
@@ -89,8 +91,9 @@ class WSClient {
         this.serverUrl = serverUrl
     }
 
-    initPlugin(pluginId: string, client: MMWebSocketClient): void {
+    initPlugin(pluginId: string, pluginVersion: string, client: MMWebSocketClient): void {
         this.pluginId = pluginId
+        this.pluginVersion = pluginVersion
         this.clientPrefix = `custom_${pluginId}_`
         this.client = client
         Utils.log(`WSClient initialised for plugin id "${pluginId}"`)
@@ -181,6 +184,7 @@ class WSClient {
                     handler(this)
                 }
             }
+            this.onPluginReconnect = onReconnect
 
             const onClose = (connectFailCount: number) => {
                 Utils.logError(`WSClient has been closed, connect fail count: ${connectFailCount}`)
@@ -311,9 +315,29 @@ class WSClient {
             return
         }
 
-        if (data.plugin_statuses.some((s: any) => s.plugin_id === this.pluginId)) {
-            Utils.log('Boards plugin has been updated')
-            this.onAppVersionChangeHandler(true)
+        const focalboardStatusChange = data.plugin_statuses.find((s: any) => s.plugin_id === this.pluginId)
+        if (focalboardStatusChange) {
+            // if the plugin version is greater than the current one,
+            // show the new version banner
+            if (Utils.compareVersions(this.pluginVersion, focalboardStatusChange.version) > 0) {
+                Utils.log('Boards plugin has been updated')
+                this.onAppVersionChangeHandler(true)
+            }
+
+            // if the plugin version is greater or equal, trigger a
+            // reconnect to resubscribe in case the interface hasn't
+            // been reloaded
+            if (Utils.compareVersions(this.pluginVersion, focalboardStatusChange.version) >= 0) {
+                // this is a temporal solution that leaves a second
+                // between the message and the reconnect so the server
+                // has time to register the WS handler
+                setTimeout(() => {
+                    if (this.onPluginReconnect) {
+                        Utils.log('Reconnecting after plugin update')
+                        this.onPluginReconnect()
+                    }
+                }, 1000)
+            }
         }
     }
 

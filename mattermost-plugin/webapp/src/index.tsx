@@ -67,7 +67,7 @@ type Props = {
 }
 
 const MainApp = (props: Props) => {
-    wsClient.initPlugin(manifest.id, props.webSocketClient)
+    wsClient.initPlugin(manifest.id, manifest.version, props.webSocketClient)
 
     useEffect(() => {
         document.body.classList.add('focalboard-body')
