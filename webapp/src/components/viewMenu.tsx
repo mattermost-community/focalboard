@@ -13,6 +13,7 @@ import {Block} from '../blocks/block'
 import {IDType, Utils} from '../utils'
 import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
+import CalendarIcon from '../widgets/icons/calendar'
 import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import GalleryIcon from '../widgets/icons/gallery'
@@ -200,6 +201,7 @@ const ViewMenu = React.memo((props: Props) => {
         case 'board': return <BoardIcon/>
         case 'table': return <TableIcon/>
         case 'gallery': return <GalleryIcon/>
+        case 'calendar': return <CalendarIcon/>
         default: return <div/>
         }
     }

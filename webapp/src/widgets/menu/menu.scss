@@ -34,6 +34,16 @@
 
         color: rgb(var(--center-channel-color-rgb));
 
+        .CompassIcon {
+            font-size: 18px;
+            opacity: 0.56;
+            width: 18px;
+
+            &::before {
+                margin: 0;
+            }
+        }
+
         > .menu-option {
             display: flex;
             flex-direction: row;
@@ -70,9 +80,8 @@
 
             > .Icon {
                 opacity: 0.56;
-                width: 16px;
-                height: 16px;
-                line-height: 16px;
+                width: 18px;
+                height: 18px;
             }
 
             > .IconButton .Icon {

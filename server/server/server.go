@@ -219,8 +219,17 @@ func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, e
 		return nil, err
 	}
 
+	storeParams := sqlstore.Params{
+		DBType:           config.DBType,
+		ConnectionString: config.DBConfigString,
+		TablePrefix:      config.DBTablePrefix,
+		Logger:           logger,
+		DB:               sqlDB,
+		IsPlugin:         false,
+	}
+
 	var db store.Store
-	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, sqlDB, false)
+	db, err = sqlstore.New(storeParams)
 	if err != nil {
 		return nil, err
 	}
