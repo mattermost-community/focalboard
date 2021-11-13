@@ -4,7 +4,7 @@
 import {Block, createBlock} from './block'
 import {FilterGroup, createFilterGroup} from './filterGroup'
 
-type IViewType = 'board' | 'table' | 'gallery' // | 'calendar' | 'list'
+type IViewType = 'board' | 'table' | 'gallery' | 'calendar'
 type ISortOption = { propertyId: '__title' | string, reversed: boolean }
 
 type KanbanCalculationFields = {
