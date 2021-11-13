@@ -19,6 +19,7 @@ import (
 	"github.com/mattermost/focalboard/server/ws"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
+	"github.com/mattermost/mattermost-plugin-api/cluster"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
@@ -83,8 +84,20 @@ func (p *Plugin) OnActivate() error {
 	serverID := client.System.GetDiagnosticID()
 	cfg := p.createBoardsConfig(*mmconfig, baseURL, serverID)
 
+	storeParams := sqlstore.Params{
+		DBType:           cfg.DBType,
+		ConnectionString: cfg.DBConfigString,
+		TablePrefix:      cfg.DBTablePrefix,
+		Logger:           logger,
+		DB:               sqlDB,
+		IsPlugin:         true,
+		NewMutexFn: func(name string) (*cluster.Mutex, error) {
+			return cluster.NewMutex(p.API, name)
+		},
+	}
+
 	var db store.Store
-	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB, true)
+	db, err = sqlstore.New(storeParams)
 	if err != nil {
 		return fmt.Errorf("error initializing the DB: %w", err)
 	}

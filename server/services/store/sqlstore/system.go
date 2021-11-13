@@ -1,8 +1,27 @@
 package sqlstore
 
 import (
+	"database/sql"
+	"errors"
+
 	sq "github.com/Masterminds/squirrel"
 )
+
+func (s *SQLStore) getSystemSetting(db sq.BaseRunner, key string) (string, error) {
+	scanner := s.getQueryBuilder(db).
+		Select("value").
+		From(s.tablePrefix + "system_settings").
+		Where(sq.Eq{"id": key}).
+		QueryRow()
+
+	var result string
+	err := scanner.Scan(&result)
+	if err != nil && !errors.Is(sql.ErrNoRows, err) {
+		return "", err
+	}
+
+	return result, nil
+}
 
 func (s *SQLStore) getSystemSettings(db sq.BaseRunner) (map[string]string, error) {
 	query := s.getQueryBuilder(db).Select("*").From(s.tablePrefix + "system_settings")
