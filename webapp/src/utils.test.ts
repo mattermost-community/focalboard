@@ -132,4 +132,18 @@ describe('utils', () => {
             expect(Utils.displayDateTime(date, intl)).toBe(`July 09, ${previousYear}, 5:35 AM`)
         })
     })
+
+    describe('compare versions', () => {
+        it('should return one if b > a', () => {
+            expect(Utils.compareVersions('0.9.4', '0.10.0')).toBe(1)
+        })
+
+        it('should return zero if a = b', () => {
+            expect(Utils.compareVersions('1.2.3', '1.2.3')).toBe(0)
+        })
+
+        it('should return minus one if b < a', () => {
+            expect(Utils.compareVersions('10.9.4', '10.9.2')).toBe(-1)
+        })
+    })
 })
