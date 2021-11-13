@@ -289,7 +289,6 @@ describe('src/components/kanban/kanbanColumnHeader', () => {
                 onCalculationMenuClose={jest.fn()}
             />,
         ))
-        screen.logTestingPlaygroundURL()
         const menuCountEmpty = screen.getByText('Count')
         expect(menuCountEmpty).toBeDefined()
         userEvent.click(menuCountEmpty)
