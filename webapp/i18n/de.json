@@ -7,6 +7,7 @@
   "BoardComponent.no-property": "Keine {property}",
   "BoardComponent.no-property-title": "Elemente mit einer leeren {property} Eigenschaft erscheinen hier. Diese Spalte kann nicht entfernt werden.",
   "BoardComponent.show": "Anzeigen",
+  "BoardPage.newVersion": "Eine neue Version von Boards ist verfügbar, klicken Sie hier, um sie neu zu laden.",
   "BoardPage.syncFailed": "Das Board kann gelöscht oder der Zugang entzogen werden.",
   "BoardsUnfurl.Remainder": "+{remainder} mehr",
   "BoardsUnfurl.Updated": "Aktualisiert {time}",
