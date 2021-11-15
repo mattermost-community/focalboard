@@ -51,7 +51,6 @@
   "CardDetail.addCardText": "Kartentext hinzufügen",
   "CardDetail.moveContent": "Karteninhalt verschieben",
   "CardDetail.new-comment-placeholder": "Kommentar hinzufügen...",
-  "CardDetailProperty.confirm-delete": "Löschen der Eigenschaft bestätigen",
   "CardDetailProperty.confirm-delete-subtext": "Sind Sie sicher, dass Sie die Eigenschaft \"{propertyName}\" löschen möchten? Wenn Sie diese löschen, wird die Eigenschaft von allen Karten in diesem Board gelöscht.",
   "CardDetailProperty.property-deleted": "{propertyName} erfolgreich gelöscht!",
   "CardDialog.copiedLink": "Kopiert!",
