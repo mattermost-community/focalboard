@@ -83,7 +83,7 @@
   "DashboardPage.title": "Dashboard",
   "DeleteBoardDialog.confirm-cancel": "Abbrechen",
   "DeleteBoardDialog.confirm-delete": "Löschen",
-  "DeleteBoardDialog.confirm-info": "Sind Sie sicher, dass Sie das Board \"{boardTitle}\" löschen möchten? Wenn Sie sie löschen, wird die Eigenschaft von allen Karten in diesem Board gelöscht.",
+  "DeleteBoardDialog.confirm-info": "Sind Sie sicher, dass Sie das Board \"{boardTitle}\" löschen möchten? Wenn Sie es löschen, werden allen Karten in diesem Board gelöscht.",
   "DeleteBoardDialog.confirm-tite": "Bestätigen Board löschen",
   "Dialog.closeDialog": "Dialog schließen",
   "EditableDayPicker.today": "Heute",
