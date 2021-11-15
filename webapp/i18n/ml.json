@@ -51,7 +51,6 @@
   "CardDetail.addCardText": "കാർഡിൽ വാക്യം ചേർക്കുക",
   "CardDetail.moveContent": "കാർഡ് ഉള്ളടക്കം നീക്കുക",
   "CardDetail.new-comment-placeholder": "ഒരു അഭിപ്രായം ചേർക്കുക...",
-  "CardDetailProperty.confirm-delete": "പ്രോപ്പർട്ടി ഇല്ലാതാക്കുന്നത് സ്ഥിരീകരിക്കുക",
   "CardDetailProperty.confirm-delete-subtext": "പ്രോപ്പർട്ടി ഇല്ലാതാക്കണമെന്ന് തീർച്ചയാണോ \"{propertyName}\"? ഇത് ഇല്ലാതാക്കുന്നത് ഈ ബോർഡിലെ എല്ലാ കാർഡുകളിൽ നിന്നും പ്രോപ്പർട്ടി ഇല്ലാതാക്കും.",
   "CardDetailProperty.property-deleted": "വിജയകരമായി {propertyName} ഇല്ലാതാക്കിയിരിക്കുന്നു!",
   "CardDialog.copiedLink": "പകർത്തി!",

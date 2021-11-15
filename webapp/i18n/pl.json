@@ -16,7 +16,6 @@
   "CardDetail.addCardText": "dodaj tekst karty",
   "CardDetail.moveContent": "przenieś zawartość karty",
   "CardDetail.new-comment-placeholder": "Dodaj komentarz...",
-  "CardDetailProperty.confirm-delete": "Potwierdź Usuń Właściwość",
   "CardDetailProperty.confirm-delete-subtext": "Czy na pewno chcesz usunąć właściwość \"{propertyName}\"? Usunięcie tej właściwości spowoduje usunięcie jej z wszystkich kart na tej tablicy.",
   "CardDetailProperty.property-deleted": "Usunięto pomyślnie {propertyName}!",
   "CardDialog.copiedLink": "Skopiowane!",

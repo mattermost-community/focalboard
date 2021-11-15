@@ -51,7 +51,6 @@
   "CardDetail.addCardText": "dodaj tekst kartice",
   "CardDetail.moveContent": "pomakni sadržaj kartice",
   "CardDetail.new-comment-placeholder": "Dodaj komentar …",
-  "CardDetailProperty.confirm-delete": "Potvrdi brisanja svojstva",
   "CardDetailProperty.confirm-delete-subtext": "Stvarno želiš izbrisati svojstvo „{propertyName}”? Brisanjem će se izbrisati svojstvo sa svih kartica na ovoj ploči.",
   "CardDetailProperty.property-deleted": "Svojstvo {propertyName} uspješno izbrisano!",
   "CardDialog.copiedLink": "Kopirano!",

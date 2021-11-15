@@ -50,7 +50,6 @@
   "CardDetail.addCardText": "カードテキストを追加する",
   "CardDetail.moveContent": "カード内容の移動",
   "CardDetail.new-comment-placeholder": "コメントを追加する...",
-  "CardDetailProperty.confirm-delete": "プロパティの削除を確定する",
   "CardDetailProperty.confirm-delete-subtext": "本当にプロパティ \"{propertyName}\" を削除しますか？ 削除すると、このボードのすべてのカードからそのプロパティが削除されます。",
   "CardDetailProperty.property-deleted": "{propertyName} が正常に削除されました!",
   "CardDialog.copiedLink": "コピーしました！",

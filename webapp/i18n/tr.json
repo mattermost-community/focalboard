@@ -50,7 +50,6 @@
   "CardDetail.addCardText": "kart metni ekle",
   "CardDetail.moveContent": "kart içeriğini taşı",
   "CardDetail.new-comment-placeholder": "Bir yorum ekle...",
-  "CardDetailProperty.confirm-delete": "Özelliği silme onayı",
   "CardDetailProperty.confirm-delete-subtext": "\"{propertyName}\" özelliğini silmek istediğinize emin misiniz? Bu işlem özelliği panodaki tüm kartlardan siler.",
   "CardDetailProperty.property-deleted": "{propertyName} silindi!",
   "CardDialog.copiedLink": "Kopyalandı!",

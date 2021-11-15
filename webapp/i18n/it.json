@@ -51,7 +51,6 @@
   "CardDetail.addCardText": "aggiungi testo alla scheda",
   "CardDetail.moveContent": "sposta il contenuto della scheda",
   "CardDetail.new-comment-placeholder": "Aggiungi un commento...",
-  "CardDetailProperty.confirm-delete": "Conferma l'eliminazione",
   "CardDetailProperty.confirm-delete-subtext": "Sei sicuro di voler eliminare la proprietà \"{propertyName}\"? Rimuovendola, verranno eliminate le proprietà da tutte le carte in questa board.",
   "CardDetailProperty.property-deleted": "Rimozione di {propertyName} effettuata con successo!",
   "CardDialog.copiedLink": "Copiato!",

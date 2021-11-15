@@ -51,7 +51,6 @@
   "CardDetail.addCardText": "kártya szövegének hozzáadása",
   "CardDetail.moveContent": "kártya tartalmának mozgatása",
   "CardDetail.new-comment-placeholder": "Megjegyzés hozzáadása...",
-  "CardDetailProperty.confirm-delete": "Tulajdonság törlésének jóváhagyása",
   "CardDetailProperty.confirm-delete-subtext": "Biztos benne, hogy törölni szeretné a \"{propertyName}\" tulajdonságot? A törléssel a tulajdonság minden kártyáról el lesz távolítva.",
   "CardDetailProperty.property-deleted": "{propertyName} törlése sikeres!",
   "CardDialog.copiedLink": "Másolva!",

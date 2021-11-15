@@ -50,7 +50,6 @@
   "CardDetail.addCardText": "kaarttekst toevoegen",
   "CardDetail.moveContent": "inhoud van de kaart verplaatsen",
   "CardDetail.new-comment-placeholder": "Voeg commentaar toe...",
-  "CardDetailProperty.confirm-delete": "Bevestig verwijderen eigenschap",
   "CardDetailProperty.confirm-delete-subtext": "Weet je zeker dat je de eigenschap \"{propertyName}\" wilt verwijderen? Dit verwijderen zal de eigenschap van alle kaarten in dit bord verwijderen.",
   "CardDetailProperty.property-deleted": "{propertyName} werd succesvol verwijderd!",
   "CardDialog.copiedLink": "Gekopieerd!",
