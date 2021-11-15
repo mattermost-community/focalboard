@@ -29,7 +29,7 @@ type Props = {
     groupByProperty?: IPropertyTemplate
     intl: IntlShape
     readonly: boolean
-    addCard: (groupByOptionId?: string) => Promise<void>
+    addCard: (groupByOptionId?: string, show?: boolean) => Promise<void>
     propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
     onDropToColumn: (srcOption: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => void
     calculationMenuOpen: boolean
@@ -180,7 +180,9 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                     </MenuWrapper>
                     <IconButton
                         icon={<AddIcon/>}
-                        onClick={() => props.addCard(group.option.id)}
+                        onClick={() => {
+                            props.addCard(group.option.id, true)
+                        }}
                     />
                 </>
             }
