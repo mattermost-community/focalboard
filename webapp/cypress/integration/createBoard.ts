@@ -60,6 +60,12 @@ describe('Create and delete board / card', () => {
         cy.log('**Close card dialog**')
         cy.get('.Dialog.dialog-back .wrapper').click({force: true})
 
+        // Create a card by clicking on the + button
+        cy.log('**Create a card by clicking on the + button**')
+        cy.get('.KanbanColumnHeader .Button .AddIcon').click()
+        cy.get('.CardDetail').should('exist')
+        cy.get('.Dialog.dialog-back .wrapper').click({force: true})
+
         // Create table view
         cy.log('**Create table view**')
         cy.get('.ViewHeader').get('.DropdownIcon').first().parent().click()
