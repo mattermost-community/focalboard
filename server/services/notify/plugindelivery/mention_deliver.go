@@ -29,7 +29,7 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 		}
 	}
 
-	author, err := pd.api.GetUserByID(evt.UserID)
+	author, err := pd.api.GetUserByID(evt.ModifiedByID)
 	if err != nil {
 		return "", fmt.Errorf("cannot find user: %w", err)
 	}

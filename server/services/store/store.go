@@ -78,7 +78,7 @@ type Store interface {
 	GetSubscriptions(subscriberID string) ([]*model.Subscription, error)
 	GetSubscribersForBlock(c Container, blockID string) ([]*model.Subscriber, error)
 	GetSubscribersCountForBlock(c Container, blockID string) (int, error)
-	UpdateSubscribersNotifyAt(c Container, blockID string, notifyAt int64) error
+	UpdateSubscribersNotifiedAt(c Container, blockID string, notifyAt int64) error
 
 	UpsertNotificationHint(hint *model.NotificationHint, notificationFreq time.Duration) (*model.NotificationHint, error)
 	DeleteNotificationHint(c Container, blockID string) error

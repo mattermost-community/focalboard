@@ -30,15 +30,15 @@ func TestPairWriter_WriteOpen(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			buf := &bytes.Buffer{}
-			pw := NewPairWriter(buf)
+			pw := NewPairWriter(buf, tt.opener, tt.closer)
 
 			// conditional closer before opener should be noop
-			n, err := pw.WriteCloseIfOpened("!")
+			n, err := pw.WriteCloseIfOpened()
 			assert.Zero(t, n)
 			assert.NoError(t, err)
 
 			for i := 0; i < 5; i++ {
-				_, err = pw.WriteOpen(tt.opener)
+				_, err = pw.WriteOpen()
 				require.NoError(t, err)
 			}
 
@@ -46,12 +46,12 @@ func TestPairWriter_WriteOpen(t *testing.T) {
 			assert.NoError(t, err)
 
 			for i := 0; i < 5; i++ {
-				_, err = pw.WriteCloseIfOpened(tt.closer)
+				_, err = pw.WriteCloseIfOpened()
 				require.NoError(t, err)
 			}
 
 			// opener again after close should be noop
-			n, err = pw.WriteOpen(tt.opener)
+			n, err = pw.WriteOpen()
 			assert.Zero(t, n)
 			assert.NoError(t, err)
 

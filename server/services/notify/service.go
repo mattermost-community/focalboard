@@ -27,7 +27,7 @@ type BlockChangeEvent struct {
 	Card         *model.Block
 	BlockChanged *model.Block
 	BlockOld     *model.Block
-	UserID       string
+	ModifiedByID string
 }
 
 // Backend provides an interface for sending notifications.

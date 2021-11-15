@@ -51,7 +51,10 @@ func (b *Backend) Name() string {
 }
 
 func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
-	if evt.Board == nil || evt.Card == nil {
+	if evt.Board == nil {
+		b.logger.Warn("No board found for block, skipping notify",
+			mlog.String("block_id", evt.BlockChanged.ID),
+		)
 		return nil
 	}
 
@@ -69,7 +72,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 			BlockID:        evt.BlockChanged.ID,
 			WorkspaceID:    evt.Workspace,
 			SubscriberType: model.SubTypeUser,
-			SubscriberID:   evt.UserID,
+			SubscriberID:   evt.ModifiedByID,
 		}
 
 		if _, err = b.store.CreateSubscription(sub); err != nil {
@@ -85,8 +88,12 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for board %s: %w", evt.Board.ID, err))
 	}
-	if err = b.notifySubscribers(subs, evt.Board, evt.UserID); err != nil {
+	if err = b.notifySubscribers(subs, evt.Board, evt.ModifiedByID); err != nil {
 		merr.Append(fmt.Errorf("cannot notify board subscribers for board %s: %w", evt.Board.ID, err))
+	}
+
+	if evt.Card == nil {
+		return merr.ErrorOrNil()
 	}
 
 	// notify card subscribers
@@ -94,7 +101,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for card %s: %w", evt.Card.ID, err))
 	}
-	if err = b.notifySubscribers(subs, evt.Card, evt.UserID); err != nil {
+	if err = b.notifySubscribers(subs, evt.Card, evt.ModifiedByID); err != nil {
 		merr.Append(fmt.Errorf("cannot notify card subscribers for card %s: %w", evt.Card.ID, err))
 	}
 
@@ -104,7 +111,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		if err != nil {
 			merr.Append(fmt.Errorf("cannot fetch subscribers for block %s: %w", evt.BlockChanged.ID, err))
 		}
-		if err := b.notifySubscribers(subs, evt.BlockChanged, evt.UserID); err != nil {
+		if err := b.notifySubscribers(subs, evt.BlockChanged, evt.ModifiedByID); err != nil {
 			merr.Append(fmt.Errorf("cannot notify block subscribers for block %s: %w", evt.BlockChanged.ID, err))
 		}
 	}
@@ -112,19 +119,19 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 }
 
 // notifySubscribers triggers a change notification for subscribers by writing a notification hint to the database.
-func (b *Backend) notifySubscribers(subs []*model.Subscriber, block *model.Block, userID string) error {
+func (b *Backend) notifySubscribers(subs []*model.Subscriber, block *model.Block, modifiedByID string) error {
 	if len(subs) == 0 {
 		return nil
 	}
 
 	hint := &model.NotificationHint{
-		BlockType:   block.Type,
-		BlockID:     block.ID,
-		WorkspaceID: block.WorkspaceID,
-		UserID:      userID,
+		BlockType:    block.Type,
+		BlockID:      block.ID,
+		WorkspaceID:  block.WorkspaceID,
+		ModifiedByID: modifiedByID,
 	}
 
-	_, err := b.store.UpsertNotificationHint(hint, getBlockUpdateFreq(block.Type))
+	hint, err := b.store.UpsertNotificationHint(hint, getBlockUpdateFreq(block.Type))
 	if err != nil {
 		return fmt.Errorf("cannot upsert notification hint: %w", err)
 	}

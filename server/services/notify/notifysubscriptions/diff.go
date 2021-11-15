@@ -8,6 +8,8 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 // Diff represents a difference between two versions of a block.
@@ -19,6 +21,8 @@ type Diff struct {
 	BlockType model.BlockType
 	OldBlock  *model.Block
 	NewBlock  *model.Block
+
+	UpdateAt int64 // the UpdateAt of the latest version of the block
 
 	schemaDiffs []SchemaDiff
 	PropDiffs   []PropDiff
@@ -45,14 +49,16 @@ type diffGenerator struct {
 	store        Store
 	hint         *model.NotificationHint
 	lastNotifyAt int64
+	logger       *mlog.Logger
 }
 
-func newDiffGenerator(container store.Container, store Store, hint *model.NotificationHint, lastNotifyAt int64) *diffGenerator {
+func newDiffGenerator(container store.Container, store Store, hint *model.NotificationHint, lastNotifyAt int64, logger *mlog.Logger) *diffGenerator {
 	return &diffGenerator{
 		container:    container,
 		store:        store,
 		hint:         hint,
 		lastNotifyAt: lastNotifyAt,
+		logger:       logger,
 	}
 }
 
@@ -71,9 +77,9 @@ func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
 		return nil, fmt.Errorf("cannot generate diff for block %s; must have a valid board and card: %w", dg.hint.BlockID, err)
 	}
 
-	user, err := dg.store.GetUserByID(dg.hint.UserID)
+	user, err := dg.store.GetUserByID(dg.hint.ModifiedByID)
 	if err != nil {
-		return nil, fmt.Errorf("could not lookup user %s: %w", dg.hint.UserID, err)
+		return nil, fmt.Errorf("could not lookup user %s: %w", dg.hint.ModifiedByID, err)
 	}
 	if user != nil {
 		dg.hint.Username = user.Username
@@ -161,6 +167,10 @@ func (dg *diffGenerator) generateDiffsForCard(board, card *model.Block, schema m
 	// walk child blocks
 	var childDiffs []*Diff
 	for i := range blocks {
+		if blocks[i].ID == card.ID {
+			continue
+		}
+
 		blockDiff, err := dg.generateDiffForBlock(board, card, &blocks[i], schema)
 		if err != nil {
 			return nil, fmt.Errorf("could not generate diff for block %s: %w", blocks[i].ID, err)
@@ -179,6 +189,7 @@ func (dg *diffGenerator) generateDiffsForCard(board, card *model.Block, schema m
 				BlockType:   card.Type,
 				OldBlock:    card,
 				NewBlock:    card,
+				UpdateAt:    card.UpdateAt,
 				PropDiffs:   nil,
 				schemaDiffs: nil,
 			}
@@ -210,6 +221,8 @@ func (dg *diffGenerator) generateDiffForBlock(board, card, block *model.Block, s
 
 	propDiffs := dg.generatePropDiffs(&oldBlock, &newBlock, schema)
 
+	dg.logger.Debug("generateDiffForBlock - prop diff count", mlog.Int("count", len(propDiffs)))
+
 	diff := &Diff{
 		Board:       board,
 		Card:        card,
@@ -217,6 +230,7 @@ func (dg *diffGenerator) generateDiffForBlock(board, card, block *model.Block, s
 		BlockType:   block.Type,
 		OldBlock:    &oldBlock,
 		NewBlock:    &newBlock,
+		UpdateAt:    newBlock.UpdateAt,
 		PropDiffs:   propDiffs,
 		schemaDiffs: nil,
 	}
@@ -226,13 +240,31 @@ func (dg *diffGenerator) generateDiffForBlock(board, card, block *model.Block, s
 func (dg *diffGenerator) generatePropDiffs(oldBlock, newBlock *model.Block, schema model.PropSchema) []PropDiff {
 	var propDiffs []PropDiff
 
-	oldProps := model.ParseProperties(oldBlock, schema)
-	newProps := model.ParseProperties(newBlock, schema)
+	oldProps, err := model.ParseProperties(oldBlock, schema)
+	if err != nil {
+		dg.logger.Error("Cannot parse properties for old block",
+			mlog.String("block_id", oldBlock.ID),
+			mlog.Err(err),
+		)
+	}
+
+	newProps, err := model.ParseProperties(newBlock, schema)
+	if err != nil {
+		dg.logger.Error("Cannot parse properties for new block",
+			mlog.String("block_id", oldBlock.ID),
+			mlog.Err(err),
+		)
+	}
+
+	dg.logger.Debug("generatePropDiffs",
+		mlog.Map("oldProps", oldProps),
+		mlog.Map("newProps", newProps),
+	)
 
 	// look for new or changed properties.
 	for k, prop := range newProps {
 		oldP, ok := oldProps[k]
-		if !ok {
+		if ok {
 			// prop changed
 			propDiffs = append(propDiffs, PropDiff{
 				ID:       prop.ID,

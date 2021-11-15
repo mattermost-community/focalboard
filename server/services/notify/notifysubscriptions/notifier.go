@@ -11,7 +11,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/utils"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -112,6 +111,9 @@ func (n *notifier) loop() {
 }
 
 func (n *notifier) onNotifyHint(hint *model.NotificationHint) error {
+	// TODO: remove debug log
+	n.logger.Debug("onNotifyHint - enqueing hint", mlog.Any("hint", hint))
+
 	select {
 	case n.hints <- hint:
 	case <-time.After(enqueueNotifyHintTimeout):
@@ -128,7 +130,10 @@ func (n *notifier) notify() time.Time {
 		hint, err = n.store.GetNextNotificationHint(true)
 		if n.store.IsErrNotFound(err) {
 			// no more hints in table; wait up to an hour or when `onNotifyHint` is called again
-			return time.Now().Add(time.Hour * 1)
+			// TODO: remove debug log
+			next := time.Now().Add(time.Hour * 1)
+			n.logger.Debug("notify - no hints in queue", mlog.Time("next_check", next))
+			return next
 		}
 
 		if err != nil {
@@ -163,7 +168,10 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		mlog.Int("sub_count", len(subs)),
 	)
 
-	dg := newDiffGenerator(c, n.store, hint, subs[0].NotifiedAt) // subs[0] contains the oldest NotifiedAt needed
+	// subs slice is sorted by `NotifiedAt`, therefore subs[0] contains the oldest NotifiedAt needed
+	oldestNotifiedAt := subs[0].NotifiedAt
+
+	dg := newDiffGenerator(c, n.store, hint, oldestNotifiedAt, n.logger)
 	diffs, err := dg.generateDiffs()
 	if err != nil {
 		return err
@@ -191,10 +199,10 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	merr := merror.New()
 	for _, sub := range subs {
 		// don't notify the author of their own changes.
-		if sub.SubscriberID == hint.UserID {
+		if sub.SubscriberID == hint.ModifiedByID {
 			n.logger.Debug("notifySubscribers - deliver, skipping change author",
 				mlog.Any("hint", hint),
-				mlog.String("user_id", hint.UserID),
+				mlog.String("modified_by_id", hint.ModifiedByID),
 				mlog.String("username", hint.Username),
 			)
 			continue
@@ -206,10 +214,18 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		}
 	}
 
+	// find the new NotifiedAt based on the newest diff.
+	var notifyAt int64
+	for _, d := range diffs {
+		if d.UpdateAt > notifyAt {
+			notifyAt = d.UpdateAt
+		}
+	}
+
 	// update the last notified_at for all subscribers since we at least attempted to notify all of them.
-	err = dg.store.UpdateSubscribersNotifyAt(dg.container, dg.hint.BlockID, utils.GetMillis())
+	err = dg.store.UpdateSubscribersNotifiedAt(dg.container, dg.hint.BlockID, notifyAt)
 	if err != nil {
-		merr.Append(fmt.Errorf("could not update subscribers notify_at for block %s: %w", dg.hint.BlockID, err))
+		merr.Append(fmt.Errorf("could not update subscribers notified_at for block %s: %w", dg.hint.BlockID, err))
 	}
 
 	return merr.ErrorOrNil()

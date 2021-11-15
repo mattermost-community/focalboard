@@ -5,10 +5,12 @@ package model
 
 import (
 	"errors"
+	"fmt"
 )
 
 var ErrInvalidBoardBlock = errors.New("invalid board block")
 var ErrInvalidPropSchema = errors.New("invalid property schema")
+var ErrInvalidProperty = errors.New("invalid property")
 
 // Properties is a map of Prop's keyed by property id.
 type Properties map[string]Prop
@@ -126,37 +128,43 @@ func getMapString(key string, m map[string]interface{}) string {
 
 // ParseProperties parses a block's `Fields` to extract the properties. Properties typically exist on
 // card blocks.
-func ParseProperties(block *Block, schema PropSchema) Properties {
+func ParseProperties(block *Block, schema PropSchema) (Properties, error) {
 	props := make(map[string]Prop)
 
 	if block == nil {
-		return props
+		return props, nil
 	}
 
 	// `properties` contains a map (untyped at this point).
 	propsIface, ok := block.Fields["properties"]
 	if !ok {
-		return props
+		return props, fmt.Errorf("`properties` key not found: %w", ErrInvalidProperty)
 	}
 
-	blockProps, ok := propsIface.(map[string]string)
-	if !ok || len(blockProps) == 0 {
-		return props
+	blockProps, ok := propsIface.(map[string]interface{})
+	if !ok {
+		return props, fmt.Errorf("`properties` field wrong type: %w", ErrInvalidProperty)
+	}
+
+	if len(blockProps) == 0 {
+		return props, nil
 	}
 
 	for k, v := range blockProps {
+		s := fmt.Sprintf("%v", v)
+
 		prop := Prop{
 			ID:    k,
 			Name:  k,
-			Value: v,
+			Value: s,
 		}
 
 		def, ok := schema[k]
 		if ok {
 			prop.Name = def.Name
-			prop.Value = def.GetValue(v)
+			prop.Value = def.GetValue(s)
 		}
 		props[k] = prop
 	}
-	return props
+	return props, nil
 }

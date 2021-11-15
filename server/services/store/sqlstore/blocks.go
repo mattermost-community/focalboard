@@ -146,10 +146,6 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID stri
 		query = query.OrderBy("insert_at")
 	}
 
-	// TODO: debugging only - remove
-	sql, args, errSQL := query.ToSql()
-	s.logger.Debug("getSubTree2 SQL", mlog.String("sql", sql), mlog.Array("args", args), mlog.Err(errSQL))
-
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error(`getSubTree ERROR`, mlog.Err(err))
@@ -158,7 +154,16 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID stri
 	}
 	defer s.CloseRows(rows)
 
-	return s.blocksFromRows(rows)
+	blocks, err := s.blocksFromRows(rows)
+
+	// TODO: debugging only - remove
+	_, args, _ := query.ToSql()
+	s.logger.Debug("getSubTree2 SQL",
+		mlog.Array("args", args),
+		mlog.Int("rows", len(blocks)),
+	)
+
+	return blocks, err
 }
 
 // g returns blocks within 3 levels of the given blockID.
@@ -524,23 +529,29 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID 
 		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
 
 	if opts.UpdateAfterAt != 0 {
-		query = query.Where(sq.Gt{"update_at": opts.UpdateAfterAt})
+		query = query.Where(sq.GtOrEq{"update_at": opts.UpdateAfterAt})
 	}
 
 	if opts.OrderByInsertAt {
 		query = query.OrderBy("insert_at")
 	}
 
-	// TODO: debugging only - remove
-	sql, args, errSQL := query.ToSql()
-	s.logger.Debug("getBlockHistory SQL", mlog.String("sql", sql), mlog.Array("args", args), mlog.Err(errSQL))
-
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error(`GetBlockHistory ERROR`, mlog.Err(err))
 		return nil, err
 	}
-	return s.blocksFromRows(rows)
+
+	blocks, err := s.blocksFromRows(rows)
+
+	// TODO: debugging only - remove
+	_, args, _ := query.ToSql()
+	s.logger.Debug("getBlockHistory SQL",
+		mlog.Array("args", args),
+		mlog.Int("rows", len(blocks)),
+	)
+
+	return blocks, err
 }
 
 // getBoardAndCard returns the first parent of type `card` and first parent of type `board` for the specified block.

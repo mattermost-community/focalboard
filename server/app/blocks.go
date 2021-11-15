@@ -36,13 +36,13 @@ func (a *App) GetParentID(c store.Container, blockID string) (string, error) {
 	return a.store.GetParentID(c, blockID)
 }
 
-func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, userID string) error {
+func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
 	oldBlock, err := a.store.GetBlock(c, blockID)
 	if err != nil {
 		return nil
 	}
 
-	err = a.store.PatchBlock(c, blockID, blockPatch, userID)
+	err = a.store.PatchBlock(c, blockID, blockPatch, modifiedByID)
 	if err != nil {
 		return err
 	}
@@ -55,28 +55,28 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 	a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *block)
 	go func() {
 		a.webhook.NotifyUpdate(*block)
-		a.notifyBlockChanged(notify.Update, c, block, oldBlock, userID)
+		a.notifyBlockChanged(notify.Update, c, block, oldBlock, modifiedByID)
 	}()
 	return nil
 }
 
-func (a *App) InsertBlock(c store.Container, block model.Block, userID string) error {
-	err := a.store.InsertBlock(c, &block, userID)
+func (a *App) InsertBlock(c store.Container, block model.Block, modifiedByID string) error {
+	err := a.store.InsertBlock(c, &block, modifiedByID)
 	if err == nil {
 		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, block)
 		a.metrics.IncrementBlocksInserted(1)
 		go func() {
 			a.webhook.NotifyUpdate(block)
-			a.notifyBlockChanged(notify.Add, c, &block, nil, userID)
+			a.notifyBlockChanged(notify.Add, c, &block, nil, modifiedByID)
 		}()
 	}
 	return err
 }
 
-func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID string, allowNotifications bool) ([]model.Block, error) {
+func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID string, allowNotifications bool) ([]model.Block, error) {
 	needsNotify := make([]model.Block, 0, len(blocks))
 	for i := range blocks {
-		err := a.store.InsertBlock(c, &blocks[i], userID)
+		err := a.store.InsertBlock(c, &blocks[i], modifiedByID)
 		if err != nil {
 			return nil, err
 		}
@@ -92,7 +92,7 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID strin
 			block := b
 			a.webhook.NotifyUpdate(block)
 			if allowNotifications {
-				a.notifyBlockChanged(notify.Add, c, &block, nil, userID)
+				a.notifyBlockChanged(notify.Add, c, &block, nil, modifiedByID)
 			}
 		}
 	}()
@@ -135,7 +135,7 @@ func (a *App) GetBlockCountsByType() (map[string]int64, error) {
 	return a.store.GetBlockCountsByType()
 }
 
-func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block *model.Block, oldBlock *model.Block, userID string) {
+func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block *model.Block, oldBlock *model.Block, modifiedByID string) {
 	if a.notifications == nil {
 		return
 	}
@@ -154,7 +154,7 @@ func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block 
 		Card:         card,
 		BlockChanged: block,
 		BlockOld:     oldBlock,
-		UserID:       userID,
+		ModifiedByID: modifiedByID,
 	}
 	a.notifications.BlockChanged(evt)
 }

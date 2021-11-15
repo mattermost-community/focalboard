@@ -106,5 +106,5 @@ type Subscriber struct {
 	SubscriberID string `json:"subscriber_id"`
 
 	// NotifiedAt is the timestamp this subscriber was last notified
-	NotifiedAt int64 `json:"notify_at"`
+	NotifiedAt int64 `json:"notified_at"`
 }

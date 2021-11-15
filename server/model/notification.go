@@ -22,9 +22,9 @@ type NotificationHint struct {
 	// required: true
 	WorkspaceID string `json:"workspace_id"`
 
-	// UserID is the id of the user who made the block change
-	UserID   string `json:"user_id"`
-	Username string `json:"-"`
+	// ModifiedByID is the id of the user who made the block change
+	ModifiedByID string `json:"modified_by_id"`
+	Username     string `json:"-"`
 
 	// CreatedAt is the timestamp this notification hint was created
 	// required: true
@@ -48,38 +48,38 @@ func (s *NotificationHint) IsValid() error {
 	if s.BlockType == "" {
 		return ErrInvalidNotificationHint{"missing block type"}
 	}
-	if s.UserID == "" {
-		return ErrInvalidNotificationHint{"missing user id"}
+	if s.ModifiedByID == "" {
+		return ErrInvalidNotificationHint{"missing modified_by id"}
 	}
 	return nil
 }
 
 func (s *NotificationHint) Copy() *NotificationHint {
 	return &NotificationHint{
-		BlockType:   s.BlockType,
-		BlockID:     s.BlockID,
-		WorkspaceID: s.WorkspaceID,
-		UserID:      s.UserID,
-		CreateAt:    s.CreateAt,
-		NotifyAt:    s.NotifyAt,
+		BlockType:    s.BlockType,
+		BlockID:      s.BlockID,
+		WorkspaceID:  s.WorkspaceID,
+		ModifiedByID: s.ModifiedByID,
+		CreateAt:     s.CreateAt,
+		NotifyAt:     s.NotifyAt,
 	}
 }
 
 func (s *NotificationHint) LogClone() interface{} {
 	return struct {
-		BlockType   BlockType `json:"block_type"`
-		BlockID     string    `json:"block_id"`
-		WorkspaceID string    `json:"workspace_id"`
-		UserID      string    `json:"user_id"`
-		CreateAt    string    `json:"create_at"`
-		NotifyAt    string    `json:"notify_at"`
+		BlockType    BlockType `json:"block_type"`
+		BlockID      string    `json:"block_id"`
+		WorkspaceID  string    `json:"workspace_id"`
+		ModifiedByID string    `json:"modified_by_id"`
+		CreateAt     string    `json:"create_at"`
+		NotifyAt     string    `json:"notify_at"`
 	}{
-		BlockType:   s.BlockType,
-		BlockID:     s.BlockID,
-		WorkspaceID: s.WorkspaceID,
-		UserID:      s.UserID,
-		CreateAt:    utils.TimeFromMillis(s.CreateAt).Format(time.StampMilli),
-		NotifyAt:    utils.TimeFromMillis(s.NotifyAt).Format(time.StampMilli),
+		BlockType:    s.BlockType,
+		BlockID:      s.BlockID,
+		WorkspaceID:  s.WorkspaceID,
+		ModifiedByID: s.ModifiedByID,
+		CreateAt:     utils.TimeFromMillis(s.CreateAt).Format(time.StampMilli),
+		NotifyAt:     utils.TimeFromMillis(s.NotifyAt).Format(time.StampMilli),
 	}
 }
 

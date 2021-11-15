@@ -16,50 +16,55 @@ type PairWriter struct {
 	mux sync.Mutex
 	w   io.Writer
 
+	open  []byte
+	close []byte
+
 	opened bool
 	closed bool
 }
 
 // NewPairWriter creates a new instance, which should not be copied.
-func NewPairWriter(w io.Writer) *PairWriter {
+func NewPairWriter(w io.Writer, open string, close string) *PairWriter {
 	return &PairWriter{
-		w: w,
+		w:     w,
+		open:  []byte(open),
+		close: []byte(close),
 	}
 }
 
-// WriteOpen writes a string, only once.
-func (pw *PairWriter) WriteOpen(s string) (int, error) {
+// WriteOpen writes the open string, only once.
+func (pw *PairWriter) WriteOpen() (int, error) {
 	pw.mux.Lock()
 	defer pw.mux.Unlock()
 
 	if !pw.opened {
 		pw.opened = true
-		return pw.w.Write([]byte(s))
+		return pw.w.Write(pw.open)
 	}
 	return 0, nil
 }
 
-// WriteClose writes a string, only once.
-func (pw *PairWriter) WriteClose(s string) (int, error) {
+// WriteClose writes the close string, only once.
+func (pw *PairWriter) WriteClose() (int, error) {
 	pw.mux.Lock()
 	defer pw.mux.Unlock()
 
 	if !pw.closed {
 		pw.closed = true
-		return pw.w.Write([]byte(s))
+		return pw.w.Write(pw.close)
 	}
 	return 0, nil
 }
 
-// WriteCloseIfOpened writes a string, only once, and only if `WriteOpen`
+// WriteCloseIfOpened writes the close string, only once, and only if `WriteOpen`
 // was called at least once.
-func (pw *PairWriter) WriteCloseIfOpened(s string) (int, error) {
+func (pw *PairWriter) WriteCloseIfOpened() (int, error) {
 	pw.mux.Lock()
 	defer pw.mux.Unlock()
 
 	if !pw.closed && pw.opened {
 		pw.closed = true
-		return pw.w.Write([]byte(s))
+		return pw.w.Write(pw.close)
 	}
 	return 0, nil
 }

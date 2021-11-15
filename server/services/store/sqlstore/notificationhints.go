@@ -21,6 +21,7 @@ func notificationHintFields() []string {
 		"block_type",
 		"block_id",
 		"workspace_id",
+		"modified_by_id",
 		"create_at",
 		"notify_at",
 	}
@@ -31,6 +32,7 @@ func valuesForNotificationHint(hint *model.NotificationHint) []interface{} {
 		hint.BlockType,
 		hint.BlockID,
 		hint.WorkspaceID,
+		hint.ModifiedByID,
 		hint.CreateAt,
 		hint.NotifyAt,
 	}
@@ -45,6 +47,7 @@ func (s *SQLStore) notificationHintFromRows(rows *sql.Rows) ([]*model.Notificati
 			&hint.BlockType,
 			&hint.BlockID,
 			&hint.WorkspaceID,
+			&hint.ModifiedByID,
 			&hint.CreateAt,
 			&hint.NotifyAt,
 		)

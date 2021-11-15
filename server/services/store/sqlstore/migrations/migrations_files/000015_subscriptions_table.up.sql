@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}notification_hints (
 	block_type VARCHAR(10),
 	block_id VARCHAR(36),
 	workspace_id VARCHAR(36),
+	modified_by_id VARCHAR(36),
 	create_at BIGINT,
 	notify_at BIGINT,
 	PRIMARY KEY (block_id, workspace_id)

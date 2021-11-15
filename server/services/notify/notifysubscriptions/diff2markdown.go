@@ -17,28 +17,28 @@ import (
 
 const (
 	// board change notifications.
-	defAddBoardNotify = "{{.Username}} has added the board {{.NewBlock | makeLink}}"
+	defAddBoardNotify = "@{{.Username}} has added the board {{.NewBlock | makeLink}}"
 
-	defDeleteBoardNotify = "{{.Username}} has deleted the board {{.NewBlock | makeLink}}"
+	defDeleteBoardNotify = "@{{.Username}} has deleted the board {{.NewBlock | makeLink}}"
 
-	defAddBoardDescriptionNotify = "{{.Username}} has added a description for the board {{.NewBlock | makeLink}}\n" +
+	defAddBoardDescriptionNotify = "@{{.Username}} has added a description for the board {{.NewBlock | makeLink}}\n" +
 		"```Description:\n{{.NewBlock | getBoardDescription}}```"
 
-	defModifyBoardDescriptionNotify = "{{.Username}} has updated the description for the board {{.Board | makeLink}}\n" +
+	defModifyBoardDescriptionNotify = "@{{.Username}} has updated the description for the board {{.Board | makeLink}}\n" +
 		"```Description:\n~~{{.OldBlock | getBoardDescription }}~~\n{{.NewBlock | getBoardDescription}}```"
 
 	// card change notifications.
-	defAddCardNotify = "{{.Username}} has added the card {{.NewBlock | makeLink}}"
+	defAddCardNotify = "@{{.Username}} has added the card {{.NewBlock | makeLink}}\n"
 
-	defModifyCardTitleNotify = "Title:\t\t\t{{.NewBlock.Title}}  ~~{{.OldBlock.Title}}~~\n"
+	defModifyCardTitleNotify = "Title:\t{{.NewBlock.Title}}  ~~{{.OldBlock.Title}}~~\n"
 
-	defModifyCardNotify = "{{.Username}} has modified the card {{.Card.Title}}"
+	defModifyCardNotify = "###### @{{.Username}} has modified the card {{.Card.Title}}\n"
 
-	defDeleteCardNotify = "{{.Username}} has deleted the card {{.Card.Title}}"
+	defDeleteCardNotify = "@{{.Username}} has deleted the card {{.Card.Title}}\n"
 
-	defModifyCardPropsNotify = "{{.Name}}:\t\t\t{{.NewValue}}  ~~{{.OldValue}}~~\n"
+	defModifyCardPropsNotify = "{{.Name}}:\t\t{{.NewValue}}  {{if .OldValue}}~~{{.OldValue}}~~{{end}}\n"
 
-	defModifyCardContentNotify = "{{.NewValue}}  ~~{{.OldValue}}~~\n"
+	defModifyCardContentNotify = "{{.NewBlock.Title}}  {{if .OldBlock.Title}}~~{{.OldBlock.Title}}~~{{end}}\n"
 
 	defModifyCardAddCommentNotify = "Comment: {{.NewValue}}\n"
 
@@ -190,16 +190,17 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 
 	// at this point new and old block are non-nil
 
+	pairWriter := utils.NewPairWriter(w, "____\n", "____\n")
+	_, _ = pairWriter.WriteOpen()
+	defer func() { _, _ = pairWriter.WriteCloseIfOpened() }()
+
 	if err := execTemplate(w, "ModifyCardNotify", opts, defModifyCardNotify, cardDiff); err != nil {
 		return fmt.Errorf("cannot write notification for card %s: %w", cardDiff.NewBlock.ID, err)
 	}
 
-	pairWriter := utils.NewPairWriter(w)
-	defer func() { _, _ = pairWriter.WriteCloseIfOpened("```") }()
-
 	// title changes
 	if cardDiff.NewBlock.Title != cardDiff.OldBlock.Title {
-		_, _ = pairWriter.WriteOpen("```")
+		_, _ = pairWriter.WriteOpen()
 		if err := execTemplate(w, "ModifyCardTitleNotify", opts, defModifyCardTitleNotify, cardDiff); err != nil {
 			return fmt.Errorf("cannot write title change for card %s: %w", cardDiff.NewBlock.ID, err)
 		}
@@ -207,7 +208,7 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 
 	// property changes
 	if len(cardDiff.PropDiffs) > 0 {
-		_, _ = pairWriter.WriteOpen("```")
+		_, _ = pairWriter.WriteOpen()
 
 		for _, propDiff := range cardDiff.PropDiffs {
 			if err := execTemplate(w, "ModifyCardPropsNotify", opts, defModifyCardPropsNotify, propDiff); err != nil {
@@ -219,7 +220,7 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 	// content/description changes
 	for _, child := range cardDiff.Diffs {
 		if child.BlockType != model.TypeComment {
-			_, _ = pairWriter.WriteOpen("```")
+			_, _ = pairWriter.WriteOpen()
 
 			if err := execTemplate(w, "ModifyCardContentNotify", opts, defModifyCardContentNotify, child); err != nil {
 				return fmt.Errorf("cannot write content change for card %s: %w", cardDiff.NewBlock.ID, err)
@@ -231,7 +232,7 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 	for _, child := range cardDiff.Diffs {
 		if child.BlockType == model.TypeComment {
 			if child.NewBlock != nil && child.OldBlock == nil {
-				_, _ = pairWriter.WriteOpen("```")
+				_, _ = pairWriter.WriteOpen()
 				// added comment
 				if err := execTemplate(w, "ModifyCardAddCommentNotify", opts, defModifyCardAddCommentNotify, child); err != nil {
 					return fmt.Errorf("cannot write comment for card %s: %w", cardDiff.NewBlock.ID, err)
@@ -239,7 +240,7 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 			}
 
 			if child.NewBlock == nil && child.OldBlock != nil {
-				_, _ = pairWriter.WriteOpen("```")
+				_, _ = pairWriter.WriteOpen()
 				// deleted comment
 				if err := execTemplate(w, "ModifyCardRemoveCommentNotify", opts, defModifyCardRemoveCommentNotify, child); err != nil {
 					return fmt.Errorf("cannot write removed comment for card %s: %w", cardDiff.NewBlock.ID, err)
