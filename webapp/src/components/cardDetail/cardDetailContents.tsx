@@ -29,11 +29,11 @@ function addTextBlock(card: Card, intl: IntlShape, text: string): void {
     block.rootId = card.rootId
     block.title = text
 
-    const contentOrder = card.fields.contentOrder.slice()
-    contentOrder.push(block.id)
     mutator.performAsUndoGroup(async () => {
         const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add card text'})
-        await mutator.insertBlock(block, description)
+        const insertedBlock = await mutator.insertBlock(block, description)
+        const contentOrder = card.fields.contentOrder.slice()
+        contentOrder.push(insertedBlock.id)
         await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
     })
 }

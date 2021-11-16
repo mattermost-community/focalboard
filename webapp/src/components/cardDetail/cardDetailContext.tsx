@@ -50,16 +50,16 @@ export const CardDetailProvider = (props: CardDetailProps): ReactElement => {
             const block = await handler.createBlock(card.rootId)
             block.parentId = card.id
             block.rootId = card.rootId
-            const contentOrder = card.fields.contentOrder.slice()
-            contentOrder.splice(index, 0, block.id)
-            setLastAddedBlock({
-                id: block.id,
-                autoAdded: auto,
-            })
             const typeName = handler.getDisplayText(intl)
             const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
             await mutator.performAsUndoGroup(async () => {
-                await mutator.insertBlock(block, description)
+                const insertedBlock = await mutator.insertBlock(block, description)
+                const contentOrder = card.fields.contentOrder.slice()
+                contentOrder.splice(index, 0, insertedBlock.id)
+                setLastAddedBlock({
+                    id: insertedBlock.id,
+                    autoAdded: auto,
+                })
                 await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
             })
         },

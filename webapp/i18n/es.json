@@ -14,7 +14,6 @@
   "CardDetail.addCardText": "añade texto a la tarjeta",
   "CardDetail.moveContent": "mover contenido de la tarjeta",
   "CardDetail.new-comment-placeholder": "Añadir un comentario...",
-  "CardDetailProperty.confirm-delete": "Confirmar la eliminación de la propiedad",
   "CardDetailProperty.confirm-delete-subtext": "¿Estas seguro de que quieres eliminar la propiedad \"{nombre de la propiedad}\"? Al eliminarla se borrará la propiedad de todas las tarjetas de este tablero.",
   "CardDetailProperty.property-deleted": "¡{nombre de la propiedad} ha sido eliminado exitosamente!",
   "CardDialog.copiedLink": "¡Copiado!",
