@@ -10,6 +10,16 @@ class WhatsNewViewController:
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		loadText()
+	}
+
+	private func loadText() {
+		guard let fileUrl = Bundle.main.url(forResource: "whatsnew", withExtension: "txt") else { assertionFailure("whatsnew"); return }
+		guard let text = try? String(contentsOf: fileUrl, encoding: .utf8) else { assertionFailure("whatsnew"); return }
+
+		textView.string = text
+		textView.textStorage?.font = NSFont.systemFont(ofSize: 13)
+		textView.textStorage?.foregroundColor = NSColor.textColor
 	}
 
 	@IBAction func rateButtonClicked(_ sender: Any) {
