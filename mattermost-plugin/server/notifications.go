@@ -44,7 +44,7 @@ func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.St
 		return nil, err
 	}
 
-	backend := notifysubscriptions.New(store, delivery, params.logger)
+	backend := notifysubscriptions.New(params.serverRoot, store, delivery, params.logger)
 
 	return backend, nil
 }

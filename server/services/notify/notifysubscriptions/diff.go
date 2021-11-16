@@ -45,21 +45,14 @@ type SchemaDiff struct {
 }
 
 type diffGenerator struct {
-	container    store.Container
+	container store.Container
+	board     *model.Block
+	card      *model.Block
+
 	store        Store
 	hint         *model.NotificationHint
 	lastNotifyAt int64
 	logger       *mlog.Logger
-}
-
-func newDiffGenerator(container store.Container, store Store, hint *model.NotificationHint, lastNotifyAt int64, logger *mlog.Logger) *diffGenerator {
-	return &diffGenerator{
-		container:    container,
-		store:        store,
-		hint:         hint,
-		lastNotifyAt: lastNotifyAt,
-		logger:       logger,
-	}
 }
 
 func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
@@ -68,12 +61,7 @@ func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
 		return nil, fmt.Errorf("could not get block for notification: %w", err)
 	}
 
-	board, card, err := dg.store.GetBoardAndCard(dg.container, block)
-	if err != nil {
-		return nil, fmt.Errorf("could not get block's board & card for notification: %w", err)
-	}
-
-	if board == nil || card == nil {
+	if dg.board == nil || dg.card == nil {
 		return nil, fmt.Errorf("cannot generate diff for block %s; must have a valid board and card: %w", dg.hint.BlockID, err)
 	}
 
@@ -88,22 +76,22 @@ func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
 	}
 
 	// parse board's property schema here so it only happens once.
-	schema, err := model.ParsePropertySchema(board)
+	schema, err := model.ParsePropertySchema(dg.board)
 	if err != nil {
-		return nil, fmt.Errorf("could not parse property schema for board %s: %w", board.ID, err)
+		return nil, fmt.Errorf("could not parse property schema for board %s: %w", dg.board.ID, err)
 	}
 
 	switch block.Type {
 	case model.TypeBoard:
 		return dg.generateDiffsForBoard(block, schema)
 	case model.TypeCard:
-		diff, err := dg.generateDiffsForCard(board, block, schema)
+		diff, err := dg.generateDiffsForCard(block, schema)
 		if err != nil || diff == nil {
 			return nil, err
 		}
 		return []*Diff{diff}, nil
 	default:
-		diff, err := dg.generateDiffForBlock(board, card, block, schema)
+		diff, err := dg.generateDiffForBlock(block, schema)
 		if err != nil || diff == nil {
 			return nil, err
 		}
@@ -125,7 +113,7 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.
 
 	var diffs []*Diff
 
-	boardDiff, err := dg.generateDiffForBlock(board, nil, board, schema)
+	boardDiff, err := dg.generateDiffForBlock(board, schema)
 	if err != nil {
 		return nil, fmt.Errorf("could not generate diff for board %s: %w", board.ID, err)
 	}
@@ -138,7 +126,7 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.
 	for _, b := range blocks {
 		block := b
 		if block.Type == model.TypeCard {
-			cardDiffs, err := dg.generateDiffsForCard(board, &block, schema)
+			cardDiffs, err := dg.generateDiffsForCard(&block, schema)
 			if err != nil {
 				return nil, err
 			}
@@ -148,8 +136,8 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.
 	return diffs, nil
 }
 
-func (dg *diffGenerator) generateDiffsForCard(board, card *model.Block, schema model.PropSchema) (*Diff, error) {
-	cardDiff, err := dg.generateDiffForBlock(board, card, card, schema)
+func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.PropSchema) (*Diff, error) {
+	cardDiff, err := dg.generateDiffForBlock(card, schema)
 	if err != nil {
 		return nil, fmt.Errorf("could not generate diff for card %s: %w", card.ID, err)
 	}
@@ -171,7 +159,7 @@ func (dg *diffGenerator) generateDiffsForCard(board, card *model.Block, schema m
 			continue
 		}
 
-		blockDiff, err := dg.generateDiffForBlock(board, card, &blocks[i], schema)
+		blockDiff, err := dg.generateDiffForBlock(&blocks[i], schema)
 		if err != nil {
 			return nil, fmt.Errorf("could not generate diff for block %s: %w", blocks[i].ID, err)
 		}
@@ -183,7 +171,7 @@ func (dg *diffGenerator) generateDiffsForCard(board, card *model.Block, schema m
 	if len(childDiffs) != 0 {
 		if cardDiff == nil { // will be nil if the card has no other changes
 			cardDiff = &Diff{
-				Board:       board,
+				Board:       dg.board,
 				Card:        card,
 				Username:    dg.hint.Username,
 				BlockType:   card.Type,
@@ -199,7 +187,7 @@ func (dg *diffGenerator) generateDiffsForCard(board, card *model.Block, schema m
 	return cardDiff, nil
 }
 
-func (dg *diffGenerator) generateDiffForBlock(board, card, block *model.Block, schema model.PropSchema) (*Diff, error) {
+func (dg *diffGenerator) generateDiffForBlock(block *model.Block, schema model.PropSchema) (*Diff, error) {
 	// find the oldest block in blocks_history that is newer than the hint.NotifyAt.
 	opts := model.BlockQueryOptions{
 		UseBlocksHistory: true,
@@ -224,8 +212,8 @@ func (dg *diffGenerator) generateDiffForBlock(board, card, block *model.Block, s
 	dg.logger.Debug("generateDiffForBlock - prop diff count", mlog.Int("count", len(propDiffs)))
 
 	diff := &Diff{
-		Board:       board,
-		Card:        card,
+		Board:       dg.board,
+		Card:        dg.card,
 		Username:    dg.hint.Username,
 		BlockType:   block.Type,
 		OldBlock:    &oldBlock,
@@ -266,12 +254,14 @@ func (dg *diffGenerator) generatePropDiffs(oldBlock, newBlock *model.Block, sche
 		oldP, ok := oldProps[k]
 		if ok {
 			// prop changed
-			propDiffs = append(propDiffs, PropDiff{
-				ID:       prop.ID,
-				Name:     prop.Name,
-				NewValue: prop.Value,
-				OldValue: oldP.Value,
-			})
+			if prop.Value != oldP.Value {
+				propDiffs = append(propDiffs, PropDiff{
+					ID:       prop.ID,
+					Name:     prop.Name,
+					NewValue: prop.Value,
+					OldValue: oldP.Value,
+				})
+			}
 		} else {
 			// prop added
 			propDiffs = append(propDiffs, PropDiff{

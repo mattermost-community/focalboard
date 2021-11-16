@@ -32,11 +32,11 @@ const (
 
 	defModifyCardTitleNotify = "Title:\t{{.NewBlock.Title}}  ~~{{.OldBlock.Title}}~~\n"
 
-	defModifyCardNotify = "###### @{{.Username}} has modified the card {{.Card.Title}}\n"
+	defModifyCardNotify = "###### @{{.Username}} has modified the card {{.Card | makeLink}}\n"
 
-	defDeleteCardNotify = "@{{.Username}} has deleted the card {{.Card.Title}}\n"
+	defDeleteCardNotify = "@{{.Username}} has deleted the card {{.Card | makeLink}}\n"
 
-	defModifyCardPropsNotify = "{{.Name}}:\t\t{{.NewValue}}  {{if .OldValue}}~~{{.OldValue}}~~{{end}}\n"
+	defModifyCardPropsNotify = "{{.Name}}:\t{{.NewValue}}  {{if .OldValue}}~~{{.OldValue}}~~{{end}}\n"
 
 	defModifyCardContentNotify = "{{.NewBlock.Title}}  {{if .OldBlock.Title}}~~{{.OldBlock.Title}}~~{{end}}\n"
 
@@ -68,12 +68,12 @@ func getTemplate(name string, opts MarkdownOpts, def string) (*template.Template
 	if !ok {
 		t = template.New(key)
 
-		if opts.MakeLink == nil {
-			opts.MakeLink = func(block *model.Block) string { return block.Title }
+		if opts.MakeCardLink == nil {
+			opts.MakeCardLink = func(block *model.Block) string { return fmt.Sprintf("`%s`", block.Title) }
 		}
 		myFuncs := template.FuncMap{
 			"getBoardDescription": getBoardDescription,
-			"makeLink":            opts.MakeLink,
+			"makeLink":            opts.MakeCardLink,
 		}
 		t.Funcs(myFuncs)
 
@@ -98,8 +98,8 @@ func execTemplate(w io.Writer, name string, opts MarkdownOpts, def string, data 
 
 // MarkdownOpts provides options when converting diffs to markdown.
 type MarkdownOpts struct {
-	Language string
-	MakeLink func(block *model.Block) string
+	Language     string
+	MakeCardLink func(block *model.Block) string
 }
 
 // Diffs2Markdown converts a slice of `Diff` to markdown to be used in a post
@@ -190,7 +190,7 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 
 	// at this point new and old block are non-nil
 
-	pairWriter := utils.NewPairWriter(w, "____\n", "____\n")
+	pairWriter := utils.NewPairWriter(w, "", "")
 	_, _ = pairWriter.WriteOpen()
 	defer func() { _, _ = pairWriter.WriteCloseIfOpened() }()
 

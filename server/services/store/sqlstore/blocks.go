@@ -554,6 +554,16 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID 
 	return blocks, err
 }
 
+// getBoardAndCardByID returns the first parent of type `card` and first parent of type `board` for the block specified by ID.
+// `board` and/or `card` may return nil without error if the block does not belong to a board or card.
+func (s *SQLStore) getBoardAndCardByID(db sq.BaseRunner, c store.Container, blockID string) (board *model.Block, card *model.Block, err error) {
+	block, err := s.GetBlock(c, blockID)
+	if err != nil || block == nil {
+		return nil, nil, err
+	}
+	return s.getBoardAndCard(db, c, block)
+}
+
 // getBoardAndCard returns the first parent of type `card` and first parent of type `board` for the specified block.
 // `board` and/or `card` may return nil without error if the block does not belong to a board or card.
 func (s *SQLStore) getBoardAndCard(db sq.BaseRunner, c store.Container, block *model.Block) (board *model.Block, card *model.Block, err error) {

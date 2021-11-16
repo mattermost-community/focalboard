@@ -128,6 +128,11 @@ func (s *SQLStore) GetBoardAndCard(c store.Container, block *model.Block) (*mode
 
 }
 
+func (s *SQLStore) GetBoardAndCardByID(c store.Container, blockID string) (*model.Block, *model.Block, error) {
+	return s.getBoardAndCardByID(s.db, c, blockID)
+
+}
+
 func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint, error) {
 	return s.getNextNotificationHint(s.db, remove)
 

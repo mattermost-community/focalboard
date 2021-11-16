@@ -26,11 +26,11 @@ type Backend struct {
 	logger   *mlog.Logger
 }
 
-func New(store Store, delivery SubscriptionDelivery, logger *mlog.Logger) *Backend {
+func New(serverRoot string, store Store, delivery SubscriptionDelivery, logger *mlog.Logger) *Backend {
 	return &Backend{
 		store:    store,
 		delivery: delivery,
-		notifier: newNotifier(store, delivery, logger),
+		notifier: newNotifier(serverRoot, store, delivery, logger),
 		logger:   logger,
 	}
 }

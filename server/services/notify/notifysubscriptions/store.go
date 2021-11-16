@@ -14,7 +14,7 @@ type Store interface {
 	GetBlock(c store.Container, blockID string) (*model.Block, error)
 	GetBlockHistory(c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error)
 	GetSubTree2(c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error)
-	GetBoardAndCard(c store.Container, block *model.Block) (board *model.Block, card *model.Block, err error)
+	GetBoardAndCardByID(c store.Container, blockID string) (board *model.Block, card *model.Block, err error)
 
 	GetUserByID(userID string) (*model.User, error)
 

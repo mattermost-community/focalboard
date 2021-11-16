@@ -11,6 +11,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -44,9 +45,10 @@ func getBlockUpdateFreq(blockType model.BlockType) time.Duration {
 // via notifications hints written to the database so that fewer notifications are sent for active
 // blocks.
 type notifier struct {
-	store    Store
-	delivery SubscriptionDelivery
-	logger   *mlog.Logger
+	serverRoot string
+	store      Store
+	delivery   SubscriptionDelivery
+	logger     *mlog.Logger
 
 	hints chan *model.NotificationHint
 
@@ -54,13 +56,14 @@ type notifier struct {
 	done chan struct{}
 }
 
-func newNotifier(store Store, delivery SubscriptionDelivery, logger *mlog.Logger) *notifier {
+func newNotifier(serverRoot string, store Store, delivery SubscriptionDelivery, logger *mlog.Logger) *notifier {
 	return &notifier{
-		store:    store,
-		delivery: delivery,
-		logger:   logger,
-		done:     nil,
-		hints:    make(chan *model.NotificationHint, 20),
+		serverRoot: serverRoot,
+		store:      store,
+		delivery:   delivery,
+		logger:     logger,
+		done:       nil,
+		hints:      make(chan *model.NotificationHint, 20),
 	}
 }
 
@@ -171,7 +174,21 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	// subs slice is sorted by `NotifiedAt`, therefore subs[0] contains the oldest NotifiedAt needed
 	oldestNotifiedAt := subs[0].NotifiedAt
 
-	dg := newDiffGenerator(c, n.store, hint, oldestNotifiedAt, n.logger)
+	// need the block's board and card.
+	board, card, err := n.store.GetBoardAndCardByID(c, hint.BlockID)
+	if err != nil || board == nil || card == nil {
+		return fmt.Errorf("could not get board & card for block %s: %w", hint.BlockID, err)
+	}
+
+	dg := &diffGenerator{
+		container:    c,
+		board:        board,
+		card:         card,
+		store:        n.store,
+		hint:         hint,
+		lastNotifyAt: oldestNotifiedAt,
+		logger:       n.logger,
+	}
 	diffs, err := dg.generateDiffs()
 	if err != nil {
 		return err
@@ -187,8 +204,10 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	}
 
 	opts := MarkdownOpts{
-		Language: "en",                                                   // TODO: use correct language with i18n available on server.
-		MakeLink: func(block *model.Block) string { return block.Title }, // TODO: provide func to make URL links to blocks.
+		Language: "en", // TODO: use correct language with i18n available on server.
+		MakeCardLink: func(block *model.Block) string {
+			return fmt.Sprintf("[%s](%s)", block.Title, utils.MakeCardLink(n.serverRoot, board.WorkspaceID, board.ID, card.ID))
+		},
 	}
 
 	markdown, err := Diffs2Markdown(diffs, opts)

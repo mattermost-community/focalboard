@@ -36,6 +36,7 @@ type Store interface {
 	// @withTransaction
 	PatchBlock(c Container, blockID string, blockPatch *model.BlockPatch, userID string) error
 	GetBlockHistory(c Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error)
+	GetBoardAndCardByID(c Container, blockID string) (board *model.Block, card *model.Block, err error)
 	GetBoardAndCard(c Container, block *model.Block) (board *model.Block, card *model.Block, err error)
 
 	Shutdown() error

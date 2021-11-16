@@ -300,6 +300,22 @@ func (mr *MockStoreMockRecorder) GetBoardAndCard(arg0, arg1 interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoardAndCard", reflect.TypeOf((*MockStore)(nil).GetBoardAndCard), arg0, arg1)
 }
 
+// GetBoardAndCardByID mocks base method.
+func (m *MockStore) GetBoardAndCardByID(arg0 store.Container, arg1 string) (*model.Block, *model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBoardAndCardByID", arg0, arg1)
+	ret0, _ := ret[0].(*model.Block)
+	ret1, _ := ret[1].(*model.Block)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// GetBoardAndCardByID indicates an expected call of GetBoardAndCardByID.
+func (mr *MockStoreMockRecorder) GetBoardAndCardByID(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoardAndCardByID", reflect.TypeOf((*MockStore)(nil).GetBoardAndCardByID), arg0, arg1)
+}
+
 // GetNextNotificationHint mocks base method.
 func (m *MockStore) GetNextNotificationHint(arg0 bool) (*model.NotificationHint, error) {
 	m.ctrl.T.Helper()

@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/model"
 )
@@ -38,7 +39,7 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 	if err != nil {
 		return "", fmt.Errorf("cannot get direct channel: %w", err)
 	}
-	link := makeLink(pd.serverRoot, evt.Workspace, evt.Board.ID, evt.Card.ID)
+	link := utils.MakeCardLink(pd.serverRoot, evt.Workspace, evt.Board.ID, evt.Card.ID)
 
 	post := &model.Post{
 		UserId:    pd.botID,
