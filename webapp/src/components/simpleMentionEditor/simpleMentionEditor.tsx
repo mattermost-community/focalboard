@@ -23,23 +23,20 @@ import {getWorkspaceUsersList} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
 
-const imageURLForUser = (window as any).Components.imageURLForUser
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import createLiveMarkdownPlugin from './draft-js-live-markdown-render'
+const imageURLForUser = (window as any).Components?.imageURLForUser
 
 type Props = {
     onChange?: (text: string) => void
     onFocus?: () => void
     onBlur?: (text: string) => void
     initialText?: string
+    id?: string
 }
 
 const SimpleMentionEditor = (props: Props): ReactElement => {
-    const {onChange, onFocus, onBlur, initialText} = props
+    const {onChange, onFocus, onBlur, initialText, id} = props
     const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
-    const mentions: MentionData[] = useMemo(() => workspaceUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser(user.id)}`})), [workspaceUsers])
+    const mentions: MentionData[] = useMemo(() => workspaceUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`})), [workspaceUsers])
     const ref = useRef<Editor>(null)
     const [editorState, setEditorState] = useState(() => {
         const state = EditorState.moveFocusToEnd(EditorState.createWithContent(ContentState.createFromText(initialText || '')))
@@ -61,7 +58,6 @@ const SimpleMentionEditor = (props: Props): ReactElement => {
         const plugins = [
             mentionPlugin,
             emojiPlugin,
-            createLiveMarkdownPlugin() as any,
         ]
         return {plugins, MentionSuggestions, EmojiSuggestions}
     }, [])
@@ -121,8 +117,11 @@ const SimpleMentionEditor = (props: Props): ReactElement => {
     }
 
     return (
-        <div className='SimpleMentionEditor'>
+        <div
+            className='SimpleMentionEditor'
+        >
             <Editor
+                editorKey={id}
                 editorState={editorState}
                 onChange={onEditorStateChange}
                 plugins={plugins}

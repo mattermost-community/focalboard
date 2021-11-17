@@ -23,7 +23,7 @@ type Props = {
 }
 
 const MarkdownEditor = (props: Props): JSX.Element => {
-    const {placeholderText, onFocus, onBlur, onChange, text} = props
+    const {placeholderText, onFocus, onBlur, onChange, text, id} = props
     const [isEditing, setIsEditing] = useState(false)
 
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
@@ -54,6 +54,7 @@ const MarkdownEditor = (props: Props): JSX.Element => {
 
     const editorElement = (
         <SimpleMentionEditor
+            id={id}
             onChange={onChange}
             onFocus={onFocus}
             onBlur={editorOnBlur}
