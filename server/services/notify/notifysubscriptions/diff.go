@@ -143,7 +143,7 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 	}
 
 	opts := model.BlockQueryOptions{
-		UseBlocksHistory: true,
+		UseBlocksHistory: false,
 		UpdateAfterAt:    dg.lastNotifyAt,
 		OrderByInsertAt:  true,
 	}
@@ -167,6 +167,11 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 			childDiffs = append(childDiffs, blockDiff)
 		}
 	}
+
+	dg.logger.Debug("generateDiffsForCard",
+		mlog.Int("subtree", len(blocks)),
+		mlog.Int("child_diffs", len(childDiffs)),
+	)
 
 	if len(childDiffs) != 0 {
 		if cardDiff == nil { // will be nil if the card has no other changes

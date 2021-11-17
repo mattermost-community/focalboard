@@ -138,7 +138,7 @@ func ParseProperties(block *Block, schema PropSchema) (Properties, error) {
 	// `properties` contains a map (untyped at this point).
 	propsIface, ok := block.Fields["properties"]
 	if !ok {
-		return props, fmt.Errorf("`properties` key not found: %w", ErrInvalidProperty)
+		return props, nil // this is expected for blocks that don't have any properties.
 	}
 
 	blockProps, ok := propsIface.(map[string]interface{})
