@@ -1,11 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useMemo} from 'react'
-import {Editor} from 'codemirror'
-import SimpleMDE from 'easymde'
+import React, {useState} from 'react'
+
 import 'easymde/dist/easymde.min.css'
 
-import {Utils, IDType} from '../utils'
+import {Utils} from '../utils'
 import './markdownEditor.scss'
 
 import SimpleMentionEditor from './simpleMentionEditor/simpleMentionEditor'
@@ -24,85 +23,8 @@ type Props = {
 }
 
 const MarkdownEditor = (props: Props): JSX. Element => {
-    const {placeholderText, onFocus, onBlur, onChange, text, id} = props
+    const {placeholderText, onFocus, onBlur, onChange, text} = props
     const [isEditing, setIsEditing] = useState(false)
-    const [uniqueId] = useState(id || Utils.createGuid(IDType.None))
-
-    const [active, setActive] = useState(false)
-    const [editorInstance, setEditorInstance] = useState<SimpleMDE>()
-    const editorOptions = useMemo(() => ({
-        autoDownloadFontAwesome: true,
-        toolbar: false,
-        status: false,
-        spellChecker: true,
-        nativeSpellcheck: true,
-        minHeight: '10px',
-        shortcuts: {
-            toggleStrikethrough: 'Cmd-.',
-            togglePreview: null,
-            drawImage: null,
-            drawLink: null,
-            toggleSideBySide: null,
-            toggleFullScreen: null,
-        },
-    }), [])
-
-    const showEditor = (): void => {
-        // const cm = editorInstance?.codemirror
-        // if (cm) {
-        //     setTimeout(() => {
-        //         cm.refresh()
-        //         cm.focus()
-        //         cm.getInputField()?.focus()
-        //         cm.setCursor(cm.lineCount(), 0) // Put cursor at end
-        //     }, 100)
-        // }
-
-        setIsEditing(true)
-    }
-
-    const stateAndPropsValue = {
-        isEditing,
-        setIsEditing,
-        setActive,
-        onBlur,
-        onChange,
-        onFocus,
-    }
-    const stateAndPropsRef = useRef(stateAndPropsValue)
-    stateAndPropsRef.current = stateAndPropsValue
-
-    const editorEvents = useMemo(() => ({
-        change: (instance: Editor) => {
-            if (stateAndPropsRef.current.isEditing) {
-                const newText = instance.getValue()
-                stateAndPropsRef.current.onChange?.(newText)
-            }
-        },
-        blur: (instance: Editor) => {
-            const newText = instance.getValue()
-            const oldText = text || ''
-            if (newText !== oldText && stateAndPropsRef.current.onChange) {
-                stateAndPropsRef.current.onChange(newText)
-            }
-
-            stateAndPropsRef.current.setActive(false)
-
-            if (stateAndPropsRef.current.onBlur) {
-                stateAndPropsRef.current.onBlur(newText)
-            }
-
-            stateAndPropsRef.current.setIsEditing(false)
-        },
-        focus: () => {
-            stateAndPropsRef.current.setActive(true)
-            stateAndPropsRef.current.setIsEditing(true)
-
-            if (stateAndPropsRef.current.onFocus) {
-                stateAndPropsRef.current.onFocus()
-            }
-        },
-    }), [])
 
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
 
@@ -119,40 +41,10 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                 }
 
                 if (!props.readonly && !isEditing) {
-                    showEditor()
+                    setIsEditing(true)
                 }
             }}
         />)
-
-    // const editorElement = (
-    //     <div
-    //         className='octo-editor-active Editor'
-
-    //         // Use visibility instead of display here so the editor is pre-rendered, avoiding a flash on showEditor
-    //         style={isEditing ? {} : {visibility: 'hidden', position: 'absolute', top: 0, left: 0}}
-    //         onKeyDown={(e) => {
-    //             // HACKHACK: Need to handle here instad of in CodeMirror because that breaks auto-lists
-    //             if (e.keyCode === 27 && !e.shiftKey && !(e.ctrlKey || e.metaKey) && !e.altKey) { // Esc
-    //                 editorInstance?.codemirror?.getInputField()?.blur()
-    //             } else if (e.keyCode === 13 && !e.shiftKey && (e.ctrlKey || e.metaKey) && !e.altKey) { // Cmd+Enter
-    //                 editorInstance?.codemirror?.getInputField()?.blur()
-
-    //                 // HACKHACK: Call onAccept after visual state change
-    //                 setTimeout(() => {
-    //                     Utils.log('onAccept')
-    //                     props.onAccept?.(text || '')
-    //                 }, 20)
-    //             }
-    //         }}
-    //     >
-    //         <SimpleMdeReact
-    //             id={uniqueId}
-    //             getMdeInstance={setEditorInstance}
-    //             value={text}
-    //             events={editorEvents}
-    //             options={editorOptions}
-    //         />
-    //     </div>)
 
     const editorOnBlur = (newText: string) => {
         setIsEditing(false)
@@ -169,10 +61,11 @@ const MarkdownEditor = (props: Props): JSX. Element => {
     )
 
     const element = (
-        <div className={`MarkdownEditor octo-editor ${props.className || ''} ${active ? 'active' : ''}`}>
+        <div className={`MarkdownEditor octo-editor ${props.className || ''} ${isEditing ? 'active' : ''}`}>
             {!isEditing && previewElement}
             {isEditing && editorElement}
-        </div>)
+        </div>
+    )
 
     return element
 }

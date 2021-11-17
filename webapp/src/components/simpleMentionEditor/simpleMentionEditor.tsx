@@ -7,20 +7,23 @@ import React, {
     useRef,
     useState,
 } from 'react'
-import {EditorState, ContentState} from 'draft-js'
+import {getDefaultKeyBinding, EditorState, ContentState, DraftHandleValue} from 'draft-js'
 import Editor from '@draft-js-plugins/editor'
 import createMentionPlugin, {
     defaultSuggestionsFilter,
     MentionData,
 } from '@draft-js-plugins/mention'
+import '@draft-js-plugins/mention/lib/plugin.css'
+import './simpleMentionEditor.scss'
 
 import createEmojiPlugin from '@draft-js-plugins/emoji'
 import '@draft-js-plugins/emoji/lib/plugin.css'
 
 import {getWorkspaceUsersList} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
-import '@draft-js-plugins/mention/lib/plugin.css'
 import {IUser} from '../../user'
+
+const imageURLForUser = (window as any).Components.imageURLForUser
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -33,16 +36,17 @@ type Props = {
     initialText?: string
 }
 
-export default function SimpleMentionEditor(props: Props): ReactElement {
+const SimpleMentionEditor = (props: Props): ReactElement => {
     const {onChange, onFocus, onBlur, initialText} = props
     const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
-    const mentions: MentionData[] = workspaceUsers.map((user) => ({name: user.username}))
+    const mentions: MentionData[] = useMemo(() => workspaceUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser(user.id)}`})), [workspaceUsers])
     const ref = useRef<Editor>(null)
     const [editorState, setEditorState] = useState(() => {
         const state = EditorState.moveFocusToEnd(EditorState.createWithContent(ContentState.createFromText(initialText || '')))
         return EditorState.moveSelectionToEnd(state)
     })
-    const [open, setOpen] = useState(false)
+    const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false)
+    const [isEmojiPopoverOpen, setIsEmojiPopoverOpen] = useState(false)
     const [suggestions, setSuggestions] = useState(mentions)
 
     const {MentionSuggestions, plugins, EmojiSuggestions} = useMemo(() => {
@@ -68,40 +72,78 @@ export default function SimpleMentionEditor(props: Props): ReactElement {
         }
     })
 
+    const customKeyBindingFn = (e: React.KeyboardEvent) => {
+        if (isMentionPopoverOpen || isEmojiPopoverOpen) {
+            return undefined
+        }
+
+        if (e.key === 'Escape') {
+            return 'editor-blur'
+        }
+
+        return getDefaultKeyBinding(e as any)
+    }
+
+    const handleKeyCommand = (command: string): DraftHandleValue => {
+        if (command === 'editor-blur') {
+            ref.current?.blur()
+            return 'handled'
+        }
+
+        return 'not-handled'
+    }
+
     const onEditorStateBlur = () => {
         const text = editorState.getCurrentContent().getPlainText()
         onBlur && onBlur(text)
     }
+
     const onEditorStateChange = (newEditorState: EditorState) => {
         const newText = newEditorState.getCurrentContent().getPlainText()
         onChange && onChange(newText)
         setEditorState(newEditorState)
     }
-    const onOpenChange = (_open: boolean) => {
-        setOpen(_open)
+
+    const onMentionPopoverOpenChange = (open: boolean) => {
+        setIsMentionPopoverOpen(open)
     }
+
+    const onEmojiPopoverOpen = () => {
+        setIsEmojiPopoverOpen(true)
+    }
+
+    const onEmojiPopoverClose = () => {
+        setIsEmojiPopoverOpen(false)
+    }
+
     const onSearchChange = ({value}: { value: string }) => {
         setSuggestions(defaultSuggestionsFilter(value, mentions))
     }
 
     return (
-        <>
+        <div className='SimpleMentionEditor'>
             <Editor
-                editorKey={'editor'}
                 editorState={editorState}
                 onChange={onEditorStateChange}
                 plugins={plugins}
                 ref={ref}
                 onBlur={onEditorStateBlur}
                 onFocus={onFocus}
+                keyBindingFn={customKeyBindingFn}
+                handleKeyCommand={handleKeyCommand}
             />
             <MentionSuggestions
-                open={open}
-                onOpenChange={onOpenChange}
+                open={isMentionPopoverOpen}
+                onOpenChange={onMentionPopoverOpenChange}
                 suggestions={suggestions}
                 onSearchChange={onSearchChange}
             />
-            <EmojiSuggestions/>
-        </>
+            <EmojiSuggestions
+                onOpen={onEmojiPopoverOpen}
+                onClose={onEmojiPopoverClose}
+            />
+        </div>
     )
 }
+
+export default SimpleMentionEditor
