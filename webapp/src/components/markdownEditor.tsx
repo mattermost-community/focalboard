@@ -22,7 +22,7 @@ type Props = {
     onAccept?: (text: string) => void
 }
 
-const MarkdownEditor = (props: Props): JSX. Element => {
+const MarkdownEditor = (props: Props): JSX.Element => {
     const {placeholderText, onFocus, onBlur, onChange, text} = props
     const [isEditing, setIsEditing] = useState(false)
 
@@ -44,7 +44,8 @@ const MarkdownEditor = (props: Props): JSX. Element => {
                     setIsEditing(true)
                 }
             }}
-        />)
+        />
+    )
 
     const editorOnBlur = (newText: string) => {
         setIsEditing(false)
