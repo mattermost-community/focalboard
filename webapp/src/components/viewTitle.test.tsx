@@ -145,22 +145,4 @@ describe('components/viewTitle', () => {
         fireEvent.blur(titleInput)
         expect(mockedMutator.changeTitle).toBeCalledTimes(1)
     })
-
-    test('change description', async () => {
-        board.fields.showDescription = true
-        await act(async () => {
-            render(wrapIntl(
-                <ReduxProvider store={store}>
-                    <ViewTitle
-                        board={board}
-                        readonly={false}
-                    />
-                </ReduxProvider>,
-            ))
-        })
-        const descriptionInput = screen.getAllByRole('textbox', {hidden: true})[2]
-        userEvent.type(descriptionInput, 'other description')
-        fireEvent.blur(descriptionInput)
-        expect(mockedMutator.changeDescription).toBeCalledTimes(1)
-    })
 })

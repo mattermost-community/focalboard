@@ -435,6 +435,7 @@ exports[`components/contentBlock should match snapshot with textBlock 1`] = `
       >
         <div
           class="octo-editor-preview"
+          data-testid="preview-element"
         />
       </div>
     </div>

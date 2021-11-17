@@ -57,38 +57,7 @@ describe('components/content/TextElement', () => {
         await act(async () => {
             const result = render(component)
             container = result.container
-            const elementMarkDown = screen.getByRole('textbox', {hidden: true})
-            userEvent.click(elementMarkDown)
         })
-        const elementsTextArea = screen.getAllByRole('textbox', {hidden: true})
-        expect(elementsTextArea).not.toBeNull()
-        expect(elementsTextArea.length).toBeGreaterThanOrEqual(2)
-        userEvent.type(elementsTextArea[1], 'hello')
         expect(container).toMatchSnapshot()
-    })
-    test('return a textElement and do a blur event', async () => {
-        const component = wrapDNDIntl(
-            <TextElement
-                block={defaultBlock}
-                readonly={false}
-            />,
-        )
-
-        let container: Element | undefined
-        let elementMarkDown: Element | undefined
-
-        await act(async () => {
-            const result = render(component)
-            container = result.container
-            elementMarkDown = screen.getByRole('textbox', {hidden: true})
-            userEvent.click(elementMarkDown)
-        })
-        const elementsTextArea = screen.getAllByRole('textbox', {hidden: true})
-        expect(elementsTextArea).not.toBeNull()
-        expect(elementsTextArea.length).toBeGreaterThanOrEqual(2)
-        userEvent.type(elementsTextArea[1], 'hello')
-        fireEvent.blur(elementsTextArea[1])
-        expect(container).toMatchSnapshot()
-        expect(mockedMutator.changeTitle).toBeCalledTimes(1)
     })
 })

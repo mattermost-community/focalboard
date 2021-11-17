@@ -30,6 +30,7 @@ const MarkdownEditor = (props: Props): JSX.Element => {
 
     const previewElement = (
         <div
+            data-testid='preview-element'
             className={text ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
             dangerouslySetInnerHTML={{__html: html}}
             onClick={(e) => {

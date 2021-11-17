@@ -93,52 +93,6 @@ describe('components/cardDetail/cardDetailContents', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('should match snapshot after onBlur triggers', async () => {
-        const component = wrap((
-            <CardDetailContents
-                id='test-id'
-                card={card}
-                contents={[]}
-                readonly={false}
-            />
-        ))
-
-        let container: Element | undefined
-        await act(async () => {
-            const result = render(component)
-            container = result.container
-        })
-        const markdownEditorField = container!.querySelector('.octo-editor-preview.octo-placeholder')
-        expect(markdownEditorField).toBeDefined()
-        fireEvent.click(markdownEditorField!)
-
-        const onFocusEvent = new FocusEvent('focus', {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-        })
-
-        const onBlurEvent = new FocusEvent('blur', {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-        })
-
-        const textareaContainer = container!.querySelectorAll('.CodeMirror.cm-s-easymde.CodeMirror-wrap')
-        const textarea = textareaContainer[textareaContainer.length - 1].querySelector('textarea')
-
-        await act(async () => {
-            textarea!.dispatchEvent(onFocusEvent)
-            fireEvent.input(textarea!, {target: {value: 'test123'}})
-            fireEvent.keyPress(textarea!, {key: 'Escape', code: 'Escape'})
-            textarea!.dispatchEvent(onBlurEvent)
-        })
-
-        // TODO: Remove this hack if we get rid of codemirror/simpleMDE.
-        await new Promise((r) => setTimeout(r, 100))
-        expect(container).toMatchSnapshot()
-    })
-
     test('should match snapshot with contents array that has array inside it', async () => {
         const contents = [TestBlockFactory.createDivider(card), [TestBlockFactory.createDivider(card), TestBlockFactory.createDivider(card)]]
         const component = wrap((
