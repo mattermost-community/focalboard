@@ -219,8 +219,17 @@ func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, e
 		return nil, err
 	}
 
+	storeParams := sqlstore.Params{
+		DBType:           config.DBType,
+		ConnectionString: config.DBConfigString,
+		TablePrefix:      config.DBTablePrefix,
+		Logger:           logger,
+		DB:               sqlDB,
+		IsPlugin:         false,
+	}
+
 	var db store.Store
-	db, err = sqlstore.New(config.DBType, config.DBConfigString, config.DBTablePrefix, logger, sqlDB, false)
+	db, err = sqlstore.New(storeParams)
 	if err != nil {
 		return nil, err
 	}
@@ -352,16 +361,7 @@ func (s *Server) App() *app.App {
 	return s.app
 }
 
-func (s *Server) UpdateClientConfig(pluginConfig map[string]interface{}) {
-	for index, value := range pluginConfig {
-		if index == "EnablePublicSharedBoards" {
-			b, ok := value.(bool)
-			if !ok {
-				s.logger.Warn("Invalid value for config value", mlog.String(index, value.(string)))
-			}
-			s.config.EnablePublicSharedBoards = b
-		}
-	}
+func (s *Server) UpdateAppConfig() {
 	s.app.SetConfig(s.config)
 }
 

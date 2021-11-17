@@ -1,20 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
 
+import React from 'react'
 import {render, screen, act} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import '@testing-library/jest-dom'
 import {mocked} from 'ts-jest/utils'
-
+import '@testing-library/jest-dom'
 import {createIntl} from 'react-intl'
 
+import {PropertyType} from '../../blocks/board'
 import {wrapIntl} from '../../testUtils'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import mutator from '../../mutator'
 import {propertyTypesList, typeDisplayName} from '../../widgets/propertyMenu'
-
-import {PropertyType} from '../../blocks/board'
 
 import CardDetailProperties from './cardDetailProperties'
 
@@ -46,6 +44,12 @@ describe('components/cardDetail/CardDetailProperties', () => {
                 },
             ],
         },
+        {
+            id: 'property_id_2',
+            name: 'MockStatus',
+            type: 'number',
+            options: [],
+        },
     ]
 
     const view = TestBlockFactory.createBoardView(board)
@@ -56,53 +60,37 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
     const card = TestBlockFactory.createCard(board)
     card.fields.properties.property_id_1 = 'property_value_id_1'
+    card.fields.properties.property_id_2 = '1234'
+
+    const cardTemplate = TestBlockFactory.createCard(board)
+    cardTemplate.fields.isTemplate = true
+
     const cards = [card]
 
-    const cardDetailProps = {
-        board,
-        card,
-        cards,
-        contents: [],
-        comments: [],
-        activeView: view,
-        views,
-        readonly: false,
+    function renderComponent() {
+        const component = wrapIntl((
+            <CardDetailProperties
+                board={board!}
+                card={card}
+                cards={[card]}
+                contents={[]}
+                comments={[]}
+                activeView={view}
+                views={views}
+                readonly={false}
+            />
+        ))
+
+        return render(component)
     }
 
     it('should match snapshot', async () => {
-        const {container} = render(
-            wrapIntl(
-                <CardDetailProperties {...cardDetailProps}/>,
-            ),
-        )
+        const {container} = renderComponent()
         expect(container).toMatchSnapshot()
     })
 
-    it('should rename existing select property', async () => {
-        render(
-            wrapIntl(
-                <CardDetailProperties {...cardDetailProps}/>,
-            ),
-        )
-
-        const menuElement = screen.getByRole('button', {name: 'Owner'})
-        userEvent.click(menuElement)
-
-        const newName = 'Owner - Renamed'
-        const propertyNameInput = screen.getByRole('textbox')
-        userEvent.type(propertyNameInput, `${newName}{enter}`)
-
-        const propertyTemplate = board.fields.cardProperties[0]
-        expect(mockedMutator.changePropertyTypeAndName).toHaveBeenCalledTimes(1)
-        expect(mockedMutator.changePropertyTypeAndName).toHaveBeenCalledWith(board, cards, propertyTemplate, 'select', newName)
-    })
-
     it('should show confirmation dialog when deleting existing select property', () => {
-        render(
-            wrapIntl(
-                <CardDetailProperties {...cardDetailProps}/>,
-            ),
-        )
+        renderComponent()
 
         const menuElement = screen.getByRole('button', {name: 'Owner'})
         userEvent.click(menuElement)
@@ -116,11 +104,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
     it('should show property types menu', () => {
         const intl = createIntl({locale: 'en'})
-        const {container} = render(
-            wrapIntl(
-                <CardDetailProperties {...cardDetailProps}/>,
-            ),
-        )
+        const {container} = renderComponent()
 
         const menuElement = screen.getByRole('button', {name: /add a property/i})
         userEvent.click(menuElement)
@@ -135,12 +119,26 @@ describe('components/cardDetail/CardDetailProperties', () => {
         })
     })
 
+    test('rename select property and confirm button on dialog should rename property', async () => {
+        const result = renderComponent()
+
+        // rename to "Owner-Renamed"
+        onPropertyRenameOpenConfirmationDialog(result.container)
+
+        const propertyTemplate = board.fields.cardProperties[0]
+
+        const confirmButton = result.getByTitle('Change Property')
+        expect(confirmButton).toBeDefined()
+
+        userEvent.click(confirmButton!)
+
+        // should be called once on confirming renaming the property
+        expect(mockedMutator.changePropertyTypeAndName).toBeCalledTimes(1)
+        expect(mockedMutator.changePropertyTypeAndName).toHaveBeenCalledWith(board, cards, propertyTemplate, 'select', 'Owner - Renamed')
+    })
+
     it('should add new number property', async () => {
-        render(
-            wrapIntl(
-                <CardDetailProperties {...cardDetailProps}/>,
-            ),
-        )
+        renderComponent()
 
         const menuElement = screen.getByRole('button', {name: /add a property/i})
         userEvent.click(menuElement)
@@ -151,10 +149,85 @@ describe('components/cardDetail/CardDetailProperties', () => {
         })
 
         expect(mockedMutator.insertPropertyTemplate).toHaveBeenCalledTimes(1)
+
         const args = mockedMutator.insertPropertyTemplate.mock.calls[0]
         const template = args[3]
         expect(template).toBeTruthy()
         expect(template!.name).toMatch(/number/i)
         expect(template!.type).toBe('number')
     })
+
+    it('cancel button in TypeorNameChange dialog should do nothing', () => {
+        const result = renderComponent()
+        const container = result.container
+        onPropertyRenameOpenConfirmationDialog(container)
+
+        const cancelButton = result.getByTitle('Cancel')
+        expect(cancelButton).toBeDefined()
+
+        userEvent.click(cancelButton!)
+
+        expect(container).toMatchSnapshot()
+    })
+
+    it('confirmation on delete dialog should delete the property', () => {
+        const result = renderComponent()
+        const container = result.container
+
+        openDeleteConfirmationDialog(container)
+
+        const propertyTemplate = board.fields.cardProperties[0]
+
+        const confirmButton = result.getByTitle('Delete')
+        expect(confirmButton).toBeDefined()
+
+        //click delete button
+        userEvent.click(confirmButton!)
+
+        // should be called once on confirming delete
+        expect(mockedMutator.deleteProperty).toBeCalledTimes(1)
+        expect(mockedMutator.deleteProperty).toBeCalledWith(board, views, cards, propertyTemplate.id)
+    })
+
+    it('cancel on delete dialog should do nothing', () => {
+        const result = renderComponent()
+        const container = result.container
+
+        openDeleteConfirmationDialog(container)
+
+        const cancelButton = result.getByTitle('Cancel')
+        expect(cancelButton).toBeDefined()
+
+        userEvent.click(cancelButton!)
+        expect(container).toMatchSnapshot()
+    })
+
+    function openDeleteConfirmationDialog(container:HTMLElement) {
+        const propertyLabel = container.querySelector('.MenuWrapper')
+        expect(propertyLabel).toBeDefined()
+        userEvent.click(propertyLabel!)
+
+        const deleteOption = container.querySelector('.MenuOption.TextOption')
+        expect(propertyLabel).toBeDefined()
+        userEvent.click(deleteOption!)
+
+        const confirmDialog = container.querySelector('.dialog.confirmation-dialog-box')
+        expect(confirmDialog).toBeDefined()
+    }
+
+    function onPropertyRenameOpenConfirmationDialog(container:HTMLElement) {
+        const propertyLabel = container.querySelector('.MenuWrapper')
+        expect(propertyLabel).toBeDefined()
+        userEvent.click(propertyLabel!)
+
+        // write new name in the name text box
+        const propertyNameInput = container.querySelector('.PropertyMenu.menu-textbox')
+        expect(propertyNameInput).toBeDefined()
+        userEvent.type(propertyNameInput!, 'Owner - Renamed{enter}')
+        userEvent.click(propertyLabel!)
+
+        const confirmDialog = container.querySelector('.dialog.confirmation-dialog-box')
+        expect(confirmDialog).toBeDefined()
+    }
 })
+

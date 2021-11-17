@@ -8,9 +8,11 @@
     border: 1px solid rgba(var(--center-channel-color-rgb), 0.24) !important;
     border-radius: 4px;
     box-sizing: border-box;
-    box-shadow: 0px 2px 3px var(--elevation-1);
     text-decoration: none !important;
-    color: inherit !important; 
+    color: inherit !important;
+    background: rgb(var(--center-channel-bg-rgb));
+    box-shadow: var(--elevation-1);
+    margin-top: 8px;
 
     &:hover {
       cursor: pointer;
@@ -22,12 +24,13 @@
 
         .icon {
             font-size: 36px;
+            height: 36px;
         }
 
         .information {
             display: flex;
             flex-direction: column;
-            margin-left: 10px;
+            margin-left: 12px;
             overflow: hidden;
 
             .card_title {
@@ -56,6 +59,16 @@
         overflow: hidden;
         padding: 16px;
         white-space: nowrap;
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            &:first-child {
+                margin-top: 0;
+            }
+        }
     }
 
     .footer {
@@ -76,54 +89,63 @@
                 .remainder {
                     color: rgba(var(--center-channel-color-rgb), 0.48);
                     font-weight: bold;
-                    font-size: 14px;
+                    font-size: 12px;
+                }
+
+                .post-preview__time {
+                    font-size: 12px;
                 }
 
                 .property {
+                    display: flex;
+                    align-items: center;
                     border-radius: 4px;
-                    padding: 2px 4px;
-                    margin-right: 10px;
+                    padding: 0 4px;
+                    margin-right: 8px;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     overflow-wrap: normal;
+                    height: 20px;
+                    font-weight: 600;
+                    font-size: 12px;
 
 
                     &.propColorDefault {
                         background-color: var(--prop-default);
                     }
-                    
+
                     &.propColorGray {
                         background-color: var(--prop-gray);
                     }
-                    
+
                     &.propColorBrown {
                         background-color: var(--prop-brown);
                     }
-                    
+
                      &.propColorOrange {
                         background-color: var(--prop-orange);
                     }
-                    
+
                     &.propColorYellow {
                         background-color: var(--prop-yellow);
                     }
-                    
+
                     &.propColorGreen {
                         background-color: var(--prop-green);
                     }
-                    
+
                     &.propColorBlue {
                         background-color: var(--prop-blue);
                     }
-                    
+
                     &.propColorPurple {
                         background-color: var(--prop-purple);
                     }
-                    
+
                     &.propColorPink {
                         background-color: var(--prop-pink);
                     }
-                    
+
                      &.propColorRed {
                         background-color: var(--prop-red);
                     }

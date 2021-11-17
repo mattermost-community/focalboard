@@ -2,6 +2,7 @@ package integrationtests
 
 import (
 	"testing"
+	"time"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
@@ -17,26 +18,29 @@ func TestGetBlocks(t *testing.T) {
 	require.NoError(t, resp.Error)
 	initialCount := len(blocks)
 
-	blockID1 := utils.NewID(utils.IDTypeBlock)
-	blockID2 := utils.NewID(utils.IDTypeBlock)
+	initialID1 := utils.NewID(utils.IDTypeBlock)
+	initialID2 := utils.NewID(utils.IDTypeBlock)
 	newBlocks := []model.Block{
 		{
-			ID:       blockID1,
-			RootID:   blockID1,
+			ID:       initialID1,
+			RootID:   initialID1,
 			CreateAt: 1,
 			UpdateAt: 1,
 			Type:     model.TypeBoard,
 		},
 		{
-			ID:       blockID2,
-			RootID:   blockID2,
+			ID:       initialID2,
+			RootID:   initialID2,
 			CreateAt: 1,
 			UpdateAt: 1,
 			Type:     model.TypeBoard,
 		},
 	}
-	_, resp = th.Client.InsertBlocks(newBlocks)
+	newBlocks, resp = th.Client.InsertBlocks(newBlocks)
 	require.NoError(t, resp.Error)
+	require.Len(t, newBlocks, 2)
+	blockID1 := newBlocks[0].ID
+	blockID2 := newBlocks[1].ID
 
 	blocks, resp = th.Client.GetBlocks()
 	require.NoError(t, resp.Error)
@@ -58,22 +62,25 @@ func TestPostBlock(t *testing.T) {
 	require.NoError(t, resp.Error)
 	initialCount := len(blocks)
 
-	blockID1 := utils.NewID(utils.IDTypeBlock)
-	blockID2 := utils.NewID(utils.IDTypeBlock)
-	blockID3 := utils.NewID(utils.IDTypeBlock)
+	var blockID1 string
+	var blockID2 string
+	var blockID3 string
 
 	t.Run("Create a single block", func(t *testing.T) {
+		initialID1 := utils.NewID(utils.IDTypeBlock)
 		block := model.Block{
-			ID:       blockID1,
-			RootID:   blockID1,
+			ID:       initialID1,
+			RootID:   initialID1,
 			CreateAt: 1,
 			UpdateAt: 1,
 			Type:     model.TypeBoard,
 			Title:    "New title",
 		}
 
-		_, resp := th.Client.InsertBlocks([]model.Block{block})
+		newBlocks, resp := th.Client.InsertBlocks([]model.Block{block})
 		require.NoError(t, resp.Error)
+		require.Len(t, newBlocks, 1)
+		blockID1 = newBlocks[0].ID
 
 		blocks, resp := th.Client.GetBlocks()
 		require.NoError(t, resp.Error)
@@ -87,25 +94,32 @@ func TestPostBlock(t *testing.T) {
 	})
 
 	t.Run("Create a couple of blocks in the same call", func(t *testing.T) {
+		initialID2 := utils.NewID(utils.IDTypeBlock)
+		initialID3 := utils.NewID(utils.IDTypeBlock)
 		newBlocks := []model.Block{
 			{
-				ID:       blockID2,
-				RootID:   blockID2,
+				ID:       initialID2,
+				RootID:   initialID2,
 				CreateAt: 1,
 				UpdateAt: 1,
 				Type:     model.TypeBoard,
 			},
 			{
-				ID:       blockID3,
-				RootID:   blockID3,
+				ID:       initialID3,
+				RootID:   initialID3,
 				CreateAt: 1,
 				UpdateAt: 1,
 				Type:     model.TypeBoard,
 			},
 		}
 
-		_, resp := th.Client.InsertBlocks(newBlocks)
+		newBlocks, resp := th.Client.InsertBlocks(newBlocks)
 		require.NoError(t, resp.Error)
+		require.Len(t, newBlocks, 2)
+		blockID2 = newBlocks[0].ID
+		blockID3 = newBlocks[1].ID
+		require.NotEqual(t, initialID2, blockID2)
+		require.NotEqual(t, initialID3, blockID3)
 
 		blocks, resp := th.Client.GetBlocks()
 		require.NoError(t, resp.Error)
@@ -120,7 +134,7 @@ func TestPostBlock(t *testing.T) {
 		require.Contains(t, blockIDs, blockID3)
 	})
 
-	t.Run("Update a block", func(t *testing.T) {
+	t.Run("Update a block should not be possible through the insert endpoint", func(t *testing.T) {
 		block := model.Block{
 			ID:       blockID1,
 			RootID:   blockID1,
@@ -130,21 +144,24 @@ func TestPostBlock(t *testing.T) {
 			Title:    "Updated title",
 		}
 
-		_, resp := th.Client.InsertBlocks([]model.Block{block})
+		newBlocks, resp := th.Client.InsertBlocks([]model.Block{block})
 		require.NoError(t, resp.Error)
+		require.Len(t, newBlocks, 1)
+		blockID4 := newBlocks[0].ID
+		require.NotEqual(t, blockID1, blockID4)
 
 		blocks, resp := th.Client.GetBlocks()
 		require.NoError(t, resp.Error)
-		require.Len(t, blocks, initialCount+3)
+		require.Len(t, blocks, initialCount+4)
 
-		var updatedBlock model.Block
+		var block4 model.Block
 		for _, b := range blocks {
-			if b.ID == blockID1 {
-				updatedBlock = b
+			if b.ID == blockID4 {
+				block4 = b
 			}
 		}
-		require.NotNil(t, updatedBlock)
-		require.Equal(t, "Updated title", updatedBlock.Title)
+		require.NotNil(t, block4)
+		require.Equal(t, "Updated title", block4.Title)
 	})
 }
 
@@ -152,11 +169,11 @@ func TestPatchBlock(t *testing.T) {
 	th := SetupTestHelper().InitBasic()
 	defer th.TearDown()
 
-	blockID := utils.NewID(utils.IDTypeBlock)
+	initialID := utils.NewID(utils.IDTypeBlock)
 
 	block := model.Block{
-		ID:       blockID,
-		RootID:   blockID,
+		ID:       initialID,
+		RootID:   initialID,
 		CreateAt: 1,
 		UpdateAt: 1,
 		Type:     model.TypeBoard,
@@ -164,8 +181,10 @@ func TestPatchBlock(t *testing.T) {
 		Fields:   map[string]interface{}{"test": "test value", "test2": "test value 2"},
 	}
 
-	_, resp := th.Client.InsertBlocks([]model.Block{block})
+	newBlocks, resp := th.Client.InsertBlocks([]model.Block{block})
 	require.NoError(t, resp.Error)
+	require.Len(t, newBlocks, 1)
+	blockID := newBlocks[0].ID
 
 	blocks, resp := th.Client.GetBlocks()
 	require.NoError(t, resp.Error)
@@ -253,19 +272,24 @@ func TestDeleteBlock(t *testing.T) {
 	require.NoError(t, resp.Error)
 	initialCount := len(blocks)
 
-	blockID := utils.NewID(utils.IDTypeBlock)
+	var blockID string
 	t.Run("Create a block", func(t *testing.T) {
+		initialID := utils.NewID(utils.IDTypeBlock)
 		block := model.Block{
-			ID:       blockID,
-			RootID:   blockID,
+			ID:       initialID,
+			RootID:   initialID,
 			CreateAt: 1,
 			UpdateAt: 1,
 			Type:     model.TypeBoard,
 			Title:    "New title",
 		}
 
-		_, resp := th.Client.InsertBlocks([]model.Block{block})
+		newBlocks, resp := th.Client.InsertBlocks([]model.Block{block})
 		require.NoError(t, resp.Error)
+		require.Len(t, newBlocks, 1)
+		require.NotZero(t, newBlocks[0].ID)
+		require.NotEqual(t, initialID, newBlocks[0].ID)
+		blockID = newBlocks[0].ID
 
 		blocks, resp := th.Client.GetBlocks()
 		require.NoError(t, resp.Error)
@@ -279,6 +303,10 @@ func TestDeleteBlock(t *testing.T) {
 	})
 
 	t.Run("Delete a block", func(t *testing.T) {
+		// this avoids triggering uniqueness constraint of
+		// id,insert_at on block history
+		time.Sleep(10 * time.Millisecond)
+
 		_, resp := th.Client.DeleteBlock(blockID)
 		require.NoError(t, resp.Error)
 
