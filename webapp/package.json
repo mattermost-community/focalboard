@@ -30,6 +30,7 @@
 		"@mattermost/compass-icons": "^0.1.10",
 		"@reduxjs/toolkit": "^1.6.0",
 		"color": "^4.0.0",
+		"draft-js": "^0.11.7",
 		"easymde": "^2.15.0",
 		"emoji-mart": "^3.0.1",
 		"imagemin-gifsicle": "^7.0.0",
