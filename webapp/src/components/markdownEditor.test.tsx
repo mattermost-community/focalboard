@@ -5,16 +5,11 @@ import userEvent from '@testing-library/user-event'
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {mocked} from 'ts-jest/utils'
-
 import {mockDOM, wrapDNDIntl, mockStateStore} from '../testUtils'
-
-import {Utils} from '../utils'
 
 import {MarkdownEditor} from './markdownEditor'
 
 jest.mock('../utils')
-const mockedUtils = mocked(Utils, true)
 jest.useFakeTimers()
 
 describe('components/markdownEditor', () => {

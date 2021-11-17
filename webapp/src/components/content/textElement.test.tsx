@@ -2,13 +2,11 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {render, screen, fireEvent, act} from '@testing-library/react'
+import {render, act} from '@testing-library/react'
 
 import '@testing-library/jest-dom'
 
 import {mocked} from 'ts-jest/utils'
-
-import userEvent from '@testing-library/user-event'
 
 import {TextBlock} from '../../blocks/textBlock'
 
