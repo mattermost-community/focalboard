@@ -2,8 +2,6 @@
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
 
-import 'easymde/dist/easymde.min.css'
-
 import {Utils} from '../utils'
 import './markdownEditor.scss'
 
