@@ -6,6 +6,8 @@ import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@red
 import {default as client} from '../octoClient'
 import {IUser} from '../user'
 
+import {UserBlockSubscription} from '../subscription'
+
 import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
@@ -19,11 +21,20 @@ type UsersStatus = {
     me: IUser|null
     workspaceUsers: {[key: string]: IUser}
     loggedIn: boolean|null
+    blockSubscriptions: Array<UserBlockSubscription>
 }
+
+const initialState = {
+    me: null,
+    workspaceUsers: {},
+    loggedIn: null,
+    userWorkspaces: [],
+    blockSubscriptions: [],
+} as UsersStatus
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: {me: null, workspaceUsers: {}, loggedIn: null, userWorkspaces: []} as UsersStatus,
+    initialState,
     reducers: {
         setMe: (state, action: PayloadAction<IUser>) => {
             state.me = action.payload
@@ -33,6 +44,15 @@ const usersSlice = createSlice({
                 acc[user.id] = user
                 return acc
             }, {})
+        },
+        followBlock: (state, action: PayloadAction<string>) => {
+            state.blockSubscriptions.push({
+                blockId: action.payload,
+            })
+        },
+        unfollowBlock: (state, action: PayloadAction<string>) => {
+            const oldSubscriptions = state.blockSubscriptions
+            state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload)
         },
     },
     extraReducers: (builder) => {
@@ -49,6 +69,8 @@ const usersSlice = createSlice({
                 acc[user.id] = user
                 return acc
             }, {})
+
+            state.blockSubscriptions = action.payload.userCardSubscriptions
         })
     },
 })
@@ -71,3 +93,5 @@ export const getUser = (userId: string): (state: RootState) => IUser|undefined =
         return users[userId]
     }
 }
+
+export const {followBlock, unfollowBlock} = usersSlice.actions

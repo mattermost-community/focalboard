@@ -32,6 +32,7 @@ import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import {followBlock, unfollowBlock} from '../store/users'
 type Props = {
     readonly?: boolean
 }
@@ -229,6 +230,12 @@ const BoardPage = (props: Props): JSX.Element => {
         wsClient.addOnChange(incrementalUpdate)
         wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
+        wsclient.setOnFollowBlock((blockId: string): void => {
+            dispatch(followBlock(blockId))
+        })
+        wsclient.setOnUnfollowBlock((blockId: string): void => {
+            dispatch(unfollowBlock(blockId))
+        })
         return () => {
             if (timeout) {
                 clearTimeout(timeout)

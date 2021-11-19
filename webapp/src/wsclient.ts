@@ -29,6 +29,8 @@ export const ACTION_SUBSCRIBE_WORKSPACE = 'SUBSCRIBE_WORKSPACE'
 export const ACTION_UNSUBSCRIBE_WORKSPACE = 'UNSUBSCRIBE_WORKSPACE'
 export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
 export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
+export const ACTION_FOLLOW_BLOCK = 'FOLLOW_BLOCK'
+export const ACTION_UNFOLLOW_BLOCK = 'UNFOLLOW_BLOCK'
 
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
@@ -45,6 +47,7 @@ type OnReconnectHandler = (client: WSClient) => void
 type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close') => void
 type OnErrorHandler = (client: WSClient, e: Event) => void
 type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => void
+type FollowChangeHandler = (blockID: string) => void
 
 class WSClient {
     ws: WebSocket|null = null
@@ -61,6 +64,8 @@ class WSClient {
     onChange: OnChangeHandler[] = []
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
+    onFollowBlock: FollowChangeHandler | null = null
+    onUnfollowBlock: FollowChangeHandler | null = null
     private notificationDelay = 100
     private reopenDelay = 3000
     private updatedBlocks: Block[] = []
@@ -298,6 +303,26 @@ class WSClient {
 
     updateBlockHandler(message: WSMessage): void {
         this.queueUpdateNotification(Utils.fixBlock(message.block!))
+    }
+
+    setOnFollowBlock(handler: FollowChangeHandler): void {
+        this.onFollowBlock = handler
+    }
+
+    setOnUnfollowBlock(handler: FollowChangeHandler): void {
+        this.onUnfollowBlock = handler
+    }
+
+    followBlockHandler(blockID: string): void {
+        if (this.onFollowBlock) {
+            this.onFollowBlock(blockID)
+        }
+    }
+
+    unfollowBlockHandler(blockID: string): void {
+        if (this.onUnfollowBlock) {
+            this.onUnfollowBlock(blockID)
+        }
     }
 
     updateClientConfigHandler(config: ClientConfig): void {

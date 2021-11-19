@@ -29,7 +29,7 @@ import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
-import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG} from './../../../webapp/src/wsclient'
+import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG, ACTION_FOLLOW_BLOCK, ACTION_UNFOLLOW_BLOCK} from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
@@ -182,7 +182,7 @@ export default class Plugin {
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`plugin_statuses_changed`, (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
+        this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
         this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
             let preferences
             try {
@@ -199,6 +199,8 @@ export default class Plugin {
                 }
             }
         })
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_FOLLOW_BLOCK}`, (e) => wsClient.followBlockHandler(e.data.blockId))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UNFOLLOW_BLOCK}`, (e) => wsClient.unfollowBlockHandler(e.data.blockId))
     }
 
     uninitialize(): void {

@@ -13,6 +13,7 @@ import './dialog.scss'
 type Props = {
     children: React.ReactNode
     toolsMenu?: React.ReactNode // some dialogs may not  require a toolmenu
+    toolbar?: React.ReactNode
     hideCloseButton?: boolean
     className?: string
     onClose: () => void,
@@ -20,6 +21,7 @@ type Props = {
 
 const Dialog = React.memo((props: Props) => {
     const {toolsMenu} = props
+    const {toolbar} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
@@ -50,6 +52,7 @@ const Dialog = React.memo((props: Props) => {
                                 className='IconButton--large'
                             />
                         }
+                        {toolbar && <div className='cardToolbar'>{toolbar}</div>}
                         {toolsMenu && <MenuWrapper>
                             <IconButton
                                 className='IconButton--large'

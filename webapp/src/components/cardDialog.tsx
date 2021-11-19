@@ -19,9 +19,15 @@ import Menu from '../widgets/menu'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/confirmationDialogBox'
 
+import Button from '../widgets/buttons/button'
+
+import {getUserBlockSubscriptionList} from '../store/initialLoad'
+
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 import {sendFlashMessage} from './flashMessages'
+
+import './cardDialog.scss'
 
 type Props = {
     board: Board
@@ -125,11 +131,38 @@ const CardDialog = (props: Props): JSX.Element => {
             }
         </Menu>
     )
+
+    const followActionButton = (following: boolean): React.ReactNode => {
+        const followBtn = (
+            <Button
+                className='cardFollowBtn follow'
+                onClick={() => mutator.followBlock(props.cardId)}
+            >
+                {intl.formatMessage({id: 'CardDetail.Follow', defaultMessage: 'Follow'})}
+            </Button>
+        )
+
+        const unfollowBtn = (
+            <Button
+                className='cardFollowBtn unfollow'
+                onClick={() => mutator.unfollowBlock(props.cardId)}
+            >
+                {intl.formatMessage({id: 'CardDetail.Unfollow', defaultMessage: 'Unfollow'})}
+            </Button>
+        )
+
+        return following ? unfollowBtn : followBtn
+    }
+
+    const followingCards = useAppSelector(getUserBlockSubscriptionList)
+    const isFollowingCard = Boolean(followingCards.find((following) => following.cardID === props.cardId))
+
     return (
         <>
             <Dialog
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && menu}
+                toolbar={followActionButton(isFollowingCard)}
             >
                 {card && card.fields.isTemplate &&
                 <div className='banner'>

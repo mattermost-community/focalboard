@@ -632,6 +632,32 @@ class Mutator {
         await this.updateBlock(newView, view, description)
     }
 
+    async followBlock(blockID: string) {
+        await undoManager.perform(
+            async () => {
+                await octoClient.followBlock(blockID)
+            },
+            async () => {
+                await octoClient.unfollowBlock(blockID)
+            },
+            'follow block',
+            this.undoGroupId,
+        )
+    }
+
+    async unfollowBlock(blockID: string) {
+        await undoManager.perform(
+            async () => {
+                await octoClient.unfollowBlock(blockID)
+            },
+            async () => {
+                await octoClient.followBlock(blockID)
+            },
+            'follow block',
+            this.undoGroupId,
+        )
+    }
+
     // Duplicate
 
     async duplicateCard(

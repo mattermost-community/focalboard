@@ -342,6 +342,9 @@ func (pa *PluginAdapter) sendWorkspaceMessageSkipCluster(workspaceID string, pay
 	userIDs := pa.getUserIDsForWorkspace(workspaceID)
 	for _, userID := range userIDs {
 		pa.api.PublishWebSocketEvent(websocketActionUpdateBlock, payload, &mmModel.WebsocketBroadcast{UserId: userID})
+
+		// DEMO unfollow block event
+		//pa.api.PublishWebSocketEvent("UNFOLLOW_BLOCK", map[string]interface{}{"blockId": "cbfgm6psfz3nxbypcqqf7s19dno"}, &mmModel.WebsocketBroadcast{UserId: userID})
 	}
 }
 

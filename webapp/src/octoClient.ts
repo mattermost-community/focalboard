@@ -8,6 +8,7 @@ import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
+import {UserBlockSubscription} from './subscription'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -266,6 +267,28 @@ class OctoClient {
         })
     }
 
+    async followBlock(blockId: string): Promise<Response> {
+        Utils.log(`followBlock: ${blockId}`)
+        return {} as Response
+
+        // TODO plug in actual API URL here
+        // return fetch(this.getBaseURL() + `/blocks/follow/${encodeURIComponent(blockId)}`, {
+        //     method: 'POST',
+        //     headers: this.headers(),
+        // })
+    }
+
+    async unfollowBlock(blockId: string): Promise<Response> {
+        Utils.log(`unfollowBlock: ${blockId}`)
+        return {} as Response
+
+        // TODO plug in actual API URL here
+        // return fetch(this.getBaseURL() + `/blocks/unfollowBlock/${encodeURIComponent(blockId)}`, {
+        //     method: 'POST',
+        //     headers: this.headers(),
+        // })
+    }
+
     async insertBlock(block: Block): Promise<Response> {
         return this.insertBlocks([block])
     }
@@ -413,6 +436,26 @@ class OctoClient {
     async getGlobalTemplates(): Promise<Block[]> {
         const path = this.workspacePath('0') + '/blocks?type=board'
         return this.getBlocksWithPath(path)
+    }
+
+    async getUserBlockSubscriptions(): Promise<Array<UserBlockSubscription>> {
+        // ================================================================
+        // Plug in actual API URL below and remove the hardcoded response.
+        // ================================================================
+
+        // const path = '/api/v1/foobar'
+        // const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        // if (response.status !== 200) {
+        //     return []
+        // }
+        //
+        // return (await this.getJson(response, [])) as Array<UserCardSubscription>[]
+
+        return [
+            {blockId: 'cbfgm6psfz3nxbypcqqf7s19dno'},
+            {blockId: 'c35i17qdk77bjigc4jsgcpzs4qc'},
+            {blockId: 'cmoz7jc4ks3g8fry9m6axjeaeoy'},
+        ]
     }
 }
 
