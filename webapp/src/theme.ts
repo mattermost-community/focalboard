@@ -281,7 +281,7 @@ export function getSelectBaseStyle() {
         }),
         valueContainer: (provided: CSSObject): CSSObject => ({
             ...provided,
-            padding: '0 5px',
+            padding: '0 5px 0 0',
             overflow: 'unset',
         }),
         singleValue: (provided: CSSObject): CSSObject => ({
