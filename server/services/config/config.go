@@ -61,10 +61,15 @@ type Configuration struct {
 
 // IsSubscriptionsEnabled returns true if the block change notification subscription service should be enabled.
 func (c *Configuration) IsSubscriptionsEnabled() bool {
-	if enabled, ok := c.FeatureFlags["subscriptions"]; ok && enabled == "true" {
-		return true
-	}
-	return false
+	return true
+
+	/*
+		// TODO: Uncomment once feature flags are working.
+		if enabled, ok := c.FeatureFlags["subscriptions"]; ok && enabled == "true" {
+			return true
+		}
+		return false
+	*/
 }
 
 // ReadConfigFile read the configuration from the filesystem.
