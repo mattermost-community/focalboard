@@ -40,7 +40,6 @@
   "CardDetail.addCardText": "lägg till korttext",
   "CardDetail.moveContent": "flytta kortinnehåll",
   "CardDetail.new-comment-placeholder": "Lägg till kommentar...",
-  "CardDetailProperty.confirm-delete": "Bekräfta att ta bort egenskap",
   "CardDetailProperty.confirm-delete-subtext": "Är du säker på att du vill ta bort egenskapen \"{propertyName}\"? Om du raderar den kommer egenskapen tas bort från alla kort på tavlan.",
   "CardDetailProperty.property-deleted": "{propertyName} har raderats!",
   "CardDialog.copiedLink": "Kopierad!",

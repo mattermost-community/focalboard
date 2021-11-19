@@ -16,7 +16,6 @@
   "CardDetail.addCardText": "apondre una zòna de tèxt",
   "CardDetail.moveContent": "desplaçar contengut de la carta",
   "CardDetail.new-comment-placeholder": "Apondre un comentari...",
-  "CardDetailProperty.confirm-delete": "Confirmar la supression de proprietat",
   "CardDetailProperty.confirm-delete-subtext": "Volètz vertadièrament suprimir la proprietat « {propertyName} » ? La supression levarà la proprietat de totas las cartas d’aquesta tablèu.",
   "CardDetailProperty.property-deleted": "Supression de {propertyName} reüssida !",
   "CardDialog.copiedLink": "Copiat !",
