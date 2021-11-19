@@ -75,7 +75,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 			SubscriberID:   evt.ModifiedByID,
 		}
 
-		if _, err = b.store.CreateSubscription(sub); err != nil {
+		if _, err = b.store.CreateSubscription(c, sub); err != nil {
 			b.logger.Warn("Cannot subscribe card author to card",
 				mlog.String("card_id", evt.BlockChanged.ID),
 				mlog.Err(err),
@@ -158,7 +158,11 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 		SubscriberID:   userID,
 	}
 
-	if _, err := b.store.CreateSubscription(sub); err != nil {
+	c := store.Container{
+		WorkspaceID: evt.Workspace,
+	}
+
+	if _, err := b.store.CreateSubscription(c, sub); err != nil {
 		b.logger.Warn("Cannot subscribe mentioned user to card",
 			mlog.String("user_id", userID),
 			mlog.String("card_id", evt.Card.ID),
