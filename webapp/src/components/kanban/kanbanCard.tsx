@@ -5,24 +5,24 @@ import {useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
+import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
+import {getCardComments} from '../../store/comments'
+import {getCardContents} from '../../store/contents'
+import {useAppSelector} from '../../store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import DuplicateIcon from '../../widgets/icons/duplicate'
-import OptionsIcon from '../../widgets/icons/options'
 import LinkIcon from '../../widgets/icons/Link'
+import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {useSortable} from '../../hooks/sortable'
-import {Utils} from '../../utils'
-import {sendFlashMessage} from '../flashMessages'
-import {useAppSelector} from '../../store/hooks'
-import {getCardContents} from '../../store/contents'
-import {getCardComments} from '../../store/comments'
-
-import './kanbanCard.scss'
-import PropertyValueElement from '../propertyValueElement'
 import Tooltip from '../../widgets/tooltip'
+import {sendFlashMessage} from '../flashMessages'
+import PropertyValueElement from '../propertyValueElement'
+import './kanbanCard.scss'
 
 type Props = {
     card: Card
@@ -75,6 +75,7 @@ const KanbanCard = React.memo((props: Props) => {
                             id='duplicate'
                             name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: props.board.id, card: card.id})
                                 mutator.duplicateCard(
                                     card.id,
                                     'duplicate card',

@@ -38,7 +38,7 @@ func Test_extractMentions(t *testing.T) {
 func makeBlock(text string) *model.Block {
 	return &model.Block{
 		ID:    mm_model.NewId(),
-		Type:  "comment",
+		Type:  model.TypeComment,
 		Title: text,
 	}
 }

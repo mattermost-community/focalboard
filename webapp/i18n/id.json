@@ -43,7 +43,6 @@
   "Dialog.closeDialog": "Tutup dialog",
   "EditableDayPicker.today": "Hari Ini",
   "EmptyCenterPanel.no-content": "Tambahkan atau pilih sebuah papan dari sidebar untuk memulai.",
-  "EmptyCenterPanel.workspace": "Ini adalah ruang kerja untuk:",
   "Error.websocket-closed": "Koneksi ke soket web tertutup, koneksi terganggu. Jika hal ini terus berlanjut, periksa konfigurasi server atau proxy web Anda.",
   "Filter.includes": "termasuk",
   "Filter.is-empty": "kosong",

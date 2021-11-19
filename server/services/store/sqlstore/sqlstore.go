@@ -66,13 +66,13 @@ func (s *SQLStore) DBHandle() *sql.DB {
 	return s.db
 }
 
-func (s *SQLStore) getQueryBuilder() sq.StatementBuilderType {
+func (s *SQLStore) getQueryBuilder(db sq.BaseRunner) sq.StatementBuilderType {
 	builder := sq.StatementBuilder
 	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
 		builder = builder.PlaceholderFormat(sq.Dollar)
 	}
 
-	return builder.RunWith(s.db)
+	return builder.RunWith(db)
 }
 
 func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam

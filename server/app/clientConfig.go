@@ -9,5 +9,6 @@ func (a *App) GetClientConfig() *model.ClientConfig {
 		Telemetry:                a.config.Telemetry,
 		TelemetryID:              a.config.TelemetryID,
 		EnablePublicSharedBoards: a.config.EnablePublicSharedBoards,
+		FeatureFlags:             a.config.FeatureFlags,
 	}
 }

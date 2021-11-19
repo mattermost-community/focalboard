@@ -1,23 +1,23 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
 import {BoardView, IViewType, sortBoardViewsAlphabetically} from '../../blocks/boardView'
 import mutator from '../../mutator'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import IconButton from '../../widgets/buttons/iconButton'
 import BoardIcon from '../../widgets/icons/board'
 import DeleteIcon from '../../widgets/icons/delete'
 import DisclosureTriangle from '../../widgets/icons/disclosureTriangle'
 import DuplicateIcon from '../../widgets/icons/duplicate'
+import GalleryIcon from '../../widgets/icons/gallery'
 import OptionsIcon from '../../widgets/icons/options'
 import TableIcon from '../../widgets/icons/table'
-import GalleryIcon from '../../widgets/icons/gallery'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-
 import './sidebarBoardItem.scss'
 
 type Props = {
@@ -26,6 +26,7 @@ type Props = {
     activeBoardId?: string
     activeViewId?: string
     nextBoardId?: string
+    hideSidebar: () => void
 }
 
 const SidebarBoardItem = React.memo((props: Props) => {
@@ -44,11 +45,13 @@ const SidebarBoardItem = React.memo((props: Props) => {
         }
         const newPath = generatePath(match.path, params)
         history.push(newPath)
+        props.hideSidebar()
     }, [match, history])
 
     const showView = useCallback((viewId, boardId) => {
         const newPath = generatePath(match.path, {...match.params, boardId: boardId || '', viewId: viewId || ''})
         history.push(newPath)
+        props.hideSidebar()
     }, [match, history])
 
     const iconForViewType = (viewType: IViewType): JSX.Element => {
@@ -86,6 +89,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
             intl.formatMessage({id: 'Mutator.new-template-from-board', defaultMessage: 'new template from board'}),
             true,
             async (newBoardId) => {
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromBoard, {board: newBoardId})
                 showBoard(newBoardId)
             },
             async () => {
@@ -124,6 +128,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
                             icon={<DeleteIcon/>}
                             onClick={async () => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: board.id})
                                 mutator.deleteBlock(
                                     board,
                                     intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
@@ -147,6 +152,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
                             icon={<DuplicateIcon/>}
                             onClick={() => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoard, {board: board.id})
                                 duplicateBoard(board.id || '')
                             }}
                         />

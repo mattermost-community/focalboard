@@ -31,6 +31,7 @@ import {UserSettings} from '../userSettings'
 import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
 
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 type Props = {
     readonly?: boolean
 }
@@ -63,6 +64,23 @@ const BoardPage = (props: Props): JSX.Element => {
     // transform the old query params into routes
     useEffect(() => {
     }, [])
+
+    useEffect(() => {
+        // don't do anything if-
+        // 1. the URL already has a workspace ID, or
+        // 2. the workspace ID is unavailable.
+        // This also ensures once the workspace id is
+        // set in the URL, we don't update the history anymore.
+        if (props.readonly || match.params.workspaceId || !workspaceId || workspaceId === '0') {
+            return
+        }
+
+        // we can pick workspace ID from board if it's not available anywhere,
+        const workspaceIDToUse = workspaceId || board.workspaceId
+
+        const newPath = Utils.buildOriginalPath(workspaceIDToUse, match.params.boardId, match.params.viewId, match.params.cardId)
+        history.replace(`/workspace/${newPath}`)
+    }, [workspaceId, match.params.boardId, match.params.viewId, match.params.cardId])
 
     useEffect(() => {
         // Backward compatibility: This can be removed in the future, this is for
@@ -146,12 +164,14 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [board?.title, activeView?.title])
 
     useEffect(() => {
-        let loadAction: any = initialLoad
+        let loadAction: any = initialLoad /* eslint-disable-line @typescript-eslint/no-explicit-any */
         let token = localStorage.getItem('focalboardSessionId') || ''
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
             token = token || queryString.get('r') || ''
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: board.id, view: activeView.id})
         }
+
         dispatch(loadAction(match.params.boardId))
 
         if (wsClient.state === 'open') {

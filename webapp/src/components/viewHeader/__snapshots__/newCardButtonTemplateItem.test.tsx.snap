@@ -22,14 +22,14 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
       <div
         class="Menu noselect left"
       >
@@ -170,14 +170,14 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
       <div
         class="Menu noselect left"
       >
@@ -318,14 +318,14 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
     </div>
   </div>
 </div>
@@ -353,14 +353,14 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
       <div
         class="Menu noselect left"
       >
@@ -501,14 +501,14 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       class="MenuWrapper"
       role="button"
     >
-      <div
+      <button
         class="Button IconButton"
-        role="button"
+        type="button"
       >
         <i
           class="CompassIcon icon-dots-horizontal OptionsIcon"
         />
-      </div>
+      </button>
       <div
         class="Menu noselect left"
       >
