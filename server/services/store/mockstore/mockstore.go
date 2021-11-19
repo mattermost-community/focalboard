@@ -210,7 +210,7 @@ func (mr *MockStoreMockRecorder) GetBlockCountsByType() *gomock.Call {
 }
 
 // GetBlockHistory mocks base method.
-func (m *MockStore) GetBlockHistory(arg0 store.Container, arg1 string, arg2 model.BlockQueryOptions) ([]model.Block, error) {
+func (m *MockStore) GetBlockHistory(arg0 store.Container, arg1 string, arg2 model.QueryBlockHistoryOptions) ([]model.Block, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBlockHistory", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]model.Block)
@@ -422,7 +422,7 @@ func (mr *MockStoreMockRecorder) GetSharing(arg0, arg1 interface{}) *gomock.Call
 }
 
 // GetSubTree2 mocks base method.
-func (m *MockStore) GetSubTree2(arg0 store.Container, arg1 string, arg2 model.BlockQueryOptions) ([]model.Block, error) {
+func (m *MockStore) GetSubTree2(arg0 store.Container, arg1 string, arg2 model.QuerySubtreeOptions) ([]model.Block, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetSubTree2", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]model.Block)
@@ -437,7 +437,7 @@ func (mr *MockStoreMockRecorder) GetSubTree2(arg0, arg1, arg2 interface{}) *gomo
 }
 
 // GetSubTree3 mocks base method.
-func (m *MockStore) GetSubTree3(arg0 store.Container, arg1 string, arg2 model.BlockQueryOptions) ([]model.Block, error) {
+func (m *MockStore) GetSubTree3(arg0 store.Container, arg1 string, arg2 model.QuerySubtreeOptions) ([]model.Block, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetSubTree3", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]model.Block)

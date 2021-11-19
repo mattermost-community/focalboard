@@ -5,6 +5,7 @@ package notifysubscriptions
 
 import (
 	"fmt"
+	"sort"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
@@ -32,6 +33,7 @@ type Diff struct {
 
 type PropDiff struct {
 	ID       string // property id
+	Index    int
 	Name     string
 	OldValue string
 	NewValue string
@@ -100,12 +102,11 @@ func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
 }
 
 func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.PropSchema) ([]*Diff, error) {
-	opts := model.BlockQueryOptions{
-		UseBlocksHistory: true,
-		UpdateAfterAt:    dg.lastNotifyAt,
-		OrderByInsertAt:  true,
+	opts := model.QuerySubtreeOptions{
+		AfterUpdateAt: dg.lastNotifyAt,
 	}
 
+	// find all child blocks of the board that updated since last notify.
 	blocks, err := dg.store.GetSubTree2(dg.container, board.ID, opts)
 	if err != nil {
 		return nil, fmt.Errorf("could not get subtree for board %s: %w", board.ID, err)
@@ -113,6 +114,7 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.
 
 	var diffs []*Diff
 
+	// generate diff for board title change or description
 	boardDiff, err := dg.generateDiffForBlock(board, schema)
 	if err != nil {
 		return nil, fmt.Errorf("could not generate diff for board %s: %w", board.ID, err)
@@ -137,15 +139,15 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.
 }
 
 func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.PropSchema) (*Diff, error) {
+	// generate diff for card title change and properties.
 	cardDiff, err := dg.generateDiffForBlock(card, schema)
 	if err != nil {
 		return nil, fmt.Errorf("could not generate diff for card %s: %w", card.ID, err)
 	}
 
-	opts := model.BlockQueryOptions{
-		UseBlocksHistory: false,
-		UpdateAfterAt:    dg.lastNotifyAt,
-		OrderByInsertAt:  true,
+	// fetch all card content blocks that were updated after last notify
+	opts := model.QuerySubtreeOptions{
+		AfterUpdateAt: dg.lastNotifyAt,
 	}
 	blocks, err := dg.store.GetSubTree2(dg.container, card.ID, opts)
 	if err != nil {
@@ -174,7 +176,7 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 	)
 
 	if len(childDiffs) != 0 {
-		if cardDiff == nil { // will be nil if the card has no other changes
+		if cardDiff == nil { // will be nil if the card has no other changes besides child diffs
 			cardDiff = &Diff{
 				Board:       dg.board,
 				Card:        card,
@@ -192,37 +194,38 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 	return cardDiff, nil
 }
 
-func (dg *diffGenerator) generateDiffForBlock(block *model.Block, schema model.PropSchema) (*Diff, error) {
-	// find the oldest block in blocks_history that is newer than the hint.NotifyAt.
-	opts := model.BlockQueryOptions{
-		UseBlocksHistory: true,
-		UpdateAfterAt:    dg.lastNotifyAt,
-		OrderByInsertAt:  true,
+func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema model.PropSchema) (*Diff, error) {
+	// find the version of the block as it was at the time of last notify.
+	opts := model.QueryBlockHistoryOptions{
+		BeforeUpdateAt: dg.lastNotifyAt - 1,
+		Limit:          1,
+		Descending:     true,
 	}
-	history, err := dg.store.GetBlockHistory(dg.container, block.ID, opts)
+	history, err := dg.store.GetBlockHistory(dg.container, newBlock.ID, opts)
 	if err != nil {
-		return nil, fmt.Errorf("could not get block history for block %s: %w", block.ID, err)
+		return nil, fmt.Errorf("could not get block history for block %s: %w", newBlock.ID, err)
 	}
 
-	if len(history) < 2 {
-		// this block didn't change
-		return nil, nil
+	var oldBlock *model.Block
+	if len(history) != 0 {
+		oldBlock = &history[0]
 	}
 
-	oldBlock := history[0]
-	newBlock := history[len(history)-1]
+	propDiffs := dg.generatePropDiffs(oldBlock, newBlock, schema)
 
-	propDiffs := dg.generatePropDiffs(&oldBlock, &newBlock, schema)
-
-	dg.logger.Debug("generateDiffForBlock - prop diff count", mlog.Int("count", len(propDiffs)))
+	dg.logger.Debug("generateDiffForBlock - results",
+		mlog.String("block_id", newBlock.ID),
+		mlog.Int("history_count", len(history)),
+		mlog.Int("prop_diff_count", len(propDiffs)),
+	)
 
 	diff := &Diff{
 		Board:       dg.board,
 		Card:        dg.card,
 		Username:    dg.hint.Username,
-		BlockType:   block.Type,
-		OldBlock:    &oldBlock,
-		NewBlock:    &newBlock,
+		BlockType:   newBlock.Type,
+		OldBlock:    oldBlock,
+		NewBlock:    newBlock,
 		UpdateAt:    newBlock.UpdateAt,
 		PropDiffs:   propDiffs,
 		schemaDiffs: nil,
@@ -262,6 +265,7 @@ func (dg *diffGenerator) generatePropDiffs(oldBlock, newBlock *model.Block, sche
 			if prop.Value != oldP.Value {
 				propDiffs = append(propDiffs, PropDiff{
 					ID:       prop.ID,
+					Index:    prop.Index,
 					Name:     prop.Name,
 					NewValue: prop.Value,
 					OldValue: oldP.Value,
@@ -271,6 +275,7 @@ func (dg *diffGenerator) generatePropDiffs(oldBlock, newBlock *model.Block, sche
 			// prop added
 			propDiffs = append(propDiffs, PropDiff{
 				ID:       prop.ID,
+				Index:    prop.Index,
 				Name:     prop.Name,
 				NewValue: prop.Value,
 				OldValue: "",
@@ -285,11 +290,23 @@ func (dg *diffGenerator) generatePropDiffs(oldBlock, newBlock *model.Block, sche
 			// prop deleted
 			propDiffs = append(propDiffs, PropDiff{
 				ID:       prop.ID,
+				Index:    prop.Index,
 				Name:     prop.Name,
 				NewValue: "",
 				OldValue: prop.Value,
 			})
 		}
 	}
+	return sortPropDiffs(propDiffs)
+}
+
+func sortPropDiffs(propDiffs []PropDiff) []PropDiff {
+	if len(propDiffs) == 0 {
+		return propDiffs
+	}
+
+	sort.Slice(propDiffs, func(i, j int) bool {
+		return propDiffs[i].Index < propDiffs[j].Index
+	})
 	return propDiffs
 }

@@ -103,9 +103,9 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID
 func (a *App) GetSubTree(c store.Container, blockID string, levels int) ([]model.Block, error) {
 	// Only 2 or 3 levels are supported for now
 	if levels >= 3 {
-		return a.store.GetSubTree3(c, blockID, model.BlockQueryOptions{})
+		return a.store.GetSubTree3(c, blockID, model.QuerySubtreeOptions{})
 	}
-	return a.store.GetSubTree2(c, blockID, model.BlockQueryOptions{})
+	return a.store.GetSubTree2(c, blockID, model.QuerySubtreeOptions{})
 }
 
 func (a *App) GetAllBlocks(c store.Container) ([]model.Block, error) {

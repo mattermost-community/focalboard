@@ -138,3 +138,36 @@ func (b *Backend) notifySubscribers(subs []*model.Subscriber, block *model.Block
 
 	return b.notifier.onNotifyHint(hint)
 }
+
+// OnMention satisfies the `MentionListener` interface and is called whenever a @mention notification
+// is sent. Here we create a subscription for the mentioned user to the card.
+func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
+	if evt.Card == nil {
+		b.logger.Debug("Cannot subscribe mentioned user to nil card",
+			mlog.String("user_id", userID),
+			mlog.String("block_id", evt.BlockChanged.ID),
+		)
+		return
+	}
+
+	sub := &model.Subscription{
+		BlockType:      model.TypeCard,
+		BlockID:        evt.Card.ID,
+		WorkspaceID:    evt.Workspace,
+		SubscriberType: model.SubTypeUser,
+		SubscriberID:   userID,
+	}
+
+	if _, err := b.store.CreateSubscription(sub); err != nil {
+		b.logger.Warn("Cannot subscribe mentioned user to card",
+			mlog.String("user_id", userID),
+			mlog.String("card_id", evt.Card.ID),
+			mlog.Err(err),
+		)
+		return
+	}
+	b.logger.Debug("Subscribed mentioned user to card",
+		mlog.String("user_id", userID),
+		mlog.String("card_id", evt.Card.ID),
+	)
+}

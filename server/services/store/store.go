@@ -22,8 +22,8 @@ type Store interface {
 	GetBlocksWithParent(c Container, parentID string) ([]model.Block, error)
 	GetBlocksWithRootID(c Container, rootID string) ([]model.Block, error)
 	GetBlocksWithType(c Container, blockType string) ([]model.Block, error)
-	GetSubTree2(c Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error)
-	GetSubTree3(c Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error)
+	GetSubTree2(c Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
+	GetSubTree3(c Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
 	GetAllBlocks(c Container) ([]model.Block, error)
 	GetRootID(c Container, blockID string) (string, error)
 	GetParentID(c Container, blockID string) (string, error)
@@ -35,7 +35,7 @@ type Store interface {
 	GetBlock(c Container, blockID string) (*model.Block, error)
 	// @withTransaction
 	PatchBlock(c Container, blockID string, blockPatch *model.BlockPatch, userID string) error
-	GetBlockHistory(c Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error)
+	GetBlockHistory(c Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
 	GetBoardAndCardByID(c Container, blockID string) (board *model.Block, card *model.Block, err error)
 	GetBoardAndCard(c Container, block *model.Block) (board *model.Block, card *model.Block, err error)
 

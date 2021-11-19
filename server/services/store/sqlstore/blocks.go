@@ -126,24 +126,24 @@ func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, c store.Container, blockT
 }
 
 // getSubTree2 returns blocks within 2 levels of the given blockID.
-func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error) {
-	table := "blocks"
-	if opts.UseBlocksHistory {
-		table = "blocks_history"
-	}
-
+func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
-		From(s.tablePrefix + table).
+		From(s.tablePrefix + "blocks").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
-		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID}).
+		OrderBy("insert_at")
 
-	if opts.UpdateAfterAt != 0 {
-		query = query.Where(sq.Gt{"update_at": opts.UpdateAfterAt})
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
 	}
 
-	if opts.OrderByInsertAt {
-		query = query.OrderBy("insert_at")
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
 	}
 
 	rows, err := query.Query()
@@ -167,12 +167,7 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID stri
 }
 
 // g returns blocks within 3 levels of the given blockID.
-func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error) {
-	table := "blocks"
-	if opts.UseBlocksHistory {
-		table = "blocks_history"
-	}
-
+func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
 	// This first subquery returns repeated blocks
 	query := s.getQueryBuilder(db).Select(
 		"l3.id",
@@ -189,14 +184,19 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 		"l3.delete_at",
 		"COALESCE(l3.workspace_id, '0')",
 	).
-		From(s.tablePrefix + table + " as l1").
-		Join(s.tablePrefix + table + " as l2 on l2.parent_id = l1.id or l2.id = l1.id").
-		Join(s.tablePrefix + table + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
+		From(s.tablePrefix + "blocks" + " as l1").
+		Join(s.tablePrefix + "blocks" + " as l2 on l2.parent_id = l1.id or l2.id = l1.id").
+		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
-		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID})
+		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID}).
+		OrderBy("insert_at")
 
-	if opts.UpdateAfterAt != 0 {
-		query = query.Where(sq.Gt{"l3.update_at": opts.UpdateAfterAt})
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
+	}
+
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
 	}
 
 	if s.dbType == postgresDBType {
@@ -205,8 +205,8 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 		query = query.Distinct()
 	}
 
-	if opts.OrderByInsertAt {
-		query = query.OrderBy("insert_at")
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
 	}
 
 	rows, err := query.Query()
@@ -521,19 +521,29 @@ func (s *SQLStore) getBlock(db sq.BaseRunner, c store.Container, blockID string)
 	return &blocks[0], nil
 }
 
-func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error) {
+func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	var order string
+	if opts.Descending {
+		order = " DESC "
+	}
+
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks_history").
 		Where(sq.Eq{"id": blockID}).
-		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID}).
+		OrderBy("insert_at" + order)
 
-	if opts.UpdateAfterAt != 0 {
-		query = query.Where(sq.GtOrEq{"update_at": opts.UpdateAfterAt})
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
 	}
 
-	if opts.OrderByInsertAt {
-		query = query.OrderBy("insert_at")
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
 	}
 
 	rows, err := query.Query()

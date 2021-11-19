@@ -18,6 +18,7 @@ type Properties map[string]Prop
 // Prop represent a property attached to a block (typically a card).
 type Prop struct {
 	ID    string `json:"id"`
+	Index int    `json:"index"`
 	Name  string `json:"name"`
 	Value string `json:"value"`
 }
@@ -163,6 +164,7 @@ func ParseProperties(block *Block, schema PropSchema) (Properties, error) {
 		if ok {
 			prop.Name = def.Name
 			prop.Value = def.GetValue(s)
+			prop.Index = def.Index
 		}
 		props[k] = prop
 	}

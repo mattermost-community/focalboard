@@ -98,7 +98,7 @@ func (s *SQLStore) GetBlockCountsByType() (map[string]int64, error) {
 
 }
 
-func (s *SQLStore) GetBlockHistory(c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error) {
+func (s *SQLStore) GetBlockHistory(c store.Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
 	return s.getBlockHistory(s.db, c, blockID, opts)
 
 }
@@ -168,12 +168,12 @@ func (s *SQLStore) GetSharing(c store.Container, rootID string) (*model.Sharing,
 
 }
 
-func (s *SQLStore) GetSubTree2(c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error) {
+func (s *SQLStore) GetSubTree2(c store.Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
 	return s.getSubTree2(s.db, c, blockID, opts)
 
 }
 
-func (s *SQLStore) GetSubTree3(c store.Container, blockID string, opts model.BlockQueryOptions) ([]model.Block, error) {
+func (s *SQLStore) GetSubTree3(c store.Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
 	return s.getSubTree3(s.db, c, blockID, opts)
 
 }

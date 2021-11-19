@@ -55,6 +55,7 @@ func (b *Backend) AddListener(l MentionListener) {
 	b.mux.Lock()
 	defer b.mux.Unlock()
 	b.listeners = append(b.listeners, l)
+	b.logger.Debug("Mention listener added.", mlog.Int("listener_count", len(b.listeners)))
 }
 
 func (b *Backend) RemoveListener(l MentionListener) {
@@ -91,7 +92,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	merr := merror.New()
 
 	b.mux.RLock()
-	listeners := make([]MentionListener, 0, len(b.listeners))
+	listeners := make([]MentionListener, len(b.listeners))
 	copy(listeners, b.listeners)
 	b.mux.RUnlock()
 
@@ -107,6 +108,12 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		if err != nil {
 			merr.Append(fmt.Errorf("cannot deliver notification for @%s: %w", username, err))
 		}
+
+		b.logger.Debug("Mention notification delivered",
+			mlog.String("user", username),
+			mlog.Int("listener_count", len(listeners)),
+		)
+
 		for _, listener := range listeners {
 			safeCallListener(listener, userID, evt, b.logger)
 		}

@@ -126,6 +126,7 @@ func (p *Plugin) OnActivate() error {
 	if err != nil {
 		return fmt.Errorf("error creating subscription notifications backend: %w", err)
 	}
+	mentionsBackend.AddListener(subscriptionsBackend)
 
 	params := server.Params{
 		Cfg:             cfg,

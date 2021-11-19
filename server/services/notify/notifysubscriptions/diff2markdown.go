@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"strings"
 	"sync"
 	"text/template"
 
@@ -30,7 +31,7 @@ const (
 	// card change notifications.
 	defAddCardNotify = "@{{.Username}} has added the card {{.NewBlock | makeLink}}\n"
 
-	defModifyCardTitleNotify = "Title:\t{{.NewBlock.Title}}  ~~{{.OldBlock.Title}}~~\n"
+	defModifyCardTitleNotify = "Title:\t{{.NewBlock.Title | stripNewlines}}  ~~{{.OldBlock.Title | stripNewlines}}~~\n"
 
 	defModifyCardNotify = "###### @{{.Username}} has modified the card {{.Card | makeLink}}\n"
 
@@ -38,11 +39,11 @@ const (
 
 	defModifyCardPropsNotify = "{{.Name}}:\t{{.NewValue}}  {{if .OldValue}}~~{{.OldValue}}~~{{end}}\n"
 
-	defModifyCardContentNotify = "{{.NewBlock.Title}}  {{if .OldBlock.Title}}~~{{.OldBlock.Title}}~~{{end}}\n"
+	defModifyCardContentNotify = "{{.NewBlock.Title | stripNewlines}}\n{{if .OldBlock.Title}}~~{{.OldBlock.Title | stripNewlines}}~~{{end}}\n"
 
-	defModifyCardAddCommentNotify = "Comment: {{.NewValue}}\n"
+	defModifyCardAddCommentNotify = "Comment: {{.Title | stripNewlines}}\n"
 
-	defModifyCardRemoveCommentNotify = "Comment: ~~{{.OldValue}}~~\n"
+	defModifyCardRemoveCommentNotify = "Comment: ~~{{.Title | stripNewlines}}~~\n"
 
 	// block change notifications.
 	defAddBlockNotify = "Added: {{.NewValue}}\n"
@@ -74,6 +75,9 @@ func getTemplate(name string, opts MarkdownOpts, def string) (*template.Template
 		myFuncs := template.FuncMap{
 			"getBoardDescription": getBoardDescription,
 			"makeLink":            opts.MakeCardLink,
+			"stripNewlines": func(s string) string {
+				return strings.TrimSpace(strings.ReplaceAll(s, "\n", "¶ "))
+			},
 		}
 		t.Funcs(myFuncs)
 
@@ -211,6 +215,10 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 		_, _ = pairWriter.WriteOpen()
 
 		for _, propDiff := range cardDiff.PropDiffs {
+			if propDiff.NewValue == propDiff.OldValue {
+				continue
+			}
+
 			if err := execTemplate(w, "ModifyCardPropsNotify", opts, defModifyCardPropsNotify, propDiff); err != nil {
 				return fmt.Errorf("cannot write property changes for card %s: %w", cardDiff.NewBlock.ID, err)
 			}
@@ -220,7 +228,28 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 	// content/description changes
 	for _, child := range cardDiff.Diffs {
 		if child.BlockType != model.TypeComment {
+			if child.NewBlock.Title == child.OldBlock.Title {
+				continue
+			}
+
 			_, _ = pairWriter.WriteOpen()
+
+			/*
+				TODO: use diff lib for content changes which can be many paragraphs.
+				      Unfortunately `github.com/sergi/go-diff` is not suitable for
+					  markdown display. An alternate markdown friendly lib is being
+					  worked on at github.com/wiggin77/go-difflib and will be substituted
+					  here when ready.
+
+				newTxt := cleanBlockTitle(child.NewBlock)
+				oldTxt := cleanBlockTitle(child.OldBlock)
+
+				dmp := diffmatchpatch.New()
+				txtDiffs := dmp.DiffMain(oldTxt, newTxt, true)
+
+				_, _ = w.Write([]byte(dmp.DiffPrettyText(txtDiffs)))
+
+			*/
 
 			if err := execTemplate(w, "ModifyCardContentNotify", opts, defModifyCardContentNotify, child); err != nil {
 				return fmt.Errorf("cannot write content change for card %s: %w", cardDiff.NewBlock.ID, err)
@@ -234,7 +263,7 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 			if child.NewBlock != nil && child.OldBlock == nil {
 				_, _ = pairWriter.WriteOpen()
 				// added comment
-				if err := execTemplate(w, "ModifyCardAddCommentNotify", opts, defModifyCardAddCommentNotify, child); err != nil {
+				if err := execTemplate(w, "ModifyCardAddCommentNotify", opts, defModifyCardAddCommentNotify, child.NewBlock); err != nil {
 					return fmt.Errorf("cannot write comment for card %s: %w", cardDiff.NewBlock.ID, err)
 				}
 			}
@@ -242,7 +271,7 @@ func cardDiff2Markdown(w io.Writer, cardDiff *Diff, opts MarkdownOpts) error {
 			if child.NewBlock == nil && child.OldBlock != nil {
 				_, _ = pairWriter.WriteOpen()
 				// deleted comment
-				if err := execTemplate(w, "ModifyCardRemoveCommentNotify", opts, defModifyCardRemoveCommentNotify, child); err != nil {
+				if err := execTemplate(w, "ModifyCardRemoveCommentNotify", opts, defModifyCardRemoveCommentNotify, child.OldBlock); err != nil {
 					return fmt.Errorf("cannot write removed comment for card %s: %w", cardDiff.NewBlock.ID, err)
 				}
 			}
