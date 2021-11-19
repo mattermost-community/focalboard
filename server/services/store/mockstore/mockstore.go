@@ -65,18 +65,18 @@ func (mr *MockStoreMockRecorder) CreateSession(arg0 interface{}) *gomock.Call {
 }
 
 // CreateSubscription mocks base method.
-func (m *MockStore) CreateSubscription(arg0 *model.Subscription) (*model.Subscription, error) {
+func (m *MockStore) CreateSubscription(arg0 store.Container, arg1 *model.Subscription) (*model.Subscription, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateSubscription", arg0)
+	ret := m.ctrl.Call(m, "CreateSubscription", arg0, arg1)
 	ret0, _ := ret[0].(*model.Subscription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateSubscription indicates an expected call of CreateSubscription.
-func (mr *MockStoreMockRecorder) CreateSubscription(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) CreateSubscription(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSubscription", reflect.TypeOf((*MockStore)(nil).CreateSubscription), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSubscription", reflect.TypeOf((*MockStore)(nil).CreateSubscription), arg0, arg1)
 }
 
 // CreateUser mocks base method.
@@ -497,18 +497,18 @@ func (mr *MockStoreMockRecorder) GetSubscription(arg0, arg1, arg2 interface{}) *
 }
 
 // GetSubscriptions mocks base method.
-func (m *MockStore) GetSubscriptions(arg0 string) ([]*model.Subscription, error) {
+func (m *MockStore) GetSubscriptions(arg0 store.Container, arg1 string) ([]*model.Subscription, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetSubscriptions", arg0)
+	ret := m.ctrl.Call(m, "GetSubscriptions", arg0, arg1)
 	ret0, _ := ret[0].([]*model.Subscription)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetSubscriptions indicates an expected call of GetSubscriptions.
-func (mr *MockStoreMockRecorder) GetSubscriptions(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetSubscriptions(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubscriptions", reflect.TypeOf((*MockStore)(nil).GetSubscriptions), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSubscriptions", reflect.TypeOf((*MockStore)(nil).GetSubscriptions), arg0, arg1)
 }
 
 // GetSystemSetting mocks base method.

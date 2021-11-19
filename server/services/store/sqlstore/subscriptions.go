@@ -64,13 +64,11 @@ func (s *SQLStore) subscriptionsFromRows(rows *sql.Rows) ([]*model.Subscription,
 
 // createSubscription creates a new subscription, or returns an existing subscription
 // for the block & subscriber.
-func (s *SQLStore) createSubscription(db sq.BaseRunner, sub *model.Subscription) (*model.Subscription, error) {
+func (s *SQLStore) createSubscription(db sq.BaseRunner, c store.Container, sub *model.Subscription) (*model.Subscription, error) {
+	sub.WorkspaceID = c.WorkspaceID
+
 	if err := sub.IsValid(); err != nil {
 		return nil, err
-	}
-
-	c := store.Container{
-		WorkspaceID: sub.WorkspaceID,
 	}
 
 	subscription, err := s.GetSubscription(c, sub.BlockID, sub.SubscriberID)
@@ -169,11 +167,12 @@ func (s *SQLStore) getSubscription(db sq.BaseRunner, c store.Container, blockID 
 }
 
 // getSubscriptions fetches all subscriptions for a specific subscriber.
-func (s *SQLStore) getSubscriptions(db sq.BaseRunner, subscriberID string) ([]*model.Subscription, error) {
+func (s *SQLStore) getSubscriptions(db sq.BaseRunner, c store.Container, subscriberID string) ([]*model.Subscription, error) {
 	query := s.getQueryBuilder(db).
 		Select(subscriptionFields()...).
 		From(s.tablePrefix + "subscriptions").
 		Where(sq.Eq{"subscriber_id": subscriberID}).
+		Where(sq.Eq{"workspace_id": c.WorkspaceID}).
 		Where(sq.Eq{"delete_at": 0})
 
 	rows, err := query.Query()

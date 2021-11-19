@@ -189,7 +189,7 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID}).
-		OrderBy("insert_at")
+		OrderBy("l1.insert_at")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})

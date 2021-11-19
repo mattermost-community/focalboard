@@ -32,8 +32,8 @@ func (s *SQLStore) CreateSession(session *model.Session) error {
 
 }
 
-func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscription, error) {
-	return s.createSubscription(s.db, sub)
+func (s *SQLStore) CreateSubscription(c store.Container, sub *model.Subscription) (*model.Subscription, error) {
+	return s.createSubscription(s.db, c, sub)
 
 }
 
@@ -193,8 +193,8 @@ func (s *SQLStore) GetSubscription(c store.Container, blockID string, subscriber
 
 }
 
-func (s *SQLStore) GetSubscriptions(subscriberID string) ([]*model.Subscription, error) {
-	return s.getSubscriptions(s.db, subscriberID)
+func (s *SQLStore) GetSubscriptions(c store.Container, subscriberID string) ([]*model.Subscription, error) {
+	return s.getSubscriptions(s.db, c, subscriberID)
 
 }
 
