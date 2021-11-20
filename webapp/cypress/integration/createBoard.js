@@ -73,6 +73,15 @@ describe('Create and delete board / card', () => {
         cy.get('.Dialog.dialog-back .wrapper').click({force: true});
     });
 
+    it('Can create a card by clicking on the + button', () => {
+        // Create a card by clicking on the + button
+        cy.get('.KanbanColumnHeader :nth-child(5) > .CompassIcon ').click();
+        cy.get('.CardDetail').should('exist');
+
+        // Close card
+        cy.get('.Dialog.dialog-back .wrapper').click({force: true});
+    });
+
     it('Can create a table view', () => {
         // Create table view
         // cy.intercept('POST', '/api/v1/blocks').as('insertBlocks');
