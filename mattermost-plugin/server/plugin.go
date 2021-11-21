@@ -126,9 +126,9 @@ func (p *Plugin) OnActivate() error {
 	notifyBackends = append(notifyBackends, mentionsBackend)
 
 	if cfg.IsSubscriptionsEnabled() {
-		subscriptionsBackend, err := createSubscriptionsNotifyBackend(backendParams, db)
-		if err != nil {
-			return fmt.Errorf("error creating subscription notifications backend: %w", err)
+		subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams, db)
+		if err2 != nil {
+			return fmt.Errorf("error creating subscription notifications backend: %w", err2)
 		}
 		notifyBackends = append(notifyBackends, subscriptionsBackend)
 		mentionsBackend.AddListener(subscriptionsBackend)

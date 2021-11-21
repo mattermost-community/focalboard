@@ -3,10 +3,15 @@
 
 package notifysubscriptions
 
-import "github.com/mattermost/focalboard/server/model"
+import (
+	"github.com/mattermost/focalboard/server/model"
+
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
+)
 
 // SubscriptionDelivery provides an interface for delivering subscription notifications to other systems, such as
 // channels server via plugin API.
 type SubscriptionDelivery interface {
-	SubscriptionDeliver(subscriberID string, subscriberType model.SubscriberType, markdown []string) error
+	SubscriptionDeliverMarkdown(subscriberID string, subscriberType model.SubscriberType, markdown []string) error
+	SubscriptionDeliverSlackAttachments(subscriberID string, subscriberType model.SubscriberType, attachments []*mm_model.SlackAttachment) error
 }

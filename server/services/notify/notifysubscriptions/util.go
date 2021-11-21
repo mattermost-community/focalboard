@@ -3,7 +3,11 @@
 
 package notifysubscriptions
 
-import "github.com/mattermost/focalboard/server/model"
+import (
+	"strings"
+
+	"github.com/mattermost/focalboard/server/model"
+)
 
 func getBoardDescription(board *model.Block) string {
 	if board == nil {
@@ -21,4 +25,8 @@ func getBoardDescription(board *model.Block) string {
 	}
 
 	return description
+}
+
+func stripNewlines(s string) string {
+	return strings.TrimSpace(strings.ReplaceAll(s, "\n", "¶ "))
 }

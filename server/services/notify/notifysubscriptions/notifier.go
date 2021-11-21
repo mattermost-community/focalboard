@@ -210,7 +210,14 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		},
 	}
 
-	markdown, err := Diffs2Markdown(diffs, opts)
+	/*
+		markdown, err := Diffs2Markdown(diffs, opts)
+		if err != nil {
+			return err
+		}
+	*/
+
+	attachments, err := Diffs2SlackAttachments(diffs, opts)
 	if err != nil {
 		return err
 	}
@@ -227,7 +234,14 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 			continue
 		}
 
-		if err = n.delivery.SubscriptionDeliver(sub.SubscriberID, sub.SubscriberType, markdown); err != nil {
+		/*
+			if err = n.delivery.SubscriptionDeliverMarkdown(sub.SubscriberID, sub.SubscriberType, markdown); err != nil {
+				merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
+					sub.SubscriberID, sub.SubscriberType, err))
+			}
+		*/
+
+		if err = n.delivery.SubscriptionDeliverSlackAttachments(sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
 			merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
 				sub.SubscriberID, sub.SubscriberType, err))
 		}
