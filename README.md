@@ -21,7 +21,7 @@ Focalboard can also be installed as a standalone [personal server](https://www.f
 
 ## Try out Focalboard
 
-**Focalboard Personal Desktop (Windows, Mac or Linux Desktop)**
+### Focalboard Personal Desktop (Windows, Mac or Linux Desktop)
 
 Try out **Focalboard Personal Desktop** by going to the Windows Store or the Apple AppStore, searching for `Focalboard` and installing to run the compiled version locally.
 
@@ -29,13 +29,13 @@ If you're running a Linux Desktop, [download the latest `focalboard-linux.tar.gz
 
 Note: For Windows and Mac users, while we don't yet offer **Focalboard Personal Desktop** outside of Store-based installs, it is in [consideration for the future](https://github.com/mattermost/focalboard/issues/99) (please upvote the ticket if you're interested in this addition).
 
-**Mattermost Boards**
+### Mattermost Boards
 
 Mattermost Boards combines project management tools with messaging and collaboration for teams of all sizes. To access and use Boards, [install or upgrade to Mattermost v6.0 or later](https://mattermost.com/get-started/?utm_source=focalboard&utm_campaign=focalboard). Then, select the menu in the top left corner of Mattermost and choose **Boards**.
 
 See the [setup guide](https://www.focalboard.com/download/mattermost/) for more details.
 
-**Focalboard Personal Server (Ubuntu)**
+### Focalboard Personal Server (Ubuntu)
 
 You can download and run the compiled **Focalboard Personal Server** by following [our latest install guide](https://www.focalboard.com/download/personal-edition/ubuntu/).
 
