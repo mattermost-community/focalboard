@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
@@ -22,6 +22,8 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import Tooltip from '../../widgets/tooltip'
 import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
+
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import './kanbanCard.scss'
 
 type Props = {
@@ -49,15 +51,44 @@ const KanbanCard = React.memo((props: Props) => {
     const contents = useAppSelector(getCardContents(card.id))
     const comments = useAppSelector(getCardComments(card.id))
 
+    const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
+    const handleDeleteCard = async () => {
+        if (!card) {
+            Utils.assertFailure()
+            return
+        }
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: board.id, card: card.id})
+        await mutator.deleteBlock(card, 'delete card')
+    }
+    const confirmDialogProps: ConfirmationDialogBoxProps = {
+        heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+        confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+        onConfirm: handleDeleteCard,
+        onClose: () => {
+            setShowConfirmationDialogBox(false)
+        },
+    }
+    const handleDeleteButtonOnClick = () => {
+        // user trying to delete a card with blank name
+        // but content present cannot be deleted without
+        // confirmation dialog
+        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
+            handleDeleteCard()
+            return
+        }
+        setShowConfirmationDialogBox(true)
+    }
+
     return (
-        <div
-            ref={props.readonly ? () => null : cardRef}
-            className={className}
-            draggable={!props.readonly}
-            style={{opacity: isDragging ? 0.5 : 1}}
-            onClick={props.onClick}
-        >
-            {!props.readonly &&
+        <>
+            <div
+                ref={props.readonly ? () => null : cardRef}
+                className={className}
+                draggable={!props.readonly}
+                style={{opacity: isDragging ? 0.5 : 1}}
+                onClick={props.onClick}
+            >
+                {!props.readonly &&
                 <MenuWrapper
                     className='optionsMenu'
                     stopPropagationOnToggle={true}
@@ -68,7 +99,7 @@ const KanbanCard = React.memo((props: Props) => {
                             icon={<DeleteIcon/>}
                             id='delete'
                             name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deleteBlock(card, 'delete card')}
+                            onClick={handleDeleteButtonOnClick}
                         />
                         <Menu.Text
                             icon={<DuplicateIcon/>}
@@ -107,29 +138,33 @@ const KanbanCard = React.memo((props: Props) => {
                         />
                     </Menu>
                 </MenuWrapper>
-            }
+                }
 
-            <div className='octo-icontitle'>
-                { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
-                <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+                <div className='octo-icontitle'>
+                    { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
+                    <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+                </div>
+                {visiblePropertyTemplates.map((template) => (
+                    <Tooltip
+                        key={template.id}
+                        title={template.name}
+                    >
+                        <PropertyValueElement
+                            board={board}
+                            readOnly={true}
+                            card={card}
+                            contents={contents}
+                            comments={comments}
+                            propertyTemplate={template}
+                            showEmptyPlaceholder={false}
+                        />
+                    </Tooltip>
+                ))}
             </div>
-            {visiblePropertyTemplates.map((template) => (
-                <Tooltip
-                    key={template.id}
-                    title={template.name}
-                >
-                    <PropertyValueElement
-                        board={board}
-                        readOnly={true}
-                        card={card}
-                        contents={contents}
-                        comments={comments}
-                        propertyTemplate={template}
-                        showEmptyPlaceholder={false}
-                    />
-                </Tooltip>
-            ))}
-        </div>
+
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
+
+        </>
     )
 })
 

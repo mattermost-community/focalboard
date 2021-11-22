@@ -57,6 +57,7 @@ function countEmpty(cards: readonly Card[], property: IPropertyTemplate): string
     return String(cards.length - cardsWithValue(cards, property).length)
 }
 
+// return count of card which have this property value as not null \\ undefined \\ ''
 function countNotEmpty(cards: readonly Card[], property: IPropertyTemplate): string {
     return String(cardsWithValue(cards, property).length)
 }
