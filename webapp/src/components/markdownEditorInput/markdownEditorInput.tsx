@@ -4,6 +4,7 @@ import React, {
     ReactElement,
     useEffect,
     useMemo,
+    useCallback,
     useRef,
     useState,
 } from 'react'
@@ -68,7 +69,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         }
     })
 
-    const customKeyBindingFn = (e: React.KeyboardEvent) => {
+    const customKeyBindingFn = useCallback((e: React.KeyboardEvent) => {
         if (isMentionPopoverOpen || isEmojiPopoverOpen) {
             return undefined
         }
@@ -78,7 +79,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         }
 
         return getDefaultKeyBinding(e as any)
-    }
+    }, [isEmojiPopoverOpen, isMentionPopoverOpen])
 
     const handleKeyCommand = (command: string): DraftHandleValue => {
         if (command === 'editor-blur') {
