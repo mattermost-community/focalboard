@@ -5,6 +5,23 @@
     margin-bottom: 10px;
     overflow: auto;
 
+    .octo-tooltip {
+        display: flex;
+        max-width: 100%;
+    }
+
+    .octo-propertyvalue {
+        input[value=''] {
+            display: none;
+        }
+
+        .Label.empty {
+            display: block;
+            padding: 0;
+            margin: 0;
+        }
+    }
+
     .octo-icontitle {
         flex: 1 1 auto;
         font-weight: 600;

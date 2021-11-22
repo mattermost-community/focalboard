@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useCallback, useMemo} from 'react'
 import {useIntl} from 'react-intl'
 
 import FullCalendar, {EventClickArg, EventChangeArg, EventInput, EventContentArg} from '@fullcalendar/react'
@@ -52,52 +52,58 @@ const timeZoneOffset = (date: number): number => {
 }
 
 const CalendarFullView = (props: Props): JSX.Element|null => {
+    console.log('CalendarFullView')
     const intl = useIntl()
     const {board, cards, activeView, dateDisplayProperty, readonly} = props
-    const visiblePropertyTemplates = board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
     const isSelectable = !readonly
+
+    const visiblePropertyTemplates = useMemo(() => (
+        board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+    ), [board.fields.cardProperties, activeView.fields.visiblePropertyIds])
 
     let {initialDate} = props
     if (!initialDate) {
         initialDate = new Date()
     }
 
-    const isEditable = () : boolean => {
+    const isEditable = useCallback(() : boolean => {
         if (readonly || !dateDisplayProperty || (dateDisplayProperty.type === 'createdTime' || dateDisplayProperty.type === 'updatedTime')) {
             return false
         }
         return true
-    }
+    }, [readonly, dateDisplayProperty])
 
-    const myEventsList = cards.flatMap((card): EventInput[] => {
-        let dateFrom = new Date(card.createAt || 0)
-        let dateTo = new Date(card.createAt || 0)
-        if (dateDisplayProperty && dateDisplayProperty?.type === 'updatedTime') {
-            dateFrom = new Date(card.updateAt || 0)
-            dateTo = new Date(card.updateAt || 0)
-        } else if (dateDisplayProperty && dateDisplayProperty?.type !== 'createdTime') {
-            const dateProperty = createDatePropertyFromString(card.fields.properties[dateDisplayProperty.id || ''] as string)
-            if (!dateProperty.from) {
-                return []
+    const myEventsList = useMemo(() => (
+        cards.flatMap((card): EventInput[] => {
+            let dateFrom = new Date(card.createAt || 0)
+            let dateTo = new Date(card.createAt || 0)
+            if (dateDisplayProperty && dateDisplayProperty?.type === 'updatedTime') {
+                dateFrom = new Date(card.updateAt || 0)
+                dateTo = new Date(card.updateAt || 0)
+            } else if (dateDisplayProperty && dateDisplayProperty?.type !== 'createdTime') {
+                const dateProperty = createDatePropertyFromString(card.fields.properties[dateDisplayProperty.id || ''] as string)
+                if (!dateProperty.from) {
+                    return []
+                }
+
+                // date properties are stored as 12 pm UTC, convert to 12 am (00) UTC for calendar
+                dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : new Date()
+                dateFrom.setHours(0, 0, 0, 0)
+                const dateToNumber = dateProperty.to ? dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to)) : dateFrom.getTime()
+                dateTo = new Date(dateToNumber + oneDay) // Add one day.
+                dateTo.setHours(0, 0, 0, 0)
             }
-
-            // date properties are stored as 12 pm UTC, convert to 12 am (00) UTC for calendar
-            dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : new Date()
-            dateFrom.setHours(0, 0, 0, 0)
-            const dateToNumber = dateProperty.to ? dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to)) : dateFrom.getTime()
-            dateTo = new Date(dateToNumber + oneDay) // Add one day.
-            dateTo.setHours(0, 0, 0, 0)
-        }
-        return [{
-            id: card.id,
-            title: card.title,
-            extendedProps: {icon: card.fields.icon},
-            properties: card.fields.properties,
-            allDay: true,
-            start: dateFrom,
-            end: dateTo,
-        }]
-    })
+            return [{
+                id: card.id,
+                title: card.title,
+                extendedProps: {icon: card.fields.icon},
+                properties: card.fields.properties,
+                allDay: true,
+                start: dateFrom,
+                end: dateTo,
+            }]
+        })
+    ), [cards])
 
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
@@ -130,14 +136,12 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         )
     }
 
-    const eventClick = (eventProps: EventClickArg) => {
-        if (!readonly) {
-            const {event} = eventProps
-            props.showCard(event.id)
-        }
-    }
+    const eventClick = useCallback((eventProps: EventClickArg) => {
+        const {event} = eventProps
+        props.showCard(event.id)
+    }, [])
 
-    const eventChange = (eventProps: EventChangeArg) => {
+    const eventChange = useCallback((eventProps: EventChangeArg) => {
         const {event} = eventProps
         if (!event.start) {
             return
@@ -153,9 +157,9 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         if (card && dateDisplayProperty) {
             mutator.changePropertyValue(card, dateDisplayProperty.id, JSON.stringify(dateProperty))
         }
-    }
+    }, [])
 
-    const onNewEvent = (args: {start: Date, end: Date}) => {
+    const onNewEvent = useCallback((args: {start: Date, end: Date}) => {
         const dateProperty = createDatePropertyFromCalendarDates(args.start, args.end)
 
         const properties: Record<string, string> = {}
@@ -164,25 +168,27 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         }
 
         props.addCard(properties)
-    }
+    }, [])
 
-    const toolbar = {
+    const toolbar = useMemo(() => ({
         left: 'title',
         center: '',
         right: 'dayGridWeek dayGridMonth prev,today,next',
-    }
+    }), [])
 
-    const buttonText = {
+    const buttonText = useMemo(() => ({
         today: intl.formatMessage({id: 'calendar.today', defaultMessage: 'TODAY'}),
         month: intl.formatMessage({id: 'calendar.month', defaultMessage: 'Month'}),
         week: intl.formatMessage({id: 'calendar.week', defaultMessage: 'Week'}),
-    }
+    }), [])
 
     return (
         <div
             className='CalendarContainer'
         >
             <FullCalendar
+
+                // dayMaxEventRows={true}
                 initialDate={initialDate}
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView='dayGridMonth'
@@ -194,7 +200,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 eventClick={eventClick}
                 eventContent={renderEventContent}
                 eventChange={eventChange}
-
                 selectable={isSelectable}
                 selectMirror={true}
                 select={onNewEvent}
