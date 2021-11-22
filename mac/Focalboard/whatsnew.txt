@@ -1,0 +1,14 @@
+Welcome to Focalboard v0.10.0!
+
+Thank you contributors! There are a number of new features and improvements in this release:
+
+* Board calculations. Thanks @harshilsharma63!
+* Mattermost: @mention notifications. Thanks @wiggin77!
+* Mattermost: Unfurl card previews in posts. Thanks @hahmadia!
+* Plus many, many contributions from Hacktoberfest and beyond, including from: @jufab, @kamre, @Johennes, @nishantwrp, @tiago154, @DeeJayBro, @CuriousCorrelation, @prakharporwal, @donno2048, @anchepiece, @puerco, @adithyaakrishna, @JenyaFTW, @ivernus, @grsky360, @b4sen, @naresh1205, @JtheBAB, @ssensalo, @berkeka, @yedamao, @Prassud, @NakulChauhan2001, @achie27, @crspeller, @sahil9001, @alauregaillard, @igordsm, @rafaeelaudibert, @kaakaa, @Sayanta66, @Bhavin789, @Shahzayb, @kayazeren, @fcoiuri, @tsabi, @DeviousLab, @leosunmo, @xMicky24GIT, @majidsajadi, @marcvelasco, and @aloks98. Sorry if we missed anyone in this list!
+
+If you like what you see, please consider taking a moment to rate this version in the App Store. Your positive ratings make a real difference for us.
+
+Thanks so much,
+
+-- The Focalboard developers and community

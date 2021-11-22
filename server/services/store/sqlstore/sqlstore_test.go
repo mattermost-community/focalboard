@@ -1,45 +1,10 @@
 package sqlstore
 
 import (
-	"database/sql"
-	"os"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/storetests"
-	"github.com/stretchr/testify/require"
-
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
-
-func SetupTests(t *testing.T) (store.Store, func()) {
-	dbType := os.Getenv("FB_STORE_TEST_DB_TYPE")
-	if dbType == "" {
-		dbType = sqliteDBType
-	}
-
-	connectionString := os.Getenv("FB_STORE_TEST_CONN_STRING")
-	if connectionString == "" {
-		connectionString = ":memory:"
-	}
-
-	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
-
-	sqlDB, err := sql.Open(dbType, connectionString)
-	require.NoError(t, err)
-	err = sqlDB.Ping()
-	require.NoError(t, err)
-	store, err := New(dbType, connectionString, "test_", logger, sqlDB, false)
-	require.Nil(t, err)
-
-	tearDown := func() {
-		defer func() { _ = logger.Shutdown() }()
-		err = store.Shutdown()
-		require.Nil(t, err)
-	}
-
-	return store, tearDown
-}
 
 func TestBlocksStore(t *testing.T) {
 	t.Run("BlocksStore", func(t *testing.T) { storetests.StoreTestBlocksStore(t, SetupTests) })
