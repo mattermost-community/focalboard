@@ -5,7 +5,7 @@ import React, {useState} from 'react'
 import {Utils} from '../utils'
 import './markdownEditor.scss'
 
-import SimpleMentionEditor from './simpleMentionEditor/simpleMentionEditor'
+import MarkdownEditorInput from './markdownEditorInput/markdownEditorInput'
 
 type Props = {
     id?: string
@@ -52,7 +52,7 @@ const MarkdownEditor = (props: Props): JSX.Element => {
     }
 
     const editorElement = (
-        <SimpleMentionEditor
+        <MarkdownEditorInput
             id={id}
             onChange={onChange}
             onFocus={onFocus}

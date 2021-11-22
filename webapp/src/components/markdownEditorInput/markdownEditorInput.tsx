@@ -14,7 +14,7 @@ import createMentionPlugin, {
     MentionData,
 } from '@draft-js-plugins/mention'
 import '@draft-js-plugins/mention/lib/plugin.css'
-import './simpleMentionEditor.scss'
+import './markdownEditorInput.scss'
 
 import createEmojiPlugin from '@draft-js-plugins/emoji'
 import '@draft-js-plugins/emoji/lib/plugin.css'
@@ -33,7 +33,7 @@ type Props = {
     id?: string
 }
 
-const SimpleMentionEditor = (props: Props): ReactElement => {
+const MarkdownEditorInput = (props: Props): ReactElement => {
     const {onChange, onFocus, onBlur, initialText, id} = props
     const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
     const mentions: MentionData[] = useMemo(() => workspaceUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`})), [workspaceUsers])
@@ -118,7 +118,7 @@ const SimpleMentionEditor = (props: Props): ReactElement => {
 
     return (
         <div
-            className='SimpleMentionEditor'
+            className='MarkdownEditorInput'
         >
             <Editor
                 editorKey={id}
@@ -145,4 +145,4 @@ const SimpleMentionEditor = (props: Props): ReactElement => {
     )
 }
 
-export default SimpleMentionEditor
+export default MarkdownEditorInput
