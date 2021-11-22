@@ -88,7 +88,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         }
 
         return 'not-handled'
-    }, [ref])
+    }, [])
 
     const onEditorStateBlur = useCallback(() => {
         const text = editorState.getCurrentContent().getPlainText()
