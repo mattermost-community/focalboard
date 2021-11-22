@@ -23,10 +23,6 @@
             position: relative;
             color: rgb(var(--sidebar-text-rgb));
 
-            .Icon {
-                stroke: rgba(var(--sidebar-text-rgb), 1);
-            }
-
             &:not(.subitem) {
                 &::before {
                     content: '';
@@ -53,9 +49,8 @@
         }
 
         > .Icon {
-            stroke: rgba(var(--sidebar-text-rgb), 0.3);
-            height: 14px;
-            width: 14px;
+            height: 18px;
+            width: 18px;
             margin-right: 8px;
             flex-shrink: 0;
 

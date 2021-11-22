@@ -162,7 +162,7 @@ describe('src/components/gallery/GalleryCard', () => {
             userEvent.click(buttonDuplicate)
             expect(container).toMatchSnapshot()
             expect(mockedMutator.duplicateCard).toBeCalledTimes(1)
-            expect(mockedMutator.duplicateCard).toBeCalledWith(card.id)
+            expect(mockedMutator.duplicateCard).toBeCalledWith(card.id, board)
         })
         test('return GalleryCard and copy link', () => {
             const {container} = render(wrapDNDIntl(

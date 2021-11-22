@@ -73,12 +73,12 @@ func (a *App) InsertBlock(c store.Container, block model.Block, userID string) e
 	return err
 }
 
-func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID string, allowNotifications bool) error {
+func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID string, allowNotifications bool) ([]model.Block, error) {
 	needsNotify := make([]model.Block, 0, len(blocks))
 	for i := range blocks {
 		err := a.store.InsertBlock(c, &blocks[i], userID)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		blocks[i].WorkspaceID = c.WorkspaceID
 		needsNotify = append(needsNotify, blocks[i])
@@ -97,7 +97,7 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, userID strin
 		}
 	}()
 
-	return nil
+	return blocks, nil
 }
 
 func (a *App) GetSubTree(c store.Container, blockID string, levels int) ([]model.Block, error) {
@@ -171,11 +171,11 @@ func (a *App) getBoardAndCard(c store.Container, block *model.Block) (board *mod
 	iter := block
 	for {
 		count++
-		if board == nil && iter.Type == "board" {
+		if board == nil && iter.Type == model.TypeBoard {
 			board = iter
 		}
 
-		if card == nil && iter.Type == "card" {
+		if card == nil && iter.Type == model.TypeCard {
 			card = iter
 		}
 

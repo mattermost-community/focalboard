@@ -6,6 +6,7 @@ import {injectIntl, IntlShape} from 'react-intl'
 import {connect} from 'react-redux'
 import Hotkeys from 'react-hot-keys'
 
+import {Block} from '../blocks/block'
 import {BlockIcons} from '../blockIcons'
 import {Card, createCard} from '../blocks/card'
 import {Board, IPropertyTemplate, IPropertyOption, BoardGroup} from '../blocks/board'
@@ -84,7 +85,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {viewType: this.props.activeView.fields.viewType})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: this.props.board.id, view: this.props.activeView.id, viewType: this.props.activeView.fields.viewType})
     }
 
     constructor(props: Props) {
@@ -100,7 +101,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     componentDidUpdate(): void {
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {viewType: this.props.activeView.fields.viewType})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: this.props.board.id, view: this.props.activeView.id, viewType: this.props.activeView.fields.viewType})
     }
 
     render(): JSX.Element {
@@ -210,14 +211,17 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private addCardFromTemplate = async (cardTemplateId: string) => {
-        const {activeView} = this.props
+        const {activeView, board} = this.props
+
         mutator.performAsUndoGroup(async () => {
             const [, newCardId] = await mutator.duplicateCard(
                 cardTemplateId,
+                board,
                 this.props.intl.formatMessage({id: 'Mutator.new-card-from-template', defaultMessage: 'new card from template'}),
                 false,
                 async (cardId) => {
                     this.props.updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, cardId]}})
+                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardViaTemplate, {board: this.props.board.id, view: this.props.activeView.id, card: cardId, cardTemplateId})
                     this.showCard(cardId)
                 },
                 async () => {
@@ -232,6 +236,8 @@ class CenterPanel extends React.Component<Props, State> {
         const {activeView, board, groupByProperty} = this.props
 
         const card = createCard()
+
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCard, {board: board.id, view: activeView.id, card: card.id})
 
         card.parentId = board.id
         card.rootId = board.rootId
@@ -248,14 +254,14 @@ class CenterPanel extends React.Component<Props, State> {
             card.fields.icon = BlockIcons.shared.randomIcon()
         }
         mutator.performAsUndoGroup(async () => {
-            await mutator.insertBlock(
+            const newCard = await mutator.insertBlock(
                 card,
                 'add card',
-                async () => {
+                async (block: Block) => {
                     if (show) {
-                        this.props.addCard(card)
-                        this.props.updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, card.id]}})
-                        this.showCard(card.id)
+                        this.props.addCard(createCard(block))
+                        this.props.updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, block.id]}})
+                        this.showCard(block.id)
                     } else {
                         // Focus on this card's title inline on next render
                         this.setState({cardIdToFocusOnRender: card.id})
@@ -266,23 +272,26 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
-            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, card.id], 'add-card')
+            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }
 
     private addCardTemplate = async () => {
-        const {board} = this.props
+        const {board, activeView} = this.props
 
         const cardTemplate = createCard()
         cardTemplate.fields.isTemplate = true
         cardTemplate.parentId = board.id
         cardTemplate.rootId = board.rootId
+
         await mutator.insertBlock(
             cardTemplate,
             'add card template',
-            async () => {
-                this.props.addTemplate(cardTemplate)
-                this.showCard(cardTemplate.id)
+            async (newBlock: Block) => {
+                const newTemplate = createCard(newBlock)
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: activeView.id, card: newTemplate.id})
+                this.props.addTemplate(newTemplate)
+                this.showCard(newTemplate.id)
             }, async () => {
                 this.showCard(undefined)
             },
@@ -353,6 +362,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private async duplicateSelectedCards() {
+        const {board} = this.props
         const {selectedCardIds} = this.state
         if (selectedCardIds.length < 1) {
             return
@@ -362,7 +372,7 @@ class CenterPanel extends React.Component<Props, State> {
             for (const cardId of selectedCardIds) {
                 const card = this.props.cards.find((o) => o.id === cardId)
                 if (card) {
-                    mutator.duplicateCard(cardId)
+                    mutator.duplicateCard(cardId, board)
                 } else {
                     Utils.assertFailure(`Selected card not found: ${cardId}`)
                 }

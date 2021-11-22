@@ -1,6 +1,3 @@
-@use './standardIcon.scss';
-
 .CardIcon {
-    @extend %standard-icon;
     stroke-width: 6px;
 }

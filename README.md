@@ -1,12 +1,8 @@
 # Focalboard
 
 ![CI Status](https://github.com/mattermost/focalboard/actions/workflows/ci.yml/badge.svg)
-![Mac Build](https://github.com/mattermost/focalboard/actions/workflows/build-mac.yml/badge.svg)
-![Ubuntu Build](https://github.com/mattermost/focalboard/actions/workflows/build-ubuntu.yml/badge.svg)
-![Windows Build](https://github.com/mattermost/focalboard/actions/workflows/build-win-wpf.yml/badge.svg)
 ![CodeQL](https://github.com/mattermost/focalboard/actions/workflows/codeql-analysis.yml/badge.svg)
 ![Dev Release](https://github.com/mattermost/focalboard/actions/workflows/dev-release.yml/badge.svg)
-![Plugin Release](https://github.com/mattermost/focalboard/actions/workflows/plugin-release.yml/badge.svg)
 ![Prod Release](https://github.com/mattermost/focalboard/actions/workflows/prod-release.yml/badge.svg)
 
 Like what you see? :eyes: Give us a GitHub Star! :star:
@@ -57,7 +53,7 @@ make
 
 To start the server, run `./bin/focalboard-server`
 
-Server settings are in config.json.
+Server settings are in config.json (or the path specified with --config).
 
 Open a browser to [http://localhost:8000](http://localhost:8000) to start.
 
@@ -81,6 +77,13 @@ You can build standalone apps that package the server to run locally against SQL
     * `make win-wpf-app`
     * run `cd win-wpf/msix && focalboard.exe`
     * *Requires: Windows 10*
+* Docker:
+    * To run it localy from Offical Image
+    * `docker run -it -p 80:8000 mattermost/focalboard`
+    * To Build it for your Current Architekture
+    * `docker build -f docker/Dockerfile .`
+    * To Build it for a custom Architekture (Expiremental)
+    * `docker build -f docker/Dockerfile --platform linux/arm64 .`
 
 Cross-compilation currently isn't fully supported, so please build on the appropriate platform. Refer to the GitHub Actions workflows (build-mac.yml, build-win.yml, build-ubuntu.yml) for the detailed list of steps on each platform.
 
