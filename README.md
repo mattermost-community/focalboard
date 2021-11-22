@@ -9,15 +9,15 @@ Like what you see? :eyes: Give us a GitHub Star! :star:
 
 [![Focalboard](website/site/static/img/hero.jpg)](https://www.focalboard.com)
 
-[Focalboard](https://www.focalboard.com) is an open source, self-hosted alternative to Trello, Notion, and Asana.
+[Focalboard](https://www.focalboard.com) is an open source, self-hosted project management tool that's an alternative to Trello, Notion, and Asana.
 
-It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two editions:
+It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two main editions:
 
-* **Focalboard Personal Desktop**: A stand-alone desktop app for your todos and personal projects. This is a single-tenant locally run server running Focalboard for optimal speed and performance.
+* **[Personal Desktop](https://www.focalboard.com/download/personal-edition/desktop/)**: A stand-alone single-user Mac, Windows, or Linux desktop app for your todos and personal projects.
 
-* **Focalboard Personal Server**: A self-hosted server for your team to collaborate.
+* **[Mattermost Boards](https://www.focalboard.com/download/mattermost/)**: A self-hosted or cloud server for your team to plan and collaborate.
 
-The same MIT-licensed binary powers both desktop and server editions.
+Focalboard can also be installed as a standalone [personal server](https://www.focalboard.com/download/personal-edition/ubuntu/) for development and personal use.
 
 ## Try out Focalboard
 
@@ -29,6 +29,12 @@ If you're running a Linux Desktop, [download the latest `focalboard-linux.tar.gz
 
 Note: For Windows and Mac users, while we don't yet offer **Focalboard Personal Desktop** outside of Store-based installs, it is in [consideration for the future](https://github.com/mattermost/focalboard/issues/99) (please upvote the ticket if you're interested in this addition).
 
+**Mattermost Boards**
+
+Mattermost Boards combines project management tools with messaging and collaboration for teams of all sizes. To access and use Boards, [install or upgrade to Mattermost v6.0 or later](https://mattermost.com/get-started/?utm_source=focalboard&utm_campaign=focalboard). Then, select the menu in the top left corner of Mattermost and choose **Boards**.
+
+See the [setup guide](https://www.focalboard.com/download/mattermost/) for more details.
+
 **Focalboard Personal Server (Ubuntu)**
 
 You can download and run the compiled **Focalboard Personal Server** by following [our latest install guide](https://www.focalboard.com/download/personal-edition/ubuntu/).
@@ -37,7 +43,7 @@ Download the latest server release from [GitHub releases](https://github.com/mat
 
 ## Building the server
 
-Please refer to the [Developer's Tips & Tricks](https://www.focalboard.com/contribute/getting-started/dev-tips/) for more detailed steps. Here's a summary:
+Most development can be done on the Personal Server edition. Please refer to the [Developer's Tips & Tricks](https://www.focalboard.com/contribute/getting-started/dev-tips/) for more detailed steps. Here's a summary:
 
 First, install basic dependencies:
 * Go 1.15+
