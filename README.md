@@ -31,7 +31,7 @@ Note: For Windows and Mac users, while we don't yet offer **Focalboard Personal 
 
 ### Mattermost Boards
 
-Mattermost Boards combines project management tools with messaging and collaboration for teams of all sizes. To access and use Boards, [install or upgrade to Mattermost v6.0 or later](https://mattermost.com/get-started/?utm_source=focalboard&utm_campaign=focalboard). Then, select the menu in the top left corner of Mattermost and choose **Boards**.
+Mattermost Boards combines project management tools with messaging and collaboration for teams of all sizes. To access and use Boards, install or upgrade to Mattermost v6.0 or later as a [self-hosted server](https://docs.mattermost.com/guides/deployment.html?utm_source=focalboard&utm_campaign=focalboard) or [Cloud server](https://mattermost.com/get-started/?utm_source=focalboard&utm_campaign=focalboard). After logging into Mattermost, select the menu in the top left corner of Mattermost and choose **Boards**.
 
 See the [setup guide](https://www.focalboard.com/download/mattermost/) for more details.
 
