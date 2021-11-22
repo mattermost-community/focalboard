@@ -17,6 +17,17 @@ const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
 const card = TestBlockFactory.createCard(board)
 
+jest.mock('react-router-dom', () => {
+    const originalModule = jest.requireActual('react-router-dom')
+
+    return {
+        ...originalModule,
+        useRouteMatch: jest.fn(() => {
+            return {url: '/board/view'}
+        }),
+    }
+})
+
 describe('components/viewHeader/viewHeader', () => {
     const state = {
         users: {
