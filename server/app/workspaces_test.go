@@ -136,7 +136,6 @@ func TestGetWorkspace(t *testing.T) {
 				require.NoError(t, err)
 				require.NotNil(t, workSpace)
 			}
-
 		})
 	}
 }
