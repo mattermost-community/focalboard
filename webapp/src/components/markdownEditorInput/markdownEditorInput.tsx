@@ -93,13 +93,13 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const onEditorStateBlur = useCallback(() => {
         const text = editorState.getCurrentContent().getPlainText()
         onBlur && onBlur(text)
-    }, [editorState])
+    }, [editorState, onBlur])
 
     const onEditorStateChange = useCallback((newEditorState: EditorState) => {
         const newText = newEditorState.getCurrentContent().getPlainText()
         onChange && onChange(newText)
         setEditorState(newEditorState)
-    }, [])
+    }, [onChange])
 
     const onMentionPopoverOpenChange = useCallback((open: boolean) => {
         setIsMentionPopoverOpen(open)
@@ -115,7 +115,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
 
     const onSearchChange = useCallback(({value}: { value: string }) => {
         setSuggestions(defaultSuggestionsFilter(value, mentions))
-    }, [])
+    }, [mentions])
 
     return (
         <div
