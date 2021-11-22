@@ -81,41 +81,41 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         return getDefaultKeyBinding(e as any)
     }, [isEmojiPopoverOpen, isMentionPopoverOpen])
 
-    const handleKeyCommand = (command: string): DraftHandleValue => {
+    const handleKeyCommand = useCallback((command: string): DraftHandleValue => {
         if (command === 'editor-blur') {
             ref.current?.blur()
             return 'handled'
         }
 
         return 'not-handled'
-    }
+    }, [ref])
 
-    const onEditorStateBlur = () => {
+    const onEditorStateBlur = useCallback(() => {
         const text = editorState.getCurrentContent().getPlainText()
         onBlur && onBlur(text)
-    }
+    }, [editorState])
 
-    const onEditorStateChange = (newEditorState: EditorState) => {
+    const onEditorStateChange = useCallback((newEditorState: EditorState) => {
         const newText = newEditorState.getCurrentContent().getPlainText()
         onChange && onChange(newText)
         setEditorState(newEditorState)
-    }
+    }, [])
 
-    const onMentionPopoverOpenChange = (open: boolean) => {
+    const onMentionPopoverOpenChange = useCallback((open: boolean) => {
         setIsMentionPopoverOpen(open)
-    }
+    }, [])
 
-    const onEmojiPopoverOpen = () => {
+    const onEmojiPopoverOpen = useCallback(() => {
         setIsEmojiPopoverOpen(true)
-    }
+    }, [])
 
-    const onEmojiPopoverClose = () => {
+    const onEmojiPopoverClose = useCallback(() => {
         setIsEmojiPopoverOpen(false)
-    }
+    }, [])
 
-    const onSearchChange = ({value}: { value: string }) => {
+    const onSearchChange = useCallback(({value}: { value: string }) => {
         setSuggestions(defaultSuggestionsFilter(value, mentions))
-    }
+    }, [])
 
     return (
         <div
