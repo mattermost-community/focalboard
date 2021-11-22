@@ -187,9 +187,11 @@ const BoardPage = (props: Props): JSX.Element => {
 
         dispatch(loadAction(match.params.boardId))
 
+        let subscribedToWorkspace = false
         if (wsClient.state === 'open') {
             wsClient.authenticate(match.params.workspaceId || '0', token)
             wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+            subscribedToWorkspace = true
         }
 
         const incrementalUpdate = (_: WSClient, blocks: Block[]) => {
@@ -211,6 +213,7 @@ const BoardPage = (props: Props): JSX.Element => {
                 const newToken = localStorage.getItem('focalboardSessionId') || ''
                 wsClient.authenticate(match.params.workspaceId || '0', newToken)
                 wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+                subscribedToWorkspace = true
             }
 
             if (timeout) {
@@ -220,6 +223,7 @@ const BoardPage = (props: Props): JSX.Element => {
             if (newState === 'close') {
                 timeout = setTimeout(() => {
                     setWebsocketClosed(true)
+                    subscribedToWorkspace = false
                 }, websocketTimeoutForBanner)
             } else {
                 setWebsocketClosed(false)
@@ -233,12 +237,14 @@ const BoardPage = (props: Props): JSX.Element => {
             if (timeout) {
                 clearTimeout(timeout)
             }
-            wsClient.unsubscribeToWorkspace(match.params.workspaceId || '0')
+            if (subscribedToWorkspace) {
+                wsClient.unsubscribeToWorkspace(match.params.workspaceId || '0')
+            }
             wsClient.removeOnChange(incrementalUpdate)
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
             wsClient.removeOnStateChange(updateWebsocketState)
         }
-    }, [match.params.workspaceId, props.readonly])
+    }, [match.params.workspaceId, props.readonly, match.params.boardId])
 
     useHotkeys('ctrl+z,cmd+z', () => {
         Utils.log('Undo')

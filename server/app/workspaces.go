@@ -20,12 +20,12 @@ func (a *App) GetRootWorkspace() (*model.Workspace, error) {
 		}
 		err := a.store.UpsertWorkspaceSignupToken(*workspace)
 		if err != nil {
-			a.logger.Fatal("Unable to initialize workspace", mlog.Err(err))
+			a.logger.Error("Unable to initialize workspace", mlog.Err(err))
 			return nil, err
 		}
 		workspace, err = a.store.GetWorkspace(workspaceID)
 		if err != nil {
-			a.logger.Fatal("Unable to get initialized workspace", mlog.Err(err))
+			a.logger.Error("Unable to get initialized workspace", mlog.Err(err))
 			return nil, err
 		}
 
