@@ -145,25 +145,33 @@ const App = React.memo((): JSX.Element => {
                             <NewVersionBanner/>
                             <Switch>
                                 {globalErrorRedirect}
-                                <Route
-                                    path='/'
-                                    exact={true}
-                                    render={() => {
-                                        if (continueToWelcomeScreen()) {
-                                            return <Redirect to={'/welcome'}/>
-                                        }
+                                {
+                                    Utils.isFocalboardPlugin() &&
+                                    <Route
+                                        path='/'
+                                        exact={true}
+                                        render={() => {
+                                            if (loggedIn === false) {
+                                                return <Redirect to='/login'/>
+                                            }
 
-                                        if (UserSettings.lastWorkspaceId) {
-                                            return <Redirect to={`/workspace/${UserSettings.lastWorkspaceId}/${UserSettings.lastBoardId}/${UserSettings.lastViewId}`}/>
-                                        }
+                                            if (continueToWelcomeScreen()) {
+                                                return <Redirect to={'/welcome'}/>
+                                            }
 
-                                        if (loggedIn === true) {
-                                            return <BoardPage/>
-                                        }
+                                            if (Utils.isFocalboardPlugin() && UserSettings.lastWorkspaceId) {
+                                                return <Redirect to={`/workspace/${UserSettings.lastWorkspaceId}/${UserSettings.lastBoardId}/${UserSettings.lastViewId}`}/>
+                                            }
 
-                                        return null
-                                    }}
-                                />
+                                            if (loggedIn === true) {
+                                                return <BoardPage/>
+                                            }
+
+                                            return null
+                                        }}
+                                    />
+                                }
+
                                 <Route path='/error'>
                                     <ErrorPage/>
                                 </Route>
