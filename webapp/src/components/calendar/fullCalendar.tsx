@@ -52,7 +52,6 @@ const timeZoneOffset = (date: number): number => {
 }
 
 const CalendarFullView = (props: Props): JSX.Element|null => {
-    console.log('CalendarFullView')
     const intl = useIntl()
     const {board, cards, activeView, dateDisplayProperty, readonly} = props
     const isSelectable = !readonly
@@ -187,8 +186,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
             className='CalendarContainer'
         >
             <FullCalendar
-
-                // dayMaxEventRows={true}
+                dayMaxEventRows={5}
                 initialDate={initialDate}
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView='dayGridMonth'
