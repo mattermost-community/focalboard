@@ -47,14 +47,56 @@ describe('pages/dashboard/CenterContent', () => {
         boardCount: 0,
     }
 
-    test('base case', () => {
+    const workspace4: UserWorkspace = {
+        id: 'workspace_4',
+        title: 'WS 4',
+        boardCount: 3,
+    }
+
+    const workspace5: UserWorkspace = {
+        id: 'workspace_5',
+        title: 'Foo Bar Baz',
+        boardCount: 33,
+    }
+
+    const workspace6: UserWorkspace = {
+        id: 'workspace_6',
+        title: 'Workspace 11',
+        boardCount: 1,
+    }
+
+    const workspace7: UserWorkspace = {
+        id: 'workspace_7',
+        title: 'Workspace',
+        boardCount: 33,
+    }
+
+    const workspace8: UserWorkspace = {
+        id: 'workspace_8',
+        title: 'team 33',
+        boardCount: 14,
+    }
+
+    const workspace9: UserWorkspace = {
+        id: 'workspace_9',
+        title: 'Chat6',
+        boardCount: 17,
+    }
+
+    const workspace10: UserWorkspace = {
+        id: 'workspace_10',
+        title: 'Title',
+        boardCount: 6,
+    }
+
+    test('base case - find all workspaces', () => {
         const store = mockStore({
             workspace: {
-                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace4, workspace5, workspace6, workspace7, workspace8),
             },
         })
 
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace4, workspace5, workspace6, workspace7, workspace8))))
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
@@ -65,7 +107,7 @@ describe('pages/dashboard/CenterContent', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('search filter', () => {
+    test('search filter - search for all workspaces that contain the word workspace', () => {
         const store = mockStore({
             workspace: {
                 userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
@@ -93,7 +135,7 @@ describe('pages/dashboard/CenterContent', () => {
             },
         })
 
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3))))
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>())))
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
@@ -103,7 +145,162 @@ describe('pages/dashboard/CenterContent', () => {
         const {container} = render(component)
         const searchInput = container.querySelector('.DashboardPage__search > input')
         expect(searchInput).toBeDefined()
-        userEvent.type(searchInput!, 'Non-existing workspace')
+        userEvent.type(searchInput!, 'Non-existing one')
+        expect(container).toMatchSnapshot()
+    })
+
+    test('search filter - search for workspace with unique name', () => {
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace4, workspace5, workspace6, workspace7, workspace8),
+            },
+        })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace4))))
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <DashboardCenterContent/>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const searchInput = container.querySelector('.DashboardPage__search > input')
+        expect(searchInput).toBeDefined()
+        userEvent.type(searchInput!, 'WS 4')
+        expect(container).toMatchSnapshot()
+    })
+
+    test('search filter - search for workspace name and amount of boards', () => {
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace4, workspace5, workspace6, workspace7, workspace8),
+            },
+        })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace3, workspace4, workspace8))))
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <DashboardCenterContent/>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const searchInput = container.querySelector('.DashboardPage__search > input')
+        expect(searchInput).toBeDefined()
+        userEvent.type(searchInput!, 'SOMETHING 3')
+        expect(container).toMatchSnapshot()
+    })
+
+    test('search filter - search for workspace name and amount of boards 2', () => {
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace4, workspace5, workspace6, workspace7, workspace8),
+            },
+        })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace5, workspace7, workspace8))))
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <DashboardCenterContent/>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const searchInput = container.querySelector('.DashboardPage__search > input')
+        expect(searchInput).toBeDefined()
+
+        userEvent.type(searchInput!, 'work 33')
+
+        expect(container).toMatchSnapshot()
+    })
+
+    test('search filter - search for amount of boards', () => {
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace4, workspace5, workspace6, workspace7, workspace8),
+            },
+        })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace3, workspace8))))
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <DashboardCenterContent/>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const searchInput = container.querySelector('.DashboardPage__search > input')
+        expect(searchInput).toBeDefined()
+
+        userEvent.type(searchInput!, '14 0')
+
+        expect(container).toMatchSnapshot()
+    })
+
+    test('search filter - search for foo baz', () => {
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace4, workspace5, workspace6, workspace7, workspace8),
+            },
+        })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace5))))
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <DashboardCenterContent/>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const searchInput = container.querySelector('.DashboardPage__search > input')
+        expect(searchInput).toBeDefined()
+        userEvent.type(searchInput!, 'foo baz')
+        expect(container).toMatchSnapshot()
+    })
+
+    test('search filter - 5 matching workspaces', () => {
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace4, workspace5, workspace6, workspace7, workspace8),
+            },
+        })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace6, workspace7, workspace8))))
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <DashboardCenterContent/>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const searchInput = container.querySelector('.DashboardPage__search > input')
+        expect(searchInput).toBeDefined()
+
+        userEvent.type(searchInput!, 'workspace')
+
+        expect(container).toMatchSnapshot()
+    })
+
+    test('search filter - number search', () => {
+        const store = mockStore({
+            workspace: {
+                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3, workspace4, workspace5, workspace6, workspace7, workspace8, workspace9, workspace10),
+            },
+        })
+
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(new Array<UserWorkspace>(workspace9))))
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <DashboardCenterContent/>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const searchInput = container.querySelector('.DashboardPage__search > input')
+        expect(searchInput).toBeDefined()
+
+        userEvent.type(searchInput!, '6')
+
         expect(container).toMatchSnapshot()
     })
 
