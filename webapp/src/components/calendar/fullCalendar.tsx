@@ -102,7 +102,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 end: dateTo,
             }]
         })
-    ), [cards])
+    ), [cards, dateDisplayProperty])
 
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
@@ -138,7 +138,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const eventClick = useCallback((eventProps: EventClickArg) => {
         const {event} = eventProps
         props.showCard(event.id)
-    }, [])
+    }, [props.showCard])
 
     const eventChange = useCallback((eventProps: EventChangeArg) => {
         const {event} = eventProps
@@ -156,7 +156,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         if (card && dateDisplayProperty) {
             mutator.changePropertyValue(card, dateDisplayProperty.id, JSON.stringify(dateProperty))
         }
-    }, [])
+    }, [cards, dateDisplayProperty])
 
     const onNewEvent = useCallback((args: {start: Date, end: Date}) => {
         const dateProperty = createDatePropertyFromCalendarDates(args.start, args.end)
@@ -167,7 +167,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         }
 
         props.addCard(properties)
-    }, [])
+    }, [props.addCard, dateDisplayProperty])
 
     const toolbar = useMemo(() => ({
         left: 'title',
