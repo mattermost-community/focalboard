@@ -66,40 +66,20 @@ func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.Notifica
 		return nil, err
 	}
 
-	c := store.Container{
-		WorkspaceID: hint.WorkspaceID,
-	}
-
-	hintRet, err := s.GetNotificationHint(c, hint.BlockID)
-	if err != nil && !s.IsErrNotFound(err) {
-		return nil, err
-	}
-
-	now := model.GetMillis()
 	notifyAt := utils.GetMillisForTime(time.Now().Add(notifyFreq))
+	hint.NotifyAt = notifyAt
 
-	if hintRet == nil {
-		// insert
-		hintRet = hint.Copy()
-		hintRet.CreateAt = now
-		hintRet.NotifyAt = notifyAt
+	query := s.getQueryBuilder(db).Insert(s.tablePrefix + "notification_hints").
+		Columns(notificationHintFields()...).
+		Values(valuesForNotificationHint(hint)...)
 
-		query := s.getQueryBuilder(db).Insert(s.tablePrefix + "notification_hints").
-			Columns(notificationHintFields()...).
-			Values(valuesForNotificationHint(hintRet)...)
-		_, err = query.Exec()
+	if s.dbType == mysqlDBType {
+		query = query.Suffix("ON DUPLICATE KEY UPDATE notify_at = ?", notifyAt)
 	} else {
-		// update
-		hintRet.NotifyAt = notifyAt
-
-		query := s.getQueryBuilder(db).Update(s.tablePrefix+"notification_hints").
-			Set("notify_at", now).
-			Where(sq.Eq{"block_id": hintRet.BlockID}).
-			Where(sq.Eq{"workspace_id": hintRet.WorkspaceID})
-		_, err = query.Exec()
+		query = query.Suffix("ON CONFLICT (block_id,workspace_id) DO UPDATE SET notify_at = ?", notifyAt)
 	}
 
-	if err != nil {
+	if _, err := query.Exec(); err != nil {
 		s.logger.Error("Cannot upsert notification hint",
 			mlog.String("block_id", hint.BlockID),
 			mlog.String("workspace_id", hint.WorkspaceID),
@@ -107,7 +87,7 @@ func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.Notifica
 		)
 		return nil, err
 	}
-	return hintRet, nil
+	return hint, nil
 }
 
 // deleteNotificationHint deletes the notification hint for the specified block.

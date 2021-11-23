@@ -71,11 +71,6 @@ func (s *SQLStore) createSubscription(db sq.BaseRunner, c store.Container, sub *
 		return nil, err
 	}
 
-	subscription, err := s.GetSubscription(c, sub.BlockID, sub.SubscriberID)
-	if subscription != nil || (err != nil && !s.IsErrNotFound(err)) {
-		return subscription, err
-	}
-
 	now := model.GetMillis()
 
 	subAdd := *sub
@@ -88,7 +83,13 @@ func (s *SQLStore) createSubscription(db sq.BaseRunner, c store.Container, sub *
 		Columns(subscriptionFields()...).
 		Values(valuesForSubscription(&subAdd)...)
 
-	if _, err = query.Exec(); err != nil {
+	if s.dbType == mysqlDBType {
+		query = query.Suffix("ON DUPLICATE KEY UPDATE delete_at = 0, notified_at = ?", now)
+	} else {
+		query = query.Suffix("ON CONFLICT (block_id,workspace_id,subscriber_id) DO UPDATE SET delete_at = 0, notified_at = ?", now)
+	}
+
+	if _, err := query.Exec(); err != nil {
 		s.logger.Error("Cannot create subscription",
 			mlog.String("block_id", sub.BlockID),
 			mlog.String("workspace_id", sub.WorkspaceID),
