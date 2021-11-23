@@ -154,16 +154,7 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID stri
 	}
 	defer s.CloseRows(rows)
 
-	blocks, err := s.blocksFromRows(rows)
-
-	// TODO: debugging only - remove
-	_, args, _ := query.ToSql()
-	s.logger.Debug("getSubTree2 SQL",
-		mlog.Array("args", args),
-		mlog.Int("rows", len(blocks)),
-	)
-
-	return blocks, err
+	return s.blocksFromRows(rows)
 }
 
 // g returns blocks within 3 levels of the given blockID.
@@ -552,16 +543,7 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID 
 		return nil, err
 	}
 
-	blocks, err := s.blocksFromRows(rows)
-
-	// TODO: debugging only - remove
-	_, args, _ := query.ToSql()
-	s.logger.Debug("getBlockHistory SQL",
-		mlog.Array("args", args),
-		mlog.Int("rows", len(blocks)),
-	)
-
-	return blocks, err
+	return s.blocksFromRows(rows)
 }
 
 // getBoardAndCardByID returns the first parent of type `card` and first parent of type `board` for the block specified by ID.

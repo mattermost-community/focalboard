@@ -6,6 +6,10 @@ package notifysubscriptions
 import (
 	"bytes"
 	"fmt"
+	"io"
+	"strings"
+	"sync"
+	"text/template"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/wiggin77/merror"
@@ -13,8 +17,68 @@ import (
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
+const (
+	// card change notifications.
+	defAddCardNotify    = "@{{.Username}} has added the card {{.NewBlock | makeLink}}\n"
+	defModifyCardNotify = "###### @{{.Username}} has modified the card {{.Card | makeLink}}\n"
+	defDeleteCardNotify = "@{{.Username}} has deleted the card {{.Card | makeLink}}\n"
+)
+
+var (
+	// templateCache is a map of text templateCache keyed by languange code.
+	templateCache    = make(map[string]*template.Template)
+	templateCacheMux sync.Mutex
+)
+
+// DiffConvOpts provides options when converting diffs to slack attachments.
+type DiffConvOpts struct {
+	Language     string
+	MakeCardLink func(block *model.Block) string
+}
+
+// getTemplate returns a new or cached named template based on the language specified.
+func getTemplate(name string, opts DiffConvOpts, def string) (*template.Template, error) {
+	templateCacheMux.Lock()
+	defer templateCacheMux.Unlock()
+
+	key := name + "&" + opts.Language
+	t, ok := templateCache[key]
+	if !ok {
+		t = template.New(key)
+
+		if opts.MakeCardLink == nil {
+			opts.MakeCardLink = func(block *model.Block) string { return fmt.Sprintf("`%s`", block.Title) }
+		}
+		myFuncs := template.FuncMap{
+			"getBoardDescription": getBoardDescription,
+			"makeLink":            opts.MakeCardLink,
+			"stripNewlines": func(s string) string {
+				return strings.TrimSpace(strings.ReplaceAll(s, "\n", "¶ "))
+			},
+		}
+		t.Funcs(myFuncs)
+
+		s := def // TODO: lookup i18n string when supported on server
+		t2, err := t.Parse(s)
+		if err != nil {
+			return nil, fmt.Errorf("cannot parse markdown template '%s' for notifications: %w", key, err)
+		}
+		templateCache[key] = t2
+	}
+	return t, nil
+}
+
+// execTemplate executes the named template corresponding to the template name and language specified.
+func execTemplate(w io.Writer, name string, opts DiffConvOpts, def string, data interface{}) error {
+	t, err := getTemplate(name, opts, def)
+	if err != nil {
+		return err
+	}
+	return t.Execute(w, data)
+}
+
 // Diffs2SlackAttachments converts a slice of `Diff` to slack attachments to be used in a post.
-func Diffs2SlackAttachments(diffs []*Diff, opts MarkdownOpts) ([]*mm_model.SlackAttachment, error) {
+func Diffs2SlackAttachments(diffs []*Diff, opts DiffConvOpts) ([]*mm_model.SlackAttachment, error) {
 	var attachments []*mm_model.SlackAttachment
 	merr := merror.New()
 
@@ -32,7 +96,7 @@ func Diffs2SlackAttachments(diffs []*Diff, opts MarkdownOpts) ([]*mm_model.Slack
 	return attachments, merr.ErrorOrNil()
 }
 
-func cardDiff2SlackAttachment(cardDiff *Diff, opts MarkdownOpts) (*mm_model.SlackAttachment, error) {
+func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.SlackAttachment, error) {
 	// sanity check
 	if cardDiff.NewBlock == nil && cardDiff.OldBlock == nil {
 		return nil, nil
