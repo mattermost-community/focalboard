@@ -35,8 +35,8 @@ const CheckboxElement = React.memo((props: Props) => {
         }
     }, [block, addedBlockId, titleRef])
 
-    const [active, setActive] = useState(Boolean(block.fields.value))
     const [title, setTitle] = useState(block.title)
+    const active = Boolean(block.fields.value)
 
     return (
         <div className='CheckboxElement'>
@@ -51,7 +51,6 @@ const CheckboxElement = React.memo((props: Props) => {
                     const newBlock = createCheckboxBlock(block)
                     newBlock.fields.value = !active
                     newBlock.title = title
-                    setActive(newBlock.fields.value)
                     mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckbox', defaultMessage: 'toggled-checkbox'}))
                 }}
             />
