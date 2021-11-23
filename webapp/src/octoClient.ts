@@ -267,26 +267,27 @@ class OctoClient {
         })
     }
 
-    async followBlock(blockId: string): Promise<Response> {
-        Utils.log(`followBlock: ${blockId}`)
-        return {} as Response
+    async followBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
+        const body = {
+            block_type: blockType,
+            block_id: blockId,
+            workspace_id: this.workspaceId,
+            subscriber_type: 'user',
+            subscriber_id: userId,
+        }
 
-        // TODO plug in actual API URL here
-        // return fetch(this.getBaseURL() + `/blocks/follow/${encodeURIComponent(blockId)}`, {
-        //     method: 'POST',
-        //     headers: this.headers(),
-        // })
+        return fetch(this.getBaseURL() + `/api/v1/workspaces/${this.workspaceId}/subscriptions`, {
+            method: 'POST',
+            headers: this.headers(),
+            body: JSON.stringify(body),
+        })
     }
 
-    async unfollowBlock(blockId: string): Promise<Response> {
-        Utils.log(`unfollowBlock: ${blockId}`)
-        return {} as Response
-
-        // TODO plug in actual API URL here
-        // return fetch(this.getBaseURL() + `/blocks/unfollowBlock/${encodeURIComponent(blockId)}`, {
-        //     method: 'POST',
-        //     headers: this.headers(),
-        // })
+    async unfollowBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
+        return fetch(this.getBaseURL() + `/api/v1/workspaces/${this.workspaceId}/subscriptions/${blockId}/${userId}`, {
+            method: 'DELETE',
+            headers: this.headers(),
+        })
     }
 
     async insertBlock(block: Block): Promise<Response> {
@@ -438,24 +439,14 @@ class OctoClient {
         return this.getBlocksWithPath(path)
     }
 
-    async getUserBlockSubscriptions(): Promise<Array<UserBlockSubscription>> {
-        // ================================================================
-        // Plug in actual API URL below and remove the hardcoded response.
-        // ================================================================
+    async getUserBlockSubscriptions(userId: string): Promise<Array<UserBlockSubscription>> {
+        const path = `/api/v1/workspaces/${this.workspaceId}/subscriptions/${userId}`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
 
-        // const path = '/api/v1/foobar'
-        // const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        // if (response.status !== 200) {
-        //     return []
-        // }
-        //
-        // return (await this.getJson(response, [])) as Array<UserCardSubscription>[]
-
-        return [
-            {blockId: 'cbfgm6psfz3nxbypcqqf7s19dno'},
-            {blockId: 'c35i17qdk77bjigc4jsgcpzs4qc'},
-            {blockId: 'cmoz7jc4ks3g8fry9m6axjeaeoy'},
-        ]
+        return (await this.getJson(response, [])) as UserBlockSubscription[]
     }
 }
 

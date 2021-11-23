@@ -632,26 +632,26 @@ class Mutator {
         await this.updateBlock(newView, view, description)
     }
 
-    async followBlock(blockID: string) {
+    async followBlock(blockId: string, blockType: string, userId: string) {
         await undoManager.perform(
             async () => {
-                await octoClient.followBlock(blockID)
+                await octoClient.followBlock(blockId, blockType, userId)
             },
             async () => {
-                await octoClient.unfollowBlock(blockID)
+                await octoClient.unfollowBlock(blockId, blockType, userId)
             },
             'follow block',
             this.undoGroupId,
         )
     }
 
-    async unfollowBlock(blockID: string) {
+    async unfollowBlock(blockId: string, blockType: string, userId: string) {
         await undoManager.perform(
             async () => {
-                await octoClient.unfollowBlock(blockID)
+                await octoClient.unfollowBlock(blockId, blockType, userId)
             },
             async () => {
-                await octoClient.followBlock(blockID)
+                await octoClient.followBlock(blockId, blockType, userId)
             },
             'follow block',
             this.undoGroupId,

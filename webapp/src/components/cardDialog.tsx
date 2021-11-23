@@ -23,6 +23,9 @@ import Button from '../widgets/buttons/button'
 
 import {getUserBlockSubscriptionList} from '../store/initialLoad'
 
+import {IUser} from '../user'
+import {getMe} from '../store/users'
+
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 import {sendFlashMessage} from './flashMessages'
@@ -46,6 +49,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const contents = useAppSelector(getCardContents(props.cardId))
     const comments = useAppSelector(getCardComments(props.cardId))
     const intl = useIntl()
+    const me = useAppSelector<IUser|null>(getMe)
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
@@ -136,7 +140,7 @@ const CardDialog = (props: Props): JSX.Element => {
         const followBtn = (
             <Button
                 className='cardFollowBtn follow'
-                onClick={() => mutator.followBlock(props.cardId)}
+                onClick={() => mutator.followBlock(props.cardId, 'card', me!.id)}
             >
                 {intl.formatMessage({id: 'CardDetail.Follow', defaultMessage: 'Follow'})}
             </Button>
@@ -145,7 +149,7 @@ const CardDialog = (props: Props): JSX.Element => {
         const unfollowBtn = (
             <Button
                 className='cardFollowBtn unfollow'
-                onClick={() => mutator.unfollowBlock(props.cardId)}
+                onClick={() => mutator.unfollowBlock(props.cardId, 'card', me!.id)}
             >
                 {intl.formatMessage({id: 'CardDetail.Unfollow', defaultMessage: 'Unfollow'})}
             </Button>
@@ -155,7 +159,7 @@ const CardDialog = (props: Props): JSX.Element => {
     }
 
     const followingCards = useAppSelector(getUserBlockSubscriptionList)
-    const isFollowingCard = Boolean(followingCards.find((following) => following.cardID === props.cardId))
+    const isFollowingCard = Boolean(followingCards.find((following) => following.block_id === props.cardId))
 
     return (
         <>

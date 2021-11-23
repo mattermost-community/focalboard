@@ -8,6 +8,8 @@ import {IUser} from '../user'
 
 import {UserBlockSubscription} from '../subscription'
 
+import {Utils} from '../utils'
+
 import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
@@ -23,6 +25,11 @@ type UsersStatus = {
     loggedIn: boolean|null
     blockSubscriptions: Array<UserBlockSubscription>
 }
+
+export const fetchUserBlockSubscriptions = createAsyncThunk(
+    'user/blockSubscriptions',
+    async (userId: string) => (Utils.isFocalboardPlugin() ? client.getUserBlockSubscriptions(userId) : []),
+)
 
 const initialState = {
     me: null,
@@ -47,12 +54,12 @@ const usersSlice = createSlice({
         },
         followBlock: (state, action: PayloadAction<string>) => {
             state.blockSubscriptions.push({
-                blockId: action.payload,
-            })
+                block_id: action.payload,
+            } as UserBlockSubscription)
         },
         unfollowBlock: (state, action: PayloadAction<string>) => {
             const oldSubscriptions = state.blockSubscriptions
-            state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload)
+            state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.block_id !== action.payload)
         },
     },
     extraReducers: (builder) => {
@@ -69,8 +76,9 @@ const usersSlice = createSlice({
                 acc[user.id] = user
                 return acc
             }, {})
-
-            state.blockSubscriptions = action.payload.userCardSubscriptions
+        })
+        builder.addCase(fetchUserBlockSubscriptions.fulfilled, (state, action) => {
+            state.blockSubscriptions = action.payload
         })
     },
 })

@@ -230,10 +230,10 @@ const BoardPage = (props: Props): JSX.Element => {
         wsClient.addOnChange(incrementalUpdate)
         wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
-        wsclient.setOnFollowBlock((blockId: string): void => {
+        wsClient.setOnFollowBlock((blockId: string): void => {
             dispatch(followBlock(blockId))
         })
-        wsclient.setOnUnfollowBlock((blockId: string): void => {
+        wsClient.setOnUnfollowBlock((blockId: string): void => {
             dispatch(unfollowBlock(blockId))
         })
         return () => {

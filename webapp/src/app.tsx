@@ -29,7 +29,7 @@ import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
 import {Utils} from './utils'
 import wsClient from './wsclient'
-import {fetchMe, getLoggedIn, getMe} from './store/users'
+import {fetchMe, fetchUserBlockSubscriptions, getLoggedIn, getMe} from './store/users'
 import {getLanguage, fetchLanguage} from './store/language'
 import {setGlobalError, getGlobalError} from './store/globalError'
 import {useAppSelector, useAppDispatch} from './store/hooks'
@@ -91,6 +91,16 @@ const App = React.memo((): JSX.Element => {
         dispatch(fetchMe())
         dispatch(fetchClientConfig())
     }, [])
+
+    // Load user's block subscriptions when user is loaded
+    useEffect(() => {
+        // block subscriptions are relevant only in plugin mode.
+        if (!Utils.isFocalboardPlugin() || !me) {
+            return
+        }
+
+        dispatch(fetchUserBlockSubscriptions(me!.id))
+    })
 
     if (Utils.isFocalboardPlugin()) {
         useEffect(() => {

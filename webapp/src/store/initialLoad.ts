@@ -17,21 +17,14 @@ const fetchUserWorkspaces = async ():Promise<UserWorkspace[]> => {
     return Utils.isFocalboardPlugin() ? client.getUserWorkspaces() : []
 }
 
-const fetchUserCardSubscriptions = async (): Promise<Array<UserBlockSubscription>> => {
-    // Concept of subscriptions is only applicable when running as a plugin.
-    // There are no other users to make changes in standalone version.
-    return Utils.isFocalboardPlugin() ? client.getUserBlockSubscriptions() : []
-}
-
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
-        const [workspace, workspaceUsers, blocks, userWorkspaces, userCardSubscriptions] = await Promise.all([
+        const [workspace, workspaceUsers, blocks, userWorkspaces] = await Promise.all([
             client.getWorkspace(),
             client.getWorkspaceUsers(),
             client.getAllBlocks(),
             fetchUserWorkspaces(),
-            fetchUserCardSubscriptions(),
         ])
 
         // if no workspace, either bad id, or user doesn't have access
@@ -43,7 +36,6 @@ export const initialLoad = createAsyncThunk(
             workspaceUsers,
             blocks,
             userWorkspaces,
-            userCardSubscriptions,
         }
     },
 )
