@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 
 import difference from 'lodash/difference'
-import xor from 'lodash/xor'
 
 import {Utils} from '../utils'
 
