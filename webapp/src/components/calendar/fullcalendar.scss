@@ -11,6 +11,9 @@
     }
 
     .octo-propertyvalue {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         input[value=''] {
             display: none;
         }
@@ -70,6 +73,7 @@
 
     .fc-event {
         border: 1px solid;
+        border-radius: 3px;
         border-color: rgba(var(--center-channel-color-rgb), 0.1);
         background-color: rgb(var(--center-channel-bg-rgb));
         margin: 5 0;
@@ -78,6 +82,9 @@
         &:hover {
             background-color: rgba(var(--center-channel-color-rgb), 0.1);
         }
+        margin-bottom: 10px;
+        padding: 12px 6px 6px 12px;
+        overflow: hidden;
     }
 
     .fc-event-main {
