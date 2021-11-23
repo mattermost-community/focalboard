@@ -114,7 +114,6 @@ func (n *notifier) loop() {
 }
 
 func (n *notifier) onNotifyHint(hint *model.NotificationHint) error {
-	// TODO: remove debug log
 	n.logger.Debug("onNotifyHint - enqueing hint", mlog.Any("hint", hint))
 
 	select {
@@ -133,7 +132,6 @@ func (n *notifier) notify() time.Time {
 		hint, err = n.store.GetNextNotificationHint(true)
 		if n.store.IsErrNotFound(err) {
 			// no more hints in table; wait up to an hour or when `onNotifyHint` is called again
-			// TODO: remove debug log
 			next := time.Now().Add(time.Hour * 1)
 			n.logger.Debug("notify - no hints in queue", mlog.Time("next_check", next))
 			return next
@@ -203,14 +201,14 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		return nil
 	}
 
-	opts := MarkdownOpts{
+	opts := DiffConvOpts{
 		Language: "en", // TODO: use correct language with i18n available on server.
 		MakeCardLink: func(block *model.Block) string {
 			return fmt.Sprintf("[%s](%s)", block.Title, utils.MakeCardLink(n.serverRoot, board.WorkspaceID, board.ID, card.ID))
 		},
 	}
 
-	markdown, err := Diffs2Markdown(diffs, opts)
+	attachments, err := Diffs2SlackAttachments(diffs, opts)
 	if err != nil {
 		return err
 	}
@@ -227,7 +225,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 			continue
 		}
 
-		if err = n.delivery.SubscriptionDeliver(sub.SubscriberID, sub.SubscriberType, markdown); err != nil {
+		if err = n.delivery.SubscriptionDeliverSlackAttachments(sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
 			merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
 				sub.SubscriberID, sub.SubscriberType, err))
 		}

@@ -73,10 +73,10 @@ type Store interface {
 	GetWorkspaceCount() (int64, error)
 	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
 
-	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
+	CreateSubscription(c Container, sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(c Container, blockID string, subscriberID string) error
 	GetSubscription(c Container, blockID string, subscriberID string) (*model.Subscription, error)
-	GetSubscriptions(subscriberID string) ([]*model.Subscription, error)
+	GetSubscriptions(c Container, subscriberID string) ([]*model.Subscription, error)
 	GetSubscribersForBlock(c Container, blockID string) ([]*model.Subscriber, error)
 	GetSubscribersCountForBlock(c Container, blockID string) (int, error)
 	UpdateSubscribersNotifiedAt(c Container, blockID string, notifyAt int64) error

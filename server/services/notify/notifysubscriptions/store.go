@@ -18,7 +18,7 @@ type Store interface {
 
 	GetUserByID(userID string) (*model.User, error)
 
-	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
+	CreateSubscription(c store.Container, sub *model.Subscription) (*model.Subscription, error)
 	GetSubscribersForBlock(c store.Container, blockID string) ([]*model.Subscriber, error)
 	GetSubscribersCountForBlock(c store.Container, blockID string) (int, error)
 	UpdateSubscribersNotifiedAt(c store.Container, blockID string, notifyAt int64) error

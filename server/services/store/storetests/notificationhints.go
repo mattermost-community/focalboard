@@ -48,9 +48,10 @@ func StoreTestNotificationHintsStore(t *testing.T, setup func(t *testing.T) (sto
 func testUpsertNotificationHint(t *testing.T, store store.Store, container store.Container) {
 	t.Run("create notification hint", func(t *testing.T) {
 		hint := &model.NotificationHint{
-			BlockType:   model.TypeCard,
-			BlockID:     utils.NewID(utils.IDTypeBlock),
-			WorkspaceID: container.WorkspaceID,
+			BlockType:    model.TypeCard,
+			BlockID:      utils.NewID(utils.IDTypeBlock),
+			ModifiedByID: utils.NewID(utils.IDTypeUser),
+			WorkspaceID:  container.WorkspaceID,
 		}
 
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
@@ -61,9 +62,10 @@ func testUpsertNotificationHint(t *testing.T, store store.Store, container store
 
 	t.Run("duplicate notification hint", func(t *testing.T) {
 		hint := &model.NotificationHint{
-			BlockType:   model.TypeCard,
-			BlockID:     utils.NewID(utils.IDTypeBlock),
-			WorkspaceID: container.WorkspaceID,
+			BlockType:    model.TypeCard,
+			BlockID:      utils.NewID(utils.IDTypeBlock),
+			ModifiedByID: utils.NewID(utils.IDTypeUser),
+			WorkspaceID:  container.WorkspaceID,
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 		require.NoError(t, err, "upsert notification hint should not error")
@@ -72,9 +74,10 @@ func testUpsertNotificationHint(t *testing.T, store store.Store, container store
 		time.Sleep(time.Millisecond * 20)
 
 		hint = &model.NotificationHint{
-			BlockType:   model.TypeCard,
-			BlockID:     hintNew.BlockID,
-			WorkspaceID: container.WorkspaceID,
+			BlockType:    model.TypeCard,
+			BlockID:      hintNew.BlockID,
+			ModifiedByID: hintNew.ModifiedByID,
+			WorkspaceID:  container.WorkspaceID,
 		}
 		hintDup, err := store.UpsertNotificationHint(hint, time.Second*15)
 
@@ -98,6 +101,10 @@ func testUpsertNotificationHint(t *testing.T, store store.Store, container store
 		_, err = store.UpsertNotificationHint(hint, time.Second*15)
 		assert.ErrorAs(t, err, &model.ErrInvalidNotificationHint{}, "invalid notification hint should error")
 
+		hint.ModifiedByID = utils.NewID(utils.IDTypeUser)
+		_, err = store.UpsertNotificationHint(hint, time.Second*15)
+		assert.ErrorAs(t, err, &model.ErrInvalidNotificationHint{}, "invalid notification hint should error")
+
 		hint.BlockID = utils.NewID(utils.IDTypeBlock)
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 		assert.NoError(t, err, "valid notification hint should not error")
@@ -108,9 +115,10 @@ func testUpsertNotificationHint(t *testing.T, store store.Store, container store
 func testDeleteNotificationHint(t *testing.T, store store.Store, container store.Container) {
 	t.Run("delete notification hint", func(t *testing.T) {
 		hint := &model.NotificationHint{
-			BlockType:   model.TypeCard,
-			BlockID:     utils.NewID(utils.IDTypeBlock),
-			WorkspaceID: container.WorkspaceID,
+			BlockType:    model.TypeCard,
+			BlockID:      utils.NewID(utils.IDTypeBlock),
+			ModifiedByID: utils.NewID(utils.IDTypeUser),
+			WorkspaceID:  container.WorkspaceID,
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 		require.NoError(t, err, "create notification hint should not error")
@@ -139,9 +147,10 @@ func testDeleteNotificationHint(t *testing.T, store store.Store, container store
 func testGetNotificationHint(t *testing.T, store store.Store, container store.Container) {
 	t.Run("get notification hint", func(t *testing.T) {
 		hint := &model.NotificationHint{
-			BlockType:   model.TypeCard,
-			BlockID:     utils.NewID(utils.IDTypeBlock),
-			WorkspaceID: container.WorkspaceID,
+			BlockType:    model.TypeCard,
+			BlockID:      utils.NewID(utils.IDTypeBlock),
+			ModifiedByID: utils.NewID(utils.IDTypeUser),
+			WorkspaceID:  container.WorkspaceID,
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 		require.NoError(t, err, "create notification hint should not error")
@@ -163,13 +172,15 @@ func testGetNextNotificationHint(t *testing.T, store store.Store, container stor
 	t.Run("get next notification hint", func(t *testing.T) {
 		const loops = 5
 		ids := [5]string{}
+		modifiedBy := utils.NewID(utils.IDTypeUser)
 
 		// create some hints with unique notifyAt
 		for i := 0; i < loops; i++ {
 			hint := &model.NotificationHint{
-				BlockType:   model.TypeCard,
-				BlockID:     utils.NewID(utils.IDTypeBlock),
-				WorkspaceID: container.WorkspaceID,
+				BlockType:    model.TypeCard,
+				BlockID:      utils.NewID(utils.IDTypeBlock),
+				ModifiedByID: modifiedBy,
+				WorkspaceID:  container.WorkspaceID,
 			}
 			hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 			require.NoError(t, err, "create notification hint should not error")
@@ -219,9 +230,10 @@ func testGetNextNotificationHint(t *testing.T, store store.Store, container stor
 		require.NoError(t, err, "emptying notification hint table should not error")
 
 		hint := &model.NotificationHint{
-			BlockType:   model.TypeCard,
-			BlockID:     utils.NewID(utils.IDTypeBlock),
-			WorkspaceID: container.WorkspaceID,
+			BlockType:    model.TypeCard,
+			BlockID:      utils.NewID(utils.IDTypeBlock),
+			ModifiedByID: utils.NewID(utils.IDTypeUser),
+			WorkspaceID:  container.WorkspaceID,
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*1)
 		require.NoError(t, err, "create notification hint should not error")
