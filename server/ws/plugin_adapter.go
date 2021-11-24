@@ -27,6 +27,7 @@ type PluginAdapterInterface interface {
 	BroadcastConfigChange(clientConfig model.ClientConfig)
 	BroadcastBlockChange(workspaceID string, block model.Block)
 	BroadcastBlockDelete(workspaceID, blockID, parentID string)
+	BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription)
 	HandleClusterEvent(ev mmModel.PluginClusterEvent)
 }
 
@@ -338,19 +339,16 @@ func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) 
 
 // sendWorkspaceMessageSkipCluster sends a message to all the users
 // with a websocket client connected to.
-func (pa *PluginAdapter) sendWorkspaceMessageSkipCluster(workspaceID string, payload map[string]interface{}) {
+func (pa *PluginAdapter) sendWorkspaceMessageSkipCluster(event string, workspaceID string, payload map[string]interface{}) {
 	userIDs := pa.getUserIDsForWorkspace(workspaceID)
 	for _, userID := range userIDs {
-		pa.api.PublishWebSocketEvent(websocketActionUpdateBlock, payload, &mmModel.WebsocketBroadcast{UserId: userID})
-
-		// DEMO unfollow block event
-		//pa.api.PublishWebSocketEvent("UNFOLLOW_BLOCK", map[string]interface{}{"blockId": "cbfgm6psfz3nxbypcqqf7s19dno"}, &mmModel.WebsocketBroadcast{UserId: userID})
+		pa.api.PublishWebSocketEvent(event, payload, &mmModel.WebsocketBroadcast{UserId: userID})
 	}
 }
 
 // sendWorkspaceMessage sends and propagates a message that is aimed
 // for all the users that are subscribed to a given workspace.
-func (pa *PluginAdapter) sendWorkspaceMessage(workspaceID string, payload map[string]interface{}) {
+func (pa *PluginAdapter) sendWorkspaceMessage(event string, workspaceID string, payload map[string]interface{}) {
 	go func() {
 		clusterMessage := &ClusterMessage{
 			WorkspaceID: workspaceID,
@@ -360,7 +358,7 @@ func (pa *PluginAdapter) sendWorkspaceMessage(workspaceID string, payload map[st
 		pa.sendMessageToCluster("websocket_message", clusterMessage)
 	}()
 
-	pa.sendWorkspaceMessageSkipCluster(workspaceID, payload)
+	pa.sendWorkspaceMessageSkipCluster(event, workspaceID, payload)
 }
 
 func (pa *PluginAdapter) BroadcastBlockChange(workspaceID string, block model.Block) {
@@ -374,7 +372,7 @@ func (pa *PluginAdapter) BroadcastBlockChange(workspaceID string, block model.Bl
 		Block:  block,
 	}
 
-	pa.sendWorkspaceMessage(workspaceID, utils.StructToMap(message))
+	pa.sendWorkspaceMessage(websocketActionUpdateBlock, workspaceID, utils.StructToMap(message))
 }
 
 func (pa *PluginAdapter) BroadcastBlockDelete(workspaceID, blockID, parentID string) {
@@ -387,4 +385,19 @@ func (pa *PluginAdapter) BroadcastBlockDelete(workspaceID, blockID, parentID str
 	block.WorkspaceID = workspaceID
 
 	pa.BroadcastBlockChange(workspaceID, block)
+}
+
+func (pa *PluginAdapter) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
+	pa.api.LogInfo("BroadcastingSubscriptionChange",
+		"workspaceID", workspaceID,
+		"blockID", subscription.BlockID,
+		"subscriberID", subscription.SubscriberID,
+	)
+
+	message := UpdateSubscription{
+		Action:       websocketActionUpdateSubscription,
+		Subscription: subscription,
+	}
+
+	pa.sendWorkspaceMessage(websocketActionUpdateSubscription, workspaceID, utils.StructToMap(message))
 }

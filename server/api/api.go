@@ -1599,7 +1599,7 @@ func (a *API) handleDeleteSubscription(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = a.app.DeleteSubscription(*container, blockID, subscriberID)
+	_, err = a.app.DeleteSubscription(*container, blockID, subscriberID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

@@ -150,10 +150,18 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 			if propDiff.NewValue == propDiff.OldValue {
 				continue
 			}
+
+			var val string
+			if propDiff.OldValue != "" {
+				val = fmt.Sprintf("%s  ~~`%s`~~", propDiff.NewValue, propDiff.OldValue)
+			} else {
+				val = propDiff.NewValue
+			}
+
 			attachment.Fields = append(attachment.Fields, &mm_model.SlackAttachmentField{
 				Short: false,
 				Title: propDiff.Name,
-				Value: fmt.Sprintf("%s  ~~`%s`~~", propDiff.NewValue, propDiff.OldValue),
+				Value: val,
 			})
 		}
 	}
@@ -188,7 +196,15 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 	// content/description changes
 	for _, child := range cardDiff.Diffs {
 		if child.BlockType != model.TypeComment {
-			if child.NewBlock.Title == child.OldBlock.Title {
+			var newTitle, oldTitle string
+			if child.NewBlock != nil {
+				newTitle = stripNewlines(child.NewBlock.Title)
+			}
+			if child.OldBlock != nil {
+				oldTitle = stripNewlines(child.OldBlock.Title)
+			}
+
+			if newTitle == oldTitle {
 				continue
 			}
 
@@ -209,16 +225,14 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 
 			*/
 
-			var newVal, oldVal string
-			newVal = stripNewlines(child.NewBlock.Title)
-			if child.OldBlock != nil && child.OldBlock.Title != "" {
-				oldVal = fmt.Sprintf("\n\n~~`%s`~~\n", stripNewlines(child.OldBlock.Title))
+			if oldTitle != "" {
+				oldTitle = fmt.Sprintf(" ~~`%s`~~", oldTitle)
 			}
 
 			attachment.Fields = append(attachment.Fields, &mm_model.SlackAttachmentField{
 				Short: false,
 				Title: "Comment",
-				Value: newVal + oldVal,
+				Value: newTitle + oldTitle,
 			})
 		}
 	}

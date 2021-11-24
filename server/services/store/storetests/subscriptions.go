@@ -30,6 +30,12 @@ func StoreTestSubscriptionsStore(t *testing.T, setup func(t *testing.T) (store.S
 		testDeleteSubscription(t, store, container)
 	})
 
+	t.Run("UndeleteSubscription", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testUndeleteSubscription(t, store, container)
+	})
+
 	t.Run("GetSubscription", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
@@ -103,7 +109,9 @@ func testCreateSubscription(t *testing.T, store store.Store, container store.Con
 		subDup, err := store.CreateSubscription(container, sub)
 		require.NoError(t, err, "create duplicate subscription should not error")
 
-		assert.Equal(t, subNew, subDup, "subscriptions should match")
+		assert.Equal(t, subNew.BlockID, subDup.BlockID)
+		assert.Equal(t, subNew.WorkspaceID, subDup.WorkspaceID)
+		assert.Equal(t, subNew.SubscriberID, subDup.SubscriberID)
 	})
 
 	t.Run("invalid subscription", func(t *testing.T) {
@@ -172,6 +180,48 @@ func testDeleteSubscription(t *testing.T, s store.Store, container store.Contain
 		var nf *store.ErrNotFound
 		require.ErrorAs(t, err, &nf, "error should be of type store.ErrNotFound")
 		require.True(t, store.IsErrNotFound(err))
+	})
+}
+
+func testUndeleteSubscription(t *testing.T, s store.Store, container store.Container) {
+	t.Run("undelete subscription", func(t *testing.T) {
+		user := createTestUsers(t, s, 1)[0]
+		block := createTestBlocks(t, s, container, user.ID, 1)[0]
+
+		sub := &model.Subscription{
+			BlockType:      block.Type,
+			BlockID:        block.ID,
+			SubscriberType: "user",
+			SubscriberID:   user.ID,
+		}
+		subNew, err := s.CreateSubscription(container, sub)
+		require.NoError(t, err, "create subscription should not error")
+
+		// check the subscription exists
+		subs, err := s.GetSubscriptions(container, user.ID)
+		require.NoError(t, err, "get subscriptions should not error")
+		assert.Len(t, subs, 1)
+		assert.Equal(t, subNew.BlockID, subs[0].BlockID)
+		assert.Equal(t, subNew.SubscriberID, subs[0].SubscriberID)
+
+		err = s.DeleteSubscription(container, block.ID, user.ID)
+		require.NoError(t, err, "delete subscription should not error")
+
+		// check the subscription was deleted
+		subs, err = s.GetSubscriptions(container, user.ID)
+		require.NoError(t, err, "get subscriptions should not error")
+		assert.Empty(t, subs)
+
+		// re-create the subscription
+		subUndeleted, err := s.CreateSubscription(container, sub)
+		require.NoError(t, err, "create subscription should not error")
+
+		// check the undeleted subscription exists
+		subs, err = s.GetSubscriptions(container, user.ID)
+		require.NoError(t, err, "get subscriptions should not error")
+		assert.Len(t, subs, 1)
+		assert.Equal(t, subUndeleted.BlockID, subs[0].BlockID)
+		assert.Equal(t, subUndeleted.SubscriberID, subs[0].SubscriberID)
 	})
 }
 

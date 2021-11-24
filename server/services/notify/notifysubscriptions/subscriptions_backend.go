@@ -9,6 +9,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/ws"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -20,18 +21,20 @@ const (
 
 // Backend provides the notification backend for subscriptions.
 type Backend struct {
-	store    Store
-	delivery SubscriptionDelivery
-	notifier *notifier
-	logger   *mlog.Logger
+	store     Store
+	delivery  SubscriptionDelivery
+	notifier  *notifier
+	wsAdapter ws.Adapter
+	logger    *mlog.Logger
 }
 
-func New(serverRoot string, store Store, delivery SubscriptionDelivery, logger *mlog.Logger) *Backend {
+func New(serverRoot string, store Store, delivery SubscriptionDelivery, wsAdapter ws.Adapter, logger *mlog.Logger) *Backend {
 	return &Backend{
-		store:    store,
-		delivery: delivery,
-		notifier: newNotifier(serverRoot, store, delivery, logger),
-		logger:   logger,
+		store:     store,
+		delivery:  delivery,
+		notifier:  newNotifier(serverRoot, store, delivery, logger),
+		wsAdapter: wsAdapter,
+		logger:    logger,
 	}
 }
 
@@ -75,12 +78,13 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 			SubscriberID:   evt.ModifiedByID,
 		}
 
-		if _, err = b.store.CreateSubscription(c, sub); err != nil {
+		if sub, err = b.store.CreateSubscription(c, sub); err != nil {
 			b.logger.Warn("Cannot subscribe card author to card",
 				mlog.String("card_id", evt.BlockChanged.ID),
 				mlog.Err(err),
 			)
 		}
+		b.wsAdapter.BroadcastSubscriptionChange(c.WorkspaceID, sub)
 	}
 
 	// notify board subscribers
@@ -161,8 +165,9 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 	c := store.Container{
 		WorkspaceID: evt.Workspace,
 	}
+	var err error
 
-	if _, err := b.store.CreateSubscription(c, sub); err != nil {
+	if sub, err = b.store.CreateSubscription(c, sub); err != nil {
 		b.logger.Warn("Cannot subscribe mentioned user to card",
 			mlog.String("user_id", userID),
 			mlog.String("card_id", evt.Card.ID),
@@ -170,8 +175,16 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 		)
 		return
 	}
+	b.wsAdapter.BroadcastSubscriptionChange(c.WorkspaceID, sub)
+
 	b.logger.Debug("Subscribed mentioned user to card",
 		mlog.String("user_id", userID),
 		mlog.String("card_id", evt.Card.ID),
 	)
+}
+
+// BroadcastSubscriptionChange sends a websocket message with details of the changed subscription to all
+// connected users in the workspace.
+func (b *Backend) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
+	b.wsAdapter.BroadcastSubscriptionChange(workspaceID, subscription)
 }

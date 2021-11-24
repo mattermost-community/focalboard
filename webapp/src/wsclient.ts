@@ -22,6 +22,23 @@ type WSMessage = {
     error?: string
 }
 
+type WSSubscriptionMsg = {
+    action?: string
+    subscription?: Subscription
+    error?: string
+}
+
+interface Subscription {
+    blockId: string
+    workspaceId: string
+    subscriberId: string
+    blockType: string
+    subscriberType: string
+    notifiedAt: number
+    createAt: number
+    deleteAt: number
+}
+
 export const ACTION_UPDATE_BLOCK = 'UPDATE_BLOCK'
 export const ACTION_AUTH = 'AUTH'
 export const ACTION_SUBSCRIBE_BLOCKS = 'SUBSCRIBE_BLOCKS'
@@ -29,8 +46,7 @@ export const ACTION_SUBSCRIBE_WORKSPACE = 'SUBSCRIBE_WORKSPACE'
 export const ACTION_UNSUBSCRIBE_WORKSPACE = 'UNSUBSCRIBE_WORKSPACE'
 export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
 export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
-export const ACTION_FOLLOW_BLOCK = 'FOLLOW_BLOCK'
-export const ACTION_UNFOLLOW_BLOCK = 'UNFOLLOW_BLOCK'
+export const ACTION_UPDATE_SUBSCRIPTION = 'UPDATE_SUBSCRIPTION'
 
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
@@ -329,6 +345,11 @@ class WSClient {
         for (const handler of this.onConfigChange) {
             handler(this, config)
         }
+    }
+
+    updateSubscriptionHandler(message: WSSubscriptionMsg): void {
+        // TODO: handle subscription change notification.
+        Utils.log('updateSubscriptionHandler: ' + message.action + '; blockId=' + message.subscription?.blockId)
     }
 
     setOnAppVersionChangeHandler(fn: (versionHasChanged: boolean) => void): void {

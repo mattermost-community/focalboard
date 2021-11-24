@@ -252,11 +252,6 @@ func (dg *diffGenerator) generatePropDiffs(oldBlock, newBlock *model.Block, sche
 		)
 	}
 
-	dg.logger.Debug("generatePropDiffs",
-		mlog.Map("oldProps", oldProps),
-		mlog.Map("newProps", newProps),
-	)
-
 	// look for new or changed properties.
 	for k, prop := range newProps {
 		oldP, ok := oldProps[k]
