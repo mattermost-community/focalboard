@@ -93,7 +93,6 @@ function createPatchesFromBlocks(newBlock: Block, oldBlock: Block): BlockPatch[]
         }
     })
 
-    // ToDo: add tests
     return [
         {
             ...newUpdatedData,
