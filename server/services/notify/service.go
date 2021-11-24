@@ -115,9 +115,11 @@ func (s *Service) BlockChanged(evt BlockChangeEvent) {
 // connected users in the workspace.
 func (s *Service) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
 	s.mux.RLock()
-	defer s.mux.RUnlock()
+	backends := make([]Backend, len(s.backends))
+	copy(backends, s.backends)
+	s.mux.RUnlock()
 
-	for _, backend := range s.backends {
+	for _, backend := range backends {
 		if scn, ok := backend.(SubscriptionChangeNotifier); ok {
 			s.logger.Debug("Delivering subscription change notification",
 				mlog.String("workspace_id", workspaceID),

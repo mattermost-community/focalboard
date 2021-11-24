@@ -3,6 +3,7 @@ package app
 import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 )
 
 func (a *App) CreateSubscription(c store.Container, sub *model.Subscription) (*model.Subscription, error) {
@@ -23,6 +24,7 @@ func (a *App) DeleteSubscription(c store.Container, blockID string, subscriberID
 	if err := a.store.DeleteSubscription(c, blockID, subscriberID); err != nil {
 		return nil, err
 	}
+	sub.DeleteAt = utils.GetMillis()
 	a.notifySubscriptionChanged(c, sub)
 
 	return sub, nil
