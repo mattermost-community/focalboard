@@ -92,6 +92,10 @@
                 background-color: rgba(var(--button-bg-rgb), 0.08);
                 color: rgb(var(--button-bg-rgb), 1);
             }
+
+            &:focus {
+                border: none;
+            }
         }
     }
 
@@ -134,6 +138,26 @@
 
     .fc-day-sat,
     .fc-day-sun {
-        background-color: rgba(var(--center-channel-color-rgb), 0.1);
+        background-color: rgba(var(--center-channel-color-rgb), 0.04);
+    }
+
+    .fc-day-today {
+        background: transparent;
+
+        .fc-daygrid-day-number {
+            color: white;
+            background-color: rgba(var(--button-bg-rgb), 1);
+        }
+    }
+
+    .fc-daygrid-day-number {
+        font-weight: 600;
+        margin: 4px 4px 0 0;
+        min-width: 24px;
+        height: 24px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
