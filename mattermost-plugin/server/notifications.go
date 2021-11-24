@@ -7,6 +7,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/notify/notifysubscriptions"
 	"github.com/mattermost/focalboard/server/services/notify/plugindelivery"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/ws"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
@@ -38,13 +39,15 @@ func createMentionsNotifyBackend(params notifyBackendParams) (*notifymentions.Ba
 	return backend, nil
 }
 
-func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.Store) (*notifysubscriptions.Backend, error) {
+func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.Store,
+	wsPluginAdapter ws.PluginAdapterInterface) (*notifysubscriptions.Backend, error) {
+	//
 	delivery, err := createDelivery(params.client, params.serverRoot)
 	if err != nil {
 		return nil, err
 	}
 
-	backend := notifysubscriptions.New(params.serverRoot, store, delivery, params.logger)
+	backend := notifysubscriptions.New(params.serverRoot, store, delivery, wsPluginAdapter, params.logger)
 
 	return backend, nil
 }
