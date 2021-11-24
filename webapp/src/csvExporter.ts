@@ -54,6 +54,15 @@ class CsvExporter {
         const rows: string[][] = []
         const visibleProperties = board.fields.cardProperties.filter((template: IPropertyTemplate) => viewToExport.fields.visiblePropertyIds.includes(template.id))
 
+        if (viewToExport.fields.viewType === 'calendar' &&
+            viewToExport.fields.dateDisplayPropertyId &&
+            !viewToExport.fields.visiblePropertyIds.includes(viewToExport.fields.dateDisplayPropertyId)) {
+            const dateDisplay = board.fields.cardProperties.find((template: IPropertyTemplate) => viewToExport.fields.dateDisplayPropertyId === template.id)
+            if (dateDisplay) {
+                visibleProperties.push(dateDisplay)
+            }
+        }
+
         {
             // Header row
             const row: string[] = [intl.formatMessage({id: 'TableComponent.name', defaultMessage: 'Name'})]

@@ -6,6 +6,8 @@ import {injectIntl, IntlShape} from 'react-intl'
 import {connect} from 'react-redux'
 import Hotkeys from 'react-hot-keys'
 
+import {ClientConfig} from '../config/clientConfig'
+
 import {Block} from '../blocks/block'
 import {BlockIcons} from '../blockIcons'
 import {Card, createCard} from '../blocks/card'
@@ -28,15 +30,21 @@ import TopBar from './topBar'
 import ViewHeader from './viewHeader/viewHeader'
 import ViewTitle from './viewTitle'
 import Kanban from './kanban/kanban'
+
 import Table from './table/table'
+
+import CalendarFullView from './calendar/fullCalendar'
+
 import Gallery from './gallery/gallery'
 
 type Props = {
+    clientConfig?: ClientConfig
     board: Board
     cards: Card[]
     activeView: BoardView
     views: BoardView[]
     groupByProperty?: IPropertyTemplate
+    dateDisplayProperty?: IPropertyTemplate
     intl: IntlShape
     readonly: boolean
     addCard: (card: Card) => void
@@ -148,6 +156,7 @@ class CenterPanel extends React.Component<Props, State> {
                         cards={this.props.cards}
                         views={this.props.views}
                         groupByProperty={this.props.groupByProperty}
+                        dateDisplayProperty={this.props.dateDisplayProperty}
                         addCard={() => this.addCard('', true)}
                         addCardFromTemplate={this.addCardFromTemplate}
                         addCardTemplate={this.addCardTemplate}
@@ -171,7 +180,6 @@ class CenterPanel extends React.Component<Props, State> {
                     addCard={this.addCard}
                     showCard={this.showCard}
                 />}
-
                 {activeView.fields.viewType === 'table' &&
                     <Table
                         board={this.props.board}
@@ -187,6 +195,18 @@ class CenterPanel extends React.Component<Props, State> {
                         addCard={this.addCard}
                         onCardClicked={this.cardClicked}
                     />}
+                {activeView.fields.viewType === 'calendar' && this.props.clientConfig?.featureFlags.CalendarView &&
+                    <CalendarFullView
+                        board={this.props.board}
+                        cards={this.props.cards}
+                        activeView={this.props.activeView}
+                        readonly={this.props.readonly}
+                        dateDisplayProperty={this.props.dateDisplayProperty}
+                        showCard={this.showCard}
+                        addCard={(properties: Record<string, string>) => {
+                            this.addCard('', true, properties)
+                        }}
+                    />}
 
                 {activeView.fields.viewType === 'gallery' &&
                     <Gallery
@@ -198,7 +218,6 @@ class CenterPanel extends React.Component<Props, State> {
                         selectedCardIds={this.state.selectedCardIds}
                         addCard={(show) => this.addCard('', show)}
                     />}
-
             </div>
         )
     }
@@ -232,7 +251,7 @@ class CenterPanel extends React.Component<Props, State> {
         })
     }
 
-    addCard = async (groupByOptionId?: string, show = false): Promise<void> => {
+    addCard = async (groupByOptionId?: string, show = false, properties: Record<string, string> = {}): Promise<void> => {
         const {activeView, board, groupByProperty} = this.props
 
         const card = createCard()
@@ -249,7 +268,7 @@ class CenterPanel extends React.Component<Props, State> {
                 delete propertiesThatMeetFilters[groupByProperty.id]
             }
         }
-        card.fields.properties = {...card.fields.properties, ...propertiesThatMeetFilters}
+        card.fields.properties = {...card.fields.properties, ...properties, ...propertiesThatMeetFilters}
         if (!card.fields.icon && UserSettings.prefillRandomIcons) {
             card.fields.icon = BlockIcons.shared.randomIcon()
         }
