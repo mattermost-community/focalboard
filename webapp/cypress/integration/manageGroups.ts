@@ -13,12 +13,12 @@ describe('Manage groups', () => {
         cy.contains('Empty board').click({force: true})
 
         cy.contains('+ Add a group').click({force: true})
-        cy.get(`.KanbanColumnHeader .Editable[value='New group']`).should('exist')
+        cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('exist')
 
-        cy.get(`.KanbanColumnHeader .Editable[value='New group']`).
+        cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').
             clear().
             type('Group 1').
             blur()
-        cy.get(`.KanbanColumnHeader .Editable[value='Group 1']`).should('exist')
+        cy.get('.KanbanColumnHeader .Editable[value=\'Group 1\']').should('exist')
     })
 })
