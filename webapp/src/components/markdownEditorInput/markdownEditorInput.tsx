@@ -81,8 +81,12 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
 
     useEffect(() => {
         let isMounted = true
-        if (isMounted && initialText === '') {
-            setTimeout(() => setEditorState(EditorState.createEmpty()), 200)
+        if (initialText === '') {
+            setTimeout(() => {
+                if (isMounted) {
+                    setEditorState(EditorState.createEmpty())
+                }
+            }, 200)
         }
 
         return () => {

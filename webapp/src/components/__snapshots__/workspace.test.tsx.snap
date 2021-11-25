@@ -337,15 +337,15 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                           <div
                             class=""
                             data-block="true"
-                            data-editor="ekfk0"
-                            data-offset-key="37kkb-0-0"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
                           >
                             <div
                               class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                              data-offset-key="37kkb-0-0"
+                              data-offset-key="123-0-0"
                             >
                               <span
-                                data-offset-key="37kkb-0-0"
+                                data-offset-key="123-0-0"
                               >
                                 <span
                                   data-text="true"
@@ -881,15 +881,15 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                           <div
                             class=""
                             data-block="true"
-                            data-editor="43sjh"
-                            data-offset-key="1kimo-0-0"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
                           >
                             <div
                               class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                              data-offset-key="1kimo-0-0"
+                              data-offset-key="123-0-0"
                             >
                               <span
-                                data-offset-key="1kimo-0-0"
+                                data-offset-key="123-0-0"
                               >
                                 <span
                                   data-text="true"
@@ -1475,15 +1475,15 @@ exports[`src/components/workspace should match snapshot 1`] = `
                           <div
                             class=""
                             data-block="true"
-                            data-editor="av7dp"
-                            data-offset-key="209bq-0-0"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
                           >
                             <div
                               class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                              data-offset-key="209bq-0-0"
+                              data-offset-key="123-0-0"
                             >
                               <span
-                                data-offset-key="209bq-0-0"
+                                data-offset-key="123-0-0"
                               >
                                 <span
                                   data-text="true"
@@ -2019,15 +2019,15 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                           <div
                             class=""
                             data-block="true"
-                            data-editor="m7o3"
-                            data-offset-key="a5qsv-0-0"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
                           >
                             <div
                               class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                              data-offset-key="a5qsv-0-0"
+                              data-offset-key="123-0-0"
                             >
                               <span
-                                data-offset-key="a5qsv-0-0"
+                                data-offset-key="123-0-0"
                               >
                                 <span
                                   data-text="true"
