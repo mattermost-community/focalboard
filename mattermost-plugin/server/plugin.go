@@ -355,6 +355,7 @@ func getFirstLinkAndShortenAllBoardsLink(postMessage string) (firstLink, newPost
 			}
 
 			if seen := seenLinks[link]; !seen && isBoardsLink(link) {
+				// TODO: Make sure that <Jump To Card> is Internationalized and translated to the Users Language preference
 				markdownFormattedLink := fmt.Sprintf("[%s](%s)", "<Jump To Card>", link)
 				newPostMessage = strings.ReplaceAll(newPostMessage, link, markdownFormattedLink)
 				seenLinks[link] = true
