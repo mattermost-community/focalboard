@@ -291,7 +291,8 @@ func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) *mmModel.Pos
 		return post
 	}
 
-	firstLink := getFirstLink(post.Message)
+	firstLink, newPostMessage := getFirstLinkAndShortenAllBoardsLink(post.Message)
+	post.Message = newPostMessage
 
 	if firstLink == "" {
 		return post
@@ -342,26 +343,33 @@ func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) *mmModel.Pos
 	return post
 }
 
-func getFirstLink(str string) string {
-	firstLink := ""
+func getFirstLinkAndShortenAllBoardsLink(postMessage string) (firstLink, newPostMessage string) {
+	newPostMessage = postMessage
+	seenLinks := make(map[string]bool)
+	markdown.Inspect(postMessage, func(blockOrInline interface{}) bool {
+		if autoLink, ok := blockOrInline.(*markdown.Autolink); ok {
+			link := autoLink.Destination()
 
-	markdown.Inspect(str, func(blockOrInline interface{}) bool {
-		if _, ok := blockOrInline.(*markdown.Autolink); ok {
-			if link := blockOrInline.(*markdown.Autolink).Destination(); firstLink == "" {
+			if firstLink == "" {
 				firstLink = link
-				return false
+			}
+
+			if seen := seenLinks[link]; !seen && isBoardsLink(link) {
+				// TODO: Make sure that <Jump To Card> is Internationalized and translated to the Users Language preference
+				markdownFormattedLink := fmt.Sprintf("[%s](%s)", "<Jump To Card>", link)
+				newPostMessage = strings.ReplaceAll(newPostMessage, link, markdownFormattedLink)
+				seenLinks[link] = true
 			}
 		}
 		if inlineLink, ok := blockOrInline.(*markdown.InlineLink); ok {
 			if link := inlineLink.Destination(); firstLink == "" {
 				firstLink = link
-				return false
 			}
 		}
 		return true
 	})
 
-	return firstLink
+	return firstLink, newPostMessage
 }
 
 func returnBoardsParams(pathArray []string) (workspaceID, boardID, viewID, cardID string) {
@@ -405,4 +413,24 @@ func returnBoardsParams(pathArray []string) (workspaceID, boardID, viewID, cardI
 		cardID = pathArray[index+7]
 	}
 	return workspaceID, boardID, viewID, cardID
+}
+
+func isBoardsLink(link string) bool {
+	u, err := url.Parse(link)
+
+	if err != nil {
+		return false
+	}
+
+	urlPath := u.Path
+	urlPath = strings.TrimPrefix(urlPath, "/")
+	urlPath = strings.TrimSuffix(urlPath, "/")
+	pathSplit := strings.Split(strings.ToLower(urlPath), "/")
+
+	if len(pathSplit) == 0 {
+		return false
+	}
+
+	workspaceID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
+	return workspaceID != "" && boardID != "" && viewID != "" && cardID != ""
 }
