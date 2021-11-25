@@ -4,14 +4,15 @@
 import '@testing-library/jest-dom'
 import {act, render, screen} from '@testing-library/react'
 
-import React from 'react'
+import React, {ReactNode, ReactElement} from 'react'
 import {mocked} from 'ts-jest/utils'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import userEvent from '@testing-library/user-event'
 
 import {Utils} from '../utils'
 import {TestBlockFactory} from '../test/testBlockFactory'
-import {mockDOM, wrapDNDIntl} from '../testUtils'
+import {mockDOM, wrapDNDIntl, mockStateStore} from '../testUtils'
 
 import mutator from '../mutator'
 
@@ -23,6 +24,7 @@ import {CardDetailContext, CardDetailContextType} from './cardDetail/cardDetailC
 jest.mock('../mutator')
 jest.mock('../utils')
 jest.mock('../octoClient')
+jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 
 beforeAll(mockDOM)
 
@@ -64,22 +66,43 @@ describe('components/contentBlock', () => {
         addBlock: jest.fn(),
     })
 
+    const state = {
+        users: {
+            workspaceUsers: {
+                1: {username: 'abc'},
+                2: {username: 'd'},
+                3: {username: 'e'},
+                4: {username: 'f'},
+                5: {username: 'g'},
+            },
+        },
+    }
+    const store = mockStateStore([], state)
+
+    const wrap = (child: ReactNode): ReactElement => (
+        wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <CardDetailContext.Provider value={cardDetailContextValue(true)}>
+                    {child}
+                </CardDetailContext.Provider>
+            </ReduxProvider>,
+        )
+    )
+
     beforeEach(jest.clearAllMocks)
 
     test('should match snapshot with textBlock', async () => {
         let container
         await act(async () => {
-            const result = render(wrapDNDIntl(
-                <CardDetailContext.Provider value={cardDetailContextValue(true)}>
-                    <ContentBlock
-                        block={textBlock}
-                        card={card}
-                        readonly={false}
-                        onDrop={jest.fn()}
-                        width={undefined}
-                        cords={{x: 1, y: 0, z: 0}}
-                    />
-                </CardDetailContext.Provider>,
+            const result = render(wrap(
+                <ContentBlock
+                    block={textBlock}
+                    card={card}
+                    readonly={false}
+                    onDrop={jest.fn()}
+                    width={undefined}
+                    cords={{x: 1, y: 0, z: 0}}
+                />,
             ))
             container = result.container
         })
@@ -89,17 +112,15 @@ describe('components/contentBlock', () => {
     test('should match snapshot with dividerBlock', async () => {
         let container
         await act(async () => {
-            const result = render(wrapDNDIntl(
-                <CardDetailContext.Provider value={cardDetailContextValue(true)}>
-                    <ContentBlock
-                        block={dividerBlock}
-                        card={card}
-                        readonly={false}
-                        onDrop={jest.fn()}
-                        width={undefined}
-                        cords={{x: 1, y: 0, z: 0}}
-                    />
-                </CardDetailContext.Provider>,
+            const result = render(wrap(
+                <ContentBlock
+                    block={dividerBlock}
+                    card={card}
+                    readonly={false}
+                    onDrop={jest.fn()}
+                    width={undefined}
+                    cords={{x: 1, y: 0, z: 0}}
+                />,
             ))
             container = result.container
         })
@@ -109,17 +130,15 @@ describe('components/contentBlock', () => {
     test('should match snapshot with commentBlock', async () => {
         let container
         await act(async () => {
-            const result = render(wrapDNDIntl(
-                <CardDetailContext.Provider value={cardDetailContextValue(true)}>
-                    <ContentBlock
-                        block={commentBlock}
-                        card={card}
-                        readonly={false}
-                        onDrop={jest.fn()}
-                        width={undefined}
-                        cords={{x: 1, y: 0, z: 0}}
-                    />
-                </CardDetailContext.Provider>,
+            const result = render(wrap(
+                <ContentBlock
+                    block={commentBlock}
+                    card={card}
+                    readonly={false}
+                    onDrop={jest.fn()}
+                    width={undefined}
+                    cords={{x: 1, y: 0, z: 0}}
+                />,
             ))
             container = result.container
         })
@@ -129,17 +148,15 @@ describe('components/contentBlock', () => {
     test('should match snapshot with imageBlock', async () => {
         let container
         await act(async () => {
-            const result = render(wrapDNDIntl(
-                <CardDetailContext.Provider value={cardDetailContextValue(true)}>
-                    <ContentBlock
-                        block={imageBlock}
-                        card={card}
-                        readonly={false}
-                        onDrop={jest.fn()}
-                        width={undefined}
-                        cords={{x: 1, y: 0, z: 0}}
-                    />
-                </CardDetailContext.Provider>,
+            const result = render(wrap(
+                <ContentBlock
+                    block={imageBlock}
+                    card={card}
+                    readonly={false}
+                    onDrop={jest.fn()}
+                    width={undefined}
+                    cords={{x: 1, y: 0, z: 0}}
+                />,
             ))
             container = result.container
         })
@@ -149,17 +166,15 @@ describe('components/contentBlock', () => {
     test('should match snapshot with commentBlock readonly', async () => {
         let container
         await act(async () => {
-            const result = render(wrapDNDIntl(
-                <CardDetailContext.Provider value={cardDetailContextValue(true)}>
-                    <ContentBlock
-                        block={commentBlock}
-                        card={card}
-                        readonly={true}
-                        onDrop={jest.fn()}
-                        width={undefined}
-                        cords={{x: 1, y: 0, z: 0}}
-                    />
-                </CardDetailContext.Provider>,
+            const result = render(wrap(
+                <ContentBlock
+                    block={commentBlock}
+                    card={card}
+                    readonly={true}
+                    onDrop={jest.fn()}
+                    width={undefined}
+                    cords={{x: 1, y: 0, z: 0}}
+                />,
             ))
             container = result.container
         })
@@ -169,17 +184,15 @@ describe('components/contentBlock', () => {
     test('return commentBlock and click on menuwrapper', async () => {
         let container
         await act(async () => {
-            const result = render(wrapDNDIntl(
-                <CardDetailContext.Provider value={cardDetailContextValue(true)}>
-                    <ContentBlock
-                        block={commentBlock}
-                        card={card}
-                        readonly={false}
-                        onDrop={jest.fn()}
-                        width={undefined}
-                        cords={{x: 1, y: 0, z: 0}}
-                    />
-                </CardDetailContext.Provider>,
+            const result = render(wrap(
+                <ContentBlock
+                    block={commentBlock}
+                    card={card}
+                    readonly={false}
+                    onDrop={jest.fn()}
+                    width={undefined}
+                    cords={{x: 1, y: 0, z: 0}}
+                />,
             ))
             container = result.container
         })
@@ -191,17 +204,15 @@ describe('components/contentBlock', () => {
 
     test('return commentBlock and click move up', async () => {
         await act(async () => {
-            render(wrapDNDIntl(
-                <CardDetailContext.Provider value={cardDetailContextValue(true)}>
-                    <ContentBlock
-                        block={commentBlock}
-                        card={card}
-                        readonly={false}
-                        onDrop={jest.fn()}
-                        width={undefined}
-                        cords={{x: 1, y: 0, z: 0}}
-                    />
-                </CardDetailContext.Provider>,
+            render(wrap(
+                <ContentBlock
+                    block={commentBlock}
+                    card={card}
+                    readonly={false}
+                    onDrop={jest.fn()}
+                    width={undefined}
+                    cords={{x: 1, y: 0, z: 0}}
+                />,
             ))
         })
         const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
@@ -214,17 +225,15 @@ describe('components/contentBlock', () => {
 
     test('return commentBlock and click move down', async () => {
         await act(async () => {
-            render(wrapDNDIntl(
-                <CardDetailContext.Provider value={cardDetailContextValue(true)}>
-                    <ContentBlock
-                        block={commentBlock}
-                        card={card}
-                        readonly={false}
-                        onDrop={jest.fn()}
-                        width={undefined}
-                        cords={{x: 1, y: 0, z: 0}}
-                    />
-                </CardDetailContext.Provider>,
+            render(wrap(
+                <ContentBlock
+                    block={commentBlock}
+                    card={card}
+                    readonly={false}
+                    onDrop={jest.fn()}
+                    width={undefined}
+                    cords={{x: 1, y: 0, z: 0}}
+                />,
             ))
         })
         const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
@@ -237,17 +246,15 @@ describe('components/contentBlock', () => {
 
     test('return commentBlock and click delete', async () => {
         await act(async () => {
-            render(wrapDNDIntl(
-                <CardDetailContext.Provider value={cardDetailContextValue(true)}>
-                    <ContentBlock
-                        block={commentBlock}
-                        card={card}
-                        readonly={false}
-                        onDrop={jest.fn()}
-                        width={undefined}
-                        cords={{x: 1, y: -1, z: 0}}
-                    />
-                </CardDetailContext.Provider>,
+            render(wrap(
+                <ContentBlock
+                    block={commentBlock}
+                    card={card}
+                    readonly={false}
+                    onDrop={jest.fn()}
+                    width={undefined}
+                    cords={{x: 1, y: -1, z: 0}}
+                />,
             ))
         })
         const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
@@ -260,17 +267,15 @@ describe('components/contentBlock', () => {
     test('return commentBlock and click delete with another contentOrder', async () => {
         card.fields.contentOrder = [[textBlock.id], [dividerBlock.id], [commentBlock.id]]
         await act(async () => {
-            render(wrapDNDIntl(
-                <CardDetailContext.Provider value={cardDetailContextValue(true)}>
-                    <ContentBlock
-                        block={commentBlock}
-                        card={card}
-                        readonly={false}
-                        onDrop={jest.fn()}
-                        width={undefined}
-                        cords={{x: 1, y: 0, z: 0}}
-                    />
-                </CardDetailContext.Provider>,
+            render(wrap(
+                <ContentBlock
+                    block={commentBlock}
+                    card={card}
+                    readonly={false}
+                    onDrop={jest.fn()}
+                    width={undefined}
+                    cords={{x: 1, y: 0, z: 0}}
+                />,
             ))
         })
         const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
