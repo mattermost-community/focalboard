@@ -92,16 +92,6 @@ const App = React.memo((): JSX.Element => {
         dispatch(fetchClientConfig())
     }, [])
 
-    // Load user's block subscriptions when user is loaded
-    useEffect(() => {
-        // block subscriptions are relevant only in plugin mode.
-        if (!Utils.isFocalboardPlugin() || !me) {
-            return
-        }
-
-        dispatch(fetchUserBlockSubscriptions(me!.id))
-    })
-
     if (Utils.isFocalboardPlugin()) {
         useEffect(() => {
             if (window.frontendBaseURL) {

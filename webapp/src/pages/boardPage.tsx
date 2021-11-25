@@ -32,7 +32,8 @@ import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
-import {followBlock, unfollowBlock} from '../store/users'
+import {fetchUserBlockSubscriptions, followBlock, getMe, unfollowBlock} from '../store/users'
+import {IUser} from '../user'
 type Props = {
     readonly?: boolean
 }
@@ -51,6 +52,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const [websocketClosed, setWebsocketClosed] = useState(false)
     const queryString = new URLSearchParams(useLocation().search)
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
+    const me = useAppSelector<IUser|null>(getMe)
 
     let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
 
@@ -65,6 +67,16 @@ const BoardPage = (props: Props): JSX.Element => {
         workspaceId = match.params.workspaceId || workspaceId
         UserSettings.lastWorkspaceId = workspaceId
         octoClient.workspaceId = workspaceId
+    }, [match.params.workspaceId])
+
+    // Load user's block subscriptions when workspace changes
+    useEffect(() => {
+        // block subscriptions are relevant only in plugin mode.
+        if (!Utils.isFocalboardPlugin() || !me) {
+            return
+        }
+
+        dispatch(fetchUserBlockSubscriptions(me!.id))
     }, [match.params.workspaceId])
 
     // Backward compatibility: This can be removed in the future, this is for
