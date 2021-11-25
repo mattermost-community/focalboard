@@ -200,15 +200,15 @@ exports[`components/viewTitle should match snapshot 1`] = `
                   <div
                     class=""
                     data-block="true"
-                    data-editor="b32sp"
-                    data-offset-key="3g6c8-0-0"
+                    data-editor="123"
+                    data-offset-key="123-0-0"
                   >
                     <div
                       class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                      data-offset-key="3g6c8-0-0"
+                      data-offset-key="123-0-0"
                     >
                       <span
-                        data-offset-key="3g6c8-0-0"
+                        data-offset-key="123-0-0"
                       >
                         <span
                           data-text="true"
@@ -300,15 +300,15 @@ exports[`components/viewTitle should match snapshot readonly 1`] = `
                   <div
                     class=""
                     data-block="true"
-                    data-editor="b3s94"
-                    data-offset-key="10ei1-0-0"
+                    data-editor="123"
+                    data-offset-key="123-0-0"
                   >
                     <div
                       class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                      data-offset-key="10ei1-0-0"
+                      data-offset-key="123-0-0"
                     >
                       <span
-                        data-offset-key="10ei1-0-0"
+                        data-offset-key="123-0-0"
                       >
                         <span
                           data-text="true"
@@ -416,15 +416,15 @@ exports[`components/viewTitle show description 1`] = `
                   <div
                     class=""
                     data-block="true"
-                    data-editor="239ps"
-                    data-offset-key="6fi84-0-0"
+                    data-editor="123"
+                    data-offset-key="123-0-0"
                   >
                     <div
                       class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                      data-offset-key="6fi84-0-0"
+                      data-offset-key="123-0-0"
                     >
                       <span
-                        data-offset-key="6fi84-0-0"
+                        data-offset-key="123-0-0"
                       >
                         <span
                           data-text="true"

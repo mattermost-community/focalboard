@@ -18,6 +18,8 @@ import CardDialog from './cardDialog'
 
 jest.mock('../mutator')
 jest.mock('../utils')
+jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
+
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(mutator, true)
 mockedUtils.createGuid.mockReturnValue('test-id')

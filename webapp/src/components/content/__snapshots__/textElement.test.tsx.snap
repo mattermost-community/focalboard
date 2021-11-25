@@ -33,15 +33,15 @@ exports[`components/content/TextElement return a textElement 1`] = `
               <div
                 class=""
                 data-block="true"
-                data-editor="3a7t7"
-                data-offset-key="1262i-0-0"
+                data-editor="123"
+                data-offset-key="123-0-0"
               >
                 <div
                   class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                  data-offset-key="1262i-0-0"
+                  data-offset-key="123-0-0"
                 >
                   <span
-                    data-offset-key="1262i-0-0"
+                    data-offset-key="123-0-0"
                   >
                     <br
                       data-text="true"

@@ -47,14 +47,14 @@ exports[`components/cardDetail/cardDetailContents should match snapshot 1`] = `
                     class=""
                     data-block="true"
                     data-editor="test-id"
-                    data-offset-key="dhdcq-0-0"
+                    data-offset-key="123-0-0"
                   >
                     <div
                       class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                      data-offset-key="dhdcq-0-0"
+                      data-offset-key="123-0-0"
                     >
                       <span
-                        data-offset-key="dhdcq-0-0"
+                        data-offset-key="123-0-0"
                       >
                         <br
                           data-text="true"

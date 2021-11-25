@@ -332,15 +332,15 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                           <div
                             class=""
                             data-block="true"
-                            data-editor="dfivp"
-                            data-offset-key="4sbh6-0-0"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
                           >
                             <div
                               class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                              data-offset-key="4sbh6-0-0"
+                              data-offset-key="123-0-0"
                             >
                               <span
-                                data-offset-key="4sbh6-0-0"
+                                data-offset-key="123-0-0"
                               >
                                 <br
                                   data-text="true"
@@ -402,15 +402,15 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                           <div
                             class=""
                             data-block="true"
-                            data-editor="dfq05"
-                            data-offset-key="9h96s-0-0"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
                           >
                             <div
                               class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                              data-offset-key="9h96s-0-0"
+                              data-offset-key="123-0-0"
                             >
                               <span
-                                data-offset-key="9h96s-0-0"
+                                data-offset-key="123-0-0"
                               >
                                 <br
                                   data-text="true"
@@ -599,15 +599,15 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
                           <div
                             class=""
                             data-block="true"
-                            data-editor="filqo"
-                            data-offset-key="cobo6-0-0"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
                           >
                             <div
                               class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                              data-offset-key="cobo6-0-0"
+                              data-offset-key="123-0-0"
                             >
                               <span
-                                data-offset-key="cobo6-0-0"
+                                data-offset-key="123-0-0"
                               >
                                 <br
                                   data-text="true"
@@ -669,15 +669,15 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
                           <div
                             class=""
                             data-block="true"
-                            data-editor="6o96j"
-                            data-offset-key="esmeu-0-0"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
                           >
                             <div
                               class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                              data-offset-key="esmeu-0-0"
+                              data-offset-key="123-0-0"
                             >
                               <span
-                                data-offset-key="esmeu-0-0"
+                                data-offset-key="123-0-0"
                               >
                                 <br
                                   data-text="true"
@@ -866,15 +866,15 @@ exports[`components/cardDialog should match snapshot 1`] = `
                           <div
                             class=""
                             data-block="true"
-                            data-editor="597dd"
-                            data-offset-key="crucp-0-0"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
                           >
                             <div
                               class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                              data-offset-key="crucp-0-0"
+                              data-offset-key="123-0-0"
                             >
                               <span
-                                data-offset-key="crucp-0-0"
+                                data-offset-key="123-0-0"
                               >
                                 <br
                                   data-text="true"
@@ -936,15 +936,15 @@ exports[`components/cardDialog should match snapshot 1`] = `
                           <div
                             class=""
                             data-block="true"
-                            data-editor="cbbt5"
-                            data-offset-key="evic4-0-0"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
                           >
                             <div
                               class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                              data-offset-key="evic4-0-0"
+                              data-offset-key="123-0-0"
                             >
                               <span
-                                data-offset-key="evic4-0-0"
+                                data-offset-key="123-0-0"
                               >
                                 <br
                                   data-text="true"

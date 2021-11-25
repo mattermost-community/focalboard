@@ -461,15 +461,15 @@ exports[`components/contentBlock should match snapshot with textBlock 1`] = `
                   <div
                     class=""
                     data-block="true"
-                    data-editor="ohpk"
-                    data-offset-key="etjh9-0-0"
+                    data-editor="123"
+                    data-offset-key="123-0-0"
                   >
                     <div
                       class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                      data-offset-key="etjh9-0-0"
+                      data-offset-key="123-0-0"
                     >
                       <span
-                        data-offset-key="etjh9-0-0"
+                        data-offset-key="123-0-0"
                       >
                         <span
                           data-text="true"
