@@ -25,35 +25,35 @@ func (st SubscriberType) IsValid() bool {
 type Subscription struct {
 	// BlockType is the block type of the entity (e.g. board, card) subscribed to
 	// required: true
-	BlockType BlockType `json:"block_type"`
+	BlockType BlockType `json:"blockType"`
 
 	// BlockID is id of the entity being subscribed to
 	// required: true
-	BlockID string `json:"block_id"`
+	BlockID string `json:"blockId"`
 
 	// WorkspaceID is id of the workspace the block belongs to
 	// required: true
-	WorkspaceID string `json:"workspace_id"`
+	WorkspaceID string `json:"workspaceId"`
 
 	// SubscriberType is the type of the entity (e.g. user, channel) that is subscribing
 	// required: true
-	SubscriberType SubscriberType `json:"subscriber_type"`
+	SubscriberType SubscriberType `json:"subscriberType"`
 
 	// SubscriberID is the id of the entity that is subscribing
 	// required: true
-	SubscriberID string `json:"subscriber_id"`
+	SubscriberID string `json:"subscriberId"`
 
 	// NotifiedAt is the timestamp of the last notification sent for this subscription
 	// required: true
-	NotifiedAt int64 `json:"notified_at,omitempty"`
+	NotifiedAt int64 `json:"notifiedAt,omitempty"`
 
 	// CreatedAt is the timestamp this subscription was created
 	// required: true
-	CreateAt int64 `json:"create_at"`
+	CreateAt int64 `json:"createAt"`
 
 	// DeleteAt is the timestamp this subscription was deleted, or zero if not deleted
 	// required: true
-	DeleteAt int64 `json:"delete_at"`
+	DeleteAt int64 `json:"deleteAt"`
 }
 
 func (s *Subscription) IsValid() error {

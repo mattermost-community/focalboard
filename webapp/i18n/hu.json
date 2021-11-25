@@ -53,6 +53,7 @@
   "CardDetail.new-comment-placeholder": "Megjegyzés hozzáadása...",
   "CardDetailProperty.confirm-delete-heading": "Tulajdonság törlésének jóváhagyása",
   "CardDetailProperty.confirm-delete-subtext": "Biztos benne, hogy törölni szeretné a \"{propertyName}\" tulajdonságot? A törléssel a tulajdonság minden kártyáról el lesz távolítva.",
+  "CardDetailProperty.confirm-property-name-change-subtext": "Biztosan szeretné megváltoztatni a \"{propertyName}\" tulajdonság {customText}? Ez érint {numOfCards} kártya adatát ebben a táblában, és akár adatvesztéssel is járhat.",
   "CardDetailProperty.confirm-property-type-change": "Hagyja jóvá a tulajdonság típusának módosítását!",
   "CardDetailProperty.delete-action-button": "Törlés",
   "CardDetailProperty.property-change-action-button": "Tulajdonság módosítása",

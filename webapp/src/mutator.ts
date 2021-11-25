@@ -19,6 +19,7 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/
 //
 class Mutator {
     private undoGroupId?: string
+    private undoDisplayId?: string
 
     private beginUndoGroup(): string | undefined {
         if (this.undoGroupId) {
@@ -42,7 +43,7 @@ class Mutator {
         try {
             await actions()
         } catch (err) {
-            Utils.assertFailure(`ERROR: ${err?.toString?.()}`)
+            Utils.assertFailure(`ERROR: ${err}`)
         }
         if (groupId) {
             this.endUndoGroup(groupId)
@@ -546,6 +547,19 @@ class Mutator {
             },
             'group by',
             this.undoGroupId,
+        )
+    }
+
+    async changeViewDateDisplayPropertyId(viewId: string, oldDateDisplayPropertyId: string|undefined, dateDisplayPropertyId: string): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {dateDisplayPropertyId}})
+            },
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {dateDisplayPropertyId: oldDateDisplayPropertyId}})
+            },
+            'display by',
+            this.undoDisplayId,
         )
     }
 
