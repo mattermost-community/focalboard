@@ -17,13 +17,11 @@ type Props = {
     onChange?: (text: string) => void
     onFocus?: () => void
     onBlur?: (text: string) => void
-    onAccept?: (text: string) => void
 }
 
 const MarkdownEditor = (props: Props): JSX.Element => {
     const {placeholderText, onFocus, onBlur, onChange, text, id} = props
     const [isEditing, setIsEditing] = useState(false)
-
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
 
     const previewElement = (
@@ -58,13 +56,14 @@ const MarkdownEditor = (props: Props): JSX.Element => {
             onFocus={onFocus}
             onBlur={editorOnBlur}
             initialText={text}
+            isEditing={isEditing}
         />
     )
 
     const element = (
         <div className={`MarkdownEditor octo-editor ${props.className || ''} ${isEditing ? 'active' : ''}`}>
             {!isEditing && previewElement}
-            {isEditing && editorElement}
+            {editorElement}
         </div>
     )
 

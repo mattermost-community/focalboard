@@ -3,4 +3,8 @@
         display: flex;
         align-items: center;
     }
+
+    &--IsNotEditing {
+        display: none;
+    }
 }

@@ -44,7 +44,6 @@ describe('components/markdownEditor', () => {
                         onFocus={jest.fn()}
 
                         onBlur={jest.fn()}
-                        onAccept={jest.fn()}
                     />
                 </ReduxProvider>,
             ))
@@ -70,7 +69,6 @@ describe('components/markdownEditor', () => {
                         onFocus={jest.fn()}
 
                         onBlur={jest.fn()}
-                        onAccept={jest.fn()}
                     />
                 </ReduxProvider>,
 
@@ -96,7 +94,6 @@ describe('components/markdownEditor', () => {
                         onFocus={jest.fn()}
 
                         onBlur={jest.fn()}
-                        onAccept={jest.fn()}
                     />
                 </ReduxProvider>,
 
@@ -124,7 +121,6 @@ describe('components/markdownEditor', () => {
                         onFocus={jest.fn()}
 
                         onBlur={jest.fn()}
-                        onAccept={jest.fn()}
                     />
                 </ReduxProvider>,
 

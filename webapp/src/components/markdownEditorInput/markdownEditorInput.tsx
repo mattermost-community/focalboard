@@ -32,15 +32,16 @@ type Props = {
     onBlur?: (text: string) => void
     initialText?: string
     id?: string
+    isEditing: boolean
 }
 
 const MarkdownEditorInput = (props: Props): ReactElement => {
-    const {onChange, onFocus, onBlur, initialText, id} = props
+    const {onChange, onFocus, onBlur, initialText, id, isEditing} = props
     const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
     const mentions: MentionData[] = useMemo(() => workspaceUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`})), [workspaceUsers])
     const ref = useRef<Editor>(null)
     const [editorState, setEditorState] = useState(() => {
-        const state = EditorState.moveFocusToEnd(EditorState.createWithContent(ContentState.createFromText(initialText || '')))
+        const state = EditorState.createWithContent(ContentState.createFromText(initialText || ''))
         return EditorState.moveSelectionToEnd(state)
     })
     const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false)
@@ -64,10 +65,20 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     }, [])
 
     useEffect(() => {
-        if (ref) {
-            setTimeout(() => ref.current?.focus(), 200)
-        }
+        setTimeout(() => ref.current?.focus(), 200)
     })
+
+    useEffect(() => {
+        if (isEditing) {
+            setEditorState(EditorState.moveSelectionToEnd(editorState))
+        }
+    }, [isEditing])
+
+    useEffect(() => {
+        if (initialText === '') {
+            setTimeout(() => setEditorState(EditorState.createEmpty()), 200)
+        }
+    }, [initialText])
 
     const customKeyBindingFn = useCallback((e: React.KeyboardEvent) => {
         if (isMentionPopoverOpen || isEmojiPopoverOpen) {
@@ -119,7 +130,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
 
     return (
         <div
-            className='MarkdownEditorInput'
+            className={`MarkdownEditorInput ${isEditing ? '' : 'MarkdownEditorInput--IsNotEditing'}`}
         >
             <Editor
                 editorKey={id}
