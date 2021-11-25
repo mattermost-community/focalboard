@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {ReactElement, ReactNode} from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import {fireEvent, render} from '@testing-library/react'
 
@@ -8,7 +9,7 @@ import {act} from 'react-dom/test-utils'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
-import {mockDOM, wrapDNDIntl} from '../../testUtils'
+import {mockDOM, wrapDNDIntl, mockStateStore} from '../../testUtils'
 
 import CardDetailContents from './cardDetailContents'
 import {CardDetailProvider} from './cardDetailContext'
@@ -48,11 +49,25 @@ describe('components/cardDetail/cardDetailContents', () => {
 
     const card = TestBlockFactory.createCard(board)
 
+    const state = {
+        users: {
+            workspaceUsers: {
+                1: {username: 'abc'},
+                2: {username: 'd'},
+                3: {username: 'e'},
+                4: {username: 'f'},
+                5: {username: 'g'},
+            },
+        },
+    }
+    const store = mockStateStore([], state)
     const wrap = (child: ReactNode): ReactElement => (
         wrapDNDIntl(
-            <CardDetailProvider card={card}>
-                {child}
-            </CardDetailProvider>,
+            <ReduxProvider store={store}>
+                <CardDetailProvider card={card}>
+                    {child}
+                </CardDetailProvider>
+            </ReduxProvider>,
         )
     )
 
@@ -103,7 +118,6 @@ describe('components/cardDetail/cardDetailContents', () => {
                 readonly={false}
             />
         ))
-
         let container: Element | undefined
         await act(async () => {
             const result = render(component)

@@ -46,6 +46,15 @@ describe('components/cardDialog', () => {
                 [card.id]: card,
             },
         },
+        users: {
+            workspaceUsers: {
+                1: {username: 'abc'},
+                2: {username: 'd'},
+                3: {username: 'e'},
+                4: {username: 'f'},
+                5: {username: 'g'},
+            },
+        },
     }
     const store = mockStateStore([], state)
     beforeEach(() => {

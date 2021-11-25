@@ -69,14 +69,24 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     })
 
     useEffect(() => {
-        if (isEditing) {
+        let isMounted = true
+        if (isEditing && isMounted) {
             setEditorState(EditorState.moveSelectionToEnd(editorState))
+        }
+
+        return () => {
+            isMounted = false
         }
     }, [isEditing])
 
     useEffect(() => {
-        if (initialText === '') {
+        let isMounted = true
+        if (isMounted && initialText === '') {
             setTimeout(() => setEditorState(EditorState.createEmpty()), 200)
+        }
+
+        return () => {
+            isMounted = false
         }
     }, [initialText])
 
@@ -128,9 +138,14 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         setSuggestions(defaultSuggestionsFilter(value, mentions))
     }, [mentions])
 
+    let className = 'MarkdownEditorInput'
+    if (!isEditing) {
+        className += ' MarkdownEditorInput--IsNotEditing'
+    }
+
     return (
         <div
-            className={`MarkdownEditorInput ${isEditing ? '' : 'MarkdownEditorInput--IsNotEditing'}`}
+            className={className}
         >
             <Editor
                 editorKey={id}

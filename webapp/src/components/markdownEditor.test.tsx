@@ -39,10 +39,8 @@ describe('components/markdownEditor', () => {
                         placeholderText={'placeholder'}
                         className={'classname-test'}
                         readonly={false}
-
                         onChange={jest.fn()}
                         onFocus={jest.fn()}
-
                         onBlur={jest.fn()}
                     />
                 </ReduxProvider>,
@@ -64,10 +62,8 @@ describe('components/markdownEditor', () => {
                         placeholderText={'placeholder'}
                         className={'classname-test'}
                         readonly={false}
-
                         onChange={jest.fn()}
                         onFocus={jest.fn()}
-
                         onBlur={jest.fn()}
                     />
                 </ReduxProvider>,
@@ -89,10 +85,8 @@ describe('components/markdownEditor', () => {
                         placeholderText={'placeholder'}
                         className={'classname-test'}
                         readonly={false}
-
                         onChange={jest.fn()}
                         onFocus={jest.fn()}
-
                         onBlur={jest.fn()}
                     />
                 </ReduxProvider>,
@@ -116,10 +110,8 @@ describe('components/markdownEditor', () => {
                         placeholderText={'placeholder'}
                         className={'classname-test'}
                         readonly={false}
-
                         onChange={jest.fn()}
                         onFocus={jest.fn()}
-
                         onBlur={jest.fn()}
                     />
                 </ReduxProvider>,

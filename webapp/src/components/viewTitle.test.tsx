@@ -30,8 +30,18 @@ describe('components/viewTitle', () => {
     const board = TestBlockFactory.createBoard()
     board.id = 'test-id'
     board.rootId = board.id
-
-    const store = mockStateStore([], {})
+    const state = {
+        users: {
+            workspaceUsers: {
+                1: {username: 'abc'},
+                2: {username: 'd'},
+                3: {username: 'e'},
+                4: {username: 'f'},
+                5: {username: 'g'},
+            },
+        },
+    }
+    const store = mockStateStore([], state)
 
     beforeEach(() => {
         jest.clearAllMocks()

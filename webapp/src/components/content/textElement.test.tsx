@@ -3,6 +3,7 @@
 
 import React from 'react'
 import {render, act} from '@testing-library/react'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import '@testing-library/jest-dom'
 
@@ -10,7 +11,7 @@ import {mocked} from 'ts-jest/utils'
 
 import {TextBlock} from '../../blocks/textBlock'
 
-import {mockDOM, wrapDNDIntl} from '../../testUtils'
+import {mockDOM, wrapDNDIntl, mockStateStore} from '../../testUtils'
 
 import {Utils} from '../../utils'
 
@@ -40,12 +41,27 @@ describe('components/content/TextElement', () => {
         mockDOM()
     })
 
+    const state = {
+        users: {
+            workspaceUsers: {
+                1: {username: 'abc'},
+                2: {username: 'd'},
+                3: {username: 'e'},
+                4: {username: 'f'},
+                5: {username: 'g'},
+            },
+        },
+    }
+    const store = mockStateStore([], state)
+
     test('return a textElement', async () => {
         const component = wrapDNDIntl(
-            <TextElement
-                block={defaultBlock}
-                readonly={false}
-            />,
+            <ReduxProvider store={store}>
+                <TextElement
+                    block={defaultBlock}
+                    readonly={false}
+                />
+            </ReduxProvider>,
         )
 
         let container: Element | undefined
