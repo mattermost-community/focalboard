@@ -17,7 +17,7 @@ import Workspace from '../components/workspace'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {Utils} from '../utils'
-import wsClient, {WSClient} from '../wsclient'
+import wsClient, {Subscription, WSClient} from '../wsclient'
 import './boardPage.scss'
 import {updateBoards, getCurrentBoard, setCurrent as setCurrentBoard} from '../store/boards'
 import {updateViews, getCurrentView, setCurrent as setCurrentView, getCurrentBoardViews} from '../store/views'
@@ -234,11 +234,11 @@ const BoardPage = (props: Props): JSX.Element => {
         wsClient.addOnChange(incrementalUpdate)
         wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
-        wsClient.setOnFollowBlock((blockId: string): void => {
-            dispatch(followBlock(blockId))
+        wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
+            dispatch(followBlock(subscription))
         })
-        wsClient.setOnUnfollowBlock((blockId: string): void => {
-            dispatch(unfollowBlock(blockId))
+        wsClient.setOnUnfollowBlock((_: WSClient, subscription: Subscription): void => {
+            dispatch(unfollowBlock(subscription))
         })
         return () => {
             if (timeout) {

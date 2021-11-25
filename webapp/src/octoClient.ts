@@ -8,7 +8,7 @@ import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
-import {UserBlockSubscription} from './subscription'
+import {Subscription} from './wsclient'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -268,12 +268,12 @@ class OctoClient {
     }
 
     async followBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
-        const body = {
-            block_type: blockType,
-            block_id: blockId,
-            workspace_id: this.workspaceId,
-            subscriber_type: 'user',
-            subscriber_id: userId,
+        const body: Subscription = {
+            blockType,
+            blockId,
+            workspaceId: this.workspaceId,
+            subscriberType: 'user',
+            subscriberId: userId,
         }
 
         return fetch(this.getBaseURL() + `/api/v1/workspaces/${this.workspaceId}/subscriptions`, {
@@ -439,14 +439,14 @@ class OctoClient {
         return this.getBlocksWithPath(path)
     }
 
-    async getUserBlockSubscriptions(userId: string): Promise<Array<UserBlockSubscription>> {
+    async getUserBlockSubscriptions(userId: string): Promise<Array<Subscription>> {
         const path = `/api/v1/workspaces/${this.workspaceId}/subscriptions/${userId}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
         }
 
-        return (await this.getJson(response, [])) as UserBlockSubscription[]
+        return (await this.getJson(response, [])) as Subscription[]
     }
 }
 

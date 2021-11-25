@@ -28,15 +28,15 @@ type WSSubscriptionMsg = {
     error?: string
 }
 
-interface Subscription {
+export interface Subscription {
     blockId: string
     workspaceId: string
     subscriberId: string
     blockType: string
     subscriberType: string
-    notifiedAt: number
-    createAt: number
-    deleteAt: number
+    notifiedAt?: number
+    createAt?: number
+    deleteAt?: number
 }
 
 export const ACTION_UPDATE_BLOCK = 'UPDATE_BLOCK'
@@ -63,7 +63,7 @@ type OnReconnectHandler = (client: WSClient) => void
 type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close') => void
 type OnErrorHandler = (client: WSClient, e: Event) => void
 type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => void
-type FollowChangeHandler = (blockID: string) => void
+type FollowChangeHandler = (client: WSClient, subscription: Subscription) => void
 
 class WSClient {
     ws: WebSocket|null = null
@@ -80,8 +80,8 @@ class WSClient {
     onChange: OnChangeHandler[] = []
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
-    onFollowBlock: FollowChangeHandler | null = null
-    onUnfollowBlock: FollowChangeHandler | null = null
+    onFollowBlock: FollowChangeHandler = () => {}
+    onUnfollowBlock: FollowChangeHandler = () => {}
     private notificationDelay = 100
     private reopenDelay = 3000
     private updatedBlocks: Block[] = []
@@ -329,18 +329,6 @@ class WSClient {
         this.onUnfollowBlock = handler
     }
 
-    followBlockHandler(blockID: string): void {
-        if (this.onFollowBlock) {
-            this.onFollowBlock(blockID)
-        }
-    }
-
-    unfollowBlockHandler(blockID: string): void {
-        if (this.onUnfollowBlock) {
-            this.onUnfollowBlock(blockID)
-        }
-    }
-
     updateClientConfigHandler(config: ClientConfig): void {
         for (const handler of this.onConfigChange) {
             handler(this, config)
@@ -348,8 +336,14 @@ class WSClient {
     }
 
     updateSubscriptionHandler(message: WSSubscriptionMsg): void {
-        // TODO: handle subscription change notification.
         Utils.log('updateSubscriptionHandler: ' + message.action + '; blockId=' + message.subscription?.blockId)
+
+        if (!message.subscription) {
+            return
+        }
+
+        const handler = message.subscription.deleteAt ? this.onUnfollowBlock : this.onFollowBlock
+        handler(this, message.subscription)
     }
 
     setOnAppVersionChangeHandler(fn: (versionHasChanged: boolean) => void): void {

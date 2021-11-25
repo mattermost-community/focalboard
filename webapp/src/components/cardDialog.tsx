@@ -159,7 +159,7 @@ const CardDialog = (props: Props): JSX.Element => {
     }
 
     const followingCards = useAppSelector(getUserBlockSubscriptionList)
-    const isFollowingCard = Boolean(followingCards.find((following) => following.block_id === props.cardId))
+    const isFollowingCard = Boolean(followingCards.find((following) => following.blockId === props.cardId))
 
     return (
         <>

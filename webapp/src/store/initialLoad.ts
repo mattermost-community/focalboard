@@ -7,7 +7,7 @@ import {default as client} from '../octoClient'
 import {UserWorkspace} from '../user'
 import {Utils} from '../utils'
 
-import {UserBlockSubscription} from '../subscription'
+import {Subscription} from '../wsclient'
 
 import {RootState} from './index'
 
@@ -48,7 +48,7 @@ export const initialReadOnlyLoad = createAsyncThunk(
     },
 )
 
-export const getUserBlockSubscriptions = (state: RootState): Array<UserBlockSubscription> => state.users.blockSubscriptions
+export const getUserBlockSubscriptions = (state: RootState): Array<Subscription> => state.users.blockSubscriptions
 
 export const getUserBlockSubscriptionList = createSelector(
     getUserBlockSubscriptions,
