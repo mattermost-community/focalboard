@@ -217,13 +217,20 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	for _, sub := range subs {
 		// don't notify the author of their own changes.
 		if sub.SubscriberID == hint.ModifiedByID {
-			n.logger.Debug("notifySubscribers - deliver, skipping change author",
+			n.logger.Debug("notifySubscribers - deliver, skipping author",
 				mlog.Any("hint", hint),
 				mlog.String("modified_by_id", hint.ModifiedByID),
-				mlog.String("username", hint.Username),
+				mlog.String("modified_by_username", hint.Username),
 			)
 			continue
 		}
+
+		n.logger.Debug("notifySubscribers - deliver",
+			mlog.Any("hint", hint),
+			mlog.String("modified_by_id", hint.ModifiedByID),
+			mlog.String("subscriber_id", sub.SubscriberID),
+			mlog.String("subscriber_type", string(sub.SubscriberType)),
+		)
 
 		if err = n.delivery.SubscriptionDeliverSlackAttachments(sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
 			merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",

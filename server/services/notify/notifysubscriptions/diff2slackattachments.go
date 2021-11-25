@@ -226,12 +226,12 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 			*/
 
 			if oldTitle != "" {
-				oldTitle = fmt.Sprintf(" ~~`%s`~~", oldTitle)
+				oldTitle = fmt.Sprintf("\n~~`%s`~~", oldTitle)
 			}
 
 			attachment.Fields = append(attachment.Fields, &mm_model.SlackAttachmentField{
 				Short: false,
-				Title: "Comment",
+				Title: "Description",
 				Value: newTitle + oldTitle,
 			})
 		}
