@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	defBlockNotificationFreq = time.Minute * 1
+	defBlockNotificationFreq = time.Minute * 2
 	enqueueNotifyHintTimeout = time.Second * 10
 )
 
@@ -26,8 +26,8 @@ var (
 	// defNotificationFreq provides default frequency for change notifications
 	// for various block types.
 	defNotificationFreq = map[model.BlockType]time.Duration{
-		model.TypeBoard: time.Second * 30, // time.Hour * 24,
-		model.TypeCard:  time.Second * 15, // time.Minute * 1,
+		model.TypeBoard: time.Hour * 24,
+		model.TypeCard:  time.Minute * 2,
 	}
 
 	errEnqueueNotifyHintTimeout = errors.New("enqueue notify hint timed out")
