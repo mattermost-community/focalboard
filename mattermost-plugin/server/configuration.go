@@ -73,7 +73,6 @@ func (p *Plugin) OnConfigurationChange() error { //nolint
 	if p.wsPluginAdapter == nil {
 		return nil
 	}
-
 	mmconfig := p.API.GetConfig()
 
 	// handle plugin configuration settings
