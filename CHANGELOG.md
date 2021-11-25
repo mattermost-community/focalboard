@@ -6,6 +6,11 @@ This changelog summarizes updates to our open source project. You can also find 
 
 ## [Work In Progress] - vNext Release - [Date TBD]
 
+## v0.11 Release - December, 2021
+* Change notifications. Thanks @wiggin77!
+* Calendar view. Thanks @sbishel!
+* `@mention` autocomplete. Thanks @hahmadia!
+
 ## v0.10 Release - November, 2021
 * @mention notifications. Thanks @wiggin77!
 * Board calculations. Thanks @harshilsharma63!
