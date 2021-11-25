@@ -17,7 +17,7 @@ import Workspace from '../components/workspace'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {Utils} from '../utils'
-import wsClient, {WSClient} from '../wsclient'
+import wsClient, {Subscription, WSClient} from '../wsclient'
 import './boardPage.scss'
 import {updateBoards, getCurrentBoard, setCurrent as setCurrentBoard} from '../store/boards'
 import {updateViews, getCurrentView, setCurrent as setCurrentView, getCurrentBoardViews} from '../store/views'
@@ -32,6 +32,8 @@ import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import {fetchUserBlockSubscriptions, followBlock, getMe, unfollowBlock} from '../store/users'
+import {IUser} from '../user'
 type Props = {
     readonly?: boolean
 }
@@ -50,6 +52,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const [websocketClosed, setWebsocketClosed] = useState(false)
     const queryString = new URLSearchParams(useLocation().search)
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
+    const me = useAppSelector<IUser|null>(getMe)
 
     let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
 
@@ -64,6 +67,16 @@ const BoardPage = (props: Props): JSX.Element => {
         workspaceId = match.params.workspaceId || workspaceId
         UserSettings.lastWorkspaceId = workspaceId
         octoClient.workspaceId = workspaceId
+    }, [match.params.workspaceId])
+
+    // Load user's block subscriptions when workspace changes
+    useEffect(() => {
+        // block subscriptions are relevant only in plugin mode.
+        if (!Utils.isFocalboardPlugin() || !me) {
+            return
+        }
+
+        dispatch(fetchUserBlockSubscriptions(me!.id))
     }, [match.params.workspaceId])
 
     // Backward compatibility: This can be removed in the future, this is for
@@ -233,6 +246,12 @@ const BoardPage = (props: Props): JSX.Element => {
         wsClient.addOnChange(incrementalUpdate)
         wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
+        wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
+            dispatch(followBlock(subscription))
+        })
+        wsClient.setOnUnfollowBlock((_: WSClient, subscription: Subscription): void => {
+            dispatch(unfollowBlock(subscription))
+        })
         return () => {
             if (timeout) {
                 clearTimeout(timeout)

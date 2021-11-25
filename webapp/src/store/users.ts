@@ -6,6 +6,10 @@ import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@red
 import {default as client} from '../octoClient'
 import {IUser} from '../user'
 
+import {Utils} from '../utils'
+
+import {Subscription} from '../wsclient'
+
 import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
@@ -19,11 +23,25 @@ type UsersStatus = {
     me: IUser|null
     workspaceUsers: {[key: string]: IUser}
     loggedIn: boolean|null
+    blockSubscriptions: Array<Subscription>
 }
+
+export const fetchUserBlockSubscriptions = createAsyncThunk(
+    'user/blockSubscriptions',
+    async (userId: string) => (Utils.isFocalboardPlugin() ? client.getUserBlockSubscriptions(userId) : []),
+)
+
+const initialState = {
+    me: null,
+    workspaceUsers: {},
+    loggedIn: null,
+    userWorkspaces: [],
+    blockSubscriptions: [],
+} as UsersStatus
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: {me: null, workspaceUsers: {}, loggedIn: null, userWorkspaces: []} as UsersStatus,
+    initialState,
     reducers: {
         setMe: (state, action: PayloadAction<IUser>) => {
             state.me = action.payload
@@ -33,6 +51,13 @@ const usersSlice = createSlice({
                 acc[user.id] = user
                 return acc
             }, {})
+        },
+        followBlock: (state, action: PayloadAction<Subscription>) => {
+            state.blockSubscriptions.push(action.payload)
+        },
+        unfollowBlock: (state, action: PayloadAction<Subscription>) => {
+            const oldSubscriptions = state.blockSubscriptions
+            state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload.blockId)
         },
     },
     extraReducers: (builder) => {
@@ -49,6 +74,9 @@ const usersSlice = createSlice({
                 acc[user.id] = user
                 return acc
             }, {})
+        })
+        builder.addCase(fetchUserBlockSubscriptions.fulfilled, (state, action) => {
+            state.blockSubscriptions = action.payload
         })
     },
 })
@@ -71,3 +99,5 @@ export const getUser = (userId: string): (state: RootState) => IUser|undefined =
         return users[userId]
     }
 }
+
+export const {followBlock, unfollowBlock} = usersSlice.actions
