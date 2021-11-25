@@ -51,9 +51,11 @@ describe('Create and delete board / card', () => {
 
         // Change card title
         cy.log('**Change card title**')
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.get('.CardDetail .EditableArea.title').
             click().
             should('have.focus').
+            wait(1000).
             type(cardTitle).
             should('have.value', cardTitle)
 
