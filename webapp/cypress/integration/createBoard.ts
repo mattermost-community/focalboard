@@ -52,8 +52,9 @@ describe('Create and delete board / card', () => {
         // Change card title
         cy.log('**Change card title**')
         cy.get('.CardDetail .EditableArea.title').
+            click().
+            should('have.focus').
             type(cardTitle).
-            type('{enter}').
             should('have.value', cardTitle)
 
         // Close card dialog
