@@ -275,14 +275,13 @@ export function getSelectBaseStyle() {
         control: (): CSSObject => ({
             border: 0,
             width: '100%',
-            margin: '4px 0 0 0',
 
             // display: 'flex',
             // marginTop: 0,
         }),
         valueContainer: (provided: CSSObject): CSSObject => ({
             ...provided,
-            padding: '0 5px',
+            padding: '0 5px 0 0',
             overflow: 'unset',
         }),
         singleValue: (provided: CSSObject): CSSObject => ({

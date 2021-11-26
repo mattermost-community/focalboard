@@ -98,7 +98,7 @@ exports[`components/calculations/Calculation should match snapshot - option chan
           class="CalculationOptions__control css-1s59geg-Control"
         >
           <div
-            class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1mxrbau-ValueContainer"
+            class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-5xgqhs-ValueContainer"
           >
             <div
               class="CalculationOptions__single-value css-1brck82-singleValue"

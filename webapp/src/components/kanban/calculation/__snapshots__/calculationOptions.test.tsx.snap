@@ -24,7 +24,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions base case 1`] =
       class="CalculationOptions__control CalculationOptions__control--is-focused css-1s59geg-Control"
     >
       <div
-        class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1mxrbau-ValueContainer"
+        class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-5xgqhs-ValueContainer"
       >
         <div
           class="CalculationOptions__single-value css-1brck82-singleValue"
@@ -106,7 +106,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
       class="CalculationOptions__control CalculationOptions__control--is-focused CalculationOptions__control--menu-is-open css-1s59geg-Control"
     >
       <div
-        class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1mxrbau-ValueContainer"
+        class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-5xgqhs-ValueContainer"
       >
         <div
           class="CalculationOptions__single-value css-1brck82-singleValue"
@@ -270,7 +270,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
       class="CalculationOptions__control CalculationOptions__control--is-focused CalculationOptions__control--menu-is-open css-1s59geg-Control"
     >
       <div
-        class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1mxrbau-ValueContainer"
+        class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-5xgqhs-ValueContainer"
       >
         <div
           class="CalculationOptions__single-value css-1brck82-singleValue"
