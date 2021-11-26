@@ -27,6 +27,8 @@ const CheckboxElement = React.memo((props: Props) => {
     const titleRef = useRef<Focusable>(null)
     const cardDetail = useCardDetailContext()
     const [addedBlockId, setAddedBlockId] = useState(cardDetail.lastAddedBlock.id)
+    const [active, setActive] = useState(Boolean(block.fields.value))
+    const [title, setTitle] = useState(block.title)
 
     useEffect(() => {
         if (block.id === addedBlockId) {
@@ -35,8 +37,9 @@ const CheckboxElement = React.memo((props: Props) => {
         }
     }, [block, addedBlockId, titleRef])
 
-    const [active, setActive] = useState(Boolean(block.fields.value))
-    const [title, setTitle] = useState(block.title)
+    useEffect(() => {
+        setActive(Boolean(block.fields.value))
+    }, [Boolean(block.fields.value)])
 
     return (
         <div className='CheckboxElement'>
