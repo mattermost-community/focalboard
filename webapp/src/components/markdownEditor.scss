@@ -50,6 +50,14 @@
     }
 
     .octo-editor-preview {
+        a {
+            color: rgba(var(--link-color-rgb), 1);
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
         p {
             margin: 0;
             word-break: break-word;

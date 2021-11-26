@@ -30,17 +30,38 @@
 
     .octo-propertyrow {
         display: flex;
-        margin: 4px 0;
+        align-items: center;
+        margin: 6px 0;
         height: 32px;
+
+        .Switch {
+            margin-left: 8px;
+            width: 40px;
+            height: 24px;
+            box-sizing: border-box;
+            padding: 2px;
+
+            .octo-switch-inner {
+                width: 20px;
+                height: 20px;
+            }
+
+            &.on {
+                .octo-switch-inner {
+                    transform: translateX(16px) translateY(0);
+                }
+            }
+        }
 
         .octo-propertyvalue {
             font-size: 14px;
+            padding: 4px 8px;
+            height: 32px;
 
             &:not(.readonly) {
                 min-width: 180px;
                 transition: background 100ms ease-out 0s;
                 cursor: pointer;
-                padding: 4px 8px;
                 border-radius: 4px;
 
                 &:hover {
@@ -59,6 +80,16 @@
         }
     }
 
+    .UserProperty {
+        .react-select__value-container {
+            padding: 0;
+        }
+
+        .react-select__control {
+            margin-top: 0;
+        }
+    }
+
     .octo-propertyname {
         width: 150px;
         margin-right: 5px;
@@ -67,12 +98,13 @@
         .Button {
             width: 100%;
             height: 100%;
-            padding: 8px;
+            padding: 4px 8px;
             text-align: left;
             justify-content: unset;
         }
 
         &.add-property {
+            margin: 8px 0 0;
             color: rgba(var(--center-channel-color-rgb), 0.4);
         }
     }

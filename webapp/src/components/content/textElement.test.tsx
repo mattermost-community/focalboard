@@ -2,28 +2,25 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {render, screen, fireEvent, act} from '@testing-library/react'
+import {render, act} from '@testing-library/react'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import '@testing-library/jest-dom'
 
 import {mocked} from 'ts-jest/utils'
 
-import userEvent from '@testing-library/user-event'
-
 import {TextBlock} from '../../blocks/textBlock'
 
-import {mockDOM, wrapDNDIntl} from '../../testUtils'
+import {mockDOM, wrapDNDIntl, mockStateStore} from '../../testUtils'
 
 import {Utils} from '../../utils'
-
-import mutator from '../../mutator'
 
 import TextElement from './textElement'
 
 jest.mock('../../utils')
 jest.mock('../../mutator')
+jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
-const mockedMutator = mocked(mutator, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
 const defaultBlock: TextBlock = {
     id: 'test-id',
@@ -45,50 +42,34 @@ describe('components/content/TextElement', () => {
         mockDOM()
     })
 
+    const state = {
+        users: {
+            workspaceUsers: {
+                1: {username: 'abc'},
+                2: {username: 'd'},
+                3: {username: 'e'},
+                4: {username: 'f'},
+                5: {username: 'g'},
+            },
+        },
+    }
+    const store = mockStateStore([], state)
+
     test('return a textElement', async () => {
         const component = wrapDNDIntl(
-            <TextElement
-                block={defaultBlock}
-                readonly={false}
-            />,
+            <ReduxProvider store={store}>
+                <TextElement
+                    block={defaultBlock}
+                    readonly={false}
+                />
+            </ReduxProvider>,
         )
 
         let container: Element | undefined
         await act(async () => {
             const result = render(component)
             container = result.container
-            const elementMarkDown = screen.getByRole('textbox', {hidden: true})
-            userEvent.click(elementMarkDown)
         })
-        const elementsTextArea = screen.getAllByRole('textbox', {hidden: true})
-        expect(elementsTextArea).not.toBeNull()
-        expect(elementsTextArea.length).toBeGreaterThanOrEqual(2)
-        userEvent.type(elementsTextArea[1], 'hello')
         expect(container).toMatchSnapshot()
-    })
-    test('return a textElement and do a blur event', async () => {
-        const component = wrapDNDIntl(
-            <TextElement
-                block={defaultBlock}
-                readonly={false}
-            />,
-        )
-
-        let container: Element | undefined
-        let elementMarkDown: Element | undefined
-
-        await act(async () => {
-            const result = render(component)
-            container = result.container
-            elementMarkDown = screen.getByRole('textbox', {hidden: true})
-            userEvent.click(elementMarkDown)
-        })
-        const elementsTextArea = screen.getAllByRole('textbox', {hidden: true})
-        expect(elementsTextArea).not.toBeNull()
-        expect(elementsTextArea.length).toBeGreaterThanOrEqual(2)
-        userEvent.type(elementsTextArea[1], 'hello')
-        fireEvent.blur(elementsTextArea[1])
-        expect(container).toMatchSnapshot()
-        expect(mockedMutator.changeTitle).toBeCalledTimes(1)
     })
 })

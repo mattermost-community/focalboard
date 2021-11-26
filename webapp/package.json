@@ -24,6 +24,9 @@
 		"updatesnapshots": "jest --updateSnapshot"
 	},
 	"dependencies": {
+		"@draft-js-plugins/editor": "^4.1.0",
+		"@draft-js-plugins/emoji": "^4.5.5",
+		"@draft-js-plugins/mention": "^5.0.0",
 		"@fullcalendar/core": "^5.10.0",
 		"@fullcalendar/daygrid": "^5.10.0",
 		"@fullcalendar/interaction": "^5.10.0",
@@ -31,7 +34,7 @@
 		"@mattermost/compass-icons": "^0.1.10",
 		"@reduxjs/toolkit": "^1.6.0",
 		"color": "^4.0.0",
-		"easymde": "^2.15.0",
+		"draft-js": "^0.11.7",
 		"emoji-mart": "^3.0.1",
 		"fullcalendar": "^5.10.0",
 		"imagemin-gifsicle": "^7.0.0",
@@ -55,8 +58,7 @@
 		"react-intl": "^5.13.5",
 		"react-redux": "^7.2.4",
 		"react-router-dom": "^5.2.0",
-		"react-select": "^4.3.0",
-		"react-simplemde-editor": "^5.0.1"
+		"react-select": "^4.3.0"
 	},
 	"jest": {
 		"moduleNameMapper": {
@@ -85,6 +87,7 @@
 		"@testing-library/react": "^11.2.5",
 		"@testing-library/user-event": "^13.1.9",
 		"@types/color": "^3.0.2",
+		"@types/draft-js": "^0.11.6",
 		"@types/emoji-mart": "^3.0.4",
 		"@types/jest": "^26.0.21",
 		"@types/marked": "^2.0.0",

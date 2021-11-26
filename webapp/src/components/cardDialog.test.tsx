@@ -18,6 +18,8 @@ import CardDialog from './cardDialog'
 
 jest.mock('../mutator')
 jest.mock('../utils')
+jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
+
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(mutator, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
@@ -44,6 +46,15 @@ describe('components/cardDialog', () => {
         cards: {
             cards: {
                 [card.id]: card,
+            },
+        },
+        users: {
+            workspaceUsers: {
+                1: {username: 'abc'},
+                2: {username: 'd'},
+                3: {username: 'e'},
+                4: {username: 'f'},
+                5: {username: 'g'},
             },
         },
     }
