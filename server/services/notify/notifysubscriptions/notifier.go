@@ -74,24 +74,37 @@ func (n *notifier) stop() {
 
 func (n *notifier) loop() {
 	done := n.done
-	nextNotify := n.notify()
+	var nextNotify time.Time
 
 	for {
+		hint, err := n.store.GetNextNotificationHint(false)
+		switch {
+		case n.store.IsErrNotFound(err):
+			// no hints in table; wait up to an hour or when `onNotifyHint` is called again
+			nextNotify = time.Now().Add(time.Hour * 1)
+			n.logger.Debug("notify loop - no hints in queue", mlog.Time("next_check", nextNotify))
+		case err != nil:
+			// try again in a minute
+			nextNotify = time.Now().Add(time.Minute * 1)
+			n.logger.Error("notify loop - error fetching next notification", mlog.Err(err))
+		case hint.NotifyAt > utils.GetMillis():
+			// next hint is not ready yet; sleep until hint.NotifyAt
+			nextNotify = utils.GetTimeForMillis(hint.NotifyAt)
+		default:
+			// it's time to notify
+			n.notify()
+			continue
+		}
+
 		n.logger.Debug("subscription notifier loop",
 			mlog.Time("next_notify", nextNotify),
 		)
+
 		select {
-		case hint := <-n.hints:
-			// if this hint suggests a notification is due before the next scheduled notification
-			// then update the nextNotify
-			notifyAt := model.GetTimeForMillis(hint.NotifyAt)
-			if notifyAt.Before(nextNotify) {
-				nextNotify = notifyAt
-			}
-
+		case <-n.hints:
+			// A new hint was added. Wake up and check if next hint is ready to go.
 		case <-time.After(time.Until(nextNotify)):
-			nextNotify = n.notify()
-
+			// Next scheduled hint should be ready now.
 		case <-done:
 			return
 		}
@@ -109,28 +122,19 @@ func (n *notifier) onNotifyHint(hint *model.NotificationHint) error {
 	return nil
 }
 
-func (n *notifier) notify() time.Time {
+func (n *notifier) notify() {
 	var hint *model.NotificationHint
 	var err error
 
-	for {
-		hint, err = n.store.GetNextNotificationHint(true)
-		if n.store.IsErrNotFound(err) {
-			// no more hints in table; wait up to an hour or when `onNotifyHint` is called again
-			next := time.Now().Add(time.Hour * 1)
-			n.logger.Debug("notify - no hints in queue", mlog.Time("next_check", next))
-			return next
-		}
+	hint, err = n.store.GetNextNotificationHint(true)
+	if err != nil {
+		// try again later
+		n.logger.Error("notify - error fetching next notification", mlog.Err(err))
+		return
+	}
 
-		if err != nil {
-			n.logger.Error("Error fetching next notification", mlog.Err(err))
-			// try again in a minute
-			return time.Now().Add(time.Minute * 1)
-		}
-
-		if err = n.notifySubscribers(hint); err != nil {
-			n.logger.Error("Error notifying subscribers", mlog.Err(err))
-		}
+	if err = n.notifySubscribers(hint); err != nil {
+		n.logger.Error("Error notifying subscribers", mlog.Err(err))
 	}
 }
 
