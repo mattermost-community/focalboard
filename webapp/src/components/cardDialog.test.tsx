@@ -39,9 +39,6 @@ describe('components/cardDialog', () => {
     card.createdBy = 'user-id-1'
 
     const state = {
-        users: {
-            blockSubscriptions: [],
-        },
         comments: {
             comments: {},
         },
@@ -59,6 +56,7 @@ describe('components/cardDialog', () => {
                 4: {username: 'f'},
                 5: {username: 'g'},
             },
+            blockSubscriptions: [],
         },
     }
     const store = mockStateStore([], state)
