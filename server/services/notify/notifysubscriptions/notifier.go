@@ -23,23 +23,8 @@ const (
 )
 
 var (
-	// defNotificationFreq provides default frequency for change notifications
-	// for various block types.
-	defNotificationFreq = map[model.BlockType]time.Duration{
-		model.TypeBoard: time.Hour * 24,
-		model.TypeCard:  time.Minute * 2,
-	}
-
 	errEnqueueNotifyHintTimeout = errors.New("enqueue notify hint timed out")
 )
-
-func getBlockUpdateFreq(blockType model.BlockType) time.Duration {
-	freq, ok := defNotificationFreq[blockType]
-	if !ok {
-		freq = defBlockNotificationFreq
-	}
-	return freq
-}
 
 // notifier provides block change notifications for subscribers. Block change events are batched
 // via notifications hints written to the database so that fewer notifications are sent for active
@@ -56,12 +41,12 @@ type notifier struct {
 	done chan struct{}
 }
 
-func newNotifier(serverRoot string, store Store, delivery SubscriptionDelivery, logger *mlog.Logger) *notifier {
+func newNotifier(params BackendParams) *notifier {
 	return &notifier{
-		serverRoot: serverRoot,
-		store:      store,
-		delivery:   delivery,
-		logger:     logger,
+		serverRoot: params.ServerRoot,
+		store:      params.Store,
+		delivery:   params.Delivery,
+		logger:     params.Logger,
 		done:       nil,
 		hints:      make(chan *model.NotificationHint, 20),
 	}
@@ -92,14 +77,14 @@ func (n *notifier) loop() {
 	nextNotify := n.notify()
 
 	for {
-		n.logger.Debug("subscription notifier loop", mlog.Time("next_notify", nextNotify))
+		n.logger.Debug("subscription notifier loop",
+			mlog.Time("next_notify", nextNotify),
+		)
 		select {
 		case hint := <-n.hints:
 			// if this hint suggests a notification is due before the next scheduled notification
 			// then update the nextNotify
-			updateAt := model.GetTimeForMillis(hint.NotifyAt)
-			freq := getBlockUpdateFreq(hint.BlockType)
-			notifyAt := updateAt.Add(freq)
+			notifyAt := model.GetTimeForMillis(hint.NotifyAt)
 			if notifyAt.Before(nextNotify) {
 				nextNotify = notifyAt
 			}

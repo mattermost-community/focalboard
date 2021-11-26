@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 	"net/url"
 	"path"
@@ -28,9 +29,11 @@ import (
 )
 
 const (
-	boardsFeatureFlagName = "BoardsFeatureFlags"
-	pluginName            = "focalboard"
-	sharedBoardsName      = "enablepublicsharedboards"
+	boardsFeatureFlagName     = "BoardsFeatureFlags"
+	pluginName                = "focalboard"
+	sharedBoardsName          = "enablepublicsharedboards"
+	notifyFreqCardSecondsKey  = "notify_freq_card_seconds"
+	notifyFreqBoardSecondsKey = "notify_freq_board_seconds"
 )
 
 type BoardsEmbed struct {
@@ -112,6 +115,7 @@ func (p *Plugin) OnActivate() error {
 	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
 
 	backendParams := notifyBackendParams{
+		cfg:        cfg,
 		client:     client,
 		serverRoot: baseURL + "/boards",
 		logger:     logger,
@@ -222,7 +226,34 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		AuthMode:                 "mattermost",
 		EnablePublicSharedBoards: enablePublicSharedBoards,
 		FeatureFlags:             featureFlags,
+		NotifyFreqCardSeconds:    getPluginSettingInt(mmconfig, notifyFreqCardSecondsKey, 120),
+		NotifyFreqBoardSeconds:   getPluginSettingInt(mmconfig, notifyFreqBoardSecondsKey, 86400),
 	}
+}
+
+func getPluginSetting(mmConfig mmModel.Config, key string) (interface{}, bool) {
+	plugin, ok := mmConfig.PluginSettings.Plugins[pluginName]
+	if !ok {
+		return nil, false
+	}
+
+	val, ok := plugin[key]
+	if !ok {
+		return nil, false
+	}
+	return val, true
+}
+
+func getPluginSettingInt(mmConfig mmModel.Config, key string, def int) int {
+	val, ok := getPluginSetting(mmConfig, key)
+	if !ok {
+		return def
+	}
+	valFloat, ok := val.(float64)
+	if !ok {
+		return def
+	}
+	return int(math.Round(valFloat))
 }
 
 func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {

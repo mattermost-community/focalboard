@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify/notifymentions"
 	"github.com/mattermost/focalboard/server/services/notify/notifysubscriptions"
 	"github.com/mattermost/focalboard/server/services/notify/plugindelivery"
@@ -23,6 +24,7 @@ const (
 )
 
 type notifyBackendParams struct {
+	cfg        *config.Configuration
 	client     *pluginapi.Client
 	serverRoot string
 	logger     *mlog.Logger
@@ -47,7 +49,16 @@ func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.St
 		return nil, err
 	}
 
-	backend := notifysubscriptions.New(params.serverRoot, store, delivery, wsPluginAdapter, params.logger)
+	backendParams := notifysubscriptions.BackendParams{
+		ServerRoot:             params.serverRoot,
+		Store:                  store,
+		Delivery:               delivery,
+		WSAdapter:              wsPluginAdapter,
+		Logger:                 params.logger,
+		NotifyFreqCardSeconds:  params.cfg.NotifyFreqCardSeconds,
+		NotifyFreqBoardSeconds: params.cfg.NotifyFreqBoardSeconds,
+	}
+	backend := notifysubscriptions.New(backendParams)
 
 	return backend, nil
 }

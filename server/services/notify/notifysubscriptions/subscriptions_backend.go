@@ -5,6 +5,7 @@ package notifysubscriptions
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
@@ -19,26 +20,44 @@ const (
 	backendName = "notifySubscriptions"
 )
 
-// Backend provides the notification backend for subscriptions.
-type Backend struct {
-	store     Store
-	delivery  SubscriptionDelivery
-	notifier  *notifier
-	wsAdapter ws.Adapter
-	logger    *mlog.Logger
+type BackendParams struct {
+	ServerRoot             string
+	Store                  Store
+	Delivery               SubscriptionDelivery
+	WSAdapter              ws.Adapter
+	Logger                 *mlog.Logger
+	NotifyFreqCardSeconds  int
+	NotifyFreqBoardSeconds int
 }
 
-func New(serverRoot string, store Store, delivery SubscriptionDelivery, wsAdapter ws.Adapter, logger *mlog.Logger) *Backend {
+// Backend provides the notification backend for subscriptions.
+type Backend struct {
+	store                  Store
+	delivery               SubscriptionDelivery
+	notifier               *notifier
+	wsAdapter              ws.Adapter
+	logger                 *mlog.Logger
+	notifyFreqCardSeconds  int
+	notifyFreqBoardSeconds int
+}
+
+func New(params BackendParams) *Backend {
 	return &Backend{
-		store:     store,
-		delivery:  delivery,
-		notifier:  newNotifier(serverRoot, store, delivery, logger),
-		wsAdapter: wsAdapter,
-		logger:    logger,
+		store:                  params.Store,
+		delivery:               params.Delivery,
+		notifier:               newNotifier(params),
+		wsAdapter:              params.WSAdapter,
+		logger:                 params.Logger,
+		notifyFreqCardSeconds:  params.NotifyFreqCardSeconds,
+		notifyFreqBoardSeconds: params.NotifyFreqBoardSeconds,
 	}
 }
 
 func (b *Backend) Start() error {
+	b.logger.Debug("Starting subscriptions backend",
+		mlog.Int("freq_card", b.notifyFreqCardSeconds),
+		mlog.Int("freq_board", b.notifyFreqBoardSeconds),
+	)
 	b.notifier.start()
 	return nil
 }
@@ -51,6 +70,17 @@ func (b *Backend) ShutDown() error {
 
 func (b *Backend) Name() string {
 	return backendName
+}
+
+func (b *Backend) getBlockUpdateFreq(blockType model.BlockType) time.Duration {
+	switch blockType {
+	case model.TypeCard:
+		return time.Second * time.Duration(b.notifyFreqCardSeconds)
+	case model.TypeBoard:
+		return time.Second * time.Duration(b.notifyFreqBoardSeconds)
+	default:
+		return defBlockNotificationFreq
+	}
 }
 
 func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
@@ -135,7 +165,7 @@ func (b *Backend) notifySubscribers(subs []*model.Subscriber, block *model.Block
 		ModifiedByID: modifiedByID,
 	}
 
-	hint, err := b.store.UpsertNotificationHint(hint, getBlockUpdateFreq(block.Type))
+	hint, err := b.store.UpsertNotificationHint(hint, b.getBlockUpdateFreq(block.Type))
 	if err != nil {
 		return fmt.Errorf("cannot upsert notification hint: %w", err)
 	}
