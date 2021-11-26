@@ -151,7 +151,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 className='cardFollowBtn unfollow'
                 onClick={() => mutator.unfollowBlock(props.cardId, 'card', me!.id)}
             >
-                {intl.formatMessage({id: 'CardDetail.Unfollow', defaultMessage: 'Unfollow'})}
+                {intl.formatMessage({id: 'CardDetail.Following', defaultMessage: 'Following'})}
             </Button>
         )
 

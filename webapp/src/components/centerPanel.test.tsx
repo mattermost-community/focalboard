@@ -63,6 +63,7 @@ describe('components/centerPanel', () => {
             workspaceUsers: [
                 {username: 'username_1'},
             ],
+            blockSubscriptions: [],
         },
         boards: {
             current: board.id,

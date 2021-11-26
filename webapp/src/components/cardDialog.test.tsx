@@ -37,6 +37,9 @@ describe('components/cardDialog', () => {
     card.createdBy = 'user-id-1'
 
     const state = {
+        users: {
+            blockSubscriptions: [],
+        },
         comments: {
             comments: {},
         },
@@ -257,5 +260,37 @@ describe('components/cardDialog', () => {
         const buttonCopy = screen.getByRole('button', {name: 'Copy link'})
         userEvent.click(buttonCopy)
         expect(mockedUtils.copyTextToClipboard).toBeCalledTimes(1)
+    })
+
+    test('already following card', async () => {
+        const newState = {
+            ...state,
+            users: {
+                blockSubscriptions: [
+                    {blockId: card.id},
+                ],
+            },
+        }
+        const newStore = mockStateStore([], newState)
+
+        let container
+        await act(async () => {
+            const result = render(wrapDNDIntl(
+                <ReduxProvider store={newStore}>
+                    <CardDialog
+                        board={board}
+                        activeView={boardView}
+                        views={[boardView]}
+                        cards={[card]}
+                        cardId={card.id}
+                        onClose={jest.fn()}
+                        showCard={jest.fn()}
+                        readonly={false}
+                    />
+                </ReduxProvider>,
+            ))
+            container = result.container
+        })
+        expect(container).toMatchSnapshot()
     })
 })
