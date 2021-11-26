@@ -247,10 +247,14 @@ const BoardPage = (props: Props): JSX.Element => {
         wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
         wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
-            dispatch(followBlock(subscription))
+            if (subscription.subscriberId === me?.id && subscription.workspaceId === match.params.workspaceId) {
+                dispatch(followBlock(subscription))
+            }
         })
         wsClient.setOnUnfollowBlock((_: WSClient, subscription: Subscription): void => {
-            dispatch(unfollowBlock(subscription))
+            if (subscription.subscriberId === me?.id && subscription.workspaceId === match.params.workspaceId) {
+                dispatch(unfollowBlock(subscription))
+            }
         })
         return () => {
             if (timeout) {
