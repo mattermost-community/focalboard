@@ -19,6 +19,7 @@ import Workspace from './workspace'
 Object.defineProperty(Constants, 'versionString', {value: '1.0.0'})
 jest.useFakeTimers()
 jest.mock('../utils')
+jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
 const workspace1: UserWorkspace = {
     id: 'workspace_1',

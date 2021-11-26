@@ -60,7 +60,6 @@ const CommentsList = React.memo((props: Props) => {
                         setNewComment(value)
                     }
                 }}
-                onAccept={onSendClicked}
             />
 
             {newComment &&

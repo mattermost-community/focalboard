@@ -40,6 +40,10 @@
         height: 100%;
     }
 
+    .fc-daygrid-day-frame {
+        cursor: pointer;
+    }
+
     .fc .fc-toolbar.fc-header-toolbar {
         margin-top: 0.75em;
         margin-bottom: 0.75em;
@@ -118,6 +122,11 @@
         }
     }
 
+    .Label {
+        font-size: 12px;
+        padding: 2px 6px;
+    }
+
     .fc-event-main {
         color: rgb(var(--center-channel-color-rgb));
     }
@@ -126,10 +135,6 @@
         font-size: 14px;
         overflow: unset;
         white-space: normal;
-    }
-
-    .fc-day a {
-        color: rgb(var(--center-channel-color-rgb));
     }
 
     .fc-day-sat,
@@ -155,5 +160,27 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .fc-more-link {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        border-radius: 4px;
+        color: rgba(var(--button-bg-rgb), 1);
+        background-color: rgba(var(--button-bg-rgb), 0.08);
+        font-weight: 600;
+        margin-bottom: 8px;
+        height: 24px;
+
+        &:hover {
+            background-color: rgba(var(--button-bg-rgb), 0.12);
+        }
+
+        &:active {
+            background-color: rgba(var(--button-bg-rgb), 0.16);
+        }
     }
 }
