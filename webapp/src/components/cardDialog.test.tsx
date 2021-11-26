@@ -264,13 +264,20 @@ describe('components/cardDialog', () => {
 
     test('already following card', async () => {
         const newState = {
-            ...state,
             users: {
-                blockSubscriptions: [
-                    {blockId: card.id},
-                ],
+                blockSubscriptions: [{blockId: card.id}],
+            },
+            comments: {
+                comments: {},
+            },
+            contents: {},
+            cards: {
+                cards: {
+                    [card.id]: card,
+                },
             },
         }
+
         const newStore = mockStateStore([], newState)
 
         let container
