@@ -25,7 +25,9 @@ const manifestStr = `
   "server": {
     "executables": {
       "darwin-amd64": "server/dist/plugin-darwin-amd64",
+      "darwin-arm64": "server/dist/plugin-darwin-arm64",
       "linux-amd64": "server/dist/plugin-linux-amd64",
+      "linux-arm64": "server/dist/plugin-linux-arm64",
       "windows-amd64": "server/dist/plugin-windows-amd64.exe"
     },
     "executable": ""
