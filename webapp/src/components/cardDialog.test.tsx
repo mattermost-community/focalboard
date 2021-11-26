@@ -37,6 +37,9 @@ describe('components/cardDialog', () => {
     card.createdBy = 'user-id-1'
 
     const state = {
+        users: {
+            blockSubscriptions: [],
+        },
         comments: {
             comments: {},
         },
