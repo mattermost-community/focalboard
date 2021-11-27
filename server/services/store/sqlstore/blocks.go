@@ -135,11 +135,11 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID stri
 		OrderBy("insert_at")
 
 	if opts.BeforeUpdateAt != 0 {
-		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
+		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
 	}
 
 	if opts.AfterUpdateAt != 0 {
-		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
+		query = query.Where(sq.GtOrEq{"update_at": opts.AfterUpdateAt})
 	}
 
 	if opts.Limit != 0 {
@@ -183,11 +183,11 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 		OrderBy("l1.insert_at")
 
 	if opts.BeforeUpdateAt != 0 {
-		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
+		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
 	}
 
 	if opts.AfterUpdateAt != 0 {
-		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
+		query = query.Where(sq.GtOrEq{"update_at": opts.AfterUpdateAt})
 	}
 
 	if s.dbType == postgresDBType {
@@ -326,6 +326,9 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, c store.Container, block *model
 		return err
 	}
 
+	block.UpdateAt = utils.GetMillis()
+	block.ModifiedBy = userID
+
 	insertQuery := s.getQueryBuilder(db).Insert("").
 		Columns(
 			"workspace_id",
@@ -359,9 +362,6 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, c store.Container, block *model
 		"update_at":             block.UpdateAt,
 	}
 
-	block.UpdateAt = utils.GetMillis()
-	block.ModifiedBy = userID
-
 	if existingBlock != nil {
 		// block with ID exists, so this is an update operation
 		query := s.getQueryBuilder(db).Update(s.tablePrefix+"blocks").
@@ -384,8 +384,6 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, c store.Container, block *model
 	} else {
 		block.CreatedBy = userID
 		block.CreateAt = utils.GetMillis()
-		block.ModifiedBy = userID
-		block.UpdateAt = utils.GetMillis()
 
 		insertQueryValues["created_by"] = block.CreatedBy
 		insertQueryValues["create_at"] = block.CreateAt
@@ -526,11 +524,11 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID 
 		OrderBy("insert_at" + order)
 
 	if opts.BeforeUpdateAt != 0 {
-		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
+		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
 	}
 
 	if opts.AfterUpdateAt != 0 {
-		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
+		query = query.Where(sq.GtOrEq{"update_at": opts.AfterUpdateAt})
 	}
 
 	if opts.Limit != 0 {

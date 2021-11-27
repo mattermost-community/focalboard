@@ -66,6 +66,8 @@ func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.Notifica
 		return nil, err
 	}
 
+	hint.CreateAt = utils.GetMillis()
+
 	notifyAt := utils.GetMillisForTime(time.Now().Add(notifyFreq))
 	hint.NotifyAt = notifyAt
 

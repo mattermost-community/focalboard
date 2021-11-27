@@ -305,8 +305,8 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 
 }
 
-func (s *SQLStore) UpdateSubscribersNotifiedAt(c store.Container, blockID string, notifyAt int64) error {
-	return s.updateSubscribersNotifiedAt(s.db, c, blockID, notifyAt)
+func (s *SQLStore) UpdateSubscribersNotifiedAt(c store.Container, blockID string, notifiedAt int64) error {
+	return s.updateSubscribersNotifiedAt(s.db, c, blockID, notifiedAt)
 
 }
 

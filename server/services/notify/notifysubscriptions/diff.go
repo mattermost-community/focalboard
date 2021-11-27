@@ -197,7 +197,7 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema model.PropSchema) (*Diff, error) {
 	// find the version of the block as it was at the time of last notify.
 	opts := model.QueryBlockHistoryOptions{
-		BeforeUpdateAt: dg.lastNotifyAt - 1,
+		BeforeUpdateAt: dg.lastNotifyAt,
 		Limit:          1,
 		Descending:     true,
 	}
@@ -215,6 +215,7 @@ func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema mode
 
 	dg.logger.Debug("generateDiffForBlock - results",
 		mlog.String("block_id", newBlock.ID),
+		mlog.Int64("before_update_at", opts.BeforeUpdateAt),
 		mlog.Int("history_count", len(history)),
 		mlog.Int("prop_diff_count", len(propDiffs)),
 	)

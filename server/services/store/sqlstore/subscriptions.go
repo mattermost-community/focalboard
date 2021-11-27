@@ -256,10 +256,10 @@ func (s *SQLStore) getSubscribersCountForBlock(db sq.BaseRunner, c store.Contain
 }
 
 // updateSubscribersNotifiedAt updates the notified_at field of all subscribers for a block.
-func (s *SQLStore) updateSubscribersNotifiedAt(db sq.BaseRunner, c store.Container, blockID string, notifyAt int64) error {
+func (s *SQLStore) updateSubscribersNotifiedAt(db sq.BaseRunner, c store.Container, blockID string, notifiedAt int64) error {
 	query := s.getQueryBuilder(db).
 		Update(s.tablePrefix+"subscriptions").
-		Set("notified_at", notifyAt).
+		Set("notified_at", notifiedAt).
 		Where(sq.Eq{"block_id": blockID}).
 		Where(sq.Eq{"workspace_id": c.WorkspaceID}).
 		Where(sq.Eq{"delete_at": 0})

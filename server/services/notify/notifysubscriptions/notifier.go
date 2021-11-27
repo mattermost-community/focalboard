@@ -228,15 +228,20 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	}
 
 	// find the new NotifiedAt based on the newest diff.
-	var notifyAt int64
+	var notifiedAt int64
 	for _, d := range diffs {
-		if d.UpdateAt > notifyAt {
-			notifyAt = d.UpdateAt
+		if d.UpdateAt > notifiedAt {
+			notifiedAt = d.UpdateAt
+		}
+		for _, c := range d.Diffs {
+			if c.UpdateAt > notifiedAt {
+				notifiedAt = c.UpdateAt
+			}
 		}
 	}
 
 	// update the last notified_at for all subscribers since we at least attempted to notify all of them.
-	err = dg.store.UpdateSubscribersNotifiedAt(dg.container, dg.hint.BlockID, notifyAt)
+	err = dg.store.UpdateSubscribersNotifiedAt(dg.container, dg.hint.BlockID, notifiedAt)
 	if err != nil {
 		merr.Append(fmt.Errorf("could not update subscribers notified_at for block %s: %w", dg.hint.BlockID, err))
 	}
