@@ -82,8 +82,7 @@ func testUpsertNotificationHint(t *testing.T, store store.Store, container store
 		hintDup, err := store.UpsertNotificationHint(hint, time.Second*15)
 
 		require.NoError(t, err, "upsert notification hint should not error")
-		// the create_at fields should match, but notify_at should be updated
-		assert.Equal(t, hintNew.CreateAt, hintDup.CreateAt)
+		// notify_at should be updated
 		assert.Greater(t, hintDup.NotifyAt, hintNew.NotifyAt)
 	})
 
