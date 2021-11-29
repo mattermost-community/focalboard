@@ -6,6 +6,9 @@ import {injectIntl, IntlShape} from 'react-intl'
 import {connect} from 'react-redux'
 import Hotkeys from 'react-hot-keys'
 
+import {ClientConfig} from '../config/clientConfig'
+
+import {Block} from '../blocks/block'
 import {BlockIcons} from '../blockIcons'
 import {Card, createCard} from '../blocks/card'
 import {Board, IPropertyTemplate, IPropertyOption, BoardGroup} from '../blocks/board'
@@ -27,15 +30,21 @@ import TopBar from './topBar'
 import ViewHeader from './viewHeader/viewHeader'
 import ViewTitle from './viewTitle'
 import Kanban from './kanban/kanban'
+
 import Table from './table/table'
+
+import CalendarFullView from './calendar/fullCalendar'
+
 import Gallery from './gallery/gallery'
 
 type Props = {
+    clientConfig?: ClientConfig
     board: Board
     cards: Card[]
     activeView: BoardView
     views: BoardView[]
     groupByProperty?: IPropertyTemplate
+    dateDisplayProperty?: IPropertyTemplate
     intl: IntlShape
     readonly: boolean
     addCard: (card: Card) => void
@@ -147,6 +156,7 @@ class CenterPanel extends React.Component<Props, State> {
                         cards={this.props.cards}
                         views={this.props.views}
                         groupByProperty={this.props.groupByProperty}
+                        dateDisplayProperty={this.props.dateDisplayProperty}
                         addCard={() => this.addCard('', true)}
                         addCardFromTemplate={this.addCardFromTemplate}
                         addCardTemplate={this.addCardTemplate}
@@ -170,7 +180,6 @@ class CenterPanel extends React.Component<Props, State> {
                     addCard={this.addCard}
                     showCard={this.showCard}
                 />}
-
                 {activeView.fields.viewType === 'table' &&
                     <Table
                         board={this.props.board}
@@ -186,6 +195,18 @@ class CenterPanel extends React.Component<Props, State> {
                         addCard={this.addCard}
                         onCardClicked={this.cardClicked}
                     />}
+                {activeView.fields.viewType === 'calendar' &&
+                    <CalendarFullView
+                        board={this.props.board}
+                        cards={this.props.cards}
+                        activeView={this.props.activeView}
+                        readonly={this.props.readonly}
+                        dateDisplayProperty={this.props.dateDisplayProperty}
+                        showCard={this.showCard}
+                        addCard={(properties: Record<string, string>) => {
+                            this.addCard('', true, properties)
+                        }}
+                    />}
 
                 {activeView.fields.viewType === 'gallery' &&
                     <Gallery
@@ -197,7 +218,6 @@ class CenterPanel extends React.Component<Props, State> {
                         selectedCardIds={this.state.selectedCardIds}
                         addCard={(show) => this.addCard('', show)}
                     />}
-
             </div>
         )
     }
@@ -210,11 +230,12 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private addCardFromTemplate = async (cardTemplateId: string) => {
-        const {activeView} = this.props
+        const {activeView, board} = this.props
 
         mutator.performAsUndoGroup(async () => {
             const [, newCardId] = await mutator.duplicateCard(
                 cardTemplateId,
+                board,
                 this.props.intl.formatMessage({id: 'Mutator.new-card-from-template', defaultMessage: 'new card from template'}),
                 false,
                 async (cardId) => {
@@ -230,12 +251,12 @@ class CenterPanel extends React.Component<Props, State> {
         })
     }
 
-    addCard = async (groupByOptionId?: string, show = false): Promise<void> => {
+    addCard = async (groupByOptionId?: string, show = false, properties: Record<string, string> = {}): Promise<void> => {
         const {activeView, board, groupByProperty} = this.props
 
         const card = createCard()
 
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCard, {board: board.id, view: this.props.activeView.id, card: card.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCard, {board: board.id, view: activeView.id, card: card.id})
 
         card.parentId = board.id
         card.rootId = board.rootId
@@ -247,19 +268,19 @@ class CenterPanel extends React.Component<Props, State> {
                 delete propertiesThatMeetFilters[groupByProperty.id]
             }
         }
-        card.fields.properties = {...card.fields.properties, ...propertiesThatMeetFilters}
+        card.fields.properties = {...card.fields.properties, ...properties, ...propertiesThatMeetFilters}
         if (!card.fields.icon && UserSettings.prefillRandomIcons) {
             card.fields.icon = BlockIcons.shared.randomIcon()
         }
         mutator.performAsUndoGroup(async () => {
-            await mutator.insertBlock(
+            const newCard = await mutator.insertBlock(
                 card,
                 'add card',
-                async () => {
+                async (block: Block) => {
                     if (show) {
-                        this.props.addCard(card)
-                        this.props.updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, card.id]}})
-                        this.showCard(card.id)
+                        this.props.addCard(createCard(block))
+                        this.props.updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, block.id]}})
+                        this.showCard(block.id)
                     } else {
                         // Focus on this card's title inline on next render
                         this.setState({cardIdToFocusOnRender: card.id})
@@ -270,12 +291,12 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
-            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, card.id], 'add-card')
+            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }
 
     private addCardTemplate = async () => {
-        const {board} = this.props
+        const {board, activeView} = this.props
 
         const cardTemplate = createCard()
         cardTemplate.fields.isTemplate = true
@@ -285,10 +306,11 @@ class CenterPanel extends React.Component<Props, State> {
         await mutator.insertBlock(
             cardTemplate,
             'add card template',
-            async () => {
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: this.props.activeView.id, card: cardTemplate.id})
-                this.props.addTemplate(cardTemplate)
-                this.showCard(cardTemplate.id)
+            async (newBlock: Block) => {
+                const newTemplate = createCard(newBlock)
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: activeView.id, card: newTemplate.id})
+                this.props.addTemplate(newTemplate)
+                this.showCard(newTemplate.id)
             }, async () => {
                 this.showCard(undefined)
             },
@@ -359,6 +381,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     private async duplicateSelectedCards() {
+        const {board} = this.props
         const {selectedCardIds} = this.state
         if (selectedCardIds.length < 1) {
             return
@@ -368,7 +391,7 @@ class CenterPanel extends React.Component<Props, State> {
             for (const cardId of selectedCardIds) {
                 const card = this.props.cards.find((o) => o.id === cardId)
                 if (card) {
-                    mutator.duplicateCard(cardId)
+                    mutator.duplicateCard(cardId, board)
                 } else {
                     Utils.assertFailure(`Selected card not found: ${cardId}`)
                 }

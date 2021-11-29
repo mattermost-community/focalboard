@@ -1,6 +1,378 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`pages/dashboard/CenterContent base case 1`] = `
+exports[`pages/dashboard/CenterContent base case - find all workspaces 1`] = `
+<div>
+  <div
+    class="DashboardCenterContent"
+  >
+    <div
+      class="DashboardPage__header"
+    >
+      <h1
+        class="h1"
+      >
+        Dashboard
+      </h1>
+      <div
+        class="DashboardPage__showEmpty"
+      >
+        Show empty
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
+        class="DashboardPage__search"
+      >
+        <i
+          class="CompassIcon icon-magnify CompassIcon"
+        />
+        <input
+          placeholder="Search"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      class="DashboardPage__content"
+    >
+      <div
+        class="text-heading3"
+      >
+        All Channels
+      </div>
+      <div
+        class="DashboardPage__workspace-container"
+      >
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Foo Bar Baz
+          </div>
+          <div
+            class="small"
+          >
+            33 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            team 33
+          </div>
+          <div
+            class="small"
+          >
+            14 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace
+          </div>
+          <div
+            class="small"
+          >
+            33 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 1
+          </div>
+          <div
+            class="small"
+          >
+            1 Board
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 11
+          </div>
+          <div
+            class="small"
+          >
+            1 Board
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 2
+          </div>
+          <div
+            class="small"
+          >
+            2 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            WS 4
+          </div>
+          <div
+            class="small"
+          >
+            3 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 3
+          </div>
+          <div
+            class="small"
+          >
+            0 Boards
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`pages/dashboard/CenterContent search filter - 5 matching workspaces 1`] = `
+<div>
+  <div
+    class="DashboardCenterContent"
+  >
+    <div
+      class="DashboardPage__header"
+    >
+      <h1
+        class="h1"
+      >
+        Dashboard
+      </h1>
+      <div
+        class="DashboardPage__showEmpty"
+      >
+        Show empty
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
+        class="DashboardPage__search"
+      >
+        <i
+          class="CompassIcon icon-magnify CompassIcon"
+        />
+        <input
+          placeholder="Search"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      class="DashboardPage__content"
+    >
+      <div
+        class="text-heading3"
+      >
+        All Channels
+      </div>
+      <div
+        class="DashboardPage__workspace-container"
+      >
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace
+          </div>
+          <div
+            class="small"
+          >
+            33 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 1
+          </div>
+          <div
+            class="small"
+          >
+            1 Board
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 11
+          </div>
+          <div
+            class="small"
+          >
+            1 Board
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 2
+          </div>
+          <div
+            class="small"
+          >
+            2 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 3
+          </div>
+          <div
+            class="small"
+          >
+            0 Boards
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`pages/dashboard/CenterContent search filter - number search 1`] = `
+<div>
+  <div
+    class="DashboardCenterContent"
+  >
+    <div
+      class="DashboardPage__header"
+    >
+      <h1
+        class="h1"
+      >
+        Dashboard
+      </h1>
+      <div
+        class="DashboardPage__showEmpty"
+      >
+        Show empty
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
+        class="DashboardPage__search"
+      >
+        <i
+          class="CompassIcon icon-magnify CompassIcon"
+        />
+        <input
+          placeholder="Search"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      class="DashboardPage__content"
+    >
+      <div
+        class="text-heading3"
+      >
+        All Channels
+      </div>
+      <div
+        class="DashboardPage__workspace-container"
+      >
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Chat6
+          </div>
+          <div
+            class="small"
+          >
+            17 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Title
+          </div>
+          <div
+            class="small"
+          >
+            6 Boards
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`pages/dashboard/CenterContent search filter - search for all workspaces that contain the word workspace 1`] = `
 <div>
   <div
     class="DashboardCenterContent"
@@ -96,6 +468,472 @@ exports[`pages/dashboard/CenterContent base case 1`] = `
 </div>
 `;
 
+exports[`pages/dashboard/CenterContent search filter - search for amount of boards 1`] = `
+<div>
+  <div
+    class="DashboardCenterContent"
+  >
+    <div
+      class="DashboardPage__header"
+    >
+      <h1
+        class="h1"
+      >
+        Dashboard
+      </h1>
+      <div
+        class="DashboardPage__showEmpty"
+      >
+        Show empty
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
+        class="DashboardPage__search"
+      >
+        <i
+          class="CompassIcon icon-magnify CompassIcon"
+        />
+        <input
+          placeholder="Search"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      class="DashboardPage__content"
+    >
+      <div
+        class="text-heading3"
+      >
+        All Channels
+      </div>
+      <div
+        class="DashboardPage__workspace-container"
+      >
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            team 33
+          </div>
+          <div
+            class="small"
+          >
+            14 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 3
+          </div>
+          <div
+            class="small"
+          >
+            0 Boards
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`pages/dashboard/CenterContent search filter - search for foo baz 1`] = `
+<div>
+  <div
+    class="DashboardCenterContent"
+  >
+    <div
+      class="DashboardPage__header"
+    >
+      <h1
+        class="h1"
+      >
+        Dashboard
+      </h1>
+      <div
+        class="DashboardPage__showEmpty"
+      >
+        Show empty
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
+        class="DashboardPage__search"
+      >
+        <i
+          class="CompassIcon icon-magnify CompassIcon"
+        />
+        <input
+          placeholder="Search"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      class="DashboardPage__content"
+    >
+      <div
+        class="text-heading3"
+      >
+        All Channels
+      </div>
+      <div
+        class="DashboardPage__workspace-container"
+      >
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Foo Bar Baz
+          </div>
+          <div
+            class="small"
+          >
+            33 Boards
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`pages/dashboard/CenterContent search filter - search for workspace name and amount of boards 1`] = `
+<div>
+  <div
+    class="DashboardCenterContent"
+  >
+    <div
+      class="DashboardPage__header"
+    >
+      <h1
+        class="h1"
+      >
+        Dashboard
+      </h1>
+      <div
+        class="DashboardPage__showEmpty"
+      >
+        Show empty
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
+        class="DashboardPage__search"
+      >
+        <i
+          class="CompassIcon icon-magnify CompassIcon"
+        />
+        <input
+          placeholder="Search"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      class="DashboardPage__content"
+    >
+      <div
+        class="text-heading3"
+      >
+        All Channels
+      </div>
+      <div
+        class="DashboardPage__workspace-container"
+      >
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            team 33
+          </div>
+          <div
+            class="small"
+          >
+            14 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            WS 4
+          </div>
+          <div
+            class="small"
+          >
+            3 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 3
+          </div>
+          <div
+            class="small"
+          >
+            0 Boards
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`pages/dashboard/CenterContent search filter - search for workspace name and amount of boards 2 1`] = `
+<div>
+  <div
+    class="DashboardCenterContent"
+  >
+    <div
+      class="DashboardPage__header"
+    >
+      <h1
+        class="h1"
+      >
+        Dashboard
+      </h1>
+      <div
+        class="DashboardPage__showEmpty"
+      >
+        Show empty
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
+        class="DashboardPage__search"
+      >
+        <i
+          class="CompassIcon icon-magnify CompassIcon"
+        />
+        <input
+          placeholder="Search"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      class="DashboardPage__content"
+    >
+      <div
+        class="text-heading3"
+      >
+        All Channels
+      </div>
+      <div
+        class="DashboardPage__workspace-container"
+      >
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Foo Bar Baz
+          </div>
+          <div
+            class="small"
+          >
+            33 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            team 33
+          </div>
+          <div
+            class="small"
+          >
+            14 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace
+          </div>
+          <div
+            class="small"
+          >
+            33 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 1
+          </div>
+          <div
+            class="small"
+          >
+            1 Board
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 11
+          </div>
+          <div
+            class="small"
+          >
+            1 Board
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 2
+          </div>
+          <div
+            class="small"
+          >
+            2 Boards
+          </div>
+        </div>
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            Workspace 3
+          </div>
+          <div
+            class="small"
+          >
+            0 Boards
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`pages/dashboard/CenterContent search filter - search for workspace with unique name 1`] = `
+<div>
+  <div
+    class="DashboardCenterContent"
+  >
+    <div
+      class="DashboardPage__header"
+    >
+      <h1
+        class="h1"
+      >
+        Dashboard
+      </h1>
+      <div
+        class="DashboardPage__showEmpty"
+      >
+        Show empty
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
+        class="DashboardPage__search"
+      >
+        <i
+          class="CompassIcon icon-magnify CompassIcon"
+        />
+        <input
+          placeholder="Search"
+          type="text"
+        />
+      </div>
+    </div>
+    <div
+      class="DashboardPage__content"
+    >
+      <div
+        class="text-heading3"
+      >
+        All Channels
+      </div>
+      <div
+        class="DashboardPage__workspace-container"
+      >
+        <div
+          class="DashboardPage__workspace"
+        >
+          <div
+            class="text-heading2"
+          >
+            WS 4
+          </div>
+          <div
+            class="small"
+          >
+            3 Boards
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`pages/dashboard/CenterContent search filter - search non-existing workspace 1`] = `
 <div>
   <div
@@ -181,74 +1019,6 @@ exports[`pages/dashboard/CenterContent search filter - search non-existing works
           >
             Please try searching for another term
           </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`pages/dashboard/CenterContent search filter 1`] = `
-<div>
-  <div
-    class="DashboardCenterContent"
-  >
-    <div
-      class="DashboardPage__header"
-    >
-      <h1
-        class="h1"
-      >
-        Dashboard
-      </h1>
-      <div
-        class="DashboardPage__showEmpty"
-      >
-        Show empty
-        <div
-          class="Switch on"
-        >
-          <div
-            class="octo-switch-inner"
-          />
-        </div>
-      </div>
-      <div
-        class="DashboardPage__search"
-      >
-        <i
-          class="CompassIcon icon-magnify CompassIcon"
-        />
-        <input
-          placeholder="Search"
-          type="text"
-        />
-      </div>
-    </div>
-    <div
-      class="DashboardPage__content"
-    >
-      <div
-        class="text-heading3"
-      >
-        All Channels
-      </div>
-      <div
-        class="DashboardPage__workspace-container"
-      >
-        <div
-          class="DashboardPage__workspace"
-        >
-          <div
-            class="text-heading2"
-          >
-            Workspace 1
-          </div>
-          <div
-            class="small"
-          >
-            1 Board
-          </div>
         </div>
       </div>
     </div>

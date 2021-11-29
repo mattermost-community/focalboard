@@ -62,9 +62,8 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                             newPath = '/dashboard'
                         } else {
                             newPath = `/workspace/${workspaceId}`
+                            UserSettings.lastWorkspaceId = workspaceId
                         }
-
-                        UserSettings.lastWorkspaceId = workspaceId
                         history.push(newPath)
                     }}
                 />

@@ -53,6 +53,12 @@ const BoardPage = (props: Props): JSX.Element => {
 
     let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
 
+    // if we're in a legacy route and not showing a shared board,
+    // redirect to the new URL schema equivalent
+    if (Utils.isFocalboardLegacy() && !props.readonly) {
+        window.location.href = window.location.href.replace('/plugins/focalboard', '/boards')
+    }
+
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
         workspaceId = match.params.workspaceId || workspaceId
@@ -163,20 +169,29 @@ const BoardPage = (props: Props): JSX.Element => {
         }
     }, [board?.title, activeView?.title])
 
+    if (props.readonly) {
+        useEffect(() => {
+            if (board?.id && activeView?.id) {
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: board?.id, view: activeView?.id})
+            }
+        }, [board?.id, activeView?.id])
+    }
+
     useEffect(() => {
         let loadAction: any = initialLoad /* eslint-disable-line @typescript-eslint/no-explicit-any */
         let token = localStorage.getItem('focalboardSessionId') || ''
         if (props.readonly) {
             loadAction = initialReadOnlyLoad
             token = token || queryString.get('r') || ''
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: board.id, view: activeView.id})
         }
 
         dispatch(loadAction(match.params.boardId))
 
+        let subscribedToWorkspace = false
         if (wsClient.state === 'open') {
             wsClient.authenticate(match.params.workspaceId || '0', token)
             wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+            subscribedToWorkspace = true
         }
 
         const incrementalUpdate = (_: WSClient, blocks: Block[]) => {
@@ -198,6 +213,7 @@ const BoardPage = (props: Props): JSX.Element => {
                 const newToken = localStorage.getItem('focalboardSessionId') || ''
                 wsClient.authenticate(match.params.workspaceId || '0', newToken)
                 wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
+                subscribedToWorkspace = true
             }
 
             if (timeout) {
@@ -207,6 +223,7 @@ const BoardPage = (props: Props): JSX.Element => {
             if (newState === 'close') {
                 timeout = setTimeout(() => {
                     setWebsocketClosed(true)
+                    subscribedToWorkspace = false
                 }, websocketTimeoutForBanner)
             } else {
                 setWebsocketClosed(false)
@@ -220,12 +237,14 @@ const BoardPage = (props: Props): JSX.Element => {
             if (timeout) {
                 clearTimeout(timeout)
             }
-            wsClient.unsubscribeToWorkspace(match.params.workspaceId || '0')
+            if (subscribedToWorkspace) {
+                wsClient.unsubscribeToWorkspace(match.params.workspaceId || '0')
+            }
             wsClient.removeOnChange(incrementalUpdate)
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
             wsClient.removeOnStateChange(updateWebsocketState)
         }
-    }, [match.params.workspaceId, props.readonly])
+    }, [match.params.workspaceId, props.readonly, match.params.boardId])
 
     useHotkeys('ctrl+z,cmd+z', () => {
         Utils.log('Undo')

@@ -156,6 +156,7 @@ function ValueSelector(props: Props): JSX.Element {
     const intl = useIntl()
     return (
         <CreatableSelect
+            noOptionsMessage={() => intl.formatMessage({id: 'ValueSelector.noOptions', defaultMessage: 'No options. Start typing to add the first one!'})}
             aria-label={intl.formatMessage({id: 'ValueSelector.valueSelector', defaultMessage: 'Value selector'})}
             captureMenuScroll={true}
             maxMenuHeight={1200}

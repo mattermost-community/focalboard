@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {BlockIcons} from './blockIcons'
-import {Block} from './blocks/block'
+import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType, createBoard} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
@@ -19,6 +19,7 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/
 //
 class Mutator {
     private undoGroupId?: string
+    private undoDisplayId?: string
 
     private beginUndoGroup(): string | undefined {
         if (this.undoGroupId) {
@@ -42,7 +43,7 @@ class Mutator {
         try {
             await actions()
         } catch (err) {
-            Utils.assertFailure(`ERROR: ${err?.toString?.()}`)
+            Utils.assertFailure(`ERROR: ${err}`)
         }
         if (groupId) {
             this.endUndoGroup(groupId)
@@ -50,12 +51,13 @@ class Mutator {
     }
 
     async updateBlock(newBlock: Block, oldBlock: Block, description: string): Promise<void> {
+        const [updatePatch, undoPatch] = createPatchesFromBlocks(newBlock, oldBlock)
         await undoManager.perform(
             async () => {
-                await octoClient.updateBlock(newBlock)
+                await octoClient.patchBlock(newBlock.id, updatePatch)
             },
             async () => {
-                await octoClient.updateBlock(oldBlock)
+                await octoClient.patchBlock(oldBlock.id, undoPatch)
             },
             description,
             this.undoGroupId,
@@ -63,43 +65,67 @@ class Mutator {
     }
 
     private async updateBlocks(newBlocks: Block[], oldBlocks: Block[], description: string): Promise<void> {
-        await undoManager.perform(
+        if (newBlocks.length !== oldBlocks.length) {
+            throw new Error('new and old blocks must have the same length when updating blocks')
+        }
+
+        const updatePatches = [] as BlockPatch[]
+        const undoPatches = [] as BlockPatch[]
+
+        newBlocks.forEach((newBlock, i) => {
+            const [updatePatch, undoPatch] = createPatchesFromBlocks(newBlock, oldBlocks[i])
+            updatePatches.push(updatePatch)
+            undoPatches.push(undoPatch)
+        })
+
+        return undoManager.perform(
             async () => {
-                await octoClient.updateBlocks(newBlocks)
+                await Promise.all(
+                    updatePatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch)),
+                )
             },
             async () => {
-                await octoClient.updateBlocks(oldBlocks)
+                await Promise.all(
+                    undoPatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch)),
+                )
             },
             description,
             this.undoGroupId,
         )
     }
 
-    async insertBlock(block: Block, description = 'add', afterRedo?: () => Promise<void>, beforeUndo?: () => Promise<void>) {
-        await undoManager.perform(
+    //eslint-disable-next-line no-shadow
+    async insertBlock(block: Block, description = 'add', afterRedo?: (block: Block) => Promise<void>, beforeUndo?: (block: Block) => Promise<void>): Promise<Block> {
+        return undoManager.perform(
             async () => {
-                await octoClient.insertBlock(block)
-                await afterRedo?.()
+                const res = await octoClient.insertBlock(block)
+                const jsonres = await res.json()
+                const newBlock = jsonres[0] as Block
+                await afterRedo?.(newBlock)
+                return newBlock
             },
-            async () => {
-                await beforeUndo?.()
-                await octoClient.deleteBlock(block.id)
+            async (newBlock: Block) => {
+                await beforeUndo?.(newBlock)
+                await octoClient.deleteBlock(newBlock.id)
             },
             description,
             this.undoGroupId,
         )
     }
 
-    async insertBlocks(blocks: Block[], description = 'add', afterRedo?: () => Promise<void>, beforeUndo?: () => Promise<void>) {
-        await undoManager.perform(
+    //eslint-disable-next-line no-shadow
+    async insertBlocks(blocks: Block[], description = 'add', afterRedo?: (blocks: Block[]) => Promise<void>, beforeUndo?: () => Promise<void>) {
+        return undoManager.perform(
             async () => {
-                await octoClient.insertBlocks(blocks)
-                await afterRedo?.()
+                const res = await octoClient.insertBlocks(blocks)
+                const newBlocks = (await res.json()) as Block[]
+                await afterRedo?.(newBlocks)
+                return newBlocks
             },
-            async () => {
+            async (newBlocks: Block[]) => {
                 await beforeUndo?.()
                 const awaits = []
-                for (const block of blocks) {
+                for (const block of newBlocks) {
                     awaits.push(octoClient.deleteBlock(block.id))
                 }
                 await Promise.all(awaits)
@@ -524,6 +550,19 @@ class Mutator {
         )
     }
 
+    async changeViewDateDisplayPropertyId(viewId: string, oldDateDisplayPropertyId: string|undefined, dateDisplayPropertyId: string): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {dateDisplayPropertyId}})
+            },
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {dateDisplayPropertyId: oldDateDisplayPropertyId}})
+            },
+            'display by',
+            this.undoDisplayId,
+        )
+    }
+
     async changeViewVisibleProperties(viewId: string, oldVisiblePropertyIds: string[], visiblePropertyIds: string[], description = 'show / hide property'): Promise<void> {
         await undoManager.perform(
             async () => {
@@ -611,6 +650,7 @@ class Mutator {
 
     async duplicateCard(
         cardId: string,
+        board: Board,
         description = 'duplicate card',
         asTemplate = false,
         afterRedo?: (newCardId: string) => Promise<void>,
@@ -636,11 +676,13 @@ class Mutator {
             }
         }
         newCard.fields.isTemplate = asTemplate
+        newCard.rootId = board.id
+        newCard.parentId = board.id
         await this.insertBlocks(
             newBlocks,
             description,
-            async () => {
-                await afterRedo?.(newCard.id)
+            async (respBlocks: Block[]) => {
+                await afterRedo?.(respBlocks[0].id)
             },
             beforeUndo,
         )
@@ -668,15 +710,15 @@ class Mutator {
             // Board from template
         }
         newBoard.fields.isTemplate = asTemplate
-        await this.insertBlocks(
+        const createdBlocks = await this.insertBlocks(
             newBlocks,
             description,
-            async () => {
-                await afterRedo?.(newBoard.id)
+            async (respBlocks: Block[]) => {
+                await afterRedo?.(respBlocks[0].id)
             },
             beforeUndo,
         )
-        return [newBlocks, newBoard.id]
+        return [createdBlocks, createdBlocks[0].id]
     }
 
     async duplicateFromRootBoard(
@@ -701,15 +743,15 @@ class Mutator {
             // Board from template
         }
         newBoard.fields.isTemplate = asTemplate
-        await this.insertBlocks(
+        const createdBlocks = await this.insertBlocks(
             newBlocks,
             description,
-            async () => {
-                await afterRedo?.(newBoard.id)
+            async (respBlocks: Block[]) => {
+                await afterRedo?.(respBlocks[0].id)
             },
             beforeUndo,
         )
-        return [newBlocks, newBoard.id]
+        return [createdBlocks, createdBlocks[0].id]
     }
 
     // Other methods

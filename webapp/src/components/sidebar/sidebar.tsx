@@ -32,8 +32,18 @@ type Props = {
     isDashboard?: boolean
 }
 
+function getWindowDimensions() {
+    const {innerWidth: width, innerHeight: height} = window
+    return {
+        width,
+        height,
+    }
+}
+
 const Sidebar = React.memo((props: Props) => {
     const [isHidden, setHidden] = useState(false)
+    const [userHidden, setUserHidden] = useState(false)
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
     const boards = useAppSelector(getSortedBoards)
     const views = useAppSelector(getSortedViews)
     const intl = useIntl()
@@ -42,9 +52,32 @@ const Sidebar = React.memo((props: Props) => {
         loadTheme()
     }, [])
 
+    useEffect(() => {
+        function handleResize() {
+            setWindowDimensions(getWindowDimensions())
+        }
+
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+    useEffect(() => {
+        hideSidebar()
+    }, [windowDimensions])
+
     const workspace = useAppSelector(getCurrentWorkspace)
     if (!boards) {
         return <div/>
+    }
+
+    const hideSidebar = () => {
+        if (!userHidden) {
+            if (windowDimensions.width < 768) {
+                setHidden(true)
+            } else {
+                setHidden(false)
+            }
+        }
     }
 
     if (isHidden) {
@@ -54,13 +87,19 @@ const Sidebar = React.memo((props: Props) => {
                     <div className='hamburger-icon'>
                         <IconButton
                             icon={<HamburgerIcon/>}
-                            onClick={() => setHidden(false)}
+                            onClick={() => {
+                                setUserHidden(false)
+                                setHidden(false)
+                            }}
                         />
                     </div>
                     <div className='show-icon'>
                         <IconButton
                             icon={<ShowSidebarIcon/>}
-                            onClick={() => setHidden(false)}
+                            onClick={() => {
+                                setUserHidden(false)
+                                setHidden(false)
+                            }}
                         />
                     </div>
                 </div>
@@ -79,7 +118,10 @@ const Sidebar = React.memo((props: Props) => {
                     <div className='octo-spacer'/>
                     <div className='sidebarSwitcher'>
                         <IconButton
-                            onClick={() => setHidden(true)}
+                            onClick={() => {
+                                setUserHidden(true)
+                                setHidden(true)
+                            }}
                             icon={<HideSidebarIcon/>}
                         />
                     </div>
@@ -92,7 +134,10 @@ const Sidebar = React.memo((props: Props) => {
                         <div className='octo-spacer'/>
                         <div className='sidebarSwitcher'>
                             <IconButton
-                                onClick={() => setHidden(true)}
+                                onClick={() => {
+                                    setUserHidden(true)
+                                    setHidden(true)
+                                }}
                                 icon={<HideSidebarIcon/>}
                             />
                         </div>
@@ -129,6 +174,7 @@ const Sidebar = React.memo((props: Props) => {
                             const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
                             return (
                                 <SidebarBoardItem
+                                    hideSidebar={hideSidebar}
                                     key={board.id}
                                     views={views}
                                     board={board}

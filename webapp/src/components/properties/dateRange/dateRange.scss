@@ -46,6 +46,7 @@
         width: 100%;
         height: 100%;
         justify-content: left;
+        padding: 0;
 
         &.--empty {
             opacity: 0;
@@ -172,11 +173,15 @@
     .DayPicker-Day--start {
         border-top-left-radius: 50% !important;
         border-bottom-left-radius: 50% !important;
+        border-top-right-radius: 50% !important;
+        border-bottom-right-radius: 50% !important;
     }
 
     .DayPicker-Day--end {
         border-top-right-radius: 50% !important;
         border-bottom-right-radius: 50% !important;
+        border-top-left-radius: 50% !important;
+        border-bottom-left-radius: 50% !important;
     }
 
     .DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {

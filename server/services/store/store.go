@@ -32,6 +32,7 @@ type Store interface {
 
 	Shutdown() error
 
+	GetSystemSetting(key string) (string, error)
 	GetSystemSettings() (map[string]string, error)
 	SetSystemSetting(key, value string) error
 

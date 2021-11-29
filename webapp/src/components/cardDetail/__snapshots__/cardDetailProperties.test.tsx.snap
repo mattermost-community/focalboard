@@ -1,5 +1,193 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`components/cardDetail/CardDetailProperties cancel button in TypeorNameChange dialog should do nothing 1`] = `
+<div>
+  <div
+    class="octo-propertylist CardDetailProperties"
+  >
+    <div
+      class="octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Owner
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="octo-propertyvalue"
+        data-testid="select-non-editable"
+        tabindex="0"
+      >
+        <span
+          class="Label propColorDefault "
+        >
+          <span
+            class="Label-text"
+          >
+            Jean-Luc Picard
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              MockStatus
+            </span>
+          </button>
+        </div>
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="false"
+        style="width: 5px;"
+        title="1234"
+        value="1234"
+      />
+    </div>
+    <div
+      class="octo-propertyname add-property"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="Button"
+          type="button"
+        >
+          <span>
+            + Add a property
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDetail/CardDetailProperties cancel on delete dialog should do nothing 1`] = `
+<div>
+  <div
+    class="octo-propertylist CardDetailProperties"
+  >
+    <div
+      class="octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Owner
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="octo-propertyvalue"
+        data-testid="select-non-editable"
+        tabindex="0"
+      >
+        <span
+          class="Label propColorDefault "
+        >
+          <span
+            class="Label-text"
+          >
+            Jean-Luc Picard
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              MockStatus
+            </span>
+          </button>
+        </div>
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="false"
+        style="width: 5px;"
+        title="1234"
+        value="1234"
+      />
+    </div>
+    <div
+      class="octo-propertyname add-property"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="Button"
+          type="button"
+        >
+          <span>
+            + Add a property
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = `
 <div>
   <div
@@ -41,6 +229,36 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
           </span>
         </span>
       </div>
+    </div>
+    <div
+      class="octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              MockStatus
+            </span>
+          </button>
+        </div>
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="false"
+        style="width: 5px;"
+        title="1234"
+        value="1234"
+      />
     </div>
     <div
       class="octo-propertyname add-property"
@@ -105,6 +323,36 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
           </span>
         </span>
       </div>
+    </div>
+    <div
+      class="octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              MockStatus
+            </span>
+          </button>
+        </div>
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="false"
+        style="width: 5px;"
+        title="1234"
+        value="1234"
+      />
     </div>
     <div
       class="octo-propertyname add-property"

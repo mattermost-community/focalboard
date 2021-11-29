@@ -10,6 +10,7 @@ import mutator from '../../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import IconButton from '../../widgets/buttons/iconButton'
 import BoardIcon from '../../widgets/icons/board'
+import CalendarIcon from '../../widgets/icons/calendar'
 import DeleteIcon from '../../widgets/icons/delete'
 import DisclosureTriangle from '../../widgets/icons/disclosureTriangle'
 import DuplicateIcon from '../../widgets/icons/duplicate'
@@ -18,6 +19,9 @@ import OptionsIcon from '../../widgets/icons/options'
 import TableIcon from '../../widgets/icons/table'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+
+import DeleteBoardDialog from './deleteBoardDialog'
+
 import './sidebarBoardItem.scss'
 
 type Props = {
@@ -26,12 +30,14 @@ type Props = {
     activeBoardId?: string
     activeViewId?: string
     nextBoardId?: string
+    hideSidebar: () => void
 }
 
 const SidebarBoardItem = React.memo((props: Props) => {
     const [collapsed, setCollapsed] = useState(false)
     const intl = useIntl()
     const history = useHistory()
+    const [deleteBoardOpen, setDeleteBoardOpen] = useState(false)
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, workspaceId?: string}>()
 
     const showBoard = useCallback((boardId) => {
@@ -44,11 +50,13 @@ const SidebarBoardItem = React.memo((props: Props) => {
         }
         const newPath = generatePath(match.path, params)
         history.push(newPath)
+        props.hideSidebar()
     }, [match, history])
 
     const showView = useCallback((viewId, boardId) => {
         const newPath = generatePath(match.path, {...match.params, boardId: boardId || '', viewId: viewId || ''})
         history.push(newPath)
+        props.hideSidebar()
     }, [match, history])
 
     const iconForViewType = (viewType: IViewType): JSX.Element => {
@@ -56,6 +64,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
         case 'board': return <BoardIcon/>
         case 'table': return <TableIcon/>
         case 'gallery': return <GalleryIcon/>
+        case 'calendar': return <CalendarIcon/>
         default: return <div/>
         }
     }
@@ -124,23 +133,8 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             id='deleteBoard'
                             name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
                             icon={<DeleteIcon/>}
-                            onClick={async () => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: board.id})
-                                mutator.deleteBlock(
-                                    board,
-                                    intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
-                                    async () => {
-                                        if (props.nextBoardId) {
-                                            // This delay is needed because WSClient has a default 100 ms notification delay before updates
-                                            setTimeout(() => {
-                                                showBoard(props.nextBoardId)
-                                            }, 120)
-                                        }
-                                    },
-                                    async () => {
-                                        showBoard(board.id)
-                                    },
-                                )
+                            onClick={() => {
+                                setDeleteBoardOpen(true)
                             }}
                         />
 
@@ -186,6 +180,30 @@ const SidebarBoardItem = React.memo((props: Props) => {
                     </div>
                 </div>
             ))}
+
+            {deleteBoardOpen &&
+            <DeleteBoardDialog
+                boardTitle={props.board.title}
+                onClose={() => setDeleteBoardOpen(false)}
+                onDelete={async () => {
+                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: board.id})
+                    mutator.deleteBlock(
+                        board,
+                        intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
+                        async () => {
+                            if (props.nextBoardId) {
+                                // This delay is needed because WSClient has a default 100 ms notification delay before updates
+                                setTimeout(() => {
+                                    showBoard(props.nextBoardId)
+                                }, 120)
+                            }
+                        },
+                        async () => {
+                            showBoard(board.id)
+                        },
+                    )
+                }}
+            />}
         </div>
     )
 })
