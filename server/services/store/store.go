@@ -2,7 +2,12 @@
 //go:generate go run ./generators/main.go
 package store
 
-import "github.com/mattermost/focalboard/server/model"
+import (
+	"errors"
+	"fmt"
+
+	"github.com/mattermost/focalboard/server/model"
+)
 
 // Conainer represents a container in a store
 // Using a struct to make extending this easier in the future.
@@ -63,4 +68,32 @@ type Store interface {
 	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
 	GetWorkspaceCount() (int64, error)
 	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
+
+	IsErrNotFound(err error) bool
+}
+
+// ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.
+type ErrNotFound struct {
+	resource string
+}
+
+// NewErrNotFound creates a new ErrNotFound instance.
+func NewErrNotFound(resource string) *ErrNotFound {
+	return &ErrNotFound{
+		resource: resource,
+	}
+}
+
+func (nf *ErrNotFound) Error() string {
+	return fmt.Sprintf("{%s} not found", nf.resource)
+}
+
+// IsErrNotFound returns true if `err` is or wraps a ErrNotFound.
+func IsErrNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	var nf *ErrNotFound
+	return errors.As(err, &nf)
 }

@@ -391,21 +391,46 @@ func (s *SQLStore) patchBlock(db sq.BaseRunner, c store.Container, blockID strin
 }
 
 func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID string, modifiedBy string) error {
+	block, err := s.getBlock(db, c, blockID)
+	if err != nil {
+		return err
+	}
+
+	if block == nil {
+		return store.NewErrNotFound(blockID)
+	}
+
 	now := utils.GetMillis()
 	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix+"blocks_history").
 		Columns(
 			"workspace_id",
 			"id",
+			"parent_id",
+			"schema",
+			"type",
+			"title",
+			"fields",
+			"root_id",
 			"modified_by",
+			"create_at",
 			"update_at",
 			"delete_at",
+			"created_by",
 		).
 		Values(
 			c.WorkspaceID,
-			blockID,
+			block.ID,
+			block.ParentID,
+			block.Schema,
+			block.Type,
+			block.Title,
+			block.Fields,
+			block.RootID,
 			modifiedBy,
+			block.CreateAt,
 			now,
 			now,
+			block.CreatedBy,
 		)
 
 	if _, err := insertQuery.Exec(); err != nil {
@@ -423,7 +448,6 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID stri
 
 	return nil
 }
-
 func (s *SQLStore) getBlockCountsByType(db sq.BaseRunner) (map[string]int64, error) {
 	query := s.getQueryBuilder(db).
 		Select(
