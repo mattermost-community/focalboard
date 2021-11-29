@@ -116,7 +116,7 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 	}
 
 	// card deleted
-	if cardDiff.NewBlock == nil && cardDiff.OldBlock != nil {
+	if (cardDiff.NewBlock == nil || cardDiff.NewBlock.DeleteAt != 0) && cardDiff.OldBlock != nil {
 		buf.Reset()
 		if err := execTemplate(buf, "DeleteCardNotify", opts, defDeleteCardNotify, cardDiff); err != nil {
 			return nil, err

@@ -428,6 +428,11 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID stri
 		return store.NewErrNotFound(blockID)
 	}
 
+	fieldsJSON, err := json.Marshal(block.Fields)
+	if err != nil {
+		return err
+	}
+
 	now := utils.GetMillis()
 	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix+"blocks_history").
 		Columns(
@@ -452,7 +457,7 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID stri
 			block.Schema,
 			block.Type,
 			block.Title,
-			block.Fields,
+			fieldsJSON,
 			block.RootID,
 			modifiedBy,
 			block.CreateAt,

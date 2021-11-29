@@ -58,10 +58,19 @@ type diffGenerator struct {
 }
 
 func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
-	block, err := dg.store.GetBlock(dg.container, dg.hint.BlockID)
-	if err != nil || block == nil {
+	// use block_history to fetch blocks in case they were deleted and no longer exist in blocks table.
+	opts := model.QueryBlockHistoryOptions{
+		Limit:      1,
+		Descending: true,
+	}
+	blocks, err := dg.store.GetBlockHistory(dg.container, dg.hint.BlockID, opts)
+	if err != nil {
 		return nil, fmt.Errorf("could not get block for notification: %w", err)
 	}
+	if len(blocks) == 0 {
+		return nil, fmt.Errorf("block not found for notification: %w", err)
+	}
+	block := &blocks[0]
 
 	if dg.board == nil || dg.card == nil {
 		return nil, fmt.Errorf("cannot generate diff for block %s; must have a valid board and card: %w", dg.hint.BlockID, err)
