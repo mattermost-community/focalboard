@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`src/archiver exportBoardArchive should export board archive 1`] = `
+<body>
+  <a
+    download="archive-2021-11-5.focalboard"
+    href="data:text/json,%7B%22version%22%3A1%2C%22date%22%3A1636070400000%7D%0A%7B%22type%22%3A%22block%22%2C%22data%22%3A%7B%22id%22%3A%22board1%22%2C%22schema%22%3A1%2C%22workspaceId%22%3A%22%22%2C%22parentId%22%3A%22%22%2C%22rootId%22%3A%22%22%2C%22createdBy%22%3A%22%22%2C%22modifiedBy%22%3A%22%22%2C%22type%22%3A%22unknown%22%2C%22fields%22%3A%7B%7D%2C%22title%22%3A%22%22%2C%22createAt%22%3A1636070400000%2C%22updateAt%22%3A1636070400000%2C%22deleteAt%22%3A0%7D%7D%0A"
+    style="display: none;"
+  />
+</body>
+`;
+
+exports[`src/archiver exportBoardArchive should export full archive 1`] = `
+<body>
+  <a
+    download="archive-2021-11-5.focalboard"
+    href="data:text/json,%7B%22version%22%3A1%2C%22date%22%3A1636070400000%7D%0A%7B%22type%22%3A%22block%22%2C%22data%22%3A%7B%22id%22%3A%22board1%22%2C%22schema%22%3A1%2C%22workspaceId%22%3A%22%22%2C%22parentId%22%3A%22%22%2C%22rootId%22%3A%22%22%2C%22createdBy%22%3A%22%22%2C%22modifiedBy%22%3A%22%22%2C%22type%22%3A%22unknown%22%2C%22fields%22%3A%7B%7D%2C%22title%22%3A%22%22%2C%22createAt%22%3A1636070400000%2C%22updateAt%22%3A1636070400000%2C%22deleteAt%22%3A0%7D%7D%0A"
+    style="display: none;"
+  />
+</body>
+`;
