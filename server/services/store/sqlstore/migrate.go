@@ -100,14 +100,10 @@ func appendMultipleStatementsFlag(connectionString string) (string, error) {
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
 // enabled.
-func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
-	connectionString := s.connectionString
-	if s.dbType == mysqlDBType {
-		var err error
-		connectionString, err = appendMultipleStatementsFlag(s.connectionString)
-		if err != nil {
-			return nil, err
-		}
+func (s *SQLStore) getMySQLMigrationConnection() (*sql.DB, error) {
+	connectionString, err := appendMultipleStatementsFlag(s.connectionString)
+	if err != nil {
+		return nil, err
 	}
 
 	db, err := sql.Open(s.dbType, connectionString)
@@ -134,11 +130,14 @@ func (s *SQLStore) Migrate() error {
 		}
 	}
 
-	db, err := s.getMigrationConnection()
-	if err != nil {
-		return err
+	db := s.db
+	if s.dbType == mysqlDBType {
+		db, err = s.getMySQLMigrationConnection()
+		if err != nil {
+			return err
+		}
+		defer db.Close()
 	}
-	defer db.Close()
 
 	if s.dbType == postgresDBType {
 		driver, err = postgres.WithInstance(db, &postgres.Config{MigrationsTable: migrationsTable})
@@ -174,6 +173,7 @@ func (s *SQLStore) Migrate() error {
 	if err != nil {
 		return err
 	}
+	defer m.Close()
 
 	var mutex *cluster.Mutex
 	if s.isPlugin {
