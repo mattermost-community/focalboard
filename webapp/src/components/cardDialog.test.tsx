@@ -275,6 +275,13 @@ describe('components/cardDialog', () => {
         const newState = {
             users: {
                 blockSubscriptions: [{blockId: card.id}],
+                workspaceUsers: {
+                    1: {username: 'abc'},
+                    2: {username: 'd'},
+                    3: {username: 'e'},
+                    4: {username: 'f'},
+                    5: {username: 'g'},
+                },
             },
             comments: {
                 comments: {},
