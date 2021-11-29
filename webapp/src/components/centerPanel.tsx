@@ -195,7 +195,7 @@ class CenterPanel extends React.Component<Props, State> {
                         addCard={this.addCard}
                         onCardClicked={this.cardClicked}
                     />}
-                {activeView.fields.viewType === 'calendar' && this.props.clientConfig?.featureFlags.CalendarView &&
+                {activeView.fields.viewType === 'calendar' &&
                     <CalendarFullView
                         board={this.props.board}
                         cards={this.props.cards}

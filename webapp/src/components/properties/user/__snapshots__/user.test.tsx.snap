@@ -12,13 +12,13 @@ exports[`components/properties/user not readonly 1`] = `
       class="css-1f43avz-a11yText-A11yText"
     />
     <div
-      class=" css-pwgt1w-Control"
+      class="react-select__control css-pwgt1w-Control"
     >
       <div
-        class=" css-kpfmlq-ValueContainer"
+        class="react-select__value-container react-select__value-container--has-value css-kpfmlq-ValueContainer"
       >
         <div
-          class=" css-ciz25-singleValue"
+          class="react-select__single-value css-ciz25-singleValue"
         >
           username-1
         </div>
@@ -26,7 +26,7 @@ exports[`components/properties/user not readonly 1`] = `
           class="css-1shkodo-Input"
         >
           <div
-            class=""
+            class="react-select__input"
             style="display: inline-block;"
           >
             <input
@@ -48,11 +48,11 @@ exports[`components/properties/user not readonly 1`] = `
         </div>
       </div>
       <div
-        class=" css-1hb7zxy-IndicatorsContainer"
+        class="react-select__indicators css-1hb7zxy-IndicatorsContainer"
       >
         <div
           aria-hidden="true"
-          class=" css-tpaeio-indicatorContainer"
+          class="react-select__indicator react-select__clear-indicator css-tpaeio-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -68,11 +68,11 @@ exports[`components/properties/user not readonly 1`] = `
           </svg>
         </div>
         <span
-          class=" css-43ykx9-indicatorSeparator"
+          class="react-select__indicator-separator css-43ykx9-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class=" css-19sxey8-indicatorContainer"
+          class="react-select__indicator react-select__dropdown-indicator css-19sxey8-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -105,13 +105,13 @@ exports[`components/properties/user not readonly not existing user 1`] = `
       class="css-1f43avz-a11yText-A11yText"
     />
     <div
-      class=" css-pwgt1w-Control"
+      class="react-select__control css-pwgt1w-Control"
     >
       <div
-        class=" css-kpfmlq-ValueContainer"
+        class="react-select__value-container css-kpfmlq-ValueContainer"
       >
         <div
-          class=" css-1oswhd8-placeholder"
+          class="react-select__placeholder css-1oswhd8-placeholder"
         >
           Empty
         </div>
@@ -119,7 +119,7 @@ exports[`components/properties/user not readonly not existing user 1`] = `
           class="css-1shkodo-Input"
         >
           <div
-            class=""
+            class="react-select__input"
             style="display: inline-block;"
           >
             <input
@@ -141,14 +141,14 @@ exports[`components/properties/user not readonly not existing user 1`] = `
         </div>
       </div>
       <div
-        class=" css-1hb7zxy-IndicatorsContainer"
+        class="react-select__indicators css-1hb7zxy-IndicatorsContainer"
       >
         <span
-          class=" css-43ykx9-indicatorSeparator"
+          class="react-select__indicator-separator css-43ykx9-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class=" css-19sxey8-indicatorContainer"
+          class="react-select__indicator react-select__dropdown-indicator css-19sxey8-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -200,13 +200,13 @@ exports[`components/properties/user user dropdown open 1`] = `
       </span>
     </span>
     <div
-      class=" css-pwgt1w-Control"
+      class="react-select__control react-select__control--is-focused react-select__control--menu-is-open css-pwgt1w-Control"
     >
       <div
-        class=" css-kpfmlq-ValueContainer"
+        class="react-select__value-container react-select__value-container--has-value css-kpfmlq-ValueContainer"
       >
         <div
-          class=" css-ciz25-singleValue"
+          class="react-select__single-value css-ciz25-singleValue"
         >
           username-1
         </div>
@@ -214,7 +214,7 @@ exports[`components/properties/user user dropdown open 1`] = `
           class="css-1shkodo-Input"
         >
           <div
-            class=""
+            class="react-select__input"
             style="display: inline-block;"
           >
             <input
@@ -236,11 +236,11 @@ exports[`components/properties/user user dropdown open 1`] = `
         </div>
       </div>
       <div
-        class=" css-1hb7zxy-IndicatorsContainer"
+        class="react-select__indicators css-1hb7zxy-IndicatorsContainer"
       >
         <div
           aria-hidden="true"
-          class=" css-13eygzs-indicatorContainer"
+          class="react-select__indicator react-select__clear-indicator css-13eygzs-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -256,11 +256,11 @@ exports[`components/properties/user user dropdown open 1`] = `
           </svg>
         </div>
         <span
-          class=" css-43ykx9-indicatorSeparator"
+          class="react-select__indicator-separator css-43ykx9-indicatorSeparator"
         />
         <div
           aria-hidden="true"
-          class=" css-hl9mox-indicatorContainer"
+          class="react-select__indicator react-select__dropdown-indicator css-hl9mox-indicatorContainer"
         >
           <svg
             aria-hidden="true"
@@ -278,13 +278,13 @@ exports[`components/properties/user user dropdown open 1`] = `
       </div>
     </div>
     <div
-      class=" css-l4y5re-menu"
+      class="react-select__menu css-l4y5re-menu"
     >
       <div
-        class=" css-g29tl0-MenuList"
+        class="react-select__menu-list css-g29tl0-MenuList"
       >
         <div
-          class=" css-xoibch-option"
+          class="react-select__option react-select__option--is-focused react-select__option--is-selected css-xoibch-option"
           id="react-select-4-option-0"
           tabindex="-1"
         >

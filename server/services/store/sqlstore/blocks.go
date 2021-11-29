@@ -476,7 +476,6 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID stri
 
 	return nil
 }
-
 func (s *SQLStore) getBlockCountsByType(db sq.BaseRunner) (map[string]int64, error) {
 	query := s.getQueryBuilder(db).
 		Select(
