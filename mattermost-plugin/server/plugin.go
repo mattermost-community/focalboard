@@ -319,7 +319,22 @@ func defaultLoggingConfig() string {
 				{"id": 1, "name": "fatal", "stacktrace": true},
 				{"id": 0, "name": "panic", "stacktrace": true}
 			]
-		}
+		},
+		"errors_file": {
+			"Type": "file",
+			"Format": "plain",
+			"Levels": [
+				{"ID": 2, "Name": "error", "Stacktrace": true}
+			],
+			"Options": {
+				"Compress": true,
+				"Filename": "focalboard_errors.log",
+				"MaxAgeDays": 0,
+				"MaxBackups": 5,
+				"MaxSizeMB": 10 
+			},
+			"MaxQueueSize": 1000
+		}		
 	}`
 }
 

@@ -419,21 +419,46 @@ func (s *SQLStore) patchBlock(db sq.BaseRunner, c store.Container, blockID strin
 }
 
 func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID string, modifiedBy string) error {
+	block, err := s.getBlock(db, c, blockID)
+	if err != nil {
+		return err
+	}
+
+	if block == nil {
+		return store.NewErrNotFound(blockID)
+	}
+
 	now := utils.GetMillis()
 	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix+"blocks_history").
 		Columns(
 			"workspace_id",
 			"id",
+			"parent_id",
+			"schema",
+			"type",
+			"title",
+			"fields",
+			"root_id",
 			"modified_by",
+			"create_at",
 			"update_at",
 			"delete_at",
+			"created_by",
 		).
 		Values(
 			c.WorkspaceID,
-			blockID,
+			block.ID,
+			block.ParentID,
+			block.Schema,
+			block.Type,
+			block.Title,
+			block.Fields,
+			block.RootID,
 			modifiedBy,
+			block.CreateAt,
 			now,
 			now,
+			block.CreatedBy,
 		)
 
 	if _, err := insertQuery.Exec(); err != nil {
@@ -547,11 +572,22 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID 
 // getBoardAndCardByID returns the first parent of type `card` and first parent of type `board` for the block specified by ID.
 // `board` and/or `card` may return nil without error if the block does not belong to a board or card.
 func (s *SQLStore) getBoardAndCardByID(db sq.BaseRunner, c store.Container, blockID string) (board *model.Block, card *model.Block, err error) {
-	block, err := s.GetBlock(c, blockID)
-	if err != nil || block == nil {
+	// use block_history to fetch block in case it was deleted and no longer exists in blocks table.
+	opts := model.QueryBlockHistoryOptions{
+		Limit:      1,
+		Descending: true,
+	}
+
+	blocks, err := s.getBlockHistory(db, c, blockID, opts)
+	if err != nil {
 		return nil, nil, err
 	}
-	return s.getBoardAndCard(db, c, block)
+
+	if len(blocks) == 0 {
+		return nil, nil, store.NewErrNotFound(blockID)
+	}
+
+	return s.getBoardAndCard(db, c, &blocks[0])
 }
 
 // getBoardAndCard returns the first parent of type `card` and first parent of type `board` for the specified block.
@@ -559,6 +595,13 @@ func (s *SQLStore) getBoardAndCardByID(db sq.BaseRunner, c store.Container, bloc
 func (s *SQLStore) getBoardAndCard(db sq.BaseRunner, c store.Container, block *model.Block) (board *model.Block, card *model.Block, err error) {
 	var count int // don't let invalid blocks hierarchy cause infinite loop.
 	iter := block
+
+	// use block_history to fetch blocks in case they were deleted and no longer exist in blocks table.
+	opts := model.QueryBlockHistoryOptions{
+		Limit:      1,
+		Descending: true,
+	}
+
 	for {
 		count++
 		if board == nil && iter.Type == model.TypeBoard {
@@ -573,10 +616,14 @@ func (s *SQLStore) getBoardAndCard(db sq.BaseRunner, c store.Container, block *m
 			break
 		}
 
-		iter, err = s.getBlock(db, c, iter.ParentID)
+		blocks, err := s.getBlockHistory(db, c, iter.ParentID, opts)
 		if err != nil {
-			return board, card, err
+			return nil, nil, err
 		}
+		if len(blocks) == 0 {
+			return board, card, nil
+		}
+		iter = &blocks[0]
 	}
 	return board, card, nil
 }
