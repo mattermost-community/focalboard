@@ -4,7 +4,7 @@
 import React, {useCallback, useMemo} from 'react'
 import {useIntl} from 'react-intl'
 
-import FullCalendar, {EventClickArg, EventChangeArg, EventInput, EventContentArg} from '@fullcalendar/react'
+import FullCalendar, {EventClickArg, EventChangeArg, EventInput, EventContentArg, DayCellContentArg} from '@fullcalendar/react'
 
 import interactionPlugin from '@fullcalendar/interaction'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -44,6 +44,15 @@ function createDatePropertyFromCalendarDates(start: Date, end: Date) : DatePrope
     if (dateTo !== dateFrom) {
         dateProperty.to = dateTo
     }
+    return dateProperty
+}
+
+function createDatePropertyFromCalendarDate(start: Date) : DateProperty {
+    // save as noon local, expected from the date picker
+    start.setHours(12)
+    const dateFrom = start.getTime() - timeZoneOffset(start.getTime())
+
+    const dateProperty : DateProperty = {from: dateFrom}
     return dateProperty
 }
 
@@ -159,7 +168,15 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     }, [cards, dateDisplayProperty])
 
     const onNewEvent = useCallback((args: {start: Date, end: Date}) => {
-        const dateProperty = createDatePropertyFromCalendarDates(args.start, args.end)
+        let dateProperty: DateProperty
+        if (args.start === args.end) {
+            dateProperty = createDatePropertyFromCalendarDate(args.start)
+        } else {
+            dateProperty = createDatePropertyFromCalendarDates(args.start, args.end)
+            if (dateProperty.to === undefined) {
+                return
+            }
+        }
 
         const properties: Record<string, string> = {}
         if (dateDisplayProperty) {
@@ -181,11 +198,32 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         week: intl.formatMessage({id: 'calendar.week', defaultMessage: 'Week'}),
     }), [])
 
+    const dayCellContent = useCallback((args: DayCellContentArg): JSX.Element|null => {
+        return (
+            <div
+                className='dateContainer'
+            >
+                <div
+                    className='addEvent'
+                    onClick={() => onNewEvent({start: args.date, end: args.date})}
+                >
+                    {'+'}
+                </div>
+                <div
+                    className='dateDisplay'
+                >
+                    {args.dayNumberText}
+                </div>
+            </div>
+        )
+    }, [])
+
     return (
         <div
             className='CalendarContainer'
         >
             <FullCalendar
+                dayCellContent={dayCellContent}
                 dayMaxEventRows={5}
                 initialDate={initialDate}
                 plugins={[dayGridPlugin, interactionPlugin]}
@@ -198,6 +236,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 eventClick={eventClick}
                 eventContent={renderEventContent}
                 eventChange={eventChange}
+
                 selectable={isSelectable}
                 selectMirror={true}
                 select={onNewEvent}
