@@ -204,14 +204,13 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 className='dateContainer'
             >
                 <div
-                    className='showPlus'
+                    className='addEvent'
                     onClick={() => onNewEvent({start: args.date, end: args.date})}
                 >
                     {'+'}
                 </div>
                 <div
-                    className='showDate'
-                    id={'fc-day-div-' + args.dayNumberText}
+                    className='dateDisplay'
                 >
                     {args.dayNumberText}
                 </div>

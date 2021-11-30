@@ -62,7 +62,7 @@
             align-items: center;
             width: 100%;
 
-            .showPlus {
+            .addEvent {
                 margin: 0 4px;
                 width: 24px;
                 text-align: center;
@@ -77,7 +77,7 @@
                 flex-direction: row;
                 justify-content: space-between;
                 
-                .showPlus {
+                .addEvent {
                     display: block;
                     background-color: rgba(192, 192, 255, 0.2);
                 }
@@ -191,7 +191,7 @@
         background: transparent;
 
         .fc-daygrid-day-number {
-            .showDate {
+            .dateDisplay {
                 color: rgba(var(--button-color-rgb));
                 background-color: rgba(var(--button-bg-rgb), 1);
                 font-weight: 600;

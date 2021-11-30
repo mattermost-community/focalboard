@@ -277,7 +277,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-2"
                                     >
-                                      26
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          26
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -310,7 +323,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-4"
                                     >
-                                      27
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          27
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -343,7 +369,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-6"
                                     >
-                                      28
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          28
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -376,7 +415,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-8"
                                     >
-                                      29
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          29
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -409,7 +461,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-10"
                                     >
-                                      30
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          30
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -442,7 +507,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-12"
                                     >
-                                      1
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          1
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -475,7 +553,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-14"
                                     >
-                                      2
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          2
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -512,7 +603,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-16"
                                     >
-                                      3
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          3
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -545,7 +649,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-18"
                                     >
-                                      4
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          4
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -578,7 +695,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-20"
                                     >
-                                      5
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          5
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -641,7 +771,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-22"
                                     >
-                                      6
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          6
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -674,7 +817,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-24"
                                     >
-                                      7
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          7
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -707,7 +863,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-26"
                                     >
-                                      8
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          8
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -740,7 +909,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-28"
                                     >
-                                      9
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          9
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -777,7 +959,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-30"
                                     >
-                                      10
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          10
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -810,7 +1005,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-32"
                                     >
-                                      11
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          11
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -843,7 +1051,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-34"
                                     >
-                                      12
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          12
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -876,7 +1097,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-36"
                                     >
-                                      13
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          13
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -909,7 +1143,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-38"
                                     >
-                                      14
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          14
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -942,7 +1189,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-40"
                                     >
-                                      15
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          15
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -975,7 +1235,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-42"
                                     >
-                                      16
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          16
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1012,7 +1285,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-44"
                                     >
-                                      17
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          17
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1045,7 +1331,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-46"
                                     >
-                                      18
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          18
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1078,7 +1377,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-48"
                                     >
-                                      19
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          19
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1111,7 +1423,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-50"
                                     >
-                                      20
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          20
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1144,7 +1469,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-52"
                                     >
-                                      21
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          21
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1177,7 +1515,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-54"
                                     >
-                                      22
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          22
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1210,7 +1561,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-56"
                                     >
-                                      23
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          23
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1247,7 +1611,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-58"
                                     >
-                                      24
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          24
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1280,7 +1657,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-60"
                                     >
-                                      25
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          25
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1313,7 +1703,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-62"
                                     >
-                                      26
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          26
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1346,7 +1749,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-64"
                                     >
-                                      27
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          27
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1379,7 +1795,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-66"
                                     >
-                                      28
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          28
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1412,7 +1841,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-68"
                                     >
-                                      29
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          29
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1445,7 +1887,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-70"
                                     >
-                                      30
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          30
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1482,7 +1937,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-72"
                                     >
-                                      31
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          31
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1515,7 +1983,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-74"
                                     >
-                                      1
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          1
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1548,7 +2029,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-76"
                                     >
-                                      2
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          2
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1581,7 +2075,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-78"
                                     >
-                                      3
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          3
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1614,7 +2121,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-80"
                                     >
-                                      4
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          4
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1647,7 +2167,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-82"
                                     >
-                                      5
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          5
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1680,7 +2213,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-84"
                                     >
-                                      6
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          6
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -1990,7 +2536,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-87"
                                     >
-                                      26
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          26
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2023,7 +2582,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-89"
                                     >
-                                      27
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          27
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2056,7 +2628,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-91"
                                     >
-                                      28
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          28
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2089,7 +2674,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-93"
                                     >
-                                      29
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          29
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2122,7 +2720,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-95"
                                     >
-                                      30
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          30
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2155,7 +2766,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-97"
                                     >
-                                      1
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          1
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2188,7 +2812,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-99"
                                     >
-                                      2
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          2
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2225,7 +2862,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-101"
                                     >
-                                      3
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          3
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2258,7 +2908,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-103"
                                     >
-                                      4
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          4
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2291,7 +2954,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-105"
                                     >
-                                      5
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          5
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2354,7 +3030,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-107"
                                     >
-                                      6
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          6
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2387,7 +3076,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-109"
                                     >
-                                      7
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          7
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2420,7 +3122,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-111"
                                     >
-                                      8
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          8
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2453,7 +3168,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-113"
                                     >
-                                      9
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          9
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2490,7 +3218,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-115"
                                     >
-                                      10
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          10
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2523,7 +3264,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-117"
                                     >
-                                      11
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          11
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2556,7 +3310,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-119"
                                     >
-                                      12
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          12
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2589,7 +3356,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-121"
                                     >
-                                      13
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          13
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2622,7 +3402,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-123"
                                     >
-                                      14
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          14
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2655,7 +3448,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-125"
                                     >
-                                      15
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          15
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2688,7 +3494,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-127"
                                     >
-                                      16
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          16
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2725,7 +3544,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-129"
                                     >
-                                      17
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          17
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2758,7 +3590,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-131"
                                     >
-                                      18
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          18
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2791,7 +3636,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-133"
                                     >
-                                      19
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          19
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2824,7 +3682,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-135"
                                     >
-                                      20
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          20
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2857,7 +3728,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-137"
                                     >
-                                      21
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          21
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2890,7 +3774,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-139"
                                     >
-                                      22
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          22
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2923,7 +3820,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-141"
                                     >
-                                      23
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          23
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2960,7 +3870,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-143"
                                     >
-                                      24
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          24
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -2993,7 +3916,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-145"
                                     >
-                                      25
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          25
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3026,7 +3962,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-147"
                                     >
-                                      26
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          26
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3059,7 +4008,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-149"
                                     >
-                                      27
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          27
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3092,7 +4054,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-151"
                                     >
-                                      28
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          28
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3125,7 +4100,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-153"
                                     >
-                                      29
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          29
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3158,7 +4146,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-155"
                                     >
-                                      30
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          30
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3195,7 +4196,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-157"
                                     >
-                                      31
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          31
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3228,7 +4242,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-159"
                                     >
-                                      1
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          1
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3261,7 +4288,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-161"
                                     >
-                                      2
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          2
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3294,7 +4334,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-163"
                                     >
-                                      3
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          3
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3327,7 +4380,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-165"
                                     >
-                                      4
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          4
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3360,7 +4426,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-167"
                                     >
-                                      5
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          5
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3393,7 +4472,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-169"
                                     >
-                                      6
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          6
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3703,7 +4795,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-172"
                                     >
-                                      26
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          26
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3736,7 +4841,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-174"
                                     >
-                                      27
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          27
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3769,7 +4887,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-176"
                                     >
-                                      28
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          28
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3802,7 +4933,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-178"
                                     >
-                                      29
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          29
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3835,7 +4979,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-180"
                                     >
-                                      30
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          30
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3868,7 +5025,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-182"
                                     >
-                                      1
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          1
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3901,7 +5071,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-184"
                                     >
-                                      2
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          2
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3938,7 +5121,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-186"
                                     >
-                                      3
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          3
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -3971,7 +5167,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-188"
                                     >
-                                      4
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          4
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4004,7 +5213,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-190"
                                     >
-                                      5
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          5
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4037,7 +5259,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-192"
                                     >
-                                      6
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          6
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4070,7 +5305,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-194"
                                     >
-                                      7
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          7
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4103,7 +5351,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-196"
                                     >
-                                      8
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          8
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4136,7 +5397,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-198"
                                     >
-                                      9
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          9
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4173,7 +5447,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-200"
                                     >
-                                      10
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          10
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4206,7 +5493,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-202"
                                     >
-                                      11
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          11
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4239,7 +5539,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-204"
                                     >
-                                      12
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          12
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4272,7 +5585,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-206"
                                     >
-                                      13
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          13
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4305,7 +5631,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-208"
                                     >
-                                      14
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          14
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4338,7 +5677,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-210"
                                     >
-                                      15
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          15
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4371,7 +5723,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-212"
                                     >
-                                      16
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          16
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4408,7 +5773,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-214"
                                     >
-                                      17
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          17
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4441,7 +5819,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-216"
                                     >
-                                      18
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          18
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4474,7 +5865,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-218"
                                     >
-                                      19
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          19
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4507,7 +5911,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-220"
                                     >
-                                      20
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          20
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4576,7 +5993,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-222"
                                     >
-                                      21
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          21
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4609,7 +6039,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-224"
                                     >
-                                      22
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          22
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4642,7 +6085,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-226"
                                     >
-                                      23
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          23
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4679,7 +6135,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-228"
                                     >
-                                      24
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          24
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4712,7 +6181,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-230"
                                     >
-                                      25
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          25
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4745,7 +6227,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-232"
                                     >
-                                      26
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          26
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4778,7 +6273,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-234"
                                     >
-                                      27
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          27
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4811,7 +6319,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-236"
                                     >
-                                      28
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          28
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4844,7 +6365,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-238"
                                     >
-                                      29
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          29
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4877,7 +6411,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-240"
                                     >
-                                      30
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          30
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4914,7 +6461,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-242"
                                     >
-                                      31
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          31
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4947,7 +6507,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-244"
                                     >
-                                      1
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          1
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -4980,7 +6553,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-246"
                                     >
-                                      2
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          2
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -5013,7 +6599,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-248"
                                     >
-                                      3
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          3
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -5046,7 +6645,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-250"
                                     >
-                                      4
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          4
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -5079,7 +6691,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-252"
                                     >
-                                      5
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          5
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
@@ -5112,7 +6737,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       class="fc-daygrid-day-number"
                                       id="fc-dom-254"
                                     >
-                                      6
+                                      <div
+                                        class="dateContainer"
+                                      >
+                                        <div
+                                          class="addEvent"
+                                        >
+                                          +
+                                        </div>
+                                        <div
+                                          class="dateDisplay"
+                                        >
+                                          6
+                                        </div>
+                                      </div>
                                     </a>
                                   </div>
                                   <div
