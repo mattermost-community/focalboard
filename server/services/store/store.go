@@ -63,4 +63,11 @@ type Store interface {
 	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
 	GetWorkspaceCount() (int64, error)
 	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
+
+	CreateCategory(category model.Category) error
+	UpdateCategory(category model.Category) error
+	//DeleteCategory(categoryID string) error
+	//
+	//GetCategories(userID, teamID string) ([]model.Category, error)
+	//UpdateBlockCategory(userID, teamID, blockID, categoryID string) error
 }
