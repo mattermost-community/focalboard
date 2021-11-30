@@ -3,6 +3,15 @@
     margin-bottom: 10px;
     overflow: auto;
 
+    a {
+        text-decoration: none;
+        color: var(--link-color-rgb);
+
+        &:hover {
+            background-color: unset !important;;
+        }
+    }
+
     .octo-tooltip {
         display: flex;
         max-width: 100%;
@@ -45,8 +54,52 @@
         height: 100%;
     }
 
-    .fc-daygrid-day-frame {
-        cursor: pointer;
+    .fc-day {
+        .dateContainer {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: right;
+            align-items: center;
+            width: 100%;
+
+            .addEvent {
+                border-radius: 4px;
+                margin: 0 4px;
+                width: 24px;
+                height: 24px;
+                align-items: center;
+                justify-content: center;
+                display: none;
+                font-size: 20px;
+                box-shadow: var(--elevation-1);
+                background: rgb(var(--center-channel-bg-rgb), 1);
+                border: 1px solid rgb(var(--center-channel-color-rgb), 0.12);
+                color: rgb(var(--center-channel-color-rgb), 0.56);
+                cursor: pointer;
+
+                &:hover {
+                    background: rgb(var(--center-channel-color-rgb), 0.08);
+                    color: rgb(var(--center-channel-color-rgb), 0.72);
+                }
+
+                &:active {
+                    color: rgba(var(--button-bg-rgb), 1);
+                    background: rgba(var(--button-bg-rgb), 0.08);
+                }
+            }
+        }
+
+        &:hover {
+            .dateContainer {
+                // display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+
+                .addEvent {
+                    display: flex;
+                }
+            }
+        }
     }
 
     .fc .fc-toolbar.fc-header-toolbar {
@@ -147,24 +200,30 @@
         background-color: rgba(var(--center-channel-color-rgb), 0.04);
     }
 
-    .fc-day-today {
-        background: transparent;
-
-        .fc-daygrid-day-number {
-            color: rgba(var(--button-color-rgb));
-            background-color: rgba(var(--button-bg-rgb), 1);
-        }
-    }
-
-    .fc-daygrid-day-number {
+    .dateDisplay {
         font-weight: 600;
         margin: 4px 4px 0 0;
         min-width: 24px;
         height: 24px;
         border-radius: 50px;
-        display: flex;
         align-items: center;
-        justify-content: center;
+        text-align: center;
+    }
+
+    .fc-day-today {
+        background: transparent;
+
+        .fc-daygrid-day-number {
+            .dateDisplay {
+                color: rgba(var(--button-color-rgb));
+                background-color: rgba(var(--button-bg-rgb), 1);
+            }
+        }
+    }
+
+    .fc-daygrid-day-number {
+        align-items: center;
+        width: 100%;
     }
 
     .fc-more-link {
