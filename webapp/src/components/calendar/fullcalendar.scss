@@ -3,6 +3,15 @@
     margin-bottom: 10px;
     overflow: auto;
 
+    a {
+        text-decoration: none;
+        color: var(--link-color-rgb);
+
+        &:hover {
+            background-color: unset !important;;
+        }
+    }
+
     .octo-tooltip {
         display: flex;
         max-width: 100%;
@@ -43,6 +52,37 @@
 
     .fc {
         height: 100%;
+    }
+
+    .fc-day {
+        .dateContainer {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: right;
+            align-items: center;
+            width: 100%;
+
+            .showPlus {
+                margin: 0 4px;
+                width: 24px;
+                text-align: center;
+                justify-self: left;
+                display: none;
+            }
+        }
+
+        &:hover {
+            .dateContainer {
+                // display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                
+                .showPlus {
+                    display: block;
+                    background-color: rgba(192, 192, 255, 0.2);
+                }
+            }
+        }
     }
 
     .fc-daygrid-day-frame {
@@ -151,20 +191,23 @@
         background: transparent;
 
         .fc-daygrid-day-number {
-            color: rgba(var(--button-color-rgb));
-            background-color: rgba(var(--button-bg-rgb), 1);
+            .showDate {
+                color: rgba(var(--button-color-rgb));
+                background-color: rgba(var(--button-bg-rgb), 1);
+                font-weight: 600;
+                margin: 4px 4px 0 0;
+                min-width: 24px;
+                height: 24px;
+                border-radius: 50px;
+                align-items: center;
+                text-align: center;
+            }
         }
     }
 
     .fc-daygrid-day-number {
-        font-weight: 600;
-        margin: 4px 4px 0 0;
-        min-width: 24px;
-        height: 24px;
-        border-radius: 50px;
-        display: flex;
         align-items: center;
-        justify-content: center;
+        width: 100%;
     }
 
     .fc-more-link {
