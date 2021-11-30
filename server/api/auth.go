@@ -252,7 +252,6 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 
 	jsonStringResponse(w, http.StatusOK, "{}")
 	auditRec.Success()
-	return
 }
 
 func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {

@@ -119,7 +119,7 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 	return session.Token, nil
 }
 
-// Logout invalidates the user session
+// Logout invalidates the user session.
 func (a *App) Logout(sessionID string) error {
 	err := a.store.DeleteSession(sessionID)
 	if err != nil {
