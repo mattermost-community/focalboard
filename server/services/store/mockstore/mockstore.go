@@ -494,20 +494,6 @@ func (mr *MockStoreMockRecorder) InsertBlock(arg0, arg1, arg2 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertBlock", reflect.TypeOf((*MockStore)(nil).InsertBlock), arg0, arg1, arg2)
 }
 
-// IsErrNotFound mocks base method.
-func (m *MockStore) IsErrNotFound(arg0 error) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsErrNotFound", arg0)
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// IsErrNotFound indicates an expected call of IsErrNotFound.
-func (mr *MockStoreMockRecorder) IsErrNotFound(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsErrNotFound", reflect.TypeOf((*MockStore)(nil).IsErrNotFound), arg0)
-}
-
 // PatchBlock mocks base method.
 func (m *MockStore) PatchBlock(arg0 store.Container, arg1 string, arg2 *model.BlockPatch, arg3 string) error {
 	m.ctrl.T.Helper()
