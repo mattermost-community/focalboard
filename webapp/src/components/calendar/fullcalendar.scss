@@ -63,11 +63,28 @@
             width: 100%;
 
             .addEvent {
+                border-radius: 4px;
                 margin: 0 4px;
                 width: 24px;
+                height: 24px;
                 text-align: center;
                 justify-self: left;
                 display: none;
+                font-size: 20px;
+                background: rgb(var(--center-channel-color-rgb), 1);
+                border: 1px solid rgb(var(--center-channel-color-rgb), 0.08);
+                box-shadow: var(--elevation-1);
+                color: rgb(var(--center-channel-color-rgb), 0.56);
+
+                &:hover {
+                    background: rgb(var(--center-channel-color-rgb), 0.08);
+                    color: rgb(var(--center-channel-color-rgb), 0.72);
+                }
+
+                &:active {
+                    background: rgba(var(--button-bg-rgb), 1);
+                    color: rgba(var(--button-bg-rgb), 0.08);
+                }
             }
         }
 
@@ -76,7 +93,7 @@
                 // display: flex;
                 flex-direction: row;
                 justify-content: space-between;
-                
+
                 .addEvent {
                     display: block;
                     background-color: rgba(192, 192, 255, 0.2);
