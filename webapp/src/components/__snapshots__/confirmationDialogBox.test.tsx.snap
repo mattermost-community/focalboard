@@ -43,7 +43,7 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
             class="action-buttons"
           >
             <button
-              class="Button emphasis--tertiary size--medium"
+              class="Button active emphasis--tertiary size--medium"
               title="Cancel"
               type="button"
             >
@@ -111,7 +111,7 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
             class="action-buttons"
           >
             <button
-              class="Button emphasis--tertiary size--medium"
+              class="Button active emphasis--tertiary size--medium"
               title="Cancel"
               type="button"
             >

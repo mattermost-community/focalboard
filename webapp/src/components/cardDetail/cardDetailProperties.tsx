@@ -66,7 +66,7 @@ const CardDetailProperties = React.memo((props: Props) => {
         let subTextString = intl.formatMessage({
             id: 'CardDetailProperty.property-name-change-subtext',
             defaultMessage: 'type from "{oldPropType}" to "{newPropType}"',
-        }, {oldPropType: oldType, newPropType: newType})
+        }, {oldPropType: typeDisplayName(intl, oldType), newPropType: typeDisplayName(intl, newType)})
 
         if (propertyTemplate.name !== newName) {
             subTextString = intl.formatMessage({
