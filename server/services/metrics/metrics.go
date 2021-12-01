@@ -30,6 +30,7 @@ type Metrics struct {
 	startTime prometheus.Gauge
 
 	loginCount     prometheus.Counter
+	logoutCount    prometheus.Counter
 	loginFailCount prometheus.Counter
 
 	blocksInsertedCount prometheus.Counter
@@ -65,6 +66,15 @@ func NewMetrics(info InstanceInfo) *Metrics {
 		ConstLabels: additionalLabels,
 	})
 	m.registry.MustRegister(m.loginCount)
+
+	m.logoutCount = prometheus.NewCounter(prometheus.CounterOpts{
+		Namespace:   MetricsNamespace,
+		Subsystem:   MetricsSubsystemSystem,
+		Name:        "logout_total",
+		Help:        "Total number of logouts.",
+		ConstLabels: additionalLabels,
+	})
+	m.registry.MustRegister(m.logoutCount)
 
 	m.loginFailCount = prometheus.NewCounter(prometheus.CounterOpts{
 		Namespace:   MetricsNamespace,
@@ -146,6 +156,12 @@ func NewMetrics(info InstanceInfo) *Metrics {
 func (m *Metrics) IncrementLoginCount(num int) {
 	if m != nil {
 		m.loginCount.Add(float64(num))
+	}
+}
+
+func (m *Metrics) IncrementLogoutCount(num int) {
+	if m != nil {
+		m.logoutCount.Add(float64(num))
 	}
 }
 
