@@ -58,13 +58,8 @@
 		"react-intl": "^5.13.5",
 		"react-redux": "^7.2.4",
 		"react-router-dom": "^5.2.0",
-<<<<<<< HEAD
 		"react-select": "^4.3.0",
-		"react-simplemde-editor": "^5.0.1",
-		"web-encoding": "^1.1.5"
-=======
-		"react-select": "^4.3.0"
->>>>>>> origin/main
+    "web-encoding": "^1.1.5"
 	},
 	"jest": {
 		"moduleNameMapper": {
