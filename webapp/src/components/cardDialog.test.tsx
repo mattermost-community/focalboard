@@ -39,6 +39,13 @@ describe('components/cardDialog', () => {
     card.createdBy = 'user-id-1'
 
     const state = {
+        clientConfig: {
+            value: {
+                featureFlags: {
+                    subscriptions: true,
+                },
+            },
+        },
         comments: {
             comments: {},
         },
@@ -272,24 +279,14 @@ describe('components/cardDialog', () => {
     })
 
     test('already following card', async () => {
-        const newState = {
-            users: {
-                blockSubscriptions: [{blockId: card.id}],
-                workspaceUsers: {
-                    1: {username: 'abc'},
-                    2: {username: 'd'},
-                    3: {username: 'e'},
-                    4: {username: 'f'},
-                    5: {username: 'g'},
-                },
-            },
-            comments: {
-                comments: {},
-            },
-            contents: {},
-            cards: {
-                cards: {
-                    [card.id]: card,
+        // simply doing {...state} gives a TypeScript error
+        // when you try updating it's values.
+        const newState = JSON.parse(JSON.stringify(state))
+        newState.users.blockSubscriptions = [{blockId: card.id}]
+        newState.clientConfig = {
+            value: {
+                featureFlags: {
+                    subscriptions: true,
                 },
             },
         }

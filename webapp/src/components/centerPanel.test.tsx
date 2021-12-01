@@ -58,6 +58,13 @@ describe('components/centerPanel', () => {
         ],
     }
     const state = {
+        clientConfig: {
+            value: {
+                featureFlags: {
+                    subscriptions: true,
+                },
+            },
+        },
         searchText: '',
         users: {
             me: {},

@@ -26,6 +26,8 @@ import {getUserBlockSubscriptionList} from '../store/initialLoad'
 import {IUser} from '../user'
 import {getMe} from '../store/users'
 
+import {getClientConfig} from '../store/clientConfig'
+
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 import {sendFlashMessage} from './flashMessages'
@@ -50,6 +52,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const comments = useAppSelector(getCardComments(props.cardId))
     const intl = useIntl()
     const me = useAppSelector<IUser|null>(getMe)
+    const clientConfig = useAppSelector(getClientConfig)
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
@@ -160,41 +163,42 @@ const CardDialog = (props: Props): JSX.Element => {
 
     const followingCards = useAppSelector(getUserBlockSubscriptionList)
     const isFollowingCard = Boolean(followingCards.find((following) => following.blockId === props.cardId))
+    const toolbar = clientConfig.featureFlags.subscriptions ? followActionButton(isFollowingCard) : null
 
     return (
         <>
             <Dialog
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && menu}
-                toolbar={followActionButton(isFollowingCard)}
+                toolbar={toolbar}
             >
                 {card && card.fields.isTemplate &&
-                <div className='banner'>
-                    <FormattedMessage
-                        id='CardDialog.editing-template'
-                        defaultMessage="You're editing a template."
-                    />
-                </div>}
+                    <div className='banner'>
+                        <FormattedMessage
+                            id='CardDialog.editing-template'
+                            defaultMessage="You're editing a template."
+                        />
+                    </div>}
 
                 {card &&
-                <CardDetail
-                    board={board}
-                    activeView={activeView}
-                    views={views}
-                    cards={cards}
-                    card={card}
-                    contents={contents}
-                    comments={comments}
-                    readonly={props.readonly}
-                />}
+                    <CardDetail
+                        board={board}
+                        activeView={activeView}
+                        views={views}
+                        cards={cards}
+                        card={card}
+                        contents={contents}
+                        comments={comments}
+                        readonly={props.readonly}
+                    />}
 
                 {!card &&
-                <div className='banner error'>
-                    <FormattedMessage
-                        id='CardDialog.nocard'
-                        defaultMessage="This card doesn't exist or is inaccessible."
-                    />
-                </div>}
+                    <div className='banner error'>
+                        <FormattedMessage
+                            id='CardDialog.nocard'
+                            defaultMessage="This card doesn't exist or is inaccessible."
+                        />
+                    </div>}
             </Dialog>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
