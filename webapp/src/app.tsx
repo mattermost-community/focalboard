@@ -145,6 +145,33 @@ const App = React.memo((): JSX.Element => {
                             <NewVersionBanner/>
                             <Switch>
                                 {globalErrorRedirect}
+                                {
+                                    Utils.isFocalboardPlugin() &&
+                                    <Route
+                                        path='/'
+                                        exact={true}
+                                        render={() => {
+                                            if (loggedIn === false) {
+                                                return <Redirect to='/login'/>
+                                            }
+
+                                            if (continueToWelcomeScreen()) {
+                                                return <Redirect to={'/welcome'}/>
+                                            }
+
+                                            if (Utils.isFocalboardPlugin() && UserSettings.lastWorkspaceId) {
+                                                return <Redirect to={`/workspace/${UserSettings.lastWorkspaceId}/${UserSettings.lastBoardId}/${UserSettings.lastViewId}`}/>
+                                            }
+
+                                            if (loggedIn === true) {
+                                                return <BoardPage/>
+                                            }
+
+                                            return null
+                                        }}
+                                    />
+                                }
+
                                 <Route path='/error'>
                                     <ErrorPage/>
                                 </Route>
