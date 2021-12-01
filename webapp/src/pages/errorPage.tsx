@@ -20,8 +20,8 @@ const ErrorPage = React.memo(() => {
             <br/>
             <Button
                 filled={true}
-                onClick={() => {
-                    octoClient.logout()
+                onClick={async () => {
+                    await octoClient.logout()
                     window.location.href = '/login'
                 }}
             >
