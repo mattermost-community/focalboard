@@ -82,7 +82,7 @@ describe('src/archiver', () => {
                 expect(mockedMutator.importFullArchive).toBeCalledTimes(1)
             })
         })
-        test('should not import full archive', async () => {
+        test('shouldn\'t import full archive', async () => {
             await Archiver.importFullArchive(mockedComplete)
             const elementInput = document.querySelector('input')
             fireEvent.change(elementInput!, {
