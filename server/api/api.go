@@ -89,6 +89,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
 
 	apiv1.HandleFunc("/login", a.handleLogin).Methods("POST")
+	apiv1.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
 	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
 	apiv1.HandleFunc("/clientConfig", a.getClientConfig).Methods("GET")
 
