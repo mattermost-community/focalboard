@@ -96,6 +96,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	apiv1.HandleFunc("/workspaces", a.sessionRequired(a.handleGetUserWorkspaces)).Methods("GET")
 
+	// Category Routes
+	apiv1.HandleFunc("/category", a.sessionRequired(a.handleCreateCategory)).Methods("POST")
+
 	// Get Files API
 
 	files := r.PathPrefix("/files").Subrouter()
@@ -323,6 +326,49 @@ func stampModificationMetadata(r *http.Request, blocks []model.Block, auditRec *
 			auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), blocks[i])
 		}
 	}
+}
+
+func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var category model.Category
+
+	err = json.Unmarshal(requestBody, &category)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "createCategory", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	// user can only create category for themselves
+	if category.UserID != session.UserID {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, fmt.Sprintf("userID %s and category userID %s mismatch", session.UserID, category.ID), nil)
+		return
+	}
+
+	if err := a.app.CreateCategory(category); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	json, err := json.Marshal(category)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, json)
+	auditRec.AddMeta("categoryID", category.ID)
+	auditRec.Success()
 }
 
 func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
@@ -861,7 +907,7 @@ func filterOrphanBlocks(blocks []model.Block) (ret []model.Block) {
 		blocks = append(blocks, block)
 		children := childrenOfBlockWithID[block.ID]
 		if children != nil {
-			queue = append(queue, (*children)...)
+			queue = append(queue, *children...)
 		}
 	}
 

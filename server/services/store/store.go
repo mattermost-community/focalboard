@@ -64,10 +64,11 @@ type Store interface {
 	GetWorkspaceCount() (int64, error)
 	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
 
+	//GetCategory(id string) (*model.Category, error)
 	CreateCategory(category model.Category) error
 	UpdateCategory(category model.Category) error
-	//DeleteCategory(categoryID string) error
-	//
+	DeleteCategory(categoryID, userID, teamID string) error
+
 	//GetCategories(userID, teamID string) ([]model.Category, error)
 	//UpdateBlockCategory(userID, teamID, blockID, categoryID string) error
 }

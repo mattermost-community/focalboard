@@ -26,6 +26,11 @@ func (s *SQLStore) CleanUpSessions(expireTime int64) error {
 
 }
 
+func (s *SQLStore) CreateCategory(category model.Category) error {
+	return s.createCategory(s.db, category)
+
+}
+
 func (s *SQLStore) CreateSession(session *model.Session) error {
 	return s.createSession(s.db, session)
 
@@ -54,6 +59,11 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 	}
 
 	return nil
+
+}
+
+func (s *SQLStore) DeleteCategory(categoryID string, userID string, teamID string) error {
+	return s.deleteCategory(s.db, categoryID, userID, teamID)
 
 }
 
@@ -236,6 +246,11 @@ func (s *SQLStore) RefreshSession(session *model.Session) error {
 
 func (s *SQLStore) SetSystemSetting(key string, value string) error {
 	return s.setSystemSetting(s.db, key, value)
+
+}
+
+func (s *SQLStore) UpdateCategory(category model.Category) error {
+	return s.updateCategory(s.db, category)
 
 }
 

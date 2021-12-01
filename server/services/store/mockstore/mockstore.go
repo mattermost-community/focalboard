@@ -49,6 +49,20 @@ func (mr *MockStoreMockRecorder) CleanUpSessions(arg0 interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CleanUpSessions", reflect.TypeOf((*MockStore)(nil).CleanUpSessions), arg0)
 }
 
+// CreateCategory mocks base method.
+func (m *MockStore) CreateCategory(arg0 model.Category) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateCategory", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateCategory indicates an expected call of CreateCategory.
+func (mr *MockStoreMockRecorder) CreateCategory(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCategory", reflect.TypeOf((*MockStore)(nil).CreateCategory), arg0)
+}
+
 // CreateSession mocks base method.
 func (m *MockStore) CreateSession(arg0 *model.Session) error {
 	m.ctrl.T.Helper()
@@ -89,6 +103,20 @@ func (m *MockStore) DeleteBlock(arg0 store.Container, arg1, arg2 string) error {
 func (mr *MockStoreMockRecorder) DeleteBlock(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBlock", reflect.TypeOf((*MockStore)(nil).DeleteBlock), arg0, arg1, arg2)
+}
+
+// DeleteCategory mocks base method.
+func (m *MockStore) DeleteCategory(arg0, arg1, arg2 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteCategory", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteCategory indicates an expected call of DeleteCategory.
+func (mr *MockStoreMockRecorder) DeleteCategory(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCategory", reflect.TypeOf((*MockStore)(nil).DeleteCategory), arg0, arg1, arg2)
 }
 
 // DeleteSession mocks base method.
@@ -548,6 +576,20 @@ func (m *MockStore) Shutdown() error {
 func (mr *MockStoreMockRecorder) Shutdown() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Shutdown", reflect.TypeOf((*MockStore)(nil).Shutdown))
+}
+
+// UpdateCategory mocks base method.
+func (m *MockStore) UpdateCategory(arg0 model.Category) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateCategory", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateCategory indicates an expected call of UpdateCategory.
+func (mr *MockStoreMockRecorder) UpdateCategory(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCategory", reflect.TypeOf((*MockStore)(nil).UpdateCategory), arg0)
 }
 
 // UpdateSession mocks base method.
