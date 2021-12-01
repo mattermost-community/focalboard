@@ -112,15 +112,9 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
-                  <svg
-                    class="DeleteIcon Icon"
-                    viewBox="0 0 448 512"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-trash-can-outline trash-can-outline"
+                  />
                   <div
                     class="menu-name"
                   >
@@ -441,121 +435,52 @@ exports[`components/contentBlock should match snapshot with textBlock 1`] = `
       >
         <div
           class="octo-editor-preview"
+          data-testid="preview-element"
         />
         <div
-          class="octo-editor-active Editor"
-          style="visibility: hidden; position: absolute; top: 0px; left: 0px;"
+          class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
         >
           <div
-            id="test-id-wrapper"
+            class="DraftEditor-root"
           >
-            <textarea
-              id="test-id"
-              style="display: none;"
-            />
             <div
-              class="EasyMDEContainer"
+              class="DraftEditor-editorContainer"
             >
               <div
-                class="CodeMirror cm-s-easymde CodeMirror-wrap"
+                aria-autocomplete="list"
+                aria-expanded="false"
+                class="notranslate public-DraftEditor-content"
+                contenteditable="true"
+                role="combobox"
+                spellcheck="false"
+                style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
               >
                 <div
-                  style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 0px;"
-                >
-                  <textarea
-                    autocapitalize="off"
-                    autocorrect="off"
-                    spellcheck="false"
-                    style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"
-                    tabindex="0"
-                  />
-                </div>
-                <div
-                  class="CodeMirror-vscrollbar"
-                  cm-not-content="true"
-                  tabindex="-1"
+                  data-contents="true"
                 >
                   <div
-                    style="min-width: 1px;"
-                  />
-                </div>
-                <div
-                  class="CodeMirror-hscrollbar"
-                  cm-not-content="true"
-                  tabindex="-1"
-                >
-                  <div
-                    style="height: 100%; min-height: 1px;"
-                  />
-                </div>
-                <div
-                  class="CodeMirror-scrollbar-filler"
-                  cm-not-content="true"
-                />
-                <div
-                  class="CodeMirror-gutter-filler"
-                  cm-not-content="true"
-                />
-                <div
-                  class="CodeMirror-scroll"
-                  style="min-height: 10px;"
-                  tabindex="-1"
-                >
-                  <div
-                    class="CodeMirror-sizer"
-                    style="margin-left: 0px;"
+                    class=""
+                    data-block="true"
+                    data-editor="123"
+                    data-offset-key="123-0-0"
                   >
                     <div
-                      style="position: relative;"
+                      class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                      data-offset-key="123-0-0"
                     >
-                      <div
-                        class="CodeMirror-lines"
-                        role="presentation"
+                      <span
+                        data-offset-key="123-0-0"
                       >
-                        <div
-                          role="presentation"
-                          style="position: relative; outline: none;"
+                        <span
+                          data-text="true"
                         >
-                          <div
-                            class="CodeMirror-measure"
-                          >
-                            <pre
-                              class="CodeMirror-line-like"
-                            >
-                              <span>
-                                xxxxxxxxxx
-                              </span>
-                            </pre>
-                          </div>
-                          <div
-                            class="CodeMirror-measure"
-                          />
-                          <div
-                            style="position: relative; z-index: 1;"
-                          />
-                          <div
-                            class="CodeMirror-cursors"
-                          />
-                          <div
-                            class="CodeMirror-code"
-                            role="presentation"
-                          />
-                        </div>
-                      </div>
+                          title
+                        </span>
+                      </span>
                     </div>
                   </div>
-                  <div
-                    style="position: absolute; height: 50px; width: 1px;"
-                  />
-                  <div
-                    class="CodeMirror-gutters"
-                    style="display: none;"
-                  />
                 </div>
               </div>
-              <div
-                class="editor-preview-side editor-preview"
-              />
             </div>
           </div>
         </div>

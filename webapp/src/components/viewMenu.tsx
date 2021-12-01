@@ -13,6 +13,7 @@ import {Block} from '../blocks/block'
 import {IDType, Utils} from '../utils'
 import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
+import CalendarIcon from '../widgets/icons/calendar'
 import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import GalleryIcon from '../widgets/icons/gallery'
@@ -168,6 +169,37 @@ const ViewMenu = React.memo((props: Props) => {
             })
     }, [props.board, props.activeView, props.intl, showView])
 
+    const handleAddViewCalendar = useCallback(() => {
+        const {board, activeView, intl} = props
+
+        Utils.log('addview-calendar')
+        const view = createBoardView()
+        view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar View'})
+        view.fields.viewType = 'calendar'
+        view.parentId = board.id
+        view.rootId = board.rootId
+        view.fields.visiblePropertyIds = [Constants.titleColumnId]
+
+        const oldViewId = activeView.id
+
+        // Find first date property
+        view.fields.dateDisplayPropertyId = board.fields.cardProperties.find((o: IPropertyTemplate) => o.type === 'date')?.id
+
+        mutator.insertBlock(
+            view,
+            'add view',
+            async (block: Block) => {
+                // This delay is needed because WSClient has a default 100 ms notification delay before updates
+                setTimeout(() => {
+                    Utils.log(`showView: ${block.id}`)
+                    showView(block.id)
+                }, 120)
+            },
+            async () => {
+                showView(oldViewId)
+            })
+    }, [props.board, props.activeView, props.intl, showView])
+
     const {views, intl} = props
 
     const duplicateViewText = intl.formatMessage({
@@ -200,6 +232,7 @@ const ViewMenu = React.memo((props: Props) => {
         case 'board': return <BoardIcon/>
         case 'table': return <TableIcon/>
         case 'gallery': return <GalleryIcon/>
+        case 'calendar': return <CalendarIcon/>
         default: return <div/>
         }
     }
@@ -254,6 +287,12 @@ const ViewMenu = React.memo((props: Props) => {
                         name={galleryText}
                         icon={<GalleryIcon/>}
                         onClick={handleAddViewGallery}
+                    />
+                    <Menu.Text
+                        id='calendar'
+                        name='Calendar'
+                        icon={<CalendarIcon/>}
+                        onClick={handleAddViewCalendar}
                     />
                 </Menu.SubMenu>
             }

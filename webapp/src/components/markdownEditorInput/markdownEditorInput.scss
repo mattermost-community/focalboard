@@ -1,0 +1,10 @@
+.MarkdownEditorInput {
+    div[role=option] {
+        display: flex;
+        align-items: center;
+    }
+
+    &--IsNotEditing {
+        display: none;
+    }
+}

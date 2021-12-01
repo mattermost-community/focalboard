@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 
 import {getCurrentBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
-import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView} from '../store/views'
+import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 import {getClientConfig, setClientConfig} from '../store/clientConfig'
@@ -32,6 +32,7 @@ function CenterContent(props: Props) {
     const activeView = useAppSelector(getView(match.params.viewId))
     const views = useAppSelector(getCurrentBoardViews)
     const groupByProperty = useAppSelector(getCurrentViewGroupBy)
+    const dateDisplayProperty = useAppSelector(getCurrentViewDisplayBy)
     const clientConfig = useAppSelector(getClientConfig)
     const history = useHistory()
     const dispatch = useAppDispatch()
@@ -60,8 +61,11 @@ function CenterContent(props: Props) {
         if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
             property = board?.fields.cardProperties.find((o) => o.type === 'select')
         }
+
+        const displayProperty = dateDisplayProperty
         return (
             <CenterPanel
+                clientConfig={clientConfig}
                 readonly={props.readonly}
                 board={board}
                 cards={cards}
@@ -69,6 +73,7 @@ function CenterContent(props: Props) {
                 showCard={showCard}
                 activeView={activeView}
                 groupByProperty={property}
+                dateDisplayProperty={displayProperty}
                 views={views}
                 showShared={clientConfig?.enablePublicSharedBoards || false}
             />

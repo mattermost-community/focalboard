@@ -16,7 +16,7 @@ import PropertyMenu, {PropertyTypes, typeDisplayName} from '../../widgets/proper
 
 import Calculations from '../calculations/calculations'
 import PropertyValueElement from '../propertyValueElement'
-import {ConfirmationDialogBox, ConfirmationDialogBoxProps} from '../confirmationDialogBox'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import {sendFlashMessage} from '../flashMessages'
 import Menu from '../../widgets/menu'
 import {IDType, Utils} from '../../utils'
@@ -55,7 +55,7 @@ const CardDetailProperties = React.memo((props: Props) => {
             return
         }
 
-        const affectsNumOfCards:string = Calculations.countCardWithPropValueNotNull(cards, propertyTemplate, intl)
+        const affectsNumOfCards:string = Calculations.countNotEmpty(cards, propertyTemplate, intl)
 
         // if no card has this value set delete the property directly without warning
         if (affectsNumOfCards === '0') {

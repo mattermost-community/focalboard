@@ -4,9 +4,8 @@
 import React from 'react'
 import {render, screen, act} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import '@testing-library/jest-dom'
 import {mocked} from 'ts-jest/utils'
-
+import '@testing-library/jest-dom'
 import {createIntl} from 'react-intl'
 
 import {PropertyType} from '../../blocks/board'
@@ -61,7 +60,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
     const card = TestBlockFactory.createCard(board)
     card.fields.properties.property_id_1 = 'property_value_id_1'
-    card.fields.properties.property_id_2 = '1234' //  random number
+    card.fields.properties.property_id_2 = '1234'
 
     const cardTemplate = TestBlockFactory.createCard(board)
     cardTemplate.fields.isTemplate = true

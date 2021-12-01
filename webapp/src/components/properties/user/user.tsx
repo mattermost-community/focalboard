@@ -41,6 +41,7 @@ const UserProperty = (props: Props): JSX.Element => {
             isClearable={true}
             backspaceRemovesValue={true}
             className={'UserProperty octo-propertyvalue'}
+            classNamePrefix={'react-select'}
             styles={selectStyles}
             placeholder={'Empty'}
             getOptionLabel={(o: IUser) => o.username}

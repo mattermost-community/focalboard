@@ -96,7 +96,6 @@ function makeCommonConfig() {
             new CopyPlugin({
                 patterns: [
                     {from: path.resolve(__dirname, 'static'), to: 'static'},
-                    {from: path.resolve(__dirname, 'node_modules/easymde/dist/easymde.min.css'), to: 'static'},
                 ],
             }),
             new HtmlWebpackPlugin({

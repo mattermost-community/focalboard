@@ -19,6 +19,7 @@ import ModalWrapper from '../modalWrapper'
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
+import ViewHeaderDisplayByMenu from './viewHeaderDisplayByMenu'
 import ViewHeaderSortMenu from './viewHeaderSortMenu'
 import ViewHeaderActionsMenu from './viewHeaderActionsMenu'
 import ViewHeaderSearch from './viewHeaderSearch'
@@ -38,14 +39,17 @@ type Props = {
     editCardTemplate: (cardTemplateId: string) => void
     readonly: boolean
     showShared: boolean
+    dateDisplayProperty?: IPropertyTemplate
 }
 
 const ViewHeader = React.memo((props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
 
-    const {board, activeView, views, groupByProperty, cards, showShared} = props
+    const {board, activeView, views, groupByProperty, cards, showShared, dateDisplayProperty} = props
 
     const withGroupBy = activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table'
+    const withDisplayBy = activeView.fields.viewType === 'calendar'
+    const withSortBy = activeView.fields.viewType !== 'calendar'
 
     const [viewTitle, setViewTitle] = useState(activeView.title)
 
@@ -102,6 +106,15 @@ const ViewHeader = React.memo((props: Props) => {
                         groupByPropertyName={groupByProperty?.name}
                     />}
 
+                {/* Display by */}
+
+                {withDisplayBy &&
+                    <ViewHeaderDisplayByMenu
+                        properties={board.fields.cardProperties}
+                        activeView={activeView}
+                        dateDisplayPropertyName={dateDisplayProperty?.name}
+                    />}
+
                 {/* Filter */}
 
                 <ModalWrapper>
@@ -124,11 +137,13 @@ const ViewHeader = React.memo((props: Props) => {
 
                 {/* Sort */}
 
-                <ViewHeaderSortMenu
-                    properties={board.fields.cardProperties}
-                    activeView={activeView}
-                    orderedCards={cards}
-                />
+                {withSortBy &&
+                    <ViewHeaderSortMenu
+                        properties={board.fields.cardProperties}
+                        activeView={activeView}
+                        orderedCards={cards}
+                    />
+                }
             </>
             }
 
