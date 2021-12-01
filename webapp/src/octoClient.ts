@@ -75,8 +75,18 @@ class OctoClient {
         return false
     }
 
-    logout(): void {
+    async logout(): Promise<boolean> {
+        const path = '/api/v1/logout'
+        const response = await fetch(this.getBaseURL() + path, {
+            method: 'POST',
+            headers: this.headers(),
+        })
         localStorage.removeItem('focalboardSessionId')
+
+        if (response.status !== 200) {
+            return false
+        }
+        return true
     }
 
     async getClientConfig(): Promise<ClientConfig | null> {
