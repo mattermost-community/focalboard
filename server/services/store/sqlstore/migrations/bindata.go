@@ -28,6 +28,8 @@
 // migrations_files/000013_millisecond_timestamps.up.sql
 // migrations_files/000014_add_not_null_constraint.down.sql
 // migrations_files/000014_add_not_null_constraint.up.sql
+// migrations_files/000015_blocks_history_no_nulls.down.sql
+// migrations_files/000015_blocks_history_no_nulls.up.sql
 // DO NOT EDIT!
 
 package migrations
@@ -655,6 +657,46 @@ func _000014_add_not_null_constraintUpSql() (*asset, error) {
 	return a, nil
 }
 
+var __000015_blocks_history_no_nullsDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xd2\xd5\x55\xc8\xcb\x57\x28\x4a\x2d\x4b\x2d\x2a\x4e\x55\xc8\xcd\x4c\x2f\x4a\x2c\xc9\xcc\xcf\x53\x48\xcb\x2f\x52\x28\xc9\xc8\x2c\x56\x00\x49\x64\xe6\xe7\x01\x02\x00\x00\xff\xff\x81\xb0\x6d\xad\x28\x00\x00\x00")
+
+func _000015_blocks_history_no_nullsDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000015_blocks_history_no_nullsDownSql,
+		"000015_blocks_history_no_nulls.down.sql",
+	)
+}
+
+func _000015_blocks_history_no_nullsDownSql() (*asset, error) {
+	bytes, err := _000015_blocks_history_no_nullsDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000015_blocks_history_no_nulls.down.sql", size: 40, mode: os.FileMode(436), modTime: time.Unix(1638397145, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __000015_blocks_history_no_nullsUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xdc\x95\x41\xcb\x9b\x30\x18\xc7\xcf\xc9\xa7\x78\x6e\xbe\x85\x29\xf4\x3d\xbe\xa3\x07\x67\x33\x36\x70\x75\xa8\x65\xec\x24\x5a\xd3\x99\xcd\xaa\x98\x0c\x26\xe2\x77\x1f\x89\x56\xad\x07\x57\x5b\x4f\xbb\x36\xcf\xff\x17\xfe\xbf\xe6\x41\x5d\x87\x22\x2c\x69\x26\x02\x16\xe3\xe3\xd7\xbd\xe9\x13\xa8\x6b\xa3\x28\xe9\x99\xfd\x69\x9a\x28\xcd\x4f\xbf\x78\x90\x30\x2e\xf2\xb2\x82\x28\xd9\x62\xe4\x11\x7f\xc8\xc0\x0e\x2c\xc7\xb4\x89\x67\x91\x17\x8c\xd0\x8b\x47\x6c\x62\xf9\x10\x25\xaf\xc6\x30\x83\x11\xfa\xe8\x3a\x5f\x66\xc1\xaf\x18\xa1\x6f\x9f\x88\x4b\xe4\x25\x86\x02\x4b\x08\x8b\xc1\x3c\xec\x27\xbc\xcf\x1e\x1c\x1c\x1f\x0e\x47\xdb\x96\x6c\xc7\xdd\x13\x17\x3e\x7c\x6f\x03\x19\xa7\xa5\x08\x42\x01\xa6\x67\x41\xca\x2e\x4c\xc0\x76\x03\x18\xbd\x03\x4d\xdb\xe0\xf6\x8a\x5b\xd4\xd1\xb6\xdf\x63\xac\xeb\xc0\x4f\x09\xbd\x84\x0b\x34\xb4\x81\x19\x07\xdd\xc0\x3a\x02\x3a\xd8\x83\xed\xb7\xd7\xf2\x23\x4c\xdf\x5c\x54\x05\x5d\xd0\x5b\x8e\xcf\xb4\x56\xc7\xeb\x74\x56\xa8\xa7\xff\xef\x9e\x32\x14\x66\x22\x5d\xd4\x58\xce\xcf\x55\x56\xe7\x2b\x75\x56\xac\xe7\x4b\xf7\x98\xbe\xf5\x99\xd1\x34\xe6\xb8\xae\xd9\x19\x8c\x22\xe7\xe2\x47\x49\x79\xd3\x60\x74\x9f\x08\x65\xa2\x65\x4c\x54\xdc\xb8\xe8\x26\xe4\xcf\x77\xd9\xf8\x87\x8e\x0e\x37\xf1\x71\xa7\x10\x69\xa4\x6e\xb4\xb7\xb7\x9f\x3c\xcf\x36\xb8\xbb\x6a\x84\x54\x6e\xea\x9a\xa6\x9c\xfe\xf7\x22\xb4\x39\x01\x59\xdc\x34\xea\x91\x9c\x4a\x1a\x0a\x1a\x84\x62\xc1\x7a\xf4\x19\xd8\xc1\xef\x22\xee\xf2\xed\x5d\xc3\xd9\xcd\x5b\x2c\xf3\x7c\xe1\x47\xa7\x4b\xcc\x6c\xe1\x75\x62\x9d\x3d\xbc\xd2\x9e\xde\xc4\x31\xa8\xef\xdf\x6a\x89\x83\xa8\x5a\xec\x59\x86\x66\x2c\x8c\x86\xd6\x11\x31\x02\x3e\xea\x82\x57\x5c\xd0\x4b\x6f\x64\x42\x94\x52\xfe\x06\x00\x00\xff\xff\xac\x11\x85\xdb\x8a\x08\x00\x00")
+
+func _000015_blocks_history_no_nullsUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000015_blocks_history_no_nullsUpSql,
+		"000015_blocks_history_no_nulls.up.sql",
+	)
+}
+
+func _000015_blocks_history_no_nullsUpSql() (*asset, error) {
+	bytes, err := _000015_blocks_history_no_nullsUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000015_blocks_history_no_nulls.up.sql", size: 2186, mode: os.FileMode(436), modTime: time.Unix(1638463470, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -735,6 +777,8 @@ var _bindata = map[string]func() (*asset, error){
 	"000013_millisecond_timestamps.up.sql": _000013_millisecond_timestampsUpSql,
 	"000014_add_not_null_constraint.down.sql": _000014_add_not_null_constraintDownSql,
 	"000014_add_not_null_constraint.up.sql": _000014_add_not_null_constraintUpSql,
+	"000015_blocks_history_no_nulls.down.sql": _000015_blocks_history_no_nullsDownSql,
+	"000015_blocks_history_no_nulls.up.sql": _000015_blocks_history_no_nullsUpSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -805,6 +849,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"000013_millisecond_timestamps.up.sql": &bintree{_000013_millisecond_timestampsUpSql, map[string]*bintree{}},
 	"000014_add_not_null_constraint.down.sql": &bintree{_000014_add_not_null_constraintDownSql, map[string]*bintree{}},
 	"000014_add_not_null_constraint.up.sql": &bintree{_000014_add_not_null_constraintUpSql, map[string]*bintree{}},
+	"000015_blocks_history_no_nulls.down.sql": &bintree{_000015_blocks_history_no_nullsDownSql, map[string]*bintree{}},
+	"000015_blocks_history_no_nulls.up.sql": &bintree{_000015_blocks_history_no_nullsUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory
