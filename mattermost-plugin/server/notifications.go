@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/services/notify"
@@ -66,4 +67,12 @@ func (da *pluginAPIAdapter) GetTeamMember(teamID string, userID string) (*model.
 
 func (da *pluginAPIAdapter) GetChannelByID(channelID string) (*model.Channel, error) {
 	return da.client.Channel.Get(channelID)
+}
+
+func (da *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*model.ChannelMember, error) {
+	return da.client.Channel.GetMember(channelID, userID)
+}
+
+func (da *pluginAPIAdapter) IsErrNotFound(err error) bool {
+	return errors.Is(err, pluginapi.ErrNotFound)
 }

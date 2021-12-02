@@ -30,6 +30,13 @@ type PluginAPI interface {
 
 	// GetChannelByID gets a Channel by its ID.
 	GetChannelByID(channelID string) (*model.Channel, error)
+
+	// GetChannelMember gets a channel member by userID.
+	GetChannelMember(channelID string, userID string) (*model.ChannelMember, error)
+
+	// IsErrNotFound returns true if `err` or one of its wrapped children are the `ErrNotFound`
+	// as defined in the plugin API.
+	IsErrNotFound(err error) bool
 }
 
 // PluginDelivery provides ability to send notifications to direct message channels via Mattermost plugin API.
@@ -62,6 +69,16 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 		} else {
 			return fmt.Errorf("cannot lookup mentioned user: %w", err)
 		}
+	}
+
+	// check that user is a member of the channel
+	_, err = pd.api.GetChannelMember(evt.Workspace, member.UserId)
+	if err != nil {
+		if pd.api.IsErrNotFound(err) {
+			// mentioned user is not a member of the channel; fail silently.
+			return nil
+		}
+		return fmt.Errorf("cannot fetch channel member for user %s: %w", member.UserId, err)
 	}
 
 	author, err := pd.api.GetUserByID(evt.UserID)
