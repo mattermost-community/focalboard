@@ -61,7 +61,12 @@ WHERE title IS NULL;
 
 -- create_at
 UPDATE {{.prefix}}blocks_history bh1
-	SET create_at = update_at
+	SET create_at = COALESCE(
+		(SELECT bh2.create_at 
+		FROM {{.prefix}}blocks_history bh2
+		WHERE bh1.id = bh2.id AND bh2.create_at IS NOT NULL 
+		ORDER BY bh2.insert_at ASC limit 1) 
+	, bh1.update_at)
 WHERE create_at IS NULL;
 
 -- root_id
