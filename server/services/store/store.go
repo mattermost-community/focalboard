@@ -2,7 +2,9 @@
 //go:generate go run ./generators/main.go
 package store
 
-import "github.com/mattermost/focalboard/server/model"
+import (
+	"github.com/mattermost/focalboard/server/model"
+)
 
 // Conainer represents a container in a store
 // Using a struct to make extending this easier in the future.
@@ -69,6 +71,5 @@ type Store interface {
 	UpdateCategory(category model.Category) error
 	DeleteCategory(categoryID, userID, teamID string) error
 
-	//GetCategories(userID, teamID string) ([]model.Category, error)
-	//UpdateBlockCategory(userID, teamID, blockID, categoryID string) error
+	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBlocks, error)
 }

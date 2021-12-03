@@ -177,6 +177,11 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 
 }
 
+func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.CategoryBlocks, error) {
+	return s.getUserCategoryBoards(s.db, userID, teamID)
+
+}
+
 func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
 	return s.getUserWorkspaces(s.db, userID)
 

@@ -98,10 +98,11 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces", a.sessionRequired(a.handleGetUserWorkspaces)).Methods("GET")
 
 	// Category Routes
-	apiv1.HandleFunc("/teams/{teamID}/category", a.sessionRequired(a.handleCreateCategory)).Methods(http.MethodPost)
-	apiv1.HandleFunc("/teams/{teamID}/category/{categoryID}", a.sessionRequired(a.handleUpdateCategory)).Methods(http.MethodPatch)
-	apiv1.HandleFunc("/teams/{teamID}/category/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
+	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleCreateCategory)).Methods(http.MethodPost)
+	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleUpdateCategory)).Methods(http.MethodPatch)
+	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
 
+	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBlocks)).Methods(http.MethodGet)
 	// Get Files API
 
 	files := r.PathPrefix("/files").Subrouter()
@@ -486,6 +487,33 @@ func (a *API) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data, err := json.Marshal(deletedCategory)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.Success()
+}
+
+func (a *API) handleGetUserCategoryBlocks(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+
+	auditRec := a.makeAuditRecord(r, "getUserCategoryBlocks", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	categoryBlocks, err := a.app.GetUserCategoryBoards(userID, teamID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(categoryBlocks)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
