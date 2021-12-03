@@ -20,6 +20,7 @@ const (
 	TypeView    = "view"
 	TypeText    = "text"
 	TypeComment = "comment"
+	TypeImage   = "image"
 )
 
 func (bt BlockType) String() string {
@@ -39,6 +40,8 @@ func BlockTypeFromString(s string) (BlockType, error) {
 		return TypeText, nil
 	case "comment":
 		return TypeComment, nil
+	case "image":
+		return TypeImage, nil
 	}
 	return TypeUnknown, ErrInvalidBlockType{s}
 }
