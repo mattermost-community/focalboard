@@ -127,12 +127,13 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 	}
 
 	if block.Type == model.TypeImage {
-		fileName, ok := block.Fields["fileId"]
-		if ok {
-			switch fileName := fileName.(type) {
-			case string:
-				filePath := filepath.Join(block.WorkspaceID, block.RootID, fileName)
-				a.filesBackend.RemoveFile(filePath)
+		fileName, fileIDExists := block.Fields["fileId"]
+		if fileName, fileIDIsString := fileName.(string); fileIDExists && fileIDIsString {
+			filePath := filepath.Join(block.WorkspaceID, block.RootID, fileName)
+			err = a.filesBackend.RemoveFile(filePath)
+
+			if err != nil {
+				return err
 			}
 		}
 	}
