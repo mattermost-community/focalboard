@@ -138,4 +138,44 @@ describe('Create and delete board / card', () => {
         cy.get('.DeleteBoardDialog button.danger').click({force: true})
         cy.contains(boardTitle).should('not.exist')
     })
+
+    it('scrolls the kanban board when dragging card to edge', () => {
+        cy.visit('/')
+
+        // Create empty boards
+        cy.log('**Create new empty board**')
+        cy.contains('+ Add board').click({force: true})
+        cy.contains('Empty board').click({force: true})
+
+        // Create 10 empty groups
+        cy.log('**Create new empty groups**')
+        for (let i = 0; i < 10; i++) {
+            cy.contains('+ Add a group').click({force: true})
+            cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('have.length', i + 1)
+        }
+
+        // Create empty card in first group
+        cy.log('**Create new empty card in first group**')
+        cy.contains('+ New').click({force: true})
+        cy.get('.Dialog').should('exist')
+        cy.get('.Dialog .wrapper').click({force: true})
+        cy.get('.KanbanCard').should('exist')
+
+        // Drag card to right corner and expect scroll to occur
+        cy.get('.Kanban').invoke('scrollLeft').should('equal', 0)
+
+        // wait necessary to let state change propagate
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.get('.KanbanCard').
+            trigger('dragstart').
+            wait(500)
+
+        // wait necessary to trigger scroll animation for some time
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.get('.Kanban').
+            trigger('dragover', {clientX: Cypress.config().viewportWidth - 100, clientY: Cypress.config().viewportHeight / 2}).
+            wait(1500)
+
+        cy.get('.Kanban').invoke('scrollLeft').should('not.equal', 0)
+    })
 })
