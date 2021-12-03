@@ -112,6 +112,11 @@ func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]mod
 
 }
 
+func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
+	return s.getCategory(s.db, id)
+
+}
+
 func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error) {
 	return s.getParentID(s.db, c, blockID)
 

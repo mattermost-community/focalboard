@@ -184,21 +184,25 @@ func (s *SQLStore) Migrate() error {
 		}
 	}
 
-	if err := ensureMigrationsAppliedUpToVersion(m, uniqueIDsMigrationRequiredVersion); err != nil {
-		return err
-	}
-
 	if s.isPlugin {
 		s.logger.Debug("Acquiring cluster lock for Unique IDs migration")
 		mutex.Lock()
 	}
 
-	if err := s.runUniqueIDsMigration(); err != nil {
+	if err := s.runUniqueIDsMigration(m); err != nil {
 		if s.isPlugin {
 			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
 			mutex.Unlock()
 		}
 		return fmt.Errorf("error running unique IDs migration: %w", err)
+	}
+
+	if err := s.runCategoryUuidIdMigration(m); err != nil {
+		if s.isPlugin {
+			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
+			mutex.Unlock()
+		}
+		return fmt.Errorf("error running categoryID migration: %w", err)
 	}
 
 	if s.isPlugin {

@@ -7,6 +7,41 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+func (s *SQLStore) getCategory(db sq.BaseRunner, id string) (*model.Category, error) {
+	query := s.getQueryBuilder(db).
+		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at").
+		From(s.tablePrefix + "categories").
+		Where(sq.Eq{"id": id})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("getCategory error", mlog.Err(err))
+		return nil, err
+	}
+
+	if !rows.Next() {
+		return nil, nil
+	}
+
+	category := model.Category{}
+	err = rows.Scan(
+		&category.ID,
+		&category.Name,
+		&category.UserID,
+		&category.TeamID,
+		&category.CreateAt,
+		&category.UpdateAt,
+		&category.DeleteAt,
+	)
+
+	if err != nil {
+		s.logger.Error("getCategory row scan error", mlog.Err(err))
+		return nil, err
+	}
+
+	return &category, nil
+}
+
 func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) error {
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"categories").
@@ -15,12 +50,18 @@ func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) err
 			"name",
 			"user_id",
 			"team_id",
+			"create_at",
+			"update_at",
+			"delete_at",
 		).
 		Values(
-			utils.NewID(utils.IDTypeNone),
+			category.ID,
 			category.Name,
 			category.UserID,
 			category.TeamID,
+			category.CreateAt,
+			category.UpdateAt,
+			category.DeleteAt,
 		)
 
 	_, err := query.Exec()
@@ -35,7 +76,8 @@ func (s *SQLStore) updateCategory(db sq.BaseRunner, category model.Category) err
 	query := s.getQueryBuilder(db).
 		Update(s.tablePrefix+"categories").
 		Set("name", category.Name).
-		Where("id", category.ID)
+		Set("update_at", category.UpdateAt).
+		Where(sq.Eq{"id": category.ID})
 
 	_, err := query.Exec()
 	if err != nil {
@@ -47,10 +89,13 @@ func (s *SQLStore) updateCategory(db sq.BaseRunner, category model.Category) err
 
 func (s *SQLStore) deleteCategory(db sq.BaseRunner, categoryID, userID, teamID string) error {
 	query := s.getQueryBuilder(db).
-		Delete(s.tablePrefix+"categories").
-		Where("id", categoryID).
-		Where("user_id", userID).
-		Where("team_id", teamID)
+		Update(s.tablePrefix+"categories").
+		Set("delete_at", utils.GetMillis()).
+		Where(sq.Eq{
+			"id":      categoryID,
+			"user_id": userID,
+			"team_id": teamID,
+		})
 
 	_, err := query.Exec()
 	if err != nil {

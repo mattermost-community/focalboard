@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -97,7 +98,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces", a.sessionRequired(a.handleGetUserWorkspaces)).Methods("GET")
 
 	// Category Routes
-	apiv1.HandleFunc("/category", a.sessionRequired(a.handleCreateCategory)).Methods("POST")
+	apiv1.HandleFunc("/teams/{teamID}/category", a.sessionRequired(a.handleCreateCategory)).Methods(http.MethodPost)
+	apiv1.HandleFunc("/teams/{teamID}/category/{categoryID}", a.sessionRequired(a.handleUpdateCategory)).Methods(http.MethodPatch)
+	apiv1.HandleFunc("/teams/{teamID}/category/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
 
 	// Get Files API
 
@@ -351,23 +354,144 @@ func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
 
 	// user can only create category for themselves
 	if category.UserID != session.UserID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, fmt.Sprintf("userID %s and category userID %s mismatch", session.UserID, category.ID), nil)
+		a.errorResponse(
+			w,
+			r.URL.Path,
+			http.StatusBadRequest,
+			fmt.Sprintf("userID %s and category userID %s mismatch", session.UserID, category.UserID),
+			nil,
+		)
 		return
 	}
 
-	if err := a.app.CreateCategory(category); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+
+	if category.TeamID != teamID {
+		a.errorResponse(
+			w,
+			r.URL.Path,
+			http.StatusBadRequest,
+			"teamID mismatch",
+			nil,
+		)
 		return
 	}
 
-	json, err := json.Marshal(category)
+	createdCategory, err := a.app.CreateCategory(&category)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
-	jsonBytesResponse(w, http.StatusOK, json)
-	auditRec.AddMeta("categoryID", category.ID)
+	data, err := json.Marshal(createdCategory)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.AddMeta("categoryID", createdCategory.ID)
+	auditRec.Success()
+}
+
+func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	categoryID := vars["categoryID"]
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var category model.Category
+	err = json.Unmarshal(requestBody, &category)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "updateCategory", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	if categoryID != category.ID {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "categoryID mismatch in patch and body", nil)
+		return
+	}
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	// user can only update category for themselves
+	if category.UserID != session.UserID {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "user ID mismatch in session and category", nil)
+		return
+	}
+
+	teamID := vars["teamID"]
+	if category.TeamID != teamID {
+		a.errorResponse(
+			w,
+			r.URL.Path,
+			http.StatusBadRequest,
+			"teamID mismatch",
+			nil,
+		)
+		return
+	}
+
+	updatedCategory, err := a.app.UpdateCategory(&category)
+	if err != nil {
+		if errors.Is(err, app.ErrorCategoryDeleted) {
+			a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", err)
+		} else if errors.Is(err, app.ErrorCategoryPermissionDenied) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		} else {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		}
+		return
+	}
+
+	data, err := json.Marshal(updatedCategory)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.Success()
+}
+
+func (a *API) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	vars := mux.Vars(r)
+
+	userID := session.UserID
+	teamID := vars["teamID"]
+	categoryID := vars["categoryID"]
+
+	auditRec := a.makeAuditRecord(r, "deleteCategory", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	deletedCategory, err := a.app.DeleteCategory(categoryID, userID, teamID)
+	if err != nil {
+		if errors.Is(err, app.ErrorCategoryPermissionDenied) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		} else {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		}
+		return
+	}
+
+	data, err := json.Marshal(deletedCategory)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
 	auditRec.Success()
 }
 

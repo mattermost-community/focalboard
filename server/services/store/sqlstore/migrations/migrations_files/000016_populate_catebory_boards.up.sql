@@ -1,22 +1,25 @@
 CREATE TABLE {{.prefix}}category_boards (
     {{if .mysql}}id INT AUTO_INCREMENT,{{end}}
     {{if .postgres}}id SERIAL,{{end}}
-    {{if .sqlite}}varchar(36),{{end}}
+    {{if .sqlite}}id varchar(36),{{end}}
     category_id varchar(36) NOT NULL,
     board_id VARCHAR(36) NOT NULL,
-    {{if .postgres}}create_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),{{end}}
-    {{if .sqlite}}create_at DATETIME NOT NULL DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),{{end}}
-    {{if .mysql}}create_at DATETIME(6) NOT NULL DEFAULT NOW(6),{{end}}
+    create_at BIGINT,
     update_at BIGINT,
     delete_at BIGINT,
     PRIMARY KEY (id)
     ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
 {{if .plugin}}
-    INSERT INTO {{.prefix}}category_boards(category_id, board_id)
+    INSERT INTO {{.prefix}}category_boards(category_id, board_id, create_at, update_at, delete_at)
     SELECT
         {{.prefix}}categories.id,
-        {{.prefix}}blocks.id
+        {{.prefix}}blocks.id,
+        {{if .postgres}}(extract(epoch from now())*1000)::bigint,{{end}}
+        {{if .mysql}}UNIX_TIMESTAMP() * 1000,{{end}}
+        {{if .sqlite}}CAST(strftime('%s', 'now') * 1000 as bigint),{{end}}
+        0,
+        0
     FROM
         {{.prefix}}categories
         JOIN {{.prefix}}blocks

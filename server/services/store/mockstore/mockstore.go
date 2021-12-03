@@ -253,6 +253,21 @@ func (mr *MockStoreMockRecorder) GetBlocksWithType(arg0, arg1 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksWithType", reflect.TypeOf((*MockStore)(nil).GetBlocksWithType), arg0, arg1)
 }
 
+// GetCategory mocks base method.
+func (m *MockStore) GetCategory(arg0 string) (*model.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCategory", arg0)
+	ret0, _ := ret[0].(*model.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCategory indicates an expected call of GetCategory.
+func (mr *MockStoreMockRecorder) GetCategory(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategory", reflect.TypeOf((*MockStore)(nil).GetCategory), arg0)
+}
+
 // GetParentID mocks base method.
 func (m *MockStore) GetParentID(arg0 store.Container, arg1 string) (string, error) {
 	m.ctrl.T.Helper()

@@ -6,21 +6,24 @@ CREATE TABLE {{.prefix}}categories (
     user_id varchar(32) NOT NULL,
     team_id varchar(32) NOT NULL,
     channel_id varchar(32) NOT NULL,
-    {{if .postgres}}create_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),{{end}}
-    {{if .sqlite}}create_at DATETIME NOT NULL DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),{{end}}
-    {{if .mysql}}create_at DATETIME(6) NOT NULL DEFAULT NOW(6),{{end}}
+    create_at BIGINT,
     update_at BIGINT,
     delete_at BIGINT,
     PRIMARY KEY (id)
     ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
 {{if .plugin}}
-    INSERT INTO {{.prefix}}categories(name, user_id, team_id, channel_id)
+    INSERT INTO {{.prefix}}categories(name, user_id, team_id, channel_id, create_at, update_at, delete_at)
     SELECT
         COALESCE(nullif(c.DisplayName, ''), 'Direct Message') as category_name,
         cm.UserId,
         COALESCE(nullif(c.TeamId, ''), 'direct_message') as team_id,
-        cm.ChannelId
+        cm.ChannelId,
+        {{if .postgres}}(extract(epoch from now())*1000)::bigint,{{end}}
+        {{if .mysql}}UNIX_TIMESTAMP() * 1000,{{end}}
+        {{if .sqlite}}CAST(strftime('%s', 'now') * 1000 as bigint),{{end}}
+        0,
+        0
     FROM
         {{.prefix}}blocks blocks
             JOIN ChannelMembers cm on blocks.workspace_id = cm.ChannelId AND blocks.type = 'board'
