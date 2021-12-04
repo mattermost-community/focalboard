@@ -58,8 +58,7 @@
 		"react-intl": "^5.13.5",
 		"react-redux": "^7.2.4",
 		"react-router-dom": "^5.2.0",
-		"react-select": "^4.3.0",
-    "web-encoding": "^1.1.5"
+		"react-select": "^4.3.0"
 	},
 	"jest": {
 		"moduleNameMapper": {
@@ -135,7 +134,8 @@
 		"typescript": "^4.2.3",
 		"webpack": "^5.28.0",
 		"webpack-cli": "^4.5.0",
-		"webpack-merge": "^5.7.3"
+		"webpack-merge": "^5.7.3",
+    "web-encoding": "^1.1.5"
 	},
 	"optionalDependencies": {
 		"cypress": "^6.8.0"

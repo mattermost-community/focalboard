@@ -3,6 +3,8 @@
 import {fireEvent, waitFor} from '@testing-library/dom'
 import {mocked} from 'ts-jest/utils'
 
+import {TextDecoder} from 'web-encoding'
+
 import {Utils} from './utils'
 import {IAppWindow} from './types'
 import {Archiver} from './archiver'
@@ -15,6 +17,8 @@ jest.mock('./utils.ts')
 const mockedMutator = mocked(mutator, true)
 const mockedUtils = mocked(Utils, true)
 const mockedIAppWindow = mocked(window as unknown as IAppWindow, true)
+
+global.TextDecoder = TextDecoder
 
 describe('src/archiver', () => {
     const board = TestBlockFactory.createBoard()
