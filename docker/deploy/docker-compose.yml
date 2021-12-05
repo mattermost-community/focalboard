@@ -1,0 +1,22 @@
+version: "3"
+services:
+  focalboard:
+    # images available here: https://hub.docker.com/r/mattermost/focalboard/tags
+    image: mattermost/focalboard:latest
+    container_name: focalboard
+    ports:
+      - 80:8000
+
+    # Uncomment to set any environment variables necessary
+    # environment:
+    #  - VIRTUAL_HOST=focalboard.local
+    #  - VIRTUAL_PORT=8000
+
+    volumes:
+      - focalboard_data:/data
+    # Uncomment and point to your configuration file if you need to override defaults
+    # - "./focalboard_sqlite3_config.json:/opt/focalboard/config.json/"
+
+volumes:
+  focalboard_data:
+
