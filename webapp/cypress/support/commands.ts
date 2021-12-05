@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {Board} from '../../src/blocks/board'
+
 Cypress.Commands.add('apiRegisterUser', (data: Cypress.UserData, token?: string, failOnError?: boolean) => {
     return cy.request({
         method: 'POST',
@@ -33,6 +35,13 @@ Cypress.Commands.add('apiLoginUser', (data: Cypress.LoginData) => {
     })
 })
 
+const headers = () => ({
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        Authorization: `Bearer ${localStorage.getItem('focalboardSessionId')}`,
+    },
+})
+
 Cypress.Commands.add('apiInitServer', () => {
     const data: Cypress.UserData = {
         username: Cypress.env('username'),
@@ -42,11 +51,34 @@ Cypress.Commands.add('apiInitServer', () => {
     return cy.apiRegisterUser(data, '', false).apiLoginUser(data)
 })
 
-const headers = () => ({
-    headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        Authorization: `Bearer ${localStorage.getItem('focalboardSessionId')}`,
-    },
+Cypress.Commands.add('apiDeleteBlock', (id: string) => {
+    return cy.request({
+        method: 'DELETE',
+        url: `/api/v1/workspaces/0/blocks/${encodeURIComponent(id)}`,
+        ...headers(),
+    })
+})
+
+const deleteBlocks = (ids: string[]) => {
+    if (ids.length === 0) {
+        return
+    }
+    const [id, ...other] = ids
+    cy.apiDeleteBlock(id).then(() => deleteBlocks(other))
+}
+
+Cypress.Commands.add('apiResetBoards', () => {
+    return cy.request({
+        method: 'GET',
+        url: '/api/v1/workspaces/0/blocks?type=board',
+        ...headers(),
+    }).then((response) => {
+        if (Array.isArray(response.body)) {
+            const boards = response.body as Board[]
+            const toDelete = boards.filter((b) => !b.fields.isTemplate).map((b) => b.id)
+            deleteBlocks(toDelete)
+        }
+    })
 })
 
 Cypress.Commands.add('apiGetMe', () => {
