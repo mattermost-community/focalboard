@@ -1,32 +1,8 @@
-# Deploy Focalboard with Docker
+# Focalboard with Docker
+This directory contains both example files for both deploying Focalboard from the [prebuilt images on Dockerhub](https://hub.docker.com/r/mattermost/focalboard), as well as building the docker image for Focalboard locally from this repository.
 
-## Docker
+## deploy/
+This directory contains an example `docker-compose.yml` file that you can use to quickly get up and running.
 
-The Dockerfile gives a quick and easy way to pull the latest Focalboard server and deploy it locally.
-
-```
-docker build -t focalboard .
-docker run -it -v "/home/user/focalboard-data:/data" -p 80:8000 focalboard
-```
-
-> The `-v` flag can be used to store Focalboard's database and uploaded files in a directory on the Docker host
-
-Open a browser to http://localhost to start
-
-## Docker-Compose
-
-Docker-Compose provides the option to automate the build and run step, or even include some of the steps from the [personal server setup](https://www.focalboard.com/download/personal-edition/ubuntu/).
-
-To start the server run
-
-```
-docker-compose up
-```
-
-This will automatically build the focalboard image and start it with the http port mapping.
-
-To run focalboard with a nginx proxy and a postgres backend run
-
-```
-docker-compose -f docker-compose-db-nginx.yml up
-```
+## develop/
+This directory contains examples on how you can build and deploy locally Focalboard directly from this repository. 
