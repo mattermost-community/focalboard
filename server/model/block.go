@@ -95,6 +95,17 @@ type BlockPatch struct {
 	DeletedFields []string `json:"deletedFields"`
 }
 
+// BlockPatchBatch is a batch of IDs and patches for modify blocks
+// swagger:model
+type BlockPatchBatch struct {
+	// The id for this block's parent block. Empty for root blocks
+	// required: false
+	BlockIDs []string `json:"block_ids"`
+
+	// The BlockPatches to be applied
+	BlockPatches []BlockPatch `json:"block_patches"`
+}
+
 // Archive is an import / export archive.
 type Archive struct {
 	Version int64   `json:"version"`
