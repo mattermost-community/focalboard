@@ -55,7 +55,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
                       <div
                         class="version"
                       >
-                        v0.11.0
+                        v0.12.0
                       </div>
                     </div>
                   </div>

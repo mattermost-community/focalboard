@@ -216,7 +216,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 </div>
             </div>
         )
-    }, [])
+    }, [dateDisplayProperty])
 
     return (
         <div
