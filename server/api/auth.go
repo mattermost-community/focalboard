@@ -211,6 +211,49 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 	a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid login type", nil)
 }
 
+func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/logout logout
+	//
+	// Logout user
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   '500':
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	if len(a.singleUserToken) > 0 {
+		// Not permitted in single-user mode
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
+		return
+	}
+
+	ctx := r.Context()
+
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	auditRec := a.makeAuditRecord(r, "logout", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
+	auditRec.AddMeta("userID", session.UserID)
+
+	if err := a.app.Logout(session.ID); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "incorrect login", err)
+		return
+	}
+
+	auditRec.AddMeta("sessionID", session.ID)
+
+	jsonStringResponse(w, http.StatusOK, "{}")
+	auditRec.Success()
+}
+
 func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation POST /api/v1/register register
 	//

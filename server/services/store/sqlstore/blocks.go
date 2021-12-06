@@ -425,7 +425,7 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID stri
 	}
 
 	if block == nil {
-		return store.NewErrNotFound(blockID)
+		return nil // deleting non-exiting block is not considered an error (for now)
 	}
 
 	fieldsJSON, err := json.Marshal(block.Fields)

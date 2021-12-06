@@ -28,6 +28,13 @@ type PluginAPI interface {
 
 	// GetChannelByID gets a Channel by its ID.
 	GetChannelByID(channelID string) (*mm_model.Channel, error)
+
+	// GetChannelMember gets a channel member by userID.
+	GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error)
+
+	// IsErrNotFound returns true if `err` or one of its wrapped children are the `ErrNotFound`
+	// as defined in the plugin API.
+	IsErrNotFound(err error) bool
 }
 
 // PluginDelivery provides ability to send notifications to direct message channels via Mattermost plugin API.
