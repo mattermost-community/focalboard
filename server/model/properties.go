@@ -12,11 +12,11 @@ var ErrInvalidBoardBlock = errors.New("invalid board block")
 var ErrInvalidPropSchema = errors.New("invalid property schema")
 var ErrInvalidProperty = errors.New("invalid property")
 
-// Properties is a map of Prop's keyed by property id.
-type Properties map[string]Prop
+// BlockProperties is a map of Prop's keyed by property id.
+type BlockProperties map[string]BlockProp
 
-// Prop represent a property attached to a block (typically a card).
-type Prop struct {
+// BlockProp represent a property attached to a block (typically a card).
+type BlockProp struct {
 	ID    string `json:"id"`
 	Index int    `json:"index"`
 	Name  string `json:"name"`
@@ -129,8 +129,8 @@ func getMapString(key string, m map[string]interface{}) string {
 
 // ParseProperties parses a block's `Fields` to extract the properties. Properties typically exist on
 // card blocks.
-func ParseProperties(block *Block, schema PropSchema) (Properties, error) {
-	props := make(map[string]Prop)
+func ParseProperties(block *Block, schema PropSchema) (BlockProperties, error) {
+	props := make(map[string]BlockProp)
 
 	if block == nil {
 		return props, nil
@@ -154,7 +154,7 @@ func ParseProperties(block *Block, schema PropSchema) (Properties, error) {
 	for k, v := range blockProps {
 		s := fmt.Sprintf("%v", v)
 
-		prop := Prop{
+		prop := BlockProp{
 			ID:    k,
 			Name:  k,
 			Value: s,
