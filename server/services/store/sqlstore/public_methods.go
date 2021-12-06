@@ -21,6 +21,11 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+func (s *SQLStore) AddUpdateCategoryBlock(userID string, teamID string, oldCategoryID string, newCategoryID string, blockID string) error {
+	return s.addUpdateCategoryBlock(s.db, userID, teamID, oldCategoryID, newCategoryID, blockID)
+
+}
+
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
 	return s.cleanUpSessions(s.db, expireTime)
 

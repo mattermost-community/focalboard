@@ -108,26 +108,12 @@ func (s *SQLStore) runCategoryUuidIdMigration(m *migrate.Migrate) error {
 		return txErr
 	}
 
-	// fetch all category IDs
-	oldCategoryIDs, err := s.getCategoryIDs(tx)
-	if err != nil {
+	if err := s.updateCategoryIDs(tx); err != nil {
 		return err
 	}
 
-	// map old category ID to new ID
-	categoryIDs := map[string]string{}
-	for _, oldId := range oldCategoryIDs {
-		newID := utils.NewID(utils.IDTypeNone)
-		categoryIDs[oldId] = newID
-	}
-
-	// update for each category ID.
-	// Update the new ID in category table,
-	// and update corresponding rows in category boards table.
-	for oldID, newID := range categoryIDs {
-		if err := s.updateCategoryID(tx, oldID, newID); err != nil {
-			return err
-		}
+	if err := s.updateCategoryBlocksIDs(tx); err != nil {
+		return err
 	}
 
 	if err := s.setSystemSetting(tx, CategoryUUIDIDMigrationKey, strconv.FormatBool(true)); err != nil {
@@ -145,14 +131,40 @@ func (s *SQLStore) runCategoryUuidIdMigration(m *migrate.Migrate) error {
 	return nil
 }
 
-func (s *SQLStore) getCategoryIDs(db sq.BaseRunner) ([]string, error) {
+func (s *SQLStore) updateCategoryIDs(db sq.BaseRunner) error {
+	// fetch all category IDs
+	oldCategoryIDs, err := s.getIDs(db, "categories")
+	if err != nil {
+		return err
+	}
+
+	// map old category ID to new ID
+	categoryIDs := map[string]string{}
+	for _, oldId := range oldCategoryIDs {
+		newID := utils.NewID(utils.IDTypeNone)
+		categoryIDs[oldId] = newID
+	}
+
+	// update for each category ID.
+	// Update the new ID in category table,
+	// and update corresponding rows in category boards table.
+	for oldID, newID := range categoryIDs {
+		if err := s.updateCategoryID(db, oldID, newID); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *SQLStore) getIDs(db sq.BaseRunner, table string) ([]string, error) {
 	rows, err := s.getQueryBuilder(db).
 		Select("id").
-		From(s.tablePrefix + "categories").
+		From(s.tablePrefix + table).
 		Query()
 
 	if err != nil {
-		s.logger.Error("getCategoryIDs error", mlog.Err(err))
+		s.logger.Error("getIDs error", mlog.String("table", table), mlog.Err(err))
 		return nil, err
 	}
 
@@ -162,7 +174,7 @@ func (s *SQLStore) getCategoryIDs(db sq.BaseRunner) ([]string, error) {
 		var id string
 		err := rows.Scan(&id)
 		if err != nil {
-			s.logger.Error("getCategoryIDs scan row error", mlog.Err(err))
+			s.logger.Error("getIDs scan row error", mlog.String("table", table), mlog.Err(err))
 			return nil, err
 		}
 
@@ -205,6 +217,47 @@ func (s *SQLStore) updateCategoryID(db sq.BaseRunner, oldID, newID string) error
 
 	if err := rows.Close(); err != nil {
 		s.logger.Error("updateCategoryID error closing rows after updating category boards table IDs", mlog.Err(err))
+		return err
+	}
+
+	return nil
+}
+
+func (s *SQLStore) updateCategoryBlocksIDs(db sq.BaseRunner) error {
+	// fetch all category IDs
+	oldCategoryIDs, err := s.getIDs(db, "category_boards")
+	if err != nil {
+		return err
+	}
+
+	// map old category ID to new ID
+	categoryIDs := map[string]string{}
+	for _, oldId := range oldCategoryIDs {
+		newID := utils.NewID(utils.IDTypeNone)
+		categoryIDs[oldId] = newID
+	}
+
+	// update for each category ID.
+	// Update the new ID in category table,
+	// and update corresponding rows in category boards table.
+	for oldID, newID := range categoryIDs {
+		if err := s.updateCategoryBlocksID(db, oldID, newID); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *SQLStore) updateCategoryBlocksID(db sq.BaseRunner, oldID, newID string) error {
+	// update in category table
+	_, err := s.getQueryBuilder(db).
+		Update(s.tablePrefix+"category_boards").
+		Set("id", newID).
+		Where(sq.Eq{"id": oldID}).
+		Query()
+
+	if err != nil {
+		s.logger.Error("updateCategoryBlocksID update category error", mlog.Err(err))
 		return err
 	}
 

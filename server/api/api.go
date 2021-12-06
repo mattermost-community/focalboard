@@ -103,6 +103,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
 
 	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBlocks)).Methods(http.MethodGet)
+	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}/blocks/{blockID}", a.sessionRequired(a.handleUpdateCategoryBlock)).Methods(http.MethodPost)
 	// Get Files API
 
 	files := r.PathPrefix("/files").Subrouter()
@@ -520,6 +521,43 @@ func (a *API) handleGetUserCategoryBlocks(w http.ResponseWriter, r *http.Request
 	}
 
 	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.Success()
+}
+
+func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) {
+	auditRec := a.makeAuditRecord(r, "updateCategoryBlock", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var payload = map[string]string{}
+	err = json.Unmarshal(requestBody, &payload)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	newCategoryID := vars["categoryID"]
+	oldCategoryID := payload["fromCategoryID"]
+	blockID := vars["blockID"]
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	err = a.app.AddUpdateUserCategoryBlock(userID, teamID, oldCategoryID, newCategoryID, blockID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, []byte("ok"))
 	auditRec.Success()
 }
 

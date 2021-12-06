@@ -72,4 +72,5 @@ type Store interface {
 	DeleteCategory(categoryID, userID, teamID string) error
 
 	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBlocks, error)
+	AddUpdateCategoryBlock(userID, teamID, oldCategoryID, newCategoryID, blockID string) error
 }
