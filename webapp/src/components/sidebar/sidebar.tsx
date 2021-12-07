@@ -14,12 +14,14 @@ import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 import {getSortedBoards} from '../../store/boards'
 import {getSortedViews} from '../../store/views'
 import {getCurrentWorkspace} from '../../store/workspace'
-import {useAppSelector} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 
 import './sidebar.scss'
 
 import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
+
+import {CategoryBlocks, fetchSidebarCategories, getSidebarCategories} from '../../store/sidebar'
 
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
@@ -47,6 +49,15 @@ const Sidebar = React.memo((props: Props) => {
     const boards = useAppSelector(getSortedBoards)
     const views = useAppSelector(getSortedViews)
     const intl = useIntl()
+    const dispatch = useAppDispatch()
+    const sidebarCategories = useAppSelector<Array<CategoryBlocks>>(getSidebarCategories)
+
+    // TODO un-hardcode this teamID
+    const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
+
+    useEffect(() => {
+        dispatch(fetchSidebarCategories(teamID))
+    }, [])
 
     useEffect(() => {
         loadTheme()

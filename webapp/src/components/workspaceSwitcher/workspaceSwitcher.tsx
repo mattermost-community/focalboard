@@ -65,6 +65,10 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                             UserSettings.lastWorkspaceId = workspaceId
                         }
                         history.push(newPath)
+
+                        if ((window as any).setTeam) {
+                            (window as any).setTeam('6xrgynzkpbfs5r76jneppj5foa')
+                        }
                     }}
                 />
             }

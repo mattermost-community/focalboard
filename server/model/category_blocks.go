@@ -2,7 +2,7 @@ package model
 
 type CategoryBlocks struct {
 	Category
-	BlockAttributes []CategoryBlockAttributes
+	BlockAttributes []CategoryBlockAttributes `json:"blockAttributes"`
 }
 
 type CategoryBlockAttributes struct {

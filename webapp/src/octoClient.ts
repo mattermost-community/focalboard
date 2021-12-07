@@ -8,6 +8,7 @@ import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
+import {CategoryBlockAttributes, CategoryBlocks} from './store/sidebar'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -413,6 +414,16 @@ class OctoClient {
     async getGlobalTemplates(): Promise<Block[]> {
         const path = this.workspacePath('0') + '/blocks?type=board'
         return this.getBlocksWithPath(path)
+    }
+
+    async getSidebarCategories(teamID: string): Promise<Array<CategoryBlocks>> {
+        const path = `/api/v1/teams/${teamID}/categories`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as Array<CategoryBlocks>
     }
 }
 
