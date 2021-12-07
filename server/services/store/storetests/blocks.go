@@ -369,7 +369,6 @@ func testPatchBlocks(t *testing.T, store store.Store, container store.Container)
 	require.NoError(t, err)
 
 	t.Run("successful updated existing blocks", func(t *testing.T) {
-
 		title := "updatedTitle"
 		blockPatch := model.BlockPatch{
 			Title: &title,
@@ -386,9 +385,11 @@ func testPatchBlocks(t *testing.T, store store.Store, container store.Container)
 		require.NoError(t, err)
 
 		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
 		require.Equal(t, title, retrievedBlock.Title)
 
 		retrievedBlock2, err := store.GetBlock(container, "id-test2")
+		require.NoError(t, err)
 		require.Equal(t, title, retrievedBlock2.Title)
 	})
 
@@ -409,6 +410,7 @@ func testPatchBlocks(t *testing.T, store store.Store, container store.Container)
 		require.Error(t, err)
 
 		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
 		require.NotEqual(t, title, retrievedBlock.Title)
 	})
 }

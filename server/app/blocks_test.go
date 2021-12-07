@@ -73,7 +73,6 @@ func TestPatchBlocks(t *testing.T) {
 	t.Run("patchBlocks success scenerio", func(t *testing.T) {
 		blockPatches := model.BlockPatchBatch{}
 		th.Store.EXPECT().PatchBlocks(gomock.Eq(container), gomock.Eq(&blockPatches), gomock.Eq("user-id-1")).Return(nil)
-		//PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch, userID string)
 		err := th.App.PatchBlocks(container, &blockPatches, "user-id-1")
 		require.NoError(t, err)
 	})

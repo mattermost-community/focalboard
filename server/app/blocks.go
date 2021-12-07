@@ -61,7 +61,6 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 }
 
 func (a *App) PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch, userID string) error {
-
 	oldBlocks := make([]model.Block, 0, len(blockPatches.BlockIDs))
 	for _, blockID := range blockPatches.BlockIDs {
 		oldBlock, err := a.store.GetBlock(c, blockID)
