@@ -16,9 +16,10 @@ type Card = Block & {
 
 function createCard(block?: Block): Card {
     const contentOrder: Array<string|string[]> = []
+    const contentIds = block?.fields?.contentOrder?.filter((id: any) => id !== null)
 
-    if (block?.fields.contentOrder) {
-        for (const contentId of block.fields.contentOrder) {
+    if (contentIds?.length > 0) {
+        for (const contentId of contentIds) {
             if (typeof contentId === 'string') {
                 contentOrder.push(contentId)
             } else {
