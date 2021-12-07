@@ -10,6 +10,7 @@ import React, {
 } from 'react'
 import {getDefaultKeyBinding, EditorState, ContentState, DraftHandleValue} from 'draft-js'
 import Editor from '@draft-js-plugins/editor'
+import createLiveMarkdownPlugin from 'draft-js-live-markdown-plugin'
 import createMentionPlugin, {
     defaultSuggestionsFilter,
     MentionData,
@@ -51,6 +52,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const {MentionSuggestions, plugins, EmojiSuggestions} = useMemo(() => {
         const mentionPlugin = createMentionPlugin({mentionPrefix: '@'})
         const emojiPlugin = createEmojiPlugin()
+        const markdownPlugin = createLiveMarkdownPlugin()
 
         // eslint-disable-next-line no-shadow
         const {EmojiSuggestions} = emojiPlugin
@@ -60,6 +62,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         const plugins = [
             mentionPlugin,
             emojiPlugin,
+            markdownPlugin,
         ]
         return {plugins, MentionSuggestions, EmojiSuggestions}
     }, [])

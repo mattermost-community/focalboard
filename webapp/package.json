@@ -35,6 +35,7 @@
 		"@reduxjs/toolkit": "^1.6.0",
 		"color": "^4.0.0",
 		"draft-js": "^0.11.7",
+		"draft-js-live-markdown-plugin": "github:chenilim/draft-js-live-markdown-plugin",
 		"emoji-mart": "^3.0.1",
 		"fullcalendar": "^5.10.0",
 		"imagemin-gifsicle": "^7.0.0",
