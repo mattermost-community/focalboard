@@ -2,8 +2,6 @@
     "chromeWebSecurity": false,
     "baseUrl": "http://localhost:8088",
     "testFiles": [
-        "**/login*.ts",
-        "**/create*.ts",
         "**/manage*.ts"
     ],
     "env": {
