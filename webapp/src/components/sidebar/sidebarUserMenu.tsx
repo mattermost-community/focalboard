@@ -52,7 +52,7 @@ const SidebarUserMenu = React.memo(() => {
                                 id='logout'
                                 name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
                                 onClick={async () => {
-                                    octoClient.logout()
+                                    await octoClient.logout()
                                     history.push('/login')
                                 }}
                             />
