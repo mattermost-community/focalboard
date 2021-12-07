@@ -165,8 +165,8 @@ describe('components/properties/dateRange', () => {
         userEvent.type(fromInput, '{selectall}{delay}07/15/2021{enter}')
         userEvent.type(toInput, '{selectall}{delay}07/20/2021{enter}')
 
-        const July15 = new Date(Date.UTC(2021, 6, 15, 12))
-        const July20 = new Date(Date.UTC(2021, 6, 20, 12))
+        const July15 = new Date(Date.UTC(2021, 6, 15, 11))
+        const July20 = new Date(Date.UTC(2021, 6, 20, 11))
         const modal = getByTitle('Close').children[0]
 
         userEvent.click(modal)
@@ -202,8 +202,8 @@ describe('components/properties/dateRange', () => {
         userEvent.type(fromInput, '{selectall}15/07/2021{enter}')
         userEvent.type(toInput, '{selectall}20/07/2021{enter}')
 
-        const July15 = new Date(Date.UTC(2021, 6, 15, 12))
-        const July20 = new Date(Date.UTC(2021, 6, 20, 12))
+        const July15 = new Date(Date.UTC(2021, 6, 15, 11))
+        const July20 = new Date(Date.UTC(2021, 6, 20, 11))
         const modal = getByTitle('Close').children[0]
 
         userEvent.click(modal)
