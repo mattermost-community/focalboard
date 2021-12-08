@@ -283,8 +283,8 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 
 func (s *MattermostAuthLayer) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data",
-			"props", "Users.CreateAt as create_at", "Users.UpdateAt as update_at", "Users.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+		Select("id", "username", "props",
+			"Users.CreateAt as create_at", "Users.UpdateAt as update_at", "Users.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
 		From("Users").
 		Join("ChannelMembers ON ChannelMembers.UserID = Users.ID").
 		LeftJoin("Bots b ON ( b.UserId = Users.ID )").
@@ -315,11 +315,6 @@ func (s *MattermostAuthLayer) usersFromRows(rows *sql.Rows) ([]*model.User, erro
 		err := rows.Scan(
 			&user.ID,
 			&user.Username,
-			&user.Email,
-			&user.Password,
-			&user.MfaSecret,
-			&user.AuthService,
-			&user.AuthData,
 			&propsBytes,
 			&user.CreateAt,
 			&user.UpdateAt,
