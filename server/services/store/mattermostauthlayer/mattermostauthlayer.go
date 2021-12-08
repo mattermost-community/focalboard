@@ -283,7 +283,8 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 
 func (s *MattermostAuthLayer) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("id", "username", "props", "Users.CreateAt as create_at", "Users.UpdateAt as update_at", "Users.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+		Select("id", "username", "props",
+			"Users.CreateAt as create_at", "Users.UpdateAt as update_at", "Users.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
 		From("Users").
 		Join("ChannelMembers ON ChannelMembers.UserID = Users.ID").
 		LeftJoin("Bots b ON ( b.UserId = Users.ID )").
