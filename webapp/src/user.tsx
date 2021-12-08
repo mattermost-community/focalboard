@@ -7,8 +7,9 @@ interface IUser {
     email: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     props: Record<string, any>,
-    createAt: number,
-    updateAt: number,
+    create_at: number,
+    update_at: number,
+    is_bot: boolean,
 }
 
 interface UserWorkspace {
