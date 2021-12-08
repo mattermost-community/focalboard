@@ -98,8 +98,7 @@ type BlockPatch struct {
 // BlockPatchBatch is a batch of IDs and patches for modify blocks
 // swagger:model
 type BlockPatchBatch struct {
-	// The id for this block's parent block. Empty for root blocks
-	// required: false
+	// The id's for of the blocks to patch
 	BlockIDs []string `json:"block_ids"`
 
 	// The BlockPatches to be applied

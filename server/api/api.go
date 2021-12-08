@@ -732,8 +732,9 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 
 	auditRec := a.makeAuditRecord(r, "patchBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-
-	// stampModificationMetadata(r, patches.BlockIDs, auditRec)
+	for i := range patches.BlockIDs {
+		auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), patches.BlockIDs[i])
+	}
 
 	err = a.app.PatchBlocks(*container, patches, userID)
 	if err != nil {
