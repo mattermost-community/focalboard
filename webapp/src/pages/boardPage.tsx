@@ -70,14 +70,16 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [match.params.workspaceId])
 
     // Load user's block subscriptions when workspace changes
-    useEffect(() => {
-        // block subscriptions are relevant only in plugin mode.
-        if (!Utils.isFocalboardPlugin() || !me) {
-            return
-        }
+    // block subscriptions are relevant only in plugin mode.
+    if (Utils.isFocalboardPlugin()) {
+        useEffect(() => {
+            if (!me) {
+                return
+            }
 
-        dispatch(fetchUserBlockSubscriptions(me!.id))
-    }, [match.params.workspaceId])
+            dispatch(fetchUserBlockSubscriptions(me!.id))
+        }, [match.params.workspaceId])
+    }
 
     // Backward compatibility: This can be removed in the future, this is for
     // transform the old query params into routes

@@ -157,7 +157,7 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID stri
 	return s.blocksFromRows(rows)
 }
 
-// g returns blocks within 3 levels of the given blockID.
+// getSubTree3 returns blocks within 3 levels of the given blockID.
 func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
 	// This first subquery returns repeated blocks
 	query := s.getQueryBuilder(db).Select(

@@ -68,6 +68,7 @@ func (b *Backend) RemoveListener(l MentionListener) {
 		}
 	}
 	b.listeners = list
+	b.logger.Debug("Mention listener removed.", mlog.Int("listener_count", len(b.listeners)))
 }
 
 func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
