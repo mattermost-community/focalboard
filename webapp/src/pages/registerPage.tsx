@@ -56,7 +56,7 @@ const RegisterPage = React.memo(() => {
                         id='login-email'
                         placeholder={'Enter email'}
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value.trim())}
                     />
                 </div>
                 <div className='username'>
@@ -64,7 +64,7 @@ const RegisterPage = React.memo(() => {
                         id='login-username'
                         placeholder={'Enter username'}
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value.trim())}
                     />
                 </div>
                 <div className='password'>
