@@ -210,27 +210,20 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
+		a.errorResponse(w, http.StatusUnauthorized, "not permitted in single-user mode", nil)
 		return
 	}
 
 	ctx := r.Context()
 
-	session := ctx.Value(sessionContextKey).(*model.Session)
+	session := ctx.Value("session").(*model.Session)
 
-	auditRec := a.makeAuditRecord(r, "logout", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
-	auditRec.AddMeta("userID", session.UserID)
-
-	if err := a.app.Logout(session.ID); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "incorrect login", err)
+	if err := a.app().Logout(session.ID); err != nil {
+		a.errorResponse(w, http.StatusUnauthorized, "incorrect login", err)
 		return
 	}
 
-	auditRec.AddMeta("sessionID", session.ID)
-
 	jsonStringResponse(w, http.StatusOK, "{}")
-	auditRec.Success()
 }
 
 func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
