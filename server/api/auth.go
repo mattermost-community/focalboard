@@ -228,7 +228,7 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
+		a.errorResponse(w, http.StatusUnauthorized, "not permitted in single-user mode", nil)
 		return
 	}
 
@@ -241,7 +241,7 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("userID", session.UserID)
 
 	if err := a.app.Logout(session.ID); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "incorrect login", err)
+		a.errorResponse(w, http.StatusUnauthorized, "incorrect login", err)
 		return
 	}
 
