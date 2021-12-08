@@ -13,17 +13,15 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func subscriptionFields() []string {
-	return []string{
-		"block_type",
-		"block_id",
-		"workspace_id",
-		"subscriber_type",
-		"subscriber_id",
-		"notified_at",
-		"create_at",
-		"delete_at",
-	}
+var subscriptionFields = []string{
+	"block_type",
+	"block_id",
+	"workspace_id",
+	"subscriber_type",
+	"subscriber_id",
+	"notified_at",
+	"create_at",
+	"delete_at",
 }
 
 func valuesForSubscription(sub *model.Subscription) []interface{} {
@@ -80,7 +78,7 @@ func (s *SQLStore) createSubscription(db sq.BaseRunner, c store.Container, sub *
 
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix + "subscriptions").
-		Columns(subscriptionFields()...).
+		Columns(subscriptionFields...).
 		Values(valuesForSubscription(&subAdd)...)
 
 	if s.dbType == mysqlDBType {
@@ -132,7 +130,7 @@ func (s *SQLStore) deleteSubscription(db sq.BaseRunner, c store.Container, block
 // getSubscription fetches the subscription for a specific block and subscriber.
 func (s *SQLStore) getSubscription(db sq.BaseRunner, c store.Container, blockID string, subscriberID string) (*model.Subscription, error) {
 	query := s.getQueryBuilder(db).
-		Select(subscriptionFields()...).
+		Select(subscriptionFields...).
 		From(s.tablePrefix + "subscriptions").
 		Where(sq.Eq{"block_id": blockID}).
 		Where(sq.Eq{"workspace_id": c.WorkspaceID}).
@@ -170,7 +168,7 @@ func (s *SQLStore) getSubscription(db sq.BaseRunner, c store.Container, blockID 
 // getSubscriptions fetches all subscriptions for a specific subscriber.
 func (s *SQLStore) getSubscriptions(db sq.BaseRunner, c store.Container, subscriberID string) ([]*model.Subscription, error) {
 	query := s.getQueryBuilder(db).
-		Select(subscriptionFields()...).
+		Select(subscriptionFields...).
 		From(s.tablePrefix + "subscriptions").
 		Where(sq.Eq{"subscriber_id": subscriberID}).
 		Where(sq.Eq{"workspace_id": c.WorkspaceID}).

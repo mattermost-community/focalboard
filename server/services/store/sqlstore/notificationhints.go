@@ -16,15 +16,13 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func notificationHintFields() []string {
-	return []string{
-		"block_type",
-		"block_id",
-		"workspace_id",
-		"modified_by_id",
-		"create_at",
-		"notify_at",
-	}
+var notificationHintFields = []string{
+	"block_type",
+	"block_id",
+	"workspace_id",
+	"modified_by_id",
+	"create_at",
+	"notify_at",
 }
 
 func valuesForNotificationHint(hint *model.NotificationHint) []interface{} {
@@ -72,7 +70,7 @@ func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.Notifica
 	hint.NotifyAt = notifyAt
 
 	query := s.getQueryBuilder(db).Insert(s.tablePrefix + "notification_hints").
-		Columns(notificationHintFields()...).
+		Columns(notificationHintFields...).
 		Values(valuesForNotificationHint(hint)...)
 
 	if s.dbType == mysqlDBType {
@@ -119,7 +117,7 @@ func (s *SQLStore) deleteNotificationHint(db sq.BaseRunner, c store.Container, b
 // getNotificationHint fetches the notification hint for the specified block.
 func (s *SQLStore) getNotificationHint(db sq.BaseRunner, c store.Container, blockID string) (*model.NotificationHint, error) {
 	query := s.getQueryBuilder(db).
-		Select(notificationHintFields()...).
+		Select(notificationHintFields...).
 		From(s.tablePrefix + "notification_hints").
 		Where(sq.Eq{"block_id": blockID}).
 		Where(sq.Eq{"workspace_id": c.WorkspaceID})
@@ -154,7 +152,7 @@ func (s *SQLStore) getNotificationHint(db sq.BaseRunner, c store.Container, bloc
 // then the hint is removed from the database as well, as if popping from a stack.
 func (s *SQLStore) getNextNotificationHint(db sq.BaseRunner, remove bool) (*model.NotificationHint, error) {
 	selectQuery := s.getQueryBuilder(db).
-		Select(notificationHintFields()...).
+		Select(notificationHintFields...).
 		From(s.tablePrefix + "notification_hints").
 		OrderBy("notify_at").
 		Limit(1)

@@ -1512,7 +1512,7 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 
 	auditRec := a.makeAuditRecord(r, "createSubscription", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	auditRec.AddMeta("user_id", sub.SubscriberID)
+	auditRec.AddMeta("subscriber_id", sub.SubscriberID)
 	auditRec.AddMeta("block_id", sub.BlockID)
 
 	// User can only create subscriptions for themselves (for now)
@@ -1535,7 +1535,7 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 	}
 
 	a.logger.Debug("CREATE subscription",
-		mlog.String("user_id", subNew.SubscriberID),
+		mlog.String("subscriber_id", subNew.SubscriberID),
 		mlog.String("block_id", subNew.BlockID),
 	)
 

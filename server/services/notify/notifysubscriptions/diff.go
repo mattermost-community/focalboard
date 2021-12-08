@@ -130,7 +130,7 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.
 	}
 
 	if boardDiff != nil {
-		// TODO: generate schema diffs and add to board diff
+		// TODO: phase 2 feature (generate schema diffs and add to board diff) goes here.
 		diffs = append(diffs, boardDiff)
 	}
 

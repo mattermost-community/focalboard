@@ -30,6 +30,16 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 		}
 	}
 
+	// check that user is a member of the channel
+	_, err = pd.api.GetChannelMember(evt.Workspace, member.UserId)
+	if err != nil {
+		if pd.api.IsErrNotFound(err) {
+			// mentioned user is not a member of the channel; fail silently.
+			return "", nil
+		}
+		return "", fmt.Errorf("cannot fetch channel member for user %s: %w", member.UserId, err)
+	}
+
 	author, err := pd.api.GetUserByID(evt.ModifiedByID)
 	if err != nil {
 		return "", fmt.Errorf("cannot find user: %w", err)

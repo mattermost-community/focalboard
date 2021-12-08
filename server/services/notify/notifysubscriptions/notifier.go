@@ -20,6 +20,7 @@ import (
 const (
 	defBlockNotificationFreq = time.Minute * 2
 	enqueueNotifyHintTimeout = time.Second * 10
+	hintQueueSize            = 20
 )
 
 var (
@@ -48,7 +49,7 @@ func newNotifier(params BackendParams) *notifier {
 		delivery:   params.Delivery,
 		logger:     params.Logger,
 		done:       nil,
-		hints:      make(chan *model.NotificationHint, 20),
+		hints:      make(chan *model.NotificationHint, hintQueueSize),
 	}
 }
 
@@ -221,7 +222,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 			mlog.String("subscriber_type", string(sub.SubscriberType)),
 		)
 
-		if err = n.delivery.SubscriptionDeliverSlackAttachments(sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
+		if err = n.delivery.SubscriptionDeliverSlackAttachments(hint.WorkspaceID, sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
 			merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
 				sub.SubscriberID, sub.SubscriberType, err))
 		}
