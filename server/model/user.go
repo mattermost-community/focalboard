@@ -18,7 +18,7 @@ type User struct {
 
 	// The user's email
 	// required: true
-	Email string `json:"email"`
+	Email string `json:"-"`
 
 	// swagger:ignore
 	Password string `json:"-"`
