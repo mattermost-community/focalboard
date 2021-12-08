@@ -244,6 +244,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	a.logger.Info("Hello, World!")
 	query := r.URL.Query()
 	parentID := query.Get("parent_id")
 	blockType := query.Get("type")
