@@ -24,7 +24,11 @@ CREATE TABLE {{.prefix}}category_boards (
         {{.prefix}}categories
         JOIN {{.prefix}}blocks
     ON {{.prefix}}categories.channel_id = {{.prefix}}blocks.workspace_id
-        AND {{.prefix}}blocks.type = 'board';
+        AND {{.prefix}}blocks.type = 'board'
+        {{if .mysql}}AND {{.prefix}}blocks.fields LIKE '%"isTemplate":false%'{{end}}
+        {{if .sqlite}}AND {{.prefix}}blocks.fields LIKE '%"isTemplate":false%'{{end}}
+        {{if .postgres}}AND {{.prefix}}blocks.fields->>'isTemplate' = 'false'{{end}}
+;
 
     ALTER TABLE {{.prefix}}categories DROP COLUMN channel_id;
 

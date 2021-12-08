@@ -23,14 +23,15 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import DeleteBoardDialog from './deleteBoardDialog'
 
 import './sidebarBoardItem.scss'
+import {CategoryBlocks} from '../../store/sidebar'
 
 type Props = {
-    views: BoardView[]
-    board: Board
-    activeBoardId?: string
+    activeCategoryId?: string
     activeViewId?: string
     nextBoardId?: string
     hideSidebar: () => void
+    categoryBlocks: CategoryBlocks
+    boards: Board[]
 }
 
 const SidebarBoardItem = React.memo((props: Props) => {
@@ -70,7 +71,8 @@ const SidebarBoardItem = React.memo((props: Props) => {
     }
 
     const duplicateBoard = async (boardId: string) => {
-        const oldBoardId = props.activeBoardId
+        // const oldBoardId = props.activeBoardId
+        const oldBoardId = ''
 
         await mutator.duplicateBoard(
             boardId,
@@ -88,7 +90,8 @@ const SidebarBoardItem = React.memo((props: Props) => {
     }
 
     const addTemplateFromBoard = async (boardId: string) => {
-        const oldBoardId = props.activeBoardId
+        // const oldBoardId = props.activeBoardId
+        const oldBoardId = ''
 
         await mutator.duplicateBoard(
             boardId,
@@ -106,15 +109,14 @@ const SidebarBoardItem = React.memo((props: Props) => {
         )
     }
 
-    const {board, views} = props
-    const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
-    const boardViews = sortBoardViewsAlphabetically(views.filter((view) => view.parentId === board.id))
+    const blocks = props.categoryBlocks.blockAttributes
 
     return (
         <div className='SidebarBoardItem'>
             <div
-                className={`octo-sidebar-item ' ${collapsed ? 'collapsed' : 'expanded'} ${board.id === props.activeBoardId ? 'active' : ''}`}
-                onClick={() => showBoard(board.id)}
+                className={`octo-sidebar-item ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBlocks.id === props.activeCategoryId ? 'active' : ''}`}
+
+                // onClick={() => showBoard(board.id)}
             >
                 <IconButton
                     icon={<DisclosureTriangle/>}
@@ -122,9 +124,9 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 />
                 <div
                     className='octo-sidebar-title'
-                    title={displayTitle}
+                    title={props.categoryBlocks.name}
                 >
-                    {board.fields.icon ? `${board.fields.icon} ${displayTitle}` : displayTitle}
+                    {props.categoryBlocks.name}
                 </div>
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
@@ -143,8 +145,8 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
                             icon={<DuplicateIcon/>}
                             onClick={() => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoard, {board: board.id})
-                                duplicateBoard(board.id || '')
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoard, {board: props.categoryBlocks.id})
+                                duplicateBoard(props.categoryBlocks.id || '')
                             }}
                         />
 
@@ -152,58 +154,63 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             id='templateFromBoard'
                             name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
                             onClick={() => {
-                                addTemplateFromBoard(board.id || '')
+                                addTemplateFromBoard(props.categoryBlocks.id || '')
                             }}
                         />
                     </Menu>
                 </MenuWrapper>
             </div>
-            {!collapsed && boardViews.length === 0 &&
+            {!collapsed && blocks.length === 0 &&
                 <div className='octo-sidebar-item subitem no-views'>
                     <FormattedMessage
                         id='Sidebar.no-views-in-board'
                         defaultMessage='No pages inside'
                     />
                 </div>}
-            {!collapsed && boardViews.map((view) => (
-                <div
-                    key={view.id}
-                    className={`octo-sidebar-item subitem ${view.id === props.activeViewId ? 'active' : ''}`}
-                    onClick={() => showView(view.id, board.id)}
-                >
-                    {iconForViewType(view.fields.viewType)}
+            {!collapsed && blocks.map((block) => {
+                console.log('AAAA ' + props.boards.length)
+                console.log(props.boards)
+                const thisBoard = props.boards.find((b) => b.id === block.blockID)
+                return (
                     <div
-                        className='octo-sidebar-title'
-                        title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
+                        key={block.blockID}
+                        className={`octo-sidebar-item subitem ${block.blockID === props.activeViewId ? 'active' : ''}`}
+                        onClick={() => showBoard(block.blockID)}
                     >
-                        {view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
+                        {thisBoard?.fields.icon}
+                        <div
+                            className='octo-sidebar-title'
+                            title={thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: '(asdasdsaUntitled Board)'})}
+                        >
+                            {thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: block.blockID})}
+                        </div>
                     </div>
-                </div>
-            ))}
+                )
+            })}
 
-            {deleteBoardOpen &&
-            <DeleteBoardDialog
-                boardTitle={props.board.title}
-                onClose={() => setDeleteBoardOpen(false)}
-                onDelete={async () => {
-                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: board.id})
-                    mutator.deleteBlock(
-                        board,
-                        intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
-                        async () => {
-                            if (props.nextBoardId) {
-                                // This delay is needed because WSClient has a default 100 ms notification delay before updates
-                                setTimeout(() => {
-                                    showBoard(props.nextBoardId)
-                                }, 120)
-                            }
-                        },
-                        async () => {
-                            showBoard(board.id)
-                        },
-                    )
-                }}
-            />}
+            {/*{deleteBoardOpen &&*/}
+            {/*<DeleteBoardDialog*/}
+            {/*    boardTitle={props.board.title}*/}
+            {/*    onClose={() => setDeleteBoardOpen(false)}*/}
+            {/*    onDelete={async () => {*/}
+            {/*        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: board.id})*/}
+            {/*        mutator.deleteBlock(*/}
+            {/*            board,*/}
+            {/*            intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),*/}
+            {/*            async () => {*/}
+            {/*                if (props.nextBoardId) {*/}
+            {/*                    // This delay is needed because WSClient has a default 100 ms notification delay before updates*/}
+            {/*                    setTimeout(() => {*/}
+            {/*                        showBoard(props.nextBoardId)*/}
+            {/*                    }, 120)*/}
+            {/*                }*/}
+            {/*            },*/}
+            {/*            async () => {*/}
+            {/*                showBoard(board.id)*/}
+            {/*            },*/}
+            {/*        )*/}
+            {/*    }}*/}
+            {/*/>}*/}
         </div>
     )
 })

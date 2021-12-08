@@ -181,17 +181,21 @@ const Sidebar = React.memo((props: Props) => {
                 !props.isDashboard &&
                 <div className='octo-sidebar-list'>
                     {
-                        boards.map((board) => {
-                            const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
+                        sidebarCategories.map((category) => {
+                            // const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
                             return (
                                 <SidebarBoardItem
                                     hideSidebar={hideSidebar}
-                                    key={board.id}
-                                    views={views}
-                                    board={board}
-                                    activeBoardId={props.activeBoardId}
-                                    activeViewId={props.activeViewId}
-                                    nextBoardId={board.id === props.activeBoardId ? nextBoardId : undefined}
+                                    key={category.id}
+
+                                    // views={views}
+                                    // board={board}
+                                    // activeBoardId={props.activeBoardId}
+                                    // activeViewId={props.activeViewId}
+
+                                    // nextBoardId={board.id === props.activeBoardId ? nextBoardId : undefined}
+                                    categoryBlocks={category}
+                                    boards={boards}
                                 />
                             )
                         })
