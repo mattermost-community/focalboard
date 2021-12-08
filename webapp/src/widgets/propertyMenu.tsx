@@ -114,6 +114,7 @@ const PropertyMenu = React.memo((props: Props) => {
                 onChange={(e) => {
                     setName(e.target.value)
                 }}
+                title={name}
                 value={name}
                 onBlur={() => props.onTypeAndNameChanged(props.propertyType, name)}
                 onKeyDown={(e) => {

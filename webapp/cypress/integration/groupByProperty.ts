@@ -1,0 +1,73 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
+describe('Group board by different properties', () => {
+    beforeEach(() => {
+        cy.apiInitServer()
+        cy.apiResetBoards()
+        localStorage.setItem('welcomePageViewed', 'true')
+    })
+
+    it('MM-T4291 Group by different property', () => {
+        cy.visit('/')
+
+        // Create new empty board
+        cy.log('**Create new empty board**')
+        cy.findByText(/add board/i).click()
+        cy.findByRole('button', {name: /empty board/i}).click()
+        cy.findByPlaceholderText(/untitled board/i).should('exist')
+
+        // Rename board
+        cy.log('**Rename board**')
+        cy.findByPlaceholderText(/untitled board/i).type('Testing{enter}')
+        cy.findByRole('textbox', {name: 'Testing'}).should('exist')
+
+        // Add a new group
+        cy.log('**Add a new group**')
+        cy.findByRole('button', {name: /add a group/i}).click()
+        cy.findByRole('textbox', {name: /new group/i}).should('exist')
+
+        // Rename group
+        cy.log('**Rename group**')
+        cy.findByRole('textbox', {name: /new group/i}).type('{selectall}Group 1{enter}')
+        cy.findByRole('textbox', {name: 'Group 1'}).should('exist')
+
+        // Add a new card to the group
+        cy.log('**Add a new card to the group**')
+        cy.findAllByRole('button', {name: '+ New'}).eq(1).click()
+        cy.findByRole('dialog').should('exist')
+        cy.findByTestId('select-non-editable').findByText('Group 1').should('exist')
+        cy.get('#mainBoardBody').findByText(/untitled/i).should('exist')
+
+        // Add new select property
+        cy.log('**Add new select property**')
+        cy.findAllByRole('button', {name: /add a property/i}).click()
+        cy.findAllByRole('button', {name: 'Select'}).click()
+        cy.findByRole('textbox', {name: 'Select'}).type('{enter}')
+        cy.findByRole('dialog').findByRole('button', {name: 'Select'}).should('exist')
+
+        // Close card dialog
+        cy.log('**Close card dialog**')
+        cy.findByRole('button', {name: 'Close dialog'}).click()
+        cy.findByRole('dialog').should('not.exist')
+
+        // Group by new select property
+        cy.log('**Group by new select property**')
+        cy.findByRole('button', {name: /group by/i}).click()
+        cy.findByRole('button', {name: 'Status'}).get('.CheckIcon').should('exist')
+        cy.findByRole('button', {name: 'Select'}).click()
+        cy.findByTitle(/empty select property/i).contains('No Select')
+        cy.get('#mainBoardBody').findByText(/untitled/i).should('exist')
+
+        // Add another new group
+        cy.log('**Add another new group**')
+        cy.findByRole('button', {name: /add a group/i}).click()
+        cy.findByRole('textbox', {name: /new group/i}).should('exist')
+
+        // Add a new card to another group
+        cy.log('**Add a new card to another group**')
+        cy.findAllByRole('button', {name: '+ New'}).eq(1).click()
+        cy.findByRole('dialog').should('exist')
+        cy.findAllByTestId('select-non-editable').last().findByText(/new group/i).should('exist')
+    })
+})
