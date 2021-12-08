@@ -63,6 +63,7 @@ func (b *Backend) Start() error {
 }
 
 func (b *Backend) ShutDown() error {
+	b.logger.Debug("Stopping subscriptions backend")
 	b.notifier.stop()
 	_ = b.logger.Flush()
 	return nil
