@@ -1,29 +1,25 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {
-    ReactElement,
-    useEffect,
-    useMemo,
-    useCallback,
-    useRef,
-    useState,
-} from 'react'
-import {getDefaultKeyBinding, EditorState, ContentState, DraftHandleValue} from 'draft-js'
 import Editor from '@draft-js-plugins/editor'
-import createLiveMarkdownPlugin from 'draft-js-live-markdown-plugin'
+import createEmojiPlugin from '@draft-js-plugins/emoji'
+import '@draft-js-plugins/emoji/lib/plugin.css'
 import createMentionPlugin, {
     defaultSuggestionsFilter,
     MentionData,
 } from '@draft-js-plugins/mention'
 import '@draft-js-plugins/mention/lib/plugin.css'
-import './markdownEditorInput.scss'
+import {ContentState, DraftHandleValue, EditorState, getDefaultKeyBinding} from 'draft-js'
+import React, {
+    ReactElement, useCallback, useEffect,
+    useMemo, useRef,
+    useState,
+} from 'react'
 
-import createEmojiPlugin from '@draft-js-plugins/emoji'
-import '@draft-js-plugins/emoji/lib/plugin.css'
-
-import {getWorkspaceUsersList} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
+import {getWorkspaceUsersList} from '../../store/users'
 import {IUser} from '../../user'
+import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin'
+import './markdownEditorInput.scss'
 
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
