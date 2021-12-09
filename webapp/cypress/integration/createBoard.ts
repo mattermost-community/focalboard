@@ -145,6 +145,7 @@ describe('Create and delete board / card', () => {
         // Create empty boards
         cy.log('**Create new empty board**')
         cy.contains('+ Add board').should('be.visible').click()
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.contains('Empty board').click().wait(1000)
 
         // Create 10 empty groups
@@ -162,6 +163,7 @@ describe('Create and delete board / card', () => {
         cy.get('.KanbanCard').should('exist')
 
         // Drag card to right corner and expect scroll to occur
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.get('.Kanban').invoke('scrollLeft').should('equal', 0).wait(1000)
 
         // wait necessary to let state change propagate
