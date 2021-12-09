@@ -6,6 +6,7 @@ import {
     ContentState,
     ContentBlock,
     EditorChangeType,
+    DraftStyleMap,
 } from 'draft-js'
 import {EditorPlugin} from '@draft-js-plugins/editor'
 import {Repeat, List} from 'immutable'
@@ -49,7 +50,7 @@ function createLiveMarkdownPlugin(config: LiveMarkdownPluginConfig = {}): Editor
     } = config
 
     // Construct the editor style map from our inline style strategies
-    const customStyleMap: Record<string, React.CSSProperties> = {}
+    const customStyleMap: DraftStyleMap = {}
     inlineStyleStrategies.forEach((styleStrategy) => {
         if (styleStrategy.style && styleStrategy.styles) {
             customStyleMap[styleStrategy.style] = styleStrategy.styles
