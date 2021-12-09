@@ -50,7 +50,7 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
         // Pick the first select property that isn't already filtered on
         const selectProperty = board.fields.cardProperties.
             filter((o: IPropertyTemplate) => !filters.find((f) => f.propertyId === o.id)).
-            find((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect')
+            find((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect' || o.type === 'person')
         if (selectProperty) {
             filter.propertyId = selectProperty.id
         }

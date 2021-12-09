@@ -40,7 +40,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{propertyName}</Button>
                 <Menu>
-                    {board.fields.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect').map((o: IPropertyTemplate) => (
+                    {board.fields.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect' || o.type === 'person').map((o: IPropertyTemplate) => (
                         <Menu.Text
                             key={o.id}
                             id={o.id}

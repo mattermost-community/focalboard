@@ -189,7 +189,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                                     const template: IPropertyTemplate = {
                                         id: Utils.createGuid(IDType.BlockID),
                                         name: typeDisplayName(intl, type),
-                                        type,
+                                        type: (type === 'person') ? 'select' : type,
                                         options: [],
                                     }
                                     const templateId = await mutator.insertPropertyTemplate(board, activeView, -1, template)
