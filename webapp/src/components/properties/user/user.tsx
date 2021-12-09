@@ -12,6 +12,9 @@ import {useAppSelector} from '../../../store/hooks'
 import './user.scss'
 import {getSelectBaseStyle} from '../../../theme'
 
+const Avatar = (window as any).Components.Avatar
+const imageURLForUser = (window as any).Components?.imageURLForUser
+
 type Props = {
     value: string,
     readonly: boolean,
@@ -24,6 +27,22 @@ const selectStyles = {
         ...provided,
         color: 'rgba(var(--center-channel-color-rgb), 0.4)',
     }),
+}
+
+const formatOptionLabel = (user: any) => {
+    const profileImg = imageURLForUser(user.id)
+    console.log(user)
+
+    return (
+        <div className='UserProperty-item'>
+            <Avatar
+                size={'sm'}
+                url={profileImg}
+                className={'avatar-post-preview'}
+            />
+            {user.username}
+        </div>
+    )
 }
 
 const UserProperty = (props: Props): JSX.Element => {
@@ -42,6 +61,7 @@ const UserProperty = (props: Props): JSX.Element => {
             backspaceRemovesValue={true}
             className={'UserProperty octo-propertyvalue'}
             classNamePrefix={'react-select'}
+            formatOptionLabel={formatOptionLabel}
             styles={selectStyles}
             placeholder={'Empty'}
             getOptionLabel={(o: IUser) => o.username}
