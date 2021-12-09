@@ -27,8 +27,10 @@
     }
 
     .react-select__single-value {
+        margin: 0;
         position: relative;
         top: 12px;
+        max-width: 100%;
     }
 
     .react-select__option {
