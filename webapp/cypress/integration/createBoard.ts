@@ -139,30 +139,30 @@ describe('Create and delete board / card', () => {
         cy.contains(boardTitle).should('not.exist')
     })
 
-    it('scrolls the kanban board when dragging card to edge', () => {
+    it('MM-T4433 Scrolls the kanban board when dragging card to edge', () => {
         cy.visit('/')
 
         // Create empty boards
         cy.log('**Create new empty board**')
-        cy.contains('+ Add board').click({force: true})
-        cy.contains('Empty board').click({force: true})
+        cy.contains('+ Add board').should('be.visible').click()
+        cy.contains('Empty board').click().wait(1000)
 
         // Create 10 empty groups
         cy.log('**Create new empty groups**')
         for (let i = 0; i < 10; i++) {
-            cy.contains('+ Add a group').click({force: true})
+            cy.contains('+ Add a group').scrollIntoView().should('be.visible').click()
             cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('have.length', i + 1)
         }
 
         // Create empty card in first group
         cy.log('**Create new empty card in first group**')
-        cy.contains('+ New').click({force: true})
+        cy.contains('+ New').click()
         cy.get('.Dialog').should('exist')
-        cy.get('.Dialog .wrapper').click({force: true})
+        cy.get('.Dialog Button[title=\'Close dialog\']').should('be.visible').click()
         cy.get('.KanbanCard').should('exist')
 
         // Drag card to right corner and expect scroll to occur
-        cy.get('.Kanban').invoke('scrollLeft').should('equal', 0)
+        cy.get('.Kanban').invoke('scrollLeft').should('equal', 0).wait(1000)
 
         // wait necessary to let state change propagate
         // eslint-disable-next-line cypress/no-unnecessary-waiting
