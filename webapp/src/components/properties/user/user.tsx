@@ -12,7 +12,6 @@ import {useAppSelector} from '../../../store/hooks'
 import './user.scss'
 import {getSelectBaseStyle} from '../../../theme'
 
-const Avatar = (window as any).Components.Avatar
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
 type Props = {
@@ -34,10 +33,9 @@ const formatOptionLabel = (user: any) => {
 
     return (
         <div className='UserProperty-item'>
-            <Avatar
-                size={'sm'}
-                url={profileImg}
-                className={'avatar-post-preview'}
+            <img
+                alt='UserProperty-avatar'
+                src={profileImg}
             />
             {user.username}
         </div>
