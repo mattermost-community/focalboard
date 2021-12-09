@@ -31,7 +31,6 @@ const selectStyles = {
 
 const formatOptionLabel = (user: any) => {
     const profileImg = imageURLForUser(user.id)
-    console.log(user)
 
     return (
         <div className='UserProperty-item'>
