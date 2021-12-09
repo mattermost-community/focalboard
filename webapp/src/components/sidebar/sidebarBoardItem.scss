@@ -6,6 +6,7 @@
         padding: 0 16px 0 8px;
         height: 36px;
         align-items: center;
+        gap: 8px;
 
         &:hover {
             background-color: rgba(var(--sidebar-text-rgb), 0.08);
@@ -82,6 +83,24 @@
             transition: 200ms ease-in-out;
             transform: rotate(0deg);
         }
+
+        &.category {
+            .MenuWrapper {
+                display: none;
+            }
+
+            &:hover {
+                .MenuWrapper {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    .MenuWrapper {
+        &:hover {
+            background: rgba(var(--sidebar-text-rgb), 0.08);
+        }
     }
 
     .octo-sidebar-title {
@@ -90,5 +109,17 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        &.category-title {
+            text-transform: uppercase;
+        }
+    }
+
+    .octo-sidebar-icon {
+        font-size: 18px;
+        width: 24px;
+        height: 24px;
+        max-width: 24px;
+        min-width: 24px;
     }
 }

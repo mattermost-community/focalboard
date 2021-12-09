@@ -24,6 +24,8 @@ import DeleteBoardDialog from './deleteBoardDialog'
 
 import './sidebarBoardItem.scss'
 import {CategoryBlocks} from '../../store/sidebar'
+import ChevronDown from '../../widgets/icons/chevronDown'
+import ChevronRight from '../../widgets/icons/chevronRight'
 
 type Props = {
     activeCategoryId?: string
@@ -114,16 +116,16 @@ const SidebarBoardItem = React.memo((props: Props) => {
     return (
         <div className='SidebarBoardItem'>
             <div
-                className={`octo-sidebar-item ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBlocks.id === props.activeCategoryId ? 'active' : ''}`}
+                className={`octo-sidebar-item category ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBlocks.id === props.activeCategoryId ? 'active' : ''}`}
 
                 // onClick={() => showBoard(board.id)}
             >
                 <IconButton
-                    icon={<DisclosureTriangle/>}
+                    icon={collapsed ? <ChevronRight/> : <ChevronDown/>}
                     onClick={() => setCollapsed(!collapsed)}
                 />
                 <div
-                    className='octo-sidebar-title'
+                    className='octo-sidebar-title category-title'
                     title={props.categoryBlocks.name}
                 >
                     {props.categoryBlocks.name}
@@ -177,7 +179,9 @@ const SidebarBoardItem = React.memo((props: Props) => {
                         className={`octo-sidebar-item subitem ${block.blockID === props.activeViewId ? 'active' : ''}`}
                         onClick={() => showBoard(block.blockID)}
                     >
-                        {thisBoard?.fields.icon}
+                        <div className='octo-sidebar-icon'>
+                            {thisBoard?.fields.icon}
+                        </div>
                         <div
                             className='octo-sidebar-title'
                             title={thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: '(asdasdsaUntitled Board)'})}

@@ -162,23 +162,24 @@ const Sidebar = React.memo((props: Props) => {
                 <WorkspaceSwitcher activeWorkspace={workspace}/>
             }
 
-            {
-                props.isDashboard &&
-                (
-                    <React.Fragment>
-                        <WorkspaceSwitcher/>
-                        <div className='Sidebar__onboarding'>
-                            <DashboardOnboardingSvg/>
-                            <div>
-                                {intl.formatMessage({id: 'DashboardPage.CenterPanel.ChangeChannels', defaultMessage: 'Use the switcher to easily change channels'})}
-                            </div>
-                        </div>
-                    </React.Fragment>
-                )
-            }
+            {/*{*/}
+            {/*    props.isDashboard &&*/}
+            {/*    (*/}
+            {/*        <React.Fragment>*/}
+            {/*            <WorkspaceSwitcher/>*/}
+            {/*            <div className='Sidebar__onboarding'>*/}
+            {/*                <DashboardOnboardingSvg/>*/}
+            {/*                <div>*/}
+            {/*                    {intl.formatMessage({id: 'DashboardPage.CenterPanel.ChangeChannels', defaultMessage: 'Use the switcher to easily change channels'})}*/}
+            {/*                </div>*/}
+            {/*            </div>*/}
+            {/*        </React.Fragment>*/}
+            {/*    )*/}
+            {/*}*/}
 
             {
-                !props.isDashboard &&
+
+                // !props.isDashboard &&
                 <div className='octo-sidebar-list'>
                     {
                         sidebarCategories.map((category) => {
