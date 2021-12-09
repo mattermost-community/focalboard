@@ -74,27 +74,19 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     }, [])
 
     useEffect(() => {
-        setTimeout(() => ref.current?.focus(), 200)
-    })
-
-    useEffect(() => {
-        let isMounted = true
-        if (isEditing && isMounted) {
+        if (isEditing) {
             setEditorState(EditorState.moveSelectionToEnd(editorState))
-        }
-
-        return () => {
-            isMounted = false
+            setTimeout(() => ref.current?.focus(), 200)
         }
     }, [isEditing])
 
     useEffect(() => {
-        if (initialText === '') {
+        if (initialText === '' && !isEditing) {
             setTimeout(() => {
                 setEditorState(EditorState.createEmpty())
             }, 200)
         }
-    }, [initialText])
+    }, [initialText, isEditing])
 
     const customKeyBindingFn = useCallback((e: React.KeyboardEvent) => {
         if (isMentionPopoverOpen || isEmojiPopoverOpen) {
