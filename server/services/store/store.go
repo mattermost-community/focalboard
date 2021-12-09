@@ -2,7 +2,9 @@
 //go:generate go run ./generators/main.go
 package store
 
-import "github.com/mattermost/focalboard/server/model"
+import (
+	"github.com/mattermost/focalboard/server/model"
+)
 
 // Conainer represents a container in a store
 // Using a struct to make extending this easier in the future.

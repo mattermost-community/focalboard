@@ -18,7 +18,7 @@ type User struct {
 
 	// The user's email
 	// required: true
-	Email string `json:"email"`
+	Email string `json:"-"`
 
 	// swagger:ignore
 	Password string `json:"-"`
@@ -47,6 +47,10 @@ type User struct {
 	// Deleted time, set to indicate user is deleted
 	// required: true
 	DeleteAt int64 `json:"delete_at"`
+
+	// If the user is a bot or not
+	// required: true
+	IsBot bool `json:"is_bot"`
 }
 
 type Session struct {

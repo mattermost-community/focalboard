@@ -682,7 +682,12 @@ class Mutator {
             newBlocks,
             description,
             async (respBlocks: Block[]) => {
-                await afterRedo?.(respBlocks[0].id)
+                const card = respBlocks.find((block) => block.type === 'card')
+                if (card) {
+                    await afterRedo?.(card.id)
+                } else {
+                    Utils.logError('card not found for opening.')
+                }
             },
             beforeUndo,
         )
