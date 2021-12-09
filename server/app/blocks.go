@@ -133,7 +133,9 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 			err = a.filesBackend.RemoveFile(filePath)
 
 			if err != nil {
-				a.logger.Error("Error deleting image file", mlog.Err(err))
+				a.logger.Error("Error deleting image file",
+					mlog.String("FilePath", filePath),
+					mlog.Err(err))
 			}
 		}
 	}
