@@ -80,14 +80,10 @@ class Mutator {
 
         return undoManager.perform(
             async () => {
-                await Promise.all(
-                    updatePatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch)),
-                )
+                await octoClient.patchBlocks(newBlocks, updatePatches)
             },
             async () => {
-                await Promise.all(
-                    undoPatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch)),
-                )
+                await octoClient.patchBlocks(newBlocks, undoPatches)
             },
             description,
             this.undoGroupId,
