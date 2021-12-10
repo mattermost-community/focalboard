@@ -1,6 +1,8 @@
 package app
 
 import (
+	"path/filepath"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
@@ -122,6 +124,20 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 	err = a.store.DeleteBlock(c, blockID, modifiedBy)
 	if err != nil {
 		return err
+	}
+
+	if block.Type == model.TypeImage {
+		fileName, fileIDExists := block.Fields["fileId"]
+		if fileName, fileIDIsString := fileName.(string); fileIDExists && fileIDIsString {
+			filePath := filepath.Join(block.WorkspaceID, block.RootID, fileName)
+			err = a.filesBackend.RemoveFile(filePath)
+
+			if err != nil {
+				a.logger.Error("Error deleting image file",
+					mlog.String("FilePath", filePath),
+					mlog.Err(err))
+			}
+		}
 	}
 
 	a.wsAdapter.BroadcastBlockDelete(c.WorkspaceID, blockID, block.ParentID)
