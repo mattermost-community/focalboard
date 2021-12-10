@@ -24,6 +24,8 @@ import {getWorkspaceUsersList} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
 
+import Entry from './entryComponent/entryComponent'
+
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
 type Props = {
@@ -38,7 +40,14 @@ type Props = {
 const MarkdownEditorInput = (props: Props): ReactElement => {
     const {onChange, onFocus, onBlur, initialText, id, isEditing} = props
     const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
-    const mentions: MentionData[] = useMemo(() => workspaceUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`})), [workspaceUsers])
+    const mentions: MentionData[] = useMemo(() =>
+        workspaceUsers.map((user) =>
+            ({
+                name: user.username,
+                avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`,
+                isBot: user.is_bot,
+            }))
+    , [workspaceUsers])
     const ref = useRef<Editor>(null)
     const [editorState, setEditorState] = useState(() => {
         const state = EditorState.createWithContent(ContentState.createFromText(initialText || ''))
@@ -65,27 +74,15 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     }, [])
 
     useEffect(() => {
-        setTimeout(() => ref.current?.focus(), 200)
-    })
-
-    useEffect(() => {
-        let isMounted = true
-        if (isEditing && isMounted) {
-            setEditorState(EditorState.moveSelectionToEnd(editorState))
-        }
-
-        return () => {
-            isMounted = false
+        if (isEditing) {
+            if (initialText === '') {
+                setEditorState(EditorState.createEmpty())
+            } else {
+                setEditorState(EditorState.moveSelectionToEnd(editorState))
+            }
+            setTimeout(() => ref.current?.focus(), 200)
         }
     }, [isEditing])
-
-    useEffect(() => {
-        if (initialText === '') {
-            setTimeout(() => {
-                setEditorState(EditorState.createEmpty())
-            }, 200)
-        }
-    }, [initialText])
 
     const customKeyBindingFn = useCallback((e: React.KeyboardEvent) => {
         if (isMentionPopoverOpen || isEmojiPopoverOpen) {
@@ -160,6 +157,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
                 onOpenChange={onMentionPopoverOpenChange}
                 suggestions={suggestions}
                 onSearchChange={onSearchChange}
+                entryComponent={Entry}
             />
             <EmojiSuggestions
                 onOpen={onEmojiPopoverOpen}
