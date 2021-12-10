@@ -79,13 +79,19 @@ func TestReplaceBlockID(t *testing.T) {
 	block3 := model.Block{ID: "block-id-3", RootID: "block-id-1"}
 	block4 := model.Block{ID: "block-id-4", RootID: "block-id-2"}
 	block5 := model.Block{ID: "block-id-5", RootID: "block-id-1", ParentID: "block-id-1"}
-	block8 := model.Block{ID: "block-id-8", RootID: "root-id-2", Type: model.TypeCard, Fields: map[string]interface{}{"contentOrder": []string{"block-id-1", "block-id-2"}}}
+	block8 := model.Block{
+		ID: "block-id-8", RootID: "root-id-2", Type: model.TypeCard,
+		Fields: map[string]interface{}{"contentOrder": []string{"block-id-1", "block-id-2"}},
+	}
 
 	// blocks from workspace2. They're identical to blocks 1 and 2,
 	// but they shouldn't change
 	block6 := model.Block{ID: "block-id-1", RootID: "root-id-1"}
 	block7 := model.Block{ID: "block-id-2", RootID: "root-id-2", ParentID: "block-id-1"}
-	block9 := model.Block{ID: "block-id-8", RootID: "root-id-2", Type: model.TypeCard, Fields: map[string]interface{}{"contentOrder": []string{"block-id-1", "block-id-2"}}}
+	block9 := model.Block{
+		ID: "block-id-8", RootID: "root-id-2", Type: model.TypeCard,
+		Fields: map[string]interface{}{"contentOrder": []string{"block-id-1", "block-id-2"}},
+	}
 
 	for _, block := range []model.Block{block1, block2, block3, block4, block5, block8} {
 		err := sqlStore.InsertBlock(container1, &block, "user-id")
