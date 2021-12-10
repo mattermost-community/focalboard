@@ -599,5 +599,24 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 		return errParentID
 	}
 
+	// update parent contentOrder
+	updateContentOrder := baseQuery.Update("")
+	if s.dbType == postgresDBType {
+		updateContentOrder = updateContentOrder.
+			Set("fields", sq.Expr("REPLACE(fields::text, ?, ?)::json", currentID, newID)).
+			Where(sq.Like{"fields->>'contentOrder'": "%" + currentID + "%"}).
+			Where(sq.Eq{"type": model.TypeCard})
+	} else {
+		updateContentOrder = updateContentOrder.
+			Set("fields", sq.Expr("REPLACE(fields, ?, ?)", currentID, newID)).
+			Where(sq.Like{"fields": "%" + currentID + "%"}).
+			Where(sq.Eq{"type": model.TypeCard})
+	}
+
+	if errParentID := runUpdateForBlocksAndHistory(updateContentOrder); errParentID != nil {
+		s.logger.Error(`replaceBlockID ERROR`, mlog.Err(errParentID))
+		return errParentID
+	}
+
 	return nil
 }
