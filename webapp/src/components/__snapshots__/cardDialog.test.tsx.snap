@@ -10,6 +10,7 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
     >
       <div
         class="dialog"
+        role="dialog"
       >
         <div
           class="toolbar"
@@ -106,6 +107,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
     >
       <div
         class="dialog"
+        role="dialog"
       >
         <div
           class="toolbar"
@@ -460,6 +462,7 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
     >
       <div
         class="dialog"
+        role="dialog"
       >
         <div
           class="toolbar"
@@ -727,6 +730,7 @@ exports[`components/cardDialog should match snapshot 1`] = `
     >
       <div
         class="dialog"
+        role="dialog"
       >
         <div
           class="toolbar"

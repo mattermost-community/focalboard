@@ -42,9 +42,15 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
             >
               Status
             </div>
-            <div
-              class="noicon"
-            />
+            <svg
+              class="CheckIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="20,60 40,80 80,40"
+              />
+            </svg>
           </div>
           <div
             aria-label="Property 1"
@@ -59,15 +65,9 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
             >
               Property 1
             </div>
-            <svg
-              class="CheckIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="20,60 40,80 80,40"
-              />
-            </svg>
+            <div
+              class="noicon"
+            />
           </div>
           <div
             aria-label="Property 2"
@@ -220,9 +220,15 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu and ung
             >
               Status
             </div>
-            <div
-              class="noicon"
-            />
+            <svg
+              class="CheckIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="20,60 40,80 80,40"
+              />
+            </svg>
           </div>
           <div
             aria-label="Property 1"
@@ -237,15 +243,9 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu and ung
             >
               Property 1
             </div>
-            <svg
-              class="CheckIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polyline
-                points="20,60 40,80 80,40"
-              />
-            </svg>
+            <div
+              class="noicon"
+            />
           </div>
           <div
             aria-label="Property 2"
