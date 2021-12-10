@@ -268,6 +268,20 @@ class OctoClient {
         })
     }
 
+    async patchBlocks(blocks: Block[], blockPatches: BlockPatch[]): Promise<Response> {
+        Utils.log(`patchBlocks: ${blocks.length} blocks`)
+        const blockIds = blocks.map((block) => block.id)
+        const body = JSON.stringify({block_ids: blockIds, block_patches: blockPatches})
+
+        const path = this.getBaseURL() + this.workspacePath() + '/blocks'
+        const response = fetch(path, {
+            method: 'PATCH',
+            headers: this.headers(),
+            body,
+        })
+        return response
+    }
+
     async deleteBlock(blockId: string): Promise<Response> {
         Utils.log(`deleteBlock: ${blockId}`)
         return fetch(this.getBaseURL() + this.workspacePath() + `/blocks/${encodeURIComponent(blockId)}`, {
