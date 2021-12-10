@@ -17,13 +17,14 @@ interface Category {
     deleteAt: number
 }
 
-interface CategoryBlockAttributes {
-    blockID: string
+interface CategoryBlocks extends Category {
+    blockIDs: Array<string>
 }
 
-interface CategoryBlocks extends Category {
-    blockAttributes: Array<CategoryBlockAttributes>
-}
+export const DefaultCategory: CategoryBlocks = {
+    id: '',
+    name: 'Boards',
+} as CategoryBlocks
 
 export const fetchSidebarCategories = createAsyncThunk(
     'sidebarCategories/fetch',
@@ -54,5 +55,5 @@ export const getSidebarCategories = createSelector(
 
 export const {reducer} = sidebarSlice
 
-export {Category, CategoryBlockAttributes, CategoryBlocks}
+export {Category, CategoryBlocks}
 

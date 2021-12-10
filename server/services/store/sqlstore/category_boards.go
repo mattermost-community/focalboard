@@ -16,14 +16,14 @@ func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string
 
 	userCategoryBlocks := []model.CategoryBlocks{}
 	for _, category := range categories {
-		attributes, err := s.getCategoryBlockAttributes(db, category.ID)
+		blockIDs, err := s.getCategoryBlockAttributes(db, category.ID)
 		if err != nil {
 			return nil, err
 		}
 
 		userCategoryBlock := model.CategoryBlocks{
-			Category:        category,
-			BlockAttributes: attributes,
+			Category: category,
+			BlockIDs: blockIDs,
 		}
 
 		userCategoryBlocks = append(userCategoryBlocks, userCategoryBlock)
@@ -32,7 +32,7 @@ func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string
 	return userCategoryBlocks, nil
 }
 
-func (s *SQLStore) getCategoryBlockAttributes(db sq.BaseRunner, categoryID string) ([]model.CategoryBlockAttributes, error) {
+func (s *SQLStore) getCategoryBlockAttributes(db sq.BaseRunner, categoryID string) ([]string, error) {
 	query := s.getQueryBuilder(db).
 		Select("board_id").
 		From(s.tablePrefix + "category_boards").
@@ -47,7 +47,7 @@ func (s *SQLStore) getCategoryBlockAttributes(db sq.BaseRunner, categoryID strin
 		return nil, err
 	}
 
-	return s.categoryBlocksAttributesFromRows(rows)
+	return s.categoryBlocksFromRows(rows)
 }
 
 func (s *SQLStore) addUpdateCategoryBlock(db sq.BaseRunner, userID, teamID, oldCategoryID, newCategoryID, blockID string) error {
@@ -132,18 +132,18 @@ func (s *SQLStore) addUserCategoryBlock(db sq.BaseRunner, categoryID, blockID st
 	return nil
 }
 
-func (s *SQLStore) categoryBlocksAttributesFromRows(rows *sql.Rows) ([]model.CategoryBlockAttributes, error) {
-	attributes := []model.CategoryBlockAttributes{}
+func (s *SQLStore) categoryBlocksFromRows(rows *sql.Rows) ([]string, error) {
+	blocks := []string{}
 
 	for rows.Next() {
-		attribute := model.CategoryBlockAttributes{}
-		if err := rows.Scan(&attribute.BlockID); err != nil {
-			s.logger.Error("categoryBlocksAttributesFromRows row scan error", mlog.Err(err))
+		blockID := ""
+		if err := rows.Scan(&blockID); err != nil {
+			s.logger.Error("categoryBlocksFromRows row scan error", mlog.Err(err))
 			return nil, err
 		}
 
-		attributes = append(attributes, attribute)
+		blocks = append(blocks, blockID)
 	}
 
-	return attributes, nil
+	return blocks, nil
 }

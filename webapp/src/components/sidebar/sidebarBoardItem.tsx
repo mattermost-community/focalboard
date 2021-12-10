@@ -5,14 +5,13 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
-import {BoardView, IViewType, sortBoardViewsAlphabetically} from '../../blocks/boardView'
+import {BoardView, IViewType} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import IconButton from '../../widgets/buttons/iconButton'
 import BoardIcon from '../../widgets/icons/board'
 import CalendarIcon from '../../widgets/icons/calendar'
 import DeleteIcon from '../../widgets/icons/delete'
-import DisclosureTriangle from '../../widgets/icons/disclosureTriangle'
 import DuplicateIcon from '../../widgets/icons/duplicate'
 import GalleryIcon from '../../widgets/icons/gallery'
 import OptionsIcon from '../../widgets/icons/options'
@@ -111,7 +110,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
         )
     }
 
-    const blocks = props.categoryBlocks.blockAttributes
+    const blocks = props.categoryBlocks.blockIDs || []
 
     return (
         <div className='SidebarBoardItem'>
@@ -169,15 +168,15 @@ const SidebarBoardItem = React.memo((props: Props) => {
                         defaultMessage='No pages inside'
                     />
                 </div>}
-            {!collapsed && blocks.map((block) => {
-                console.log('AAAA ' + props.boards.length)
-                console.log(props.boards)
-                const thisBoard = props.boards.find((b) => b.id === block.blockID)
+            {!collapsed && blocks.map((blockID) => {
+                // console.log('AAAA ' + props.boards.length)
+                // console.log(props.boards)
+                const thisBoard = props.boards.find((b) => b.id === blockID)
                 return (
                     <div
-                        key={block.blockID}
-                        className={`octo-sidebar-item subitem ${block.blockID === props.activeViewId ? 'active' : ''}`}
-                        onClick={() => showBoard(block.blockID)}
+                        key={blockID}
+                        className={`octo-sidebar-item subitem ${blockID === props.activeViewId ? 'active' : ''}`}
+                        onClick={() => showBoard(blockID)}
                     >
                         <div className='octo-sidebar-icon'>
                             {thisBoard?.fields.icon}
@@ -186,7 +185,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             className='octo-sidebar-title'
                             title={thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: '(asdasdsaUntitled Board)'})}
                         >
-                            {thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: block.blockID})}
+                            {thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: blockID})}
                         </div>
                     </div>
                 )

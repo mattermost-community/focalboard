@@ -23,10 +23,15 @@ import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
 
 import {CategoryBlocks, fetchSidebarCategories, getSidebarCategories} from '../../store/sidebar'
 
+import BoardsSwitcher from '../BoardsSwitcher/boardsSwitcher'
+
+import DashboardButton from '../dashboardButton/dashboardButton'
+
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
+import {addMissingBlocks} from './utils'
 
 type Props = {
     activeBoardId?: string
@@ -50,7 +55,9 @@ const Sidebar = React.memo((props: Props) => {
     const views = useAppSelector(getSortedViews)
     const intl = useIntl()
     const dispatch = useAppDispatch()
-    const sidebarCategories = useAppSelector<Array<CategoryBlocks>>(getSidebarCategories)
+    const partialCategories = useAppSelector<Array<CategoryBlocks>>(getSidebarCategories)
+    const sidebarCategories = addMissingBlocks(partialCategories, boards)
+    console.log('AAA')
 
     // TODO un-hardcode this teamID
     const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
@@ -157,10 +164,13 @@ const Sidebar = React.memo((props: Props) => {
                 </div>
             }
 
-            {
-                workspace && workspace.id !== '0' && !props.isDashboard &&
-                <WorkspaceSwitcher activeWorkspace={workspace}/>
-            }
+            {/*{*/}
+            {/*    workspace && workspace.id !== '0' && !props.isDashboard &&*/}
+            {/*    <WorkspaceSwitcher activeWorkspace={workspace}/>*/}
+            {/*}*/}
+
+            <BoardsSwitcher/>
+            <DashboardButton/>
 
             {/*{*/}
             {/*    props.isDashboard &&*/}

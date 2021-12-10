@@ -1171,7 +1171,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	jsonStringResponse(w, http.StatusOK, "{}")
 
-	a.logger.Debug("IMPORT Blocks", mlog.Int("block_count", len(blocks)))
+	a.logger.Debug("IMPORT BlockIDs", mlog.Int("block_count", len(blocks)))
 	auditRec.AddMeta("blockCount", len(blocks))
 	auditRec.Success()
 }

@@ -8,6 +8,10 @@
         align-items: center;
         gap: 8px;
 
+        &.category {
+            padding-left: 0;
+        }
+
         &:hover {
             background-color: rgba(var(--sidebar-text-rgb), 0.08);
             display: flex;
@@ -112,6 +116,7 @@
 
         &.category-title {
             text-transform: uppercase;
+            font-size: 12px;
         }
     }
 
