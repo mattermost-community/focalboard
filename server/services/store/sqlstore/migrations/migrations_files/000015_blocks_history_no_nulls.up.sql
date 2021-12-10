@@ -1,3 +1,16 @@
+{{if .mysql}}
+
+UPDATE {{.prefix}}blocks_history AS bh SET bh.parent_id='' WHERE bh.parent_id IS NULL;
+UPDATE {{.prefix}}blocks_history AS bh SET bh.schema='' WHERE bh.schema IS NULL;
+UPDATE {{.prefix}}blocks_history AS bh SET bh.type='' WHERE bh.type IS NULL;
+UPDATE {{.prefix}}blocks_history AS bh SET bh.title='' WHERE bh.title IS NULL;
+UPDATE {{.prefix}}blocks_history AS bh SET bh.fields='' WHERE bh.fields IS NULL;
+UPDATE {{.prefix}}blocks_history AS bh SET bh.create_at=0 WHERE bh.create_at IS NULL;
+UPDATE {{.prefix}}blocks_history AS bh SET bh.root_id='' WHERE bh.root_id IS NULL;
+UPDATE {{.prefix}}blocks_history AS bh SET bh.created_by='system' WHERE bh.created_by IS NULL;
+
+{{else}}
+
 /* parent_id */
 UPDATE {{.prefix}}blocks_history AS bh1
 	SET parent_id = COALESCE(
@@ -88,3 +101,5 @@ UPDATE {{.prefix}}blocks_history AS bh1
 		ORDER BY bh2.insert_at ASC limit 1) 
 	, 'system')
 WHERE created_by IS NULL;
+
+{{end}}

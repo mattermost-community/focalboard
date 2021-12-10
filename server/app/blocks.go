@@ -1,6 +1,8 @@
 package app
 
 import (
+	"path/filepath"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
@@ -57,6 +59,37 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 		a.webhook.NotifyUpdate(*block)
 		a.notifyBlockChanged(notify.Update, c, block, oldBlock, userID)
 	}()
+	return nil
+}
+
+func (a *App) PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch, userID string) error {
+	oldBlocks := make([]model.Block, 0, len(blockPatches.BlockIDs))
+	for _, blockID := range blockPatches.BlockIDs {
+		oldBlock, err := a.store.GetBlock(c, blockID)
+		if err != nil {
+			return nil
+		}
+		oldBlocks = append(oldBlocks, *oldBlock)
+	}
+
+	err := a.store.PatchBlocks(c, blockPatches, userID)
+	if err != nil {
+		return err
+	}
+
+	a.metrics.IncrementBlocksPatched(len(oldBlocks))
+	for i, blockID := range blockPatches.BlockIDs {
+		newBlock, err := a.store.GetBlock(c, blockID)
+		if err != nil {
+			return nil
+		}
+		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *newBlock)
+		go func(currentIndex int) {
+			a.webhook.NotifyUpdate(*newBlock)
+			a.notifyBlockChanged(notify.Update, c, newBlock, &oldBlocks[currentIndex], userID)
+		}(i)
+	}
+
 	return nil
 }
 
@@ -122,6 +155,20 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 	err = a.store.DeleteBlock(c, blockID, modifiedBy)
 	if err != nil {
 		return err
+	}
+
+	if block.Type == model.TypeImage {
+		fileName, fileIDExists := block.Fields["fileId"]
+		if fileName, fileIDIsString := fileName.(string); fileIDExists && fileIDIsString {
+			filePath := filepath.Join(block.WorkspaceID, block.RootID, fileName)
+			err = a.filesBackend.RemoveFile(filePath)
+
+			if err != nil {
+				a.logger.Error("Error deleting image file",
+					mlog.String("FilePath", filePath),
+					mlog.Err(err))
+			}
+		}
 	}
 
 	a.wsAdapter.BroadcastBlockDelete(c.WorkspaceID, blockID, block.ParentID)

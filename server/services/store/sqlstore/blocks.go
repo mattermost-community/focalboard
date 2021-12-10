@@ -390,6 +390,26 @@ func (s *SQLStore) patchBlock(db sq.BaseRunner, c store.Container, blockID strin
 	return s.insertBlock(db, c, block, userID)
 }
 
+func (s *SQLStore) patchBlocks(db sq.BaseRunner, c store.Container, blockPatches *model.BlockPatchBatch, userID string) error {
+	for i, blockID := range blockPatches.BlockIDs {
+		err := s.patchBlock(db, c, blockID, &blockPatches.BlockPatches[i], userID)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *SQLStore) insertBlocks(db sq.BaseRunner, c store.Container, blocks []model.Block, userID string) error {
+	for i := range blocks {
+		err := s.insertBlock(db, c, &blocks[i], userID)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID string, modifiedBy string) error {
 	block, err := s.getBlock(db, c, blockID)
 	if err != nil {
@@ -575,6 +595,25 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 		Where(sq.Eq{"parent_id": currentID})
 
 	if errParentID := runUpdateForBlocksAndHistory(updateParentIDQ); errParentID != nil {
+		s.logger.Error(`replaceBlockID ERROR`, mlog.Err(errParentID))
+		return errParentID
+	}
+
+	// update parent contentOrder
+	updateContentOrder := baseQuery.Update("")
+	if s.dbType == postgresDBType {
+		updateContentOrder = updateContentOrder.
+			Set("fields", sq.Expr("REPLACE(fields::text, ?, ?)::json", currentID, newID)).
+			Where(sq.Like{"fields->>'contentOrder'": "%" + currentID + "%"}).
+			Where(sq.Eq{"type": model.TypeCard})
+	} else {
+		updateContentOrder = updateContentOrder.
+			Set("fields", sq.Expr("REPLACE(fields, ?, ?)", currentID, newID)).
+			Where(sq.Like{"fields": "%" + currentID + "%"}).
+			Where(sq.Eq{"type": model.TypeCard})
+	}
+
+	if errParentID := runUpdateForBlocksAndHistory(updateContentOrder); errParentID != nil {
 		s.logger.Error(`replaceBlockID ERROR`, mlog.Err(errParentID))
 		return errParentID
 	}

@@ -69,6 +69,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handlePatchBlocks)).Methods("PATCH")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
@@ -671,6 +672,77 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	a.logger.Debug("PATCH Block", mlog.String("blockID", blockID))
+	jsonStringResponse(w, http.StatusOK, "{}")
+
+	auditRec.Success()
+}
+
+func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation PATCH /api/v1/workspaces/{workspaceID}/blocks/ patchBlocks
+	//
+	// Partially updates batch of blocks
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
+	// - name: Body
+	//   in: body
+	//   description: block Ids and block patches to apply
+	//   required: true
+	//   schema:
+	//     "$ref": "#/definitions/BlockPatchBatch"
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	container, err := a.getContainer(r)
+	if err != nil {
+		a.noContainerErrorResponse(w, r.URL.Path, err)
+		return
+	}
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var patches *model.BlockPatchBatch
+	err = json.Unmarshal(requestBody, &patches)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "patchBlocks", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	for i := range patches.BlockIDs {
+		auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), patches.BlockIDs[i])
+	}
+
+	err = a.app.PatchBlocks(*container, patches, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("PATCH Blocks", mlog.String("patches", strconv.Itoa(len(patches.BlockIDs))))
 	jsonStringResponse(w, http.StatusOK, "{}")
 
 	auditRec.Success()
