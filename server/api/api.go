@@ -1726,6 +1726,8 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
 
 	vars := mux.Vars(r)
 	subscriberID := vars["subscriberID"]
@@ -1739,6 +1741,12 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "getSubscriptions", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("subscriber_id", subscriberID)
+
+	// User can only get subscriptions for themselves (for now)
+	if session.UserID != subscriberID {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "userID and subscriberID mismatch", nil)
+		return
+	}
 
 	subs, err := a.app.GetSubscriptions(*container, subscriberID)
 	if err != nil {
