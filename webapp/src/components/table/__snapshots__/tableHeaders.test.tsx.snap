@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/table/TableHeaders should match snapshot 1`] = `
+<div>
+  <div
+    class="octo-table-header TableHeaders"
+    id="mainBoardHeader"
+  >
+    <div
+      class="octo-table-cell header-cell"
+      style="overflow: unset; width: 100px; opacity: 1;"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <span
+          class="Label empty "
+        >
+          Name
+        </span>
+      </div>
+      <div
+        class="octo-spacer"
+      />
+      <div
+        class="HorizontalGrip"
+        draggable="true"
+      />
+    </div>
+  </div>
+</div>
+`;
