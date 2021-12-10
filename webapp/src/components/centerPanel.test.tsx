@@ -68,12 +68,20 @@ describe('components/centerPanel', () => {
         ],
     }
     const state = {
+        clientConfig: {
+            value: {
+                featureFlags: {
+                    subscriptions: true,
+                },
+            },
+        },
         searchText: '',
         users: {
             me: {},
             workspaceUsers: [
                 {username: 'username_1'},
             ],
+            blockSubscriptions: [],
         },
         boards: {
             current: board.id,

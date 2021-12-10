@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 	"net/url"
 	"path"
@@ -28,9 +29,11 @@ import (
 )
 
 const (
-	boardsFeatureFlagName = "BoardsFeatureFlags"
-	pluginName            = "focalboard"
-	sharedBoardsName      = "enablepublicsharedboards"
+	boardsFeatureFlagName     = "BoardsFeatureFlags"
+	pluginName                = "focalboard"
+	sharedBoardsName          = "enablepublicsharedboards"
+	notifyFreqCardSecondsKey  = "notify_freq_card_seconds"
+	notifyFreqBoardSecondsKey = "notify_freq_board_seconds"
 )
 
 type BoardsEmbed struct {
@@ -111,9 +114,28 @@ func (p *Plugin) OnActivate() error {
 
 	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
 
-	mentionsBackend, err := createMentionsNotifyBackend(client, baseURL+"/boards", logger)
+	backendParams := notifyBackendParams{
+		cfg:        cfg,
+		client:     client,
+		serverRoot: baseURL + "/boards",
+		logger:     logger,
+	}
+
+	var notifyBackends []notify.Backend
+
+	mentionsBackend, err := createMentionsNotifyBackend(backendParams)
 	if err != nil {
-		return fmt.Errorf("error creating mentions notifications backend: %w", err)
+		return fmt.Errorf("error creating mention notifications backend: %w", err)
+	}
+	notifyBackends = append(notifyBackends, mentionsBackend)
+
+	if cfg.IsSubscriptionsEnabled() {
+		subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams, db, p.wsPluginAdapter)
+		if err2 != nil {
+			return fmt.Errorf("error creating subscription notifications backend: %w", err2)
+		}
+		notifyBackends = append(notifyBackends, subscriptionsBackend)
+		mentionsBackend.AddListener(subscriptionsBackend)
 	}
 
 	params := server.Params{
@@ -123,7 +145,7 @@ func (p *Plugin) OnActivate() error {
 		Logger:          logger,
 		ServerID:        serverID,
 		WSAdapter:       p.wsPluginAdapter,
-		NotifyBackends:  []notify.Backend{mentionsBackend},
+		NotifyBackends:  notifyBackends,
 	}
 
 	server, err := server.New(params)
@@ -204,7 +226,34 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		AuthMode:                 "mattermost",
 		EnablePublicSharedBoards: enablePublicSharedBoards,
 		FeatureFlags:             featureFlags,
+		NotifyFreqCardSeconds:    getPluginSettingInt(mmconfig, notifyFreqCardSecondsKey, 120),
+		NotifyFreqBoardSeconds:   getPluginSettingInt(mmconfig, notifyFreqBoardSecondsKey, 86400),
 	}
+}
+
+func getPluginSetting(mmConfig mmModel.Config, key string) (interface{}, bool) {
+	plugin, ok := mmConfig.PluginSettings.Plugins[pluginName]
+	if !ok {
+		return nil, false
+	}
+
+	val, ok := plugin[key]
+	if !ok {
+		return nil, false
+	}
+	return val, true
+}
+
+func getPluginSettingInt(mmConfig mmModel.Config, key string, def int) int {
+	val, ok := getPluginSetting(mmConfig, key)
+	if !ok {
+		return def
+	}
+	valFloat, ok := val.(float64)
+	if !ok {
+		return def
+	}
+	return int(math.Round(valFloat))
 }
 
 func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {
@@ -270,7 +319,22 @@ func defaultLoggingConfig() string {
 				{"id": 1, "name": "fatal", "stacktrace": true},
 				{"id": 0, "name": "panic", "stacktrace": true}
 			]
-		}
+		},
+		"errors_file": {
+			"Type": "file",
+			"Format": "plain",
+			"Levels": [
+				{"ID": 2, "Name": "error", "Stacktrace": true}
+			],
+			"Options": {
+				"Compress": true,
+				"Filename": "focalboard_errors.log",
+				"MaxAgeDays": 0,
+				"MaxBackups": 5,
+				"MaxSizeMB": 10 
+			},
+			"MaxQueueSize": 1000
+		}		
 	}`
 }
 

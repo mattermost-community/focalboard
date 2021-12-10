@@ -14,6 +14,7 @@ package sqlstore
 
 import (
 	"context"
+	"time"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
@@ -28,6 +29,11 @@ func (s *SQLStore) CleanUpSessions(expireTime int64) error {
 
 func (s *SQLStore) CreateSession(session *model.Session) error {
 	return s.createSession(s.db, session)
+
+}
+
+func (s *SQLStore) CreateSubscription(c store.Container, sub *model.Subscription) (*model.Subscription, error) {
+	return s.createSubscription(s.db, c, sub)
 
 }
 
@@ -57,8 +63,18 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 
 }
 
+func (s *SQLStore) DeleteNotificationHint(c store.Container, blockID string) error {
+	return s.deleteNotificationHint(s.db, c, blockID)
+
+}
+
 func (s *SQLStore) DeleteSession(sessionID string) error {
 	return s.deleteSession(s.db, sessionID)
+
+}
+
+func (s *SQLStore) DeleteSubscription(c store.Container, blockID string, subscriberID string) error {
+	return s.deleteSubscription(s.db, c, blockID, subscriberID)
 
 }
 
@@ -82,6 +98,11 @@ func (s *SQLStore) GetBlockCountsByType() (map[string]int64, error) {
 
 }
 
+func (s *SQLStore) GetBlockHistory(c store.Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	return s.getBlockHistory(s.db, c, blockID, opts)
+
+}
+
 func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]model.Block, error) {
 	return s.getBlocksWithParent(s.db, c, parentID)
 
@@ -99,6 +120,26 @@ func (s *SQLStore) GetBlocksWithRootID(c store.Container, rootID string) ([]mode
 
 func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]model.Block, error) {
 	return s.getBlocksWithType(s.db, c, blockType)
+
+}
+
+func (s *SQLStore) GetBoardAndCard(c store.Container, block *model.Block) (*model.Block, *model.Block, error) {
+	return s.getBoardAndCard(s.db, c, block)
+
+}
+
+func (s *SQLStore) GetBoardAndCardByID(c store.Container, blockID string) (*model.Block, *model.Block, error) {
+	return s.getBoardAndCardByID(s.db, c, blockID)
+
+}
+
+func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint, error) {
+	return s.getNextNotificationHint(s.db, remove)
+
+}
+
+func (s *SQLStore) GetNotificationHint(c store.Container, blockID string) (*model.NotificationHint, error) {
+	return s.getNotificationHint(s.db, c, blockID)
 
 }
 
@@ -127,13 +168,33 @@ func (s *SQLStore) GetSharing(c store.Container, rootID string) (*model.Sharing,
 
 }
 
-func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block, error) {
-	return s.getSubTree2(s.db, c, blockID)
+func (s *SQLStore) GetSubTree2(c store.Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
+	return s.getSubTree2(s.db, c, blockID, opts)
 
 }
 
-func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block, error) {
-	return s.getSubTree3(s.db, c, blockID)
+func (s *SQLStore) GetSubTree3(c store.Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
+	return s.getSubTree3(s.db, c, blockID, opts)
+
+}
+
+func (s *SQLStore) GetSubscribersCountForBlock(c store.Container, blockID string) (int, error) {
+	return s.getSubscribersCountForBlock(s.db, c, blockID)
+
+}
+
+func (s *SQLStore) GetSubscribersForBlock(c store.Container, blockID string) ([]*model.Subscriber, error) {
+	return s.getSubscribersForBlock(s.db, c, blockID)
+
+}
+
+func (s *SQLStore) GetSubscription(c store.Container, blockID string, subscriberID string) (*model.Subscription, error) {
+	return s.getSubscription(s.db, c, blockID, subscriberID)
+
+}
+
+func (s *SQLStore) GetSubscriptions(c store.Container, subscriberID string) ([]*model.Subscription, error) {
+	return s.getSubscriptions(s.db, c, subscriberID)
 
 }
 
@@ -286,6 +347,11 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 
 }
 
+func (s *SQLStore) UpdateSubscribersNotifiedAt(c store.Container, blockID string, notifiedAt int64) error {
+	return s.updateSubscribersNotifiedAt(s.db, c, blockID, notifiedAt)
+
+}
+
 func (s *SQLStore) UpdateUser(user *model.User) error {
 	return s.updateUser(s.db, user)
 
@@ -298,6 +364,11 @@ func (s *SQLStore) UpdateUserPassword(username string, password string) error {
 
 func (s *SQLStore) UpdateUserPasswordByID(userID string, password string) error {
 	return s.updateUserPasswordByID(s.db, userID, password)
+
+}
+
+func (s *SQLStore) UpsertNotificationHint(hint *model.NotificationHint, notificationFreq time.Duration) (*model.NotificationHint, error) {
+	return s.upsertNotificationHint(s.db, hint, notificationFreq)
 
 }
 

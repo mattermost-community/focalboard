@@ -102,6 +102,7 @@ describe('src/components/workspace', () => {
         users: {
             me,
             workspaceUsers: [me],
+            blockSubscriptions: [],
         },
         boards: {
             current: board.id,

@@ -166,6 +166,21 @@ func (p *BlockPatch) Patch(block *Block) *Block {
 	return block
 }
 
+// QuerySubtreeOptions are query options that can be passed to GetSubTree methods.
+type QuerySubtreeOptions struct {
+	BeforeUpdateAt int64  // if non-zero then filter for records with update_at less than BeforeUpdateAt
+	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
+	Limit          uint64 // if non-zero then limit the number of returned records
+}
+
+// QueryBlockHistoryOptions are query options that can be passed to GetBlockHistory.
+type QueryBlockHistoryOptions struct {
+	BeforeUpdateAt int64  // if non-zero then filter for records with update_at less than BeforeUpdateAt
+	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
+	Limit          uint64 // if non-zero then limit the number of returned records
+	Descending     bool   // if true then the records are sorted by insert_at in descending order
+}
+
 // GenerateBlockIDs generates new IDs for all the blocks of the list,
 // keeping consistent any references that other blocks would made to
 // the original IDs, so a tree of blocks can get new IDs and maintain

@@ -30,6 +30,8 @@
 // migrations_files/000014_add_not_null_constraint.up.sql
 // migrations_files/000015_blocks_history_no_nulls.down.sql
 // migrations_files/000015_blocks_history_no_nulls.up.sql
+// migrations_files/000016_subscriptions_table.down.sql
+// migrations_files/000016_subscriptions_table.up.sql
 // DO NOT EDIT!
 
 package migrations
@@ -692,7 +694,47 @@ func _000015_blocks_history_no_nullsUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000015_blocks_history_no_nulls.up.sql", size: 3143, mode: os.FileMode(436), modTime: time.Unix(1639096820, 0)}
+	info := bindataFileInfo{name: "000015_blocks_history_no_nulls.up.sql", size: 3143, mode: os.FileMode(436), modTime: time.Unix(1639144692, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __000016_subscriptions_tableDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\x09\xf2\x0f\x50\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x2d\x2e\x4d\x2a\x4e\x2e\xca\x2c\x28\xc9\xcc\xcf\x2b\xb6\xe6\xc2\xae\x28\x2f\xbf\x24\x33\x2d\x33\x39\x11\xa4\x28\x3e\x23\x33\xaf\xa4\xd8\x9a\x0b\x10\x00\x00\xff\xff\x8c\x8f\xec\x6f\x4f\x00\x00\x00")
+
+func _000016_subscriptions_tableDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000016_subscriptions_tableDownSql,
+		"000016_subscriptions_table.down.sql",
+	)
+}
+
+func _000016_subscriptions_tableDownSql() (*asset, error) {
+	bytes, err := _000016_subscriptions_tableDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000016_subscriptions_table.down.sql", size: 79, mode: os.FileMode(436), modTime: time.Unix(1639144681, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
+var __000016_subscriptions_tableUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xac\x90\x5f\x4b\xf3\x30\x14\x87\xaf\xd7\x4f\x71\x2e\x5b\x28\xe3\x7d\x51\x44\xf0\x2a\xab\x99\x16\xe7\x94\x34\x8a\xbb\x2a\xfd\x73\x8a\x61\x6d\x53\x93\x0c\x2d\x21\xdf\x5d\xea\x9c\x38\x3b\x50\xc4\xdb\xdf\x43\x4e\x1e\x9e\x88\x51\xc2\x29\x70\x32\x5b\x50\x88\xe7\xb0\xbc\xe1\x40\x1f\xe2\x84\x27\x60\xed\xb4\x53\x58\x89\x17\xe7\xf4\x26\xd7\x85\x12\x9d\x11\xb2\xd5\xe0\x7b\x93\xbc\x96\xc5\x3a\x35\x7d\x87\x70\x4f\x58\x74\x49\x98\xff\xff\x5f\x10\xee\x80\x28\x3f\xe6\xa3\x93\x61\x7e\x96\x6a\xad\xbb\xac\xc0\x31\x7a\xbf\x9d\xa3\x3a\x74\xef\x13\x1d\xbd\x6c\xa5\x11\x95\xc0\x32\xcd\x0c\xcc\xe2\x8b\x78\xc9\x43\x6f\x52\x28\xcc\x0c\xee\x4d\x25\xd6\xf8\x65\xba\x65\xf1\x35\x61\x2b\xb8\xa2\x2b\xf0\x77\xce\x21\xec\xfd\x16\x78\x01\x58\x2b\x2a\x98\x36\xbd\x7e\xaa\x9d\x3b\xa7\x73\x72\xb7\xe0\x30\x28\x90\x88\x53\x06\x09\xe5\xb0\x31\xd5\x69\x93\x1f\x5b\x8b\x6d\xe9\xdc\x99\xe7\xfd\x2c\xe9\x56\xbe\xc8\x86\xa4\xe9\xa3\x68\xcd\x5f\x77\x6d\x64\xb9\xad\x93\xf7\x63\x78\xa0\xd2\x9b\x50\xff\x7d\xa5\xdf\x66\x79\x0d\x00\x00\xff\xff\xbe\x9d\xee\xc3\x6a\x02\x00\x00")
+
+func _000016_subscriptions_tableUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000016_subscriptions_tableUpSql,
+		"000016_subscriptions_table.up.sql",
+	)
+}
+
+func _000016_subscriptions_tableUpSql() (*asset, error) {
+	bytes, err := _000016_subscriptions_tableUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000016_subscriptions_table.up.sql", size: 618, mode: os.FileMode(436), modTime: time.Unix(1639144681, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -779,6 +821,8 @@ var _bindata = map[string]func() (*asset, error){
 	"000014_add_not_null_constraint.up.sql": _000014_add_not_null_constraintUpSql,
 	"000015_blocks_history_no_nulls.down.sql": _000015_blocks_history_no_nullsDownSql,
 	"000015_blocks_history_no_nulls.up.sql": _000015_blocks_history_no_nullsUpSql,
+	"000016_subscriptions_table.down.sql": _000016_subscriptions_tableDownSql,
+	"000016_subscriptions_table.up.sql": _000016_subscriptions_tableUpSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -851,6 +895,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"000014_add_not_null_constraint.up.sql": &bintree{_000014_add_not_null_constraintUpSql, map[string]*bintree{}},
 	"000015_blocks_history_no_nulls.down.sql": &bintree{_000015_blocks_history_no_nullsDownSql, map[string]*bintree{}},
 	"000015_blocks_history_no_nulls.up.sql": &bintree{_000015_blocks_history_no_nullsUpSql, map[string]*bintree{}},
+	"000016_subscriptions_table.down.sql": &bintree{_000016_subscriptions_tableDownSql, map[string]*bintree{}},
+	"000016_subscriptions_table.up.sql": &bintree{_000016_subscriptions_tableUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory

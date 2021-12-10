@@ -361,3 +361,51 @@ func (c *Client) WorkspaceUploadFile(workspaceID, rootID string, data io.Reader)
 
 	return fileUploadResponse, BuildResponse(r)
 }
+
+func (c *Client) GetSubscriptionsRoute(workspaceID string) string {
+	return fmt.Sprintf("/workspaces/%s/subscriptions", workspaceID)
+}
+
+func (c *Client) CreateSubscription(workspaceID string, sub *model.Subscription) (*model.Subscription, *Response) {
+	r, err := c.DoAPIPost(c.GetSubscriptionsRoute(workspaceID), toJSON(&sub))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	subNew, err := model.SubscriptionFromJSON(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	return subNew, BuildResponse(r)
+}
+
+func (c *Client) DeleteSubscription(workspaceID string, blockID string, subscriberID string) *Response {
+	url := fmt.Sprintf("%s/%s/%s", c.GetSubscriptionsRoute(workspaceID), blockID, subscriberID)
+
+	r, err := c.DoAPIDelete(url)
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return BuildResponse(r)
+}
+
+func (c *Client) GetSubscriptions(workspaceID string, subscriberID string) ([]*model.Subscription, *Response) {
+	url := fmt.Sprintf("%s/%s", c.GetSubscriptionsRoute(workspaceID), subscriberID)
+
+	r, err := c.DoAPIGet(url, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var subs []*model.Subscription
+	err = json.NewDecoder(r.Body).Decode(&subs)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return subs, BuildResponse(r)
+}

@@ -16,6 +16,10 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+const (
+	maxSearchDepth = 50
+)
+
 type RootIDNilError struct{}
 
 func (re RootIDNilError) Error() string {
@@ -121,13 +125,26 @@ func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, c store.Container, blockT
 	return s.blocksFromRows(rows)
 }
 
-// GetSubTree2 returns blocks within 2 levels of the given blockID.
-func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID string) ([]model.Block, error) {
+// getSubTree2 returns blocks within 2 levels of the given blockID.
+func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
-		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID}).
+		OrderBy("insert_at")
+
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
+	}
+
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.GtOrEq{"update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
+	}
 
 	rows, err := query.Query()
 	if err != nil {
@@ -140,8 +157,8 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, c store.Container, blockID stri
 	return s.blocksFromRows(rows)
 }
 
-// GetSubTree3 returns blocks within 3 levels of the given blockID.
-func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID string) ([]model.Block, error) {
+// getSubTree3 returns blocks within 3 levels of the given blockID.
+func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
 	// This first subquery returns repeated blocks
 	query := s.getQueryBuilder(db).Select(
 		"l3.id",
@@ -158,16 +175,29 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 		"l3.delete_at",
 		"COALESCE(l3.workspace_id, '0')",
 	).
-		From(s.tablePrefix + "blocks as l1").
-		Join(s.tablePrefix + "blocks as l2 on l2.parent_id = l1.id or l2.id = l1.id").
-		Join(s.tablePrefix + "blocks as l3 on l3.parent_id = l2.id or l3.id = l2.id").
+		From(s.tablePrefix + "blocks" + " as l1").
+		Join(s.tablePrefix + "blocks" + " as l2 on l2.parent_id = l1.id or l2.id = l1.id").
+		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
-		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID})
+		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID}).
+		OrderBy("l1.insert_at")
+
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
+	}
+
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.GtOrEq{"update_at": opts.AfterUpdateAt})
+	}
 
 	if s.dbType == postgresDBType {
 		query = query.Options("DISTINCT ON (l3.id)")
 	} else {
 		query = query.Distinct()
+	}
+
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
 	}
 
 	rows, err := query.Query()
@@ -296,6 +326,9 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, c store.Container, block *model
 		return err
 	}
 
+	block.UpdateAt = utils.GetMillis()
+	block.ModifiedBy = userID
+
 	insertQuery := s.getQueryBuilder(db).Insert("").
 		Columns(
 			"workspace_id",
@@ -329,9 +362,6 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, c store.Container, block *model
 		"update_at":             block.UpdateAt,
 	}
 
-	block.UpdateAt = utils.GetMillis()
-	block.ModifiedBy = userID
-
 	if existingBlock != nil {
 		// block with ID exists, so this is an update operation
 		query := s.getQueryBuilder(db).Update(s.tablePrefix+"blocks").
@@ -354,8 +384,6 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, c store.Container, block *model
 	} else {
 		block.CreatedBy = userID
 		block.CreateAt = utils.GetMillis()
-		block.ModifiedBy = userID
-		block.UpdateAt = utils.GetMillis()
 
 		insertQueryValues["created_by"] = block.CreatedBy
 		insertQueryValues["create_at"] = block.CreateAt
@@ -529,6 +557,99 @@ func (s *SQLStore) getBlock(db sq.BaseRunner, c store.Container, blockID string)
 	}
 
 	return &blocks[0], nil
+}
+
+func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	var order string
+	if opts.Descending {
+		order = " DESC "
+	}
+
+	query := s.getQueryBuilder(db).
+		Select(s.blockFields()...).
+		From(s.tablePrefix + "blocks_history").
+		Where(sq.Eq{"id": blockID}).
+		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID}).
+		OrderBy("insert_at" + order)
+
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
+	}
+
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.GtOrEq{"update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`GetBlockHistory ERROR`, mlog.Err(err))
+		return nil, err
+	}
+
+	return s.blocksFromRows(rows)
+}
+
+// getBoardAndCardByID returns the first parent of type `card` and first parent of type `board` for the block specified by ID.
+// `board` and/or `card` may return nil without error if the block does not belong to a board or card.
+func (s *SQLStore) getBoardAndCardByID(db sq.BaseRunner, c store.Container, blockID string) (board *model.Block, card *model.Block, err error) {
+	// use block_history to fetch block in case it was deleted and no longer exists in blocks table.
+	opts := model.QueryBlockHistoryOptions{
+		Limit:      1,
+		Descending: true,
+	}
+
+	blocks, err := s.getBlockHistory(db, c, blockID, opts)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if len(blocks) == 0 {
+		return nil, nil, store.NewErrNotFound(blockID)
+	}
+
+	return s.getBoardAndCard(db, c, &blocks[0])
+}
+
+// getBoardAndCard returns the first parent of type `card` and first parent of type `board` for the specified block.
+// `board` and/or `card` may return nil without error if the block does not belong to a board or card.
+func (s *SQLStore) getBoardAndCard(db sq.BaseRunner, c store.Container, block *model.Block) (board *model.Block, card *model.Block, err error) {
+	var count int // don't let invalid blocks hierarchy cause infinite loop.
+	iter := block
+
+	// use block_history to fetch blocks in case they were deleted and no longer exist in blocks table.
+	opts := model.QueryBlockHistoryOptions{
+		Limit:      1,
+		Descending: true,
+	}
+
+	for {
+		count++
+		if board == nil && iter.Type == model.TypeBoard {
+			board = iter
+		}
+
+		if card == nil && iter.Type == model.TypeCard {
+			card = iter
+		}
+
+		if iter.ParentID == "" || (board != nil && card != nil) || count > maxSearchDepth {
+			break
+		}
+
+		blocks, err := s.getBlockHistory(db, c, iter.ParentID, opts)
+		if err != nil {
+			return nil, nil, err
+		}
+		if len(blocks) == 0 {
+			return board, card, nil
+		}
+		iter = &blocks[0]
+	}
+	return board, card, nil
 }
 
 func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]model.Block, error) {
