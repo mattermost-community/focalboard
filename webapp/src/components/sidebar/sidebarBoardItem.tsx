@@ -25,6 +25,8 @@ import './sidebarBoardItem.scss'
 import {CategoryBlocks} from '../../store/sidebar'
 import ChevronDown from '../../widgets/icons/chevronDown'
 import ChevronRight from '../../widgets/icons/chevronRight'
+import CreateNewFolder from '../../widgets/icons/newFolder'
+import CreateCategory from '../createCategory/createCategory'
 
 type Props = {
     activeCategoryId?: string
@@ -41,6 +43,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const history = useHistory()
     const [deleteBoardOpen, setDeleteBoardOpen] = useState(false)
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, workspaceId?: string}>()
+    const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
 
     const showBoard = useCallback((boardId) => {
         // if the same board, reuse the match params
@@ -112,6 +115,10 @@ const SidebarBoardItem = React.memo((props: Props) => {
 
     const blocks = props.categoryBlocks.blockIDs || []
 
+    const handleCreateNewCategory = () => {
+        setShowCreateCategoryModal(true)
+    }
+
     return (
         <div className='SidebarBoardItem'>
             <div
@@ -132,31 +139,38 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
-                        <Menu.Text
-                            id='deleteBoard'
-                            name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
-                            icon={<DeleteIcon/>}
-                            onClick={() => {
-                                setDeleteBoardOpen(true)
-                            }}
-                        />
+                        {/*<Menu.Text*/}
+                        {/*    id='deleteBoard'*/}
+                        {/*    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}*/}
+                        {/*    icon={<DeleteIcon/>}*/}
+                        {/*    onClick={() => {*/}
+                        {/*        setDeleteBoardOpen(true)*/}
+                        {/*    }}*/}
+                        {/*/>*/}
+
+                        {/*<Menu.Text*/}
+                        {/*    id='duplicateBoard'*/}
+                        {/*    name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}*/}
+                        {/*    icon={<DuplicateIcon/>}*/}
+                        {/*    onClick={() => {*/}
+                        {/*        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoard, {board: props.categoryBlocks.id})*/}
+                        {/*        duplicateBoard(props.categoryBlocks.id || '')*/}
+                        {/*    }}*/}
+                        {/*/>*/}
+
+                        {/*<Menu.Text*/}
+                        {/*    id='templateFromBoard'*/}
+                        {/*    name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}*/}
+                        {/*    onClick={() => {*/}
+                        {/*        addTemplateFromBoard(props.categoryBlocks.id || '')*/}
+                        {/*    }}*/}
+                        {/*/>*/}
 
                         <Menu.Text
-                            id='duplicateBoard'
-                            name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
-                            icon={<DuplicateIcon/>}
-                            onClick={() => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoard, {board: props.categoryBlocks.id})
-                                duplicateBoard(props.categoryBlocks.id || '')
-                            }}
-                        />
-
-                        <Menu.Text
-                            id='templateFromBoard'
-                            name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
-                            onClick={() => {
-                                addTemplateFromBoard(props.categoryBlocks.id || '')
-                            }}
+                            id='createNewCategory'
+                            name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                            icon={<CreateNewFolder/>}
+                            onClick={handleCreateNewCategory}
                         />
                     </Menu>
                 </MenuWrapper>
@@ -190,6 +204,10 @@ const SidebarBoardItem = React.memo((props: Props) => {
                     </div>
                 )
             })}
+
+            {
+                showCreateCategoryModal && <CreateCategory onClose={() => setShowCreateCategoryModal(false)}/>
+            }
 
             {/*{deleteBoardOpen &&*/}
             {/*<DeleteBoardDialog*/}

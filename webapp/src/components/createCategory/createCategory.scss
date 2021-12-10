@@ -1,0 +1,40 @@
+.CreateCategoryModal {
+    color: rgba(var(--center-channel-color-rgb));
+
+    .wrapper {
+        .dialog {
+            height: max-content;
+            width: 600px;
+        }
+
+        .toolbar {
+            flex-direction: row-reverse;
+            padding: 2px 6px;
+        }
+
+        .CreateCategory {
+            display: flex;
+            flex-direction: column;
+            padding: 0 40px;
+            gap: 12px;
+
+            h3 {
+                margin-top: 0;
+            }
+
+            input {
+                font-size: 16px;
+                padding: 6px 12px;
+                border-radius: 4px;
+                border: 2px solid;
+                border-color: var(--sidebar-bg-rgb);
+            }
+
+            .actionButtons {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+            }
+        }
+    }
+}

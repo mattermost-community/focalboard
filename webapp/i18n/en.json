@@ -252,5 +252,9 @@
   "login.register-button": "or create an account if you don't have one",
   "register.login-button": "or log in if you already have an account",
   "register.signup-title": "Sign up for your account",
-  "BoardsSwitcher.Title": "Find Boards"
+  "BoardsSwitcher.Title": "Find Boards",
+  "SidebarCategories.CategoryMenu.CreateNew": "Create New Category",
+  "Categories.CreateCategoryDialog.Placeholder": "Name your category",
+  "Categories.CreateCategoryDialog.CancelText": "Cancel",
+  "Categories.CreateCategoryDialog.CreateText": "Create"
 }
