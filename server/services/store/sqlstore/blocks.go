@@ -390,6 +390,26 @@ func (s *SQLStore) patchBlock(db sq.BaseRunner, c store.Container, blockID strin
 	return s.insertBlock(db, c, block, userID)
 }
 
+func (s *SQLStore) patchBlocks(db sq.BaseRunner, c store.Container, blockPatches *model.BlockPatchBatch, userID string) error {
+	for i, blockID := range blockPatches.BlockIDs {
+		err := s.patchBlock(db, c, blockID, &blockPatches.BlockPatches[i], userID)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *SQLStore) insertBlocks(db sq.BaseRunner, c store.Container, blocks []model.Block, userID string) error {
+	for i := range blocks {
+		err := s.insertBlock(db, c, &blocks[i], userID)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID string, modifiedBy string) error {
 	block, err := s.getBlock(db, c, blockID)
 	if err != nil {

@@ -62,6 +62,37 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 	return nil
 }
 
+func (a *App) PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch, userID string) error {
+	oldBlocks := make([]model.Block, 0, len(blockPatches.BlockIDs))
+	for _, blockID := range blockPatches.BlockIDs {
+		oldBlock, err := a.store.GetBlock(c, blockID)
+		if err != nil {
+			return nil
+		}
+		oldBlocks = append(oldBlocks, *oldBlock)
+	}
+
+	err := a.store.PatchBlocks(c, blockPatches, userID)
+	if err != nil {
+		return err
+	}
+
+	a.metrics.IncrementBlocksPatched(len(oldBlocks))
+	for i, blockID := range blockPatches.BlockIDs {
+		newBlock, err := a.store.GetBlock(c, blockID)
+		if err != nil {
+			return nil
+		}
+		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *newBlock)
+		go func(currentIndex int) {
+			a.webhook.NotifyUpdate(*newBlock)
+			a.notifyBlockChanged(notify.Update, c, newBlock, &oldBlocks[currentIndex], userID)
+		}(i)
+	}
+
+	return nil
+}
+
 func (a *App) InsertBlock(c store.Container, block model.Block, userID string) error {
 	err := a.store.InsertBlock(c, &block, userID)
 	if err == nil {
