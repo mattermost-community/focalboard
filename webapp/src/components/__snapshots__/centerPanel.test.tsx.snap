@@ -833,7 +833,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -1342,7 +1342,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -1895,7 +1895,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -2514,7 +2514,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -3133,7 +3133,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -3752,7 +3752,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -4371,7 +4371,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -4990,7 +4990,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -5609,7 +5609,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -6228,7 +6228,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -6847,7 +6847,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -8278,7 +8278,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
