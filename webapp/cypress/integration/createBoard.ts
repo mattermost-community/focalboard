@@ -38,13 +38,9 @@ describe('Create and delete board / card', () => {
     })
 
     it('Can create and delete a board and a card', () => {
+        // Visit a page and create new empty board
         cy.visit('/')
-
-        // Create new empty board
-        cy.log('**Create new empty board**')
-        cy.contains('+ Add board').click({force: true})
-        cy.contains('Empty board').click({force: true})
-        cy.get('.BoardComponent').should('exist')
+        cy.uiCreateBoard('Empty board')
 
         // Change board title
         cy.log('**Change board title**')
@@ -87,7 +83,7 @@ describe('Create and delete board / card', () => {
 
         // Close card dialog
         cy.log('**Close card dialog**')
-        cy.get('.Dialog.dialog-back .wrapper').click({force: true})
+        cy.get('.Dialog Button[title=\'Close dialog\']').should('be.visible').click()
 
         // Create a card by clicking on the + button
         cy.log('**Create a card by clicking on the + button**')
@@ -140,13 +136,9 @@ describe('Create and delete board / card', () => {
     })
 
     it('MM-T4433 Scrolls the kanban board when dragging card to edge', () => {
+        // Visit a page and create new empty board
         cy.visit('/')
-
-        // Create empty boards
-        cy.log('**Create new empty board**')
-        cy.contains('+ Add board').should('be.visible').click()
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.contains('Empty board').click().wait(1000)
+        cy.uiCreateBoard('Empty board')
 
         // Create 10 empty groups
         cy.log('**Create new empty groups**')

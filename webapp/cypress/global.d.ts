@@ -19,5 +19,12 @@ declare namespace Cypress {
         apiResetBoards: () => Chainable
         uiCreateNewBoard: (title?: string) => Chainable
         uiAddNewGroup: (name?: string) => Chainable
+
+        /**
+         * Create a board on a given menu item.
+         *
+         * @param {string} item - one of the template menu options, ex. 'Empty board'
+         */
+        uiCreateBoard: (item: string) => Chainable
     }
 }
