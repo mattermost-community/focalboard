@@ -675,6 +675,20 @@ func (mr *MockStoreMockRecorder) InsertBlock(arg0, arg1, arg2 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertBlock", reflect.TypeOf((*MockStore)(nil).InsertBlock), arg0, arg1, arg2)
 }
 
+// InsertBlocks mocks base method.
+func (m *MockStore) InsertBlocks(arg0 store.Container, arg1 []model.Block, arg2 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InsertBlocks", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// InsertBlocks indicates an expected call of InsertBlocks.
+func (mr *MockStoreMockRecorder) InsertBlocks(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertBlocks", reflect.TypeOf((*MockStore)(nil).InsertBlocks), arg0, arg1, arg2)
+}
+
 // IsErrNotFound mocks base method.
 func (m *MockStore) IsErrNotFound(arg0 error) bool {
 	m.ctrl.T.Helper()
@@ -701,6 +715,20 @@ func (m *MockStore) PatchBlock(arg0 store.Container, arg1 string, arg2 *model.Bl
 func (mr *MockStoreMockRecorder) PatchBlock(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchBlock", reflect.TypeOf((*MockStore)(nil).PatchBlock), arg0, arg1, arg2, arg3)
+}
+
+// PatchBlocks mocks base method.
+func (m *MockStore) PatchBlocks(arg0 store.Container, arg1 *model.BlockPatchBatch, arg2 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PatchBlocks", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PatchBlocks indicates an expected call of PatchBlocks.
+func (mr *MockStoreMockRecorder) PatchBlocks(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchBlocks", reflect.TypeOf((*MockStore)(nil).PatchBlocks), arg0, arg1, arg2)
 }
 
 // RefreshSession mocks base method.

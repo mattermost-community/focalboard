@@ -30,6 +30,8 @@ type Store interface {
 	// @withTransaction
 	InsertBlock(c Container, block *model.Block, userID string) error
 	// @withTransaction
+	InsertBlocks(c Container, blocks []model.Block, userID string) error
+	// @withTransaction
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
 	GetBlock(c Container, blockID string) (*model.Block, error)
@@ -38,6 +40,8 @@ type Store interface {
 	GetBlockHistory(c Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
 	GetBoardAndCardByID(c Container, blockID string) (board *model.Block, card *model.Block, err error)
 	GetBoardAndCard(c Container, block *model.Block) (board *model.Block, card *model.Block, err error)
+	// @withTransaction
+	PatchBlocks(c Container, blockPatches *model.BlockPatchBatch, userID string) error
 
 	Shutdown() error
 
