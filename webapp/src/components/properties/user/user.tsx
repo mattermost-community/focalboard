@@ -29,14 +29,19 @@ const selectStyles = {
 }
 
 const formatOptionLabel = (user: any) => {
-    const profileImg = imageURLForUser(user.id)
+    let profileImg
+    if (imageURLForUser) {
+        profileImg = imageURLForUser(user.id)
+    }
 
     return (
         <div className='UserProperty-item'>
-            <img
-                alt='UserProperty-avatar'
-                src={profileImg}
-            />
+            {profileImg && (
+                <img
+                    alt='UserProperty-avatar'
+                    src={profileImg}
+                />
+            )}
             {user.username}
         </div>
     )
