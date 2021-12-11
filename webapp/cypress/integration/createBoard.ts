@@ -186,7 +186,7 @@ describe('Create and delete board / card', () => {
             trigger('dragover', {clientX: 200, clientY: Cypress.config().viewportHeight / 2}).
             wait(1500).
             trigger('dragend')
-        
+
         cy.get('.Kanban').invoke('scrollLeft').should('equal', 1)
     })
 })
