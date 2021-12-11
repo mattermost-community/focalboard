@@ -172,5 +172,21 @@ describe('Create and delete board / card', () => {
             trigger('dragend')
 
         cy.get('.Kanban').invoke('scrollLeft').should('not.equal', 0)
+
+        // go into other direction
+        // wait necessary to let state change propagate
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.get('.KanbanCard').
+            trigger('dragstart').
+            wait(500)
+
+        // wait necessary to trigger scroll animation for some time
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.get('.Kanban').
+            trigger('dragover', {clientX: 200, clientY: Cypress.config().viewportHeight / 2}).
+            wait(1500).
+            trigger('dragend')
+        
+        cy.get('.Kanban').invoke('scrollLeft').should('equal', 1)
     })
 })
