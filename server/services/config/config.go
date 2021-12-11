@@ -57,6 +57,17 @@ type Configuration struct {
 
 	AuditCfgFile string `json:"audit_cfg_file" mapstructure:"audit_cfg_file"`
 	AuditCfgJSON string `json:"audit_cfg_json" mapstructure:"audit_cfg_json"`
+
+	NotifyFreqCardSeconds  int `json:"notify_freq_card_seconds" mapstructure:"notify_freq_card_seconds"`
+	NotifyFreqBoardSeconds int `json:"notify_freq_board_seconds" mapstructure:"notify_freq_board_seconds"`
+}
+
+// IsSubscriptionsEnabled returns true if the block change notification subscription service should be enabled.
+func (c *Configuration) IsSubscriptionsEnabled() bool {
+	if enabled, ok := c.FeatureFlags["subscriptions"]; ok && enabled == "true" {
+		return true
+	}
+	return false
 }
 
 // ReadConfigFile read the configuration from the filesystem.
@@ -88,8 +99,9 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	viper.SetDefault("LocalModeSocketLocation", "/var/tmp/focalboard_local.socket")
 	viper.SetDefault("EnablePublicSharedBoards", false)
 	viper.SetDefault("FeatureFlags", map[string]string{})
-
 	viper.SetDefault("AuthMode", "native")
+	viper.SetDefault("NotifyFreqCardSeconds", 120)    // 2 minutes after last card edit
+	viper.SetDefault("NotifyFreqBoardSeconds", 86400) // 1 day after last card edit
 
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {             // Handle errors reading the config file

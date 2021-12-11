@@ -127,7 +127,7 @@ func New(params Params) (*Server, error) {
 	// Init notification services
 	notificationService, errNotify := initNotificationService(params.NotifyBackends, params.Logger)
 	if errNotify != nil {
-		return nil, fmt.Errorf("cannot initialize notification service: %w", errNotify)
+		return nil, fmt.Errorf("cannot initialize notification service(s): %w", errNotify)
 	}
 
 	appServices := app.Services{

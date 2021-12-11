@@ -80,14 +80,10 @@ class Mutator {
 
         return undoManager.perform(
             async () => {
-                await Promise.all(
-                    updatePatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch)),
-                )
+                await octoClient.patchBlocks(newBlocks, updatePatches)
             },
             async () => {
-                await Promise.all(
-                    undoPatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch)),
-                )
+                await octoClient.patchBlocks(newBlocks, undoPatches)
             },
             description,
             this.undoGroupId,
@@ -646,6 +642,32 @@ class Mutator {
         await this.updateBlock(newView, view, description)
     }
 
+    async followBlock(blockId: string, blockType: string, userId: string) {
+        await undoManager.perform(
+            async () => {
+                await octoClient.followBlock(blockId, blockType, userId)
+            },
+            async () => {
+                await octoClient.unfollowBlock(blockId, blockType, userId)
+            },
+            'follow block',
+            this.undoGroupId,
+        )
+    }
+
+    async unfollowBlock(blockId: string, blockType: string, userId: string) {
+        await undoManager.perform(
+            async () => {
+                await octoClient.unfollowBlock(blockId, blockType, userId)
+            },
+            async () => {
+                await octoClient.followBlock(blockId, blockType, userId)
+            },
+            'follow block',
+            this.undoGroupId,
+        )
+    }
+
     // Duplicate
 
     async duplicateCard(
@@ -682,7 +704,12 @@ class Mutator {
             newBlocks,
             description,
             async (respBlocks: Block[]) => {
-                await afterRedo?.(respBlocks[0].id)
+                const card = respBlocks.find((block) => block.type === 'card')
+                if (card) {
+                    await afterRedo?.(card.id)
+                } else {
+                    Utils.logError('card not found for opening.')
+                }
             },
             beforeUndo,
         )

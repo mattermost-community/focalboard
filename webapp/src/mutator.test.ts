@@ -38,7 +38,7 @@ describe('Mutator', () => {
         const board = TestBlockFactory.createBoard()
 
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([card])))
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify({})))
+        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([])))
         const [newBlocks, newCardID] = await mutator.duplicateCard(card.id, board)
 
         expect(newBlocks).toHaveLength(1)

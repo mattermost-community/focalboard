@@ -95,6 +95,16 @@ type BlockPatch struct {
 	DeletedFields []string `json:"deletedFields"`
 }
 
+// BlockPatchBatch is a batch of IDs and patches for modify blocks
+// swagger:model
+type BlockPatchBatch struct {
+	// The id's for of the blocks to patch
+	BlockIDs []string `json:"block_ids"`
+
+	// The BlockPatches to be applied
+	BlockPatches []BlockPatch `json:"block_patches"`
+}
+
 // Archive is an import / export archive.
 type Archive struct {
 	Version int64   `json:"version"`
@@ -154,6 +164,21 @@ func (p *BlockPatch) Patch(block *Block) *Block {
 	}
 
 	return block
+}
+
+// QuerySubtreeOptions are query options that can be passed to GetSubTree methods.
+type QuerySubtreeOptions struct {
+	BeforeUpdateAt int64  // if non-zero then filter for records with update_at less than BeforeUpdateAt
+	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
+	Limit          uint64 // if non-zero then limit the number of returned records
+}
+
+// QueryBlockHistoryOptions are query options that can be passed to GetBlockHistory.
+type QueryBlockHistoryOptions struct {
+	BeforeUpdateAt int64  // if non-zero then filter for records with update_at less than BeforeUpdateAt
+	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
+	Limit          uint64 // if non-zero then limit the number of returned records
+	Descending     bool   // if true then the records are sorted by insert_at in descending order
 }
 
 // GenerateBlockIDs generates new IDs for all the blocks of the list,

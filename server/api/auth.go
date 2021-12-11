@@ -297,6 +297,8 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
+	registerData.Email = strings.TrimSpace(registerData.Email)
+	registerData.Username = strings.TrimSpace(registerData.Username)
 
 	// Validate token
 	if len(registerData.Token) > 0 {

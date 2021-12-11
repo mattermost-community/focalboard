@@ -52,7 +52,7 @@ exports[`components/sidebarSidebar global templates 1`] = `
                     <div
                       class="version"
                     >
-                      v0.11.0
+                      v0.12.0
                     </div>
                   </div>
                 </div>
@@ -236,7 +236,7 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
                     <div
                       class="version"
                     >
-                      v0.11.0
+                      v0.12.0
                     </div>
                   </div>
                 </div>
@@ -610,7 +610,7 @@ exports[`components/sidebarSidebar sidebar in dashboard page 1`] = `
                     <div
                       class="version"
                     >
-                      v0.11.0
+                      v0.12.0
                     </div>
                   </div>
                 </div>

@@ -1,13 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createAsyncThunk} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
 import {UserWorkspace} from '../user'
 import {Utils} from '../utils'
 
-const getUserWorkspaces = async ():Promise<UserWorkspace[]> => {
+import {Subscription} from '../wsclient'
+
+import {RootState} from './index'
+
+const fetchUserWorkspaces = async ():Promise<UserWorkspace[]> => {
     // Concept of workspaces is only applicable when running as a plugin.
     // There is always only one, single workspace in personal server edition.
     return Utils.isFocalboardPlugin() ? client.getUserWorkspaces() : []
@@ -20,7 +24,7 @@ export const initialLoad = createAsyncThunk(
             client.getWorkspace(),
             client.getWorkspaceUsers(),
             client.getAllBlocks(),
-            getUserWorkspaces(),
+            fetchUserWorkspaces(),
         ])
 
         // if no workspace, either bad id, or user doesn't have access
@@ -42,4 +46,11 @@ export const initialReadOnlyLoad = createAsyncThunk(
         const blocks = client.getSubtree(boardId, 3)
         return blocks
     },
+)
+
+export const getUserBlockSubscriptions = (state: RootState): Array<Subscription> => state.users.blockSubscriptions
+
+export const getUserBlockSubscriptionList = createSelector(
+    getUserBlockSubscriptions,
+    (subscriptions) => subscriptions,
 )

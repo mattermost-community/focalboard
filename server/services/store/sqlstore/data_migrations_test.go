@@ -79,19 +79,27 @@ func TestReplaceBlockID(t *testing.T) {
 	block3 := model.Block{ID: "block-id-3", RootID: "block-id-1"}
 	block4 := model.Block{ID: "block-id-4", RootID: "block-id-2"}
 	block5 := model.Block{ID: "block-id-5", RootID: "block-id-1", ParentID: "block-id-1"}
+	block8 := model.Block{
+		ID: "block-id-8", RootID: "root-id-2", Type: model.TypeCard,
+		Fields: map[string]interface{}{"contentOrder": []string{"block-id-1", "block-id-2"}},
+	}
 
 	// blocks from workspace2. They're identical to blocks 1 and 2,
 	// but they shouldn't change
 	block6 := model.Block{ID: "block-id-1", RootID: "root-id-1"}
 	block7 := model.Block{ID: "block-id-2", RootID: "root-id-2", ParentID: "block-id-1"}
+	block9 := model.Block{
+		ID: "block-id-8", RootID: "root-id-2", Type: model.TypeCard,
+		Fields: map[string]interface{}{"contentOrder": []string{"block-id-1", "block-id-2"}},
+	}
 
-	for _, block := range []model.Block{block1, block2, block3, block4, block5} {
+	for _, block := range []model.Block{block1, block2, block3, block4, block5, block8} {
 		err := sqlStore.InsertBlock(container1, &block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	for _, block := range []model.Block{block6, block7} {
+	for _, block := range []model.Block{block6, block7, block9} {
 		err := sqlStore.InsertBlock(container2, &block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
@@ -114,15 +122,23 @@ func TestReplaceBlockID(t *testing.T) {
 	require.NoError(t, err)
 	newBlock7, err := sqlStore.GetBlock(container2, block7.ID)
 	require.NoError(t, err)
+	newBlock8, err := sqlStore.GetBlock(container1, block8.ID)
+	require.NoError(t, err)
+	newBlock9, err := sqlStore.GetBlock(container2, block9.ID)
+	require.NoError(t, err)
 
 	require.Equal(t, newID, newBlock1.ID)
 	require.Equal(t, newID, newBlock2.ParentID)
 	require.Equal(t, newID, newBlock3.RootID)
 	require.Equal(t, newID, newBlock5.RootID)
 	require.Equal(t, newID, newBlock5.ParentID)
+	require.Equal(t, newBlock8.Fields["contentOrder"].([]interface{})[0], newID)
+	require.Equal(t, newBlock8.Fields["contentOrder"].([]interface{})[1], "block-id-2")
 
 	require.Equal(t, currentID, newBlock6.ID)
 	require.Equal(t, currentID, newBlock7.ParentID)
+	require.Equal(t, newBlock9.Fields["contentOrder"].([]interface{})[0], "block-id-1")
+	require.Equal(t, newBlock9.Fields["contentOrder"].([]interface{})[1], "block-id-2")
 }
 
 //nolint:gosec

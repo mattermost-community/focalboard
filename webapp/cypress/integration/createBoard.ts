@@ -11,6 +11,31 @@ describe('Create and delete board / card', () => {
         localStorage.setItem('welcomePageViewed', 'true')
     })
 
+    it('MM-T4274 Create an Empty Board', () => {
+        cy.visit('/')
+
+        cy.contains('+ Add board').should('exist').click()
+
+        // Tests for template selector
+        cy.contains('Select a template').should('exist')
+
+        // Some options are present
+        cy.contains('Meeting Notes').should('exist')
+        cy.contains('Personal Goals').should('exist')
+        cy.contains('Project Tasks').should('exist')
+
+        // Create empty board
+        cy.contains('Empty board').should('exist').click()
+        cy.get('.BoardComponent').should('exist')
+        cy.get('.Editable.title').invoke('attr', 'placeholder').should('contain', 'Untitled board')
+
+        // Change Title
+        cy.get('.Editable.title').
+            type('Testing').
+            type('{enter}').
+            should('have.value', 'Testing')
+    })
+
     it('Can create and delete a board and a card', () => {
         cy.visit('/')
 
