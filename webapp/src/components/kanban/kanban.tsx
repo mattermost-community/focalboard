@@ -255,6 +255,7 @@ const Kanban = (props: Props) => {
                                 card={card}
                                 board={board}
                                 visiblePropertyTemplates={visiblePropertyTemplates}
+                                badgesVisible={Boolean(activeView.fields.cardBadgesVisible)}
                                 key={card.id}
                                 readonly={props.readonly}
                                 isSelected={props.selectedCardIds.includes(card.id)}

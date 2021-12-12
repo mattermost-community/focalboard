@@ -64,6 +64,7 @@ const Gallery = (props: Props): JSX.Element => {
                         visiblePropertyTemplates={visiblePropertyTemplates}
                         visibleTitle={visibleTitle}
                         isSelected={props.selectedCardIds.includes(card.id)}
+                        badgesVisible={Boolean(activeView.fields.cardBadgesVisible)}
                         readonly={props.readonly}
                         onDrop={onDropToCard}
                         isManualSort={isManualSort}

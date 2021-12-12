@@ -36,6 +36,7 @@ type Props = {
     visiblePropertyTemplates: IPropertyTemplate[]
     visibleTitle: boolean
     isSelected: boolean
+    badgesVisible: boolean
     readonly: boolean
     isManualSort: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
@@ -177,10 +178,11 @@ const GalleryCard = React.memo((props: Props) => {
                         </Tooltip>
                     ))}
                 </div>}
-            <CardBadges
-                card={card}
-                className='gallery-badges'
-            />
+            {props.badgesVisible &&
+                <CardBadges
+                    card={card}
+                    className='gallery-badges'
+                />}
         </div>
     )
 })

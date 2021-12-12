@@ -32,6 +32,7 @@ type Props = {
     board: Board
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
+    badgesVisible: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     readonly: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
@@ -166,8 +167,8 @@ const KanbanCard = React.memo((props: Props) => {
                         />
                     </Tooltip>
                 ))}
-            <CardBadges card={card}/>
-        </div>
+                {props.badgesVisible && <CardBadges card={card}/>}
+            </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
 
