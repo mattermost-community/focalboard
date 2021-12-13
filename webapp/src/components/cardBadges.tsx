@@ -11,6 +11,7 @@ import {CommentBlock} from '../blocks/commentBlock'
 import TextIcon from '../widgets/icons/text'
 import MessageIcon from '../widgets/icons/message'
 import CheckIcon from '../widgets/icons/check'
+import {Utils} from '../utils'
 
 import './cardBadges.scss'
 
@@ -19,13 +20,15 @@ type Props = {
     className?: string
 }
 
+type Checkboxes = {
+    total: number
+    checked: number
+}
+
 type Badges = {
     description: boolean
     comments: number
-    checkboxes: {
-        total: number
-        checked: number
-    }
+    checkboxes: Checkboxes
 }
 
 const hasBadges = (badges: Badges): boolean => {
@@ -42,6 +45,9 @@ const calculateBadges = (contents: ContentsType, comments: CommentBlock[]): Badg
     const updateCounters = (block: ContentBlock) => {
         if (block.type === 'text') {
             text++
+            const checkboxes = Utils.countCheckboxesInMarkdown(block.title)
+            total += checkboxes.total
+            checked += checkboxes.checked
         } else if (block.type === 'checkbox') {
             total++
             if (block.fields.value) {
