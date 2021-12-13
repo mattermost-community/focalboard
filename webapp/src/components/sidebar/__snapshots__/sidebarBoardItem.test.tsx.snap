@@ -26,7 +26,16 @@ exports[`components/sidebarBoardItem sidebar call hideSidebar 1`] = `
         class="octo-sidebar-title"
         title="board title"
       >
-        i board title
+        <div
+          class="octo-icon"
+        >
+          i
+        </div>
+        <span
+          class="octo-sidebar-name"
+        >
+          board title
+        </span>
       </div>
       <div
         aria-label="menuwrapper"

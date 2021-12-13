@@ -140,7 +140,16 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="octo-sidebar-title"
               title="board title"
             >
-              i board title
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <span
+                class="octo-sidebar-name"
+              >
+                board title
+              </span>
             </div>
             <div
               aria-label="menuwrapper"
@@ -1278,7 +1287,16 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="octo-sidebar-title"
               title="board title"
             >
-              i board title
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <span
+                class="octo-sidebar-name"
+              >
+                board title
+              </span>
             </div>
             <div
               aria-label="menuwrapper"
