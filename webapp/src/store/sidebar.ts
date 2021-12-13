@@ -28,7 +28,10 @@ export const DefaultCategory: CategoryBlocks = {
 
 export const fetchSidebarCategories = createAsyncThunk(
     'sidebarCategories/fetch',
-    async (teamID: string) => client.getSidebarCategories(teamID),
+    async (teamID: string) => {
+        const categories = await client.getSidebarCategories(teamID)
+        return categories.sort((a, b) => a.name.localeCompare(b.name))
+    },
 )
 
 type Sidebar = {

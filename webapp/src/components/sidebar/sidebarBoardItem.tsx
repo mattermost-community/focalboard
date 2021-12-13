@@ -22,11 +22,15 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import DeleteBoardDialog from './deleteBoardDialog'
 
 import './sidebarBoardItem.scss'
-import {CategoryBlocks} from '../../store/sidebar'
+import {Category, CategoryBlocks} from '../../store/sidebar'
 import ChevronDown from '../../widgets/icons/chevronDown'
 import ChevronRight from '../../widgets/icons/chevronRight'
 import CreateNewFolder from '../../widgets/icons/newFolder'
 import CreateCategory from '../createCategory/createCategory'
+import {useAppSelector} from '../../store/hooks'
+import {IUser} from '../../user'
+import {getMe} from '../../store/users'
+import {Utils} from '../../utils'
 
 type Props = {
     activeCategoryId?: string
@@ -44,6 +48,10 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const [deleteBoardOpen, setDeleteBoardOpen] = useState(false)
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, workspaceId?: string}>()
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
+    const me = useAppSelector<IUser|null>(getMe)
+
+    // TODO un-hardcode this teamID
+    const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
 
     const showBoard = useCallback((boardId) => {
         // if the same board, reuse the match params
@@ -206,7 +214,26 @@ const SidebarBoardItem = React.memo((props: Props) => {
             })}
 
             {
-                showCreateCategoryModal && <CreateCategory onClose={() => setShowCreateCategoryModal(false)}/>
+                showCreateCategoryModal && (
+                    <CreateCategory
+                        onClose={() => setShowCreateCategoryModal(false)}
+                        onCreate={async (name) => {
+                            if (!me) {
+                                Utils.logError('me not initialized')
+                                return
+                            }
+
+                            const category: Category = {
+                                name,
+                                userID: me.id,
+                                teamID,
+                            } as Category
+
+                            await mutator.createCategory(category)
+                            setShowCreateCategoryModal(false)
+                        }}
+                    />
+                )
             }
 
             {/*{deleteBoardOpen &&*/}

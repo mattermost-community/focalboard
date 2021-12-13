@@ -12,6 +12,7 @@ import undoManager from './undomanager'
 import {Utils, IDType} from './utils'
 import {UserSettings} from './userSettings'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/telemetryClient'
+import {Category} from './store/sidebar'
 
 //
 // The Mutator is used to make all changes to server state
@@ -644,6 +645,19 @@ class Mutator {
         const newView = createBoardView(view)
         newView.fields.cardOrder = cardOrder
         await this.updateBlock(newView, view, description)
+    }
+
+    async createCategory(category: Category): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.createSidebarCategory(category)
+            },
+            async () => {
+                await octoClient.deleteSidebarCategory(category.teamID, category.id)
+            },
+            'create/delete sidebar category',
+            this.undoGroupId,
+        )
     }
 
     // Duplicate

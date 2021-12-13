@@ -8,7 +8,7 @@ import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
-import {CategoryBlockAttributes, CategoryBlocks} from './store/sidebar'
+import {Category, CategoryBlocks} from './store/sidebar'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -424,6 +424,24 @@ class OctoClient {
         }
 
         return (await this.getJson(response, [])) as Array<CategoryBlocks>
+    }
+
+    async createSidebarCategory(category: Category): Promise<Response> {
+        const path = `/api/v1/teams/${category.teamID}/categories`
+        const body = JSON.stringify(category)
+        return fetch(this.getBaseURL() + path, {
+            method: 'POST',
+            headers: this.headers(),
+            body,
+        })
+    }
+
+    async deleteSidebarCategory(teamID: string, categoryID: string): Promise<Response> {
+        const url = `/api/v1/teams/${teamID}/categories/${categoryID}`
+        return fetch(url, {
+            method: 'DELETE',
+            headers: this.headers(),
+        })
     }
 }
 

@@ -1,17 +1,19 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useState} from 'react'
 
-import {useIntl} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import Dialog from '../dialog'
 import Button from '../../widgets/buttons/button'
 
 import './createCategory.scss'
+import {Utils} from '../../utils'
 
 type Props = {
     onClose: () => void
+    onCreate: (name: string) => void
 }
 
 const CreateCategory = (props: Props): JSX.Element => {
@@ -21,6 +23,8 @@ const CreateCategory = (props: Props): JSX.Element => {
     const placeholder = intl.formatMessage({id: 'Categories.CreateCategoryDialog.Placeholder', defaultMessage: 'Name your category'})
     const cancelText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CancelText', defaultMessage: 'Cancel'})
     const createText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CreateText', defaultMessage: 'Create'})
+
+    const [name, setName] = useState('')
 
     return (
         <Dialog
@@ -33,23 +37,24 @@ const CreateCategory = (props: Props): JSX.Element => {
                     className='categoryNameInput'
                     type='text'
                     placeholder={placeholder}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    autoFocus={true}
+                    maxLength={100}
                 />
-                <div className='actionButtons'>
+                <div className='createCategoryActions'>
                     <Button
-                        title={cancelText}
-                        size='medium'
-                        submit={true}
+                        size={'medium'}
+                        danger={true}
                         onClick={props.onClose}
                     >
                         {cancelText}
                     </Button>
                     <Button
-                        title={createText}
-                        size='medium'
-                        submit={true}
-                        emphasis={'danger'}
-                        filled={true}
-                        onClick={props.onClose}
+                        size={'medium'}
+                        filled={Boolean(name)}
+                        onClick={() => props.onCreate(name)}
+                        disabled={!name}
                     >
                         {createText}
                     </Button>

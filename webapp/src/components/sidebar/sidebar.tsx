@@ -170,7 +170,6 @@ const Sidebar = React.memo((props: Props) => {
             {/*}*/}
 
             <BoardsSwitcher/>
-            <DashboardButton/>
 
             {/*{*/}
             {/*    props.isDashboard &&*/}
