@@ -10,6 +10,7 @@ exports[`components/cardDialog already following card 1`] = `
     >
       <div
         class="dialog"
+        role="dialog"
       >
         <div
           class="toolbar"
