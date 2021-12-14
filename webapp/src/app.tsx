@@ -19,6 +19,7 @@ import TelemetryClient from './telemetry/telemetryClient'
 import {IAppWindow} from './types'
 import {getMessages} from './i18n'
 import {FlashMessages} from './components/flashMessages'
+import NewVersionBanner from './components/newVersionBanner'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
 import DashboardPage from './pages/dashboard/dashboardPage'
@@ -85,13 +86,6 @@ const App = React.memo((): JSX.Element => {
     const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
 
-    // this is a temporary solution while we're using legacy routes
-    // for shared boards as a way to disable websockets, and should be
-    // removed when anonymous plugin routes are implemented. This
-    // check is used to detect if we're running inside the plugin but
-    // in a legacy route
-    const inPluginLegacy = window.location.pathname.includes('/plugins/focalboard/')
-
     useEffect(() => {
         dispatch(fetchLanguage())
         dispatch(fetchMe())
@@ -106,7 +100,12 @@ const App = React.memo((): JSX.Element => {
         }, [])
     }
 
-    if (!inPluginLegacy) {
+    // this is a temporary solution while we're using legacy routes
+    // for shared boards as a way to disable websockets, and should be
+    // removed when anonymous plugin routes are implemented. This
+    // check is used to detect if we're running inside the plugin but
+    // in a legacy route
+    if (!Utils.isFocalboardLegacy()) {
         useEffect(() => {
             wsClient.open()
             return () => {
@@ -131,28 +130,6 @@ const App = React.memo((): JSX.Element => {
         return Utils.isFocalboardPlugin() && loggedIn === true && !UserSettings.welcomePageViewed
     }
 
-    const buildOriginalPath = (workspaceId = '', boardId = '', viewId = '', cardId = '') => {
-        let originalPath = ''
-
-        if (workspaceId) {
-            originalPath += `${workspaceId}/`
-        }
-
-        if (boardId) {
-            originalPath += `${boardId}/`
-        }
-
-        if (viewId) {
-            originalPath += `${viewId}/`
-        }
-
-        if (cardId) {
-            originalPath += `${cardId}/`
-        }
-
-        return originalPath
-    }
-
     return (
         <IntlProvider
             locale={language.split(/[_]/)[0]}
@@ -165,8 +142,36 @@ const App = React.memo((): JSX.Element => {
                 >
                     <div id='frame'>
                         <div id='main'>
+                            <NewVersionBanner/>
                             <Switch>
                                 {globalErrorRedirect}
+                                {
+                                    Utils.isFocalboardPlugin() &&
+                                    <Route
+                                        path='/'
+                                        exact={true}
+                                        render={() => {
+                                            if (loggedIn === false) {
+                                                return <Redirect to='/login'/>
+                                            }
+
+                                            if (continueToWelcomeScreen()) {
+                                                return <Redirect to={'/welcome'}/>
+                                            }
+
+                                            if (Utils.isFocalboardPlugin() && UserSettings.lastWorkspaceId) {
+                                                return <Redirect to={`/workspace/${UserSettings.lastWorkspaceId}/${UserSettings.lastBoardId}/${UserSettings.lastViewId}`}/>
+                                            }
+
+                                            if (loggedIn === true) {
+                                                return <BoardPage/>
+                                            }
+
+                                            return null
+                                        }}
+                                    />
+                                }
+
                                 <Route path='/error'>
                                     <ErrorPage/>
                                 </Route>
@@ -190,7 +195,7 @@ const App = React.memo((): JSX.Element => {
                                         }
 
                                         if (continueToWelcomeScreen()) {
-                                            const originalPath = `/board/${buildOriginalPath('', boardId, viewId, cardId)}`
+                                            const originalPath = `/board/${Utils.buildOriginalPath('', boardId, viewId, cardId)}`
                                             return <Redirect to={`/welcome?r=${originalPath}`}/>
                                         }
 
@@ -207,7 +212,7 @@ const App = React.memo((): JSX.Element => {
                                 <Route
                                     path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'
                                     render={({match: {params: {workspaceId, boardId, viewId, cardId}}}) => {
-                                        const originalPath = `/workspace/${buildOriginalPath(workspaceId, boardId, viewId, cardId)}`
+                                        const originalPath = `/workspace/${Utils.buildOriginalPath(workspaceId, boardId, viewId, cardId)}`
                                         if (loggedIn === false) {
                                             let redirectUrl = '/' + Utils.buildURL(originalPath)
                                             if (redirectUrl.indexOf('//') === 0) {
@@ -240,31 +245,32 @@ const App = React.memo((): JSX.Element => {
                                     <WelcomePage/>
                                 </Route>
 
-                                <Route
-                                    path='/:boardId?/:viewId?/:cardId?'
-                                    render={({match: {params: {boardId, viewId, cardId}}}) => {
-                                        // Since these 3 path values are optional and they can be anything, we can pass /x/y/z and it will
-                                        // match this route however these values may not be valid so we should at the very least check
-                                        // board id for descisions made below
-                                        const boardIdIsValidUUIDV4 = UUID_REGEX.test(boardId || '')
+                                {!Utils.isFocalboardPlugin() &&
+                                    <Route
+                                        path='/:boardId?/:viewId?/:cardId?'
+                                        render={({match: {params: {boardId, viewId, cardId}}}) => {
+                                            // Since these 3 path values are optional and they can be anything, we can pass /x/y/z and it will
+                                            // match this route however these values may not be valid so we should at the very least check
+                                            // board id for descisions made below
+                                            const boardIdIsValidUUIDV4 = UUID_REGEX.test(boardId || '')
 
-                                        if (loggedIn === false) {
-                                            return <Redirect to='/login'/>
-                                        }
+                                            if (loggedIn === false) {
+                                                return <Redirect to='/login'/>
+                                            }
 
-                                        if (continueToWelcomeScreen()) {
-                                            const originalPath = `/${buildOriginalPath('', boardId, viewId, cardId)}`
-                                            const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
-                                            return <Redirect to={`/welcome?${queryString}`}/>
-                                        }
+                                            if (continueToWelcomeScreen()) {
+                                                const originalPath = `/${Utils.buildOriginalPath('', boardId, viewId, cardId)}`
+                                                const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
+                                                return <Redirect to={`/welcome?${queryString}`}/>
+                                            }
 
-                                        if (loggedIn === true) {
-                                            return <BoardPage/>
-                                        }
+                                            if (loggedIn === true) {
+                                                return <BoardPage/>
+                                            }
 
-                                        return null
-                                    }}
-                                />
+                                            return null
+                                        }}
+                                    />}
                             </Switch>
                         </div>
                     </div>

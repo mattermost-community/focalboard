@@ -219,7 +219,7 @@ class Utils {
                 'rel="noreferrer" ' +
                 `href="${encodeURI(href || '')}" ` +
                 `title="${title ? encodeURI(title) : ''}" ` +
-                `onclick="event.stopPropagation();${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
+                `onclick="${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
 
@@ -508,6 +508,13 @@ class Utils {
         return Boolean(window.isFocalboardPlugin)
     }
 
+    // this is a temporary solution while we're using legacy routes
+    // for shared boards as a way to check if we're accessing the
+    // legacy routes inside the plugin
+    static isFocalboardLegacy(): boolean {
+        return window.location.pathname.includes('/plugins/focalboard')
+    }
+
     static fixBlock(block: Block): Block {
         switch (block.type) {
         case 'board':
@@ -539,41 +546,39 @@ class Utils {
     }
 
     /**
-     * Boolean function to check if a version is greater than another.
+     * Function to check how a version compares to another
      *
-     * currentVersionParam: The version being checked
-     * compareVersionParam: The version to compare the former version against
-     *
-     * eg.  currentVersionParam = 4.16.0, compareVersionParam = 4.17.0 returns false
-     *      currentVersionParam = 4.16.1, compareVersionParam = 4.16.1 returns true
+     * eg.  versionA = 4.16.0, versionB = 4.17.0 returns  1
+     *      versionA = 4.16.1, versionB = 4.16.1 returns  0
+     *      versionA = 4.16.1, versionB = 4.15.0 returns -1
      */
-    static isVersionGreaterThanOrEqualTo(currentVersionParam: string, compareVersionParam: string): boolean {
-        if (currentVersionParam === compareVersionParam) {
-            return true
+    static compareVersions(versionA: string, versionB: string): number {
+        if (versionA === versionB) {
+            return 0
         }
 
         // We only care about the numbers
-        const currentVersionNumber = (currentVersionParam || '').split('.').filter((x) => (/^[0-9]+$/).exec(x) !== null)
-        const compareVersionNumber = (compareVersionParam || '').split('.').filter((x) => (/^[0-9]+$/).exec(x) !== null)
+        const versionANumber = (versionA || '').split('.').filter((x) => (/^[0-9]+$/).exec(x) !== null)
+        const versionBNumber = (versionB || '').split('.').filter((x) => (/^[0-9]+$/).exec(x) !== null)
 
-        for (let i = 0; i < Math.max(currentVersionNumber.length, compareVersionNumber.length); i++) {
-            const currentVersion = parseInt(currentVersionNumber[i], 10) || 0
-            const compareVersion = parseInt(compareVersionNumber[i], 10) || 0
-            if (currentVersion > compareVersion) {
-                return true
+        for (let i = 0; i < Math.max(versionANumber.length, versionBNumber.length); i++) {
+            const a = parseInt(versionANumber[i], 10) || 0
+            const b = parseInt(versionBNumber[i], 10) || 0
+            if (a > b) {
+                return -1
             }
 
-            if (currentVersion < compareVersion) {
-                return false
+            if (a < b) {
+                return 1
             }
         }
 
         // If all components are equal, then return true
-        return true
+        return 0
     }
 
     static isDesktop(): boolean {
-        return Utils.isDesktopApp() && Utils.isVersionGreaterThanOrEqualTo(Utils.getDesktopVersion(), '5.0.0')
+        return Utils.isDesktopApp() && (Utils.compareVersions(Utils.getDesktopVersion(), '5.0.0') <= 0)
     }
 
     static getReadToken(): string {
@@ -584,6 +589,28 @@ class Utils {
 
     static generateClassName(conditions: Record<string, boolean>): string {
         return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
+    }
+
+    static buildOriginalPath(workspaceId = '', boardId = '', viewId = '', cardId = ''): string {
+        let originalPath = ''
+
+        if (workspaceId) {
+            originalPath += `${workspaceId}/`
+        }
+
+        if (boardId) {
+            originalPath += `${boardId}/`
+        }
+
+        if (viewId) {
+            originalPath += `${viewId}/`
+        }
+
+        if (cardId) {
+            originalPath += `${cardId}/`
+        }
+
+        return originalPath
     }
 }
 

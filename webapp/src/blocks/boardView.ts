@@ -1,12 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../telemetry/telemetryClient'
-
 import {Block, createBlock} from './block'
 import {FilterGroup, createFilterGroup} from './filterGroup'
 
-type IViewType = 'board' | 'table' | 'gallery' // | 'calendar' | 'list'
+type IViewType = 'board' | 'table' | 'gallery' | 'calendar'
 type ISortOption = { propertyId: '__title' | string, reversed: boolean }
 
 type KanbanCalculationFields = {
@@ -17,6 +15,7 @@ type KanbanCalculationFields = {
 type BoardViewFields = {
     viewType: IViewType
     groupById?: string
+    dateDisplayPropertyId?: string
     sortOptions: ISortOption[]
     visiblePropertyIds: string[]
     visibleOptionIds: string[]
@@ -35,13 +34,13 @@ type BoardView = Block & {
 }
 
 function createBoardView(block?: Block): BoardView {
-    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardView, {viewType: block?.fields.viewType || 'board'})
     return {
         ...createBlock(block),
         type: 'view',
         fields: {
             viewType: block?.fields.viewType || 'board',
             groupById: block?.fields.groupById,
+            dateDisplayPropertyId: block?.fields.dateDisplayPropertyId,
             sortOptions: block?.fields.sortOptions?.map((o: ISortOption) => ({...o})) || [],
             visiblePropertyIds: block?.fields.visiblePropertyIds?.slice() || [],
             visibleOptionIds: block?.fields.visibleOptionIds?.slice() || [],

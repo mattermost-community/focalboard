@@ -17,6 +17,16 @@ import Switch from '../../widgets/switch'
 import SearchIcon from '../../widgets/icons/search'
 import {UserSettings} from '../../userSettings'
 
+const checkBoardCount = (numsArr: RegExpMatchArray, boardCount: number) => {
+    for (const n of numsArr) {
+        if (Number(n) === boardCount) {
+            return true
+        }
+    }
+
+    return false
+}
+
 const DashboardCenterContent = (): JSX.Element => {
     const rawWorkspaces = useAppSelector<UserWorkspace[]>(getUserWorkspaceList) || []
     const dispatch = useAppDispatch()
@@ -34,8 +44,11 @@ const DashboardCenterContent = (): JSX.Element => {
         initializeUserWorkspaces()
     }, [])
 
+    const titlePattern = new RegExp(searchFilter.split(' ').join('|'), 'i')
+    const extractedNumbers = searchFilter.match(/(\d+)/g)
+
     const userWorkspaces = rawWorkspaces.
-        filter((workspace) => (workspace.boardCount > 0 || showEmptyWorkspaces) && (workspace.title.toLowerCase().includes(searchFilter) || workspace.boardCount.toString().includes(searchFilter))).
+        filter((workspace) => (workspace.boardCount > 0 || showEmptyWorkspaces) && (titlePattern.test(workspace.title) || (extractedNumbers && checkBoardCount(extractedNumbers, workspace.boardCount)))).
         sort((a, b) => {
             if ((a.boardCount === 0 && b.boardCount === 0) || (a.boardCount !== 0 && b.boardCount !== 0)) {
                 return a.title.localeCompare(b.title)

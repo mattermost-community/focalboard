@@ -18,6 +18,8 @@ import CardDialog from './cardDialog'
 
 jest.mock('../mutator')
 jest.mock('../utils')
+jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
+
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(mutator, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
@@ -37,6 +39,13 @@ describe('components/cardDialog', () => {
     card.createdBy = 'user-id-1'
 
     const state = {
+        clientConfig: {
+            value: {
+                featureFlags: {
+                    subscriptions: true,
+                },
+            },
+        },
         comments: {
             comments: {},
         },
@@ -45,6 +54,16 @@ describe('components/cardDialog', () => {
             cards: {
                 [card.id]: card,
             },
+        },
+        users: {
+            workspaceUsers: {
+                1: {username: 'abc'},
+                2: {username: 'd'},
+                3: {username: 'e'},
+                4: {username: 'f'},
+                5: {username: 'g'},
+            },
+            blockSubscriptions: [],
         },
     }
     const store = mockStateStore([], state)
@@ -85,7 +104,7 @@ describe('components/cardDialog', () => {
                         cardId={card.id}
                         onClose={jest.fn()}
                         showCard={jest.fn()}
-                        readonly={false}
+                        readonly={true}
                     />
                 </ReduxProvider>,
             ))
@@ -159,8 +178,58 @@ describe('components/cardDialog', () => {
         userEvent.click(buttonMenu)
         const buttonDelete = screen.getByRole('button', {name: 'Delete'})
         userEvent.click(buttonDelete)
+
+        const confirmDialog = screen.getByTitle('Confirmation Dialog Box')
+        expect(confirmDialog).toBeDefined()
+
+        const confirmButton = screen.getByTitle('Delete')
+        expect(confirmButton).toBeDefined()
+
+        //click delete button
+        userEvent.click(confirmButton!)
+
+        // should be called once on confirming delete
         expect(mockedMutator.deleteBlock).toBeCalledTimes(1)
     })
+
+    test('return cardDialog menu content and cancel delete confirmation do nothing', async () => {
+        let container
+        await act(async () => {
+            const result = render(wrapDNDIntl(
+                <ReduxProvider store={store}>
+                    <CardDialog
+                        board={board}
+                        activeView={boardView}
+                        views={[boardView]}
+                        cards={[card]}
+                        cardId={card.id}
+                        onClose={jest.fn()}
+                        showCard={jest.fn()}
+                        readonly={false}
+                    />
+                </ReduxProvider>,
+            ))
+            container = result.container
+        })
+
+        const buttonMenu = screen.getAllByRole('button', {name: 'menuwrapper'})[0]
+        userEvent.click(buttonMenu)
+        const buttonDelete = screen.getByRole('button', {name: 'Delete'})
+        userEvent.click(buttonDelete)
+
+        const confirmDialog = screen.getByTitle('Confirmation Dialog Box')
+        expect(confirmDialog).toBeDefined()
+
+        const cancelButton = screen.getByTitle('Cancel')
+        expect(cancelButton).toBeDefined()
+
+        //click delete button
+        userEvent.click(cancelButton!)
+
+        // should do nothing  on cancel delete dialog
+        expect(container).toMatchSnapshot()
+    })
+
     test('return cardDialog menu content and do a New template from card', async () => {
         await act(async () => {
             render(wrapDNDIntl(
@@ -207,5 +276,41 @@ describe('components/cardDialog', () => {
         const buttonCopy = screen.getByRole('button', {name: 'Copy link'})
         userEvent.click(buttonCopy)
         expect(mockedUtils.copyTextToClipboard).toBeCalledTimes(1)
+    })
+
+    test('already following card', async () => {
+        // simply doing {...state} gives a TypeScript error
+        // when you try updating it's values.
+        const newState = JSON.parse(JSON.stringify(state))
+        newState.users.blockSubscriptions = [{blockId: card.id}]
+        newState.clientConfig = {
+            value: {
+                featureFlags: {
+                    subscriptions: true,
+                },
+            },
+        }
+
+        const newStore = mockStateStore([], newState)
+
+        let container
+        await act(async () => {
+            const result = render(wrapDNDIntl(
+                <ReduxProvider store={newStore}>
+                    <CardDialog
+                        board={board}
+                        activeView={boardView}
+                        views={[boardView]}
+                        cards={[card]}
+                        cardId={card.id}
+                        onClose={jest.fn()}
+                        showCard={jest.fn()}
+                        readonly={false}
+                    />
+                </ReduxProvider>,
+            ))
+            container = result.container
+        })
+        expect(container).toMatchSnapshot()
     })
 })
