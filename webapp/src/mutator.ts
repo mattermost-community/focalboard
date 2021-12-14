@@ -80,14 +80,10 @@ class Mutator {
 
         return undoManager.perform(
             async () => {
-                await Promise.all(
-                    updatePatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch)),
-                )
+                await octoClient.patchBlocks(newBlocks, updatePatches)
             },
             async () => {
-                await Promise.all(
-                    undoPatches.map((patch, i) => octoClient.patchBlock(newBlocks[i].id, patch)),
-                )
+                await octoClient.patchBlocks(newBlocks, undoPatches)
             },
             description,
             this.undoGroupId,
@@ -644,6 +640,32 @@ class Mutator {
         const newView = createBoardView(view)
         newView.fields.cardOrder = cardOrder
         await this.updateBlock(newView, view, description)
+    }
+
+    async followBlock(blockId: string, blockType: string, userId: string) {
+        await undoManager.perform(
+            async () => {
+                await octoClient.followBlock(blockId, blockType, userId)
+            },
+            async () => {
+                await octoClient.unfollowBlock(blockId, blockType, userId)
+            },
+            'follow block',
+            this.undoGroupId,
+        )
+    }
+
+    async unfollowBlock(blockId: string, blockType: string, userId: string) {
+        await undoManager.perform(
+            async () => {
+                await octoClient.unfollowBlock(blockId, blockType, userId)
+            },
+            async () => {
+                await octoClient.followBlock(blockId, blockType, userId)
+            },
+            'follow block',
+            this.undoGroupId,
+        )
     }
 
     // Duplicate

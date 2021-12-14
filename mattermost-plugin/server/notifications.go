@@ -4,9 +4,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify/notifymentions"
+	"github.com/mattermost/focalboard/server/services/notify/notifysubscriptions"
 	"github.com/mattermost/focalboard/server/services/notify/plugindelivery"
+	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/ws"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
@@ -21,7 +24,47 @@ const (
 	botDescription = "Created by Boards plugin."
 )
 
-func createMentionsNotifyBackend(client *pluginapi.Client, serverRoot string, logger *mlog.Logger) (notify.Backend, error) {
+type notifyBackendParams struct {
+	cfg        *config.Configuration
+	client     *pluginapi.Client
+	serverRoot string
+	logger     *mlog.Logger
+}
+
+func createMentionsNotifyBackend(params notifyBackendParams) (*notifymentions.Backend, error) {
+	delivery, err := createDelivery(params.client, params.serverRoot)
+	if err != nil {
+		return nil, err
+	}
+
+	backend := notifymentions.New(delivery, params.logger)
+
+	return backend, nil
+}
+
+func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.Store,
+	wsPluginAdapter ws.PluginAdapterInterface) (*notifysubscriptions.Backend, error) {
+	//
+	delivery, err := createDelivery(params.client, params.serverRoot)
+	if err != nil {
+		return nil, err
+	}
+
+	backendParams := notifysubscriptions.BackendParams{
+		ServerRoot:             params.serverRoot,
+		Store:                  store,
+		Delivery:               delivery,
+		WSAdapter:              wsPluginAdapter,
+		Logger:                 params.logger,
+		NotifyFreqCardSeconds:  params.cfg.NotifyFreqCardSeconds,
+		NotifyFreqBoardSeconds: params.cfg.NotifyFreqBoardSeconds,
+	}
+	backend := notifysubscriptions.New(backendParams)
+
+	return backend, nil
+}
+
+func createDelivery(client *pluginapi.Client, serverRoot string) (*plugindelivery.PluginDelivery, error) {
 	bot := &model.Bot{
 		Username:    botUsername,
 		DisplayName: botDisplayname,
@@ -34,11 +77,7 @@ func createMentionsNotifyBackend(client *pluginapi.Client, serverRoot string, lo
 
 	pluginAPI := &pluginAPIAdapter{client: client}
 
-	delivery := plugindelivery.New(botID, serverRoot, pluginAPI)
-
-	backend := notifymentions.New(delivery, logger)
-
-	return backend, nil
+	return plugindelivery.New(botID, serverRoot, pluginAPI), nil
 }
 
 type pluginAPIAdapter struct {

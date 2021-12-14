@@ -61,6 +61,8 @@
   "CardDetailProperty.property-deleted": "Deleted {propertyName} Successfully!",
   "CardDetailProperty.property-name-change-subtext": "type from \"{oldPropType}\" to \"{newPropType}\"",
   "CardDetailProperty.property-type-change-subtext": "name to \"{newPropName}\"",
+  "CardDetail.Follow": "Follow",
+  "CardDetail.Following": "Following",
   "CardDialog.copiedLink": "Copied!",
   "CardDialog.copyLink": "Copy link",
   "CardDialog.editing-template": "You're editing a template.",

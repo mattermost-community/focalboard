@@ -62,3 +62,25 @@ func TestInsertBlock(t *testing.T) {
 		require.Error(t, err, "error")
 	})
 }
+
+func TestPatchBlocks(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	container := st.Container{
+		WorkspaceID: "0",
+	}
+	t.Run("patchBlocks success scenerio", func(t *testing.T) {
+		blockPatches := model.BlockPatchBatch{}
+		th.Store.EXPECT().PatchBlocks(gomock.Eq(container), gomock.Eq(&blockPatches), gomock.Eq("user-id-1")).Return(nil)
+		err := th.App.PatchBlocks(container, &blockPatches, "user-id-1")
+		require.NoError(t, err)
+	})
+
+	t.Run("patchBlocks error scenerio", func(t *testing.T) {
+		blockPatches := model.BlockPatchBatch{}
+		th.Store.EXPECT().PatchBlocks(gomock.Eq(container), gomock.Eq(&blockPatches), gomock.Eq("user-id-1")).Return(blockError{"error"})
+		err := th.App.PatchBlocks(container, &blockPatches, "user-id-1")
+		require.Error(t, err, "error")
+	})
+}

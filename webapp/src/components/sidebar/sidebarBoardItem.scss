@@ -90,5 +90,18 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        display: flex;
+        align-items: baseline;
+
+        .octo-icon {
+            margin-right: 6px;
+        }
+
+        .octo-sidebar-name {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 }
