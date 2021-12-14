@@ -285,7 +285,6 @@ class OctoClient {
     }
 
     // Sharing
-
     async getSharing(rootId: string): Promise<ISharing | undefined> {
         const path = this.workspacePath() + `/sharing/${rootId}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
@@ -438,9 +437,33 @@ class OctoClient {
 
     async deleteSidebarCategory(teamID: string, categoryID: string): Promise<Response> {
         const url = `/api/v1/teams/${teamID}/categories/${categoryID}`
-        return fetch(url, {
+        return fetch(this.getBaseURL() + url, {
             method: 'DELETE',
             headers: this.headers(),
+        })
+    }
+
+    async updateSidebarCategory(category: Category): Promise<Response> {
+        const path = `/api/v1/teams/${category.teamID}/categories/${category.id}`
+        const body = JSON.stringify(category)
+        return fetch(this.getBaseURL() + path, {
+            method: 'PUT',
+            headers: this.headers(),
+            body,
+        })
+    }
+
+    async moveBlockToCategory(teamID: string, blockID: string, toCategoryID: string, fromCategoryID: string): Promise<Response> {
+        const url = `/api/v1/teams/${teamID}/categories/${toCategoryID}/blocks/${blockID}`
+        const payload = {
+            fromCategoryID,
+        }
+        const body = JSON.stringify(payload)
+
+        return fetch(this.getBaseURL() + url, {
+            method: 'POST',
+            headers: this.headers(),
+            body,
         })
     }
 }

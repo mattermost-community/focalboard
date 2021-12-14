@@ -31,6 +31,9 @@ import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
 import {getMe} from '../../store/users'
 import {Utils} from '../../utils'
+import Update from '../../widgets/icons/update'
+import Folder from '../../widgets/icons/folder'
+import CheckIcon from '../../widgets/icons/check'
 
 type Props = {
     activeCategoryId?: string
@@ -39,6 +42,7 @@ type Props = {
     hideSidebar: () => void
     categoryBlocks: CategoryBlocks
     boards: Board[]
+    allCategories: Array<CategoryBlocks>
 }
 
 const SidebarBoardItem = React.memo((props: Props) => {
@@ -48,6 +52,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const [deleteBoardOpen, setDeleteBoardOpen] = useState(false)
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, workspaceId?: string}>()
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
+    const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
     const me = useAppSelector<IUser|null>(getMe)
 
     // TODO un-hardcode this teamID
@@ -127,6 +132,29 @@ const SidebarBoardItem = React.memo((props: Props) => {
         setShowCreateCategoryModal(true)
     }
 
+    const handleDeleteCategory = async () => {
+        await mutator.deleteCategory(teamID, props.categoryBlocks.id)
+    }
+
+    const handleUpdateCategory = async () => {
+        setShowUpdateCategoryModal(true)
+    }
+
+    const generateMoveToCategoryOptions = (blockID: string) => {
+        return props.allCategories.map((category) => (
+            <Menu.Text
+                key={category.id}
+                id={category.id}
+                name={category.name}
+                icon={category.id === props.categoryBlocks.id ? <CheckIcon/> : <Folder/>}
+                onClick={async (toCategoryID) => {
+                    const fromCategoryID = props.categoryBlocks.id
+                    await mutator.moveBlockToCategory(teamID, blockID, toCategoryID, fromCategoryID)
+                }}
+            />
+        ))
+    }
+
     return (
         <div className='SidebarBoardItem'>
             <div
@@ -147,39 +175,29 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
-                        {/*<Menu.Text*/}
-                        {/*    id='deleteBoard'*/}
-                        {/*    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}*/}
-                        {/*    icon={<DeleteIcon/>}*/}
-                        {/*    onClick={() => {*/}
-                        {/*        setDeleteBoardOpen(true)*/}
-                        {/*    }}*/}
-                        {/*/>*/}
-
-                        {/*<Menu.Text*/}
-                        {/*    id='duplicateBoard'*/}
-                        {/*    name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}*/}
-                        {/*    icon={<DuplicateIcon/>}*/}
-                        {/*    onClick={() => {*/}
-                        {/*        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoard, {board: props.categoryBlocks.id})*/}
-                        {/*        duplicateBoard(props.categoryBlocks.id || '')*/}
-                        {/*    }}*/}
-                        {/*/>*/}
-
-                        {/*<Menu.Text*/}
-                        {/*    id='templateFromBoard'*/}
-                        {/*    name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}*/}
-                        {/*    onClick={() => {*/}
-                        {/*        addTemplateFromBoard(props.categoryBlocks.id || '')*/}
-                        {/*    }}*/}
-                        {/*/>*/}
-
                         <Menu.Text
                             id='createNewCategory'
                             name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
                             icon={<CreateNewFolder/>}
                             onClick={handleCreateNewCategory}
                         />
+                        {
+                            props.categoryBlocks.id !== '' &&
+                            <React.Fragment>
+                                <Menu.Text
+                                    id='deleteCategory'
+                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Delete', defaultMessage: 'Delete Category'})}
+                                    icon={<DeleteIcon/>}
+                                    onClick={handleDeleteCategory}
+                                />
+                                <Menu.Text
+                                    id='updateCategory'
+                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'SidebarCategories.CategoryMenu.Update'})}
+                                    icon={<Update/>}
+                                    onClick={handleUpdateCategory}
+                                />
+                            </React.Fragment>
+                        }
                     </Menu>
                 </MenuWrapper>
             </div>
@@ -209,6 +227,19 @@ const SidebarBoardItem = React.memo((props: Props) => {
                         >
                             {thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: blockID})}
                         </div>
+                        <MenuWrapper stopPropagationOnToggle={true}>
+                            <IconButton icon={<OptionsIcon/>}/>
+                            <Menu position='left'>
+                                <Menu.SubMenu
+                                    id='moveBlock'
+                                    name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
+                                    icon={<CreateNewFolder/>}
+                                    position='bottom'
+                                >
+                                    {generateMoveToCategoryOptions(blockID)}
+                                </Menu.SubMenu>
+                            </Menu>
+                        </MenuWrapper>
                     </div>
                 )
             })}
@@ -231,6 +262,31 @@ const SidebarBoardItem = React.memo((props: Props) => {
 
                             await mutator.createCategory(category)
                             setShowCreateCategoryModal(false)
+                        }}
+                    />
+                )
+            }
+
+            {
+                showUpdateCategoryModal && (
+                    <CreateCategory
+                        initialValue={props.categoryBlocks.name}
+                        onClose={() => setShowUpdateCategoryModal(false)}
+                        onCreate={async (name) => {
+                            if (!me) {
+                                Utils.logError('me not initialized')
+                                return
+                            }
+
+                            const category: Category = {
+                                name,
+                                id: props.categoryBlocks.id,
+                                userID: me.id,
+                                teamID,
+                            } as Category
+
+                            await mutator.updateCategory(category)
+                            setShowUpdateCategoryModal(false)
                         }}
                     />
                 )

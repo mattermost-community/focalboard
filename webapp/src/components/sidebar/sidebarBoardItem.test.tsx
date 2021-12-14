@@ -17,7 +17,8 @@ import SidebarBoardItem from './sidebarBoardItem'
 describe('components/sidebarBoardItem', () => {
     test('sidebar call hideSidebar', () => {
         const board = TestBlockFactory.createBoard()
-        const view = TestBlockFactory.createBoardView(board)
+
+        // const view = TestBlockFactory.createBoardView(board)
 
         const view2 = TestBlockFactory.createBoardView(board)
         view2.fields.sortOptions = []
@@ -28,12 +29,12 @@ describe('components/sidebarBoardItem', () => {
         const component = wrapIntl(
             <Router history={history}>
 
-                <SidebarBoardItem
-                    hideSidebar={mockHide}
-                    key={board.id}
-                    views={[view, view2]}
-                    board={board}
-                />
+                {/*<SidebarBoardItem*/}
+                {/*    hideSidebar={mockHide}*/}
+                {/*    key={board.id}*/}
+                {/*    views={[view, view2]}*/}
+                {/*    board={board}*/}
+                {/*/>*/}
             </Router>,
         )
         const {container} = render(component)

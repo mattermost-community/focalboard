@@ -9,9 +9,9 @@ import Dialog from '../dialog'
 import Button from '../../widgets/buttons/button'
 
 import './createCategory.scss'
-import {Utils} from '../../utils'
 
 type Props = {
+    initialValue?: string
     onClose: () => void
     onCreate: (name: string) => void
 }
@@ -23,8 +23,9 @@ const CreateCategory = (props: Props): JSX.Element => {
     const placeholder = intl.formatMessage({id: 'Categories.CreateCategoryDialog.Placeholder', defaultMessage: 'Name your category'})
     const cancelText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CancelText', defaultMessage: 'Cancel'})
     const createText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CreateText', defaultMessage: 'Create'})
+    const updateText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.UpdateText', defaultMessage: 'Update'})
 
-    const [name, setName] = useState('')
+    const [name, setName] = useState(props.initialValue || '')
 
     return (
         <Dialog
@@ -56,7 +57,7 @@ const CreateCategory = (props: Props): JSX.Element => {
                         onClick={() => props.onCreate(name)}
                         disabled={!name}
                     >
-                        {createText}
+                        {props.initialValue ? updateText : createText}
                     </Button>
                 </div>
             </div>

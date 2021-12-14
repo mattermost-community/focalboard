@@ -648,16 +648,19 @@ class Mutator {
     }
 
     async createCategory(category: Category): Promise<void> {
-        await undoManager.perform(
-            async () => {
-                await octoClient.createSidebarCategory(category)
-            },
-            async () => {
-                await octoClient.deleteSidebarCategory(category.teamID, category.id)
-            },
-            'create/delete sidebar category',
-            this.undoGroupId,
-        )
+        await octoClient.createSidebarCategory(category)
+    }
+
+    async deleteCategory(teamID: string, categoryID: string): Promise<void> {
+        await octoClient.deleteSidebarCategory(teamID, categoryID)
+    }
+
+    async updateCategory(category: Category): Promise<void> {
+        await octoClient.updateSidebarCategory(category)
+    }
+
+    async moveBlockToCategory(teamID: string, blockID: string, toCategoryID: string, fromCategoryID: string): Promise<void> {
+        await octoClient.moveBlockToCategory(teamID, blockID, toCategoryID, fromCategoryID)
     }
 
     // Duplicate

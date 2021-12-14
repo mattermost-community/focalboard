@@ -99,6 +99,18 @@
                 }
             }
         }
+
+        &.subitem {
+            .MenuWrapper {
+                display: none;
+            }
+
+            &:hover {
+                .MenuWrapper {
+                    display: block;
+                }
+            }
+        }
     }
 
     .MenuWrapper {
@@ -126,5 +138,13 @@
         height: 24px;
         max-width: 24px;
         min-width: 24px;
+    }
+
+    .SubMenu.Menu.noselect.bottom {
+        left: 0;
+        top: 40px;
+        width: 98%;
+        max-height: 500px;
+        overflow-y: auto;
     }
 }

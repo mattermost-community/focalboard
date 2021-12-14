@@ -254,7 +254,11 @@
   "register.signup-title": "Sign up for your account",
   "BoardsSwitcher.Title": "Find Boards",
   "SidebarCategories.CategoryMenu.CreateNew": "Create New Category",
+  "SidebarCategories.CategoryMenu.Delete": "Delete Category",
+  "SidebarCategories.CategoryMenu.Update": "Rename Category",
+  "SidebarCategories.BlocksMenu.Move": "Move To...",
   "Categories.CreateCategoryDialog.Placeholder": "Name your category",
   "Categories.CreateCategoryDialog.CancelText": "Cancel",
-  "Categories.CreateCategoryDialog.CreateText": "Create"
+  "Categories.CreateCategoryDialog.CreateText": "Create",
+  "Categories.CreateCategoryDialog.UpdateText": "Update"
 }
