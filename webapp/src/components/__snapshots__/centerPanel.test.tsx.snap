@@ -493,7 +493,9 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               >
                 i
               </div>
-              <div>
+              <div
+                class="octo-titletext"
+              >
                 card1
               </div>
             </div>
@@ -525,7 +527,9 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               >
                 i
               </div>
-              <div>
+              <div
+                class="octo-titletext"
+              >
                 card2
               </div>
             </div>
@@ -7970,7 +7974,9 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               >
                 i
               </div>
-              <div>
+              <div
+                class="octo-titletext"
+              >
                 card1
               </div>
             </div>
