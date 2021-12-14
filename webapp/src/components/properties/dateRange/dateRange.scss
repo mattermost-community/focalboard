@@ -157,16 +157,25 @@
     }
 
     .DayPicker-Day {
-        padding: 0;
-        align-items: center;
         display: flex;
+        align-items: center;
         justify-content: center;
+        padding: 0;
         border-radius: unset;
         width: 36px;
         height: 36px;
+        border-radius: 50px;
+
+        &:not(.DayPicker-Day--selected) {
+            &:hover {
+                background: rgba(var(--button-bg-rgb), 0.08) !important;
+                color: rgba(var(--button-bg-rgb), 1) !important;
+            }
+        }
     }
 
     .DayPicker-Day--today {
+        background: transparent;
         color: #c74655;
     }
 
