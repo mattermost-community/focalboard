@@ -11,26 +11,11 @@ describe('Group board by different properties', () => {
     it('MM-T4291 Group by different property', () => {
         cy.visit('/')
 
-        // Create new empty board
-        cy.log('**Create new empty board**')
-        cy.findByText('+ Add board').click()
-        cy.findByRole('button', {name: 'Empty board'}).click()
-        cy.findByPlaceholderText('Untitled board').should('exist')
-
-        // Rename board
-        cy.log('**Rename board**')
-        cy.findByPlaceholderText('Untitled board').type('Testing{enter}')
-        cy.findByRole('textbox', {name: 'Testing'}).should('exist')
+        // Create new board
+        cy.uiCreateNewBoard('Testing')
 
         // Add a new group
-        cy.log('**Add a new group**')
-        cy.findByRole('button', {name: '+ Add a group'}).click()
-        cy.findByRole('textbox', {name: 'New group'}).should('exist')
-
-        // Rename group
-        cy.log('**Rename group**')
-        cy.findByRole('textbox', {name: 'New group'}).type('{selectall}Group 1{enter}')
-        cy.findByRole('textbox', {name: 'Group 1'}).should('exist')
+        cy.uiAddNewGroup('Group 1')
 
         // Add a new card to the group
         cy.log('**Add a new card to the group**')

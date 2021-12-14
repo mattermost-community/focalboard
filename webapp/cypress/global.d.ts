@@ -17,5 +17,7 @@ declare namespace Cypress {
         apiInitServer: () => Chainable
         apiDeleteBlock: (id: string) => Chainable
         apiResetBoards: () => Chainable
+        uiCreateNewBoard: (title?: string) => Chainable
+        uiAddNewGroup: (name?: string) => Chainable
     }
 }
