@@ -116,7 +116,9 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -248,7 +250,9 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -380,7 +384,9 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -425,7 +431,9 @@ exports[`src/components/kanban/kanbanCard should match snapshot 1`] = `
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -456,7 +464,9 @@ exports[`src/components/kanban/kanbanCard should match snapshot with readonly 1`
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>

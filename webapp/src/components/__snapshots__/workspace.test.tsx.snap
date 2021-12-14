@@ -660,7 +660,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-1
                   </div>
                 </div>
@@ -702,7 +704,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-2
                   </div>
                 </div>
@@ -744,7 +748,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-3
                   </div>
                 </div>
@@ -1042,7 +1048,9 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-1
                   </div>
                 </div>
@@ -1070,7 +1078,9 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-2
                   </div>
                 </div>
@@ -1098,7 +1108,9 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-3
                   </div>
                 </div>
@@ -1807,7 +1819,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-1
                   </div>
                 </div>
@@ -1849,7 +1863,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-2
                   </div>
                 </div>
@@ -1891,7 +1907,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-3
                   </div>
                 </div>
@@ -2189,7 +2207,9 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-1
                   </div>
                 </div>
@@ -2217,7 +2237,9 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-2
                   </div>
                 </div>
@@ -2245,7 +2267,9 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-3
                   </div>
                 </div>
