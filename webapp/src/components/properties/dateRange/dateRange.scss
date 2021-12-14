@@ -166,10 +166,20 @@
         height: 36px;
         border-radius: 50px;
 
+        &:before {
+            content: initial;
+        }
+
         &:not(.DayPicker-Day--selected) {
             &:hover {
                 background: rgba(var(--button-bg-rgb), 0.08) !important;
                 color: rgba(var(--button-bg-rgb), 1) !important;
+            }
+        }
+
+        &.DayPicker-Day--selected {
+            &:hover {
+                background: rgba(var(--button-bg-rgb), 1) !important;
             }
         }
     }
