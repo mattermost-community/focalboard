@@ -553,6 +553,12 @@ func (s *SQLStore) InsertBlock(block *model.Block, userID string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.insertBlock(s.db, block, userID)
 	}
+func (s *SQLStore) InitializeTemplates() error {
+	return s.initializeTemplates(s.db)
+
+}
+
+func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID string) error {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr

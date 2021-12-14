@@ -165,6 +165,8 @@ type Store interface {
 	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserTimezone(userID string) (string, error)
+	IsErrNotFound(err error) bool
+	InitializeTemplates() error
 }
 
 type NotSupportedError struct {

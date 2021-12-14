@@ -1166,6 +1166,20 @@ func (mr *MockStoreMockRecorder) GetUsersList(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersList", reflect.TypeOf((*MockStore)(nil).GetUsersList), arg0)
 }
 
+// InitializeTemplates mocks base method.
+func (m *MockStore) InitializeTemplates() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "InitializeTemplates")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// InitializeTemplates indicates an expected call of InitializeTemplates.
+func (mr *MockStoreMockRecorder) InitializeTemplates() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InitializeTemplates", reflect.TypeOf((*MockStore)(nil).InitializeTemplates))
+}
+
 // InsertBlock mocks base method.
 func (m *MockStore) InsertBlock(arg0 *model.Block, arg1 string) error {
 	m.ctrl.T.Helper()
