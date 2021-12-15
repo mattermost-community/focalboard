@@ -9,7 +9,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -397,7 +397,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -785,7 +785,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -1173,7 +1173,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -1561,7 +1561,7 @@ exports[`components/table/Table should match snapshot 1`] = `
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -1813,7 +1813,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -2047,7 +2047,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
