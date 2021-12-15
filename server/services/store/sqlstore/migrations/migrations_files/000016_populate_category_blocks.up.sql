@@ -1,9 +1,10 @@
-CREATE TABLE {{.prefix}}category_boards (
+CREATE TABLE {{.prefix}}category_blocks (
     {{if .mysql}}id INT AUTO_INCREMENT,{{end}}
     {{if .postgres}}id SERIAL,{{end}}
     {{if .sqlite}}id varchar(36),{{end}}
+    user_id varchar(32) NOT NULL,
     category_id varchar(36) NOT NULL,
-    board_id VARCHAR(36) NOT NULL,
+    block_id VARCHAR(36) NOT NULL,
     create_at BIGINT,
     update_at BIGINT,
     delete_at BIGINT,
@@ -11,8 +12,9 @@ CREATE TABLE {{.prefix}}category_boards (
     ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
 {{if .plugin}}
-    INSERT INTO {{.prefix}}category_boards(category_id, board_id, create_at, update_at, delete_at)
+    INSERT INTO {{.prefix}}category_blocks(user_id, category_id, block_id, create_at, update_at, delete_at)
     SELECT
+        {{.prefix}}categories.user_id,
         {{.prefix}}categories.id,
         {{.prefix}}blocks.id,
         {{if .postgres}}(extract(epoch from now())*1000)::bigint,{{end}}
@@ -33,11 +35,11 @@ CREATE TABLE {{.prefix}}category_boards (
     ALTER TABLE {{.prefix}}categories DROP COLUMN channel_id;
 
     {{if .mysql}}
-        ALTER TABLE {{.prefix}}category_boards MODIFY id varchar(36);
+        ALTER TABLE {{.prefix}}category_blocks MODIFY id varchar(36);
     {{end}}
 
     {{if .postgres}}
-        ALTER TABLE {{.prefix}}category_boards ALTER COLUMN id TYPE varchar(36);
-        ALTER TABLE {{.prefix}}category_boards ALTER COLUMN id DROP DEFAULT;
+        ALTER TABLE {{.prefix}}category_blocks ALTER COLUMN id TYPE varchar(36);
+        ALTER TABLE {{.prefix}}category_blocks ALTER COLUMN id DROP DEFAULT;
     {{end}}
 {{end}}

@@ -508,7 +508,7 @@ func (a *API) handleGetUserCategoryBlocks(w http.ResponseWriter, r *http.Request
 	auditRec := a.makeAuditRecord(r, "getUserCategoryBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
-	categoryBlocks, err := a.app.GetUserCategoryBoards(userID, teamID)
+	categoryBlocks, err := a.app.GetUserCategoryBlocks(userID, teamID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -543,15 +543,14 @@ func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) 
 
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
-	newCategoryID := vars["categoryID"]
-	oldCategoryID := payload["fromCategoryID"]
+	categoryID := vars["categoryID"]
 	blockID := vars["blockID"]
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
 
-	err = a.app.AddUpdateUserCategoryBlock(userID, teamID, oldCategoryID, newCategoryID, blockID)
+	err = a.app.AddUpdateUserCategoryBlock(userID, teamID, categoryID, blockID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

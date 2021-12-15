@@ -2,13 +2,14 @@ package sqlstore
 
 import (
 	"database/sql"
+	"errors"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string) ([]model.CategoryBlocks, error) {
+func (s *SQLStore) getUserCategoryBlocks(db sq.BaseRunner, userID, teamID string) ([]model.CategoryBlocks, error) {
 	categories, err := s.getUserCategories(db, userID, teamID)
 	if err != nil {
 		return nil, err
@@ -34,8 +35,8 @@ func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string
 
 func (s *SQLStore) getCategoryBlockAttributes(db sq.BaseRunner, categoryID string) ([]string, error) {
 	query := s.getQueryBuilder(db).
-		Select("board_id").
-		From(s.tablePrefix + "category_boards").
+		Select("block_id").
+		From(s.tablePrefix + "category_blocks").
 		Where(sq.Eq{
 			"category_id": categoryID,
 			"delete_at":   0,
@@ -50,33 +51,47 @@ func (s *SQLStore) getCategoryBlockAttributes(db sq.BaseRunner, categoryID strin
 	return s.categoryBlocksFromRows(rows)
 }
 
-func (s *SQLStore) addUpdateCategoryBlock(db sq.BaseRunner, userID, teamID, oldCategoryID, newCategoryID, blockID string) error {
-	// Check if block already belongs to a category.
-	// Update or insert accordingly.
-	exists, err := s.userCategoryBlockExists(db, userID, teamID, oldCategoryID, blockID)
+func (s *SQLStore) addUpdateCategoryBlock(db sq.BaseRunner, userID, teamID, categoryID, blockID string) error {
+	//// Check if block already belongs to a category.
+	//// Update or insert accordingly.
+	//exists, err := s.userCategoryBlockExists(db, userID, teamID, blockID)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//if exists {
+	//	return s.updateUserCategoryBlock(db, blockID, newCategoryID)
+	//}
+	//
+	//return s.addUserCategoryBlock(db, newCategoryID, blockID)
+
+	rowsAffected, err := s.updateUserCategoryBlock(db, userID, blockID, categoryID)
 	if err != nil {
 		return err
 	}
 
-	if exists {
-		return s.updateUserCategoryBlock(db, blockID, oldCategoryID, newCategoryID)
+	if rowsAffected > 1 {
+		return errors.New("duplicate entries found for user-board-category mapping")
 	}
 
-	return s.addUserCategoryBlock(db, newCategoryID, blockID)
+	if rowsAffected == 0 {
+		// user-block mapping didn't already exist. So we'll create a new entry
+		return s.addUserCategoryBlock(db, userID, categoryID, blockID)
+	}
+
+	return nil
 }
 
 func (s *SQLStore) userCategoryBlockExists(db sq.BaseRunner, userID, teamID, categoryID, blockID string) (bool, error) {
-	// TODO rename category_boards to category_blocks
-
 	query := s.getQueryBuilder(db).
 		Select("blocks.id").
 		From(s.tablePrefix + "categories AS categories").
-		Join(s.tablePrefix + "category_boards AS blocks ON blocks.category_id = categories.id").
+		Join(s.tablePrefix + "category_blocks AS blocks ON blocks.category_id = categories.id").
 		Where(sq.Eq{
 			"user_id":       userID,
 			"team_id":       teamID,
 			"categories.id": categoryID,
-			"board_id":      blockID,
+			"block_id":      blockID,
 		})
 
 	rows, err := query.Query()
@@ -88,36 +103,45 @@ func (s *SQLStore) userCategoryBlockExists(db sq.BaseRunner, userID, teamID, cat
 	return rows.Next(), nil
 }
 
-func (s *SQLStore) updateUserCategoryBlock(db sq.BaseRunner, blockID, oldCategoryID, newCategoryID string) error {
-	_, err := s.getQueryBuilder(db).
-		Update(s.tablePrefix+"category_boards").
-		Set("category_id", newCategoryID).
+func (s *SQLStore) updateUserCategoryBlock(db sq.BaseRunner, userID, blockID, categoryID string) (int64, error) {
+	result, err := s.getQueryBuilder(db).
+		Update(s.tablePrefix+"category_blocks").
+		Set("category_id", categoryID).
 		Where(sq.Eq{
-			"category_id": oldCategoryID,
-			"board_id":    blockID,
+			"block_id": blockID,
+			"user_id":  userID,
 		}).
 		Exec()
 
 	if err != nil {
 		s.logger.Error("updateUserCategoryBlock error", mlog.Err(err))
-		return err
+		return 0, err
 	}
-	return nil
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		s.logger.Error("updateUserCategoryBlock affected row count error", mlog.Err(err))
+		return 0, err
+	}
+
+	return rowsAffected, nil
 }
 
-func (s *SQLStore) addUserCategoryBlock(db sq.BaseRunner, categoryID, blockID string) error {
+func (s *SQLStore) addUserCategoryBlock(db sq.BaseRunner, userID, categoryID, blockID string) error {
 	_, err := s.getQueryBuilder(db).
-		Insert(s.tablePrefix+"category_boards").
+		Insert(s.tablePrefix+"category_blocks").
 		Columns(
 			"id",
+			"user_id",
 			"category_id",
-			"board_id",
+			"block_id",
 			"create_at",
 			"update_at",
 			"delete_at",
 		).
 		Values(
 			utils.NewID(utils.IDTypeNone),
+			userID,
 			categoryID,
 			blockID,
 			utils.GetMillis(),

@@ -36,17 +36,17 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 }
 
 // AddUpdateCategoryBlock mocks base method.
-func (m *MockStore) AddUpdateCategoryBlock(arg0, arg1, arg2, arg3, arg4 string) error {
+func (m *MockStore) AddUpdateCategoryBlock(arg0, arg1, arg2, arg3 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddUpdateCategoryBlock", arg0, arg1, arg2, arg3, arg4)
+	ret := m.ctrl.Call(m, "AddUpdateCategoryBlock", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddUpdateCategoryBlock indicates an expected call of AddUpdateCategoryBlock.
-func (mr *MockStoreMockRecorder) AddUpdateCategoryBlock(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) AddUpdateCategoryBlock(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddUpdateCategoryBlock", reflect.TypeOf((*MockStore)(nil).AddUpdateCategoryBlock), arg0, arg1, arg2, arg3, arg4)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddUpdateCategoryBlock", reflect.TypeOf((*MockStore)(nil).AddUpdateCategoryBlock), arg0, arg1, arg2, arg3)
 }
 
 // CleanUpSessions mocks base method.
@@ -462,19 +462,19 @@ func (mr *MockStoreMockRecorder) GetUserByUsername(arg0 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByUsername", reflect.TypeOf((*MockStore)(nil).GetUserByUsername), arg0)
 }
 
-// GetUserCategoryBoards mocks base method.
-func (m *MockStore) GetUserCategoryBoards(arg0, arg1 string) ([]model.CategoryBlocks, error) {
+// GetUserCategoryBlocks mocks base method.
+func (m *MockStore) GetUserCategoryBlocks(arg0, arg1 string) ([]model.CategoryBlocks, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserCategoryBoards", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetUserCategoryBlocks", arg0, arg1)
 	ret0, _ := ret[0].([]model.CategoryBlocks)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetUserCategoryBoards indicates an expected call of GetUserCategoryBoards.
-func (mr *MockStoreMockRecorder) GetUserCategoryBoards(arg0, arg1 interface{}) *gomock.Call {
+// GetUserCategoryBlocks indicates an expected call of GetUserCategoryBlocks.
+func (mr *MockStoreMockRecorder) GetUserCategoryBlocks(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserCategoryBoards", reflect.TypeOf((*MockStore)(nil).GetUserCategoryBoards), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserCategoryBlocks", reflect.TypeOf((*MockStore)(nil).GetUserCategoryBlocks), arg0, arg1)
 }
 
 // GetUserWorkspaces mocks base method.
