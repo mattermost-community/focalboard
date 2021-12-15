@@ -361,7 +361,7 @@ func (pa *PluginAdapter) sendWorkspaceMessage(workspaceID string, payload map[st
 }
 
 func (pa *PluginAdapter) BroadcastBlockChange(workspaceID string, block model.Block) {
-	pa.api.LogInfo("BroadcastingBlockChange",
+	pa.api.LogDebug("BroadcastingBlockChange",
 		"workspaceID", workspaceID,
 		"blockID", block.ID,
 	)

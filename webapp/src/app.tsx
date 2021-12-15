@@ -232,12 +232,14 @@ const App = React.memo((): JSX.Element => {
                                         return null
                                     }}
                                 />
-                                <Route
-                                    exact={true}
-                                    path='/dashboard'
-                                >
-                                    <DashboardPage/>
-                                </Route>
+
+                                {/* TODO: enable this when new dashboard is implemented*/}
+                                {/*<Route*/}
+                                {/*    exact={true}*/}
+                                {/*    path='/dashboard'*/}
+                                {/*>*/}
+                                {/*    <DashboardPage/>*/}
+                                {/*</Route>*/}
                                 <Route
                                     exact={true}
                                     path='/welcome'

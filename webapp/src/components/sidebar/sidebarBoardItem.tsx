@@ -37,8 +37,7 @@ import CheckIcon from '../../widgets/icons/check'
 
 type Props = {
     activeCategoryId?: string
-    activeViewId?: string
-    nextBoardId?: string
+    activeBoardID?: string
     hideSidebar: () => void
     categoryBlocks: CategoryBlocks
     boards: Board[]
@@ -215,7 +214,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 return (
                     <div
                         key={blockID}
-                        className={`octo-sidebar-item subitem ${blockID === props.activeViewId ? 'active' : ''}`}
+                        className={`octo-sidebar-item subitem ${blockID === props.activeBoardID ? 'active' : ''}`}
                         onClick={() => showBoard(blockID)}
                     >
                         <div className='octo-sidebar-icon'>
