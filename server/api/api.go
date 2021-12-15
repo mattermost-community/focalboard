@@ -1635,7 +1635,7 @@ func (a *API) handleDeleteSubscription(w http.ResponseWriter, r *http.Request) {
 	//   description: Workspace ID
 	//   required: true
 	//   type: string
-	// - name: BlockID
+	// - name: blockID
 	//   in: path
 	//   description: Block ID
 	//   required: true
