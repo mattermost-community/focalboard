@@ -16,19 +16,19 @@ type Board struct {
 
 	// The ID of the team that the board belongs to
 	// required: false
-	TeamID string `json:"team_id"`
+	TeamID string `json:"teamId"`
 
 	// The ID of the channel that the board was created from
 	// required: false
-	ChannelID string `json:"channel_id"`
+	ChannelID string `json:"channelId"`
 
 	// The ID of the user that created the board
 	// required: true
-	CreatedBy string `json:"created_by"`
+	CreatedBy string `json:"createdBy"`
 
 	// The ID of the last user that updated the board
 	// required: true
-	ModifiedBy string `json:"modified_by"`
+	ModifiedBy string `json:"modifiedBy"`
 
 	// The type of the board
 	// required: true
@@ -48,35 +48,35 @@ type Board struct {
 
 	// Indicates if the board shows the description on the interface
 	// required: false
-	ShowDescription bool `json:"show_description"`
+	ShowDescription bool `json:"showDescription"`
 
 	// Marks the template boards
 	// required: false
-	IsTemplate bool `json:"is_template"`
+	IsTemplate bool `json:"isTemplate"`
 
 	// The properties of the board
 	// required: false
-	Properties map[string]interface{} `json:"properties" db:"-"`
+	Properties map[string]interface{} `json:"properties"`
 
 	// The properties of the board cards
 	// required: false
-	CardProperties map[string]interface{} `json:"card_properties" db:"-"`
+	CardProperties map[string]interface{} `json:"cardProperties"`
 
 	// The calculations on the board's cards
 	// required: false
-	ColumnCalculations map[string]interface{} `json:"column_calculations" db:"-"`
+	ColumnCalculations map[string]interface{} `json:"columnCalculations"`
 
 	// The creation time
 	// required: true
-	CreateAt int64 `json:"create_at"`
+	CreateAt int64 `json:"createAt"`
 
 	// The last modified time
 	// required: true
-	UpdateAt int64 `json:"update_at"`
+	UpdateAt int64 `json:"updateAt"`
 
 	// The deleted time. Set to indicate this block is deleted
 	// required: false
-	DeleteAt int64 `json:"delete_at"`
+	DeleteAt int64 `json:"deleteAt"`
 }
 
 // BoardMember stores the information of the membership of a user on a board
@@ -84,11 +84,11 @@ type Board struct {
 type BoardMember struct {
 	// The ID of the board
 	// required: true
-	BoardID string `json:"board_id"`
+	BoardID string `json:"boardId"`
 
 	// The ID of the user
 	// required: true
-	UserID string `json:"user_id"`
+	UserID string `json:"userId"`
 
 	// The independent roles of the user on the board
 	// required: false
@@ -96,19 +96,19 @@ type BoardMember struct {
 
 	// Marks the user as an admin of the board
 	// required: true
-	SchemeAdmin bool `json:"scheme_admin"`
+	SchemeAdmin bool `json:"schemeAdmin"`
 
 	// Marks the user as an editor of the board
 	// required: true
-	SchemeEditor bool `json:"scheme_editor"`
+	SchemeEditor bool `json:"schemeEditor"`
 
 	// Marks the user as an commenter of the board
 	// required: true
-	SchemeCommenter bool `json:"scheme_commenter"`
+	SchemeCommenter bool `json:"schemeCommenter"`
 
 	// Marks the user as an viewer of the board
 	// required: true
-	SchemeViewer bool `json:"scheme_viewer"`
+	SchemeViewer bool `json:"schemeViewer"`
 }
 
 type InvalidBoardErr struct {
