@@ -8,6 +8,7 @@ describe('Create and delete board / card', () => {
 
     beforeEach(() => {
         cy.apiInitServer()
+        cy.apiResetBoards()
         localStorage.setItem('welcomePageViewed', 'true')
     })
 
