@@ -26,6 +26,7 @@ import ViewHeaderSearch from './viewHeaderSearch'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
+import ShareBoardDialog from '../shareBoard/shareBoard'
 
 type Props = {
     board: Board
@@ -60,6 +61,8 @@ const ViewHeader = React.memo((props: Props) => {
 
     const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
 
+    const [showShareDialog, setShowShareDialog] = useState(false)
+
     return (
         <div className='ViewHeader'>
             <Editable
@@ -86,6 +89,12 @@ const ViewHeader = React.memo((props: Props) => {
                     readonly={props.readonly}
                 />
             </MenuWrapper>
+
+            <button
+                onClick={() => setShowShareDialog(!showShareDialog)}
+            >
+                {'Show Share Modal'}
+            </button>
 
             <div className='octo-spacer'/>
 
@@ -173,6 +182,8 @@ const ViewHeader = React.memo((props: Props) => {
                 />
             </>
             }
+
+            {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>}
         </div>
     )
 })
