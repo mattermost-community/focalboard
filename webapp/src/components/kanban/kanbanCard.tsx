@@ -142,7 +142,12 @@ const KanbanCard = React.memo((props: Props) => {
 
                 <div className='octo-icontitle'>
                     { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
-                    <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+                    <div
+                        key='__title'
+                        className='octo-titletext'
+                    >
+                        {card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}
+                    </div>
                 </div>
                 {visiblePropertyTemplates.map((template) => (
                     <Tooltip
