@@ -1,9 +1,16 @@
 version: '2.4'
 services:
   postgres:
-    extends:
-        file: docker-compose.common.yml
-        service: postgres
+    image: "postgres:10"
+    restart: always
+    environment:
+      POSTGRES_USER: mmuser
+      POSTGRES_PASSWORD: mostest
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-h", "localhost" ]
+      interval: 5s
+      timeout: 10s
+      retries: 3
     tmpfs: /var/lib/postgresql/data
     ports:
       - 44446:5432
