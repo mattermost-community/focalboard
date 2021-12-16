@@ -22,8 +22,11 @@ type TestHelper struct {
 	Client2 *client.Client
 }
 
-func getTestConfig() *config.Configuration {
-	dbType, connectionString, _ := sqlstore.PrepareNewTestDatabase()
+func getTestConfig() (*config.Configuration, error) {
+	dbType, connectionString, err := sqlstore.PrepareNewTestDatabase()
+	if err != nil {
+		return nil, err
+	}
 
 	logging := `
 	{
@@ -59,15 +62,19 @@ func getTestConfig() *config.Configuration {
 		LoggingCfgJSON:    logging,
 		SessionExpireTime: int64(30 * time.Second),
 		AuthMode:          "native",
-	}
+	}, nil
 }
 
 func newTestServer(singleUserToken string) *server.Server {
-	logger, _ := mlog.NewLogger()
-	if err := logger.Configure("", getTestConfig().LoggingCfgJSON, nil); err != nil {
+	cfg, err := getTestConfig()
+	if err != nil {
 		panic(err)
 	}
-	cfg := getTestConfig()
+
+	logger, _ := mlog.NewLogger()
+	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
+		panic(err)
+	}
 	db, err := server.NewStore(cfg, logger)
 	if err != nil {
 		panic(err)

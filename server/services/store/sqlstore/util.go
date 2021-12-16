@@ -29,6 +29,7 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 	}
 
 	var dbName string
+	var rootUser string
 
 	if dbType == sqliteDBType {
 		connectionString = ":memory:"
@@ -38,13 +39,15 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 		switch dbType {
 		case mysqlDBType:
 			template = "%s:mostest@tcp(localhost:%s)/%s?charset=utf8mb4,utf8&writeTimeout=30s"
+			rootUser = "root"
 		case postgresDBType:
-			template = "%s:mostest@localhost:%s/%s?sslmode=disable\u0026connect_timeout=10"
+			template = "postgres://%s:mostest@localhost:%s/%s?sslmode=disable\u0026connect_timeout=10"
+			rootUser = "mmuser"
 		default:
 			return "", "", newErrInvalidDBType(dbType)
 		}
 
-		connectionString = fmt.Sprintf(template, "root", port, "")
+		connectionString = fmt.Sprintf(template, rootUser, port, "")
 
 		// create a new database each run
 		sqlDB, err := sql.Open(dbType, connectionString)
@@ -64,9 +67,11 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 			return "", "", fmt.Errorf("cannot create %s database %s: %w", dbType, dbName, err)
 		}
 
-		_, err = sqlDB.Exec(fmt.Sprintf("GRANT ALL PRIVILEGES ON %s.* TO mmuser;", dbName))
-		if err != nil {
-			return "", "", fmt.Errorf("cannot grant permissions on %s database %s: %w", dbType, dbName, err)
+		if dbType != postgresDBType {
+			_, err = sqlDB.Exec(fmt.Sprintf("GRANT ALL PRIVILEGES ON %s.* TO mmuser;", dbName))
+			if err != nil {
+				return "", "", fmt.Errorf("cannot grant permissions on %s database %s: %w", dbType, dbName, err)
+			}
 		}
 
 		connectionString = fmt.Sprintf(template, "mmuser", port, dbName)

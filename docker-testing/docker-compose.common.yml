@@ -19,7 +19,6 @@ services:
     environment:
       POSTGRES_USER: mmuser
       POSTGRES_PASSWORD: mostest
-    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
     healthcheck:
       test: [ "CMD", "pg_isready", "-h", "localhost" ]
       interval: 5s
