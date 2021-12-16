@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"text/template"
 
 	"github.com/gorilla/mux"
@@ -81,20 +82,20 @@ func (ws *Server) registerRoutes() {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		indexTemplate, err := template.New("index").ParseFiles(path.Join(ws.rootPath, "index.html"))
 		if err != nil {
-			ws.logger.Error("Unable to serve the index.html file", mlog.Err(err))
+			ws.logger.Log(errorOrWarn(), "Unable to serve the index.html file", mlog.Err(err))
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		err = indexTemplate.ExecuteTemplate(w, "index.html", map[string]string{"BaseURL": ws.baseURL})
 		if err != nil {
-			ws.logger.Error("Unable to serve the index.html file", mlog.Err(err))
+			ws.logger.Log(errorOrWarn(), "Unable to serve the index.html file", mlog.Err(err))
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 	})
 }
 
-// Start runs the web server and start listening for charsetnnections.
+// Start runs the web server and start listening for connections.
 func (ws *Server) Start() {
 	ws.registerRoutes()
 	if ws.port == -1 {
@@ -135,4 +136,13 @@ func fileExists(path string) bool {
 	}
 
 	return err == nil
+}
+
+// errorOrWarn returns a `warn` level if this server instance is running unit tests, otherwise `error`.
+func errorOrWarn() mlog.Level {
+	unitTesting := strings.ToLower(strings.TrimSpace(os.Getenv("FB_UNIT_TESTING")))
+	if unitTesting == "1" || unitTesting == "y" || unitTesting == "t" {
+		return mlog.LvlWarn
+	}
+	return mlog.LvlError
 }
