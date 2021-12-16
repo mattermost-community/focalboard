@@ -612,6 +612,10 @@ class Utils {
 
         return originalPath
     }
+
+    static uuid(): string {
+        return (window as any).URL.createObjectURL(new Blob([])).substr(-36)
+    }
 }
 
 export {Utils, IDType}

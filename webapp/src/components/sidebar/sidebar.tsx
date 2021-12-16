@@ -23,7 +23,7 @@ import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
 
 import {CategoryBlocks, fetchSidebarCategories, getSidebarCategories} from '../../store/sidebar'
 
-import BoardsSwitcher from '../BoardsSwitcher/boardsSwitcher'
+import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
 
 import DashboardButton from '../dashboardButton/dashboardButton'
 
