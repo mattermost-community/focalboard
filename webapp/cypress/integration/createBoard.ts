@@ -8,6 +8,7 @@ describe('Create and delete board / card', () => {
 
     beforeEach(() => {
         cy.apiInitServer()
+        cy.apiResetBoards()
         localStorage.setItem('welcomePageViewed', 'true')
     })
 
@@ -129,7 +130,7 @@ describe('Create and delete board / card', () => {
         cy.log('**Delete board**')
         cy.get('.Sidebar .octo-sidebar-list').
             contains(boardTitle).
-            first().
+            parent().
             next().
             find('.Button.IconButton').
             click({force: true})

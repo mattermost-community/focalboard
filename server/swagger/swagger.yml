@@ -51,14 +51,16 @@ definitions:
         type: string
         x-go-name: Title
       type:
-        description: The block type
-        type: string
-        x-go-name: Type
+        $ref: '#/definitions/BlockType'
       updateAt:
         description: The last modified time
         format: int64
         type: integer
         x-go-name: UpdateAt
+      workspaceId:
+        description: The workspace id that the block belongs to
+        type: string
+        x-go-name: WorkspaceID
     required:
     - id
     - rootId
@@ -68,6 +70,7 @@ definitions:
     - type
     - createAt
     - updateAt
+    - workspaceId
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
   BlockPatch:
@@ -97,9 +100,7 @@ definitions:
         type: string
         x-go-name: Title
       type:
-        description: The block type
-        type: string
-        x-go-name: Type
+        $ref: '#/definitions/BlockType'
       updatedFields:
         additionalProperties:
           type: object
@@ -107,6 +108,27 @@ definitions:
         type: object
         x-go-name: UpdatedFields
     type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
+  BlockPatchBatch:
+    description: BlockPatchBatch is a batch of IDs and patches for modify blocks
+    properties:
+      block_ids:
+        description: The id's for of the blocks to patch
+        items:
+          type: string
+        type: array
+        x-go-name: BlockIDs
+      block_patches:
+        description: The BlockPatches to be applied
+        items:
+          $ref: '#/definitions/BlockPatch'
+        type: array
+        x-go-name: BlockPatches
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
+  BlockType:
+    title: BlockType represents a block type.
+    type: string
     x-go-package: github.com/mattermost/focalboard/server/model
   ChangePasswordRequest:
     description: ChangePasswordRequest is a user password change request
@@ -184,6 +206,43 @@ definitions:
     - token
     type: object
     x-go-package: github.com/mattermost/focalboard/server/api
+  NotificationHint:
+    description: |-
+      NotificationHint provides a hint that a block has been modified and has subscribers that
+      should be notified.
+    properties:
+      block_id:
+        description: BlockID is id of the entity that was updated
+        type: string
+        x-go-name: BlockID
+      block_type:
+        $ref: '#/definitions/BlockType'
+      create_at:
+        description: CreatedAt is the timestamp this notification hint was created
+        format: int64
+        type: integer
+        x-go-name: CreateAt
+      modified_by_id:
+        description: ModifiedByID is the id of the user who made the block change
+        type: string
+        x-go-name: ModifiedByID
+      notify_at:
+        description: NotifyAt is the timestamp this notification should be scheduled
+        format: int64
+        type: integer
+        x-go-name: NotifyAt
+      workspace_id:
+        description: WorkspaceID is id of workspace the block belongs to
+        type: string
+        x-go-name: WorkspaceID
+    required:
+    - block_type
+    - block_id
+    - workspace_id
+    - create_at
+    - notify_at
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
   RegisterRequest:
     description: RegisterRequest is a user registration request
     properties:
@@ -242,6 +301,76 @@ definitions:
     - update_at
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
+  Subscriber:
+    description: Subscriber is an entity (e.g. user, channel) that can subscribe to
+      events from boards, cards, etc
+    properties:
+      notified_at:
+        description: NotifiedAt is the timestamp this subscriber was last notified
+        format: int64
+        type: integer
+        x-go-name: NotifiedAt
+      subscriber_id:
+        description: SubscriberID is the id of the entity that is subscribing
+        type: string
+        x-go-name: SubscriberID
+      subscriber_type:
+        $ref: '#/definitions/SubscriberType'
+    required:
+    - subscriber_type
+    - subscriber_id
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
+  SubscriberType:
+    type: string
+    x-go-package: github.com/mattermost/focalboard/server/model
+  Subscription:
+    properties:
+      blockId:
+        description: BlockID is id of the entity being subscribed to
+        type: string
+        x-go-name: BlockID
+      blockType:
+        $ref: '#/definitions/BlockType'
+      createAt:
+        description: CreatedAt is the timestamp this subscription was created
+        format: int64
+        type: integer
+        x-go-name: CreateAt
+      deleteAt:
+        description: DeleteAt is the timestamp this subscription was deleted, or zero
+          if not deleted
+        format: int64
+        type: integer
+        x-go-name: DeleteAt
+      notifiedAt:
+        description: NotifiedAt is the timestamp of the last notification sent for
+          this subscription
+        format: int64
+        type: integer
+        x-go-name: NotifiedAt
+      subscriberId:
+        description: SubscriberID is the id of the entity that is subscribing
+        type: string
+        x-go-name: SubscriberID
+      subscriberType:
+        $ref: '#/definitions/SubscriberType'
+      workspaceId:
+        description: WorkspaceID is id of the workspace the block belongs to
+        type: string
+        x-go-name: WorkspaceID
+    required:
+    - blockType
+    - blockId
+    - workspaceId
+    - subscriberType
+    - subscriberId
+    - notifiedAt
+    - createAt
+    - deleteAt
+    title: Subscription is a subscription to a board, card, etc, for a user or channel.
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
   User:
     description: User is a user
     properties:
@@ -255,14 +384,14 @@ definitions:
         format: int64
         type: integer
         x-go-name: DeleteAt
-      email:
-        description: The user's email
-        type: string
-        x-go-name: Email
       id:
         description: The user ID
         type: string
         x-go-name: ID
+      is_bot:
+        description: If the user is a bot or not
+        type: boolean
+        x-go-name: IsBot
       props:
         additionalProperties:
           type: object
@@ -281,11 +410,33 @@ definitions:
     required:
     - id
     - username
-    - email
     - props
     - create_at
     - update_at
     - delete_at
+    - is_bot
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
+  UserWorkspace:
+    description: |-
+      UserWorkspace is a summary of a single association between
+      a user and a workspace
+    properties:
+      boardCount:
+        description: Number of boards in the workspace
+        format: int64
+        type: integer
+        x-go-name: BoardCount
+      id:
+        description: ID of the workspace
+        type: string
+        x-go-name: ID
+      title:
+        description: Title of the workspace
+        type: string
+        x-go-name: Title
+    required:
+    - id
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
   Workspace:
@@ -331,7 +482,7 @@ info:
     email: api@focalboard.com
     name: Focalboard
     url: https://www.focalboard.com
-  description: Server for Focalboard
+  description: Focalboard Server
   license:
     name: Custom
     url: https://github.com/mattermost/focalboard/blob/main/LICENSE.txt
@@ -364,6 +515,21 @@ paths:
           description: internal error
           schema:
             $ref: '#/definitions/ErrorResponse'
+  /api/v1/logout:
+    post:
+      description: Logout user
+      operationId: logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        "500":
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
   /api/v1/register:
     post:
       description: Register new user
@@ -548,7 +714,10 @@ paths:
       security:
       - BearerAuth: []
     post:
-      description: Insert or update blocks
+      description: |-
+        Insert blocks. The specified IDs will only be used to link
+        blocks with existing ones, the rest will be replaced by server
+        generated IDs
       operationId: updateBlocks
       parameters:
       - description: Workspace ID
@@ -564,6 +733,37 @@ paths:
           items:
             $ref: '#/definitions/Block'
           type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            items:
+              $ref: '#/definitions/Block'
+            type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/workspaces/{workspaceID}/blocks/:
+    patch:
+      description: Partially updates batch of blocks
+      operationId: patchBlocks
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: block Ids and block patches to apply
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/BlockPatchBatch'
       produces:
       - application/json
       responses:
@@ -802,6 +1002,98 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
+  /api/v1/workspaces/{workspaceID}/subscriptions:
+    post:
+      operationId: createSubscription
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: subscription definition
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/Subscription'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Creates a subscription to a block for a user. The user will receive
+        change notifications for the block.
+  /api/v1/workspaces/{workspaceID}/subscriptions/{blockID}/{subscriberID}:
+    delete:
+      operationId: deleteSubscription
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: Block ID
+        in: path
+        name: blockID
+        required: true
+        type: string
+      - description: Subscriber ID
+        in: path
+        name: subscriberID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Deletes a subscription a user has for a a block. The user will no longer
+        receive change notifications for the block.
+  /api/v1/workspaces/{workspaceID}/subscriptions/{subscriberID}:
+    get:
+      operationId: getSubscriptions
+      parameters:
+      - description: Workspace ID
+        in: path
+        name: workspaceID
+        required: true
+        type: string
+      - description: Subscriber ID
+        in: path
+        name: subscriberID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            items:
+              $ref: '#/definitions/User'
+            type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Gets subscriptions for a user.
   /api/v1/workspaces/{workspaceID}/users:
     get:
       description: Returns workspace users

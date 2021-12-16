@@ -41,7 +41,10 @@ const Dialog = React.memo((props: Props) => {
                     }
                 }}
             >
-                <div className='dialog' >
+                <div
+                    role='dialog'
+                    className='dialog'
+                >
                     <div className='toolbar'>
                         {
                             !props.hideCloseButton &&

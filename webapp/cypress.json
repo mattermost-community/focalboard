@@ -4,7 +4,8 @@
     "testFiles": [
         "**/login*.ts",
         "**/create*.ts",
-        "**/manage*.ts"
+        "**/manage*.ts",
+        "**/group*.ts"
     ],
     "env": {
         "username": "test-user",

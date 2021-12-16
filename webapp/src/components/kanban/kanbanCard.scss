@@ -67,6 +67,15 @@
             width: 20px;
             height: 20px;
         }
+
+        .octo-titletext {
+            display: -webkit-box; // stylelint-disable-line
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 100px;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical; // stylelint-disable-line
+        }
     }
 
     .IconButton {
