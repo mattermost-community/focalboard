@@ -26,9 +26,14 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
     const dispatch = useAppDispatch()
     const [showMenu, setShowMenu] = useState<boolean>(false)
 
+    // TODO un-hardcode this teamID
+    const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
+
     const goToEmptyCenterPanel = () => {
-        UserSettings.lastBoardId = null
-        UserSettings.lastViewId = null
+        UserSettings.setLastBoardID(teamID, '')
+
+        // TODO see if this works or do we need a solutiion
+        // UserSettings.lastViewId = null
         dispatch(setCurrentBoard(''))
         dispatch(setCurrentView(''))
         history.replace(`/workspace/${activeWorkspace?.id}`)
@@ -66,6 +71,7 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                         }
                         history.push(newPath)
 
+                        // TODO remove this and set the correct team ID
                         if ((window as any).setTeam) {
                             (window as any).setTeam('6xrgynzkpbfs5r76jneppj5foa')
                         }

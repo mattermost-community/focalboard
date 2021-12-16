@@ -69,20 +69,61 @@ export class UserSettings {
         UserSettings.set(UserSettingKey.LastWorkspaceId, newValue)
     }
 
-    static get lastBoardId(): string | null {
-        return UserSettings.get(UserSettingKey.LastBoardId)
+    // maps last board ID for each team
+    // maps teamID -> board ID
+    static get lastBoardId(): Map<string, string> {
+        let rawData = UserSettings.get(UserSettingKey.LastBoardId) || '{}'
+        if (rawData[0] !== '{') {
+            rawData = '{}'
+        }
+
+        let mapping: Map<string, string>
+        try {
+            mapping = new Map<string, string>(Object.entries(JSON.parse(rawData)))
+        } catch (e) {
+            console.log(e)
+
+            // revert to empty data if JSON conversion fails.
+            // This will happen when users run the new code for the first time
+            mapping = new Map<string, string>()
+        }
+
+        return mapping
     }
 
-    static set lastBoardId(newValue: string | null) {
-        UserSettings.set(UserSettingKey.LastBoardId, newValue)
+    // static set lastBoardId(newValue: Map<string, string> | null) {
+    //     UserSettings.set(UserSettingKey.LastBoardId, JSON.stringify(newValue))
+    // }
+
+    static setLastBoardID(teamID: string, boardID: string) {
+        const data = this.lastBoardId
+        console.log(data)
+        data.set(teamID, boardID)
+        UserSettings.set(UserSettingKey.LastBoardId, JSON.stringify(data))
     }
 
-    static get lastViewId(): string | null {
-        return UserSettings.get(UserSettingKey.LastViewId)
+    static get lastViewId(): Map<string, string> | null {
+        const rawData = UserSettings.get(UserSettingKey.LastViewId) || '{}'
+        let mapping: Map<string, string>
+        try {
+            mapping = new Map<string, string>(Object.entries(JSON.parse(rawData)))
+        } catch {
+            // revert to empty data if JSON conversion fails.
+            // This will happen when users run the new code for the first time
+            mapping = new Map<string, string>()
+        }
+
+        return mapping
     }
 
-    static set lastViewId(newValue: string | null) {
-        UserSettings.set(UserSettingKey.LastViewId, newValue)
+    // static set lastViewId(newValue: Map<string, string> | null) {
+    //     UserSettings.set(UserSettingKey.LastViewId, JSON.stringify(newValue))
+    // }
+
+    static setLastViewId(boardID: string, viewID: string) {
+        const data = this.lastViewId || new Map<string, string>()
+        data.set(boardID, viewID)
+        UserSettings.set(UserSettingKey.LastBoardId, JSON.stringify(data))
     }
 
     static get prefillRandomIcons(): boolean {

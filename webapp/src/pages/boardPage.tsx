@@ -120,8 +120,8 @@ const BoardPage = (props: Props): JSX.Element => {
 
         if (!boardId) {
             // Load last viewed boardView
-            const lastBoardId = UserSettings.lastBoardId || undefined
-            const lastViewId = UserSettings.lastViewId || undefined
+            const lastBoardId = UserSettings.lastBoardId?.get(boardId) || undefined
+            const lastViewId = lastBoardId ? UserSettings.lastViewId?.get(lastBoardId) : undefined
             if (lastBoardId) {
                 let newPath = generatePath(match.path, {...match.params, boardId: lastBoardId})
                 if (lastViewId) {
@@ -143,8 +143,16 @@ const BoardPage = (props: Props): JSX.Element => {
             return
         }
 
-        UserSettings.lastBoardId = boardId || ''
-        UserSettings.lastViewId = viewId || ''
+        // UserSettings.lastBoardId = boardId || ''
+        // UserSettings.lastViewId = viewId || ''
+
+        // TODO use actual team ID here
+        const teamID = workspaceId
+        UserSettings.setLastBoardID(teamID, boardId || '')
+        if (boardId !== '') {
+            UserSettings.setLastViewId(boardId, viewId)
+        }
+
         UserSettings.lastWorkspaceId = workspaceId
 
         dispatch(setCurrentBoard(boardId || ''))
