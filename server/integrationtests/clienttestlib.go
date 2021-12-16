@@ -10,6 +10,7 @@ import (
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -22,15 +23,7 @@ type TestHelper struct {
 }
 
 func getTestConfig() *config.Configuration {
-	dbType := os.Getenv("FB_STORE_TEST_DB_TYPE")
-	if dbType == "" {
-		dbType = "sqlite3"
-	}
-
-	connectionString := os.Getenv("FB_STORE_TEST_CONN_STRING")
-	if connectionString == "" {
-		connectionString = ":memory:"
-	}
+	dbType, connectionString, _ := sqlstore.PrepareNewTestDatabase()
 
 	logging := `
 	{

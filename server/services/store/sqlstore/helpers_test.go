@@ -2,7 +2,6 @@ package sqlstore
 
 import (
 	"database/sql"
-	"os"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/services/store"
@@ -12,15 +11,8 @@ import (
 )
 
 func SetupTests(t *testing.T) (store.Store, func()) {
-	dbType := os.Getenv("FB_STORE_TEST_DB_TYPE")
-	if dbType == "" {
-		dbType = sqliteDBType
-	}
-
-	connectionString := os.Getenv("FB_STORE_TEST_CONN_STRING")
-	if connectionString == "" {
-		connectionString = ":memory:"
-	}
+	dbType, connectionString, err := PrepareNewTestDatabase()
+	require.NoError(t, err)
 
 	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
 
@@ -28,6 +20,12 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 	require.NoError(t, err)
 	err = sqlDB.Ping()
 	require.NoError(t, err)
+
+	// TODO: remove this
+	logger.Debug("Open database success",
+		mlog.String("type", dbType),
+		mlog.String("dsn", connectionString),
+	)
 
 	storeParams := Params{
 		DBType:           dbType,
