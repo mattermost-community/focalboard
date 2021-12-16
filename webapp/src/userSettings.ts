@@ -71,43 +71,40 @@ export class UserSettings {
 
     // maps last board ID for each team
     // maps teamID -> board ID
-    static get lastBoardId(): Map<string, string> {
+    static get lastBoardId(): {[key: string]: string} {
         let rawData = UserSettings.get(UserSettingKey.LastBoardId) || '{}'
         if (rawData[0] !== '{') {
             rawData = '{}'
         }
 
-        let mapping: Map<string, string>
+        let mapping: {}
         try {
-            mapping = new Map<string, string>(Object.entries(JSON.parse(rawData)))
+            mapping = JSON.parse(rawData)
         } catch (e) {
-            console.log(e)
+            Utils.logWarn(e)
 
             // revert to empty data if JSON conversion fails.
             // This will happen when users run the new code for the first time
-            mapping = new Map<string, string>()
+            mapping = {}
         }
 
         return mapping
     }
 
-    // static set lastBoardId(newValue: Map<string, string> | null) {
-    //     UserSettings.set(UserSettingKey.LastBoardId, JSON.stringify(newValue))
-    // }
-
-    static setLastBoardID(teamID: string, boardID: string) {
+    static setLastBoardID(teamID: string, boardID: string): void {
         const data = this.lastBoardId
-        console.log(data)
-        data.set(teamID, boardID)
+        data[teamID] = boardID
         UserSettings.set(UserSettingKey.LastBoardId, JSON.stringify(data))
     }
 
-    static get lastViewId(): Map<string, string> | null {
+    static get lastViewId(): {[key: string]: string} {
         const rawData = UserSettings.get(UserSettingKey.LastViewId) || '{}'
-        let mapping: Map<string, string>
+        let mapping: {}
         try {
-            mapping = new Map<string, string>(Object.entries(JSON.parse(rawData)))
-        } catch {
+            mapping = JSON.parse(rawData)
+        } catch (e) {
+            Utils.logWarn(e)
+
             // revert to empty data if JSON conversion fails.
             // This will happen when users run the new code for the first time
             mapping = new Map<string, string>()
@@ -116,14 +113,10 @@ export class UserSettings {
         return mapping
     }
 
-    // static set lastViewId(newValue: Map<string, string> | null) {
-    //     UserSettings.set(UserSettingKey.LastViewId, JSON.stringify(newValue))
-    // }
-
-    static setLastViewId(boardID: string, viewID: string) {
-        const data = this.lastViewId || new Map<string, string>()
-        data.set(boardID, viewID)
-        UserSettings.set(UserSettingKey.LastBoardId, JSON.stringify(data))
+    static setLastViewId(boardID: string, viewID: string): void {
+        const data = this.lastViewId
+        data[boardID] = viewID
+        UserSettings.set(UserSettingKey.LastViewId, JSON.stringify(data))
     }
 
     static get prefillRandomIcons(): boolean {

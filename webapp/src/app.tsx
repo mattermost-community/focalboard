@@ -160,7 +160,12 @@ const App = React.memo((): JSX.Element => {
                                             }
 
                                             if (Utils.isFocalboardPlugin() && UserSettings.lastWorkspaceId) {
-                                                return <Redirect to={`/workspace/${UserSettings.lastWorkspaceId}/${UserSettings.lastBoardId}/${UserSettings.lastViewId}`}/>
+                                                // TODO un-hardcode this teamID
+                                                const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
+                                                const lastBoardID = UserSettings.lastBoardId[teamID]
+                                                const lastViewID = UserSettings.lastViewId[lastBoardID]
+
+                                                return <Redirect to={`/workspace/${UserSettings.lastWorkspaceId}/${lastBoardID}/${lastViewID}`}/>
                                             }
 
                                             if (loggedIn === true) {
