@@ -21,12 +21,6 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 	err = sqlDB.Ping()
 	require.NoError(t, err)
 
-	// TODO: remove this
-	logger.Debug("Open database success",
-		mlog.String("type", dbType),
-		mlog.String("dsn", connectionString),
-	)
-
 	storeParams := Params{
 		DBType:           dbType,
 		ConnectionString: connectionString,
