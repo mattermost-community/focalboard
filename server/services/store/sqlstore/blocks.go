@@ -45,6 +45,7 @@ func (s *SQLStore) blockFields() []string {
 		"type",
 		"title",
 		"COALESCE(fields, '{}')",
+		"insert_at",
 		"create_at",
 		"update_at",
 		"delete_at",
@@ -170,6 +171,7 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 		"l3.type",
 		"l3.title",
 		"l3.fields",
+		"l3.insert_at",
 		"l3.create_at",
 		"l3.update_at",
 		"l3.delete_at",
@@ -180,7 +182,7 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID}).
-		OrderBy("l1.insert_at")
+		OrderBy("l3.insert_at")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -235,6 +237,7 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 		var block model.Block
 		var fieldsJSON string
 		var modifiedBy sql.NullString
+		var insertAt string
 
 		err := rows.Scan(
 			&block.ID,
@@ -246,6 +249,7 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 			&block.Type,
 			&block.Title,
 			&fieldsJSON,
+			&insertAt,
 			&block.CreateAt,
 			&block.UpdateAt,
 			&block.DeleteAt,
@@ -459,7 +463,7 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID stri
 			"workspace_id",
 			"id",
 			"parent_id",
-			"schema",
+			s.escapeField("schema"),
 			"type",
 			"title",
 			"fields",
