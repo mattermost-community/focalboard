@@ -127,7 +127,7 @@ describe('Create and delete board / card', () => {
         cy.get('.Sidebar .octo-sidebar-list').
             contains(boardTitle).
             parent().
-            next().
+            find('.MenuWrapper').
             find('.Button.IconButton').
             click({force: true})
         cy.contains('Delete board').click({force: true})
@@ -147,16 +147,16 @@ describe('Create and delete board / card', () => {
             cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('have.length', i + 1)
         }
 
-        // Create empty card in first group
+        // Create empty card in last group
         cy.log('**Create new empty card in first group**')
-        cy.contains('+ New').click()
+        cy.get('.octo-board-column').last().contains('+ New').scrollIntoView().click()
         cy.get('.Dialog').should('exist')
         cy.get('.Dialog Button[title=\'Close dialog\']').should('be.visible').click()
-        cy.get('.KanbanCard').should('exist')
+        cy.get('.KanbanCard').scrollIntoView().should('exist')
 
         // Drag card to right corner and expect scroll to occur
         // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.get('.Kanban').invoke('scrollLeft').should('equal', 0).wait(1000)
+        cy.get('.Kanban').invoke('scrollLeft').should('not.equal', 0).wait(1000)
 
         // wait necessary to let state change propagate
         // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -167,26 +167,10 @@ describe('Create and delete board / card', () => {
         // wait necessary to trigger scroll animation for some time
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.get('.Kanban').
-            trigger('dragover', {clientX: Cypress.config().viewportWidth - 100, clientY: Cypress.config().viewportHeight / 2}).
-            wait(1500).
+            trigger('dragover', {clientX: 400, clientY: Cypress.config().viewportHeight / 2}).
+            wait(3500).
             trigger('dragend')
 
-        cy.get('.Kanban').invoke('scrollLeft').should('not.equal', 0)
-
-        // go into other direction
-        // wait necessary to let state change propagate
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.get('.KanbanCard').
-            trigger('dragstart').
-            wait(500)
-
-        // wait necessary to trigger scroll animation for some time
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.get('.Kanban').
-            trigger('dragover', {clientX: 200, clientY: Cypress.config().viewportHeight / 2}).
-            wait(1500).
-            trigger('dragend')
-
-        cy.get('.Kanban').invoke('scrollLeft').should('equal', 1)
+        cy.get('.Kanban').invoke('scrollLeft').should('equal', 0)
     })
 })
