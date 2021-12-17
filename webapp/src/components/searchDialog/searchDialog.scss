@@ -1,0 +1,88 @@
+
+.BoardSwitcherDialog {
+    color: rgba(var(--center-channel-color-rgb));
+
+    .dialog {
+        .toolbar {
+            flex-direction: row-reverse;
+        }
+    }
+
+    .wrapper {
+        .dialog {
+            .toolbar {
+                flex-direction: row-reverse;
+                padding: 0;
+                position: absolute;
+                right: 0;
+            }
+        }
+    }
+
+    .wrapper {
+        .dialog {
+            position: relative;
+            width: 600px;
+            height: 450px;
+        }
+    }
+
+    .BoardSwitcherDialogBody {
+        display: flex;
+        flex-direction: column;
+
+        .head, .searchResults {
+            padding: 0px 24px 24px;
+        }
+
+        .searchResults {
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0;
+            margin-bottom: 24px;
+
+            .searchResult {
+                height: 40px;
+                justify-content: flex-start;
+                align-items: center;
+                display: flex;
+                padding: 0 24px;
+                cursor: pointer;
+                overflow: hidden;
+            }
+        }
+
+        .text-heading1 {
+            font-size: 12px !important;
+        }
+
+        h5 {
+            font-size: 12px;
+            margin-top: 0;
+        }
+
+        .queryWrapper {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+
+            .MagnifyIcon {
+                position: absolute;
+                left: 4px;
+                font-size: 22px;
+                top: 6px;
+            }
+
+            .searchQuery {
+                height: 40px;
+                font-size: 14px;
+                border: 1px solid;
+                border-radius: 4px;
+                border-color: var(--sidebar-bg-rgb);
+                padding: 0 33px;
+                flex: 1;
+            }
+        }
+    }
+}

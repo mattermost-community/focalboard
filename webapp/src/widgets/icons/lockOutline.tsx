@@ -5,11 +5,11 @@ import React from 'react'
 
 import CompassIcon from './compassIcon'
 
-export default function Search(): JSX.Element {
+export default function LockOutline(): JSX.Element {
     return (
         <CompassIcon
-            icon='magnify'
-            className='MagnifyIcon'
+            icon='lock-outline'
+            className='LockOutlineIcon'
         />
     )
 }

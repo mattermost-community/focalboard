@@ -2,8 +2,8 @@
 // See LICENSE.txt for license information.
 import React, {ReactNode, useState} from 'react'
 
-import './boardSwitcherDialog.scss'
-import {FormattedMessage, useIntl} from 'react-intl'
+import './searchDialog.scss'
+import {FormattedMessage} from 'react-intl'
 
 import Dialog from '../dialog'
 import {Utils} from '../../utils'
@@ -25,7 +25,9 @@ const SearchDialog = (props: Props): JSX.Element => {
     const searchHandler = async (query: string): Promise<void> => {
         setIsSearching(true)
         setSearchQuery(query)
-        setResults(await props.searchHandler(query))
+        const results = await props.searchHandler(query)
+        console.log(results)
+        setResults(results)
         setIsSearching(false)
     }
 
@@ -36,16 +38,21 @@ const SearchDialog = (props: Props): JSX.Element => {
             className='BoardSwitcherDialog'
             onClose={props.onClose}
         >
-            <div className='CreateCategory'>
-                <h3>{props.title}</h3>
-                <h5>{props.subTitle}</h5>
-                <input
-                    className='searchQuery'
-                    type='text'
-                    onChange={(e) => searchHandler(e.target.value)}
-                    autoFocus={true}
-                    maxLength={100}
-                />
+            <div className='BoardSwitcherDialogBody'>
+                <div className='head'>
+                    <h3 className='text-heading4'>{props.title}</h3>
+                    <h5 className='text-heading1'>{props.subTitle}</h5>
+                    <div className='queryWrapper'>
+                        <Search/>
+                        <input
+                            className='searchQuery'
+                            type='text'
+                            onChange={(e) => searchHandler(e.target.value)}
+                            autoFocus={true}
+                            maxLength={100}
+                        />
+                    </div>
+                </div>
                 <div className='searchResults'>
                     {/*When there are results to show*/}
                     {results.length > 0 &&
