@@ -161,6 +161,8 @@ func main() {
 		logger.Fatal("server.Start ERROR", mlog.Err(err))
 	}
 
+	log.Println("ready")
+
 	// Setting up signal capturing
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt)

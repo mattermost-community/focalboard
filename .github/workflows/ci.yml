@@ -51,3 +51,32 @@ jobs:
 
     - name: "Test webapp: Cypress"
       run: "cd webapp; npm run cypress:ci"
+
+  lhci:
+    name: Lighthouse
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.1.0
+
+      - name: npm install
+        run: cd webapp; npm install --no-optional
+
+      - name: Build Server
+        run: make server
+
+      - name: Build Webapp
+        run: make webapp
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.8.x
+
+      - name: Install Puppeteer
+        run: npm install -g puppeteer-core@13.0.x
+
+      - name: Run Lighthouse
+        run: lhci autorun
