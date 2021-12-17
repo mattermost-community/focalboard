@@ -1,5 +1,10 @@
 package model
 
+import (
+	"encoding/json"
+	"io"
+)
+
 // Workspace is information global to a workspace
 // swagger:model
 type Workspace struct {
@@ -42,4 +47,12 @@ type UserWorkspace struct {
 
 	// Number of boards in the workspace
 	BoardCount int `json:"boardCount"`
+}
+
+func WorkspaceFromJSON(data io.Reader) (*Workspace, error) {
+	var workspace Workspace
+	if err := json.NewDecoder(data).Decode(&workspace); err != nil {
+		return nil, err
+	}
+	return &workspace, nil
 }
