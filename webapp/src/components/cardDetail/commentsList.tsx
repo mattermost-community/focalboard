@@ -48,12 +48,13 @@ const CommentsList = React.memo((props: Props) => {
 
     const {comments} = props
     const intl = useIntl()
+    const defaultImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
     const newCommentComponent = (
         <div className='CommentsList__new'>
             <img
                 className='comment-avatar'
-                src={imageURLForUser(me!.id)}
+                src={imageURLForUser ? imageURLForUser(me!.id) : defaultImageUrl}
             />
             <MarkdownEditor
                 className='newcomment'
