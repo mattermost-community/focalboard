@@ -10,10 +10,30 @@ import './boardsSwitcher.scss'
 import AddIcon from '../../widgets/icons/add'
 import BoardSwitcherDialog from '../boardsSwitcherDialog/boardSwitcherDialog'
 
-const BoardsSwitcher = ():JSX.Element => {
+const BoardsSwitcher = (): JSX.Element => {
     const intl = useIntl()
 
     const [showSwitcher, setShowSwitcher] = useState<boolean>(false)
+
+    // Disabling this for now as Cmd+K
+    // is being used by Firefox for activating
+    // Search Bar. Unable to prevent browser default right now.
+    //
+    // useHotkeys('ctrl+k,cmd+k',
+    //     (e) => {
+    //         e.preventDefault()
+    //         setShowSwitcher((show) => !show)
+    //     },
+    //     {
+    //         filter: () => {
+    //             console.log('filter called')
+    //             return true
+    //         },
+    //         enableOnTags: ['INPUT'],
+    //         filterPreventDefault: true,
+    //     },
+    //     [showSwitcher],
+    // )
 
     return (
         <div className='BoardsSwitcherWrapper'>

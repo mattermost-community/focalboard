@@ -5,6 +5,8 @@ import React, {ReactNode} from 'react'
 import './boardSwitcherDialog.scss'
 import {useIntl} from 'react-intl'
 
+import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+
 import octoClient from '../../octoClient'
 import SearchDialog from '../searchDialog/searchDialog'
 import Globe from '../../widgets/icons/globe'
@@ -27,15 +29,23 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
         },
     )
 
-    // const [results, setResults] = useState<Block[]>([])
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
+    const history = useHistory()
+
+    const showBoard = (boardId: string): void => {
+        const newPath = generatePath(match.path, {...match.params, boardId, viewId: undefined})
+        history.push(newPath)
+        props.onClose()
+    }
 
     const searchHandler = async (query: string): Promise<Array<ReactNode>> => {
-        const blocks = await octoClient.getAllBlocks()
+        const blocks = (await octoClient.getAllBlocks()).filter((block) => block.type === 'board' && !block.fields.isTemplate)
         const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
         return blocks.map((block, i) => (
             <div
                 key={block.id}
                 className='blockSearchResult'
+                onClick={() => showBoard(block.id)}
             >
                 {/*TODO decide icon from board is public or private*/}
                 {i % 2 === 0 ? <Globe/> : <LockOutline/>}
