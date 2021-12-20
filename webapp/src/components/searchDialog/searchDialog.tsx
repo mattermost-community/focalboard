@@ -37,6 +37,8 @@ const SearchDialog = (props: Props): JSX.Element => {
 
     const emptyResult = results.length === 0 && !isSearching && searchQuery
 
+    console.log(searchQuery)
+
     return (
         <Dialog
             className='BoardSwitcherDialog'
@@ -59,7 +61,7 @@ const SearchDialog = (props: Props): JSX.Element => {
                 </div>
                 <div className='searchResults'>
                     {/*When there are results to show*/}
-                    {results.length > 0 &&
+                    {searchQuery && results.length > 0 &&
                         results.map((result) => (
                             <div
                                 key={Utils.uuid()}
@@ -74,8 +76,10 @@ const SearchDialog = (props: Props): JSX.Element => {
                     {
                         emptyResult &&
                         <div className='noResults'>
-                            <Search/>
-                            <h4>
+                            <div className='iconWrapper'>
+                                <Search/>
+                            </div>
+                            <h4 className='text-heading4'>
                                 <FormattedMessage
                                     id='FindBoardsDialog.NoResultsFor'
                                     defaultMessage='No results for "{searchQuery}"'
@@ -95,9 +99,17 @@ const SearchDialog = (props: Props): JSX.Element => {
 
                     {/*default state, when user didn't search for anything. This is the initial screen*/}
                     {
-                        !emptyResult &&
-                        <div className='initialScreen'>
-                            <span>{'TODO: do we even need this?'}</span>
+                        !emptyResult && !searchQuery &&
+                        <div className='noResults introScreen'>
+                            <div className='iconWrapper'>
+                                <Search/>
+                            </div>
+                            <h4 className='text-heading4'>
+                                <FormattedMessage
+                                    id='FindBoFindBoardsDialog.IntroText'
+                                    defaultMessage='Search for boards'
+                                />
+                            </h4>
                         </div>
                     }
                 </div>

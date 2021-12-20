@@ -263,6 +263,7 @@
   "Categories.CreateCategoryDialog.UpdateText": "Update",
   "FindBoardsDialog.Title": "Find Boards",
   "FindBoardsDialog.SubTitle": "Type to find a board. Use <b>UP/DOWN</b> to browse. <b>ENTER</b> to select, <b>ESC</b> to dismiss",
+  "FindBoardsDialog.IntroText": "Search for boards",
   "FindBoardsDialog.NoResultsFor": "No results for \"{searchQuery}\"",
   "FindBoardsDialog.NoResultsSubtext": "Check the spelling or try another search."
 }
