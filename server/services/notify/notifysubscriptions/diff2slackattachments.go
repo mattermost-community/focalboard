@@ -208,31 +208,12 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 				continue
 			}
 
-			/*
-				TODO: use diff lib for content changes which can be many paragraphs.
-				      Unfortunately `github.com/sergi/go-diff` is not suitable for
-					  markdown display. An alternate markdown friendly lib is being
-					  worked on at github.com/wiggin77/go-difflib and will be substituted
-					  here when ready.
-
-				newTxt := cleanBlockTitle(child.NewBlock)
-				oldTxt := cleanBlockTitle(child.OldBlock)
-
-				dmp := diffmatchpatch.New()
-				txtDiffs := dmp.DiffMain(oldTxt, newTxt, true)
-
-				_, _ = w.Write([]byte(dmp.DiffPrettyText(txtDiffs)))
-
-			*/
-
-			if oldTitle != "" {
-				oldTitle = fmt.Sprintf("\n~~`%s`~~", oldTitle)
-			}
+			markdown := diff2Markdown(oldTitle, newTitle)
 
 			attachment.Fields = append(attachment.Fields, &mm_model.SlackAttachmentField{
 				Short: false,
 				Title: "Description",
-				Value: newTitle + oldTitle,
+				Value: markdown,
 			})
 		}
 	}
