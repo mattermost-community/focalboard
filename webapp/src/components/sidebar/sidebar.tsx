@@ -21,11 +21,19 @@ import './sidebar.scss'
 
 import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
 
-import {CategoryBlocks, fetchSidebarCategories, getSidebarCategories} from '../../store/sidebar'
+import {
+    Category,
+    CategoryBlocks,
+    fetchSidebarCategories,
+    getSidebarCategories,
+    updateCategories,
+} from '../../store/sidebar'
 
 import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
 
 import DashboardButton from '../dashboardButton/dashboardButton'
+
+import wsClient, {WSClient} from '../../wsclient'
 
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
@@ -58,6 +66,13 @@ const Sidebar = React.memo((props: Props) => {
     const partialCategories = useAppSelector<Array<CategoryBlocks>>(getSidebarCategories)
     const sidebarCategories = addMissingBlocks(partialCategories, boards)
     console.log('AAA')
+
+    useEffect(() => {
+        wsClient.addOnChange((client: WSClient, categories: Category[]) => {
+            categories.forEach((c) => console.log(`category changed: ${c.id} ${c.name}`))
+            dispatch(updateCategories(categories))
+        }, 'category')
+    }, [])
 
     // TODO un-hardcode this teamID
     const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'

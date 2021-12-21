@@ -3,6 +3,7 @@ package ws
 
 import (
 	"fmt"
+	"math/rand"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -336,12 +337,39 @@ func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) 
 	pa.sendMessageToAll(utils.StructToMap(pluginConfig))
 }
 
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func randSeq(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
+}
+
 // sendWorkspaceMessageSkipCluster sends a message to all the users
 // with a websocket client connected to.
 func (pa *PluginAdapter) sendWorkspaceMessageSkipCluster(workspaceID string, payload map[string]interface{}) {
 	userIDs := pa.getUserIDsForWorkspace(workspaceID)
 	for _, userID := range userIDs {
 		pa.api.PublishWebSocketEvent(websocketActionUpdateBlock, payload, &mmModel.WebsocketBroadcast{UserId: userID})
+
+		// TODO remove this demo code
+		category := model.Category{
+			ID:       "7p5rfd6hhpifqfbg87mz177nyeo",
+			Name:     "Space X - " + randSeq(5),
+			UserID:   userID,
+			TeamID:   "atjjg8ofqb8kjnwy15yhezdgoh",
+			CreateAt: utils.GetMillis(),
+			UpdateAt: utils.GetMillis(),
+			DeleteAt: 0,
+		}
+		message := UpdateMsg{
+			Action:   websocketActionUpdateCategory,
+			Category: &category,
+		}
+
+		pa.api.PublishWebSocketEvent("UPDATE_CATEGORY", utils.StructToMap(message), &mmModel.WebsocketBroadcast{UserId: userID})
 	}
 }
 
@@ -368,7 +396,7 @@ func (pa *PluginAdapter) BroadcastBlockChange(workspaceID string, block model.Bl
 
 	message := UpdateMsg{
 		Action: websocketActionUpdateBlock,
-		Block:  block,
+		Block:  &block,
 	}
 
 	pa.sendWorkspaceMessage(workspaceID, utils.StructToMap(message))

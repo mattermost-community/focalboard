@@ -239,7 +239,7 @@ const BoardPage = (props: Props): JSX.Element => {
             }
         }
 
-        wsClient.addOnChange(incrementalUpdate)
+        wsClient.addOnChange(incrementalUpdate, 'block')
         wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
         return () => {
@@ -249,7 +249,7 @@ const BoardPage = (props: Props): JSX.Element => {
             if (subscribedToWorkspace) {
                 wsClient.unsubscribeToWorkspace(match.params.workspaceId || '0')
             }
-            wsClient.removeOnChange(incrementalUpdate)
+            wsClient.removeOnChange(incrementalUpdate, 'block')
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
             wsClient.removeOnStateChange(updateWebsocketState)
         }

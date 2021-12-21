@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createAsyncThunk, createSelector, createSlice} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSelector, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
 
@@ -42,7 +42,29 @@ const sidebarSlice = createSlice({
     name: 'sidebar',
     initialState: {categoryAttributes: []} as Sidebar,
     reducers: {
+        updateCategories: (state, action: PayloadAction<Array<Category>>) => {
+            action.payload.forEach((updatedCategory) => {
+                const index = state.categoryAttributes.findIndex((c) => c.id === updatedCategory.id)
 
+                // category not found
+                if (index === -1) {
+                    return
+                }
+
+                // when category is deleted
+                if (updatedCategory.deleteAt) {
+                    state.categoryAttributes.splice(index, 1)
+                    return
+                }
+
+                // else all, update the category
+                state.categoryAttributes[index] = {
+                    ...state.categoryAttributes[index],
+                    name: updatedCategory.name,
+                    updateAt: updatedCategory.updateAt,
+                }
+            })
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchSidebarCategories.fulfilled, (state, action) => {
@@ -57,6 +79,8 @@ export const getSidebarCategories = createSelector(
 )
 
 export const {reducer} = sidebarSlice
+
+export const {updateCategories} = sidebarSlice.actions
 
 export {Category, CategoryBlocks}
 

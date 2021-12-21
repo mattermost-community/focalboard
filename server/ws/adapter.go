@@ -12,6 +12,7 @@ const (
 	websocketActionUnsubscribeBlocks    = "UNSUBSCRIBE_BLOCKS"
 	websocketActionUpdateBlock          = "UPDATE_BLOCK"
 	websocketActionUpdateConfig         = "UPDATE_CLIENT_CONFIG"
+	websocketActionUpdateCategory       = "UPDATE_CATEGORY"
 )
 
 type Adapter interface {

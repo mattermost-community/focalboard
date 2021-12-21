@@ -10,6 +10,8 @@ import {createBoardView} from './blocks/boardView'
 import {createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
 import {IAppWindow} from './types'
+import {ChangeHandlerType, WSMessage} from './wsclient'
+import {Category} from './store/sidebar'
 
 declare let window: IAppWindow
 
@@ -513,6 +515,15 @@ class Utils {
     // legacy routes inside the plugin
     static isFocalboardLegacy(): boolean {
         return window.location.pathname.includes('/plugins/focalboard')
+    }
+
+    static fixWSData(message: WSMessage): [Block | Category | null, ChangeHandlerType] {
+        if (message.block) {
+            return [this.fixBlock(message.block), 'block']
+        } else if (message.category) {
+            return [message.category, 'category']
+        }
+        return [null, 'block']
     }
 
     static fixBlock(block: Block): Block {

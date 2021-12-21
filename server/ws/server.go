@@ -481,7 +481,7 @@ func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
 
 	message := UpdateMsg{
 		Action: websocketActionUpdateBlock,
-		Block:  block,
+		Block:  &block,
 	}
 
 	listeners := ws.getListenersForWorkspace(workspaceID)
