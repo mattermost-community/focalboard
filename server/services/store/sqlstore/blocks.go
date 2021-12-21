@@ -34,6 +34,17 @@ func (be BlockNotFoundErr) Error() string {
 	return fmt.Sprintf("block not found (block id: %s", be.blockID)
 }
 
+func (s *SQLStore) timestampToCharField(name string, as string) string {
+	switch s.dbType {
+	case mysqlDBType:
+		return fmt.Sprintf("date_format(%s, '%%Y-%%m-%%d %%H:%%i:%%S') AS %s", name, as)
+	case postgresDBType:
+		return fmt.Sprintf("to_char(%s, 'YYYY-MM-DD HH:MI:SS.MS') AS %s", name, as)
+	default:
+		return fmt.Sprintf("%s AS %s", name, as)
+	}
+}
+
 func (s *SQLStore) blockFields() []string {
 	return []string{
 		"id",
@@ -45,7 +56,7 @@ func (s *SQLStore) blockFields() []string {
 		"type",
 		"title",
 		"COALESCE(fields, '{}')",
-		"insert_at",
+		s.timestampToCharField("insert_at", "insertAt"),
 		"create_at",
 		"update_at",
 		"delete_at",
@@ -171,7 +182,7 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 		"l3.type",
 		"l3.title",
 		"l3.fields",
-		"l3.insert_at",
+		s.timestampToCharField("l3.insert_at", "insertAt"),
 		"l3.create_at",
 		"l3.update_at",
 		"l3.delete_at",
@@ -182,7 +193,7 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"COALESCE(l3.workspace_id, '0')": c.WorkspaceID}).
-		OrderBy("l3.id, l3.insert_at")
+		OrderBy("l3.id, insertAt")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -237,7 +248,7 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 		var block model.Block
 		var fieldsJSON string
 		var modifiedBy sql.NullString
-		var insertAt string
+		var insertAt sql.NullString
 
 		err := rows.Scan(
 			&block.ID,
