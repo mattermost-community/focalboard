@@ -62,7 +62,11 @@ function CenterContent(props: Props) {
             property = board?.fields.cardProperties.find((o) => o.type === 'select')
         }
 
-        const displayProperty = dateDisplayProperty
+        let displayProperty = dateDisplayProperty
+        if (!displayProperty && activeView.fields.viewType === 'calendar') {
+            displayProperty = board.fields.cardProperties.find((o) => o.type === 'date')
+        }
+
         return (
             <CenterPanel
                 clientConfig={clientConfig}
