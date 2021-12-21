@@ -25,7 +25,7 @@ const ErrorPage = React.memo(() => {
                 filled={true}
                 onClick={async () => {
                     await octoClient.logout()
-                    history.push("/login")
+                    history.push('/login')
                 }}
             >
                 <FormattedMessage
