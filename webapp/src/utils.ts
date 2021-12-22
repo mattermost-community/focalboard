@@ -58,10 +58,10 @@ class Utils {
         return ret
     }
 
-    static getProfilePicture(userId: string): string {
+    static getProfilePicture(userId?: string): string {
         const defaultImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
-        return imageURLForUser ? imageURLForUser(userId) : defaultImageUrl
+        return imageURLForUser && userId ? imageURLForUser(userId) : defaultImageUrl
     }
 
     static randomArray(size: number): Uint8Array {

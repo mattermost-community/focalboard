@@ -51,7 +51,7 @@ const CommentsList = React.memo((props: Props) => {
         <div className='CommentsList__new'>
             <img
                 className='comment-avatar'
-                src={Utils.getProfilePicture(me!.id)}
+                src={Utils.getProfilePicture(me?.id)}
             />
             <MarkdownEditor
                 className='newcomment'
