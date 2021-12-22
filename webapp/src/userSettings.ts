@@ -77,7 +77,7 @@ export class UserSettings {
             rawData = '{}'
         }
 
-        let mapping: {}
+        let mapping: {[key: string]: string}
         try {
             mapping = JSON.parse(rawData)
         } catch (e) {
@@ -99,7 +99,7 @@ export class UserSettings {
 
     static get lastViewId(): {[key: string]: string} {
         const rawData = UserSettings.get(UserSettingKey.LastViewId) || '{}'
-        let mapping: {}
+        let mapping: {[key: string]: string}
         try {
             mapping = JSON.parse(rawData)
         } catch (e) {
@@ -107,7 +107,7 @@ export class UserSettings {
 
             // revert to empty data if JSON conversion fails.
             // This will happen when users run the new code for the first time
-            mapping = new Map<string, string>()
+            mapping = {}
         }
 
         return mapping

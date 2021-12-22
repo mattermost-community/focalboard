@@ -21,6 +21,11 @@ interface CategoryBlocks extends Category {
     blockIDs: Array<string>
 }
 
+interface BlockCategoryWebsocketData {
+    blockID: string
+    categoryID: string
+}
+
 export const DefaultCategory: CategoryBlocks = {
     id: '',
     name: 'Boards',
@@ -46,22 +51,37 @@ const sidebarSlice = createSlice({
             action.payload.forEach((updatedCategory) => {
                 const index = state.categoryAttributes.findIndex((c) => c.id === updatedCategory.id)
 
-                // category not found
+                // when new category got created
                 if (index === -1) {
-                    return
-                }
-
-                // when category is deleted
-                if (updatedCategory.deleteAt) {
+                    state.categoryAttributes.push({
+                        ...updatedCategory,
+                        blockIDs: [],
+                    })
+                } else if (updatedCategory.deleteAt) {
+                    // when category is deleted
                     state.categoryAttributes.splice(index, 1)
-                    return
+                } else {
+                    // else all, update the category
+                    state.categoryAttributes[index] = {
+                        ...state.categoryAttributes[index],
+                        name: updatedCategory.name,
+                        updateAt: updatedCategory.updateAt,
+                    }
                 }
+            })
+        },
+        updateBlockCategories: (state, action: PayloadAction<Array<BlockCategoryWebsocketData>>) => {
+            action.payload.forEach((blockCategory) => {
+                for (let i = 0; i < state.categoryAttributes.length; i++) {
+                    const categoryAttribute = state.categoryAttributes[i]
 
-                // else all, update the category
-                state.categoryAttributes[index] = {
-                    ...state.categoryAttributes[index],
-                    name: updatedCategory.name,
-                    updateAt: updatedCategory.updateAt,
+                    // first we remove the block from list of blocks
+                    categoryAttribute.blockIDs = categoryAttribute.blockIDs.filter((blockID) => blockID !== blockCategory.blockID)
+
+                    // then we add it if this is the target category
+                    if (categoryAttribute.id === blockCategory.categoryID) {
+                        categoryAttribute.blockIDs.push(blockCategory.blockID)
+                    }
                 }
             })
         },
@@ -80,7 +100,7 @@ export const getSidebarCategories = createSelector(
 
 export const {reducer} = sidebarSlice
 
-export const {updateCategories} = sidebarSlice.actions
+export const {updateCategories, updateBlockCategories} = sidebarSlice.actions
 
-export {Category, CategoryBlocks}
+export {Category, CategoryBlocks, BlockCategoryWebsocketData}
 

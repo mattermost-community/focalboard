@@ -4,11 +4,18 @@ import React, {useState} from 'react'
 
 import {useIntl} from 'react-intl'
 
+import {useHistory, useRouteMatch} from 'react-router-dom'
+
 import Search from '../../widgets/icons/search'
 
 import './boardsSwitcher.scss'
 import AddIcon from '../../widgets/icons/add'
 import BoardSwitcherDialog from '../boardsSwitcherDialog/boardSwitcherDialog'
+import {UserSettings} from '../../userSettings'
+import {setCurrent as setCurrentBoard} from '../../store/boards'
+import {setCurrent as setCurrentView} from '../../store/views'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
+import {getCurrentWorkspace} from '../../store/workspace'
 
 const BoardsSwitcher = (): JSX.Element => {
     const intl = useIntl()
@@ -35,6 +42,24 @@ const BoardsSwitcher = (): JSX.Element => {
     //     [showSwitcher],
     // )
 
+    const dispatch = useAppDispatch()
+    const history = useHistory()
+
+    // TODO un-hardcode this teamID
+    const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
+
+    const workspace = useAppSelector(getCurrentWorkspace)
+
+    const goToEmptyCenterPanel = () => {
+        UserSettings.setLastBoardID(teamID, '')
+
+        // TODO see if this works or do we need a solutiion
+        // UserSettings.lastViewId = null
+        dispatch(setCurrentBoard(''))
+        dispatch(setCurrentView(''))
+        history.replace(`/workspace/${workspace?.id}`)
+    }
+
     return (
         <div className='BoardsSwitcherWrapper'>
             <div
@@ -48,7 +73,10 @@ const BoardsSwitcher = (): JSX.Element => {
                     </span>
                 </div>
             </div>
-            <span className='add-workspace-icon'>
+            <span
+                className='add-board-icon'
+                onClick={goToEmptyCenterPanel}
+            >
                 <AddIcon/>
             </span>
 

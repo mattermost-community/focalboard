@@ -370,6 +370,65 @@ func (pa *PluginAdapter) sendWorkspaceMessageSkipCluster(workspaceID string, pay
 		}
 
 		pa.api.PublishWebSocketEvent("UPDATE_CATEGORY", utils.StructToMap(message), &mmModel.WebsocketBroadcast{UserId: userID})
+
+		categoryTesla := model.Category{
+			ID:       "7guagyjdymjnpzxa7qmq1oz98fr",
+			Name:     "Tesla",
+			UserID:   userID,
+			TeamID:   "atjjg8ofqb8kjnwy15yhezdgoh",
+			CreateAt: utils.GetMillis(),
+			UpdateAt: utils.GetMillis(),
+			DeleteAt: 0,
+		}
+		messageTesla := UpdateMsg{
+			Action:   websocketActionUpdateCategory,
+			Category: &categoryTesla,
+		}
+		pa.api.PublishWebSocketEvent("UPDATE_CATEGORY", utils.StructToMap(messageTesla), &mmModel.WebsocketBroadcast{UserId: userID})
+
+		categoryTataMotors := model.Category{
+			ID:       "7guagyjdymjnpzxa7qmq1oz9000",
+			Name:     "Tata Motors",
+			UserID:   userID,
+			TeamID:   "atjjg8ofqb8kjnwy15yhezdgoh",
+			CreateAt: utils.GetMillis(),
+			UpdateAt: utils.GetMillis(),
+			DeleteAt: 0,
+		}
+		messageTataMotors := UpdateMsg{
+			Action:   websocketActionUpdateCategory,
+			Category: &categoryTataMotors,
+		}
+		pa.api.PublishWebSocketEvent("UPDATE_CATEGORY", utils.StructToMap(messageTataMotors), &mmModel.WebsocketBroadcast{UserId: userID})
+
+		messageUpdateBlockCategory := UpdateMsg{
+			Action: websocketActionUpdateCategoryBlock,
+			BlockCategories: &model.BlockCategoryWebsocketData{
+				BlockID:    "bwcar88o69ib4jmbaw8hwqiy9nh",
+				CategoryID: "7jbjd1dfcdtnhxkz6pwmder87me",
+			},
+		}
+		pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
+
+		messageUpdateBlockCategory.BlockCategories.BlockID = "bnx61sn1di7y3mx4t4d7jeycfcw"
+		messageUpdateBlockCategory.BlockCategories.CategoryID = "7guagyjdymjnpzxa7qmq1oz98fr"
+		pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
+
+		messageUpdateBlockCategory.BlockCategories.BlockID = "ba8i3jnhbh3gaxrwejht49xbaac"
+		messageUpdateBlockCategory.BlockCategories.CategoryID = "7jbjd1dfcdtnhxkz6pwmder87me"
+		pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
+
+		messageUpdateBlockCategory.BlockCategories.BlockID = "b7ob9z41dw7r1bysya79myn7jjc"
+		messageUpdateBlockCategory.BlockCategories.CategoryID = "7jbjd1dfcdtnhxkz6pwmder87me"
+		pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
+
+		messageUpdateBlockCategory.BlockCategories.BlockID = "bco3k38hgnb8t98trdokabahgmh"
+		messageUpdateBlockCategory.BlockCategories.CategoryID = ""
+		pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
+
+		messageUpdateBlockCategory.BlockCategories.BlockID = "bao8i9i67jjyhdde6hynn3f8t9r"
+		messageUpdateBlockCategory.BlockCategories.CategoryID = ""
+		pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
 	}
 }
 

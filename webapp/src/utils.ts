@@ -11,7 +11,7 @@ import {createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
 import {IAppWindow} from './types'
 import {ChangeHandlerType, WSMessage} from './wsclient'
-import {Category} from './store/sidebar'
+import {BlockCategoryWebsocketData, Category} from './store/sidebar'
 
 declare let window: IAppWindow
 
@@ -20,6 +20,8 @@ const OpenButtonClass = 'open-button'
 const SpacerClass = 'octo-spacer'
 const HorizontalGripClass = 'HorizontalGrip'
 const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
+
+export type WSMessagePayloads = Block | Category | BlockCategoryWebsocketData | null
 
 // eslint-disable-next-line no-shadow
 enum IDType {
@@ -517,11 +519,13 @@ class Utils {
         return window.location.pathname.includes('/plugins/focalboard')
     }
 
-    static fixWSData(message: WSMessage): [Block | Category | null, ChangeHandlerType] {
+    static fixWSData(message: WSMessage): [WSMessagePayloads, ChangeHandlerType] {
         if (message.block) {
             return [this.fixBlock(message.block), 'block']
         } else if (message.category) {
             return [message.category, 'category']
+        } else if (message.blockCategories) {
+            return [message.blockCategories, 'blockCategories']
         }
         return [null, 'block']
     }

@@ -4,13 +4,12 @@ import React, {useEffect, useState} from 'react'
 
 import {useHistory} from 'react-router-dom'
 
-import {FormattedMessage, useIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import SearchIllustration from '../../svg/search-illustration'
 
-import {UserWorkspace} from '../../user'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {getUserWorkspaceList, setUserWorkspaces} from '../../store/workspace'
+import {setUserWorkspaces} from '../../store/workspace'
 import octoClient from '../../octoClient'
 import Switch from '../../widgets/switch'
 
@@ -18,15 +17,15 @@ import SearchIcon from '../../widgets/icons/search'
 import {UserSettings} from '../../userSettings'
 import {getSortedBoards} from '../../store/boards'
 
-const checkBoardCount = (numsArr: RegExpMatchArray, boardCount: number) => {
-    for (const n of numsArr) {
-        if (Number(n) === boardCount) {
-            return true
-        }
-    }
-
-    return false
-}
+// const checkBoardCount = (numsArr: RegExpMatchArray, boardCount: number) => {
+//     for (const n of numsArr) {
+//         if (Number(n) === boardCount) {
+//             return true
+//         }
+//     }
+//
+//     return false
+// }
 
 const DashboardCenterContent = (): JSX.Element => {
     // const rawWorkspaces = useAppSelector<UserWorkspace[]>(getUserWorkspaceList) || []
@@ -52,15 +51,7 @@ const DashboardCenterContent = (): JSX.Element => {
 
     const filteredBoards = allBoards.
         filter((board) => titlePattern.test(board.title)).
-        sort((a, b) => {
-            // if ((a.boardCount === 0 && b.boardCount === 0) || (a.boardCount !== 0 && b.boardCount !== 0)) {
-            //     return a.title.localeCompare(b.title)
-            // }
-            //
-            // return b.boardCount - a.boardCount
-
-            return a.title.localeCompare(b.title)
-        })
+        sort((a, b) => a.title.localeCompare(b.title))
 
     return (
         <div className='DashboardCenterContent'>

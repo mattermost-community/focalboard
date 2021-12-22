@@ -27,17 +27,14 @@ const SearchDialog = (props: Props): JSX.Element => {
     const searchHandler = async (query: string): Promise<void> => {
         setIsSearching(true)
         setSearchQuery(query)
-        const results = await props.searchHandler(query)
-        console.log(results)
-        setResults(results)
+        const searchResults = await props.searchHandler(query)
+        setResults(searchResults)
         setIsSearching(false)
     }
 
     const debouncedSearchHandler = useMemo(() => debounce(searchHandler, 200), [])
 
     const emptyResult = results.length === 0 && !isSearching && searchQuery
-
-    console.log(searchQuery)
 
     return (
         <Dialog

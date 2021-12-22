@@ -94,7 +94,6 @@ const Workspace = React.memo((props: Props) => {
             {!props.readonly &&
                 <Sidebar
                     activeBoardId={board?.id}
-                    activeViewId={view?.id}
                 />
             }
             <div className='mainFrame'>

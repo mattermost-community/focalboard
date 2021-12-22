@@ -5,21 +5,12 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
-import {BoardView, IViewType} from '../../blocks/boardView'
 import mutator from '../../mutator'
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import IconButton from '../../widgets/buttons/iconButton'
-import BoardIcon from '../../widgets/icons/board'
-import CalendarIcon from '../../widgets/icons/calendar'
 import DeleteIcon from '../../widgets/icons/delete'
-import DuplicateIcon from '../../widgets/icons/duplicate'
-import GalleryIcon from '../../widgets/icons/gallery'
 import OptionsIcon from '../../widgets/icons/options'
-import TableIcon from '../../widgets/icons/table'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-
-import DeleteBoardDialog from './deleteBoardDialog'
 
 import './sidebarBoardItem.scss'
 import {Category, CategoryBlocks} from '../../store/sidebar'
@@ -48,7 +39,8 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const [collapsed, setCollapsed] = useState(false)
     const intl = useIntl()
     const history = useHistory()
-    const [deleteBoardOpen, setDeleteBoardOpen] = useState(false)
+
+    // const [deleteBoardOpen, setDeleteBoardOpen] = useState(false)
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, workspaceId?: string}>()
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
     const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
@@ -70,60 +62,60 @@ const SidebarBoardItem = React.memo((props: Props) => {
         props.hideSidebar()
     }, [match, history])
 
-    const showView = useCallback((viewId, boardId) => {
-        const newPath = generatePath(match.path, {...match.params, boardId: boardId || '', viewId: viewId || ''})
-        history.push(newPath)
-        props.hideSidebar()
-    }, [match, history])
+    // const showView = useCallback((viewId, boardId) => {
+    //     const newPath = generatePath(match.path, {...match.params, boardId: boardId || '', viewId: viewId || ''})
+    //     history.push(newPath)
+    //     props.hideSidebar()
+    // }, [match, history])
+    //
+    // const iconForViewType = (viewType: IViewType): JSX.Element => {
+    //     switch (viewType) {
+    //     case 'board': return <BoardIcon/>
+    //     case 'table': return <TableIcon/>
+    //     case 'gallery': return <GalleryIcon/>
+    //     case 'calendar': return <CalendarIcon/>
+    //     default: return <div/>
+    //     }
+    // }
+    //
+    // const duplicateBoard = async (boardId: string) => {
+    //     // const oldBoardId = props.activeBoardId
+    //     const oldBoardId = ''
+    //
+    //     await mutator.duplicateBoard(
+    //         boardId,
+    //         intl.formatMessage({id: 'Mutator.duplicate-board', defaultMessage: 'duplicate board'}),
+    //         false,
+    //         async (newBoardId) => {
+    //             showBoard(newBoardId)
+    //         },
+    //         async () => {
+    //             if (oldBoardId) {
+    //                 showBoard(oldBoardId)
+    //             }
+    //         },
+    //     )
+    // }
 
-    const iconForViewType = (viewType: IViewType): JSX.Element => {
-        switch (viewType) {
-        case 'board': return <BoardIcon/>
-        case 'table': return <TableIcon/>
-        case 'gallery': return <GalleryIcon/>
-        case 'calendar': return <CalendarIcon/>
-        default: return <div/>
-        }
-    }
-
-    const duplicateBoard = async (boardId: string) => {
-        // const oldBoardId = props.activeBoardId
-        const oldBoardId = ''
-
-        await mutator.duplicateBoard(
-            boardId,
-            intl.formatMessage({id: 'Mutator.duplicate-board', defaultMessage: 'duplicate board'}),
-            false,
-            async (newBoardId) => {
-                showBoard(newBoardId)
-            },
-            async () => {
-                if (oldBoardId) {
-                    showBoard(oldBoardId)
-                }
-            },
-        )
-    }
-
-    const addTemplateFromBoard = async (boardId: string) => {
-        // const oldBoardId = props.activeBoardId
-        const oldBoardId = ''
-
-        await mutator.duplicateBoard(
-            boardId,
-            intl.formatMessage({id: 'Mutator.new-template-from-board', defaultMessage: 'new template from board'}),
-            true,
-            async (newBoardId) => {
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromBoard, {board: newBoardId})
-                showBoard(newBoardId)
-            },
-            async () => {
-                if (oldBoardId) {
-                    showBoard(oldBoardId)
-                }
-            },
-        )
-    }
+    // const addTemplateFromBoard = async (boardId: string) => {
+    //     // const oldBoardId = props.activeBoardId
+    //     const oldBoardId = ''
+    //
+    //     await mutator.duplicateBoard(
+    //         boardId,
+    //         intl.formatMessage({id: 'Mutator.new-template-from-board', defaultMessage: 'new template from board'}),
+    //         true,
+    //         async (newBoardId) => {
+    //             TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromBoard, {board: newBoardId})
+    //             showBoard(newBoardId)
+    //         },
+    //         async () => {
+    //             if (oldBoardId) {
+    //                 showBoard(oldBoardId)
+    //             }
+    //         },
+    //     )
+    // }
 
     const blocks = props.categoryBlocks.blockIDs || []
 

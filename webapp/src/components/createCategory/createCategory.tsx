@@ -3,7 +3,7 @@
 
 import React, {useState} from 'react'
 
-import {FormattedMessage, useIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import Dialog from '../dialog'
 import Button from '../../widgets/buttons/button'

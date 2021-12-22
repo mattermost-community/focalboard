@@ -6,9 +6,10 @@ import (
 
 // UpdateMsg is sent on block updates.
 type UpdateMsg struct {
-	Action   string          `json:"action"`
-	Block    *model.Block    `json:"block,omitempty"`
-	Category *model.Category `json:"category,omitempty"`
+	Action          string                            `json:"action"`
+	Block           *model.Block                      `json:"block,omitempty"`
+	Category        *model.Category                   `json:"category,omitempty"`
+	BlockCategories *model.BlockCategoryWebsocketData `json:"blockCategories,omitempty"`
 }
 
 // WebsocketCommand is an incoming command from the client.

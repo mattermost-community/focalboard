@@ -2,36 +2,28 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
 
-import {useIntl} from 'react-intl'
-
-import DashboardOnboardingSvg from '../../svg/dashboard-onboarding'
-
 import {getActiveThemeName, loadTheme} from '../../theme'
 import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 import {getSortedBoards} from '../../store/boards'
-import {getSortedViews} from '../../store/views'
 import {getCurrentWorkspace} from '../../store/workspace'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 
 import './sidebar.scss'
 
-import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
-
 import {
+    BlockCategoryWebsocketData,
     Category,
     CategoryBlocks,
     fetchSidebarCategories,
-    getSidebarCategories,
+    getSidebarCategories, updateBlockCategories,
     updateCategories,
 } from '../../store/sidebar'
 
 import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
-
-import DashboardButton from '../dashboardButton/dashboardButton'
 
 import wsClient, {WSClient} from '../../wsclient'
 
@@ -43,7 +35,6 @@ import {addMissingBlocks} from './utils'
 
 type Props = {
     activeBoardId?: string
-    activeViewId?: string
     isDashboard?: boolean
 }
 
@@ -60,18 +51,18 @@ const Sidebar = React.memo((props: Props) => {
     const [userHidden, setUserHidden] = useState(false)
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
     const boards = useAppSelector(getSortedBoards)
-    const views = useAppSelector(getSortedViews)
-    const intl = useIntl()
     const dispatch = useAppDispatch()
     const partialCategories = useAppSelector<Array<CategoryBlocks>>(getSidebarCategories)
     const sidebarCategories = addMissingBlocks(partialCategories, boards)
-    console.log('AAA')
 
     useEffect(() => {
-        wsClient.addOnChange((client: WSClient, categories: Category[]) => {
-            categories.forEach((c) => console.log(`category changed: ${c.id} ${c.name}`))
+        wsClient.addOnChange((_: WSClient, categories: Category[]) => {
             dispatch(updateCategories(categories))
         }, 'category')
+
+        wsClient.addOnChange((_: WSClient, blockCategories: Array<BlockCategoryWebsocketData>) => {
+            dispatch(updateBlockCategories(blockCategories))
+        }, 'blockCategories')
     }, [])
 
     // TODO un-hardcode this teamID
@@ -179,27 +170,7 @@ const Sidebar = React.memo((props: Props) => {
                 </div>
             }
 
-            {/*{*/}
-            {/*    workspace && workspace.id !== '0' && !props.isDashboard &&*/}
-            {/*    <WorkspaceSwitcher activeWorkspace={workspace}/>*/}
-            {/*}*/}
-
             <BoardsSwitcher/>
-
-            {/*{*/}
-            {/*    props.isDashboard &&*/}
-            {/*    (*/}
-            {/*        <React.Fragment>*/}
-            {/*            <WorkspaceSwitcher/>*/}
-            {/*            <div className='Sidebar__onboarding'>*/}
-            {/*                <DashboardOnboardingSvg/>*/}
-            {/*                <div>*/}
-            {/*                    {intl.formatMessage({id: 'DashboardPage.CenterPanel.ChangeChannels', defaultMessage: 'Use the switcher to easily change channels'})}*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*        </React.Fragment>*/}
-            {/*    )*/}
-            {/*}*/}
 
             {
 
@@ -207,19 +178,11 @@ const Sidebar = React.memo((props: Props) => {
                 <div className='octo-sidebar-list'>
                     {
                         sidebarCategories.map((category) => {
-                            // const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
                             return (
                                 <SidebarBoardItem
                                     hideSidebar={hideSidebar}
                                     key={category.id}
                                     activeBoardID={props.activeBoardId}
-
-                                    // views={views}
-                                    // board={board}
-                                    // activeBoardId={props.activeBoardId}
-                                    // activeViewId={props.activeViewId}
-
-                                    // nextBoardId={board.id === props.activeBoardId ? nextBoardId : undefined}
                                     categoryBlocks={category}
                                     boards={boards}
                                     allCategories={sidebarCategories}

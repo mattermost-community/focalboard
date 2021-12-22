@@ -3,10 +3,10 @@
 
 import {ClientConfig} from './config/clientConfig'
 
-import {Utils} from './utils'
+import {Utils, WSMessagePayloads} from './utils'
 import {Block} from './blocks/block'
 import {OctoUtils} from './octoUtils'
-import {Category} from './store/sidebar'
+import {BlockCategoryWebsocketData, Category} from './store/sidebar'
 
 // These are outgoing commands to the server
 type WSCommand = {
@@ -21,6 +21,7 @@ export type WSMessage = {
     action?: string
     block?: Block
     category?: Category
+    blockCategories?: BlockCategoryWebsocketData
     error?: string
 }
 
@@ -32,6 +33,7 @@ export const ACTION_UNSUBSCRIBE_WORKSPACE = 'UNSUBSCRIBE_WORKSPACE'
 export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
 export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
 export const ACTION_UPDATE_CATEGORY = 'UPDATE_CATEGORY'
+export const ACTION_UPDATE_BLOCK_CATEGORY = 'UPDATE_BLOCK_CATEGORY'
 
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
@@ -49,16 +51,18 @@ type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close')
 type OnErrorHandler = (client: WSClient, e: Event) => void
 type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => void
 
-export type ChangeHandlerType = 'block' | 'category'
+export type ChangeHandlerType = 'block' | 'category' | 'blockCategories'
 
 type UpdatedData = {
     Blocks: Block[]
     Categories: Category[]
+    BlockCategories: Array<BlockCategoryWebsocketData>
 }
 
 type ChangeHandlers = {
     Block: OnChangeHandler[]
     Category: OnChangeHandler[]
+    BlockCategory: OnChangeHandler[]
 }
 
 class WSClient {
@@ -73,12 +77,12 @@ class WSClient {
     state: 'init'|'open'|'close' = 'init'
     onStateChange: OnStateChangeHandler[] = []
     onReconnect: OnReconnectHandler[] = []
-    onChange: ChangeHandlers = {Block: [], Category: []}
+    onChange: ChangeHandlers = {Block: [], Category: [], BlockCategory: []}
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
     private notificationDelay = 100
     private reopenDelay = 3000
-    private updatedData: UpdatedData = {Blocks: [], Categories: []}
+    private updatedData: UpdatedData = {Blocks: [], Categories: [], BlockCategories: []}
     private updateTimeout?: NodeJS.Timeout
     private errorPollId?: NodeJS.Timeout
 
@@ -129,6 +133,8 @@ class WSClient {
             this.onChange.Block.push(handler)
         } else if (type === 'category') {
             this.onChange.Category.push(handler)
+        } else if (type === 'blockCategories') {
+            this.onChange.BlockCategory.push(handler)
         }
     }
 
@@ -451,14 +457,21 @@ class WSClient {
         this.sendCommand(command)
     }
 
-    private queueUpdateNotification(data: Block | Category, type: ChangeHandlerType) {
+    private queueUpdateNotification(data: WSMessagePayloads, type: ChangeHandlerType) {
+        if (!data) {
+            return
+        }
+
         // Remove existing queued update
         if (type === 'block') {
-            this.updatedData.Blocks = this.updatedData.Blocks.filter((o) => o.id !== data.id)
+            this.updatedData.Blocks = this.updatedData.Blocks.filter((o) => o.id !== (data as Block).id)
             this.updatedData.Blocks.push(OctoUtils.hydrateBlock(data as Block))
         } else if (type === 'category') {
-            this.updatedData.Categories = this.updatedData.Categories.filter((c) => c.id !== data.id)
+            this.updatedData.Categories = this.updatedData.Categories.filter((c) => c.id !== (data as Category).id)
             this.updatedData.Categories.push(data as Category)
+        } else if (type === 'blockCategories') {
+            this.updatedData.BlockCategories = this.updatedData.BlockCategories.filter((b) => b.blockID === (data as BlockCategoryWebsocketData).blockID)
+            this.updatedData.BlockCategories.push(data as BlockCategoryWebsocketData)
         }
 
         if (this.updateTimeout) {
@@ -480,6 +493,10 @@ class WSClient {
             Utils.log(`WSClient flush update category: ${category.id}`)
         }
 
+        for (const blockCategories of this.updatedData.BlockCategories) {
+            Utils.log(`WSClient flush update blockCategory: ${blockCategories.blockID} ${blockCategories.categoryID}`)
+        }
+
         for (const handler of this.onChange.Block) {
             handler(this, this.updatedData.Blocks)
         }
@@ -488,9 +505,14 @@ class WSClient {
             handler(this, this.updatedData.Categories)
         }
 
+        for (const handler of this.onChange.BlockCategory) {
+            handler(this, this.updatedData.BlockCategories)
+        }
+
         this.updatedData = {
             Blocks: [],
             Categories: [],
+            BlockCategories: [],
         }
     }
 
@@ -504,7 +526,7 @@ class WSClient {
         // Use this sequence so the onclose method doesn't try to re-open
         const ws = this.ws
         this.ws = null
-        this.onChange = {Block: [], Category: []}
+        this.onChange = {Block: [], Category: [], BlockCategory: []}
         this.onReconnect = []
         this.onStateChange = []
         this.onError = []
