@@ -46,12 +46,12 @@ const BoardPage = (props: Props): JSX.Element => {
     const dispatch = useAppDispatch()
 
     const history = useHistory()
-    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
     const queryString = new URLSearchParams(useLocation().search)
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
 
-    let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
+    let teamId = match.params.teamId || UserSettings.lastTeamId || '0'
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -61,10 +61,10 @@ const BoardPage = (props: Props): JSX.Element => {
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
-        workspaceId = match.params.workspaceId || workspaceId
-        UserSettings.lastWorkspaceId = workspaceId
-        octoClient.workspaceId = workspaceId
-    }, [match.params.workspaceId])
+        teamId = match.params.teamId || teamId
+        UserSettings.lastTeamId = teamId
+        octoClient.teamId = teamId
+    }, [match.params.teamId])
 
     // Backward compatibility: This can be removed in the future, this is for
     // transform the old query params into routes
@@ -73,20 +73,20 @@ const BoardPage = (props: Props): JSX.Element => {
 
     useEffect(() => {
         // don't do anything if-
-        // 1. the URL already has a workspace ID, or
-        // 2. the workspace ID is unavailable.
-        // This also ensures once the workspace id is
+        // 1. the URL already has a team ID, or
+        // 2. the team ID is unavailable.
+        // This also ensures once the team id is
         // set in the URL, we don't update the history anymore.
-        if (props.readonly || match.params.workspaceId || !workspaceId || workspaceId === '0') {
+        if (props.readonly || match.params.teamId || !teamId || teamId === '0') {
             return
         }
 
-        // we can pick workspace ID from board if it's not available anywhere,
-        const workspaceIDToUse = workspaceId || board.workspaceId
+        // we can pick team ID from board if it's not available anywhere,
+        const teamIDToUse = teamId || board.teamId
 
-        const newPath = Utils.buildOriginalPath(workspaceIDToUse, match.params.boardId, match.params.viewId, match.params.cardId)
-        history.replace(`/workspace/${newPath}`)
-    }, [workspaceId, match.params.boardId, match.params.viewId, match.params.cardId])
+        const newPath = Utils.buildOriginalPath(teamIDToUse, match.params.boardId, match.params.viewId, match.params.cardId)
+        history.replace(`/team/${newPath}`)
+    }, [teamId, match.params.boardId, match.params.viewId, match.params.cardId])
 
     useEffect(() => {
         // Backward compatibility: This can be removed in the future, this is for
@@ -145,15 +145,15 @@ const BoardPage = (props: Props): JSX.Element => {
 
         UserSettings.lastBoardId = boardId || ''
         UserSettings.lastViewId = viewId || ''
-        UserSettings.lastWorkspaceId = workspaceId
+        UserSettings.lastTeamId = teamId
 
         dispatch(setCurrentBoard(boardId || ''))
         dispatch(setCurrentView(viewId || ''))
     }, [match.params.boardId, match.params.viewId, boardViews])
 
     useEffect(() => {
-        Utils.setFavicon(board?.fields.icon)
-    }, [board?.fields.icon])
+        Utils.setFavicon(board?.icon)
+    }, [board?.icon])
 
     useEffect(() => {
         if (board) {
@@ -187,23 +187,28 @@ const BoardPage = (props: Props): JSX.Element => {
 
         dispatch(loadAction(match.params.boardId))
 
-        let subscribedToWorkspace = false
+        let subscribedToTeam = false
         if (wsClient.state === 'open') {
-            wsClient.authenticate(match.params.workspaceId || '0', token)
-            wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
-            subscribedToWorkspace = true
+            wsClient.authenticate(match.params.teamId || '0', token)
+            wsClient.subscribeToTeam(match.params.teamId || '0')
+            subscribedToTeam = true
         }
 
-        const incrementalUpdate = (_: WSClient, blocks: Block[]) => {
-            // only takes into account the blocks that belong to the workspace
-            const workspaceBlocks = blocks.filter((b: Block) => b.workspaceId === '0' || b.workspaceId === workspaceId)
+        const incrementalUpdate = (_: WSClient, boards: Board[], blocks: Block[]) => {
+            // only takes into account the entities that belong to the team or the user boards
+            const teamBoards = boards.filter((b: Board) => b.teamId === '0' || b.teamId === teamId)
+            // ToDo: update this
+            // - create a selector to get user boards
+            // - replace the teamId check of blocks by a "is in my boards" check
+            /* const teamBlocks = blocks.filter((b: Block) => b.teamId === '0' || b.boardId in userBoardIds) */
+            const teamBlocks = blocks
 
             batch(() => {
-                dispatch(updateBoards(workspaceBlocks.filter((b: Block) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
-                dispatch(updateViews(workspaceBlocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
-                dispatch(updateCards(workspaceBlocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
-                dispatch(updateComments(workspaceBlocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
-                dispatch(updateContents(workspaceBlocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
+                dispatch(updateBoards(teamBoards.filter((b: Board) => b.deleteAt !== 0)))
+                dispatch(updateViews(teamBlocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+                dispatch(updateCards(teamBlocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
+                dispatch(updateComments(teamBlocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
+                dispatch(updateContents(teamBlocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
             })
         }
 
@@ -211,9 +216,9 @@ const BoardPage = (props: Props): JSX.Element => {
         const updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
             if (newState === 'open') {
                 const newToken = localStorage.getItem('focalboardSessionId') || ''
-                wsClient.authenticate(match.params.workspaceId || '0', newToken)
-                wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
-                subscribedToWorkspace = true
+                wsClient.authenticate(match.params.teamId || '0', newToken)
+                wsClient.subscribeToTeam(match.params.teamId || '0')
+                subscribedToTeam = true
             }
 
             if (timeout) {
@@ -223,7 +228,7 @@ const BoardPage = (props: Props): JSX.Element => {
             if (newState === 'close') {
                 timeout = setTimeout(() => {
                     setWebsocketClosed(true)
-                    subscribedToWorkspace = false
+                    subscribedToTeam = false
                 }, websocketTimeoutForBanner)
             } else {
                 setWebsocketClosed(false)
@@ -237,14 +242,14 @@ const BoardPage = (props: Props): JSX.Element => {
             if (timeout) {
                 clearTimeout(timeout)
             }
-            if (subscribedToWorkspace) {
-                wsClient.unsubscribeToWorkspace(match.params.workspaceId || '0')
+            if (subscribedToTeam) {
+                wsClient.unsubscribeToTeam(match.params.teamId || '0')
             }
             wsClient.removeOnChange(incrementalUpdate)
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
             wsClient.removeOnStateChange(updateWebsocketState)
         }
-    }, [match.params.workspaceId, props.readonly, match.params.boardId])
+    }, [match.params.teamId, props.readonly, match.params.boardId])
 
     useHotkeys('ctrl+z,cmd+z', () => {
         Utils.log('Undo')
@@ -280,7 +285,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
     // this is needed to redirect to dashboard
     // when opening Focalboard for the first time
-    const shouldGoToDashboard = Utils.isFocalboardPlugin() && workspaceId === '0' && !match.params.boardId && !match.params.viewId
+    const shouldGoToDashboard = Utils.isFocalboardPlugin() && teamId === '0' && !match.params.boardId && !match.params.viewId
     if (shouldGoToDashboard) {
         return (<Redirect to={'/dashboard'}/>)
     }

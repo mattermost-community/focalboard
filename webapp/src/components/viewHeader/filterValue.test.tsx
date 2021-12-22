@@ -43,7 +43,7 @@ const filter: FilterClause = {
 describe('components/viewHeader/filterValue', () => {
     beforeEach(() => {
         jest.clearAllMocks()
-        board.fields.cardProperties[0].options = [{id: 'Status', value: 'Status', color: ''}]
+        board.cardProperties[0].options = [{id: 'Status', value: 'Status', color: ''}]
         activeView.fields.filter.filters = [filter]
     })
     test('return filterValue', () => {
@@ -53,7 +53,7 @@ describe('components/viewHeader/filterValue', () => {
                     <FilterValue
                         view={activeView}
                         filter={filter}
-                        template={board.fields.cardProperties[0]}
+                        template={board.cardProperties[0]}
                     />
                 </ReduxProvider>,
             ),
@@ -69,7 +69,7 @@ describe('components/viewHeader/filterValue', () => {
                     <FilterValue
                         view={activeView}
                         filter={filter}
-                        template={board.fields.cardProperties[0]}
+                        template={board.cardProperties[0]}
                     />
                 </ReduxProvider>,
             ),
@@ -90,7 +90,7 @@ describe('components/viewHeader/filterValue', () => {
                     <FilterValue
                         view={activeView}
                         filter={filter}
-                        template={board.fields.cardProperties[0]}
+                        template={board.cardProperties[0]}
                     />
                 </ReduxProvider>,
             ),

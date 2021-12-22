@@ -44,12 +44,14 @@ const usersSlice = createSlice({
             state.me = null
             state.loggedIn = false
         })
-        builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.workspaceUsers = action.payload.workspaceUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
-                acc[user.id] = user
-                return acc
-            }, {})
-        })
+
+        // ToDo: readd with members
+        // builder.addCase(initialLoad.fulfilled, (state, action) => {
+        //     state.workspaceUsers = action.payload.workspaceUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
+        //         acc[user.id] = user
+        //         return acc
+        //     }, {})
+        // })
     },
 })
 

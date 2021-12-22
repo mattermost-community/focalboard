@@ -68,7 +68,7 @@ function convert(input: Trello): Block[] {
     console.log(`Board: ${input.name}`)
     board.rootId = board.id
     board.title = input.name
-    board.fields.description = input.desc
+    board.description = input.desc
 
     // Convert lists (columns) to a Select property
     const optionIdMap = new Map<string, string>()
@@ -92,7 +92,7 @@ function convert(input: Trello): Block[] {
         type: 'select',
         options
     }
-    board.fields.cardProperties = [cardProperty]
+    board.cardProperties = [cardProperty]
     blocks.push(board)
 
     // Board view

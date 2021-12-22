@@ -5,6 +5,53 @@ import {Utils, IDType} from '../utils'
 import {Block, createBlock} from './block'
 import {Card} from './card'
 
+
+
+
+
+// ----------------------------------------------------------------
+// -         NEW
+// ----------------------------------------------------------------
+
+const boardTypes = ['O', 'P']
+type BoardTypes = typeof boardTypes[number]
+
+type Board = {
+    id: string
+    teamId: string
+    channelId?: string
+    createdBy: string
+    modifiedBy: string
+    type: BoardTypes
+
+    title: string
+    description: string
+    icon?: string
+    showDescription: boolean
+    isTemplate: boolean
+    properties: Record<string, string | string[]>
+    cardProperties: IPropertyTemplate[]
+    columnCalculations: Record<string, string>
+
+    createAt: number
+    updateAt: number
+    deleteAt: number
+}
+
+type BoardMember = {
+    boardId: string
+    userId: string
+    roles?: string
+    schemeAdmin: boolean
+    schemeEditor: boolean
+    schemeCommenter: boolean
+    schemeViewer: boolean
+}
+
+// ----------------------------------------------------------------
+
+
+
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
 
 interface IPropertyOption {
@@ -30,11 +77,12 @@ type BoardFields = {
     columnCalculations: Record<string, string>
 }
 
-type Board = Block & {
-    fields: BoardFields
-}
-
-function createBoard(block?: Block): Board {
+// type Board = Block & {
+//     fields: BoardFields
+// }
+//
+function createBoard(board?: Board): Board {
+    const now = Date.now()
     let cardProperties: IPropertyTemplate[] = []
     const selectProperties = cardProperties.find((o) => o.type === 'select')
     if (!selectProperties) {
@@ -47,9 +95,9 @@ function createBoard(block?: Block): Board {
         cardProperties.push(property)
     }
 
-    if (block?.fields.cardProperties) {
+    if (board?.cardProperties) {
         // Deep clone of card properties and their options
-        cardProperties = block?.fields.cardProperties.map((o: IPropertyTemplate) => {
+        cardProperties = board?.cardProperties.map((o: IPropertyTemplate) => {
             return {
                 id: o.id,
                 name: o.name,
@@ -60,16 +108,23 @@ function createBoard(block?: Block): Board {
     }
 
     return {
-        ...createBlock(block),
-        type: 'board',
-        fields: {
-            showDescription: block?.fields.showDescription || false,
-            description: block?.fields.description || '',
-            icon: block?.fields.icon || '',
-            isTemplate: block?.fields.isTemplate || false,
-            columnCalculations: block?.fields.columnCalculations || [],
-            cardProperties,
-        },
+        id: board?.id || '',
+        teamId: board?.teamId || '',
+        channelId: board?.channelId || '',
+        createdBy: board?.createdBy || '',
+        modifiedBy: board?.modifiedBy || '',
+        type: board?.type || 'P',
+        title: board?.title || '',
+        description: board?.description || '',
+        icon: board?.icon || '',
+        showDescription: board?.showDescription || false,
+        isTemplate: board?.isTemplate || false,
+        properties: board?.properties || {},
+        cardProperties,
+        columnCalculations: board?.columnCalculations || {},
+        createAt: board?.createAt || now,
+        updateAt: board?.updateAt || now,
+        deleteAt: board?.deleteAt || 0,
     }
 }
 
@@ -78,4 +133,4 @@ type BoardGroup = {
     cards: Card[]
 }
 
-export {Board, PropertyType, IPropertyOption, IPropertyTemplate, BoardGroup, createBoard}
+export {Board, BoardMember, PropertyType, IPropertyOption, IPropertyTemplate, BoardGroup, createBoard}

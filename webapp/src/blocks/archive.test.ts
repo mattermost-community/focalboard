@@ -9,7 +9,8 @@ test('archive: archive and unarchive', async () => {
     const blocks: Block[] = []
 
     const board = TestBlockFactory.createBoard()
-    blocks.push(board)
+    // ToDo: remove
+    // blocks.push(board)
     blocks.push(TestBlockFactory.createBoardView(board))
     const card = TestBlockFactory.createCard(board)
     blocks.push(card)

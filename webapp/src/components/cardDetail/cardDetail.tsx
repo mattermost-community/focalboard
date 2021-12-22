@@ -76,7 +76,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
     const setRandomIcon = useCallback(() => {
         const newIcon = BlockIcons.shared.randomIcon()
-        mutator.changeIcon(card.id, card.fields.icon, newIcon)
+        mutator.changeBlockIcon(card.id, card.fields.icon, newIcon)
     }, [card.id, card.fields.icon])
 
     if (!card) {

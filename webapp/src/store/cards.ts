@@ -178,7 +178,7 @@ function sortCards(cards: Card[], board: Board, activeView: BoardView, usersById
             })
         } else {
             const sortPropertyId = sortOption.propertyId
-            const template = board.fields.cardProperties.find((o) => o.id === sortPropertyId)
+            const template = board.cardProperties.find((o) => o.id === sortPropertyId)
             if (!template) {
                 Utils.logError(`Missing template for property id: ${sortPropertyId}`)
                 return sortedCards
@@ -270,7 +270,7 @@ function searchFilterCards(cards: Card[], board: Board, searchTextRaw: string): 
 
         for (const [propertyId, propertyValue] of Object.entries(card.fields.properties)) {
             // TODO: Refactor to a shared function that returns the display value of a property
-            const propertyTemplate = board.fields.cardProperties.find((o) => o.id === propertyId)
+            const propertyTemplate = board.cardProperties.find((o) => o.id === propertyId)
             if (propertyTemplate) {
                 if (propertyTemplate.type === 'select') {
                     // Look up the value of the select option
@@ -306,7 +306,7 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
         }
         let result = cards
         if (view.fields.filter) {
-            result = CardFilter.applyFilterGroup(view.fields.filter, board.fields.cardProperties, result)
+            result = CardFilter.applyFilterGroup(view.fields.filter, board.cardProperties, result)
         }
 
         if (searchText) {

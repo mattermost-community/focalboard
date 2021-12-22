@@ -122,7 +122,7 @@ const TableRow = React.memo((props: Props) => {
 
             {/* Columns, one per property */}
 
-            {board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
+            {board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
                 if (!columnRefs.get(template.id)) {
                     columnRefs.set(template.id, React.createRef())
                 }

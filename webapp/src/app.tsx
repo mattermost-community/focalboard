@@ -124,13 +124,13 @@ const App = React.memo((): JSX.Element => {
     if (globalError) {
         globalErrorRedirect = <Route path='/*'><Redirect to={`/error?id=${globalError}`}/></Route>
         setTimeout(() => dispatch(setGlobalError('')), 0)
-    }
+        }
 
-    const continueToWelcomeScreen = () => {
-        return Utils.isFocalboardPlugin() && loggedIn === true && !UserSettings.welcomePageViewed
-    }
+        const continueToWelcomeScreen = () => {
+            return Utils.isFocalboardPlugin() && loggedIn === true && !UserSettings.welcomePageViewed
+        }
 
-    return (
+        return (
         <IntlProvider
             locale={language.split(/[_]/)[0]}
             messages={getMessages(language)}
@@ -159,8 +159,8 @@ const App = React.memo((): JSX.Element => {
                                                 return <Redirect to={'/welcome'}/>
                                             }
 
-                                            if (Utils.isFocalboardPlugin() && UserSettings.lastWorkspaceId) {
-                                                return <Redirect to={`/workspace/${UserSettings.lastWorkspaceId}/${UserSettings.lastBoardId}/${UserSettings.lastViewId}`}/>
+                                            if (Utils.isFocalboardPlugin() && UserSettings.lastTeamId) {
+                                                return <Redirect to={`/team/${UserSettings.lastTeamId}/${UserSettings.lastBoardId}/${UserSettings.lastViewId}`}/>
                                             }
 
                                             if (loggedIn === true) {
@@ -207,12 +207,20 @@ const App = React.memo((): JSX.Element => {
                                     }}
                                 />
                                 <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?/:cardId?'>
+                                    {/* ToDo: redirect component here */}
                                     <BoardPage readonly={true}/>
                                 </Route>
+
+                                <Route path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'>
+                                    {/* ToDo: redirect component here */}
+                                </Route>
                                 <Route
-                                    path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'
-                                    render={({match: {params: {workspaceId, boardId, viewId, cardId}}}) => {
-                                        const originalPath = `/workspace/${Utils.buildOriginalPath(workspaceId, boardId, viewId, cardId)}`
+                                    path='/team/:teamId/:boardId?/:viewId?/:cardId?'
+                                    render={({match: {params: {teamId, boardId, viewId, cardId}}}) => {
+                                        const originalPath = `/team/${Utils.buildOriginalPath(teamId, boardId, viewId, cardId)}`
+
+                                        // ToDo: redirect component here, and this one needs to be migrated
+
                                         if (loggedIn === false) {
                                             let redirectUrl = '/' + Utils.buildURL(originalPath)
                                             if (redirectUrl.indexOf('//') === 0) {
@@ -246,38 +254,38 @@ const App = React.memo((): JSX.Element => {
                                 </Route>
 
                                 {!Utils.isFocalboardPlugin() &&
-                                    <Route
-                                        path='/:boardId?/:viewId?/:cardId?'
-                                        render={({match: {params: {boardId, viewId, cardId}}}) => {
-                                            // Since these 3 path values are optional and they can be anything, we can pass /x/y/z and it will
-                                            // match this route however these values may not be valid so we should at the very least check
-                                            // board id for descisions made below
-                                            const boardIdIsValidUUIDV4 = UUID_REGEX.test(boardId || '')
+                                 <Route
+                                     path='/:boardId?/:viewId?/:cardId?'
+                                     render={({match: {params: {boardId, viewId, cardId}}}) => {
+                                         // Since these 3 path values are optional and they can be anything, we can pass /x/y/z and it will
+                                         // match this route however these values may not be valid so we should at the very least check
+                                         // board id for descisions made below
+                                         const boardIdIsValidUUIDV4 = UUID_REGEX.test(boardId || '')
 
-                                            if (loggedIn === false) {
-                                                return <Redirect to='/login'/>
-                                            }
+                                         if (loggedIn === false) {
+                                             return <Redirect to='/login'/>
+                                         }
 
-                                            if (continueToWelcomeScreen()) {
-                                                const originalPath = `/${Utils.buildOriginalPath('', boardId, viewId, cardId)}`
-                                                const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
-                                                return <Redirect to={`/welcome?${queryString}`}/>
-                                            }
+                                         if (continueToWelcomeScreen()) {
+                                             const originalPath = `/${Utils.buildOriginalPath('', boardId, viewId, cardId)}`
+                                             const queryString = boardIdIsValidUUIDV4 ? `r=${originalPath}` : ''
+                                             return <Redirect to={`/welcome?${queryString}`}/>
+                                         }
 
-                                            if (loggedIn === true) {
-                                                return <BoardPage/>
-                                            }
+                                         if (loggedIn === true) {
+                                             return <BoardPage/>
+                                         }
 
-                                            return null
-                                        }}
-                                    />}
+                                         return null
+                                     }}
+                                 />}
                             </Switch>
                         </div>
                     </div>
                 </Router>
             </DndProvider>
         </IntlProvider>
-    )
+        )
 })
 
 export default App

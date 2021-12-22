@@ -82,7 +82,7 @@ const Table = (props: Props): JSX.Element => {
 
     const onAutoSizeColumn = useCallback((columnID: string, headerWidth: number) => {
         let longestSize = headerWidth
-        const visibleProperties = board.fields.cardProperties.filter(() => activeView.fields.visiblePropertyIds.includes(columnID)) || []
+        const visibleProperties = board.cardProperties.filter(() => activeView.fields.visiblePropertyIds.includes(columnID)) || []
         const columnRef = columnRefs.get(columnID)
         if (!columnRef?.current) {
             return
@@ -176,7 +176,7 @@ const Table = (props: Props): JSX.Element => {
         Utils.log(`ondrop. Source column: ${template.name}, dest column: ${container.name}`)
 
         // Move template to new index
-        const destIndex = container ? board.fields.cardProperties.indexOf(container) : 0
+        const destIndex = container ? board.cardProperties.indexOf(container) : 0
         await mutator.changePropertyTemplateOrder(board, template, destIndex >= 0 ? destIndex : 0)
     }, [board])
 
@@ -303,7 +303,7 @@ const Table = (props: Props): JSX.Element => {
 
                     {/* Table header row */}
 
-                    {board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
+                    {board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
                         let sorted: 'up' | 'down' | 'none' = 'none'
                         const sortOption = activeView.fields.sortOptions.find((o: ISortOption) => o.propertyId === template.id)
                         if (sortOption) {

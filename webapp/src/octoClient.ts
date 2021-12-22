@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {Block, BlockPatch} from './blocks/block'
+import {Board, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
-import {IWorkspace} from './blocks/workspace'
 import {OctoUtils} from './octoUtils'
 import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
@@ -41,7 +41,7 @@ class OctoClient {
         localStorage.setItem('focalboardSessionId', value)
     }
 
-    constructor(serverUrl?: string, public workspaceId = '0') {
+    constructor(serverUrl?: string, public teamId = '0') {
         this.serverUrl = serverUrl
     }
 
@@ -126,18 +126,25 @@ class OctoClient {
         }
     }
 
+    // ToDo: delete
     /**
      * Generates workspace's path.
      * Uses workspace ID from `workspaceId` param is provided,
      * Else uses Client's workspaceID if available, else the user's last visited workspace ID.
      */
-    private workspacePath(workspaceId?: string) {
-        let workspaceIdToUse = workspaceId
-        if (!workspaceId) {
-            workspaceIdToUse = this.workspaceId === '0' ? UserSettings.lastWorkspaceId || this.workspaceId : this.workspaceId
-        }
+    // private workspacePath(workspaceId?: string) {
+    //     let workspaceIdToUse = workspaceId
+    //     if (!workspaceId) {
+    //         workspaceIdToUse = this.workspaceId === '0' ? UserSettings.lastWorkspaceId || this.workspaceId : this.workspaceId
+    //     }
+    //
+    //     return `/api/v1/workspaces/${workspaceIdToUse}`
+    // }
 
-        return `/api/v1/workspaces/${workspaceIdToUse}`
+    // ToDo: document
+    private teamPath(teamId?: string) {
+        const teamIdToUse = teamId ? teamId : '0'
+        return `/api/v1/teams/${teamIdToUse}`
     }
 
     async getMe(): Promise<IUser | undefined> {
@@ -160,8 +167,8 @@ class OctoClient {
         return user
     }
 
-    async getSubtree(rootId?: string, levels = 2, workspaceID?: string): Promise<Block[]> {
-        let path = this.workspacePath(workspaceID) + `/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
+    async getSubtree(rootId?: string, levels = 2, teamID?: string): Promise<Block[]> {
+        let path = this.teamPath(teamID) + `/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
         const readToken = Utils.getReadToken()
         if (readToken) {
             path += `&read_token=${readToken}`
@@ -176,7 +183,7 @@ class OctoClient {
 
     // If no boardID is provided, it will export the entire archive
     async exportArchive(boardID = ''): Promise<Block[]> {
-        const path = `${this.workspacePath()}/blocks/export?root_id=${boardID}`
+        const path = `${this.teamPath()}/blocks/export?root_id=${boardID}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
@@ -192,7 +199,7 @@ class OctoClient {
         //     Utils.log(`\t ${block.type}, ${block.id}`)
         // })
         const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.workspacePath() + '/blocks/import', {
+        return fetch(this.getBaseURL() + this.teamPath() + '/blocks/import', {
             method: 'POST',
             headers: this.headers(),
             body,
@@ -202,20 +209,20 @@ class OctoClient {
     async getBlocksWithParent(parentId: string, type?: string): Promise<Block[]> {
         let path: string
         if (type) {
-            path = this.workspacePath() + `/blocks?parent_id=${encodeURIComponent(parentId)}&type=${encodeURIComponent(type)}`
+            path = this.teamPath() + `/blocks?parent_id=${encodeURIComponent(parentId)}&type=${encodeURIComponent(type)}`
         } else {
-            path = this.workspacePath() + `/blocks?parent_id=${encodeURIComponent(parentId)}`
+            path = this.teamPath() + `/blocks?parent_id=${encodeURIComponent(parentId)}`
         }
         return this.getBlocksWithPath(path)
     }
 
     async getBlocksWithType(type: string): Promise<Block[]> {
-        const path = this.workspacePath() + `/blocks?type=${encodeURIComponent(type)}`
+        const path = this.teamPath() + `/blocks?type=${encodeURIComponent(type)}`
         return this.getBlocksWithPath(path)
     }
 
-    async getBlocksWithBlockID(blockID: string, workspaceID?: string, optionalReadToken?: string): Promise<Block[]> {
-        let path = this.workspacePath(workspaceID) + `/blocks?block_id=${blockID}`
+    async getBlocksWithBlockID(blockID: string, teamID?: string, optionalReadToken?: string): Promise<Block[]> {
+        let path = this.teamPath(teamID) + `/blocks?block_id=${blockID}`
         const readToken = optionalReadToken || Utils.getReadToken()
         if (readToken) {
             path += `&read_token=${readToken}`
@@ -224,7 +231,7 @@ class OctoClient {
     }
 
     async getAllBlocks(): Promise<Block[]> {
-        const path = this.workspacePath() + '/blocks?all=true'
+        const path = this.teamPath() + '/blocks?all=true'
         return this.getBlocksWithPath(path)
     }
 
@@ -235,6 +242,24 @@ class OctoClient {
         }
         const blocks = (await this.getJson(response, [])) as Block[]
         return this.fixBlocks(blocks)
+    }
+
+    private async getBoardsWithPath(path: string): Promise<Board[]> {
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+        const boards = (await this.getJson(response, [])) as Board[]
+        return boards // ToDo: fix boards?
+    }
+
+    private async getBoardMembersWithPath(path: string): Promise<BoardMember[]> {
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+        const boardMembers = (await this.getJson(response, [])) as BoardMember[]
+        return boardMembers // ToDo: fix board members?
     }
 
     fixBlocks(blocks: Block[]): Block[] {
@@ -251,7 +276,7 @@ class OctoClient {
     async patchBlock(blockId: string, blockPatch: BlockPatch): Promise<Response> {
         Utils.log(`patchBlock: ${blockId} block`)
         const body = JSON.stringify(blockPatch)
-        return fetch(this.getBaseURL() + this.workspacePath() + '/blocks/' + blockId, {
+        return fetch(this.getBaseURL() + this.teamPath() + '/blocks/' + blockId, {
             method: 'PATCH',
             headers: this.headers(),
             body,
@@ -260,7 +285,7 @@ class OctoClient {
 
     async deleteBlock(blockId: string): Promise<Response> {
         Utils.log(`deleteBlock: ${blockId}`)
-        return fetch(this.getBaseURL() + this.workspacePath() + `/blocks/${encodeURIComponent(blockId)}`, {
+        return fetch(this.getBaseURL() + this.teamPath() + `/blocks/${encodeURIComponent(blockId)}`, {
             method: 'DELETE',
             headers: this.headers(),
         })
@@ -276,7 +301,7 @@ class OctoClient {
             Utils.log(`\t ${block.type}, ${block.id}, ${block.title?.substr(0, 50) || ''}`)
         })
         const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.workspacePath() + '/blocks', {
+        return fetch(this.getBaseURL() + this.teamPath() + '/blocks', {
             method: 'POST',
             headers: this.headers(),
             body,
@@ -286,7 +311,7 @@ class OctoClient {
     // Sharing
 
     async getSharing(rootId: string): Promise<ISharing | undefined> {
-        const path = this.workspacePath() + `/sharing/${rootId}`
+        const path = this.teamPath() + `/sharing/${rootId}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return undefined
@@ -296,7 +321,7 @@ class OctoClient {
     }
 
     async setSharing(sharing: ISharing): Promise<boolean> {
-        const path = this.workspacePath() + `/sharing/${sharing.id}`
+        const path = this.teamPath() + `/sharing/${sharing.id}`
         const body = JSON.stringify(sharing)
         const response = await fetch(
             this.getBaseURL() + path,
@@ -315,25 +340,27 @@ class OctoClient {
 
     // Workspace
 
-    async getWorkspace(): Promise<IWorkspace | undefined> {
-        const path = this.workspacePath()
-        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return undefined
-        }
-        const workspace = (await this.getJson(response, undefined)) as IWorkspace
-        return workspace
-    }
+    // async getWorkspace(): Promise<IWorkspace | undefined> {
+    //     const path = this.workspacePath()
+    //     const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+    //     if (response.status !== 200) {
+    //         return undefined
+    //     }
+    //     const workspace = (await this.getJson(response, undefined)) as IWorkspace
+    //     return workspace
+    // }
+    //
 
     async regenerateWorkspaceSignupToken(): Promise<boolean> {
-        const path = this.workspacePath() + '/regenerate_signup_token'
-        const response = await fetch(this.getBaseURL() + path, {
-            method: 'POST',
-            headers: this.headers(),
-        })
-        if (response.status !== 200) {
-            return false
-        }
+        // ToDo: update for team
+        // const path = this.workspacePath() + '/regenerate_signup_token'
+        // const response = await fetch(this.getBaseURL() + path, {
+        //     method: 'POST',
+        //     headers: this.headers(),
+        // })
+        // if (response.status !== 200) {
+        //     return false
+        // }
 
         return true
     }
@@ -352,7 +379,7 @@ class OctoClient {
             // TIPTIP: Leave out Content-Type here, it will be automatically set by the browser
             delete headers['Content-Type']
 
-            const response = await fetch(this.getBaseURL() + this.workspacePath() + '/' + rootID + '/files', {
+            const response = await fetch(this.getBaseURL() + this.teamPath() + '/' + rootID + '/files', {
                 method: 'POST',
                 headers,
                 body: formData,
@@ -378,7 +405,7 @@ class OctoClient {
     }
 
     async getFileAsDataUrl(rootId: string, fileId: string): Promise<string> {
-        let path = '/files/workspaces/' + this.workspaceId + '/' + rootId + '/' + fileId
+        let path = '/files/teams/' + this.teamId + '/' + rootId + '/' + fileId
         const readToken = Utils.getReadToken()
         if (readToken) {
             path += `?read_token=${readToken}`
@@ -391,8 +418,13 @@ class OctoClient {
         return URL.createObjectURL(blob)
     }
 
-    async getWorkspaceUsers(): Promise<IUser[]> {
-        const path = this.workspacePath() + '/users'
+    async getTeam() {
+        // ToDo: implement
+        // ToDo: getTeam(teamId string): Promise<Team> ??
+    }
+
+    async getTeamUsers(): Promise<IUser[]> {
+        const path = this.teamPath() + '/users'
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
@@ -400,6 +432,7 @@ class OctoClient {
         return (await this.getJson(response, [])) as IUser[]
     }
 
+    // ToDo: delete??
     async getUserWorkspaces(): Promise<UserWorkspace[]> {
         const path = '/api/v1/workspaces'
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
@@ -410,10 +443,50 @@ class OctoClient {
         return (await this.getJson(response, [])) as UserWorkspace[]
     }
 
-    async getGlobalTemplates(): Promise<Block[]> {
-        const path = this.workspacePath('0') + '/blocks?type=board'
-        return this.getBlocksWithPath(path)
+    // ToDo: modify to get local templates
+    // async getGlobalTemplates(): Promise<Block[]> {
+    //     const path = this.workspacePath('0') + '/blocks?type=board'
+    //     return this.getBlocksWithPath(path)
+    // }
+
+    async getTeamTemplates(teamId: string): Promise<Board[]> {
+        const path = this.teamPath(teamId) + '/templates'
+        return this.getBoardsWithPath(path)
     }
+
+    // Boards
+
+    async getBoards(teamId: string): Promise<Board[]> {
+        const path = this.teamPath(teamId) + '/boards'
+        return this.getBoardsWithPath(path)
+    }
+
+    async getBlocksForBoard(teamId: string, boardId: string): Promise<Board[]> {
+        const path = this.teamPath(teamId) + `/boards/${boardId}`
+        return this.getBoardsWithPath(path)
+    }
+
+    async getBoardMembers(teamId: string, boardId: string): Promise<BoardMember[]> {
+        const path = this.teamPath(teamId) + `/boards/${boardId}/members`
+        return this.getBoardMembersWithPath(path)
+    }
+
+    async createBoard(board: Board): Promise<Response> {
+        Utils.log(`createBoard: ${board.title} [${board.type}]`)
+        return fetch(this.getBaseURL() + this.teamPath(board.teamId) + '/boards', {
+            method: 'POST',
+            headers: this.headers(),
+            body: JSON.stringify(board),
+        })
+    }
+
+
+    // ToDo: .
+    // - goal? make the interface show boards & blocks for boards
+    // - teams (maybe current team)? boards, members, user roles in the store, whatever that is
+    // - selectors for boards, current team, board members
+    // - ops to add/delete a board, add/delete board members, change roles? .
+    // - WS definition and implementation
 }
 
 const octoClient = new OctoClient()

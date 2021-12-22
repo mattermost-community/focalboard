@@ -5,12 +5,13 @@ import {ClientConfig} from './config/clientConfig'
 
 import {Utils} from './utils'
 import {Block} from './blocks/block'
+import {Board} from './blocks/board'
 import {OctoUtils} from './octoUtils'
 
 // These are outgoing commands to the server
 type WSCommand = {
     action: string
-    workspaceId?: string
+    teamId?: string
     readToken?: string
     blockIds?: string[]
 }
@@ -22,11 +23,14 @@ type WSMessage = {
     error?: string
 }
 
+export const ACTION_UPDATE_BOARD = 'UPDATE_BOARD'
+export const ACTION_UPDATE_MEMBER = 'UPDATE_MEMBER'
+export const ACTION_DELETE_MEMBER = 'DELETE_MEMBER'
 export const ACTION_UPDATE_BLOCK = 'UPDATE_BLOCK'
 export const ACTION_AUTH = 'AUTH'
 export const ACTION_SUBSCRIBE_BLOCKS = 'SUBSCRIBE_BLOCKS'
-export const ACTION_SUBSCRIBE_WORKSPACE = 'SUBSCRIBE_WORKSPACE'
-export const ACTION_UNSUBSCRIBE_WORKSPACE = 'UNSUBSCRIBE_WORKSPACE'
+export const ACTION_SUBSCRIBE_TEAM = 'SUBSCRIBE_TEAM'
+export const ACTION_UNSUBSCRIBE_TEAM = 'UNSUBSCRIBE_TEAM'
 export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
 export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
 
@@ -40,7 +44,7 @@ export interface MMWebSocketClient {
     setCloseCallback(callback: (connectFailCount: number) => void): void
 }
 
-type OnChangeHandler = (client: WSClient, blocks: Block[]) => void
+type OnChangeHandler = (client: WSClient, boards: Board[], blocks: Block[]) => void
 type OnReconnectHandler = (client: WSClient) => void
 type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close') => void
 type OnErrorHandler = (client: WSClient, e: Event) => void
@@ -64,6 +68,7 @@ class WSClient {
     private notificationDelay = 100
     private reopenDelay = 3000
     private updatedBlocks: Block[] = []
+    private updatedBoards: Board[] = []
     private updateTimeout?: NodeJS.Timeout
     private errorPollId?: NodeJS.Timeout
 
@@ -297,7 +302,7 @@ class WSClient {
     }
 
     updateBlockHandler(message: WSMessage): void {
-        this.queueUpdateNotification(Utils.fixBlock(message.block!))
+        this.queueUpdateBlockNotification(Utils.fixBlock(message.block!))
     }
 
     updateClientConfigHandler(config: ClientConfig): void {
@@ -359,7 +364,7 @@ class WSClient {
         this.sendCommand(command)
     }
 
-    subscribeToBlocks(workspaceId: string, blockIds: string[], readToken = ''): void {
+    subscribeToBlocks(teamId: string, blockIds: string[], readToken = ''): void {
         if (!this.hasConn()) {
             Utils.assertFailure('WSClient.subscribeToBlocks: ws is not open')
             return
@@ -368,42 +373,42 @@ class WSClient {
         const command: WSCommand = {
             action: ACTION_SUBSCRIBE_BLOCKS,
             blockIds,
-            workspaceId,
+            teamId,
             readToken,
         }
 
         this.sendCommand(command)
     }
 
-    unsubscribeToWorkspace(workspaceId: string): void {
+    unsubscribeToTeam(teamId: string): void {
         if (!this.hasConn()) {
-            Utils.assertFailure('WSClient.subscribeToWorkspace: ws is not open')
+            Utils.assertFailure('WSClient.subscribeToTeam: ws is not open')
             return
         }
 
         const command: WSCommand = {
-            action: ACTION_UNSUBSCRIBE_WORKSPACE,
-            workspaceId,
+            action: ACTION_UNSUBSCRIBE_TEAM,
+            teamId,
         }
 
         this.sendCommand(command)
     }
 
-    subscribeToWorkspace(workspaceId: string): void {
+    subscribeToTeam(teamId: string): void {
         if (!this.hasConn()) {
-            Utils.assertFailure('WSClient.subscribeToWorkspace: ws is not open')
+            Utils.assertFailure('WSClient.subscribeToTeam: ws is not open')
             return
         }
 
         const command: WSCommand = {
-            action: ACTION_SUBSCRIBE_WORKSPACE,
-            workspaceId,
+            action: ACTION_SUBSCRIBE_TEAM,
+            teamId,
         }
 
         this.sendCommand(command)
     }
 
-    unsubscribeFromBlocks(workspaceId: string, blockIds: string[], readToken = ''): void {
+    unsubscribeFromBlocks(teamId: string, blockIds: string[], readToken = ''): void {
         if (!this.hasConn()) {
             Utils.assertFailure('WSClient.removeBlocks: ws is not open')
             return
@@ -412,14 +417,14 @@ class WSClient {
         const command: WSCommand = {
             action: ACTION_UNSUBSCRIBE_BLOCKS,
             blockIds,
-            workspaceId,
+            teamId,
             readToken,
         }
 
         this.sendCommand(command)
     }
 
-    private queueUpdateNotification(block: Block) {
+    private queueUpdateBlockNotification(block: Block) {
         this.updatedBlocks = this.updatedBlocks.filter((o) => o.id !== block.id) // Remove existing queued update
         this.updatedBlocks.push(OctoUtils.hydrateBlock(block))
         if (this.updateTimeout) {
@@ -432,13 +437,32 @@ class WSClient {
         }, this.notificationDelay)
     }
 
+    private queueUpdateBoardNotification(board: Board) {
+        this.updatedBoards = this.updatedBoards.filter((o) => o.id !== board.id) // Remove existing queued update
+        // ToDo: hydrate required?
+        // this.updatedBoards.push(OctoUtils.hydrateBoard(board))
+        this.updatedBoards.push(board)
+        if (this.updateTimeout) {
+            clearTimeout(this.updateTimeout)
+            this.updateTimeout = undefined
+        }
+
+        this.updateTimeout = setTimeout(() => {
+            this.flushUpdateNotifications()
+        }, this.notificationDelay)
+    }
+
     private flushUpdateNotifications() {
+        for (const board of this.updatedBoards) {
+            Utils.log(`WSClient flush update board: ${board.id}`)
+        }
         for (const block of this.updatedBlocks) {
             Utils.log(`WSClient flush update block: ${block.id}`)
         }
         for (const handler of this.onChange) {
-            handler(this, this.updatedBlocks)
+            handler(this, this.updatedBoards, this.updatedBlocks)
         }
+        this.updatedBoards = []
         this.updatedBlocks = []
     }
 

@@ -59,7 +59,7 @@ function CenterContent(props: Props) {
     if (board && activeView) {
         let property = groupByProperty
         if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
-            property = board?.fields.cardProperties.find((o) => o.type === 'select')
+            property = board?.cardProperties.find((o) => o.type === 'select')
         }
 
         const displayProperty = dateDisplayProperty
@@ -98,7 +98,7 @@ const Workspace = React.memo((props: Props) => {
                 />
             }
             <div className='mainFrame'>
-                {(board?.fields.isTemplate) &&
+                {(board?.isTemplate) &&
                 <div className='banner'>
                     <FormattedMessage
                         id='Workspace.editing-board-template'

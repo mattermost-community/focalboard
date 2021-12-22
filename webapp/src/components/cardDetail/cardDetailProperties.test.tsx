@@ -21,7 +21,7 @@ const mockedMutator = mocked(mutator, true)
 
 describe('components/cardDetail/CardDetailProperties', () => {
     const board = TestBlockFactory.createBoard()
-    board.fields.cardProperties = [
+    board.cardProperties = [
         {
             id: 'property_id_1',
             name: 'Owner',
@@ -125,7 +125,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         // rename to "Owner-Renamed"
         onPropertyRenameOpenConfirmationDialog(result.container)
 
-        const propertyTemplate = board.fields.cardProperties[0]
+        const propertyTemplate = board.cardProperties[0]
 
         const confirmButton = result.getByTitle('Change Property')
         expect(confirmButton).toBeDefined()
@@ -176,7 +176,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
         openDeleteConfirmationDialog(container)
 
-        const propertyTemplate = board.fields.cardProperties[0]
+        const propertyTemplate = board.cardProperties[0]
 
         const confirmButton = result.getByTitle('Delete')
         expect(confirmButton).toBeDefined()
@@ -230,4 +230,3 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(confirmDialog).toBeDefined()
     }
 })
-

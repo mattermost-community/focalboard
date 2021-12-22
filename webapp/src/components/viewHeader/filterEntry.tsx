@@ -29,7 +29,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
     const {board, view, filter} = props
     const intl = useIntl()
 
-    const template = board.fields.cardProperties.find((o: IPropertyTemplate) => o.id === filter.propertyId)
+    const template = board.cardProperties.find((o: IPropertyTemplate) => o.id === filter.propertyId)
     const propertyName = template ? template.name : '(unknown)'
     const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
     return (
@@ -40,7 +40,7 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{propertyName}</Button>
                 <Menu>
-                    {board.fields.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect').map((o: IPropertyTemplate) => (
+                    {board.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect').map((o: IPropertyTemplate) => (
                         <Menu.Text
                             key={o.id}
                             id={o.id}

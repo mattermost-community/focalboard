@@ -103,8 +103,8 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
         let totalNumberOfCheckBoxes = 0
 
         // We will just display the first 3 or less select/multi-select properties and do a +n for remainder if any remainder
-        for (let i = 0; i < board.fields.cardProperties.length; i++) {
-            const optionInBoard = board.fields.cardProperties[i]
+        for (let i = 0; i < board.cardProperties.length; i++) {
+            const optionInBoard = board.cardProperties[i]
             let valueToLookUp = card.fields.properties[optionInBoard.id]
 
             // Since these are always set and not included in the card properties

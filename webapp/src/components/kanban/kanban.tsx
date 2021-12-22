@@ -48,7 +48,7 @@ const Kanban = (props: Props) => {
     const propertyValues = groupByProperty.options || []
     Utils.log(`${propertyValues.length} propertyValues`)
 
-    const visiblePropertyTemplates = board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+    const visiblePropertyTemplates = board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
     const isManualSort = activeView.fields.sortOptions.length === 0
 
     const propertyNameChanged = useCallback(async (option: IPropertyOption, text: string): Promise<void> => {

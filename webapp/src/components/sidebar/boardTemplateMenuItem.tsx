@@ -14,6 +14,9 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
 
 export const addBoardFromTemplate = async (intl: IntlShape, showBoard: (id: string) => void, boardTemplateId: string, activeBoardId?: string, global = false) => {
+
+    // ToDo: maybe useAppSelector( --getBoardFromId-- ) and we pass the whole board to the duplicate funcs?
+
     const oldBoardId = activeBoardId
     const afterRedo = async (newBoardId: string) => {
         showBoard(newBoardId)
@@ -60,7 +63,7 @@ export const BoardTemplateButtonMenu = React.memo((props: ButtonProps) => {
                     id='delete'
                     name={intl.formatMessage({id: 'Sidebar.delete-template', defaultMessage: 'Delete'})}
                     onClick={async () => {
-                        await mutator.deleteBlock(boardTemplate, 'delete board template')
+                        await mutator.deleteBoard(boardTemplate, 'delete board template')
                     }}
                 />
             </Menu>
@@ -86,7 +89,7 @@ const BoardTemplateMenuItem = React.memo((props: Props) => {
             key={boardTemplate.id || ''}
             id={boardTemplate.id || ''}
             name={displayName}
-            icon={<div className='Icon'>{boardTemplate.fields.icon}</div>}
+            icon={<div className='Icon'>{boardTemplate.icon}</div>}
             onClick={() => {
                 addBoardFromTemplate(intl, showBoard, boardTemplate.id || '', activeBoardId, isGlobal)
             }}

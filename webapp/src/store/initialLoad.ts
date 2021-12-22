@@ -16,22 +16,22 @@ const getUserWorkspaces = async ():Promise<UserWorkspace[]> => {
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
-        const [workspace, workspaceUsers, blocks, userWorkspaces] = await Promise.all([
-            client.getWorkspace(),
-            client.getWorkspaceUsers(),
+        const [blocks] = await Promise.all([
+            // ToDo: get board members maybe?
+            // ToDo: get user boards
+            // ToDo: replace getallblocks with get board blocks? or directly when loading the board?
             client.getAllBlocks(),
-            getUserWorkspaces(),
+            // ToDo: probably add memberships here
         ])
 
+        // ToDo: do we really need to get the team info?? wouldn't it be the board info?
         // if no workspace, either bad id, or user doesn't have access
-        if (workspace === undefined) {
-            throw new Error('Workspace undefined')
-        }
+        // if (team === undefined) {
+        //     throw new Error('Workspace undefined')
+        // }
         return {
-            workspace,
-            workspaceUsers,
             blocks,
-            userWorkspaces,
+            // ToDo: return extra Promise.all things
         }
     },
 )

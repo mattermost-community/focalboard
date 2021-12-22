@@ -21,6 +21,7 @@ jest.useFakeTimers()
 jest.mock('../utils')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
+// ToDo: replace with team and its instances with boardId
 const workspace1: UserWorkspace = {
     id: 'workspace_1',
     title: 'Workspace 1',
@@ -28,9 +29,9 @@ const workspace1: UserWorkspace = {
 }
 const board = TestBlockFactory.createBoard()
 board.id = 'board1'
-board.rootId = 'root1'
-board.workspaceId = workspace1.id
-board.fields.cardProperties = [
+// ToDo: create a team and use teamId here
+board.teamId = 'team-id'
+board.cardProperties = [
     {
         id: 'property1',
         name: 'Property 1',
@@ -61,19 +62,21 @@ activeView.id = 'view1'
 activeView.fields.hiddenOptionIds = []
 activeView.fields.visiblePropertyIds = ['property1']
 activeView.fields.visibleOptionIds = ['value1']
-activeView.workspaceId = workspace1.id
+// ToDo: use a board.id here and in the rest of the instances
+const fakeBoard = {id: 'board-id'}
+activeView.boardId = fakeBoard.id
 const card1 = TestBlockFactory.createCard(board)
 card1.id = 'card1'
 card1.title = 'card-1'
-card1.workspaceId = workspace1.id
+card1.boardId = fakeBoard.id
 const card2 = TestBlockFactory.createCard(board)
 card2.id = 'card2'
 card2.title = 'card-2'
-card2.workspaceId = workspace1.id
+card2.boardId = fakeBoard.id
 const card3 = TestBlockFactory.createCard(board)
 card3.id = 'card3'
 card3.title = 'card-3'
-card3.workspaceId = workspace1.id
+card3.boardId = fakeBoard.id
 
 const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, createAt: 0, updateAt: 0}
 

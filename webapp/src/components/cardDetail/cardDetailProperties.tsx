@@ -38,11 +38,11 @@ const CardDetailProperties = React.memo((props: Props) => {
     const intl = useIntl()
 
     useEffect(() => {
-        const newProperty = board.fields.cardProperties.find((property) => property.id === newTemplateId)
+        const newProperty = board.cardProperties.find((property) => property.id === newTemplateId)
         if (newProperty) {
             setNewTemplateId('')
         }
-    }, [newTemplateId, board.fields.cardProperties])
+    }, [newTemplateId, board.cardProperties])
 
     const [confirmationDialogBox, setConfirmationDialogBox] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
     const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
@@ -134,7 +134,7 @@ const CardDetailProperties = React.memo((props: Props) => {
 
     return (
         <div className='octo-propertylist CardDetailProperties'>
-            {board.fields.cardProperties.map((propertyTemplate: IPropertyTemplate) => {
+            {board.cardProperties.map((propertyTemplate: IPropertyTemplate) => {
                 const propertyValue = card.fields.properties[propertyTemplate.id]
                 return (
                     <div
