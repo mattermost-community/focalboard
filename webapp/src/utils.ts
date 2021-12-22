@@ -517,8 +517,6 @@ class Utils {
 
     static fixBlock(block: Block): Block {
         switch (block.type) {
-        case 'board':
-            return createBoard(block)
         case 'view':
             return createBoardView(block)
         case 'card':

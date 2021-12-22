@@ -29,9 +29,9 @@ beforeAll(() => {
 })
 describe('components/cardDialog', () => {
     const board = TestBlockFactory.createBoard()
-    board.fields.cardProperties = []
+    board.cardProperties = []
     board.id = 'test-id'
-    board.rootId = board.id
+    board.teamId = 'team-id'
     const boardView = TestBlockFactory.createBoardView(board)
     boardView.id = board.id
     const card = TestBlockFactory.createCard(board)

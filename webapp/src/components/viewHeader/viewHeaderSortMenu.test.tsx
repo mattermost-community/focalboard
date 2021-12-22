@@ -43,7 +43,7 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
                     <ViewHeaderSortMenu
                         activeView={activeView}
                         orderedCards={cards}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -59,7 +59,7 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
                     <ViewHeaderSortMenu
                         activeView={activeView}
                         orderedCards={cards}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -78,7 +78,7 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
                     <ViewHeaderSortMenu
                         activeView={activeView}
                         orderedCards={cards}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -98,7 +98,7 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
                     <ViewHeaderSortMenu
                         activeView={activeView}
                         orderedCards={cards}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),

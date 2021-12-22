@@ -38,7 +38,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const intl = useIntl()
     const history = useHistory()
     const [deleteBoardOpen, setDeleteBoardOpen] = useState(false)
-    const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, workspaceId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
 
     const showBoard = useCallback((boardId) => {
         // if the same board, reuse the match params
@@ -124,7 +124,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                     className='octo-sidebar-title'
                     title={displayTitle}
                 >
-                    {board.fields.icon ? `${board.fields.icon} ${displayTitle}` : displayTitle}
+                    {board.icon ? `${board.icon} ${displayTitle}` : displayTitle}
                 </div>
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
@@ -187,7 +187,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 onClose={() => setDeleteBoardOpen(false)}
                 onDelete={async () => {
                     TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: board.id})
-                    mutator.deleteBlock(
+                    mutator.deleteBoard(
                         board,
                         intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
                         async () => {

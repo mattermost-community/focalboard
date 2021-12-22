@@ -37,7 +37,7 @@ describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
                 <ReduxProvider store={store}>
                     <ViewHeaderPropertiesMenu
                         activeView={activeView}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -53,7 +53,7 @@ describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
                 <ReduxProvider store={store}>
                     <ViewHeaderPropertiesMenu
                         activeView={activeView}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),

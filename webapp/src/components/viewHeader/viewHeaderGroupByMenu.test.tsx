@@ -42,7 +42,7 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
                     <ViewHeaderGroupByMenu
                         activeView={activeView}
                         groupByPropertyName={propertyName}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -58,7 +58,7 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
                     <ViewHeaderGroupByMenu
                         activeView={activeView}
                         groupByPropertyName={propertyName}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -78,7 +78,7 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
                     <ViewHeaderGroupByMenu
                         activeView={activeView}
                         groupByPropertyName={propertyName}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),

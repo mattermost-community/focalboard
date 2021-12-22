@@ -5,7 +5,9 @@
 console.log = jest.fn()
 
 import {Block} from './blocks/block'
+import {Board} from './blocks/board'
 import {createBoard} from './blocks/board'
+import {createCard} from './blocks/card'
 import octoClient from './octoClient'
 import 'isomorphic-fetch'
 import {FetchMock} from './test/fetchMock'
@@ -17,10 +19,10 @@ beforeEach(() => {
 })
 
 test('OctoClient: get blocks', async () => {
-    const blocks = createBoards()
+    const blocks = createBlocks()
 
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(blocks)))
-    let boards = await octoClient.getBlocksWithType('board')
+    let boards = await octoClient.getBlocksWithType('card')
     expect(boards.length).toBe(blocks.length)
 
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(blocks)))
@@ -37,12 +39,12 @@ test('OctoClient: get blocks', async () => {
     expect(boards.length).toBe(blocks.length)
 
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(blocks)))
-    boards = await octoClient.getBlocksWithParent(parentId, 'board')
+    boards = await octoClient.getBlocksWithParent(parentId, 'card')
     expect(boards.length).toBe(blocks.length)
 })
 
 test('OctoClient: insert blocks', async () => {
-    const blocks = createBoards()
+    const blocks = createBlocks()
 
     await octoClient.insertBlocks(blocks)
 
@@ -55,8 +57,8 @@ test('OctoClient: insert blocks', async () => {
         }))
 })
 
-test('OctoClient: importFullArchive', async () => {
-    const blocks = createBoards()
+test.skip('OctoClient: importFullArchive', async () => {
+    const blocks = createBlocks()
 
     await octoClient.importFullArchive(blocks)
 
@@ -66,16 +68,16 @@ test('OctoClient: importFullArchive', async () => {
         expect.objectContaining({
             method: 'POST',
             body: JSON.stringify(blocks),
-        }))
+    }))
 })
 
-function createBoards(): Block[] {
+function createBlocks(): Block[] {
     const blocks = []
 
     for (let i = 0; i < 5; i++) {
-        const board = createBoard()
-        board.id = `board${i + 1}`
-        blocks.push(board)
+        const block = createCard()
+        block.id = `block${i + 1}`
+        blocks.push(block)
     }
 
     return blocks

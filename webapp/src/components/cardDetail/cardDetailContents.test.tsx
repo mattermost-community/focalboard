@@ -23,7 +23,7 @@ beforeAll(() => {
 
 describe('components/cardDetail/cardDetailContents', () => {
     const board = TestBlockFactory.createBoard()
-    board.fields.cardProperties = [
+    board.cardProperties = [
         {
             id: 'property_id_1',
             name: 'Owner',

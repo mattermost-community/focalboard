@@ -27,7 +27,7 @@ const boardsSlice = createSlice({
                 if (board.deleteAt !== 0) {
                     delete state.boards[board.id]
                     delete state.templates[board.id]
-                } else if (board.fields.isTemplate) {
+                } else if (board.isTemplate) {
                     state.templates[board.id] = board
                 } else {
                     state.boards[board.id] = board
@@ -35,28 +35,33 @@ const boardsSlice = createSlice({
             }
         },
     },
+    // ToDo: update extra reducers
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
-            state.boards = {}
-            state.templates = {}
-            for (const block of action.payload) {
-                if (block.type === 'board' && block.fields.isTemplate) {
-                    state.templates[block.id] = block as Board
-                } else if (block.type === 'board' && !block.fields.isTemplate) {
-                    state.boards[block.id] = block as Board
-                }
-            }
+            // ToDo: complete with the new initial load
+
+            // state.boards = {}
+            // state.templates = {}
+            // for (const block of action.payload) {
+            //     if (block.type === 'board' && block.fields.isTemplate) {
+            //         state.templates[block.id] = block as Board
+            //     } else if (block.type === 'board' && !block.fields.isTemplate) {
+            //         state.boards[block.id] = block as Board
+            //     }
+            // }
         })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.boards = {}
-            state.templates = {}
-            for (const block of action.payload.blocks) {
-                if (block.type === 'board' && block.fields.isTemplate) {
-                    state.templates[block.id] = block as Board
-                } else if (block.type === 'board' && !block.fields.isTemplate) {
-                    state.boards[block.id] = block as Board
-                }
-            }
+            // ToDo: complete
+
+            // state.boards = {}
+            // state.templates = {}
+            // for (const block of action.payload.blocks) {
+            //     if (block.type === 'board' && block.fields.isTemplate) {
+            //         state.templates[block.id] = block as Board
+            //     } else if (block.type === 'board' && !block.fields.isTemplate) {
+            //         state.boards[block.id] = block as Board
+            //     }
+            // }
         })
     },
 })

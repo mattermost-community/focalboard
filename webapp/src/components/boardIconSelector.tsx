@@ -14,22 +14,22 @@ import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 
 type Props = {
-    block: Card
+    board: Board
     size?: 's' | 'm' | 'l'
     readonly?: boolean
 }
 
-const BlockIconSelector = React.memo((props: Props) => {
-    const {block, size} = props
+const BoardIconSelector = React.memo((props: Props) => {
+    const {board, size} = props
 
     const onSelectEmoji = useCallback((emoji: string) => {
-        mutator.changeBlockIcon(block.id, block.fields.icon, emoji)
+        mutator.changeBoardIcon(board.id, board.icon, emoji)
         document.body.click()
-    }, [block.id, block.fields.icon])
-    const onAddRandomIcon = useCallback(() => mutator.changeBlockIcon(block.id, block.fields.icon, BlockIcons.shared.randomIcon()), [block.id, block.fields.icon])
-    const onRemoveIcon = useCallback(() => mutator.changeBlockIcon(block.id, block.fields.icon, '', 'remove icon'), [block.id, block.fields.icon])
+    }, [board.id, board.icon])
+    const onAddRandomIcon = useCallback(() => mutator.changeBoardIcon(board.id, board.icon, BlockIcons.shared.randomIcon()), [board.id, board.icon])
+    const onRemoveIcon = useCallback(() => mutator.changeBoardIcon(board.id, board.icon, '', 'remove board icon'), [board.id, board.icon])
 
-    if (!block.fields.icon) {
+    if (!board.icon) {
         return null
     }
 
@@ -37,7 +37,7 @@ const BlockIconSelector = React.memo((props: Props) => {
     if (props.readonly) {
         className += ' readonly'
     }
-    const iconElement = <div className={className}><span>{block.fields.icon}</span></div>
+    const iconElement = <div className={className}><span>{board.icon}</span></div>
 
     return (
         <IconSelector
@@ -50,4 +50,4 @@ const BlockIconSelector = React.memo((props: Props) => {
     )
 })
 
-export default BlockIconSelector
+export default BoardIconSelector

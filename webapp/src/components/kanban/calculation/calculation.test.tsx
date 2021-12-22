@@ -22,13 +22,13 @@ describe('components/kanban/calculation/KanbanCalculation', () => {
         const component = wrapIntl((
             <KanbanCalculation
                 cards={cards}
-                cardProperties={board.fields.cardProperties}
+                cardProperties={board.cardProperties}
                 menuOpen={false}
                 onMenuClose={() => {}}
                 onMenuOpen={() => {}}
                 onChange={() => {}}
                 value={'count'}
-                property={board.fields.cardProperties[0]}
+                property={board.cardProperties[0]}
                 readonly={false}
             />
         ))
@@ -41,13 +41,13 @@ describe('components/kanban/calculation/KanbanCalculation', () => {
         const component = wrapIntl((
             <KanbanCalculation
                 cards={cards}
-                cardProperties={board.fields.cardProperties}
+                cardProperties={board.cardProperties}
                 menuOpen={true}
                 onMenuClose={() => {}}
                 onMenuOpen={() => {}}
                 onChange={() => {}}
                 value={'count'}
-                property={board.fields.cardProperties[0]}
+                property={board.cardProperties[0]}
                 readonly={false}
             />
         ))
@@ -60,13 +60,13 @@ describe('components/kanban/calculation/KanbanCalculation', () => {
         const component = wrapIntl((
             <KanbanCalculation
                 cards={cards}
-                cardProperties={board.fields.cardProperties}
+                cardProperties={board.cardProperties}
                 menuOpen={true}
                 onMenuClose={() => {}}
                 onMenuOpen={() => {}}
                 onChange={() => {}}
                 value={'count'}
-                property={board.fields.cardProperties[0]}
+                property={board.cardProperties[0]}
                 readonly={true}
             />
         ))

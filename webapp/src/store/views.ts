@@ -96,7 +96,7 @@ export const getCurrentViewGroupBy = createSelector(
         if (!currentView) {
             return undefined
         }
-        return currentBoard.fields.cardProperties.find((o) => o.id === currentView.fields.groupById)
+        return currentBoard.cardProperties.find((o) => o.id === currentView.fields.groupById)
     },
 )
 
@@ -110,6 +110,6 @@ export const getCurrentViewDisplayBy = createSelector(
         if (!currentView) {
             return undefined
         }
-        return currentBoard.fields.cardProperties.find((o) => o.id === currentView.fields.dateDisplayPropertyId)
+        return currentBoard.cardProperties.find((o) => o.id === currentView.fields.dateDisplayPropertyId)
     },
 )

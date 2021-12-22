@@ -135,7 +135,7 @@ function convert(input: any[], title: string): Block[] {
             type: 'select',
             options: []
         }
-        board.fields.cardProperties.push(cardProperty)
+        board.cardProperties.push(cardProperty)
     })
 
     // Set all column types to select
@@ -177,7 +177,7 @@ function convert(input: any[], title: string): Block[] {
                 continue
             }
 
-            const cardProperty = board.fields.cardProperties.find((o) => o.name === key)!
+            const cardProperty = board.cardProperties.find((o) => o.name === key)!
             let option = cardProperty.options.find((o) => o.value === value)
             if (!option) {
                 const color = optionColors[optionColorIndex % optionColors.length]

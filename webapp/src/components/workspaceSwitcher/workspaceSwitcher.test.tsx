@@ -127,7 +127,7 @@ describe('components/workspaceSwitcher/WorkspaceSwitcher', () => {
         expect(workspace2Option).not.toBeNull()
         userEvent.click(workspace2Option as Element)
         expect(history.push).toBeCalledWith('/workspace/workspace_2')
-        expect(UserSettings.lastWorkspaceId).toBe('workspace_2')
+        expect(UserSettings.lastTeamId).toBe('workspace_2')
 
         userEvent.click(switcher as Element)
         const workspace3Option = container.querySelector('.WorkspaceOptions__menu-list > div:nth-child(4)')
@@ -135,7 +135,7 @@ describe('components/workspaceSwitcher/WorkspaceSwitcher', () => {
         expect(workspace3Option).not.toBeNull()
         userEvent.click(workspace3Option as Element)
         expect(history.push).toBeCalledWith('/workspace/workspace_3')
-        expect(UserSettings.lastWorkspaceId).toBe('workspace_3')
+        expect(UserSettings.lastTeamId).toBe('workspace_3')
 
         userEvent.click(switcher as Element)
         const dashboardOption = container.querySelector('.WorkspaceOptions__menu-list > div:nth-child(1)')
@@ -145,6 +145,6 @@ describe('components/workspaceSwitcher/WorkspaceSwitcher', () => {
         expect(history.push).toBeCalledWith('/dashboard')
 
         // last workspace ID should not have changed
-        expect(UserSettings.lastWorkspaceId).toBe('workspace_3')
+        expect(UserSettings.lastTeamId).toBe('workspace_3')
     })
 })

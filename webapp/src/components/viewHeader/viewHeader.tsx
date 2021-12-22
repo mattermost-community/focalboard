@@ -93,7 +93,7 @@ const ViewHeader = React.memo((props: Props) => {
                 {/* Card properties */}
 
                 <ViewHeaderPropertiesMenu
-                    properties={board.fields.cardProperties}
+                    properties={board.cardProperties}
                     activeView={activeView}
                 />
 
@@ -101,7 +101,7 @@ const ViewHeader = React.memo((props: Props) => {
 
                 {withGroupBy &&
                     <ViewHeaderGroupByMenu
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                         activeView={activeView}
                         groupByPropertyName={groupByProperty?.name}
                     />}
@@ -110,7 +110,7 @@ const ViewHeader = React.memo((props: Props) => {
 
                 {withDisplayBy &&
                     <ViewHeaderDisplayByMenu
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                         activeView={activeView}
                         dateDisplayPropertyName={dateDisplayProperty?.name}
                     />}
@@ -139,7 +139,7 @@ const ViewHeader = React.memo((props: Props) => {
 
                 {withSortBy &&
                     <ViewHeaderSortMenu
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                         activeView={activeView}
                         orderedCards={cards}
                     />

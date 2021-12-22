@@ -59,10 +59,10 @@ const EmptyCenterPanel = React.memo(() => {
     const match = useRouteMatch<{boardId: string, viewId?: string}>()
 
     useEffect(() => {
-        if (octoClient.workspaceId !== '0' && globalTemplates.length === 0) {
+        if (octoClient.teamId !== '0' && globalTemplates.length === 0) {
             dispatch(fetchGlobalTemplates())
         }
-    }, [octoClient.workspaceId])
+    }, [octoClient.teamId])
 
     const showBoard = useCallback((boardId) => {
         const params = {...match.params, boardId: boardId || ''}
@@ -119,7 +119,7 @@ const EmptyCenterPanel = React.memo(() => {
                             <PanelButton
                                 key={template.id}
                                 title={template.title}
-                                buttonIcon={template.fields.icon}
+                                buttonIcon={template.icon}
                                 readonly={false}
                                 onClick={() => addBoardFromTemplate(intl, showBoard, template.id)}
                                 showBoard={showBoard}
@@ -132,7 +132,7 @@ const EmptyCenterPanel = React.memo(() => {
                             <PanelButton
                                 key={template.id}
                                 title={template.title}
-                                buttonIcon={template.fields.icon}
+                                buttonIcon={template.icon}
                                 readonly={true}
                                 onClick={() => addBoardFromTemplate(intl, showBoard, template.id, undefined, true)}
                             />

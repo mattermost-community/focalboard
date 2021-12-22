@@ -20,6 +20,7 @@ type Props = {
     activeWorkspace?: IWorkspace
 }
 
+// ToDo: update to use team/board
 const WorkspaceSwitcher = (props: Props): JSX.Element => {
     const history = useHistory()
     const {activeWorkspace} = props
@@ -54,15 +55,15 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                     onBlur={() => {
                         setShowMenu(false)
                     }}
-                    onChange={(workspaceId: string) => {
+                    onChange={(teamId: string) => {
                         setShowMenu(false)
                         let newPath: string
 
-                        if (workspaceId === DashboardOption.value) {
+                        if (teamId === DashboardOption.value) {
                             newPath = '/dashboard'
                         } else {
-                            newPath = `/workspace/${workspaceId}`
-                            UserSettings.lastWorkspaceId = workspaceId
+                            newPath = `/team/${teamId}`
+                            UserSettings.lastTeamId = teamId
                         }
                         history.push(newPath)
                     }}

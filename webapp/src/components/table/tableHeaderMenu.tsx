@@ -42,7 +42,7 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                         // eslint-disable-next-line no-warning-comments
                         // TODO: Handle name column
                     } else {
-                        const index = board.fields.cardProperties.findIndex((o: IPropertyTemplate) => o.id === templateId)
+                        const index = board.cardProperties.findIndex((o: IPropertyTemplate) => o.id === templateId)
                         mutator.insertPropertyTemplate(board, activeView, index)
                     }
                 }}
@@ -55,7 +55,7 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                         // eslint-disable-next-line no-warning-comments
                         // TODO: Handle title column
                     } else {
-                        const index = board.fields.cardProperties.findIndex((o: IPropertyTemplate) => o.id === templateId) + 1
+                        const index = board.cardProperties.findIndex((o: IPropertyTemplate) => o.id === templateId) + 1
                         mutator.insertPropertyTemplate(board, activeView, index)
                     }
                 }}
