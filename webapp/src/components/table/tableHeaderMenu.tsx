@@ -5,7 +5,7 @@ import React, {FC} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
-import {Board, IPropertyTemplate} from '../../blocks/board'
+import {Board} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
