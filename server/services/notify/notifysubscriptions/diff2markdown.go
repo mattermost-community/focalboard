@@ -18,10 +18,10 @@ func diff2Markdown(oldText string, newText string) string {
 	diffs = dmp.DiffCleanupEfficiency(diffs)
 
 	cfg := markDownCfg{
-		insertOpen:  "*",
-		insertClose: "*",
-		deleteOpen:  "~~",
-		deleteClose: "~~",
+		insertOpen:  "`",
+		insertClose: "`",
+		deleteOpen:  "~~`",
+		deleteClose: "`~~",
 	}
 	markdown := generateMarkdown(diffs, cfg)
 	markdown = strings.ReplaceAll(markdown, "¶", "\n")
@@ -46,18 +46,24 @@ func generateMarkdown(diffs []diffmatchpatch.Diff, cfg markDownCfg) string {
 	inserts := &strings.Builder{}
 	deletes := &strings.Builder{}
 
-	flush := func() {
+	flush := func(newline bool) {
 		if inserts.Len() > 0 {
 			sb.WriteString(cfg.insertOpen)
-			sb.WriteString(inserts.String())
+			sb.WriteString(strings.TrimSpace(inserts.String()))
 			sb.WriteString(cfg.insertClose)
+			if newline {
+				sb.WriteString("\n")
+			}
 			inserts.Reset()
 		}
 
 		if deletes.Len() > 0 {
 			sb.WriteString(cfg.deleteOpen)
-			sb.WriteString(deletes.String())
+			sb.WriteString(strings.TrimSpace(deletes.String()))
 			sb.WriteString(cfg.deleteClose)
+			if newline {
+				sb.WriteString("\n")
+			}
 			deletes.Reset()
 		}
 	}
@@ -67,8 +73,8 @@ func generateMarkdown(diffs []diffmatchpatch.Diff, cfg markDownCfg) string {
 		case diffmatchpatch.DiffInsert:
 			if inserts.Len()+len(diff.Text) > changeLenInserts {
 				inserts.WriteString(diff.Text[:changeLenInserts])
-				inserts.WriteString("...\n")
-				flush()
+				inserts.WriteString("...")
+				flush(true)
 				break
 			}
 			inserts.WriteString(diff.Text)
@@ -76,18 +82,18 @@ func generateMarkdown(diffs []diffmatchpatch.Diff, cfg markDownCfg) string {
 		case diffmatchpatch.DiffDelete:
 			if deletes.Len()+len(diff.Text) > changeLenDeletes {
 				deletes.WriteString(diff.Text[:changeLenDeletes])
-				deletes.WriteString("...\n")
-				flush()
+				deletes.WriteString("...")
+				flush(true)
 				break
 			}
 			deletes.WriteString(diff.Text)
 
 		case diffmatchpatch.DiffEqual:
-			flush()
+			flush(false)
 			sb.WriteString(diff.Text)
 		}
 	}
-	flush()
+	flush(false)
 
 	return sb.String()
 }

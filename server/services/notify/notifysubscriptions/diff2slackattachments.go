@@ -140,7 +140,7 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 		attachment.Fields = append(attachment.Fields, &mm_model.SlackAttachmentField{
 			Short: false,
 			Title: "Title",
-			Value: fmt.Sprintf("%s  ~~`%s`~~", cardDiff.NewBlock.Title, cardDiff.OldBlock.Title),
+			Value: fmt.Sprintf("%s  ~~`%s`~~", stripNewlines(cardDiff.NewBlock.Title), stripNewlines(cardDiff.OldBlock.Title)),
 		})
 	}
 
@@ -153,7 +153,7 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 
 			var val string
 			if propDiff.OldValue != "" {
-				val = fmt.Sprintf("%s  ~~`%s`~~", propDiff.NewValue, propDiff.OldValue)
+				val = fmt.Sprintf("%s  ~~`%s`~~", stripNewlines(propDiff.NewValue), stripNewlines(propDiff.OldValue))
 			} else {
 				val = propDiff.NewValue
 			}
