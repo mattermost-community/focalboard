@@ -80,9 +80,7 @@ export class UserSettings {
         let mapping: {[key: string]: string}
         try {
             mapping = JSON.parse(rawData)
-        } catch (e) {
-            Utils.logWarn(e)
-
+        } catch {
             // revert to empty data if JSON conversion fails.
             // This will happen when users run the new code for the first time
             mapping = {}
@@ -102,9 +100,7 @@ export class UserSettings {
         let mapping: {[key: string]: string}
         try {
             mapping = JSON.parse(rawData)
-        } catch (e) {
-            Utils.logWarn(e)
-
+        } catch {
             // revert to empty data if JSON conversion fails.
             // This will happen when users run the new code for the first time
             mapping = {}

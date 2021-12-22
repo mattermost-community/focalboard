@@ -10,6 +10,8 @@ import {createFilterClause} from '../blocks/filterClause'
 import {createFilterGroup} from '../blocks/filterGroup'
 import {ImageBlock, createImageBlock} from '../blocks/imageBlock'
 import {TextBlock, createTextBlock} from '../blocks/textBlock'
+import {Category, CategoryBlocks} from '../store/sidebar'
+import {Utils} from '../utils'
 
 class TestBlockFactory {
     static createBoard(): Board {
@@ -155,6 +157,27 @@ class TestBlockFactory {
         block.title = 'title'
 
         return block
+    }
+
+    static createCategory(): Category {
+        const now = Date.now()
+
+        return {
+            id: Utils.createGuid(Utils.blockTypeToIDType('7')),
+            name: 'Category',
+            createAt: now,
+            updateAt: now,
+            deleteAt: 0,
+            userID: '',
+            teamID: '',
+        }
+    }
+
+    static createCategoryBlocks(): CategoryBlocks {
+        return {
+            ...TestBlockFactory.createCategory(),
+            blockIDs: [],
+        }
     }
 }
 

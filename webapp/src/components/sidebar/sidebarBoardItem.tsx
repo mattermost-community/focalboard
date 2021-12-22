@@ -26,6 +26,10 @@ import Update from '../../widgets/icons/update'
 import Folder from '../../widgets/icons/folder'
 import Check from '../../widgets/icons/checkIcon'
 
+import telemetryClient, {TelemetryActions, TelemetryCategory, TelemetryClient} from '../../telemetry/telemetryClient'
+
+import DeleteBoardDialog from './deleteBoardDialog'
+
 type Props = {
     activeCategoryId?: string
     activeBoardID?: string
@@ -40,7 +44,9 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const intl = useIntl()
     const history = useHistory()
 
-    // const [deleteBoardOpen, setDeleteBoardOpen] = useState(false)
+    const [deleteBoardOpen, setDeleteBoardOpen] = useState<boolean>(false)
+    const [deleteBoard, setDeleteBoard] = useState<Board>()
+
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, workspaceId?: string}>()
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
     const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
@@ -150,8 +156,6 @@ const SidebarBoardItem = React.memo((props: Props) => {
         <div className='SidebarBoardItem'>
             <div
                 className={`octo-sidebar-item category ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBlocks.id === props.activeCategoryId ? 'active' : ''}`}
-
-                // onClick={() => showBoard(board.id)}
             >
                 <IconButton
                     icon={collapsed ? <ChevronRight/> : <ChevronDown/>}
@@ -200,9 +204,8 @@ const SidebarBoardItem = React.memo((props: Props) => {
                     />
                 </div>}
             {!collapsed && blocks.map((blockID) => {
-                // console.log('AAAA ' + props.boards.length)
-                // console.log(props.boards)
                 const thisBoard = props.boards.find((b) => b.id === blockID)
+                const title = thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: blockID})
                 return (
                     <div
                         key={blockID}
@@ -216,12 +219,23 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             className='octo-sidebar-title'
                             title={thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: '(asdasdsaUntitled Board)'})}
                         >
-                            {thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: blockID})}
+                            {title}
                         </div>
                         <MenuWrapper stopPropagationOnToggle={true}>
                             <IconButton icon={<OptionsIcon/>}/>
                             <Menu position='left'>
+                                <Menu.Text
+                                    key='deleteBlock'
+                                    id='deleteBlock'
+                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
+                                    icon={<DeleteIcon/>}
+                                    onClick={() => {
+                                        setDeleteBoard(thisBoard!)
+                                        setDeleteBoardOpen(true)
+                                    }}
+                                />
                                 <Menu.SubMenu
+                                    key='moveBlock'
                                     id='moveBlock'
                                     name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
                                     icon={<CreateNewFolder/>}
@@ -283,29 +297,35 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 )
             }
 
-            {/*{deleteBoardOpen &&*/}
-            {/*<DeleteBoardDialog*/}
-            {/*    boardTitle={props.board.title}*/}
-            {/*    onClose={() => setDeleteBoardOpen(false)}*/}
-            {/*    onDelete={async () => {*/}
-            {/*        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: board.id})*/}
-            {/*        mutator.deleteBlock(*/}
-            {/*            board,*/}
-            {/*            intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),*/}
-            {/*            async () => {*/}
-            {/*                if (props.nextBoardId) {*/}
-            {/*                    // This delay is needed because WSClient has a default 100 ms notification delay before updates*/}
-            {/*                    setTimeout(() => {*/}
-            {/*                        showBoard(props.nextBoardId)*/}
-            {/*                    }, 120)*/}
-            {/*                }*/}
-            {/*            },*/}
-            {/*            async () => {*/}
-            {/*                showBoard(board.id)*/}
-            {/*            },*/}
-            {/*        )*/}
-            {/*    }}*/}
-            {/*/>}*/}
+            {deleteBoardOpen && deleteBoard &&
+            <DeleteBoardDialog
+                boardTitle={deleteBoard.title}
+                onClose={() => setDeleteBoardOpen(false)}
+                onDelete={async () => {
+                    telemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: deleteBoard.id})
+                    mutator.deleteBlock(
+                        deleteBoard,
+                        intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
+                        async () => {
+                            let nextBoardId: number | undefined
+                            if (props.boards.length > 1) {
+                                const deleteBoardIndex = props.boards.findIndex((board) => board.id === deleteBoard.id)
+                                nextBoardId = deleteBoardIndex + 1 === props.boards.length ? deleteBoardIndex - 1 : deleteBoardIndex + 1
+                            }
+
+                            if (nextBoardId) {
+                                // This delay is needed because WSClient has a default 100 ms notification delay before updates
+                                setTimeout(() => {
+                                    showBoard(props.boards[nextBoardId as number].id)
+                                }, 120)
+                            }
+                        },
+                        async () => {
+                            showBoard(deleteBoard.id)
+                        },
+                    )
+                }}
+            />}
         </div>
     )
 })

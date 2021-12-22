@@ -173,22 +173,18 @@ const Sidebar = React.memo((props: Props) => {
             <BoardsSwitcher/>
 
             {
-
-                // !props.isDashboard &&
                 <div className='octo-sidebar-list'>
                     {
-                        sidebarCategories.map((category) => {
-                            return (
-                                <SidebarBoardItem
-                                    hideSidebar={hideSidebar}
-                                    key={category.id}
-                                    activeBoardID={props.activeBoardId}
-                                    categoryBlocks={category}
-                                    boards={boards}
-                                    allCategories={sidebarCategories}
-                                />
-                            )
-                        })
+                        sidebarCategories.map((category) => (
+                            <SidebarBoardItem
+                                hideSidebar={hideSidebar}
+                                key={category.id}
+                                activeBoardID={props.activeBoardId}
+                                categoryBlocks={category}
+                                boards={boards}
+                                allCategories={sidebarCategories}
+                            />
+                        ))
                     }
                 </div>
             }

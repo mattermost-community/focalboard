@@ -77,6 +77,10 @@ card3.workspaceId = workspace1.id
 
 const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, createAt: 0, updateAt: 0}
 
+const categoryAttribute1 = TestBlockFactory.createCategoryBlocks()
+categoryAttribute1.name = 'Category 1'
+categoryAttribute1.blockIDs = [board.id]
+
 jest.mock('react-router-dom', () => {
     const originalModule = jest.requireActual('react-router-dom')
 
@@ -137,6 +141,11 @@ describe('src/components/workspace', () => {
         },
         comments: {
             comments: {},
+        },
+        sidebar: {
+            categoryAttributes: [
+                categoryAttribute1,
+            ],
         },
     }
     const store = mockStateStore([], state)

@@ -8,6 +8,10 @@ import {Router} from 'react-router-dom'
 import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import {Provider as ReduxProvider} from 'react-redux'
+
+import configureStore from 'redux-mock-store'
+
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import {wrapIntl} from '../../testUtils'
@@ -15,34 +19,64 @@ import {wrapIntl} from '../../testUtils'
 import SidebarBoardItem from './sidebarBoardItem'
 
 describe('components/sidebarBoardItem', () => {
+    const board = TestBlockFactory.createBoard()
+
+    const view2 = TestBlockFactory.createBoardView(board)
+    view2.fields.sortOptions = []
+    const history = createMemoryHistory()
+
+    const mockHide = jest.fn()
+
+    const board1 = TestBlockFactory.createBoard()
+    const board2 = TestBlockFactory.createBoard()
+    const boards = [board1, board2]
+    const categoryBlocks1 = TestBlockFactory.createCategoryBlocks()
+    categoryBlocks1.name = 'Category 1'
+    categoryBlocks1.blockIDs = [board1.id, board2.id]
+
+    const categoryBlocks2 = TestBlockFactory.createCategoryBlocks()
+    categoryBlocks2.name = 'Category 2'
+
+    const categoryBlocks3 = TestBlockFactory.createCategoryBlocks()
+    categoryBlocks3.name = 'Category 3'
+
+    const allCategoryBlocks = [
+        categoryBlocks1,
+        categoryBlocks2,
+        categoryBlocks3,
+    ]
+
+    const state = {
+        users: {
+            me: {
+                id: 'user_id_1',
+            },
+        },
+    }
+
     test('sidebar call hideSidebar', () => {
-        const board = TestBlockFactory.createBoard()
-
-        // const view = TestBlockFactory.createBoardView(board)
-
-        const view2 = TestBlockFactory.createBoardView(board)
-        view2.fields.sortOptions = []
-        const history = createMemoryHistory()
-
-        const mockHide = jest.fn()
+        const mockStore = configureStore([])
+        const store = mockStore(state)
 
         const component = wrapIntl(
-            <Router history={history}>
-
-                {/*<SidebarBoardItem*/}
-                {/*    hideSidebar={mockHide}*/}
-                {/*    key={board.id}*/}
-                {/*    views={[view, view2]}*/}
-                {/*    board={board}*/}
-                {/*/>*/}
-            </Router>,
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <SidebarBoardItem
+                        hideSidebar={() => {}}
+                        categoryBlocks={categoryBlocks1}
+                        boards={boards}
+                        allCategories={allCategoryBlocks}
+                    />
+                </Router>
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
 
-        const subItems = container.querySelectorAll('.subitem > .BoardIcon')
+        // testing collapsed state of category
+        const subItems = container.querySelectorAll('.category > .IconButton')
         expect(subItems).toBeDefined()
         userEvent.click(subItems[0] as Element)
-        expect(mockHide).toBeCalled()
+        expect(container).toMatchSnapshot()
     })
 })

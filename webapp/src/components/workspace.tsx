@@ -87,7 +87,6 @@ function CenterContent(props: Props) {
 
 const Workspace = React.memo((props: Props) => {
     const board = useAppSelector(getCurrentBoard)
-    const view = useAppSelector(getCurrentView)
 
     return (
         <div className='Workspace'>
