@@ -17,8 +17,6 @@ import {getMe} from '../../store/users'
 import Comment from './comment'
 import './commentsList.scss'
 
-const imageURLForUser = (window as any).Components?.imageURLForUser
-
 type Props = {
     comments: readonly CommentBlock[]
     rootId: string
@@ -48,13 +46,12 @@ const CommentsList = React.memo((props: Props) => {
 
     const {comments} = props
     const intl = useIntl()
-    const defaultImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
     const newCommentComponent = (
         <div className='CommentsList__new'>
             <img
                 className='comment-avatar'
-                src={imageURLForUser ? imageURLForUser(me!.id) : defaultImageUrl}
+                src={Utils.getProfilePicture(me!.id)}
             />
             <MarkdownEditor
                 className='newcomment'
@@ -90,7 +87,7 @@ const CommentsList = React.memo((props: Props) => {
                 <Comment
                     key={comment.id}
                     comment={comment}
-                    userImageUrl={imageURLForUser(comment.modifiedBy)}
+                    userImageUrl={Utils.getProfilePicture(comment.modifiedBy)}
                     userId={comment.modifiedBy}
                     readonly={props.readonly}
                 />
