@@ -32,6 +32,10 @@
         flex-direction: column;
         height: 100%;
 
+        .head {
+            margin-top: 4px;
+        }
+
         .head, .searchResults {
             padding: 0 24px 24px;
         }
@@ -42,7 +46,6 @@
             overflow-x: hidden;
             padding: 0;
             margin-bottom: 18px;
-            padding-top: 6px;
             border-top: solid 1px rgba(var(--center-channel-color-rgb), 0.16);
 
             .searchResult {
@@ -111,6 +114,7 @@
             position: relative;
             display: flex;
             flex-direction: row;
+            margin-top: 20px;
 
             .MagnifyIcon {
                 position: absolute;

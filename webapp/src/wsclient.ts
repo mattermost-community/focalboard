@@ -318,6 +318,9 @@ class WSClient {
                 case ACTION_UPDATE_CATEGORY:
                     this.updateHandler(message)
                     break
+                case ACTION_UPDATE_BLOCK_CATEGORY:
+                    this.updateHandler(message)
+                    break
                 default:
                     Utils.logError(`Unexpected action: ${message.action}`)
                 }

@@ -16,6 +16,7 @@ import {setCurrent as setCurrentBoard} from '../../store/boards'
 import {setCurrent as setCurrentView} from '../../store/views'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getCurrentWorkspace} from '../../store/workspace'
+import {Utils} from '../../utils'
 
 const BoardsSwitcher = (): JSX.Element => {
     const intl = useIntl()
@@ -73,12 +74,16 @@ const BoardsSwitcher = (): JSX.Element => {
                     </span>
                 </div>
             </div>
-            <span
-                className='add-board-icon'
-                onClick={goToEmptyCenterPanel}
-            >
-                <AddIcon/>
-            </span>
+
+            {
+                Utils.isFocalboardPlugin() &&
+                <span
+                    className='add-board-icon'
+                    onClick={goToEmptyCenterPanel}
+                >
+                    <AddIcon/>
+                </span>
+            }
 
             {
                 showSwitcher &&

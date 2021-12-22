@@ -24,7 +24,7 @@ import {getMe} from '../../store/users'
 import {Utils} from '../../utils'
 import Update from '../../widgets/icons/update'
 import Folder from '../../widgets/icons/folder'
-import CheckIcon from '../../widgets/icons/check'
+import Check from '../../widgets/icons/checkIcon'
 
 type Props = {
     activeCategoryId?: string
@@ -137,7 +137,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 key={category.id}
                 id={category.id}
                 name={category.name}
-                icon={category.id === props.categoryBlocks.id ? <CheckIcon/> : <Folder/>}
+                icon={category.id === props.categoryBlocks.id ? <Check/> : <Folder/>}
                 onClick={async (toCategoryID) => {
                     const fromCategoryID = props.categoryBlocks.id
                     await mutator.moveBlockToCategory(teamID, blockID, toCategoryID, fromCategoryID)

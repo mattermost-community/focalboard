@@ -5,7 +5,9 @@ CREATE TABLE {{.prefix}}categories (
     name varchar(100) NOT NULL,
     user_id varchar(32) NOT NULL,
     team_id varchar(32) NOT NULL,
-    channel_id varchar(32) NOT NULL,
+    {{if not .sqlite}}
+        channel_id varchar(32) NOT NULL,
+    {{end}}
     create_at BIGINT,
     update_at BIGINT,
     delete_at BIGINT,
@@ -13,12 +15,20 @@ CREATE TABLE {{.prefix}}categories (
     ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
 {{if .plugin}}
-    INSERT INTO {{.prefix}}categories(name, user_id, team_id, channel_id, create_at, update_at, delete_at)
+    INSERT INTO {{.prefix}}categories(
+        name,
+        user_id,
+        team_id,
+        {{if not .sqlite}}channel_id,{{end}}
+        create_at,
+        update_at,
+        delete_at
+    )
     SELECT
         COALESCE(nullif(c.DisplayName, ''), 'Direct Message') as category_name,
         cm.UserId,
         COALESCE(nullif(c.TeamId, ''), 'direct_message') as team_id,
-        cm.ChannelId,
+        {{if not .sqlite}}cm.ChannelId,{{end}}
         {{if .postgres}}(extract(epoch from now())*1000)::bigint,{{end}}
         {{if .mysql}}UNIX_TIMESTAMP() * 1000,{{end}}
         {{if .sqlite}}CAST(strftime('%s', 'now') * 1000 as bigint),{{end}}
