@@ -124,7 +124,7 @@ exports[`components/cardDialog already following card 1`] = `
             class="CommentsList"
           >
             <div
-              class="commentrow"
+              class="CommentsList__new"
             >
               <img
                 class="comment-avatar"
@@ -185,7 +185,9 @@ exports[`components/cardDialog already following card 1`] = `
               </div>
               
             </div>
-            <hr />
+            <hr
+              class="CommentsList__divider"
+            />
           </div>
         </div>
         <div
@@ -598,7 +600,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
             class="CommentsList"
           >
             <div
-              class="commentrow"
+              class="CommentsList__new"
             >
               <img
                 class="comment-avatar"
@@ -659,7 +661,9 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
               </div>
               
             </div>
-            <hr />
+            <hr
+              class="CommentsList__divider"
+            />
           </div>
         </div>
         <div
@@ -877,7 +881,7 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
             class="CommentsList"
           >
             <div
-              class="commentrow"
+              class="CommentsList__new"
             >
               <img
                 class="comment-avatar"
@@ -938,7 +942,9 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
               </div>
               
             </div>
-            <hr />
+            <hr
+              class="CommentsList__divider"
+            />
           </div>
         </div>
         <div
@@ -1156,7 +1162,7 @@ exports[`components/cardDialog should match snapshot 1`] = `
             class="CommentsList"
           >
             <div
-              class="commentrow"
+              class="CommentsList__new"
             >
               <img
                 class="comment-avatar"
@@ -1217,7 +1223,9 @@ exports[`components/cardDialog should match snapshot 1`] = `
               </div>
               
             </div>
-            <hr />
+            <hr
+              class="CommentsList__divider"
+            />
           </div>
         </div>
         <div
