@@ -528,29 +528,18 @@ func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) 
 	auditRec := a.makeAuditRecord(r, "updateCategoryBlock", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
-	requestBody, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	var payload = map[string]string{}
-	err = json.Unmarshal(requestBody, &payload)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
 	vars := mux.Vars(r)
-	teamID := vars["teamID"]
 	categoryID := vars["categoryID"]
 	blockID := vars["blockID"]
+
+	a.logger.Debug("############ categoryID " + categoryID)
+	a.logger.Debug("############ blockID " + blockID)
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
 
-	err = a.app.AddUpdateUserCategoryBlock(userID, teamID, categoryID, blockID)
+	err := a.app.AddUpdateUserCategoryBlock(userID, categoryID, blockID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

@@ -454,7 +454,7 @@ class OctoClient {
     }
 
     async moveBlockToCategory(teamID: string, blockID: string, toCategoryID: string, fromCategoryID: string): Promise<Response> {
-        const url = `/api/v1/teams/${teamID}/categories/${toCategoryID}/blocks/${blockID}`
+        const url = `/api/v1/teams/${teamID}/categories/${toCategoryID || '0'}/blocks/${blockID}`
         const payload = {
             fromCategoryID,
         }

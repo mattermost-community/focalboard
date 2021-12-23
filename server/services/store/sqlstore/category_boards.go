@@ -51,19 +51,10 @@ func (s *SQLStore) getCategoryBlockAttributes(db sq.BaseRunner, categoryID strin
 	return s.categoryBlocksFromRows(rows)
 }
 
-func (s *SQLStore) addUpdateCategoryBlock(db sq.BaseRunner, userID, teamID, categoryID, blockID string) error {
-	//// Check if block already belongs to a category.
-	//// Update or insert accordingly.
-	//exists, err := s.userCategoryBlockExists(db, userID, teamID, blockID)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//if exists {
-	//	return s.updateUserCategoryBlock(db, blockID, newCategoryID)
-	//}
-	//
-	//return s.addUserCategoryBlock(db, newCategoryID, blockID)
+func (s *SQLStore) addUpdateCategoryBlock(db sq.BaseRunner, userID, categoryID, blockID string) error {
+	if categoryID == "0" {
+		return s.deleteUserCategoryBlock(db, userID, blockID)
+	}
 
 	rowsAffected, err := s.updateUserCategoryBlock(db, userID, blockID, categoryID)
 	if err != nil {
@@ -107,6 +98,7 @@ func (s *SQLStore) updateUserCategoryBlock(db sq.BaseRunner, userID, blockID, ca
 	result, err := s.getQueryBuilder(db).
 		Update(s.tablePrefix+"category_blocks").
 		Set("category_id", categoryID).
+		Set("delete_at", 0).
 		Where(sq.Eq{
 			"block_id": blockID,
 			"user_id":  userID,
@@ -153,6 +145,29 @@ func (s *SQLStore) addUserCategoryBlock(db sq.BaseRunner, userID, categoryID, bl
 		s.logger.Error("addUserCategoryBlock error", mlog.Err(err))
 		return err
 	}
+	return nil
+}
+
+func (s *SQLStore) deleteUserCategoryBlock(db sq.BaseRunner, userID, blockID string) error {
+	_, err := s.getQueryBuilder(db).
+		Update(s.tablePrefix+"category_blocks").
+		Set("delete_at", utils.GetMillis()).
+		Where(sq.Eq{
+			"user_id":   userID,
+			"block_id":  blockID,
+			"delete_at": 0,
+		}).Exec()
+
+	if err != nil {
+		s.logger.Error(
+			"deleteUserCategoryBlock delete error",
+			mlog.String("userID", userID),
+			mlog.String("blockID", blockID),
+			mlog.Err(err),
+		)
+		return err
+	}
+
 	return nil
 }
 

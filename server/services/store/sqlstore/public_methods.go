@@ -21,8 +21,8 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) AddUpdateCategoryBlock(userID string, teamID string, categoryID string, blockID string) error {
-	return s.addUpdateCategoryBlock(s.db, userID, teamID, categoryID, blockID)
+func (s *SQLStore) AddUpdateCategoryBlock(userID string, categoryID string, blockID string) error {
+	return s.addUpdateCategoryBlock(s.db, userID, categoryID, blockID)
 
 }
 

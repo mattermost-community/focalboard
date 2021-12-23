@@ -6,6 +6,6 @@ func (a *App) GetUserCategoryBlocks(userID, teamID string) ([]model.CategoryBloc
 	return a.store.GetUserCategoryBlocks(userID, teamID)
 }
 
-func (a *App) AddUpdateUserCategoryBlock(userID, teamID, categoryID, blockID string) error {
-	return a.store.AddUpdateCategoryBlock(userID, teamID, categoryID, blockID)
+func (a *App) AddUpdateUserCategoryBlock(userID, categoryID, blockID string) error {
+	return a.store.AddUpdateCategoryBlock(userID, categoryID, blockID)
 }

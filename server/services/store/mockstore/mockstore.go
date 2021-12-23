@@ -36,17 +36,17 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 }
 
 // AddUpdateCategoryBlock mocks base method.
-func (m *MockStore) AddUpdateCategoryBlock(arg0, arg1, arg2, arg3 string) error {
+func (m *MockStore) AddUpdateCategoryBlock(arg0, arg1, arg2 string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddUpdateCategoryBlock", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "AddUpdateCategoryBlock", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddUpdateCategoryBlock indicates an expected call of AddUpdateCategoryBlock.
-func (mr *MockStoreMockRecorder) AddUpdateCategoryBlock(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) AddUpdateCategoryBlock(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddUpdateCategoryBlock", reflect.TypeOf((*MockStore)(nil).AddUpdateCategoryBlock), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddUpdateCategoryBlock", reflect.TypeOf((*MockStore)(nil).AddUpdateCategoryBlock), arg0, arg1, arg2)
 }
 
 // CleanUpSessions mocks base method.
