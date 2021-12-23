@@ -4,7 +4,7 @@ import React, {useState} from 'react'
 
 import {useIntl} from 'react-intl'
 
-import {useHistory, useRouteMatch} from 'react-router-dom'
+import {useHistory} from 'react-router-dom'
 
 import Search from '../../widgets/icons/search'
 

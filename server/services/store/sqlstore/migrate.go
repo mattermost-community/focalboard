@@ -189,7 +189,11 @@ func (s *SQLStore) Migrate() error {
 		mutex.Lock()
 	}
 
-	if err := s.runUniqueIDsMigration(m); err != nil {
+	if err := ensureMigrationsAppliedUpToVersion(m, uniqueIDsMigrationRequiredVersion); err != nil {
+		return err
+	}
+
+	if err := s.runUniqueIDsMigration(); err != nil {
 		if s.isPlugin {
 			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
 			mutex.Unlock()
@@ -197,7 +201,11 @@ func (s *SQLStore) Migrate() error {
 		return fmt.Errorf("error running unique IDs migration: %w", err)
 	}
 
-	if err := s.runCategoryUuidIdMigration(m); err != nil {
+	if err := ensureMigrationsAppliedUpToVersion(m, categoriesUUIDIDMigrationRequiredVersion); err != nil {
+		return err
+	}
+
+	if err := s.runCategoryUuidIdMigration(); err != nil {
 		if s.isPlugin {
 			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
 			mutex.Unlock()

@@ -26,7 +26,7 @@ import Update from '../../widgets/icons/update'
 import Folder from '../../widgets/icons/folder'
 import Check from '../../widgets/icons/checkIcon'
 
-import telemetryClient, {TelemetryActions, TelemetryCategory, TelemetryClient} from '../../telemetry/telemetryClient'
+import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import DeleteBoardDialog from './deleteBoardDialog'
 
@@ -225,7 +225,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             <IconButton icon={<OptionsIcon/>}/>
                             <Menu position='left'>
                                 <Menu.Text
-                                    key='deleteBlock'
+                                    key={`deleteBlock-${thisBoard?.id}`}
                                     id='deleteBlock'
                                     name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
                                     icon={<DeleteIcon/>}
@@ -235,7 +235,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                                     }}
                                 />
                                 <Menu.SubMenu
-                                    key='moveBlock'
+                                    key={`moveBlock-${thisBoard?.id}`}
                                     id='moveBlock'
                                     name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
                                     icon={<CreateNewFolder/>}

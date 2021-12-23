@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 
 import {getCurrentBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
-import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
+import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 import {getClientConfig, setClientConfig} from '../store/clientConfig'

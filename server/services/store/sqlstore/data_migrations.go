@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	sq "github.com/Masterminds/squirrel"
-	"github.com/golang-migrate/migrate/v4"
 	"strconv"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -19,11 +18,7 @@ const (
 	categoriesUUIDIDMigrationRequiredVersion = 16
 )
 
-func (s *SQLStore) runUniqueIDsMigration(m *migrate.Migrate) error {
-	if err := ensureMigrationsAppliedUpToVersion(m, uniqueIDsMigrationRequiredVersion); err != nil {
-		return err
-	}
-
+func (s *SQLStore) runUniqueIDsMigration() error {
 	setting, err := s.GetSystemSetting(UniqueIDsMigrationKey)
 	if err != nil {
 		return fmt.Errorf("cannot get migration state: %w", err)
@@ -86,11 +81,7 @@ func (s *SQLStore) runUniqueIDsMigration(m *migrate.Migrate) error {
 	return nil
 }
 
-func (s *SQLStore) runCategoryUuidIdMigration(m *migrate.Migrate) error {
-	if err := ensureMigrationsAppliedUpToVersion(m, categoriesUUIDIDMigrationRequiredVersion); err != nil {
-		return err
-	}
-
+func (s *SQLStore) runCategoryUuidIdMigration() error {
 	setting, err := s.GetSystemSetting(CategoryUUIDIDMigrationKey)
 	if err != nil {
 		return fmt.Errorf("cannot get migration state: %w", err)

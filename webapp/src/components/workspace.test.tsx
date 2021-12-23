@@ -8,6 +8,8 @@ import {mocked} from 'ts-jest/utils'
 
 import userEvent from '@testing-library/user-event'
 
+import thunk from 'redux-thunk'
+
 import {IUser, UserWorkspace} from '../user'
 import {TestBlockFactory} from '../test/testBlockFactory'
 import {mockDOM, mockMatchMedia, mockStateStore, wrapDNDIntl} from '../testUtils'
@@ -148,7 +150,7 @@ describe('src/components/workspace', () => {
             ],
         },
     }
-    const store = mockStateStore([], state)
+    const store = mockStateStore([thunk], state)
     beforeAll(() => {
         mockDOM()
         mockMatchMedia({matches: true})

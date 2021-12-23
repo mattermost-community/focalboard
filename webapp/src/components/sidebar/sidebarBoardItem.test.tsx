@@ -25,8 +25,6 @@ describe('components/sidebarBoardItem', () => {
     view2.fields.sortOptions = []
     const history = createMemoryHistory()
 
-    const mockHide = jest.fn()
-
     const board1 = TestBlockFactory.createBoard()
     const board2 = TestBlockFactory.createBoard()
     const boards = [board1, board2]

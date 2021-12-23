@@ -26,7 +26,9 @@ const WelcomePage = React.memo(() => {
             return
         }
 
-        history.replace('/dashboard')
+        // TODO verify this redirects to current team after
+        // integrating with permission changes
+        history.replace('/')
     }
 
     if (UserSettings.welcomePageViewed) {
