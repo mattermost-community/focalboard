@@ -15,7 +15,7 @@ const (
 	UniqueIDsMigrationKey      = "UniqueIDsMigrationComplete"
 	CategoryUUIDIDMigrationKey = "CategoryUuidIdMigrationComplete"
 
-	categoriesUUIDIDMigrationRequiredVersion = 16
+	categoriesUUIDIDMigrationRequiredVersion = 17
 )
 
 func (s *SQLStore) runUniqueIDsMigration() error {
