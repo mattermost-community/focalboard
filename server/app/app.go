@@ -5,6 +5,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/metrics"
 	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/ws"
@@ -22,6 +23,7 @@ type Services struct {
 	Metrics       *metrics.Metrics
 	Notifications *notify.Service
 	Logger        *mlog.Logger
+	Permissions   permissions.PermissionsService
 }
 
 type App struct {

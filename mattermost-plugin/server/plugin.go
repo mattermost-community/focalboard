@@ -13,6 +13,7 @@ import (
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
@@ -109,7 +110,9 @@ func (p *Plugin) OnActivate() error {
 		db = layeredStore
 	}
 
-	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
+	permissionsService := mmpermissions.New(db, p.API)
+
+	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db, permissionsService), db)
 
 	mentionsBackend, err := createMentionsNotifyBackend(client, baseURL+"/boards", logger)
 	if err != nil {
@@ -117,13 +120,14 @@ func (p *Plugin) OnActivate() error {
 	}
 
 	params := server.Params{
-		Cfg:             cfg,
-		SingleUserToken: "",
-		DBStore:         db,
-		Logger:          logger,
-		ServerID:        serverID,
-		WSAdapter:       p.wsPluginAdapter,
-		NotifyBackends:  []notify.Backend{mentionsBackend},
+		Cfg:                cfg,
+		SingleUserToken:    "",
+		DBStore:            db,
+		Logger:             logger,
+		ServerID:           serverID,
+		WSAdapter:          p.wsPluginAdapter,
+		NotifyBackends:     []notify.Backend{mentionsBackend},
+		PermissionsService: permissionsService,
 	}
 
 	server, err := server.New(params)
