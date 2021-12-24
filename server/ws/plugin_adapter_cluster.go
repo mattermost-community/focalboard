@@ -7,8 +7,10 @@ import (
 )
 
 type ClusterMessage struct {
-	WorkspaceID string
+	TeamID      string
+	BoardID     string
 	Payload     map[string]interface{}
+	EnsureUsers []string
 }
 
 func (pa *PluginAdapter) sendMessageToCluster(id string, clusterMessage *ClusterMessage) {
@@ -46,5 +48,10 @@ func (pa *PluginAdapter) HandleClusterEvent(ev mmModel.PluginClusterEvent) {
 		return
 	}
 
-	pa.sendWorkspaceMessageSkipCluster(clusterMessage.WorkspaceID, clusterMessage.Payload)
+	if clusterMessage.BoardID != "" {
+		pa.sendBoardMessageSkipCluster(clusterMessage.TeamID, clusterMessage.BoardID, clusterMessage.Payload, clusterMessage.EnsureUsers...)
+		return
+	}
+
+	pa.sendTeamMessageSkipCluster(clusterMessage.TeamID, clusterMessage.Payload)
 }
