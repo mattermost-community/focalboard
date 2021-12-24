@@ -1,5 +1,10 @@
 package model
 
+import (
+	"encoding/json"
+	"io"
+)
+
 type BoardType string
 
 const (
@@ -15,7 +20,7 @@ type Board struct {
 	ID string `json:"id"`
 
 	// The ID of the team that the board belongs to
-	// required: false
+	// required: true
 	TeamID string `json:"teamId"`
 
 	// The ID of the channel that the board was created from
@@ -79,6 +84,54 @@ type Board struct {
 	DeleteAt int64 `json:"deleteAt"`
 }
 
+// BoardPatch is a patch for modify boards
+// swagger:model
+type BoardPatch struct {
+	// The type of the board
+	// required: false
+	Type *BoardType `json:"type"`
+
+	// The title of the board
+	// required: false
+	Title *string `json:"title"`
+
+	// The description of the board
+	// required: false
+	Description *string `json:"description"`
+
+	// The icon of the board
+	// required: false
+	Icon *string `json:"icon"`
+
+	// Indicates if the board shows the description on the interface
+	// required: false
+	ShowDescription *bool `json:"showDescription"`
+
+	// The board updated properties
+	// required: false
+	UpdatedProperties map[string]interface{} `json:"updatedProperties"`
+
+	// The board removed properties
+	// required: false
+	DeletedProperties []string `json:"deletedProperties"`
+
+	// The board updated card properties
+	// required: false
+	UpdatedCardProperties map[string]interface{} `json:"updatedCardProperties"`
+
+	// The board removed card properties
+	// required: false
+	DeletedCardProperties []string `json:"deletedCardProperties"`
+
+	// The board updated column calculations
+	// required: false
+	UpdatedColumnCalculations map[string]interface{} `json:"updatedColumnCalculations"`
+
+	// The board deleted column calculations
+	// required: false
+	DeletedColumnCalculations []string `json:"deletedColumnCalculations"`
+}
+
 // BoardMember stores the information of the membership of a user on a board
 // swagger:model
 type BoardMember struct {
@@ -111,6 +164,79 @@ type BoardMember struct {
 	SchemeViewer bool `json:"schemeViewer"`
 }
 
+func BoardFromJSON(data io.Reader) *Board {
+	var board *Board
+	_ = json.NewDecoder(data).Decode(&board)
+	return board
+}
+
+func BoardsFromJSON(data io.Reader) []*Board {
+	var boards []*Board
+	_ = json.NewDecoder(data).Decode(&boards)
+	return boards
+}
+
+// Patch returns an updated version of the board.
+func (p *BoardPatch) Patch(board *Board) *Board {
+	if p.Type != nil {
+		board.Type = *p.Type
+	}
+
+	if p.Title != nil {
+		board.Title = *p.Title
+	}
+
+	if p.Description != nil {
+		board.Description = *p.Description
+	}
+
+	if p.Icon != nil {
+		board.Icon = *p.Icon
+	}
+
+	if p.ShowDescription != nil {
+		board.ShowDescription = *p.ShowDescription
+	}
+
+	for key, property := range p.UpdatedProperties {
+		board.Properties[key] = property
+	}
+
+	for _, key := range p.DeletedProperties {
+		delete(board.Properties, key)
+	}
+
+	for key, cardProperty := range p.UpdatedCardProperties {
+		board.CardProperties[key] = cardProperty
+	}
+
+	for _, key := range p.DeletedCardProperties {
+		delete(board.CardProperties, key)
+	}
+
+	for key, columnCalculation := range p.UpdatedColumnCalculations {
+		board.ColumnCalculations[key] = columnCalculation
+	}
+
+	for _, key := range p.DeletedColumnCalculations {
+		delete(board.ColumnCalculations, key)
+	}
+
+	return board
+}
+
+func IsBoardTypeValid(t BoardType) bool {
+	return t == BoardTypeOpen || t == BoardTypePrivate
+}
+
+func (p *BoardPatch) IsValid() error {
+	if p.Type != nil && !IsBoardTypeValid(*p.Type) {
+		return InvalidBoardErr{"invalid-board-type"}
+	}
+
+	return nil
+}
+
 type InvalidBoardErr struct {
 	msg string
 }
@@ -124,11 +250,7 @@ func (b *Board) IsValid() error {
 		return InvalidBoardErr{"empty-team-id"}
 	}
 
-	// ToDo: maybe we'll need to remove this for single user mode
-	if b.CreatedBy == "" && b.ModifiedBy == "" {
-		return InvalidBoardErr{"empty-created-and-modified-by"}
-	}
-	if b.Type != BoardTypeOpen && b.Type != BoardTypePrivate {
+	if !IsBoardTypeValid(b.Type) {
 		return InvalidBoardErr{"invalid-board-type"}
 	}
 	return nil

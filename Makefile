@@ -12,6 +12,8 @@ ifeq ($(BUILD_NUMBER),)
 	BUILD_DATE := n/a
 endif
 
+BUILD_TAGS += json1
+
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD_NUMBER)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
@@ -28,25 +30,25 @@ ci: server-test
 
 server: ## Build server for local environment.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
-	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/focalboard-server ./main
+	cd server; go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/focalboard-server ./main
 
 server-mac: ## Build server for Mac.
 	mkdir -p bin/mac
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
-	cd server; env GOOS=darwin GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/mac/focalboard-server ./main
+	cd server; env GOOS=darwin GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/mac/focalboard-server ./main
 
 server-linux: ## Build server for Linux.
 	mkdir -p bin/linux
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
-	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/linux/focalboard-server ./main
+	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/linux/focalboard-server ./main
 
 server-win: ## Build server for Windows.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
-	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/win/focalboard-server.exe ./main
+	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/win/focalboard-server.exe ./main
 
 server-dll: ## Build server as Windows DLL.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
-	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -buildmode=c-shared -o ../bin/win-dll/focalboard-server.dll ./main
+	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -buildmode=c-shared -o ../bin/win-dll/focalboard-server.dll ./main
 
 server-linux-package: server-linux webapp
 	rm -rf package
@@ -94,22 +96,22 @@ modd-precheck:
 	fi; \
 
 watch: modd-precheck ## Run both server and webapp watching for changes
-	modd
+	env FOCALBOARD_BUILD_TAGS='$(BUILD_TAGS)' modd
 
 watch-single-user: modd-precheck ## Run both server and webapp in single user mode watching for changes
-	env FOCALBOARDSERVER_ARGS=--single-user modd
+	env FOCALBOARDSERVER_ARGS=--single-user FOCALBOARD_BUILD_TAGS='$(BUILD_TAGS)' modd
 
 watch-server-test: modd-precheck ## Run server tests watching for changes
-	modd -f modd-servertest.conf
+	env FOCALBOARD_BUILD_TAGS='$(BUILD_TAGS)' modd -f modd-servertest.conf
 
 server-test: ## Run server tests
-	cd server; go test -race -v -count=1 ./...
+	cd server; go test -tags='$(BUILD_TAGS)' -race -v -count=1 ./...
 
 webapp: ## Build webapp.
 	cd webapp; npm run pack
 
 watch-plugin: modd-precheck ## Run and upload the plugin to a development server
-	modd -f modd-watchplugin.conf
+	env FOCALBOARD_BUILD_TAGS='$(BUILD_TAGS)' modd -f modd-watchplugin.conf
 
 live-watch-plugin: modd-precheck ## Run and update locally the plugin in the development server
 	cd mattermost-plugin; make live-watch

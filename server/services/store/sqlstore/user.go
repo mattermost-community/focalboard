@@ -4,12 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"log"
+
+	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
-
-	sq "github.com/Masterminds/squirrel"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type UserNotFoundError struct {
@@ -69,7 +69,7 @@ func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition sq.Eq) ([]*mo
 		Where(condition)
 	rows, err := query.Query()
 	if err != nil {
-		log.Printf("getUsersByCondition ERROR: %v", err)
+		s.logger.Error(`getUsersByCondition ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
@@ -196,7 +196,7 @@ func (s *SQLStore) updateUserPasswordByID(db sq.BaseRunner, userID, password str
 	return nil
 }
 
-func (s *SQLStore) getUsersByWorkspace(db sq.BaseRunner, _ string) ([]*model.User, error) {
+func (s *SQLStore) getUsersByTeam(db sq.BaseRunner, _ string) ([]*model.User, error) {
 	return s.getUsersByCondition(db, nil)
 }
 

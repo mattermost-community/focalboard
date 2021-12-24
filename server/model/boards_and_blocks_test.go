@@ -1,0 +1,146 @@
+package model
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/require"
+)
+
+func TestIsValidBoardsAndBlocks(t *testing.T) {
+	t.Run("no boards", func(t *testing.T) {
+		bab := &BoardsAndBlocks{
+			Blocks: []Block{
+				{ID: "block-id-1", BoardID: "board-id-1", RootID: "root-id-1", Type: TypeCard},
+				{ID: "block-id-2", BoardID: "board-id-2", RootID: "root-id-2", Type: TypeCard},
+			},
+		}
+
+		require.ErrorIs(t, bab.IsValid(), NoBoardsInBoardsAndBlocksErr)
+	})
+
+	t.Run("no blocks", func(t *testing.T) {
+		bab := &BoardsAndBlocks{
+			Boards: []*Board{
+				{ID: "board-id-1", Type: BoardTypeOpen},
+				{ID: "board-id-2", Type: BoardTypePrivate},
+			},
+		}
+
+		require.ErrorIs(t, bab.IsValid(), NoBlocksInBoardsAndBlocksErr)
+	})
+
+	t.Run("block that doesn't belong to the boards", func(t *testing.T) {
+		bab := &BoardsAndBlocks{
+			Boards: []*Board{
+				{ID: "board-id-1", Type: BoardTypeOpen},
+				{ID: "board-id-2", Type: BoardTypePrivate},
+			},
+			Blocks: []Block{
+				{ID: "block-id-1", BoardID: "board-id-1", RootID: "root-id-1", Type: TypeCard},
+				{ID: "block-id-3", BoardID: "board-id-3", RootID: "root-id-3", Type: TypeCard},
+				{ID: "block-id-2", BoardID: "board-id-2", RootID: "root-id-2", Type: TypeCard},
+			},
+		}
+
+		require.ErrorIs(t, bab.IsValid(), BlockDoesntBelongToAnyBoardErr{"block-id-3"})
+	})
+
+	t.Run("valid boards and blocks", func(t *testing.T) {
+		bab := &BoardsAndBlocks{
+			Boards: []*Board{
+				{ID: "board-id-1", Type: BoardTypeOpen},
+				{ID: "board-id-2", Type: BoardTypePrivate},
+			},
+			Blocks: []Block{
+				{ID: "block-id-1", BoardID: "board-id-1", RootID: "root-id-1", Type: TypeCard},
+				{ID: "block-id-3", BoardID: "board-id-2", RootID: "root-id-3", Type: TypeCard},
+				{ID: "block-id-2", BoardID: "board-id-2", RootID: "root-id-2", Type: TypeCard},
+			},
+		}
+
+		require.NoError(t, bab.IsValid())
+	})
+}
+
+func TestGenerateBoardsAndBlocksIDs(t *testing.T) {
+	getBlockByType := func(blocks []Block, blockType BlockType) Block {
+		for _, b := range blocks {
+			if b.Type == blockType {
+				return b
+			}
+		}
+		return Block{}
+	}
+
+	getBoardByTitle := func(boards []*Board, title string) *Board {
+		for _, b := range boards {
+			if b.Title == title {
+				return b
+			}
+		}
+		return nil
+	}
+
+	t.Run("invalid boards and blocks", func(t *testing.T) {
+		bab := &BoardsAndBlocks{
+			Blocks: []Block{
+				{ID: "block-id-1", BoardID: "board-id-1", RootID: "root-id-1", Type: TypeCard},
+				{ID: "block-id-2", BoardID: "board-id-2", RootID: "root-id-2", Type: TypeCard},
+			},
+		}
+
+		rBab, err := GenerateBoardsAndBlocksIDs(bab)
+		require.Error(t, err)
+		require.Nil(t, rBab)
+	})
+
+	t.Run("correctly generates IDs for all the boards and links the blocks to them, with new IDs too", func(t *testing.T) {
+		bab := &BoardsAndBlocks{
+			Boards: []*Board{
+				{ID: "board-id-1", Type: BoardTypeOpen, Title: "board1"},
+				{ID: "board-id-2", Type: BoardTypePrivate, Title: "board2"},
+				{ID: "board-id-3", Type: BoardTypeOpen, Title: "board3"},
+			},
+			Blocks: []Block{
+				{ID: "block-id-1", BoardID: "board-id-1", RootID: "root-id-1", Type: TypeCard},
+				{ID: "block-id-2", BoardID: "board-id-2", RootID: "root-id-2", Type: TypeView},
+				{ID: "block-id-3", BoardID: "board-id-2", RootID: "root-id-3", Type: TypeText},
+			},
+		}
+
+		rBab, err := GenerateBoardsAndBlocksIDs(bab)
+		require.NoError(t, err)
+		require.NotNil(t, rBab)
+
+		// all boards and blocks should have refreshed their IDs, and
+		// blocks should be correctly linked to the new board IDs
+		board1 := getBoardByTitle(rBab.Boards, "board1")
+		require.NotNil(t, board1)
+		require.NotEmpty(t, board1.ID)
+		require.NotEqual(t, "board-id-1", board1.ID)
+		board2 := getBoardByTitle(rBab.Boards, "board2")
+		require.NotNil(t, board2)
+		require.NotEmpty(t, board2.ID)
+		require.NotEqual(t, "board-id-2", board2.ID)
+		board3 := getBoardByTitle(rBab.Boards, "board3")
+		require.NotNil(t, board3)
+		require.NotEmpty(t, board3.ID)
+		require.NotEqual(t, "board-id-3", board3.ID)
+
+		block1 := getBlockByType(rBab.Blocks, TypeCard)
+		require.NotNil(t, block1)
+		require.NotEmpty(t, block1.ID)
+		require.NotEqual(t, "block-id-1", block1.ID)
+		require.Equal(t, board1.ID, block1.BoardID)
+		block2 := getBlockByType(rBab.Blocks, TypeView)
+		require.NotNil(t, block2)
+		require.NotEmpty(t, block2.ID)
+		require.NotEqual(t, "block-id-2", block2.ID)
+		require.Equal(t, board2.ID, block2.BoardID)
+		block3 := getBlockByType(rBab.Blocks, TypeText)
+		require.NotNil(t, block3)
+		require.NotEmpty(t, block3.ID)
+		require.NotEqual(t, "block-id-3", block3.ID)
+		require.Equal(t, board2.ID, block3.BoardID)
+	})
+}

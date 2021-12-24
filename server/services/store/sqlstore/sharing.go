@@ -2,13 +2,12 @@ package sqlstore
 
 import (
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	sq "github.com/Masterminds/squirrel"
 )
 
-func (s *SQLStore) upsertSharing(db sq.BaseRunner, _ store.Container, sharing model.Sharing) error {
+func (s *SQLStore) upsertSharing(db sq.BaseRunner, sharing model.Sharing) error {
 	now := utils.GetMillis()
 
 	query := s.getQueryBuilder(db).
@@ -41,7 +40,7 @@ func (s *SQLStore) upsertSharing(db sq.BaseRunner, _ store.Container, sharing mo
 	return err
 }
 
-func (s *SQLStore) getSharing(db sq.BaseRunner, _ store.Container, rootID string) (*model.Sharing, error) {
+func (s *SQLStore) getSharing(db sq.BaseRunner, boardID string) (*model.Sharing, error) {
 	query := s.getQueryBuilder(db).
 		Select(
 			"id",
@@ -51,7 +50,7 @@ func (s *SQLStore) getSharing(db sq.BaseRunner, _ store.Container, rootID string
 			"update_at",
 		).
 		From(s.tablePrefix + "sharing").
-		Where(sq.Eq{"id": rootID})
+		Where(sq.Eq{"id": boardID})
 	row := query.QueryRow()
 	sharing := model.Sharing{}
 

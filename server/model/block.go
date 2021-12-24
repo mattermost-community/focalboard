@@ -58,9 +58,13 @@ type Block struct {
 	// required: false
 	DeleteAt int64 `json:"deleteAt"`
 
-	// The workspace id that the block belongs to
+	// Deprecated. The workspace id that the block belongs to
+	// required: false
+	WorkspaceID string `json:"-"`
+
+	// The board id that the block belongs to
 	// required: true
-	WorkspaceID string `json:"workspaceId"`
+	BoardID string `json:"boardId"`
 }
 
 // BlockPatch is a patch for modify blocks

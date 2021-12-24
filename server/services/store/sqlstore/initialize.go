@@ -1,12 +1,12 @@
 package sqlstore
 
 import (
-	"encoding/json"
+	// "encoding/json"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/services/store/sqlstore/initializations"
+	// "github.com/mattermost/focalboard/server/model"
+	// "github.com/mattermost/focalboard/server/services/store"
+	// "github.com/mattermost/focalboard/server/services/store/sqlstore/initializations"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -25,42 +25,54 @@ func (s *SQLStore) InitializeTemplates() error {
 	return nil
 }
 
+// ToDo: needs a rewrite to loop over teams and insert boards and
+// blocks, commented to move forward with the rest of the store
+// changes
 func (s *SQLStore) importInitialTemplates() error {
-	s.logger.Debug("importInitialTemplates")
-	blocksJSON := initializations.MustAsset("templates.json")
+	/*
+		s.logger.Debug("importInitialTemplates")
+		blocksJSON := initializations.MustAsset("templates.json")
 
-	var archive model.Archive
-	err := json.Unmarshal(blocksJSON, &archive)
-	if err != nil {
-		return err
-	}
-
-	globalContainer := store.Container{
-		WorkspaceID: "0",
-	}
-
-	s.logger.Debug("Inserting blocks", mlog.Int("block_count", len(archive.Blocks)))
-	for i := range archive.Blocks {
-		s.logger.Trace("insert block",
-			mlog.String("blockID", archive.Blocks[i].ID),
-			mlog.String("block_type", archive.Blocks[i].Type.String()),
-			mlog.String("block_title", archive.Blocks[i].Title),
-		)
-		err := s.InsertBlock(globalContainer, &archive.Blocks[i], "system")
+		var archive model.Archive
+		err := json.Unmarshal(blocksJSON, &archive)
 		if err != nil {
 			return err
 		}
-	}
+
+		// ToDo: loop over teams
+
+		globalContainer := store.Container{
+			TeamID: "0",
+		}
+
+		s.logger.Debug("Inserting blocks", mlog.Int("block_count", len(archive.Blocks)))
+		for i := range archive.Blocks {
+			s.logger.Trace("insert block",
+				mlog.String("blockID", archive.Blocks[i].ID),
+				mlog.String("block_type", archive.Blocks[i].Type.String()),
+				mlog.String("block_title", archive.Blocks[i].Title),
+			)
+			err := s.InsertBlock(globalContainer, &archive.Blocks[i], "system")
+			if err != nil {
+				return err
+			}
+		}
+	*/
 
 	return nil
 }
+
+// ToDo: as part of the change in the above method,
+// isInitializationNeeded should be something like:
+// getTeamsThatNeedInitialization() ([]string, error)
+// and return the team IDs that have no boards
 
 // isInitializationNeeded returns true if the blocks table is empty.
 func (s *SQLStore) isInitializationNeeded() (bool, error) {
 	query := s.getQueryBuilder(s.db).
 		Select("count(*)").
 		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"COALESCE(workspace_id, '0')": "0"})
+		Where(sq.Eq{"COALESCE(channel_id, '0')": "0"})
 
 	row := query.QueryRow()
 

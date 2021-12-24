@@ -16,13 +16,54 @@ import (
 	"context"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
 	return s.cleanUpSessions(s.db, expireTime)
+
+}
+
+func (s *SQLStore) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, error) {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return nil, txErr
+	}
+	result, err := s.createBoardsAndBlocks(tx, bab, userID)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "CreateBoardsAndBlocks"))
+		}
+		return nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+
+}
+
+func (s *SQLStore) CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return nil, nil, txErr
+	}
+	result, resultVar1, err := s.createBoardsAndBlocksWithAdmin(tx, bab, userID)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "CreateBoardsAndBlocksWithAdmin"))
+		}
+		return nil, nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, nil, err
+	}
+
+	return result, resultVar1, nil
 
 }
 
@@ -36,12 +77,12 @@ func (s *SQLStore) CreateUser(user *model.User) error {
 
 }
 
-func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
+func (s *SQLStore) DeleteBlock(blockID string, modifiedBy string) error {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
 	}
-	err := s.deleteBlock(tx, c, blockID, modifiedBy)
+	err := s.deleteBlock(tx, blockID, modifiedBy)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DeleteBlock"))
@@ -57,6 +98,32 @@ func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy str
 
 }
 
+func (s *SQLStore) DeleteBoard(boardID string, userID string) error {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.deleteBoard(tx, boardID, userID)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DeleteBoard"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (s *SQLStore) DeleteMember(boardID string, userID string) error {
+	return s.deleteMember(s.db, boardID, userID)
+
+}
+
 func (s *SQLStore) DeleteSession(sessionID string) error {
 	return s.deleteSession(s.db, sessionID)
 
@@ -67,13 +134,13 @@ func (s *SQLStore) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 
 }
 
-func (s *SQLStore) GetAllBlocks(c store.Container) ([]model.Block, error) {
-	return s.getAllBlocks(s.db, c)
+func (s *SQLStore) GetAllTeams() ([]*model.Team, error) {
+	return s.getAllTeams(s.db)
 
 }
 
-func (s *SQLStore) GetBlock(c store.Container, blockID string) (*model.Block, error) {
-	return s.getBlock(s.db, c, blockID)
+func (s *SQLStore) GetBlock(blockID string) (*model.Block, error) {
+	return s.getBlock(s.db, blockID)
 
 }
 
@@ -82,28 +149,48 @@ func (s *SQLStore) GetBlockCountsByType() (map[string]int64, error) {
 
 }
 
-func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]model.Block, error) {
-	return s.getBlocksWithParent(s.db, c, parentID)
+func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
+	return s.getBlocksForBoard(s.db, boardID)
 
 }
 
-func (s *SQLStore) GetBlocksWithParentAndType(c store.Container, parentID string, blockType string) ([]model.Block, error) {
-	return s.getBlocksWithParentAndType(s.db, c, parentID, blockType)
+func (s *SQLStore) GetBlocksWithParent(boardID string, parentID string) ([]model.Block, error) {
+	return s.getBlocksWithParent(s.db, boardID, parentID)
 
 }
 
-func (s *SQLStore) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {
-	return s.getBlocksWithRootID(s.db, c, rootID)
+func (s *SQLStore) GetBlocksWithParentAndType(boardID string, parentID string, blockType string) ([]model.Block, error) {
+	return s.getBlocksWithParentAndType(s.db, boardID, parentID, blockType)
 
 }
 
-func (s *SQLStore) GetBlocksWithType(c store.Container, blockType string) ([]model.Block, error) {
-	return s.getBlocksWithType(s.db, c, blockType)
+func (s *SQLStore) GetBlocksWithRootID(boardID string, rootID string) ([]model.Block, error) {
+	return s.getBlocksWithRootID(s.db, boardID, rootID)
 
 }
 
-func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error) {
-	return s.getParentID(s.db, c, blockID)
+func (s *SQLStore) GetBlocksWithType(boardID string, blockType string) ([]model.Block, error) {
+	return s.getBlocksWithType(s.db, boardID, blockType)
+
+}
+
+func (s *SQLStore) GetBoard(id string) (*model.Board, error) {
+	return s.getBoard(s.db, id)
+
+}
+
+func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*model.Board, error) {
+	return s.getBoardsForUserAndTeam(s.db, userID, teamID)
+
+}
+
+func (s *SQLStore) GetMemberForBoard(boardID string, userID string) (*model.BoardMember, error) {
+	return s.getMemberForBoard(s.db, boardID, userID)
+
+}
+
+func (s *SQLStore) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
+	return s.getMembersForBoard(s.db, boardID)
 
 }
 
@@ -112,28 +199,23 @@ func (s *SQLStore) GetRegisteredUserCount() (int, error) {
 
 }
 
-func (s *SQLStore) GetRootID(c store.Container, blockID string) (string, error) {
-	return s.getRootID(s.db, c, blockID)
-
-}
-
 func (s *SQLStore) GetSession(token string, expireTime int64) (*model.Session, error) {
 	return s.getSession(s.db, token, expireTime)
 
 }
 
-func (s *SQLStore) GetSharing(c store.Container, rootID string) (*model.Sharing, error) {
-	return s.getSharing(s.db, c, rootID)
+func (s *SQLStore) GetSharing(rootID string) (*model.Sharing, error) {
+	return s.getSharing(s.db, rootID)
 
 }
 
-func (s *SQLStore) GetSubTree2(c store.Container, blockID string) ([]model.Block, error) {
-	return s.getSubTree2(s.db, c, blockID)
+func (s *SQLStore) GetSubTree2(boardID string, blockID string) ([]model.Block, error) {
+	return s.getSubTree2(s.db, boardID, blockID)
 
 }
 
-func (s *SQLStore) GetSubTree3(c store.Container, blockID string) ([]model.Block, error) {
-	return s.getSubTree3(s.db, c, blockID)
+func (s *SQLStore) GetSubTree3(boardID string, blockID string) ([]model.Block, error) {
+	return s.getSubTree3(s.db, boardID, blockID)
 
 }
 
@@ -144,6 +226,21 @@ func (s *SQLStore) GetSystemSetting(key string) (string, error) {
 
 func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 	return s.getSystemSettings(s.db)
+
+}
+
+func (s *SQLStore) GetTeam(ID string) (*model.Team, error) {
+	return s.getTeam(s.db, ID)
+
+}
+
+func (s *SQLStore) GetTeamCount() (int64, error) {
+	return s.getTeamCount(s.db)
+
+}
+
+func (s *SQLStore) GetTeamsForUser(userID string) ([]*model.Team, error) {
+	return s.getTeamsForUser(s.db, userID)
 
 }
 
@@ -162,37 +259,17 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 
 }
 
-func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
-	return s.getUserWorkspaces(s.db, userID)
+func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
+	return s.getUsersByTeam(s.db, teamID)
 
 }
 
-func (s *SQLStore) GetUsersByWorkspace(workspaceID string) ([]*model.User, error) {
-	return s.getUsersByWorkspace(s.db, workspaceID)
-
-}
-
-func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
-	return s.getWorkspace(s.db, ID)
-
-}
-
-func (s *SQLStore) GetWorkspaceCount() (int64, error) {
-	return s.getWorkspaceCount(s.db)
-
-}
-
-func (s *SQLStore) HasWorkspaceAccess(userID string, workspaceID string) (bool, error) {
-	return s.hasWorkspaceAccess(s.db, userID, workspaceID)
-
-}
-
-func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID string) error {
+func (s *SQLStore) InsertBlock(block *model.Block, userID string) error {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
 	}
-	err := s.insertBlock(tx, c, block, userID)
+	err := s.insertBlock(tx, block, userID)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "InsertBlock"))
@@ -208,12 +285,38 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 
 }
 
-func (s *SQLStore) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, userID string) error {
+func (s *SQLStore) InsertBoard(board *model.Board, userID string) (*model.Board, error) {
+	return s.insertBoard(s.db, board, userID)
+
+}
+
+func (s *SQLStore) InsertBoardWithAdmin(board *model.Board, userID string) (*model.Board, *model.BoardMember, error) {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return nil, nil, txErr
+	}
+	result, resultVar1, err := s.insertBoardWithAdmin(tx, board, userID)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "InsertBoardWithAdmin"))
+		}
+		return nil, nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, nil, err
+	}
+
+	return result, resultVar1, nil
+
+}
+
+func (s *SQLStore) PatchBlock(blockID string, blockPatch *model.BlockPatch, userID string) error {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
 	}
-	err := s.patchBlock(tx, c, blockID, blockPatch, userID)
+	err := s.patchBlock(tx, blockID, blockPatch, userID)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "PatchBlock"))
@@ -229,8 +332,39 @@ func (s *SQLStore) PatchBlock(c store.Container, blockID string, blockPatch *mod
 
 }
 
+func (s *SQLStore) PatchBoard(boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error) {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return nil, txErr
+	}
+	result, err := s.patchBoard(tx, boardID, boardPatch, userID)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "PatchBoard"))
+		}
+		return nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+
+}
+
 func (s *SQLStore) RefreshSession(session *model.Session) error {
 	return s.refreshSession(s.db, session)
+
+}
+
+func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error) {
+	return s.saveMember(s.db, bm)
+
+}
+
+func (s *SQLStore) SearchBoardsForUserAndTeam(term string, userID string, teamID string) ([]*model.Board, error) {
+	return s.searchBoardsForUserAndTeam(s.db, term, userID, teamID)
 
 }
 
@@ -259,17 +393,17 @@ func (s *SQLStore) UpdateUserPasswordByID(userID string, password string) error 
 
 }
 
-func (s *SQLStore) UpsertSharing(c store.Container, sharing model.Sharing) error {
-	return s.upsertSharing(s.db, c, sharing)
+func (s *SQLStore) UpsertSharing(sharing model.Sharing) error {
+	return s.upsertSharing(s.db, sharing)
 
 }
 
-func (s *SQLStore) UpsertWorkspaceSettings(workspace model.Workspace) error {
-	return s.upsertWorkspaceSettings(s.db, workspace)
+func (s *SQLStore) UpsertTeamSettings(team model.Team) error {
+	return s.upsertTeamSettings(s.db, team)
 
 }
 
-func (s *SQLStore) UpsertWorkspaceSignupToken(workspace model.Workspace) error {
-	return s.upsertWorkspaceSignupToken(s.db, workspace)
+func (s *SQLStore) UpsertTeamSignupToken(team model.Team) error {
+	return s.upsertTeamSignupToken(s.db, team)
 
 }

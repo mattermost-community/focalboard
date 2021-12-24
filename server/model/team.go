@@ -1,5 +1,10 @@
 package model
 
+import (
+	"encoding/json"
+	"io"
+)
+
 // Team is information global to a team
 // swagger:model
 type Team struct {
@@ -28,18 +33,14 @@ type Team struct {
 	UpdateAt int64 `json:"updateAt"`
 }
 
-// UserTeam is a summary of a single association between
-// a user and a team
-// swagger:model
-type UserTeam struct {
-	// ID of the team
-	// required: true
-	ID string `json:"id"`
+func TeamFromJSON(data io.Reader) *Team {
+	var team *Team
+	_ = json.NewDecoder(data).Decode(&team)
+	return team
+}
 
-	// Title of the team
-	// required: false
-	Title string `json:"title"`
-
-	// Number of boards in the team
-	BoardCount int `json:"boardCount"`
+func TeamsFromJSON(data io.Reader) []*Team {
+	var teams []*Team
+	_ = json.NewDecoder(data).Decode(&teams)
+	return teams
 }
