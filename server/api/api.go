@@ -47,17 +47,19 @@ func (pe PermissionError) Error() string {
 type API struct {
 	app             *app.App
 	authService     string
+	permissions     permissions.PermissionsService
 	singleUserToken string
 	MattermostAuth  bool
 	logger          *mlog.Logger
 	audit           *audit.Audit
 }
 
-func NewAPI(app *app.App, singleUserToken string, authService string, logger *mlog.Logger, audit *audit.Audit) *API {
+func NewAPI(app *app.App, singleUserToken string, authService string, permissions permissions.PermissionsService, logger *mlog.Logger, audit *audit.Audit) *API {
 	return &API{
 		app:             app,
 		singleUserToken: singleUserToken,
 		authService:     authService,
+		permissions:     permissions,
 		logger:          logger,
 		audit:           audit,
 	}

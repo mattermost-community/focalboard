@@ -13,6 +13,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
 	"github.com/webview/webview"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -66,6 +67,8 @@ func runServer(port int) (*server.Server, error) {
 		return nil, err
 	}
 
+	permissionsService := localpermissions.New(db, logger)
+
 	params := server.Params{
 		Cfg:             config,
 		SingleUserToken: sessionToken,
@@ -74,6 +77,7 @@ func runServer(port int) (*server.Server, error) {
 		ServerID:        "",
 		WSAdapter:       nil,
 		NotifyBackends:  nil,
+		PermissionsService: permissionsService,
 	}
 
 	server, err := server.New(params)

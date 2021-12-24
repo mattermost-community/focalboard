@@ -75,12 +75,12 @@ func New(params Params) (*Server, error) {
 		return nil, err
 	}
 
-	authenticator := auth.New(params.Cfg, params.DBStore)
+	authenticator := auth.New(params.Cfg, params.DBStore, params.PermissionsService)
 
 	// if no ws adapter is provided, we spin up a websocket server
 	wsAdapter := params.WSAdapter
 	if wsAdapter == nil {
-		wsAdapter = ws.NewServer(authenticator, params.SingleUserToken, params.Cfg.AuthMode == MattermostAuthMod, params.Logger)
+		wsAdapter = ws.NewServer(authenticator, params.SingleUserToken, params.Cfg.AuthMode == MattermostAuthMod, params.Logger, params.DBStore)
 	}
 
 	filesBackendSettings := filestore.FileBackendSettings{}
@@ -138,10 +138,11 @@ func New(params Params) (*Server, error) {
 		Metrics:       metricsService,
 		Notifications: notificationService,
 		Logger:        params.Logger,
+		Permissions:   params.PermissionsService,
 	}
 	app := app.New(params.Cfg, wsAdapter, appServices)
 
-	focalboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.Logger, auditService)
+	focalboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.PermissionsService, params.Logger, auditService)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
