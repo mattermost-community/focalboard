@@ -73,7 +73,7 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 	if err != nil {
 		return fmt.Errorf("cannot get direct channel: %w", err)
 	}
-	link := makeLink(pd.serverRoot, evt.Workspace, evt.Board.ID, evt.Card.ID)
+	link := makeLink(pd.serverRoot, evt.Team, evt.Board.ID, evt.Card.ID)
 
 	post := &model.Post{
 		UserId:    pd.botID,

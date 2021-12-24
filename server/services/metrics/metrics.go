@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	MetricsNamespace           = "focalboard"
-	MetricsSubsystemBlocks     = "blocks"
-	MetricsSubsystemWorkspaces = "workspaces"
-	MetricsSubsystemSystem     = "system"
+	MetricsNamespace       = "focalboard"
+	MetricsSubsystemBlocks = "blocks"
+	MetricsSubsystemTeams  = "teams"
+	MetricsSubsystemSystem = "system"
 
 	MetricsCloudInstallationLabel = "installationId"
 )
@@ -37,8 +37,8 @@ type Metrics struct {
 	blocksPatchedCount  prometheus.Counter
 	blocksDeletedCount  prometheus.Counter
 
-	blockCount     *prometheus.GaugeVec
-	workspaceCount prometheus.Gauge
+	blockCount *prometheus.GaugeVec
+	teamCount  prometheus.Gauge
 
 	blockLastActivity prometheus.Gauge
 }
@@ -133,14 +133,14 @@ func NewMetrics(info InstanceInfo) *Metrics {
 	}, []string{"BlockType"})
 	m.registry.MustRegister(m.blockCount)
 
-	m.workspaceCount = prometheus.NewGauge(prometheus.GaugeOpts{
+	m.teamCount = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace:   MetricsNamespace,
-		Subsystem:   MetricsSubsystemWorkspaces,
-		Name:        "workspaces_total",
-		Help:        "Total number of workspaces.",
+		Subsystem:   MetricsSubsystemTeams,
+		Name:        "teams_total",
+		Help:        "Total number of teams.",
 		ConstLabels: additionalLabels,
 	})
-	m.registry.MustRegister(m.workspaceCount)
+	m.registry.MustRegister(m.teamCount)
 
 	m.blockLastActivity = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace:   MetricsNamespace,
@@ -193,8 +193,8 @@ func (m *Metrics) ObserveBlockCount(blockType string, count int64) {
 	}
 }
 
-func (m *Metrics) ObserveWorkspaceCount(count int64) {
+func (m *Metrics) ObserveTeamCount(count int64) {
 	if m != nil {
-		m.workspaceCount.Set(float64(count))
+		m.teamCount.Set(float64(count))
 	}
 }

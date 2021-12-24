@@ -1,20 +1,35 @@
 package integrationtests
 
 import (
+	"io/ioutil"
 	"net/http"
 	"os"
+	"testing"
 	"time"
 
+	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/client"
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+
+	"github.com/stretchr/testify/require"
+)
+
+const (
+	user1Username = "user1"
+	user2Username = "user2"
+	password      = "Pa$$word"
 )
 
 type TestHelper struct {
-	Server *server.Server
-	Client *client.Client
+	T       *testing.T
+	Server  *server.Server
+	Client  *client.Client
+	Client2 *client.Client
 }
 
 func getTestConfig() *config.Configuration {
@@ -50,11 +65,17 @@ func getTestConfig() *config.Configuration {
 		}
 	}`
 
+	dbFile, err := ioutil.TempFile("", "focalboard-test-*.db")
+	if err != nil {
+		panic(err)
+	}
+	dbFile.Close()
+
 	return &config.Configuration{
 		ServerRoot:        "http://localhost:8888",
 		Port:              8888,
 		DBType:            dbType,
-		DBConfigString:    connectionString,
+		DBConfigString:    dbFile.Name(),
 		DBTablePrefix:     "test_",
 		WebPath:           "./pack",
 		FilesDriver:       "local",
@@ -76,11 +97,14 @@ func newTestServer(singleUserToken string) *server.Server {
 		panic(err)
 	}
 
+	permissionsService := localpermissions.New(db, logger)
+
 	params := server.Params{
-		Cfg:             cfg,
-		SingleUserToken: singleUserToken,
-		DBStore:         db,
-		Logger:          logger,
+		Cfg:                cfg,
+		SingleUserToken:    singleUserToken,
+		DBStore:            db,
+		Logger:             logger,
+		PermissionsService: permissionsService,
 	}
 
 	srv, err := server.New(params)
@@ -91,22 +115,26 @@ func newTestServer(singleUserToken string) *server.Server {
 	return srv
 }
 
-func SetupTestHelper() *TestHelper {
+func SetupTestHelperWithToken(t *testing.T) *TestHelper {
 	sessionToken := "TESTTOKEN"
-	th := &TestHelper{}
+	th := &TestHelper{T: t}
 	th.Server = newTestServer(sessionToken)
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
+	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
 	return th
 }
 
-func SetupTestHelperWithoutToken() *TestHelper {
-	th := &TestHelper{}
+func SetupTestHelper(t *testing.T) *TestHelper {
+	th := &TestHelper{T: t}
 	th.Server = newTestServer("")
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
+	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, "")
 	return th
 }
 
-func (th *TestHelper) InitBasic() *TestHelper {
+// Start starts the test server and ensures that it's correctly
+// responding to requests before returning
+func (th *TestHelper) Start() *TestHelper {
 	go func() {
 		if err := th.Server.Start(); err != nil {
 			panic(err)
@@ -139,6 +167,26 @@ func (th *TestHelper) InitBasic() *TestHelper {
 	return th
 }
 
+// InitBasic starts the test server and initializes the clients of the
+// helper, registering them and logging them into the system
+func (th *TestHelper) InitBasic() *TestHelper {
+	th.Start()
+
+	// user1
+	th.RegisterAndLogin(th.Client, user1Username, "user1@sample.com", password, "")
+
+	// get token
+	team, resp := th.Client.GetTeam("0")
+	th.CheckOK(resp)
+	require.NotNil(th.T, team)
+	require.NotNil(th.T, team.SignupToken)
+
+	// user2
+	th.RegisterAndLogin(th.Client2, user2Username, "user2@sample.com", password, team.SignupToken)
+
+	return th
+}
+
 func (th *TestHelper) TearDown() {
 	defer func() { _ = th.Server.Logger().Shutdown() }()
 
@@ -148,4 +196,83 @@ func (th *TestHelper) TearDown() {
 	}
 
 	os.RemoveAll(th.Server.Config().FilesPath)
+	os.Remove(th.Server.Config().DBConfigString)
+}
+
+func (th *TestHelper) RegisterAndLogin(client *client.Client, username, email, password, token string) {
+	req := &api.RegisterRequest{
+		Username: username,
+		Email:    email,
+		Password: password,
+		Token:    token,
+	}
+
+	success, resp := th.Client.Register(req)
+	th.CheckOK(resp)
+	require.True(th.T, success)
+
+	th.Login(client, username, password)
+}
+
+func (th *TestHelper) Login(client *client.Client, username, password string) {
+	req := &api.LoginRequest{
+		Type:     "normal",
+		Username: username,
+		Password: password,
+	}
+	data, resp := client.Login(req)
+	th.CheckOK(resp)
+	require.NotNil(th.T, data)
+}
+
+func (th *TestHelper) Login1() {
+	th.Login(th.Client, user1Username, password)
+}
+
+func (th *TestHelper) Login2() {
+	th.Login(th.Client2, user2Username, password)
+}
+
+func (th *TestHelper) Logout(client *client.Client) {
+	client.Token = ""
+}
+
+func (th *TestHelper) Me(client *client.Client) *model.User {
+	user, resp := client.GetMe()
+	th.CheckOK(resp)
+	require.NotNil(th.T, user)
+	return user
+}
+
+func (th *TestHelper) GetUser1() *model.User {
+	return th.Me(th.Client)
+}
+
+func (th *TestHelper) GetUser2() *model.User {
+	return th.Me(th.Client2)
+}
+
+func (th *TestHelper) CheckOK(r *client.Response) {
+	require.Equal(th.T, http.StatusOK, r.StatusCode)
+	require.NoError(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckBadRequest(r *client.Response) {
+	require.Equal(th.T, http.StatusBadRequest, r.StatusCode)
+	require.Error(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckNotFound(r *client.Response) {
+	require.Equal(th.T, http.StatusNotFound, r.StatusCode)
+	require.Error(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckUnauthorized(r *client.Response) {
+	require.Equal(th.T, http.StatusUnauthorized, r.StatusCode)
+	require.Error(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckForbidden(r *client.Response) {
+	require.Equal(th.T, http.StatusForbidden, r.StatusCode)
+	require.Error(th.T, r.Error)
 }

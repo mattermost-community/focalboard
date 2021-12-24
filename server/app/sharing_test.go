@@ -17,7 +17,7 @@ func TestGetSharing(t *testing.T) {
 	defer tearDown()
 
 	container := st.Container{
-		WorkspaceID: utils.NewID(utils.IDTypeWorkspace),
+		TeamID: utils.NewID(utils.IDTypeTeam),
 	}
 
 	t.Run("should get a sharing successfully", func(t *testing.T) {
@@ -66,7 +66,7 @@ func TestUpsertSharing(t *testing.T) {
 	defer tearDown()
 
 	container := st.Container{
-		WorkspaceID: utils.NewID(utils.IDTypeWorkspace),
+		TeamID: utils.NewID(utils.IDTypeTeam),
 	}
 	sharing := model.Sharing{
 		ID:         utils.NewID(utils.IDTypeBlock),

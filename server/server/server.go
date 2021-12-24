@@ -148,9 +148,9 @@ func New(params Params) (*Server, error) {
 	localRouter := mux.NewRouter()
 	focalboardAPI.RegisterAdminRoutes(localRouter)
 
-	// Init workspace
-	if _, err := app.GetRootWorkspace(); err != nil {
-		params.Logger.Error("Unable to get root workspace", mlog.Err(err))
+	// Init team
+	if _, err := app.GetRootTeam(); err != nil {
+		params.Logger.Error("Unable to get root team", mlog.Err(err))
 		return nil, err
 	}
 
@@ -281,13 +281,13 @@ func (s *Server) Start() error {
 		for blockType, count := range blockCounts {
 			s.metricsService.ObserveBlockCount(blockType, count)
 		}
-		workspaceCount, err := s.store.GetWorkspaceCount()
+		teamCount, err := s.store.GetTeamCount()
 		if err != nil {
-			s.logger.Error("Error updating metrics", mlog.String("group", "workspaces"), mlog.Err(err))
+			s.logger.Error("Error updating metrics", mlog.String("group", "teams"), mlog.Err(err))
 			return
 		}
-		s.logger.Log(mlog.LvlFBMetrics, "Workspace metrics collected", mlog.Int64("workspace_count", workspaceCount))
-		s.metricsService.ObserveWorkspaceCount(workspaceCount)
+		s.logger.Log(mlog.LvlFBMetrics, "Team metrics collected", mlog.Int64("team_count", teamCount))
+		s.metricsService.ObserveTeamCount(teamCount)
 	}
 	// metricsUpdater()   Calling this immediately causes integration unit tests to fail.
 	s.metricsUpdaterTask = scheduler.CreateRecurringTask("updateMetrics", metricsUpdater, updateMetricsTaskFrequency)
@@ -478,13 +478,13 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 		}
 		return m, nil
 	})
-	telemetryService.RegisterTracker("workspaces", func() (telemetry.Tracker, error) {
-		count, err := opts.app.GetWorkspaceCount()
+	telemetryService.RegisterTracker("teams", func() (telemetry.Tracker, error) {
+		count, err := opts.app.GetTeamCount()
 		if err != nil {
 			return nil, err
 		}
 		m := map[string]interface{}{
-			"workspaces": count,
+			"teams": count,
 		}
 		return m, nil
 	})

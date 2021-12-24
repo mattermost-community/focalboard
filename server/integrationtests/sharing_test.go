@@ -9,22 +9,46 @@ import (
 )
 
 func TestSharing(t *testing.T) {
-	th := SetupTestHelper().InitBasic()
+	th := SetupTestHelper(t).InitBasic()
 	defer th.TearDown()
 
-	rootID := utils.NewID(utils.IDTypeBlock)
+	var boardID string
 	token := utils.NewID(utils.IDTypeToken)
 
+	t.Run("an unauthenticated client should not be able to get a sharing", func(t *testing.T) {
+		th.Logout(th.Client)
+
+		sharing, resp := th.Client.GetSharing("board-id")
+		th.CheckUnauthorized(resp)
+		require.Nil(t, sharing)
+	})
+
 	t.Run("Check no initial sharing", func(t *testing.T) {
-		sharing, resp := th.Client.GetSharing(rootID)
-		require.NoError(t, resp.Error)
-		require.Empty(t, sharing.ID)
-		require.False(t, sharing.Enabled)
+		th.Login1()
+
+		teamID := "0"
+		newBoard := &model.Board{
+			TeamID: teamID,
+			Type:   model.BoardTypeOpen,
+		}
+
+		board, err := th.Server.App().CreateBoard(newBoard, th.GetUser1().ID, true)
+		require.NoError(t, err)
+		require.NotNil(t, board)
+		boardID = board.ID
+
+		s, err := th.Server.App().GetSharing(boardID)
+		require.NoError(t, err)
+		require.Nil(t, s)
+
+		sharing, resp := th.Client.GetSharing(boardID)
+		th.CheckNotFound(resp)
+		require.Nil(t, sharing)
 	})
 
 	t.Run("POST sharing", func(t *testing.T) {
-		sharing := model.Sharing{
-			ID:       rootID,
+		sharing := &model.Sharing{
+			ID:       boardID,
 			Token:    token,
 			Enabled:  true,
 			UpdateAt: 1,
@@ -36,10 +60,10 @@ func TestSharing(t *testing.T) {
 	})
 
 	t.Run("GET sharing", func(t *testing.T) {
-		sharing, resp := th.Client.GetSharing(rootID)
+		sharing, resp := th.Client.GetSharing(boardID)
 		require.NoError(t, resp.Error)
 		require.NotNil(t, sharing)
-		require.Equal(t, sharing.ID, rootID)
+		require.Equal(t, sharing.ID, boardID)
 		require.True(t, sharing.Enabled)
 		require.Equal(t, sharing.Token, token)
 	})
