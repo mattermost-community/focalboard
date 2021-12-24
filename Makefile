@@ -2,6 +2,8 @@
 
 PACKAGE_FOLDER = focalboard
 
+BUILD_TAGS += json1
+
 # Build Flags
 BUILD_NUMBER ?= $(BUILD_NUMBER:)
 BUILD_DATE = $(shell date -u)
@@ -103,7 +105,7 @@ watch-server-test: modd-precheck ## Run server tests watching for changes
 	modd -f modd-servertest.conf
 
 server-test: ## Run server tests
-	cd server; go test -race -v -count=1 ./...
+	cd server; go test -tags='$(BUILD_TAGS)' -race -v -count=1 ./...
 
 webapp: ## Build webapp.
 	cd webapp; npm run pack

@@ -35,8 +35,8 @@ CREATE TABLE {{.prefix}}categories (
         0,
         0
     FROM
-        {{.prefix}}blocks blocks
-            JOIN ChannelMembers cm on blocks.workspace_id = cm.ChannelId AND blocks.type = 'board'
+        {{.prefix}}boards boards
+            JOIN ChannelMembers cm on boards.channel_id = cm.ChannelId
             JOIN Channels c on cm.ChannelId = c.id
     GROUP BY cm.UserId, c.TeamId, cm.ChannelId, c.DisplayName;
 

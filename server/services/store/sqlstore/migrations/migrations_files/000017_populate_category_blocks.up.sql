@@ -16,7 +16,7 @@ CREATE TABLE {{.prefix}}category_blocks (
     SELECT
         {{.prefix}}categories.user_id,
         {{.prefix}}categories.id,
-        {{.prefix}}blocks.id,
+        {{.prefix}}boards.id,
         {{if .postgres}}(extract(epoch from now())*1000)::bigint,{{end}}
         {{if .mysql}}UNIX_TIMESTAMP() * 1000,{{end}}
         {{if .sqlite}}CAST(strftime('%s', 'now') * 1000 as bigint),{{end}}
@@ -24,12 +24,8 @@ CREATE TABLE {{.prefix}}category_blocks (
         0
     FROM
         {{.prefix}}categories
-        JOIN {{.prefix}}blocks
-    ON {{.prefix}}categories.channel_id = {{.prefix}}blocks.workspace_id
-        AND {{.prefix}}blocks.type = 'board'
-        {{if .mysql}}AND {{.prefix}}blocks.fields LIKE '%"isTemplate":false%'{{end}}
-        {{if .sqlite}}AND {{.prefix}}blocks.fields LIKE '%"isTemplate":false%'{{end}}
-        {{if .postgres}}AND {{.prefix}}blocks.fields->>'isTemplate' = 'false'{{end}}
+        JOIN {{.prefix}}boards ON {{.prefix}}categories.channel_id = {{.prefix}}boards.channel_id
+        AND {{.prefix}}boards.is_template = false
 ;
 
     ALTER TABLE {{.prefix}}categories DROP COLUMN channel_id;

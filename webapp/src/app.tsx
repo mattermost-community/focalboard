@@ -150,6 +150,7 @@ const App = React.memo((): JSX.Element => {
                                         path='/'
                                         exact={true}
                                         render={() => {
+                                            console.log('AAA')
                                             if (loggedIn === false) {
                                                 return <Redirect to='/login'/>
                                             }
