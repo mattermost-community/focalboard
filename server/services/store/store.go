@@ -12,23 +12,21 @@ type Container struct {
 
 // Store represents the abstraction of the data storage.
 type Store interface {
-	GetBlocksWithParentAndType(c Container, parentID string, blockType string) ([]model.Block, error)
-	GetBlocksWithParent(c Container, parentID string) ([]model.Block, error)
-	GetBlocksWithRootID(c Container, rootID string) ([]model.Block, error)
-	GetBlocksWithType(c Container, blockType string) ([]model.Block, error)
-	GetSubTree2(c Container, blockID string) ([]model.Block, error)
-	GetSubTree3(c Container, blockID string) ([]model.Block, error)
-	GetAllBlocks(c Container) ([]model.Block, error)
-	GetRootID(c Container, blockID string) (string, error)
-	GetParentID(c Container, blockID string) (string, error)
+	GetBlocksWithParentAndType(boardID, parentID string, blockType string) ([]model.Block, error)
+	GetBlocksWithParent(boardID, parentID string) ([]model.Block, error)
+	GetBlocksWithRootID(boardID, rootID string) ([]model.Block, error)
+	GetBlocksWithType(boardID, blockType string) ([]model.Block, error)
+	GetSubTree2(boardID, blockID string) ([]model.Block, error)
+	GetSubTree3(boardID, blockID string) ([]model.Block, error)
+	GetBlocksForBoard(boardID string) ([]model.Block, error)
 	// @withTransaction
-	InsertBlock(c Container, block *model.Block, userID string) error
+	InsertBlock(block *model.Block, userID string) error
 	// @withTransaction
-	DeleteBlock(c Container, blockID string, modifiedBy string) error
+	DeleteBlock(blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
-	GetBlock(c Container, blockID string) (*model.Block, error)
+	GetBlock(blockID string) (*model.Block, error)
 	// @withTransaction
-	PatchBlock(c Container, blockID string, blockPatch *model.BlockPatch, userID string) error
+	PatchBlock(blockID string, blockPatch *model.BlockPatch, userID string) error
 
 	Shutdown() error
 
@@ -44,7 +42,7 @@ type Store interface {
 	UpdateUser(user *model.User) error
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
-	GetUsersByWorkspace(workspaceID string) ([]*model.User, error)
+	GetUsersByTeam(teamID string) ([]*model.User, error)
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
@@ -54,13 +52,34 @@ type Store interface {
 	DeleteSession(sessionID string) error
 	CleanUpSessions(expireTime int64) error
 
-	UpsertSharing(c Container, sharing model.Sharing) error
-	GetSharing(c Container, rootID string) (*model.Sharing, error)
+	UpsertSharing(sharing model.Sharing) error
+	GetSharing(rootID string) (*model.Sharing, error)
 
-	UpsertWorkspaceSignupToken(workspace model.Workspace) error
-	UpsertWorkspaceSettings(workspace model.Workspace) error
-	GetWorkspace(ID string) (*model.Workspace, error)
-	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
-	GetWorkspaceCount() (int64, error)
-	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
+	UpsertTeamSignupToken(team model.Team) error
+	UpsertTeamSettings(team model.Team) error
+	GetTeam(ID string) (*model.Team, error)
+	GetTeamsForUser(userID string) ([]*model.Team, error)
+	GetAllTeams() ([]*model.Team, error)
+	GetTeamCount() (int64, error)
+
+	InsertBoard(board *model.Board, userID string) (*model.Board, error)
+	// @withTransaction
+	InsertBoardWithAdmin(board *model.Board, userID string) (*model.Board, *model.BoardMember, error)
+	// @withTransaction
+	PatchBoard(boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error)
+	GetBoard(id string) (*model.Board, error)
+	GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error)
+	// @withTransaction
+	DeleteBoard(boardID, userID string) error
+
+	SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
+	DeleteMember(boardID, userID string) error
+	GetMemberForBoard(boardID, userID string) (*model.BoardMember, error)
+	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
+	SearchBoardsForUserAndTeam(term, userID, teamID string) ([]*model.Board, error)
+
+	// @withTransaction
+	CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, []*model.BoardMember, error)
+	// @withTransaction
+	CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, error)
 }

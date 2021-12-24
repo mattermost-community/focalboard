@@ -681,7 +681,7 @@ func _000015_add_teams_and_boardsDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000015_add_teams_and_boards.down.sql", size: 10, mode: os.FileMode(436), modTime: time.Unix(1639566862, 0)}
+	info := bindataFileInfo{name: "000015_add_teams_and_boards.down.sql", size: 10, mode: os.FileMode(436), modTime: time.Unix(1640169268, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -701,7 +701,7 @@ func _000015_add_teams_and_boardsUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000015_add_teams_and_boards.up.sql", size: 14746, mode: os.FileMode(436), modTime: time.Unix(1639566862, 0)}
+	info := bindataFileInfo{name: "000015_add_teams_and_boards.up.sql", size: 14746, mode: os.FileMode(436), modTime: time.Unix(1640169268, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

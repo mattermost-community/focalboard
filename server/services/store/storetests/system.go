@@ -25,18 +25,14 @@ func addBaseSettings(m map[string]string) map[string]string {
 }
 
 func StoreTestSystemStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
-	container := store.Container{
-		WorkspaceID: "0",
-	}
-
 	t.Run("SetGetSystemSettings", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testSetGetSystemSettings(t, store, container)
+		testSetGetSystemSettings(t, store)
 	})
 }
 
-func testSetGetSystemSettings(t *testing.T, store store.Store, _ /*container*/ store.Container) {
+func testSetGetSystemSettings(t *testing.T, store store.Store) {
 	t.Run("Get empty settings", func(t *testing.T) {
 		settings, err := store.GetSystemSettings()
 		require.NoError(t, err)
