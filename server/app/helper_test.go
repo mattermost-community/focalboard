@@ -29,10 +29,10 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	defer ctrl.Finish()
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
-	auth := auth.New(&cfg, store)
+	auth := auth.New(&cfg, store, nil)
 	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
 	sessionToken := "TESTTOKEN"
-	wsserver := ws.NewServer(auth, sessionToken, false, logger)
+	wsserver := ws.NewServer(auth, sessionToken, false, logger, nil)
 	webhook := webhook.NewClient(&cfg, logger)
 	metricsService := metrics.NewMetrics(metrics.InstanceInfo{})
 

@@ -152,20 +152,50 @@ func (c *Client) doAPIRequestReader(method, url string, data io.Reader, _ /* eta
 	return rp, nil
 }
 
-func (c *Client) GetBlocksRoute() string {
-	return "/workspaces/0/blocks"
+func (c *Client) GetTeamRoute(teamID string) string {
+	return fmt.Sprintf("%s/%s", c.GetTeamsRoute(), teamID)
 }
 
-func (c *Client) GetBlockRoute(id string) string {
-	return fmt.Sprintf("%s/%s", c.GetBlocksRoute(), id)
+func (c *Client) GetTeamsRoute() string {
+	return "/teams"
 }
 
-func (c *Client) GetSubtreeRoute(id string) string {
-	return fmt.Sprintf("%s/subtree", c.GetBlockRoute(id))
+func (c *Client) GetBlockRoute(boardID, blockID string) string {
+	return fmt.Sprintf("%s/%s", c.GetBlocksRoute(boardID), blockID)
 }
 
-func (c *Client) GetBlocks() ([]model.Block, *Response) {
-	r, err := c.DoAPIGet(c.GetBlocksRoute(), "")
+func (c *Client) GetSubtreeRoute(boardID, blockID string) string {
+	return fmt.Sprintf("%s/subtree", c.GetBlockRoute(boardID, blockID))
+}
+
+func (c *Client) GetBoardsRoute() string {
+	return "/boards"
+}
+
+func (c *Client) GetBoardRoute(boardID string) string {
+	return fmt.Sprintf("%s/%s", c.GetBoardsRoute(), boardID)
+}
+
+func (c *Client) GetBlocksRoute(boardID string) string {
+	return fmt.Sprintf("%s/blocks", c.GetBoardRoute(boardID))
+}
+
+func (c *Client) GetBoardsAndBlocksRoute() string {
+	return "/boards-and-blocks"
+}
+
+func (c *Client) GetTeam(teamID string) (*model.Team, *Response) {
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.TeamFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
+	r, err := c.DoAPIGet(c.GetBlocksRoute(boardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -174,8 +204,8 @@ func (c *Client) GetBlocks() ([]model.Block, *Response) {
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) PatchBlock(blockID string, blockPatch *model.BlockPatch) (bool, *Response) {
-	r, err := c.DoAPIPatch(c.GetBlockRoute(blockID), toJSON(blockPatch))
+func (c *Client) PatchBlock(boardID, blockID string, blockPatch *model.BlockPatch) (bool, *Response) {
+	r, err := c.DoAPIPatch(c.GetBlockRoute(boardID, blockID), toJSON(blockPatch))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
@@ -184,8 +214,8 @@ func (c *Client) PatchBlock(blockID string, blockPatch *model.BlockPatch) (bool,
 	return true, BuildResponse(r)
 }
 
-func (c *Client) InsertBlocks(blocks []model.Block) ([]model.Block, *Response) {
-	r, err := c.DoAPIPost(c.GetBlocksRoute(), toJSON(blocks))
+func (c *Client) InsertBlocks(boardID string, blocks []model.Block) ([]model.Block, *Response) {
+	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID), toJSON(blocks))
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -194,8 +224,8 @@ func (c *Client) InsertBlocks(blocks []model.Block) ([]model.Block, *Response) {
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) DeleteBlock(blockID string) (bool, *Response) {
-	r, err := c.DoAPIDelete(c.GetBlockRoute(blockID))
+func (c *Client) DeleteBlock(boardID, blockID string) (bool, *Response) {
+	r, err := c.DoAPIDelete(c.GetBlockRoute(boardID, blockID))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
@@ -204,24 +234,35 @@ func (c *Client) DeleteBlock(blockID string) (bool, *Response) {
 	return true, BuildResponse(r)
 }
 
-func (c *Client) GetSubtree(blockID string) ([]model.Block, *Response) {
-	r, err := c.DoAPIGet(c.GetSubtreeRoute(blockID), "")
+func (c *Client) GetSubtree(boardID, blockID string) ([]model.Block, *Response) {
+	r, err := c.DoAPIGet(c.GetSubtreeRoute(boardID, blockID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
+}
+
+// Boards and blocks
+func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
+	r, err := c.DoAPIPost(c.GetBoardsAndBlocksRoute(), toJSON(bab))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardsAndBlocksFromJSON(r.Body), BuildResponse(r)
 }
 
 // Sharing
 
-func (c *Client) GetSharingRoute(rootID string) string {
-	return fmt.Sprintf("/workspaces/0/sharing/%s", rootID)
+func (c *Client) GetSharingRoute(boardID string) string {
+	return fmt.Sprintf("%s/sharing", c.GetBoardRoute(boardID))
 }
 
-func (c *Client) GetSharing(rootID string) (*model.Sharing, *Response) {
-	r, err := c.DoAPIGet(c.GetSharingRoute(rootID), "")
+func (c *Client) GetSharing(boardID string) (*model.Sharing, *Response) {
+	r, err := c.DoAPIGet(c.GetSharingRoute(boardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -231,7 +272,7 @@ func (c *Client) GetSharing(rootID string) (*model.Sharing, *Response) {
 	return &sharing, BuildResponse(r)
 }
 
-func (c *Client) PostSharing(sharing model.Sharing) (bool, *Response) {
+func (c *Client) PostSharing(sharing *model.Sharing) (bool, *Response) {
 	r, err := c.DoAPIPost(c.GetSharingRoute(sharing.ID), toJSON(sharing))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
@@ -328,11 +369,66 @@ func (c *Client) UserChangePassword(id string, data *api.ChangePasswordRequest) 
 	return true, BuildResponse(r)
 }
 
-func (c *Client) GetWorkspaceUploadFileRoute(workspaceID, rootID string) string {
-	return fmt.Sprintf("/workspaces/%s/%s/files", workspaceID, rootID)
+func (c *Client) CreateBoard(board *model.Board) (*model.Board, *Response) {
+	r, err := c.DoAPIPost(c.GetBoardsRoute(), toJSON(board))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) WorkspaceUploadFile(workspaceID, rootID string, data io.Reader) (*api.FileUploadResponse, *Response) {
+func (c *Client) PatchBoard(boardID string, patch *model.BoardPatch) (*model.Board, *Response) {
+	r, err := c.DoAPIPatch(c.GetBoardRoute(boardID), toJSON(patch))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) GetBoard(boardID, readToken string) (*model.Board, *Response) {
+	url := c.GetBoardRoute(boardID)
+	if readToken != "" {
+		url += fmt.Sprintf("?read_token=%s", readToken)
+	}
+
+	r, err := c.DoAPIGet(url, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) GetBoardsForTeam(teamID string) ([]*model.Board, *Response) {
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardsFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) SearchBoardsForTeam(teamID, term string) ([]*model.Board, *Response) {
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/search?q="+term, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardsFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) GetTeamUploadFileRoute(boardID, rootID string) string {
+	return fmt.Sprintf("%s/%s/files", c.GetBoardRoute(boardID), rootID)
+}
+
+func (c *Client) TeamUploadFile(boardID, rootID string, data io.Reader) (*api.FileUploadResponse, *Response) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 	part, err := writer.CreateFormFile(api.UploadFormFileKey, "file")
@@ -348,7 +444,7 @@ func (c *Client) WorkspaceUploadFile(workspaceID, rootID string, data io.Reader)
 		r.Header.Add("Content-Type", writer.FormDataContentType())
 	}
 
-	r, err := c.doAPIRequestReader(http.MethodPost, c.APIURL+c.GetWorkspaceUploadFileRoute(workspaceID, rootID), body, "", opt)
+	r, err := c.doAPIRequestReader(http.MethodPost, c.APIURL+c.GetTeamUploadFileRoute(boardID, rootID), body, "", opt)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}

@@ -22,8 +22,8 @@ const (
 
 type BlockChangeEvent struct {
 	Action       Action
-	Workspace    string
-	Board        *model.Block
+	Team         string
+	Board        *model.Board
 	Card         *model.Block
 	BlockChanged *model.Block
 	BlockOld     *model.Block

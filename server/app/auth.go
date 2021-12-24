@@ -3,7 +3,6 @@ package app
 import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/auth"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -25,8 +24,8 @@ func (a *App) GetSession(token string) (*model.Session, error) {
 }
 
 // IsValidReadToken validates the read token for a block.
-func (a *App) IsValidReadToken(c store.Container, blockID string, readToken string) (bool, error) {
-	return a.auth.IsValidReadToken(c, blockID, readToken)
+func (a *App) IsValidReadToken(boardID string, readToken string) (bool, error) {
+	return a.auth.IsValidReadToken(boardID, readToken)
 }
 
 // GetRegisteredUserCount returns the number of registered users.
