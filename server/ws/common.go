@@ -4,17 +4,32 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 )
 
-// UpdateMsg is sent on block updates.
-type UpdateMsg struct {
+// UpdateBlockMsg is sent on block updates.
+type UpdateBlockMsg struct {
 	Action string      `json:"action"`
+	TeamID string      `json:"teamId"`
 	Block  model.Block `json:"block"`
+}
+
+// UpdateBoardMsg is sent on block updates.
+type UpdateBoardMsg struct {
+	Action string       `json:"action"`
+	TeamID string       `json:"teamId"`
+	Board  *model.Board `json:"board"`
+}
+
+// UpdateMemberMsg is sent on membership updates.
+type UpdateMemberMsg struct {
+	Action string             `json:"action"`
+	TeamID string             `json:"teamId"`
+	Member *model.BoardMember `json:"member"`
 }
 
 // WebsocketCommand is an incoming command from the client.
 type WebsocketCommand struct {
-	Action      string   `json:"action"`
-	WorkspaceID string   `json:"workspaceId"`
-	Token       string   `json:"token"`
-	ReadToken   string   `json:"readToken"`
-	BlockIDs    []string `json:"blockIds"`
+	Action    string   `json:"action"`
+	TeamID    string   `json:"teamId"`
+	Token     string   `json:"token"`
+	ReadToken string   `json:"readToken"`
+	BlockIDs  []string `json:"blockIds"`
 }
