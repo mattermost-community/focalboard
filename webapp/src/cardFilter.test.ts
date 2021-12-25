@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {mocked} from 'ts-jest/utils'
+
 import {createFilterClause} from './blocks/filterClause'
 
 import {createFilterGroup} from './blocks/filterGroup'
@@ -51,8 +52,6 @@ describe('src/cardFilter', () => {
             const result = CardFilter.isClauseMet(filterClauseNotIncludes, [], card1)
             expect(result).toBeTruthy()
         })
-
-
     })
     describe('verify isFilterGroupMet method', () => {
         test('should return true with no filter', () => {
@@ -69,7 +68,7 @@ describe('src/cardFilter', () => {
                 operation: 'or',
                 filters: [
                     filterClauseNotIncludes,
-                    filterClause
+                    filterClause,
                 ],
             })
             const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
@@ -81,8 +80,8 @@ describe('src/cardFilter', () => {
                 operation: 'or',
                 filters: [
                     filterClauseNotIncludes,
-                    filterClause
-                ]
+                    filterClause,
+                ],
             })
             const filterGroup = createFilterGroup({
                 operation: 'or',
@@ -99,7 +98,7 @@ describe('src/cardFilter', () => {
                 operation: 'or',
                 filters: [
                     filterClauseNotIncludes,
-                    filterClauseEmpty
+                    filterClauseEmpty,
                 ],
             })
             const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
@@ -111,7 +110,7 @@ describe('src/cardFilter', () => {
                 operation: 'and',
                 filters: [
                     filterClauseNotIncludes,
-                    filterClause
+                    filterClause,
                 ],
             })
             const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
@@ -123,7 +122,7 @@ describe('src/cardFilter', () => {
                 operation: 'and',
                 filters: [
                     filterClauseIncludes,
-                    filterClause
+                    filterClause,
                 ],
             })
             const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
@@ -135,8 +134,8 @@ describe('src/cardFilter', () => {
                 operation: 'and',
                 filters: [
                     filterClauseNotIncludes,
-                    filterClause
-                ]
+                    filterClause,
+                ],
             })
             const filterGroup = createFilterGroup({
                 operation: 'and',
@@ -146,7 +145,6 @@ describe('src/cardFilter', () => {
             const result = CardFilter.isFilterGroupMet(filterGroup, [], card1)
             expect(result).toBeFalsy()
         })
-
     })
     describe('verify propertyThatMeetsFilterClause method', () => {
         test('should return Utils.assertFailure and filterClause propertyId ', () => {
@@ -174,9 +172,9 @@ describe('src/cardFilter', () => {
                 name: 'template',
                 type: 'select',
                 options: [{
-                    id:'idOption',
+                    id: 'idOption',
                     value: '',
-                    color: ''
+                    color: '',
                 }],
             }
             const result = CardFilter.propertyThatMeetsFilterClause(filterClauseIsNotEmpty, [templateFilter])
@@ -264,7 +262,7 @@ describe('src/cardFilter', () => {
                 operation: 'or',
                 filters: [
                     filterClauseIncludes,
-                    filterClause
+                    filterClause,
                 ],
             })
             const result = CardFilter.propertiesThatMeetFilterGroup(filterGroup, [])
@@ -276,7 +274,7 @@ describe('src/cardFilter', () => {
                 operation: 'or',
                 filters: [
                     filterClauseIncludes,
-                    filterClause
+                    filterClause,
                 ],
             })
             const templateFilter: IPropertyTemplate = {
@@ -295,7 +293,7 @@ describe('src/cardFilter', () => {
                 operation: 'and',
                 filters: [
                     filterClauseIncludes,
-                    filterClause
+                    filterClause,
                 ],
             })
             const result = CardFilter.propertiesThatMeetFilterGroup(filterGroup, [])
@@ -308,7 +306,7 @@ describe('src/cardFilter', () => {
                 operation: 'and',
                 filters: [
                     filterClauseIncludes,
-                    filterClause
+                    filterClause,
                 ],
             })
             const templateFilter: IPropertyTemplate = {
@@ -321,7 +319,6 @@ describe('src/cardFilter', () => {
             expect(result).toBeDefined()
             expect(result.propertyId).toEqual(filterClauseIncludes.values[0])
         })
-
     })
     describe('verify applyFilterGroup method', () => {
         test('should return array with card1', () => {
@@ -330,15 +327,12 @@ describe('src/cardFilter', () => {
                 operation: 'or',
                 filters: [
                     filterClauseNotIncludes,
-                    filterClause
+                    filterClause,
                 ],
             })
-            const result = CardFilter.applyFilterGroup(filterGroup,[],[card1])
+            const result = CardFilter.applyFilterGroup(filterGroup, [], [card1])
             expect(result).toBeDefined()
             expect(result[0]).toEqual(card1)
         })
-
     })
-
-
 })
