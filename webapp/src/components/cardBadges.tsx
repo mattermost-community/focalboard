@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useMemo} from 'react'
+import {useIntl} from 'react-intl'
 
 import {Card} from '../blocks/card'
 import {useAppSelector} from '../store/hooks'
@@ -81,20 +82,21 @@ const CardBadges = (props: Props) => {
     if (!hasBadges(badges)) {
         return null
     }
+    const intl = useIntl()
     const {checkboxes} = badges
     return (
         <div className={`cardBadges ${className || ''}`}>
             {badges.description &&
-                <span title='This card has a description'>
+                <span title={intl.formatMessage({id: 'CardBadges.title-description', defaultMessage: 'This card has a description'})}>
                     <TextIcon/>
                 </span>}
             {badges.comments > 0 &&
-                <span title='Comments'>
+                <span title={intl.formatMessage({id: 'CardBadges.title-comments', defaultMessage: 'Comments'})}>
                     <MessageIcon/>
                     {badges.comments}
                 </span>}
             {checkboxes.total > 0 &&
-                <span title='Checkboxes'>
+                <span title={intl.formatMessage({id: 'CardBadges.title-checkboxes', defaultMessage: 'Checkboxes'})}>
                     <CheckIcon/>
                     {`${checkboxes.checked}/${checkboxes.total}`}
                 </span>}
