@@ -6,29 +6,29 @@
     width: 100%;
 
     .comment-avatar {
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
         border-radius: 100%;
-        box-shadow: rgba(15, 15, 15, 0.1) 0 2px 4px;
     }
 
-    .commentrow {
+    .CommentsList__new {
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
-
-        .comment-avatar {
-            margin-top: 6px;
-            margin-bottom: 6px;
-        }
+        align-items: center;
+        padding: 8px 0 24px;
+        min-height: 64px;
     }
 
     .newcomment {
         flex-grow: 1;
-        margin: 4px 0 0 8px;
+        margin: 0 0 0 8px;
 
         + button {
             margin-left: 8px;
         }
     }
+}
+
+.CommentsList__divider {
+    margin-top: 8px;
 }

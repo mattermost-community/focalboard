@@ -174,7 +174,9 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
             >
               i
             </div>
-            <div>
+            <div
+              class="octo-titletext"
+            >
               title
             </div>
           </div>
@@ -206,7 +208,9 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
             >
               i
             </div>
-            <div>
+            <div
+              class="octo-titletext"
+            >
               title
             </div>
           </div>
@@ -249,7 +253,9 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
             >
               i
             </div>
-            <div>
+            <div
+              class="octo-titletext"
+            >
               title
             </div>
           </div>
@@ -461,7 +467,9 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
             >
               i
             </div>
-            <div>
+            <div
+              class="octo-titletext"
+            >
               title
             </div>
           </div>
@@ -493,7 +501,9 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
             >
               i
             </div>
-            <div>
+            <div
+              class="octo-titletext"
+            >
               title
             </div>
           </div>
@@ -536,7 +546,9 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
             >
               i
             </div>
-            <div>
+            <div
+              class="octo-titletext"
+            >
               title
             </div>
           </div>
@@ -748,7 +760,9 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
             >
               i
             </div>
-            <div>
+            <div
+              class="octo-titletext"
+            >
               title
             </div>
           </div>
@@ -780,7 +794,9 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
             >
               i
             </div>
-            <div>
+            <div
+              class="octo-titletext"
+            >
               title
             </div>
           </div>
@@ -823,7 +839,9 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
             >
               i
             </div>
-            <div>
+            <div
+              class="octo-titletext"
+            >
               title
             </div>
           </div>

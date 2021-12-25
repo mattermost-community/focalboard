@@ -1,28 +1,25 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {
-    ReactElement,
-    useEffect,
-    useMemo,
-    useCallback,
-    useRef,
-    useState,
-} from 'react'
-import {getDefaultKeyBinding, EditorState, ContentState, DraftHandleValue} from 'draft-js'
 import Editor from '@draft-js-plugins/editor'
+import createEmojiPlugin from '@draft-js-plugins/emoji'
+import '@draft-js-plugins/emoji/lib/plugin.css'
 import createMentionPlugin, {
     defaultSuggestionsFilter,
     MentionData,
 } from '@draft-js-plugins/mention'
 import '@draft-js-plugins/mention/lib/plugin.css'
-import './markdownEditorInput.scss'
+import {ContentState, DraftHandleValue, EditorState, getDefaultKeyBinding} from 'draft-js'
+import React, {
+    ReactElement, useCallback, useEffect,
+    useMemo, useRef,
+    useState,
+} from 'react'
 
-import createEmojiPlugin from '@draft-js-plugins/emoji'
-import '@draft-js-plugins/emoji/lib/plugin.css'
-
-import {getWorkspaceUsersList} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
+import {getWorkspaceUsersList} from '../../store/users'
 import {IUser} from '../../user'
+import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin'
+import './markdownEditorInput.scss'
 
 import Entry from './entryComponent/entryComponent'
 
@@ -60,6 +57,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const {MentionSuggestions, plugins, EmojiSuggestions} = useMemo(() => {
         const mentionPlugin = createMentionPlugin({mentionPrefix: '@'})
         const emojiPlugin = createEmojiPlugin()
+        const markdownPlugin = createLiveMarkdownPlugin()
 
         // eslint-disable-next-line no-shadow
         const {EmojiSuggestions} = emojiPlugin
@@ -69,6 +67,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         const plugins = [
             mentionPlugin,
             emojiPlugin,
+            markdownPlugin,
         ]
         return {plugins, MentionSuggestions, EmojiSuggestions}
     }, [])

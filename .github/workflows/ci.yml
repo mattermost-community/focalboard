@@ -43,8 +43,14 @@ jobs:
         name: focalboard-server-linux-amd64.tar.gz
         path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
 
-    - name: Test server
+    - name: "Test server: sqlite"
       run: make server-test
+
+    - name: "Test server: mysql"
+      run: make server-test-mysql
+
+    - name: "Test server: postgres"
+      run: make server-test-postgres
 
     - name: "Test webapp: Jest"
       run: cd webapp; npm run test
