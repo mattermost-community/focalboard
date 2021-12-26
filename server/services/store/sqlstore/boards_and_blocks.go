@@ -1,9 +1,20 @@
 package sqlstore
 
 import (
+	"database/sql"
+	"fmt"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
 )
+
+type BlockDoesntBelongToBoardsErr struct {
+	blockID string
+}
+
+func (e BlockDoesntBelongToBoardsErr) Error() string {
+	return fmt.Sprintf("block %s doesn't belong to any of the boards in the delete request", e.blockID)
+}
 
 func (s *SQLStore) createBoardsAndBlocksWithAdmin(db sq.BaseRunner, bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	newBab, err := s.createBoardsAndBlocks(db, bab, userID)
@@ -59,4 +70,62 @@ func (s *SQLStore) createBoardsAndBlocks(db sq.BaseRunner, bab *model.BoardsAndB
 	}
 
 	return newBab, nil
+}
+
+func (s *SQLStore) patchBoardsAndBlocks(db sq.BaseRunner, pbab *model.PatchBoardsAndBlocks, userID string) (*model.BoardsAndBlocks, error) {
+	bab := &model.BoardsAndBlocks{}
+	for i, boardID := range pbab.BoardIDs {
+		board, err := s.patchBoard(db, boardID, pbab.BoardPatches[i], userID)
+		if err != nil {
+			return nil, err
+		}
+		bab.Boards = append(bab.Boards, board)
+	}
+
+	for i, blockID := range pbab.BlockIDs {
+		if err := s.patchBlock(db, blockID, pbab.BlockPatches[i], userID); err != nil {
+			return nil, err
+		}
+		block, err := s.getBlock(db, blockID)
+		if err != nil {
+			return nil, err
+		}
+		bab.Blocks = append(bab.Blocks, *block)
+	}
+
+	return bab, nil
+}
+
+// deleteBoardsAndBlocks deletes all the boards and blocks entities of
+// the DeleteBoardsAndBlocks struct, making sure that all the blocks
+// belong to the boards in the struct
+func (s *SQLStore) deleteBoardsAndBlocks(db sq.BaseRunner, dbab *model.DeleteBoardsAndBlocks, userID string) error {
+	boardIDMap := map[string]bool{}
+	for _, boardID := range dbab.Boards {
+		if err := s.deleteBoard(db, boardID, userID); err != nil {
+			return err
+		}
+
+		boardIDMap[boardID] = true
+	}
+
+	for _, blockID := range dbab.Blocks {
+		block, err := s.getBlock(db, blockID)
+		if err != nil {
+			return err
+		}
+		if block == nil {
+			return sql.ErrNoRows
+		}
+
+		if _, ok := boardIDMap[block.BoardID]; !ok {
+			return BlockDoesntBelongToBoardsErr{blockID}
+		}
+
+		if err := s.deleteBlock(db, blockID, userID); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

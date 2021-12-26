@@ -135,6 +135,20 @@ func (mr *MockStoreMockRecorder) DeleteBoard(arg0, arg1 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBoard", reflect.TypeOf((*MockStore)(nil).DeleteBoard), arg0, arg1)
 }
 
+// DeleteBoardsAndBlocks mocks base method.
+func (m *MockStore) DeleteBoardsAndBlocks(arg0 *model.DeleteBoardsAndBlocks, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteBoardsAndBlocks", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteBoardsAndBlocks indicates an expected call of DeleteBoardsAndBlocks.
+func (mr *MockStoreMockRecorder) DeleteBoardsAndBlocks(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBoardsAndBlocks", reflect.TypeOf((*MockStore)(nil).DeleteBoardsAndBlocks), arg0, arg1)
+}
+
 // DeleteMember mocks base method.
 func (m *MockStore) DeleteMember(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
@@ -640,6 +654,21 @@ func (m *MockStore) PatchBoard(arg0 string, arg1 *model.BoardPatch, arg2 string)
 func (mr *MockStoreMockRecorder) PatchBoard(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchBoard", reflect.TypeOf((*MockStore)(nil).PatchBoard), arg0, arg1, arg2)
+}
+
+// PatchBoardsAndBlocks mocks base method.
+func (m *MockStore) PatchBoardsAndBlocks(arg0 *model.PatchBoardsAndBlocks, arg1 string) (*model.BoardsAndBlocks, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PatchBoardsAndBlocks", arg0, arg1)
+	ret0, _ := ret[0].(*model.BoardsAndBlocks)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PatchBoardsAndBlocks indicates an expected call of PatchBoardsAndBlocks.
+func (mr *MockStoreMockRecorder) PatchBoardsAndBlocks(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchBoardsAndBlocks", reflect.TypeOf((*MockStore)(nil).PatchBoardsAndBlocks), arg0, arg1)
 }
 
 // RefreshSession mocks base method.

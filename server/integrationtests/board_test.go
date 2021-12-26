@@ -217,6 +217,21 @@ func TestCreateBoard(t *testing.T) {
 			require.NoError(t, err)
 			require.Empty(t, boards)
 		})
+
+		t.Run("no team ID", func(t *testing.T) {
+			newBoard := &model.Board{
+				Title: title,
+			}
+			board, resp := th.Client.CreateBoard(newBoard)
+			// the request is unauthorized because the permission
+			// check fails on an empty teamID
+			th.CheckForbidden(resp)
+			require.Nil(t, board)
+
+			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID)
+			require.NoError(t, err)
+			require.Empty(t, boards)
+		})
 	})
 }
 

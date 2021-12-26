@@ -82,4 +82,8 @@ type Store interface {
 	CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, []*model.BoardMember, error)
 	// @withTransaction
 	CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, error)
+	// @withTransaction
+	PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID string) (*model.BoardsAndBlocks, error)
+	// @withTransaction
+	DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks, userID string) error
 }

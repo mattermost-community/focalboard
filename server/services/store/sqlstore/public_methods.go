@@ -119,6 +119,27 @@ func (s *SQLStore) DeleteBoard(boardID string, userID string) error {
 
 }
 
+func (s *SQLStore) DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks, userID string) error {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.deleteBoardsAndBlocks(tx, dbab, userID)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DeleteBoardsAndBlocks"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 func (s *SQLStore) DeleteMember(boardID string, userID string) error {
 	return s.deleteMember(s.db, boardID, userID)
 
@@ -341,6 +362,27 @@ func (s *SQLStore) PatchBoard(boardID string, boardPatch *model.BoardPatch, user
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "PatchBoard"))
+		}
+		return nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+
+}
+
+func (s *SQLStore) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID string) (*model.BoardsAndBlocks, error) {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return nil, txErr
+	}
+	result, err := s.patchBoardsAndBlocks(tx, pbab, userID)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "PatchBoardsAndBlocks"))
 		}
 		return nil, err
 	}

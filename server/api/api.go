@@ -2449,11 +2449,230 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 }
 
 func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request) {
-	// ToDo: implement
+	// swagger:operation PATCH /api/v1/boards-and-blocks patchBoardsAndBlocks
+	//
+	// Patches a set of related boards and blocks
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: Body
+	//   in: body
+	//   description: the patches for the boards and blocks
+	//   required: true
+	//   schema:
+	//     "$ref": "#/definitions/PatchBoardsAndBlocks"
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       $ref: '#/definitions/BoardsAndBlocks'
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	userID := getUserID(r)
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var pbab *model.PatchBoardsAndBlocks
+	if err = json.Unmarshal(requestBody, &pbab); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		return
+	}
+
+	if err := pbab.IsValid(); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		return
+	}
+
+	teamID := ""
+	boardIDMap := map[string]bool{}
+	for i, boardID := range pbab.BoardIDs {
+		boardIDMap[boardID] = true
+		patch := pbab.BoardPatches[i]
+
+		if err := patch.IsValid(); err != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+			return
+		}
+
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardProperties) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board properties"})
+			return
+		}
+
+		if patch.Type != nil {
+			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board type"})
+				return
+			}
+		}
+
+		board, err := a.app.GetBoard(boardID)
+		if err != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			return
+		}
+		if board == nil {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+			return
+		}
+
+		if teamID == "" {
+			teamID = board.TeamID
+		}
+		if teamID != board.TeamID {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+			return
+		}
+	}
+
+	for _, blockID := range pbab.BlockIDs {
+		block, err := a.app.GetBlockWithID(blockID)
+		if err != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			return
+		}
+		if block == nil {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+			return
+		}
+
+		if _, ok := boardIDMap[block.BoardID]; !ok {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+			return
+		}
+	}
+
+	auditRec := a.makeAuditRecord(r, "patchBoardsAndBlocks", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("boardsCount", len(pbab.BoardIDs))
+	auditRec.AddMeta("blocksCount", len(pbab.BlockIDs))
+
+	bab, err := a.app.PatchBoardsAndBlocks(pbab, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("PATCH BoardsAndBlocks",
+		mlog.Int("boardsCount", len(pbab.BoardIDs)),
+		mlog.Int("blocksCount", len(pbab.BlockIDs)),
+	)
+
+	data, err := json.Marshal(bab)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.Success()
 }
 
 func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request) {
-	// ToDo: implement
+	// swagger:operation DELETE /api/v1/boards-and-blocks deleteBoardsAndBlocks
+	//
+	// Deletes boards and blocks
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: Body
+	//   in: body
+	//   description: the boards and blocks to delete
+	//   required: true
+	//   schema:
+	//     "$ref": "#/definitions/DeleteBoardsAndBlocks"
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	userID := getUserID(r)
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var dbab *model.DeleteBoardsAndBlocks
+	if err = json.Unmarshal(requestBody, &dbab); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		return
+	}
+
+	// user must have permission to delete all the boards, and that
+	// would include the permission to manage their blocks
+	teamID := ""
+	for _, boardID := range dbab.Boards {
+		// all boards in the request should belong to the same team
+		board, err := a.app.GetBoard(boardID)
+		if err != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			return
+		}
+		if board == nil {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+			return
+		}
+		if teamID == "" {
+			teamID = board.TeamID
+		}
+		if teamID != board.TeamID {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+			return
+		}
+
+		// permission check
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to delete board"})
+			return
+		}
+	}
+
+	if err := dbab.IsValid(); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "deleteBoardsAndBlocks", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("boardsCount", len(dbab.Boards))
+	auditRec.AddMeta("blocksCount", len(dbab.Blocks))
+
+	if err := a.app.DeleteBoardsAndBlocks(dbab, userID); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("DELETE BoardsAndBlocks",
+		mlog.Int("boardsCount", len(dbab.Boards)),
+		mlog.Int("blocksCount", len(dbab.Blocks)),
+	)
+
+	// response
+	jsonStringResponse(w, http.StatusOK, "{}")
+
+	auditRec.Success()
 }
 
 // Response helpers

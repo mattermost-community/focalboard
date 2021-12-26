@@ -1,10 +1,14 @@
 package storetests
 
 import (
+	"database/sql"
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/stretchr/testify/require"
 )
@@ -135,9 +139,429 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 }
 
 func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
-	// ToDo: implement
+	teamID := "team-id"
+	userID := "user-id"
+
+	t.Run("on failure, nothing should be saved", func(t *testing.T) {
+		initialTitle := "initial title"
+		newTitle := "new title"
+
+		board := &model.Board{
+			ID:     "board-id-1",
+			Title:  initialTitle,
+			TeamID: teamID,
+			Type:   model.BoardTypeOpen,
+		}
+		_, err := store.InsertBoard(board, userID)
+		require.NoError(t, err)
+
+		block := model.Block{
+			ID:      "block-id-1",
+			RootID:  "block-id-1",
+			BoardID: "board-id-1",
+			Title:   initialTitle,
+		}
+		require.NoError(t, store.InsertBlock(&block, userID))
+
+		// apply the patches
+		pbab := &model.PatchBoardsAndBlocks{
+			BoardIDs: []string{"board-id-1"},
+			BoardPatches: []*model.BoardPatch{
+				{Title: &newTitle},
+			},
+			BlockIDs: []string{"block-id-1", "block-id-2"},
+			BlockPatches: []*model.BlockPatch{
+				{Title: &newTitle},
+				{Title: &newTitle},
+			},
+		}
+
+		time.Sleep(10 * time.Millisecond)
+
+		bab, err := store.PatchBoardsAndBlocks(pbab, userID)
+		require.Error(t, err)
+		require.Nil(t, bab)
+
+		// check that things have changed
+		rBoard, err := store.GetBoard("board-id-1")
+		require.NoError(t, err)
+		require.Equal(t, initialTitle, rBoard.Title)
+
+		rBlock, err := store.GetBlock("block-id-1")
+		require.NoError(t, err)
+		require.Equal(t, initialTitle, rBlock.Title)
+	})
+
+	t.Run("patch boards and blocks", func(t *testing.T) {
+		newBab := &model.BoardsAndBlocks{
+			Boards: []*model.Board{
+				{ID: "board-id-1", Description: "initial description", TeamID: teamID, Type: model.BoardTypeOpen},
+				{ID: "board-id-2", TeamID: teamID, Type: model.BoardTypePrivate},
+				{ID: "board-id-3", Title: "initial title", TeamID: teamID, Type: model.BoardTypeOpen},
+			},
+			Blocks: []model.Block{
+				{ID: "block-id-1", Title: "initial title", BoardID: "board-id-1", RootID: "block-id-1", Type: model.TypeCard},
+				{ID: "block-id-2", Schema: 1, BoardID: "board-id-2", RootID: "block-id-2", Type: model.TypeCard},
+			},
+		}
+
+		rBab, err := store.CreateBoardsAndBlocks(newBab, userID)
+		require.Nil(t, err)
+		require.NotNil(t, rBab)
+		require.Len(t, rBab.Boards, 3)
+		require.Len(t, rBab.Blocks, 2)
+
+		// apply the patches
+		newTitle := "new title"
+		newDescription := "new description"
+		var newSchema int64 = 2
+
+		pbab := &model.PatchBoardsAndBlocks{
+			BoardIDs: []string{"board-id-3", "board-id-1"},
+			BoardPatches: []*model.BoardPatch{
+				{Title: &newTitle, Description: &newDescription},
+				{Description: &newDescription},
+			},
+			BlockIDs: []string{"block-id-1", "block-id-2"},
+			BlockPatches: []*model.BlockPatch{
+				{Title: &newTitle},
+				{Schema: &newSchema},
+			},
+		}
+
+		time.Sleep(10 * time.Millisecond)
+
+		bab, err := store.PatchBoardsAndBlocks(pbab, userID)
+		require.NoError(t, err)
+		require.NotNil(t, bab)
+		require.Len(t, bab.Boards, 2)
+		require.Len(t, bab.Blocks, 2)
+
+		// check that things have changed
+		board1, err := store.GetBoard("board-id-1")
+		require.NoError(t, err)
+		require.Equal(t, newDescription, board1.Description)
+
+		board3, err := store.GetBoard("board-id-3")
+		require.NoError(t, err)
+		require.Equal(t, newTitle, board3.Title)
+		require.Equal(t, newDescription, board3.Description)
+
+		block1, err := store.GetBlock("block-id-1")
+		require.NoError(t, err)
+		require.Equal(t, newTitle, block1.Title)
+
+		block2, err := store.GetBlock("block-id-2")
+		require.NoError(t, err)
+		require.Equal(t, newSchema, block2.Schema)
+	})
 }
 
 func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
-	// ToDo: implement
+	teamID := "team-id"
+	userID := "user-id"
+
+	t.Run("should not delete anything if a block doesn't belong to any of the boards", func(t *testing.T) {
+		newBoard1 := &model.Board{
+			ID:     utils.NewID(utils.IDTypeBoard),
+			TeamID: teamID,
+			Type:   model.BoardTypeOpen,
+		}
+		board1, err := store.InsertBoard(newBoard1, userID)
+		require.NoError(t, err)
+
+		block1 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-1",
+			BoardID: board1.ID,
+		}
+		require.NoError(t, store.InsertBlock(block1, userID))
+
+		block2 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-2",
+			BoardID: board1.ID,
+		}
+		require.NoError(t, store.InsertBlock(block2, userID))
+
+		newBoard2 := &model.Board{
+			ID:     utils.NewID(utils.IDTypeBoard),
+			TeamID: teamID,
+			Type:   model.BoardTypeOpen,
+		}
+		board2, err := store.InsertBoard(newBoard2, userID)
+		require.NoError(t, err)
+
+		block3 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-3",
+			BoardID: board2.ID,
+		}
+		require.NoError(t, store.InsertBlock(block3, userID))
+
+		block4 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-4",
+			BoardID: "different-board-id",
+		}
+		require.NoError(t, store.InsertBlock(block4, userID))
+
+		dbab := &model.DeleteBoardsAndBlocks{
+			Boards: []string{board1.ID, board2.ID},
+			Blocks: []string{block1.ID, block2.ID, block3.ID, block4.ID},
+		}
+
+		time.Sleep(10 * time.Millisecond)
+
+		expectedErrorMsg := fmt.Sprintf("block %s doesn't belong to any of the boards in the delete request", block4.ID)
+		require.EqualError(t, store.DeleteBoardsAndBlocks(dbab, userID), expectedErrorMsg)
+
+		// all the entities should still exist
+		rBoard1, err := store.GetBoard(board1.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBoard1)
+		rBlock1, err := store.GetBlock(block1.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock1)
+		rBlock2, err := store.GetBlock(block2.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock2)
+
+		rBoard2, err := store.GetBoard(board2.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBoard2)
+		rBlock3, err := store.GetBlock(block3.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock3)
+		rBlock4, err := store.GetBlock(block4.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock4)
+	})
+
+	t.Run("should not delete anything if a board doesn't exist", func(t *testing.T) {
+		newBoard1 := &model.Board{
+			ID:     utils.NewID(utils.IDTypeBoard),
+			TeamID: teamID,
+			Type:   model.BoardTypeOpen,
+		}
+		board1, err := store.InsertBoard(newBoard1, userID)
+		require.NoError(t, err)
+
+		block1 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-1",
+			BoardID: board1.ID,
+		}
+		require.NoError(t, store.InsertBlock(block1, userID))
+
+		block2 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-2",
+			BoardID: board1.ID,
+		}
+		require.NoError(t, store.InsertBlock(block2, userID))
+
+		newBoard2 := &model.Board{
+			ID:     utils.NewID(utils.IDTypeBoard),
+			TeamID: teamID,
+			Type:   model.BoardTypeOpen,
+		}
+		board2, err := store.InsertBoard(newBoard2, userID)
+		require.NoError(t, err)
+
+		block3 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-3",
+			BoardID: board2.ID,
+		}
+		require.NoError(t, store.InsertBlock(block3, userID))
+
+		block4 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-4",
+			BoardID: board2.ID,
+		}
+		require.NoError(t, store.InsertBlock(block4, userID))
+
+		dbab := &model.DeleteBoardsAndBlocks{
+			Boards: []string{board1.ID, board2.ID, "a nonexistent board ID"},
+			Blocks: []string{block1.ID, block2.ID, block3.ID, block4.ID},
+		}
+
+		time.Sleep(10 * time.Millisecond)
+
+		require.ErrorIs(t, store.DeleteBoardsAndBlocks(dbab, userID), sql.ErrNoRows)
+
+		// all the entities should still exist
+		rBoard1, err := store.GetBoard(board1.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBoard1)
+		rBlock1, err := store.GetBlock(block1.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock1)
+		rBlock2, err := store.GetBlock(block2.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock2)
+
+		rBoard2, err := store.GetBoard(board2.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBoard2)
+		rBlock3, err := store.GetBlock(block3.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock3)
+		rBlock4, err := store.GetBlock(block4.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock4)
+	})
+
+	t.Run("should not delete anything if a block doesn't exist", func(t *testing.T) {
+		newBoard1 := &model.Board{
+			ID:     utils.NewID(utils.IDTypeBoard),
+			TeamID: teamID,
+			Type:   model.BoardTypeOpen,
+		}
+		board1, err := store.InsertBoard(newBoard1, userID)
+		require.NoError(t, err)
+
+		block1 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-1",
+			BoardID: board1.ID,
+		}
+		require.NoError(t, store.InsertBlock(block1, userID))
+
+		block2 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-2",
+			BoardID: board1.ID,
+		}
+		require.NoError(t, store.InsertBlock(block2, userID))
+
+		newBoard2 := &model.Board{
+			ID:     utils.NewID(utils.IDTypeBoard),
+			TeamID: teamID,
+			Type:   model.BoardTypeOpen,
+		}
+		board2, err := store.InsertBoard(newBoard2, userID)
+		require.NoError(t, err)
+
+		block3 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-3",
+			BoardID: board2.ID,
+		}
+		require.NoError(t, store.InsertBlock(block3, userID))
+
+		block4 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-4",
+			BoardID: board2.ID,
+		}
+		require.NoError(t, store.InsertBlock(block4, userID))
+
+		dbab := &model.DeleteBoardsAndBlocks{
+			Boards: []string{board1.ID, board2.ID},
+			Blocks: []string{block1.ID, block2.ID, block3.ID, block4.ID, "a nonexistent block ID"},
+		}
+
+		time.Sleep(10 * time.Millisecond)
+
+		require.ErrorIs(t, store.DeleteBoardsAndBlocks(dbab, userID), sql.ErrNoRows)
+
+		// all the entities should still exist
+		rBoard1, err := store.GetBoard(board1.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBoard1)
+		rBlock1, err := store.GetBlock(block1.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock1)
+		rBlock2, err := store.GetBlock(block2.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock2)
+
+		rBoard2, err := store.GetBoard(board2.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBoard2)
+		rBlock3, err := store.GetBlock(block3.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock3)
+		rBlock4, err := store.GetBlock(block4.ID)
+		require.NoError(t, err)
+		require.NotNil(t, rBlock4)
+	})
+
+	t.Run("should not work properly if all the entities are related", func(t *testing.T) {
+		newBoard1 := &model.Board{
+			ID:     utils.NewID(utils.IDTypeBoard),
+			TeamID: teamID,
+			Type:   model.BoardTypeOpen,
+		}
+		board1, err := store.InsertBoard(newBoard1, userID)
+		require.NoError(t, err)
+
+		block1 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-1",
+			BoardID: board1.ID,
+		}
+		require.NoError(t, store.InsertBlock(block1, userID))
+
+		block2 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-2",
+			BoardID: board1.ID,
+		}
+		require.NoError(t, store.InsertBlock(block2, userID))
+
+		newBoard2 := &model.Board{
+			ID:     utils.NewID(utils.IDTypeBoard),
+			TeamID: teamID,
+			Type:   model.BoardTypeOpen,
+		}
+		board2, err := store.InsertBoard(newBoard2, userID)
+		require.NoError(t, err)
+
+		block3 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-3",
+			BoardID: board2.ID,
+		}
+		require.NoError(t, store.InsertBlock(block3, userID))
+
+		block4 := &model.Block{
+			ID:      utils.NewID(utils.IDTypeBlock),
+			RootID:  "block-id-4",
+			BoardID: board2.ID,
+		}
+		require.NoError(t, store.InsertBlock(block4, userID))
+
+		dbab := &model.DeleteBoardsAndBlocks{
+			Boards: []string{board1.ID, board2.ID},
+			Blocks: []string{block1.ID, block2.ID, block3.ID, block4.ID},
+		}
+
+		time.Sleep(10 * time.Millisecond)
+
+		require.NoError(t, store.DeleteBoardsAndBlocks(dbab, userID))
+
+		rBoard1, err := store.GetBoard(board1.ID)
+		require.Error(t, err)
+		require.Nil(t, rBoard1)
+		rBlock1, err := store.GetBlock(block1.ID)
+		require.NoError(t, err)
+		require.Nil(t, rBlock1)
+		rBlock2, err := store.GetBlock(block2.ID)
+		require.NoError(t, err)
+		require.Nil(t, rBlock2)
+
+		rBoard2, err := store.GetBoard(board2.ID)
+		require.Error(t, err)
+		require.Nil(t, rBoard2)
+		rBlock3, err := store.GetBlock(block3.ID)
+		require.NoError(t, err)
+		require.Nil(t, rBlock3)
+		rBlock4, err := store.GetBlock(block4.ID)
+		require.NoError(t, err)
+		require.Nil(t, rBlock4)
+	})
 }

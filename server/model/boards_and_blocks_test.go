@@ -144,3 +144,113 @@ func TestGenerateBoardsAndBlocksIDs(t *testing.T) {
 		require.Equal(t, board2.ID, block3.BoardID)
 	})
 }
+
+func TestIsValidPatchBoardsAndBlocks(t *testing.T) {
+	newTitle := "new title"
+	newDescription := "new description"
+	var schema int64 = 1
+
+	t.Run("no board ids", func(t *testing.T) {
+		pbab := &PatchBoardsAndBlocks{
+			BoardIDs: []string{},
+			BlockIDs: []string{"block-id-1"},
+			BlockPatches: []*BlockPatch{
+				{Title: &newTitle},
+				{Schema: &schema},
+			},
+		}
+
+		require.ErrorIs(t, pbab.IsValid(), NoBoardsInBoardsAndBlocksErr)
+	})
+
+	t.Run("missmatch board IDs and patches", func(t *testing.T) {
+		pbab := &PatchBoardsAndBlocks{
+			BoardIDs: []string{"board-id-1", "board-id-2"},
+			BoardPatches: []*BoardPatch{
+				{Title: &newTitle},
+			},
+			BlockIDs: []string{"block-id-1"},
+			BlockPatches: []*BlockPatch{
+				{Title: &newTitle},
+			},
+		}
+
+		require.ErrorIs(t, pbab.IsValid(), BoardIDsAndPatchesMissmatchInBoardsAndBlocksErr)
+	})
+
+	t.Run("no block ids", func(t *testing.T) {
+		pbab := &PatchBoardsAndBlocks{
+			BoardIDs: []string{"board-id-1", "board-id-2"},
+			BoardPatches: []*BoardPatch{
+				{Title: &newTitle},
+				{Description: &newDescription},
+			},
+			BlockIDs: []string{},
+		}
+
+		require.ErrorIs(t, pbab.IsValid(), NoBlocksInBoardsAndBlocksErr)
+	})
+
+	t.Run("missmatch block IDs and patches", func(t *testing.T) {
+		pbab := &PatchBoardsAndBlocks{
+			BoardIDs: []string{"board-id-1", "board-id-2"},
+			BoardPatches: []*BoardPatch{
+				{Title: &newTitle},
+				{Description: &newDescription},
+			},
+			BlockIDs: []string{"block-id-1"},
+			BlockPatches: []*BlockPatch{
+				{Title: &newTitle},
+				{Schema: &schema},
+			},
+		}
+
+		require.ErrorIs(t, pbab.IsValid(), BlockIDsAndPatchesMissmatchInBoardsAndBlocksErr)
+	})
+
+	t.Run("valid", func(t *testing.T) {
+		pbab := &PatchBoardsAndBlocks{
+			BoardIDs: []string{"board-id-1", "board-id-2"},
+			BoardPatches: []*BoardPatch{
+				{Title: &newTitle},
+				{Description: &newDescription},
+			},
+			BlockIDs: []string{"block-id-1"},
+			BlockPatches: []*BlockPatch{
+				{Title: &newTitle},
+			},
+		}
+
+		require.NoError(t, pbab.IsValid())
+	})
+}
+
+func TestIsValidDeleteBoardsAndBlocks(t *testing.T) {
+	t.Run("no board ids", func(t *testing.T) {
+		dbab := &DeleteBoardsAndBlocks{
+			TeamID: "team-id",
+			Blocks: []string{"block-id-1"},
+		}
+
+		require.ErrorIs(t, dbab.IsValid(), NoBoardsInBoardsAndBlocksErr)
+	})
+
+	t.Run("no block ids", func(t *testing.T) {
+		dbab := &DeleteBoardsAndBlocks{
+			TeamID: "team-id",
+			Boards: []string{"board-id-1", "board-id-2"},
+		}
+
+		require.ErrorIs(t, dbab.IsValid(), NoBlocksInBoardsAndBlocksErr)
+	})
+
+	t.Run("valid", func(t *testing.T) {
+		dbab := &DeleteBoardsAndBlocks{
+			TeamID: "team-id",
+			Boards: []string{"board-id-1", "board-id-2"},
+			Blocks: []string{"block-id-1"},
+		}
+
+		require.NoError(t, dbab.IsValid())
+	})
+}

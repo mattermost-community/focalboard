@@ -101,8 +101,8 @@ func (c *Client) DoAPIPut(url, data string) (*http.Response, error) {
 	return c.DoAPIRequest(http.MethodPut, c.APIURL+url, data, "")
 }
 
-func (c *Client) DoAPIDelete(url string) (*http.Response, error) {
-	return c.DoAPIRequest(http.MethodDelete, c.APIURL+url, "", "")
+func (c *Client) DoAPIDelete(url string, data string) (*http.Response, error) {
+	return c.DoAPIRequest(http.MethodDelete, c.APIURL+url, data, "")
 }
 
 func (c *Client) DoAPIRequest(method, url, data, etag string) (*http.Response, error) {
@@ -225,7 +225,7 @@ func (c *Client) InsertBlocks(boardID string, blocks []model.Block) ([]model.Blo
 }
 
 func (c *Client) DeleteBlock(boardID, blockID string) (bool, *Response) {
-	r, err := c.DoAPIDelete(c.GetBlockRoute(boardID, blockID))
+	r, err := c.DoAPIDelete(c.GetBlockRoute(boardID, blockID), "")
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
@@ -253,6 +253,26 @@ func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.Board
 	defer closeBody(r)
 
 	return model.BoardsAndBlocksFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
+	r, err := c.DoAPIPatch(c.GetBoardsAndBlocksRoute(), toJSON(pbab))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardsAndBlocksFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks) (bool, *Response) {
+	r, err := c.DoAPIDelete(c.GetBoardsAndBlocksRoute(), toJSON(dbab))
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
 }
 
 // Sharing
