@@ -28,6 +28,23 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
             class="menu-options"
           >
             <div
+              aria-label="Show  card badges"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Show  card badges
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
               aria-label="Export to CSV"
               class="MenuOption TextOption menu-option"
               role="button"
@@ -137,6 +154,23 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
           <div
             class="menu-options"
           >
+            <div
+              aria-label="Show  card badges"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Show  card badges
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               aria-label="Export to CSV"
               class="MenuOption TextOption menu-option"
@@ -248,6 +282,23 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu with Share Boar
             class="menu-options"
           >
             <div
+              aria-label="Show  card badges"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Show  card badges
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
               aria-label="Export to CSV"
               class="MenuOption TextOption menu-option"
               role="button"
@@ -357,6 +408,23 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu without Share B
           <div
             class="menu-options"
           >
+            <div
+              aria-label="Show  card badges"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Show  card badges
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               aria-label="Export to CSV"
               class="MenuOption TextOption menu-option"
