@@ -85,7 +85,7 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 
 func (pd *PluginDelivery) getTeamID(evt notify.BlockChangeEvent) (string, error) {
 	// for now, the workspace ID is also the channel ID
-	channel, err := pd.api.GetChannelByID(evt.Workspace)
+	channel, err := pd.api.GetChannelByID(evt.Team)
 	if err != nil {
 		return "", err
 	}
