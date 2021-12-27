@@ -100,7 +100,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="ModalWrapper"
     >
       <div
-        aria-label="menuwrapper"
+        aria-label="View menu"
         class="MenuWrapper"
         role="button"
       >

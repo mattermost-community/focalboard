@@ -60,7 +60,7 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
             ),
         )
         const buttonElement = screen.getByRole('button', {
-            name: 'menuwrapper',
+            name: 'View menu',
         })
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
@@ -80,7 +80,7 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
             ),
         )
         const buttonElement = screen.getByRole('button', {
-            name: 'menuwrapper',
+            name: 'View menu',
         })
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
@@ -98,7 +98,7 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
                 </ReduxProvider>,
             ),
         )
-        const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
+        const buttonElement = screen.getByRole('button', {name: 'View menu'})
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
         const buttonExportCSV = screen.getByRole('button', {name: 'Export to CSV'})
@@ -119,7 +119,7 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
                 </ReduxProvider>,
             ),
         )
-        const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
+        const buttonElement = screen.getByRole('button', {name: 'View menu'})
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
         const buttonExportBoardArchive = screen.getByRole('button', {name: 'Export board archive'})
@@ -141,7 +141,7 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
                 </ReduxProvider>,
             ),
         )
-        const menuButton = screen.getByRole('button', {name: 'menuwrapper'})
+        const menuButton = screen.getByRole('button', {name: 'View menu'})
         userEvent.click(menuButton)
         const badgesButton = screen.getByRole('button', {name: 'Show card badges'})
         userEvent.click(badgesButton)
