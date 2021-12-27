@@ -589,11 +589,11 @@ class Utils {
         return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
     }
 
-    static buildOriginalPath(workspaceId = '', boardId = '', viewId = '', cardId = ''): string {
+    static buildOriginalPath(teamID = '', boardId = '', viewId = '', cardId = ''): string {
         let originalPath = ''
 
-        if (workspaceId) {
-            originalPath += `${workspaceId}/`
+        if (teamID) {
+            originalPath += `${teamID}/`
         }
 
         if (boardId) {
