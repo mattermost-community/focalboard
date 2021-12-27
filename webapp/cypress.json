@@ -5,7 +5,8 @@
         "**/login*.ts",
         "**/create*.ts",
         "**/manage*.ts",
-        "**/group*.ts"
+        "**/group*.ts",
+        "**/card*.ts"
     ],
     "env": {
         "username": "test-user",

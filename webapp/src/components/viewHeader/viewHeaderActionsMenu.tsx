@@ -111,7 +111,7 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
 
     return (
         <ModalWrapper>
-            <MenuWrapper>
+            <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
                 <IconButton icon={<OptionsIcon/>}/>
                 <Menu>
                     {canShowCardBadges &&

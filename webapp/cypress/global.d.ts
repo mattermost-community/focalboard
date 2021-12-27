@@ -19,5 +19,6 @@ declare namespace Cypress {
         apiResetBoards: () => Chainable
         uiCreateNewBoard: (title?: string) => Chainable
         uiAddNewGroup: (name?: string) => Chainable
+        uiAddNewCard: (title?: string, columnIndex?: number) => Chainable
     }
 }

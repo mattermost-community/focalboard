@@ -124,3 +124,14 @@ Cypress.Commands.add('uiAddNewGroup', (name?: string) => {
         cy.findByRole('textbox', {name}).should('exist')
     }
 })
+
+Cypress.Commands.add('uiAddNewCard', (title?: string, columnIndex?: number) => {
+    cy.log('**Add a new card**')
+    cy.findByRole('button', {name: '+ New'}).eq(columnIndex || 0).click()
+    cy.findByRole('dialog').should('exist')
+
+    if (title) {
+        cy.log('**Change card title**')
+        cy.findByPlaceholderText('Untitled').type(title)
+    }
+})
