@@ -22,7 +22,6 @@ import {FlashMessages} from './components/flashMessages'
 import NewVersionBanner from './components/newVersionBanner'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
-import DashboardPage from './pages/dashboard/dashboardPage'
 import WelcomePage from './pages/welcome/welcomePage'
 import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
@@ -151,6 +150,7 @@ const App = React.memo((): JSX.Element => {
                                         path='/'
                                         exact={true}
                                         render={() => {
+                                            console.log('AAA')
                                             if (loggedIn === false) {
                                                 return <Redirect to='/login'/>
                                             }
@@ -160,7 +160,12 @@ const App = React.memo((): JSX.Element => {
                                             }
 
                                             if (Utils.isFocalboardPlugin() && UserSettings.lastTeamId) {
-                                                return <Redirect to={`/team/${UserSettings.lastTeamId}/${UserSettings.lastBoardId}/${UserSettings.lastViewId}`}/>
+                                                // TODO use incoming team ID if opened from channels
+                                                const teamID = UserSettings.lastTeamId
+                                                const lastBoardID = UserSettings.lastBoardId[teamID]
+                                                const lastViewID = UserSettings.lastViewId[lastBoardID]
+
+                                                return <Redirect to={`/team/${teamID}/${lastBoardID}/${lastViewID}`}/>
                                             }
 
                                             if (loggedIn === true) {
@@ -240,12 +245,14 @@ const App = React.memo((): JSX.Element => {
                                         return null
                                     }}
                                 />
-                                <Route
-                                    exact={true}
-                                    path='/dashboard'
-                                >
-                                    <DashboardPage/>
-                                </Route>
+
+                                {/* TODO: enable this when new dashboard is implemented*/}
+                                {/*<Route*/}
+                                {/*    exact={true}*/}
+                                {/*    path='/dashboard'*/}
+                                {/*>*/}
+                                {/*    <DashboardPage/>*/}
+                                {/*</Route>*/}
                                 <Route
                                     exact={true}
                                     path='/welcome'

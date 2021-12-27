@@ -8,6 +8,7 @@ import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
+import {Category, CategoryBlocks} from './store/sidebar'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -143,7 +144,7 @@ class OctoClient {
 
     // ToDo: document
     private teamPath(teamId?: string) {
-        const teamIdToUse = teamId ? teamId : '0'
+        const teamIdToUse = teamId || '0'
         return `/api/v1/teams/${teamIdToUse}`
     }
 
@@ -309,7 +310,6 @@ class OctoClient {
     }
 
     // Sharing
-
     async getSharing(rootId: string): Promise<ISharing | undefined> {
         const path = this.teamPath() + `/sharing/${rootId}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
@@ -455,6 +455,12 @@ class OctoClient {
     }
 
     // Boards
+    // ToDo: .
+    // - goal? make the interface show boards & blocks for boards
+    // - teams (maybe current team)? boards, members, user roles in the store, whatever that is
+    // - selectors for boards, current team, board members
+    // - ops to add/delete a board, add/delete board members, change roles? .
+    // - WS definition and implementation
 
     async getBoards(teamId: string): Promise<Board[]> {
         const path = this.teamPath(teamId) + '/boards'
@@ -480,13 +486,57 @@ class OctoClient {
         })
     }
 
+    async getSidebarCategories(teamID: string): Promise<Array<CategoryBlocks>> {
+        const path = `/api/v1/teams/${teamID}/categories`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
 
-    // ToDo: .
-    // - goal? make the interface show boards & blocks for boards
-    // - teams (maybe current team)? boards, members, user roles in the store, whatever that is
-    // - selectors for boards, current team, board members
-    // - ops to add/delete a board, add/delete board members, change roles? .
-    // - WS definition and implementation
+        return (await this.getJson(response, [])) as Array<CategoryBlocks>
+    }
+
+    async createSidebarCategory(category: Category): Promise<Response> {
+        const path = `/api/v1/teams/${category.teamID}/categories`
+        const body = JSON.stringify(category)
+        return fetch(this.getBaseURL() + path, {
+            method: 'POST',
+            headers: this.headers(),
+            body,
+        })
+    }
+
+    async deleteSidebarCategory(teamID: string, categoryID: string): Promise<Response> {
+        const url = `/api/v1/teams/${teamID}/categories/${categoryID}`
+        return fetch(this.getBaseURL() + url, {
+            method: 'DELETE',
+            headers: this.headers(),
+        })
+    }
+
+    async updateSidebarCategory(category: Category): Promise<Response> {
+        const path = `/api/v1/teams/${category.teamID}/categories/${category.id}`
+        const body = JSON.stringify(category)
+        return fetch(this.getBaseURL() + path, {
+            method: 'PUT',
+            headers: this.headers(),
+            body,
+        })
+    }
+
+    async moveBlockToCategory(teamID: string, blockID: string, toCategoryID: string, fromCategoryID: string): Promise<Response> {
+        const url = `/api/v1/teams/${teamID}/categories/${toCategoryID || '0'}/blocks/${blockID}`
+        const payload = {
+            fromCategoryID,
+        }
+        const body = JSON.stringify(payload)
+
+        return fetch(this.getBaseURL() + url, {
+            method: 'POST',
+            headers: this.headers(),
+            body,
+        })
+    }
 }
 
 const octoClient = new OctoClient()

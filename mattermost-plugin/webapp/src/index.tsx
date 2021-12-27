@@ -12,6 +12,7 @@ const windowAny = (window as any)
 windowAny.baseURL = '/plugins/focalboard'
 windowAny.frontendBaseURL = '/boards'
 windowAny.isFocalboardPlugin = true
+windowAny.setTeam = undefined
 
 import {ClientConfig} from 'mattermost-redux/types/config'
 
@@ -29,7 +30,12 @@ import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
-import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG} from './../../../webapp/src/wsclient'
+import wsClient, {
+    MMWebSocketClient,
+    ACTION_UPDATE_BLOCK,
+    ACTION_UPDATE_CLIENT_CONFIG,
+    ACTION_UPDATE_CATEGORY, ACTION_UPDATE_BLOCK_CATEGORY,
+} from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
@@ -38,6 +44,9 @@ import ErrorBoundary from './error_boundary'
 import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
+
+import {TeamTypes} from 'mattermost-redux/action_types'
+import {selectTeam} from 'mattermost-redux/actions/teams'
 
 function getSubpath(siteURL: string): string {
     const url = new URL(siteURL)
@@ -122,12 +131,19 @@ export default class Plugin {
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
+        let prevTeamID: string
         mmStore.subscribe(() => {
             const currentUserId = mmStore.getState().entities.users.currentUserId
             const currentChannel = mmStore.getState().entities.channels.currentChannelId
             if (lastViewedChannel !== currentChannel && currentChannel) {
                 localStorage.setItem('focalboardLastViewedChannel:' + currentUserId, currentChannel)
                 lastViewedChannel = currentChannel
+            }
+
+            const currentTeamID = mmStore.getState().entities.teams.currentTeamId
+            if (currentTeamID && currentTeamID !== prevTeamID) {
+                console.log(`Switched team from: ${prevTeamID} to ${currentTeamID}`)
+                prevTeamID = currentTeamID
             }
         })
 
@@ -138,8 +154,18 @@ export default class Plugin {
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelHeader, {teamID: currentTeam})
                 window.open(`${windowAny.frontendBaseURL}/team/${currentTeam}`, '_blank', 'noopener')
             }
+
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboard, 'Boards', 'Boards')
-            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
+            this.registry.registerProduct(
+                '/boards',
+                'product-boards',
+                'Boards',
+                '/boards/welcome',
+                MainApp,
+                HeaderComponent,
+                () => null,
+                true,
+            )
 
             if (mmStore.getState().entities.general.config?.['FeatureFlagBoardsUnfurl' as keyof Partial<ClientConfig>] === 'true') {
                 this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
@@ -180,7 +206,9 @@ export default class Plugin {
         }
 
         // register websocket handlers
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
         this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
         this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
@@ -199,6 +227,11 @@ export default class Plugin {
                 }
             }
         })
+        windowAny.setTeam = (teamID: string) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            mmStore.dispatch(selectTeam(teamID))
+        }
     }
 
     uninitialize(): void {

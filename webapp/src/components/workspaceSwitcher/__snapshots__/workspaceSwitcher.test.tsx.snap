@@ -111,7 +111,7 @@ exports[`components/workspaceSwitcher/WorkspaceSwitcher open menu 1`] = `
           class="WorkspaceOptions__indicators css-1hb7zxy-IndicatorsContainer"
         >
           <i
-            class="CompassIcon icon-magnify CompassIcon"
+            class="CompassIcon icon-magnify MagnifyIcon"
           />
         </div>
       </div>

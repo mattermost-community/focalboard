@@ -60,7 +60,7 @@ exports[`components/workspaceSwitcher/WorkspaceOptions 2 more workspaces availab
         class="WorkspaceOptions__indicators css-1hb7zxy-IndicatorsContainer"
       >
         <i
-          class="CompassIcon icon-magnify CompassIcon"
+          class="CompassIcon icon-magnify MagnifyIcon"
         />
       </div>
     </div>
@@ -179,7 +179,7 @@ exports[`components/workspaceSwitcher/WorkspaceOptions no more workspaces availa
         class="WorkspaceOptions__indicators css-1hb7zxy-IndicatorsContainer"
       >
         <i
-          class="CompassIcon icon-magnify CompassIcon"
+          class="CompassIcon icon-magnify MagnifyIcon"
         />
       </div>
     </div>

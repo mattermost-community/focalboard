@@ -538,6 +538,61 @@ func (ws *Server) BroadcastBlockChange(teamID string, block model.Block) {
 
 	listeners := ws.getListenersForTeamAndBoard(teamID, block.BoardID)
 	ws.logger.Debug("listener(s) for teamID",
+
+		// Rename Space X
+		//category := model.Category{
+		//	ID:       "7uph4t9n1ri8xjcfeknr8y1hboc",
+		//	Name:     "Space X - " + randSeq(5),
+		//	UserID:   block.CreatedBy,
+		//	TeamID:   "atjjg8ofqb8kjnwy15yhezdgoh",
+		//	CreateAt: utils.GetMillis(),
+		//	UpdateAt: utils.GetMillis(),
+		//	DeleteAt: 0,
+		//}
+		//categoryMessage1 := UpdateMsg{
+		//	Action:   websocketActionUpdateCategory,
+		//	Category: &category,
+		//}
+		//
+		//// Delete Tesla
+		//categoryTesla := model.Category{
+		//	ID:       "763zggj7k43r3p8u9wra5dswsqr",
+		//	Name:     "Tesla",
+		//	UserID:   block.CreatedBy,
+		//	TeamID:   "atjjg8ofqb8kjnwy15yhezdgoh",
+		//	CreateAt: utils.GetMillis(),
+		//	UpdateAt: utils.GetMillis(),
+		//	DeleteAt: utils.GetMillis(),
+		//}
+		//messageTesla := UpdateMsg{
+		//	Action:   websocketActionUpdateCategory,
+		//	Category: &categoryTesla,
+		//}
+		//
+		//// Create new category
+		//categoryTataMotors := model.Category{
+		//	ID:       "7guagyjdymjnpzxa7qmq1oz9000",
+		//	Name:     "Tata Motors - DVR",
+		//	UserID:   block.CreatedBy,
+		//	TeamID:   "atjjg8ofqb8kjnwy15yhezdgoh",
+		//	CreateAt: utils.GetMillis(),
+		//	UpdateAt: utils.GetMillis(),
+		//	DeleteAt: 0,
+		//}
+		//messageTataMotors := UpdateMsg{
+		//	Action:   websocketActionUpdateCategory,
+		//	Category: &categoryTataMotors,
+		//}
+		//
+		//// Space - X to Town Square
+		//messageUpdateBlockCategory := UpdateMsg{
+		//	Action: websocketActionUpdateCategoryBlock,
+		//	BlockCategories: &model.BlockCategoryWebsocketData{
+		//		BlockID:    "btiignq6363goxnrcpeoj7zbhqw",
+		//		CategoryID: "7qefs6kcf3fdcfdx7q5irjkrzoo",
+		//	},
+		//}
+	
 		mlog.Int("listener_count", len(listeners)),
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", block.BoardID),
@@ -563,6 +618,32 @@ func (ws *Server) BroadcastBlockChange(teamID string, block model.Block) {
 			ws.logger.Error("broadcast error", mlog.Err(err))
 			listener.conn.Close()
 		}
+
+		//listener.WriteJSON(categoryMessage1)
+		//listener.WriteJSON(messageTesla)
+		//listener.WriteJSON(messageTataMotors)
+		//
+		//listener.WriteJSON(messageUpdateBlockCategory)
+		//
+		//messageUpdateBlockCategory.BlockCategories.BlockID = "bxyqs9di4xbr5mqtjkgn7xyxyuh"
+		//messageUpdateBlockCategory.BlockCategories.CategoryID = "7qefs6kcf3fdcfdx7q5irjkrzoo"
+		//listener.WriteJSON(messageUpdateBlockCategory)
+		//
+		//messageUpdateBlockCategory.BlockCategories.BlockID = "bt4kr5znrfpnf8jf6bz7zqj5fmc"
+		//messageUpdateBlockCategory.BlockCategories.CategoryID = "7qefs6kcf3fdcfdx7q5irjkrzoo"
+		//listener.WriteJSON(messageUpdateBlockCategory)
+		//
+		//messageUpdateBlockCategory.BlockCategories.BlockID = "b8bbwjqm4oi8m8rmmwobdphoazc"
+		//messageUpdateBlockCategory.BlockCategories.CategoryID = "7guagyjdymjnpzxa7qmq1oz9000"
+		//listener.WriteJSON(messageUpdateBlockCategory)
+		//
+		//messageUpdateBlockCategory.BlockCategories.BlockID = "bco3k38hgnb8t98trdokabahgmh"
+		//messageUpdateBlockCategory.BlockCategories.CategoryID = ""
+		//listener.WriteJSON(messageUpdateBlockCategory)
+		//
+		//messageUpdateBlockCategory.BlockCategories.BlockID = "bao8i9i67jjyhdde6hynn3f8t9r"
+		//messageUpdateBlockCategory.BlockCategories.CategoryID = ""
+		//listener.WriteJSON(messageUpdateBlockCategory)
 	}
 }
 

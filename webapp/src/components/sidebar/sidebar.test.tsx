@@ -10,9 +10,13 @@ import {Router} from 'react-router-dom'
 import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import thunk from 'redux-thunk'
+
 import {UserWorkspace} from '../../user'
 
 import {mockMatchMedia, wrapIntl} from '../../testUtils'
+
+import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import Sidebar from './sidebar'
 
@@ -21,7 +25,7 @@ beforeAll(() => {
 })
 
 describe('components/sidebarSidebar', () => {
-    const mockStore = configureStore([])
+    const mockStore = configureStore([thunk])
     const workspace1: UserWorkspace = {
         id: 'workspace_1',
         title: 'Workspace 1',
@@ -40,6 +44,13 @@ describe('components/sidebarSidebar', () => {
         boardCount: 0,
     }
 
+    const board = TestBlockFactory.createBoard()
+    board.id = 'board1'
+
+    const categoryAttribute1 = TestBlockFactory.createCategoryBlocks()
+    categoryAttribute1.name = 'Category 1'
+    categoryAttribute1.blockIDs = [board.id]
+
     test('sidebar in dashboard page', () => {
         const store = mockStore({
             workspace: {
@@ -53,6 +64,11 @@ describe('components/sidebarSidebar', () => {
             },
             users: {
                 me: {},
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
             },
         })
 
@@ -82,6 +98,11 @@ describe('components/sidebarSidebar', () => {
             },
             users: {
                 me: {},
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
             },
         })
 
@@ -124,6 +145,11 @@ describe('components/sidebarSidebar', () => {
             },
             users: {
                 me: {},
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
             },
         })
 
@@ -170,6 +196,11 @@ describe('components/sidebarSidebar', () => {
             },
             globalTemplates: {
                 value: [],
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
             },
         })
 

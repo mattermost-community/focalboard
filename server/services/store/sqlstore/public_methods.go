@@ -20,6 +20,11 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+func (s *SQLStore) AddUpdateCategoryBlock(userID string, categoryID string, blockID string) error {
+	return s.addUpdateCategoryBlock(s.db, userID, categoryID, blockID)
+
+}
+
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
 	return s.cleanUpSessions(s.db, expireTime)
 
@@ -64,6 +69,11 @@ func (s *SQLStore) CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, us
 	}
 
 	return result, resultVar1, nil
+
+}
+
+func (s *SQLStore) CreateCategory(category model.Category) error {
+	return s.createCategory(s.db, category)
 
 }
 
@@ -140,6 +150,11 @@ func (s *SQLStore) DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks, user
 
 }
 
+func (s *SQLStore) DeleteCategory(categoryID string, userID string, teamID string) error {
+	return s.deleteCategory(s.db, categoryID, userID, teamID)
+
+}
+
 func (s *SQLStore) DeleteMember(boardID string, userID string) error {
 	return s.deleteMember(s.db, boardID, userID)
 
@@ -202,6 +217,11 @@ func (s *SQLStore) GetBoard(id string) (*model.Board, error) {
 
 func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*model.Board, error) {
 	return s.getBoardsForUserAndTeam(s.db, userID, teamID)
+
+}
+
+func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
+	return s.getCategory(s.db, id)
 
 }
 
@@ -277,6 +297,11 @@ func (s *SQLStore) GetUserByID(userID string) (*model.User, error) {
 
 func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 	return s.getUserByUsername(s.db, username)
+
+}
+
+func (s *SQLStore) GetUserCategoryBlocks(userID string, teamID string) ([]model.CategoryBlocks, error) {
+	return s.getUserCategoryBlocks(s.db, userID, teamID)
 
 }
 
@@ -412,6 +437,11 @@ func (s *SQLStore) SearchBoardsForUserAndTeam(term string, userID string, teamID
 
 func (s *SQLStore) SetSystemSetting(key string, value string) error {
 	return s.setSystemSetting(s.db, key, value)
+
+}
+
+func (s *SQLStore) UpdateCategory(category model.Category) error {
+	return s.updateCategory(s.db, category)
 
 }
 

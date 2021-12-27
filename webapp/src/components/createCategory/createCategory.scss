@@ -1,0 +1,67 @@
+.CreateCategoryModal {
+    color: rgba(var(--center-channel-color-rgb));
+
+    .wrapper {
+        .dialog {
+            width: 600px;
+            height: 260px;
+        }
+
+        .toolbar {
+            flex-direction: row-reverse;
+            padding: 2px 6px;
+        }
+
+        h3 {
+            margin-top: 0;
+        }
+
+        input {
+            font-size: 16px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 2px solid;
+            border-color: var(--sidebar-bg-rgb);
+        }
+
+        .footer {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+        }
+
+        .CreateCategory {
+            display: flex;
+            flex-direction: column;
+            padding: 0 40px 30px;
+            gap: 12px;
+            flex: 1;
+
+            h3 {
+                margin-top: 0;
+            }
+
+            input {
+                font-size: 16px;
+                padding: 6px 12px;
+                border-radius: 4px;
+                border: 2px solid;
+                border-color: var(--sidebar-bg-rgb);
+            }
+
+            .footer {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+            }
+
+            .createCategoryActions {
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                margin-top: auto;
+                gap: 12px;
+            }
+        }
+    }
+}

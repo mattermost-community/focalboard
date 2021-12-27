@@ -10,10 +10,10 @@ export default function useCardListener(onChange: (blocks: Block[]) => void, onR
     useEffect(() => {
         // ToDo: does this onChange need boards as well??
         const onChangeHandler = (_: WSClient, boards: Board[], blocks: Block[]) => onChange(blocks)
-        wsClient.addOnChange(onChangeHandler)
+        wsClient.addOnChange(onChangeHandler, 'block')
         wsClient.addOnReconnect(onReconnect)
         return () => {
-            wsClient.removeOnChange(onChangeHandler)
+            wsClient.removeOnChange(onChangeHandler, 'block')
             wsClient.removeOnReconnect(onReconnect)
         }
     }, [])

@@ -1,0 +1,19 @@
+.blockSearchResult {
+    display: flex;
+    gap: 12px;
+    overflow: hidden;
+    flex-direction: row;
+
+    .CompassIcon {
+        font-size: 18px;
+        color: #484848;
+    }
+
+    span {
+        display: inline-block;
+        height: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}

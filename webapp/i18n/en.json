@@ -251,5 +251,19 @@
   "login.log-in-title": "Log in",
   "login.register-button": "or create an account if you don't have one",
   "register.login-button": "or log in if you already have an account",
-  "register.signup-title": "Sign up for your account"
+  "register.signup-title": "Sign up for your account",
+  "BoardsSwitcher.Title": "Find Boards",
+  "SidebarCategories.CategoryMenu.CreateNew": "Create New Category",
+  "SidebarCategories.CategoryMenu.Delete": "Delete Category",
+  "SidebarCategories.CategoryMenu.Update": "Rename Category",
+  "SidebarCategories.BlocksMenu.Move": "Move To...",
+  "Categories.CreateCategoryDialog.Placeholder": "Name your category",
+  "Categories.CreateCategoryDialog.CancelText": "Cancel",
+  "Categories.CreateCategoryDialog.CreateText": "Create",
+  "Categories.CreateCategoryDialog.UpdateText": "Update",
+  "FindBoardsDialog.Title": "Find Boards",
+  "FindBoardsDialog.SubTitle": "Type to find a board. Use <b>UP/DOWN</b> to browse. <b>ENTER</b> to select, <b>ESC</b> to dismiss",
+  "FindBoardsDialog.IntroText": "Search for boards",
+  "FindBoardsDialog.NoResultsFor": "No results for \"{searchQuery}\"",
+  "FindBoardsDialog.NoResultsSubtext": "Check the spelling or try another search."
 }

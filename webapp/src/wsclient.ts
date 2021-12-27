@@ -3,10 +3,11 @@
 
 import {ClientConfig} from './config/clientConfig'
 
-import {Utils} from './utils'
+import {Utils, WSMessagePayloads} from './utils'
 import {Block} from './blocks/block'
 import {Board} from './blocks/board'
 import {OctoUtils} from './octoUtils'
+import {BlockCategoryWebsocketData, Category} from './store/sidebar'
 
 // These are outgoing commands to the server
 type WSCommand = {
@@ -17,9 +18,11 @@ type WSCommand = {
 }
 
 // These are messages from the server
-type WSMessage = {
+export type WSMessage = {
     action?: string
     block?: Block
+    category?: Category
+    blockCategories?: BlockCategoryWebsocketData
     error?: string
 }
 
@@ -33,6 +36,8 @@ export const ACTION_SUBSCRIBE_TEAM = 'SUBSCRIBE_TEAM'
 export const ACTION_UNSUBSCRIBE_TEAM = 'UNSUBSCRIBE_TEAM'
 export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
 export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
+export const ACTION_UPDATE_CATEGORY = 'UPDATE_CATEGORY'
+export const ACTION_UPDATE_BLOCK_CATEGORY = 'UPDATE_BLOCK_CATEGORY'
 
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
@@ -44,11 +49,27 @@ export interface MMWebSocketClient {
     setCloseCallback(callback: (connectFailCount: number) => void): void
 }
 
-type OnChangeHandler = (client: WSClient, boards: Board[], blocks: Block[]) => void
+type OnChangeHandler = (client: WSClient, items: any[], boards: Board[], blocks: Block[]) => void
 type OnReconnectHandler = (client: WSClient) => void
 type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close') => void
 type OnErrorHandler = (client: WSClient, e: Event) => void
 type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => void
+
+export type ChangeHandlerType = 'block' | 'category' | 'blockCategories'
+
+type UpdatedData = {
+    Blocks: Block[]
+    Categories: Category[]
+    BlockCategories: Array<BlockCategoryWebsocketData>
+    Boards: Board[]
+}
+
+type ChangeHandlers = {
+    Block: OnChangeHandler[]
+    Category: OnChangeHandler[]
+    BlockCategory: OnChangeHandler[]
+    Board: []
+}
 
 class WSClient {
     ws: WebSocket|null = null
@@ -62,13 +83,12 @@ class WSClient {
     state: 'init'|'open'|'close' = 'init'
     onStateChange: OnStateChangeHandler[] = []
     onReconnect: OnReconnectHandler[] = []
-    onChange: OnChangeHandler[] = []
+    onChange: ChangeHandlers = {Block: [], Category: [], BlockCategory: [], Board: []}
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
     private notificationDelay = 100
     private reopenDelay = 3000
-    private updatedBlocks: Block[] = []
-    private updatedBoards: Board[] = []
+    private updatedData: UpdatedData = {Blocks: [], Categories: [], BlockCategories: [], Boards: []}
     private updateTimeout?: NodeJS.Timeout
     private errorPollId?: NodeJS.Timeout
 
@@ -114,14 +134,27 @@ class WSClient {
         this.ws?.send(JSON.stringify(command))
     }
 
-    addOnChange(handler: OnChangeHandler): void {
-        this.onChange.push(handler)
+    addOnChange(handler: OnChangeHandler, type: ChangeHandlerType): void {
+        if (type === 'block') {
+            this.onChange.Block.push(handler)
+        } else if (type === 'category') {
+            this.onChange.Category.push(handler)
+        } else if (type === 'blockCategories') {
+            this.onChange.BlockCategory.push(handler)
+        }
     }
 
-    removeOnChange(handler: OnChangeHandler): void {
-        const index = this.onChange.indexOf(handler)
-        if (index !== -1) {
-            this.onChange.splice(index, 1)
+    removeOnChange(handler: OnChangeHandler, type: ChangeHandlerType): void {
+        if (type === 'block') {
+            const index = this.onChange.Block.indexOf(handler)
+            if (index !== -1) {
+                this.onChange.Block.splice(index, 1)
+            }
+        } else if (type === 'category') {
+            const index = this.onChange.Category.indexOf(handler)
+            if (index !== -1) {
+                this.onChange.Category.splice(index, 1)
+            }
         }
     }
 
@@ -286,7 +319,13 @@ class WSClient {
 
                 switch (message.action) {
                 case ACTION_UPDATE_BLOCK:
-                    this.updateBlockHandler(message)
+                    this.updateHandler(message)
+                    break
+                case ACTION_UPDATE_CATEGORY:
+                    this.updateHandler(message)
+                    break
+                case ACTION_UPDATE_BLOCK_CATEGORY:
+                    this.updateHandler(message)
                     break
                 default:
                     Utils.logError(`Unexpected action: ${message.action}`)
@@ -301,8 +340,11 @@ class WSClient {
         return this.ws !== null || this.client !== null
     }
 
-    updateBlockHandler(message: WSMessage): void {
-        this.queueUpdateBlockNotification(Utils.fixBlock(message.block!))
+    updateHandler(message: WSMessage): void {
+        const [data, type] = Utils.fixWSData(message)
+        if (data) {
+            this.queueUpdateNotification(data, type)
+        }
     }
 
     updateClientConfigHandler(config: ClientConfig): void {
@@ -424,9 +466,23 @@ class WSClient {
         this.sendCommand(command)
     }
 
-    private queueUpdateBlockNotification(block: Block) {
-        this.updatedBlocks = this.updatedBlocks.filter((o) => o.id !== block.id) // Remove existing queued update
-        this.updatedBlocks.push(OctoUtils.hydrateBlock(block))
+    private queueUpdateNotification(data: WSMessagePayloads, type: ChangeHandlerType) {
+        if (!data) {
+            return
+        }
+
+        // Remove existing queued update
+        if (type === 'block') {
+            this.updatedData.Blocks = this.updatedData.Blocks.filter((o) => o.id !== (data as Block).id)
+            this.updatedData.Blocks.push(OctoUtils.hydrateBlock(data as Block))
+        } else if (type === 'category') {
+            this.updatedData.Categories = this.updatedData.Categories.filter((c) => c.id !== (data as Category).id)
+            this.updatedData.Categories.push(data as Category)
+        } else if (type === 'blockCategories') {
+            this.updatedData.BlockCategories = this.updatedData.BlockCategories.filter((b) => b.blockID === (data as BlockCategoryWebsocketData).blockID)
+            this.updatedData.BlockCategories.push(data as BlockCategoryWebsocketData)
+        }
+
         if (this.updateTimeout) {
             clearTimeout(this.updateTimeout)
             this.updateTimeout = undefined
@@ -453,17 +509,44 @@ class WSClient {
     }
 
     private flushUpdateNotifications() {
-        for (const board of this.updatedBoards) {
-            Utils.log(`WSClient flush update board: ${board.id}`)
-        }
-        for (const block of this.updatedBlocks) {
+        for (const block of this.updatedData.Blocks) {
             Utils.log(`WSClient flush update block: ${block.id}`)
         }
-        for (const handler of this.onChange) {
-            handler(this, this.updatedBoards, this.updatedBlocks)
+
+        for (const category of this.updatedData.Categories) {
+            Utils.log(`WSClient flush update category: ${category.id}`)
         }
-        this.updatedBoards = []
-        this.updatedBlocks = []
+
+        for (const blockCategories of this.updatedData.BlockCategories) {
+            Utils.log(`WSClient flush update blockCategory: ${blockCategories.blockID} ${blockCategories.categoryID}`)
+        }
+
+        for (const board of this.updatedData.Boards) {
+            Utils.log(`WSClient flush update board: ${board.id}`)
+        }
+
+        for (const handler of this.onChange.Block) {
+            handler(this, this.updatedData.Blocks)
+        }
+
+        for (const handler of this.onChange.Category) {
+            handler(this, this.updatedData.Categories)
+        }
+
+        for (const handler of this.onChange.BlockCategory) {
+            handler(this, this.updatedData.BlockCategories)
+        }
+
+        for (const handler of this.onChange.Board) {
+            handler(this, this.updatedData.Boards)
+        }
+
+        this.updatedData = {
+            Blocks: [],
+            Categories: [],
+            BlockCategories: [],
+        }
+>>>>>>> sidebar-categories
     }
 
     close(): void {
@@ -476,7 +559,7 @@ class WSClient {
         // Use this sequence so the onclose method doesn't try to re-open
         const ws = this.ws
         this.ws = null
-        this.onChange = []
+        this.onChange = {Block: [], Category: [], BlockCategory: []}
         this.onReconnect = []
         this.onStateChange = []
         this.onError = []
