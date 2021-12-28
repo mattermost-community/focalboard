@@ -97,19 +97,23 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			&board.DeleteAt,
 		)
 		if err != nil {
+			s.logger.Error("boardsFromRows scan error", mlog.Err(err))
 			return nil, err
 		}
 
 		err = json.Unmarshal(propertiesBytes, &board.Properties)
 		if err != nil {
+			s.logger.Error("board properties unmarshal error", mlog.Err(err))
 			return nil, err
 		}
 		err = json.Unmarshal(cardPropertiesBytes, &board.CardProperties)
 		if err != nil {
+			s.logger.Error("board card properties unmarshal error", mlog.Err(err))
 			return nil, err
 		}
 		err = json.Unmarshal(columnCalculationsBytes, &board.ColumnCalculations)
 		if err != nil {
+			s.logger.Error("board column calculation unmarshal error", mlog.Err(err))
 			return nil, err
 		}
 

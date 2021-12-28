@@ -10,6 +10,21 @@ ALTER TABLE {{.prefix}}blocks_history RENAME COLUMN workspace_id TO channel_id;
 ALTER TABLE {{.prefix}}blocks ADD COLUMN board_id VARCHAR(36);
 ALTER TABLE {{.prefix}}blocks_history ADD COLUMN board_id VARCHAR(36);
 
+{{- /* cleanup incorrect data format in column calculations */ -}}
+{{if .mysql}}
+UPDATE {{.prefix}}blocks SET fields = JSON_SET(fields, '$.columnCalculations', cast('{}' as json))  WHERE fields->'$.columnCalculations' = cast('[]' as json);
+{{end}}
+
+{{if .postgres}}
+UPDATE {{.prefix}}blocks SET fields = fields::jsonb - 'columnCalculations' || '{"columnCalculations": {}}' WHERE fields->>'columnCalculations' = '[]';
+{{end}}
+
+{{if .sqlite}}
+UPDATE blocks SET fields = replace(fields, '"columnCalculations":[]', '"columnCalculations":{}');
+{{end}}
+
+
+
 
 {{- /* add boards tables */ -}}
 CREATE TABLE {{.prefix}}boards (

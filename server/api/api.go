@@ -1778,21 +1778,30 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
+	a.logger.Info("AAA")
+
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
 		return
 	}
 
+	a.logger.Info("BBB")
+
 	auditRec := a.makeAuditRecord(r, "getBoards", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("teamID", teamID)
 
+	a.logger.Info("CCC")
+
 	// retrieve boards list
 	boards, err := a.app.GetBoardsForUserAndTeam(userID, teamID)
 	if err != nil {
+		a.logger.Info("EEE")
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
+
+	a.logger.Info("DDD")
 
 	a.logger.Debug("GetBoards",
 		mlog.String("teamID", teamID),
@@ -1801,9 +1810,12 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(boards)
 	if err != nil {
+		a.logger.Info("GGG")
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
+
+	a.logger.Info("FFF")
 
 	// response
 	jsonBytesResponse(w, http.StatusOK, data)
@@ -2909,6 +2921,7 @@ func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message
 		mlog.String("msg", message),
 		mlog.String("api", api),
 	)
+
 	w.Header().Set("Content-Type", "application/json")
 	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: code})
 	if err != nil {

@@ -146,6 +146,16 @@ func (s *SQLStore) runTemplatesToTeamsMigration() error {
 		return v
 	}
 
+	getArrayProperty := func(m map[string]interface{}, k string) []map[string]interface{} {
+		v := []map[string]interface{}{}
+		s := getStrProperty(m, k)
+		if s == "" {
+			return v
+		}
+		_ = json.Unmarshal([]byte(s), &v)
+		return v
+	}
+
 	// add all templates for each team
 	for _, templateBlock := range boardTemplateBlocks {
 		newBoardTemplate := &model.Board{
@@ -157,7 +167,7 @@ func (s *SQLStore) runTemplatesToTeamsMigration() error {
 			ShowDescription:    getBoolProperty(templateBlock.Fields, "showDescription"),
 			IsTemplate:         getBoolProperty(templateBlock.Fields, "isTemplate"),
 			Properties:         map[string]interface{}{},
-			CardProperties:     getMapProperty(templateBlock.Fields, "cardProperties"),
+			CardProperties:     getArrayProperty(templateBlock.Fields, "cardProperties"),
 			ColumnCalculations: getMapProperty(templateBlock.Fields, "columnCalculations"),
 			CreateAt:           templateBlock.CreateAt,
 			UpdateAt:           templateBlock.UpdateAt,

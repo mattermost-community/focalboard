@@ -65,7 +65,7 @@ type Board struct {
 
 	// The properties of the board cards
 	// required: false
-	CardProperties map[string]interface{} `json:"cardProperties"`
+	CardProperties []map[string]interface{} `json:"cardProperties"`
 
 	// The calculations on the board's cards
 	// required: false
@@ -117,7 +117,7 @@ type BoardPatch struct {
 
 	// The board updated card properties
 	// required: false
-	UpdatedCardProperties map[string]interface{} `json:"updatedCardProperties"`
+	UpdatedCardProperties []map[string]interface{} `json:"updatedCardProperties"`
 
 	// The board removed card properties
 	// required: false
@@ -206,13 +206,15 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 		delete(board.Properties, key)
 	}
 
-	for key, cardProperty := range p.UpdatedCardProperties {
-		board.CardProperties[key] = cardProperty
-	}
+	//for key, cardProperty := range p.UpdatedCardProperties {
+	//	board.CardProperties[key] = cardProperty
+	//}
+	//
+	//for _, key := range p.DeletedCardProperties {
+	//	delete(board.CardProperties, key)
+	//}
 
-	for _, key := range p.DeletedCardProperties {
-		delete(board.CardProperties, key)
-	}
+	board.CardProperties = p.UpdatedCardProperties
 
 	for key, columnCalculation := range p.UpdatedColumnCalculations {
 		board.ColumnCalculations[key] = columnCalculation
