@@ -1,5 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+
+import {Channel, ChannelMembership} from 'mattermost-redux/types/channels';
+
 export interface PluginRegistry {
     registerPostTypeComponent(typeName: string, component: React.ElementType)
     registerChannelHeaderButtonAction(icon: React.Element, action: () => void, dropdownText: string, tooltipText: string)
@@ -10,6 +13,7 @@ export interface PluginRegistry {
     registerPostWillRenderEmbedComponent(match: (embed: {type: string, data: any}) => void, component: any, toggleable: boolean)
     registerWebSocketEventHandler(event: string, handler: (e: any) => void)
     unregisterWebSocketEventHandler(event: string)
+    registerAppBarComponent(iconURL: string, action: (channel: Channel, member: ChannelMembership) => void, tooltipText: React.ReactNode)
 
     // Add more if needed from https://developers.mattermost.com/extend/plugins/webapp/reference
 }

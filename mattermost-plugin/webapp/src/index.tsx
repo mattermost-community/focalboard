@@ -141,6 +141,11 @@ export default class Plugin {
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, 'Boards', 'Boards')
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
 
+            if (this.registry.registerAppBarComponent) {
+                const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png';
+                this.registry.registerAppBarComponent(appBarIconURL, goToFocalboardWorkspace, 'Open Boards Workspace')
+            }
+
             if (mmStore.getState().entities.general.config?.['FeatureFlagBoardsUnfurl' as keyof Partial<ClientConfig>] === 'true') {
                 this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
             }
