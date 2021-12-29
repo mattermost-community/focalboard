@@ -17,6 +17,7 @@ import {setCurrent as setCurrentView} from '../../store/views'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getCurrentWorkspace} from '../../store/workspace'
 import {Utils} from '../../utils'
+import {getCurrentTeam} from '../../store/teams'
 
 const BoardsSwitcher = (): JSX.Element => {
     const intl = useIntl()
@@ -46,13 +47,12 @@ const BoardsSwitcher = (): JSX.Element => {
     const dispatch = useAppDispatch()
     const history = useHistory()
 
-    // TODO un-hardcode this teamID
-    const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
+    const team = useAppSelector(getCurrentTeam)
 
     const workspace = useAppSelector(getCurrentWorkspace)
 
     const goToEmptyCenterPanel = () => {
-        UserSettings.setLastBoardID(teamID, '')
+        UserSettings.setLastBoardID(team?.id || '', '')
 
         // TODO see if this works or do we need a solutiion
         // UserSettings.lastViewId = null

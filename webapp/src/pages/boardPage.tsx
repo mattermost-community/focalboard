@@ -32,6 +32,7 @@ import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import {getCurrentTeam} from '../store/teams'
 type Props = {
     readonly?: boolean
 }
@@ -53,11 +54,18 @@ const BoardPage = (props: Props): JSX.Element => {
 
     let teamId = match.params.teamId || UserSettings.lastTeamId || '0'
 
+    const team = useAppSelector(getCurrentTeam)
+
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
     if (Utils.isFocalboardLegacy() && !props.readonly) {
         window.location.href = window.location.href.replace('/plugins/focalboard', '/boards')
     }
+
+    console.log(`match.params.teamId: ${match.params.teamId}`)
+    console.log('team team team')
+    console.log(team)
+    console.log('team team team')
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {

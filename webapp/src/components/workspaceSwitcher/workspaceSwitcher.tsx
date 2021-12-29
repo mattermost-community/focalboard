@@ -10,9 +10,11 @@ import ChevronDown from '../../widgets/icons/chevronDown'
 import AddIcon from '../../widgets/icons/add'
 import {setCurrent as setCurrentBoard} from '../../store/boards'
 import {setCurrent as setCurrentView} from '../../store/views'
-import {useAppDispatch} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 
 import {UserSettings} from '../../userSettings'
+
+import {getCurrentTeam} from '../../store/teams'
 
 import WorkspaceOptions, {DashboardOption} from './workspaceOptions'
 
@@ -27,8 +29,8 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
     const dispatch = useAppDispatch()
     const [showMenu, setShowMenu] = useState<boolean>(false)
 
-    // TODO un-hardcode this teamID
-    const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
+    const team = useAppSelector(getCurrentTeam)
+    const teamID = team?.id || ''
 
     const goToEmptyCenterPanel = () => {
         UserSettings.setLastBoardID(teamID, '')

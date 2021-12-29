@@ -1,11 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-// ToDo: delete this whole thing?
-
 import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
-import {default as client} from '../octoClient'
 import {IWorkspace} from '../blocks/workspace'
 
 import {UserWorkspace} from '../user'
@@ -16,7 +13,9 @@ import {RootState} from './index'
 
 export const fetchWorkspace = createAsyncThunk(
     'workspace/fetch',
-    async () => client.getTeam(), // ToDo: pass team id
+
+    // async () => client.getWorkspace(),
+    async () => null,
 )
 
 type WorkspaceState = {
@@ -37,14 +36,14 @@ const workspaceSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
-            // ToDo: remove
             // state.current = action.payload.workspace || null
-            // ToDo: remove
             // state.userWorkspaces = action.payload.userWorkspaces
+            state.current = null
+            state.userWorkspaces = []
         })
         builder.addCase(fetchWorkspace.fulfilled, (state, action) => {
-            // ToDo: ??
             // state.current = action.payload || null
+            state.current = null
         })
     },
 })
@@ -52,8 +51,7 @@ const workspaceSlice = createSlice({
 export const {setWorkspace, setUserWorkspaces} = workspaceSlice.actions
 export const {reducer} = workspaceSlice
 
-// ToDo: remove
-export const getUserWorkspaces = (state: RootState): UserWorkspace[] => []
+export const getUserWorkspaces = (state: RootState): UserWorkspace[] => state.workspace.userWorkspaces
 
 export const getUserWorkspaceList = createSelector(
     getUserWorkspaces,
@@ -61,6 +59,6 @@ export const getUserWorkspaceList = createSelector(
 )
 
 export function getCurrentWorkspace(state: RootState): IWorkspace|null {
-    // ToDo: change to team
+    // return state.workspace.current
     return null
 }

@@ -28,6 +28,8 @@ import Check from '../../widgets/icons/checkIcon'
 
 import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
+import {getCurrentTeam} from '../../store/teams'
+
 import DeleteBoardDialog from './deleteBoardDialog'
 
 type Props = {
@@ -52,8 +54,8 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
     const me = useAppSelector<IUser|null>(getMe)
 
-    // TODO un-hardcode this teamID
-    const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
+    const team = useAppSelector(getCurrentTeam)
+    const teamID = team?.id || ''
 
     const showBoard = useCallback((boardId) => {
         // if the same board, reuse the match params
@@ -213,7 +215,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                         onClick={() => showBoard(blockID)}
                     >
                         <div className='octo-sidebar-icon'>
-                            {thisBoard?.fields.icon}
+                            {thisBoard?.icon}
                         </div>
                         <div
                             className='octo-sidebar-title'
@@ -303,7 +305,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 onClose={() => setDeleteBoardOpen(false)}
                 onDelete={async () => {
                     telemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: deleteBoard.id})
-                    mutator.deleteBlock(
+                    mutator.deleteBoard(
                         deleteBoard,
                         intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
                         async () => {

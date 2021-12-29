@@ -16,12 +16,16 @@ const getUserWorkspaces = async ():Promise<UserWorkspace[]> => {
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
-        const [blocks] = await Promise.all([
+        const [blocks, team, boards] = await Promise.all([
+
             // ToDo: get board members maybe?
             // ToDo: get user boards
             // ToDo: replace getallblocks with get board blocks? or directly when loading the board?
             client.getAllBlocks(),
+
             // ToDo: probably add memberships here
+            client.getTeam(),
+            client.getBoards(),
         ])
 
         // ToDo: do we really need to get the team info?? wouldn't it be the board info?
@@ -31,6 +35,9 @@ export const initialLoad = createAsyncThunk(
         // }
         return {
             blocks,
+            team,
+            boards,
+
             // ToDo: return extra Promise.all things
         }
     },

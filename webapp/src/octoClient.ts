@@ -9,6 +9,7 @@ import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
 import {Category, CategoryBlocks} from './store/sidebar'
+import {Team} from './store/team'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -46,7 +47,7 @@ class OctoClient {
         this.serverUrl = serverUrl
     }
 
-    private async getJson(response: Response, defaultValue: unknown): Promise<unknown> {
+    private async getJson<T>(response: Response, defaultValue: T): Promise<T> {
         // The server may return null or malformed json
         try {
             const value = await response.json()
@@ -143,8 +144,12 @@ class OctoClient {
     // }
 
     // ToDo: document
-    private teamPath(teamId?: string) {
-        const teamIdToUse = teamId || '0'
+    private teamPath(teamId?: string): string {
+        let teamIdToUse = teamId
+        if (!teamId) {
+            teamIdToUse = this.teamId === '0' ? UserSettings.lastTeamId || this.teamId : this.teamId
+        }
+
         return `/api/v1/teams/${teamIdToUse}`
     }
 
@@ -418,9 +423,24 @@ class OctoClient {
         return URL.createObjectURL(blob)
     }
 
-    async getTeam() {
-        // ToDo: implement
-        // ToDo: getTeam(teamId string): Promise<Team> ??
+    async getTeam(): Promise<Team> {
+        const path = this.teamPath()
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, null)) as Team
+    }
+
+    async getTeams(): Promise<Array<Team>> {
+        const path = this.teamPath()
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+
+        return this.getJson<Array<Team>>(response, [])
     }
 
     async getTeamUsers(): Promise<IUser[]> {
@@ -462,8 +482,8 @@ class OctoClient {
     // - ops to add/delete a board, add/delete board members, change roles? .
     // - WS definition and implementation
 
-    async getBoards(teamId: string): Promise<Board[]> {
-        const path = this.teamPath(teamId) + '/boards'
+    async getBoards(): Promise<Board[]> {
+        const path = this.teamPath() + '/boards'
         return this.getBoardsWithPath(path)
     }
 

@@ -27,6 +27,8 @@ import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
 
 import wsClient, {WSClient} from '../../wsclient'
 
+import {getCurrentTeam} from '../../store/teams'
+
 import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -65,12 +67,13 @@ const Sidebar = React.memo((props: Props) => {
         }, 'blockCategories')
     }, [])
 
-    // TODO un-hardcode this teamID
-    const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
+    const team = useAppSelector(getCurrentTeam)
 
     useEffect(() => {
-        dispatch(fetchSidebarCategories(teamID))
-    }, [])
+        if (team) {
+            dispatch(fetchSidebarCategories(team!.id))
+        }
+    }, [team?.id])
 
     useEffect(() => {
         loadTheme()

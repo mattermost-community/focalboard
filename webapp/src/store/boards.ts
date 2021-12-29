@@ -35,6 +35,7 @@ const boardsSlice = createSlice({
             }
         },
     },
+
     // ToDo: update extra reducers
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
@@ -51,7 +52,10 @@ const boardsSlice = createSlice({
             // }
         })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
-            // ToDo: complete
+            state.boards = {}
+            action.payload.boards.forEach((board) => {
+                state.boards[board.id] = board
+            })
 
             // state.boards = {}
             // state.templates = {}
