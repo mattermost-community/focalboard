@@ -23,9 +23,6 @@ UPDATE {{.prefix}}blocks SET fields = fields::jsonb - 'columnCalculations' || '{
 UPDATE blocks SET fields = replace(fields, '"columnCalculations":[]', '"columnCalculations":{}');
 {{end}}
 
-
-
-
 {{- /* add boards tables */ -}}
 CREATE TABLE {{.prefix}}boards (
     id VARCHAR(36) NOT NULL PRIMARY KEY,
@@ -109,7 +106,7 @@ CREATE TABLE {{.prefix}}boards_history (
   {{if .postgres}}
   INSERT INTO {{.prefix}}boards (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->'description')::text,
-                 B.fields->'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
+                 B.fields->>'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
                  '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
@@ -118,7 +115,7 @@ CREATE TABLE {{.prefix}}boards_history (
   );
   INSERT INTO {{.prefix}}boards_history (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->'description')::text,
-                 B.fields->'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
+                 B.fields->>'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
                  '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B
@@ -129,7 +126,7 @@ CREATE TABLE {{.prefix}}boards_history (
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, B.fields->'$.description',
-                 B.fields->'$.icon', B.fields->'$.showDescription', B.fields->'$.isTemplate',
+                 B.fields->>'$.icon', B.fields->'$.showDescription', B.fields->'$.isTemplate',
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
@@ -138,7 +135,7 @@ CREATE TABLE {{.prefix}}boards_history (
   );
   INSERT INTO {{.prefix}}boards_history (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, B.fields->'$.description',
-                 B.fields->'$.icon', B.fields->'$.showDescription', B.fields->'$.isTemplate',
+                 B.fields->>'$.icon', B.fields->'$.showDescription', B.fields->'$.isTemplate',
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B
@@ -150,7 +147,7 @@ CREATE TABLE {{.prefix}}boards_history (
   {{if .postgres}}
   INSERT INTO {{.prefix}}boards (
       SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->'description')::text,
-                 fields->'icon', (fields->'showDescription')::text::boolean, (fields->'isTemplate')::text::boolean,
+                 fields->>'icon', (fields->'showDescription')::text::boolean, (fields->'isTemplate')::text::boolean,
                  '{}', fields->'cardProperties', fields->'columnCalculations', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks
@@ -158,7 +155,7 @@ CREATE TABLE {{.prefix}}boards_history (
   );
   INSERT INTO {{.prefix}}boards_history (
       SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->'description')::text,
-                 fields->'icon', (fields->'showDescription')::text::boolean, (fields->'isTemplate')::text::boolean,
+                 fields->>'icon', (fields->'showDescription')::text::boolean, (fields->'isTemplate')::text::boolean,
                  '{}', fields->'cardProperties', fields->'columnCalculations', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history
@@ -168,7 +165,7 @@ CREATE TABLE {{.prefix}}boards_history (
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
       SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, fields->'$.description',
-                 fields->'$.icon', fields->'$.showDescription', fields->'$.isTemplate',
+                 fields->>'$.icon', fields->'$.showDescription', fields->'$.isTemplate',
                  '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks
@@ -176,7 +173,7 @@ CREATE TABLE {{.prefix}}boards_history (
   );
   INSERT INTO {{.prefix}}boards_history (
       SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, fields->'$.description',
-                 fields->'$.icon', fields->'$.showDescription', fields->'$.isTemplate',
+                 fields->>'$.icon', fields->'$.showDescription', fields->'$.isTemplate',
                  '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history

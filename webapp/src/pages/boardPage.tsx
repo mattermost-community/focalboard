@@ -6,6 +6,8 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, Redirect, useHistory, useRouteMatch, useLocation} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
+import {first} from 'lodash'
+
 import {Block} from '../blocks/block'
 import {ContentBlock} from '../blocks/contentBlock'
 import {CommentBlock} from '../blocks/commentBlock'
@@ -32,7 +34,7 @@ import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
-import {getCurrentTeam} from '../store/teams'
+import {getSidebarCategories} from '../store/sidebar'
 type Props = {
     readonly?: boolean
 }
@@ -45,16 +47,12 @@ const BoardPage = (props: Props): JSX.Element => {
     const activeView = useAppSelector(getCurrentView)
     const boardViews = useAppSelector(getCurrentBoardViews)
     const dispatch = useAppDispatch()
-
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
     const queryString = new URLSearchParams(useLocation().search)
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
-
     let teamId = match.params.teamId || UserSettings.lastTeamId || '0'
-
-    const team = useAppSelector(getCurrentTeam)
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -62,10 +60,12 @@ const BoardPage = (props: Props): JSX.Element => {
         window.location.href = window.location.href.replace('/plugins/focalboard', '/boards')
     }
 
-    console.log(`match.params.teamId: ${match.params.teamId}`)
-    console.log('team team team')
-    console.log(team)
-    console.log('team team team')
+    const categories = useAppSelector(getSidebarCategories)
+
+    console.log(`Board: ${board && board.id}`)
+    console.log(`Views: ${boardViews}`)
+    console.log(`Categories: ${categories && categories.length}`)
+    console.log(`Categories: ${categories.length > 0 && categories[0].name}`)
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
@@ -74,25 +74,45 @@ const BoardPage = (props: Props): JSX.Element => {
         octoClient.teamId = teamId
     }, [match.params.teamId])
 
-    // Backward compatibility: This can be removed in the future, this is for
-    // transform the old query params into routes
-    useEffect(() => {
-    }, [])
-
     useEffect(() => {
         // don't do anything if-
         // 1. the URL already has a team ID, or
         // 2. the team ID is unavailable.
         // This also ensures once the team id is
         // set in the URL, we don't update the history anymore.
-        if (props.readonly || match.params.teamId || !teamId || teamId === '0') {
+        if (props.readonly || (match.params.teamId && match.params.boardId && match.params.viewId)) {
             return
         }
 
-        // we can pick team ID from board if it's not available anywhere,
-        const teamIDToUse = teamId || board.teamId
+        // TODO fetch all teams and send user to the first team
+        const teamID = match.params.teamId || UserSettings.lastTeamId || undefined
+        let boardID
+        if (teamID) {
+            const firstBoard = categories.length > 0 && categories[0].blockIDs.length > 0 ? categories[0].blockIDs[0] : undefined
+            boardID = match.params.boardId || UserSettings.lastBoardId[teamID] || firstBoard
+        }
 
-        const newPath = Utils.buildOriginalPath(teamIDToUse, match.params.boardId, match.params.viewId, match.params.cardId)
+        let viewID
+        if (boardID) {
+            const firstView = boardViews.length > 0 ? boardViews[0].id : undefined
+            viewID = match.params.viewId || UserSettings.lastViewId[boardID] || firstView
+        }
+
+        if (teamID) {
+            if (boardID) {
+                UserSettings.setLastBoardID(teamID, boardID)
+
+                if (viewID) {
+                    UserSettings.setLastViewId(boardID, viewID)
+                }
+            }
+        }
+
+        const newPath = Utils.buildOriginalPath(teamID, boardID, viewID, match.params.cardId)
+
+        console.log(`redirecting to ${newPath}`)
+        console.log(boardViews)
+
         history.replace(`/team/${newPath}`)
     }, [teamId, match.params.boardId, match.params.viewId, match.params.cardId])
 

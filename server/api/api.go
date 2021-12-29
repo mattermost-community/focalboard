@@ -241,6 +241,8 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	a.logger.Debug("AAAA")
+
 	auditRec := a.makeAuditRecord(r, "getBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("boardID", boardID)
@@ -249,13 +251,17 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("all", all)
 	auditRec.AddMeta("blockID", blockID)
 
+	a.logger.Debug("BBBB")
+
 	var blocks []model.Block
 	var block *model.Block
 	var err error
 	switch {
 	case all != "":
+		a.logger.Debug("CCCC")
 		blocks, err = a.app.GetBlocksForBoard(boardID)
 		if err != nil {
+			a.logger.Debug("DDDD")
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
 		}
@@ -274,6 +280,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			blocks = append(blocks, *block)
 		}
 	default:
+		a.logger.Debug("EEEE")
 		blocks, err = a.app.GetBlocks(boardID, parentID, blockType)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
