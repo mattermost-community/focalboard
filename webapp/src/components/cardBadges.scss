@@ -1,10 +1,12 @@
 .cardBadges {
     display: flex;
     align-items: center;
+
     span {
         margin-right: 8px;
 
-        .Icon, .CompassIcon {
+        .Icon,
+        .CompassIcon {
             margin-right: 4px;
         }
     }
