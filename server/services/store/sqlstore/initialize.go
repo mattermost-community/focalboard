@@ -27,7 +27,7 @@ func (s *SQLStore) InitializeTemplates() error {
 
 func (s *SQLStore) importInitialTemplates() error {
 	s.logger.Debug("importInitialTemplates")
-	blocksJSON := initializations.MustAsset("templates.json")
+	blocksJSON, _ := initializations.Asset("templates.json")
 
 	var archive model.Archive
 	err := json.Unmarshal(blocksJSON, &archive)

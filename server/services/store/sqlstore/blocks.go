@@ -4,8 +4,11 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/utils"
+	"github.com/pkg/errors"
 
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq" // postgres driver
@@ -755,4 +758,193 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 	}
 
 	return nil
+}
+
+// PermanentDeleteBatchForRetentionPolicies deletes a batch of records which are affected by
+// the global or a granular retention policy.
+// See `genericPermanentDeleteBatchForRetentionPolicies` for details.
+func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, nowTime int64, limit int64) (int64, error) {
+	// func (s *SQLStore) PermanentDeleteBatchForRetentionPolicies(db sq.BaseRunner, now, globalPolicyEndTime, limit int64) (int64, error) {
+
+	deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id"}
+	// deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id", "boards": "id", "boards_history": "id"}
+	// deleteTables := map[string]string{"blocks": "board_id", "blocks_history": "board_id", "boards": "id", "boards_history": "id"}
+
+	// templateWSId := "0"
+	subBuilder := s.getQueryBuilder(db).
+		// Select("root_id, board_id, MAX(update_at) AS maxDate").
+		Select("root_id, MAX(update_at) AS maxDate").
+		From(s.tablePrefix + "blocks").
+		Where("workspace_id <> '0'").
+		GroupBy("root_id")
+		// GroupBy("root_id, board_id")
+
+	subQuery, _, _ := subBuilder.ToSql()
+
+	builder := s.getQueryBuilder(db).
+		// Select("subquery.root_id, subquery.board_id").
+		Select("subquery.root_id").
+		From("( " + subQuery + " ) As subquery")
+
+	totalAffected := 0
+	globalOnlyDelete := true
+	if globalOnlyDelete {
+		// global only section
+		deleteIds, err := s.globalOnlySubQuery(builder, globalRetentionDate, limit)
+		if err != nil {
+			return 0, err
+		}
+
+		mlog.Debug("DeleteIDs")
+		mlog.Debug(strings.Join(deleteIds, " "))
+
+		if len(deleteIds) > 0 {
+			mlog.Debug(strconv.FormatInt(int64(len(deleteIds)), 10))
+			for table, field := range deleteTables {
+				affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds, limit)
+				if err != nil {
+					return int64(totalAffected), err
+				}
+				totalAffected += int(affected)
+				mlog.Debug("TotalAffected " + strconv.FormatInt(int64(totalAffected), 10))
+			}
+		}
+	} else {
+		// if global and team policy supported
+		deleteIds, err := s.teamPolicySubQuery(builder, globalRetentionDate, nowTime, limit)
+		if err != nil {
+			return 0, err
+		}
+		for table, field := range deleteTables {
+			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds, limit)
+			if err != nil {
+				return int64(totalAffected), err
+			}
+			totalAffected += int(affected)
+		}
+
+		deleteIds, err = s.globalWithTeamPolicySubQuery(builder, globalRetentionDate, limit)
+		if err != nil {
+			return 0, err
+		}
+		for table, field := range deleteTables {
+			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds, limit)
+			if err != nil {
+				return int64(totalAffected), err
+			}
+			totalAffected += int(affected)
+		}
+	}
+	return int64(totalAffected), nil
+}
+
+func (s *SQLStore) globalWithTeamPolicySubQuery(baseBuilder sq.SelectBuilder, globalPolicyEndTime int64, limit int64) ([]string, error) {
+
+	rows, err := baseBuilder.
+		LeftJoin("RetentionPoliciesTeams ON Boards.TeamId = RetentionPoliciesTeams.TeamId").
+		LeftJoin("RetentionPolicies ON RetentionPoliciesChannels.PolicyId = RetentionPolicies.Id").
+		Where(
+			sq.Eq{"RetentionPoliciesTeams.PolicyId": nil},
+		).
+		Where(sq.Lt{"subQuery.maxDate": globalPolicyEndTime}).
+		Limit(uint64(limit)).
+		Query()
+	if err != nil {
+		s.logger.Error(`dataRetention subquery ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+	return idsFromRows(rows)
+}
+
+func (s *SQLStore) teamPolicySubQuery(baseBuilder sq.SelectBuilder, globalPolicyEndTime int64, nowTime int64, limit int64) ([]string, error) {
+	const millisecondsInADay = 24 * 60 * 60 * 1000
+	nowStr := strconv.FormatInt(nowTime, 10)
+	fallsUnderGranularPolicy := sq.And{
+		sq.GtOrEq{"RetentionPolicies.BoardsDuration": 0},
+		sq.Expr(nowStr + " - " + "subQuery.maxDate" + " > RetentionPolicies.BoardsDuration * " + strconv.FormatInt(millisecondsInADay, 10)),
+	}
+
+	rows, err := baseBuilder.
+		InnerJoin("RetentionPoliciesTeams ON Channels.TeamId = RetentionPoliciesTeams.TeamId").
+		InnerJoin("RetentionPolicies ON RetentionPoliciesTeams.PolicyId = RetentionPolicies.Id").
+		Where(sq.And{
+			sq.Expr("RetentionPoliciesTeams.PolicyId = RetentionPolicies.Id"),
+		}).
+		Where(fallsUnderGranularPolicy).
+		Limit(uint64(limit)).
+		Query()
+	if err != nil {
+		s.logger.Error(`dataRetention subquery ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+	return idsFromRows(rows)
+}
+
+func (s *SQLStore) globalOnlySubQuery(baseBuilder sq.SelectBuilder, globalPolicyEndTime int64, limit int64) ([]string, error) {
+
+	query := baseBuilder.
+		Where(sq.Lt{"subQuery.maxDate": globalPolicyEndTime}).
+		Limit(uint64(limit))
+
+	s1, args, _ := query.ToSql()
+	mlog.Debug(s1)
+	mlog.Debug(fmt.Sprintf("&v", args))
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`dataRetention subquery ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+	return idsFromRows(rows)
+}
+
+func idsFromRows(rows *sql.Rows) ([]string, error) {
+	deleteIds := []string{}
+	for rows.Next() {
+		var rootId string
+		// var boardId string
+		err := rows.Scan(
+			&rootId,
+			// &boardId,
+		)
+		if err != nil {
+			return nil, err
+		}
+		// deleteIds = append(deleteIds, boardId)
+		deleteIds = append(deleteIds, rootId)
+	}
+	return deleteIds, nil
+}
+
+// genericRetentionPoliciesDeletion actually executes the DELETE query using a sq.SelectBuilder
+// which selects the rows to delete.
+func (s *SQLStore) genericRetentionPoliciesDeletion(
+	db sq.BaseRunner,
+	table string,
+	deleteColumn string,
+	deleteIds []string,
+	limit int64,
+) (int64, error) {
+	whereClause := deleteColumn + ` IN ('` + strings.Join(deleteIds, `','`) + `')`
+	deleteQuery := s.getQueryBuilder(db).
+		Delete(s.tablePrefix + table).
+		Where(whereClause)
+		// .Limit(uint64(limit))
+
+	s1, _, _ := deleteQuery.ToSql()
+	mlog.Debug(s1)
+	result, err := deleteQuery.Exec()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to delete "+table)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to get rows affected for "+table)
+	}
+	mlog.Debug("Rows Affected" + strconv.FormatInt(int64(rowsAffected), 10))
+	return rowsAffected, nil
 }

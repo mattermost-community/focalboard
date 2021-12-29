@@ -90,6 +90,9 @@ type Store interface {
 	GetNotificationHint(c Container, blockID string) (*model.NotificationHint, error)
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
 
+	// @withTransaction
+	RunDataRetention(globalRetentionDate int64, nowTime int64, batchSize int64) (int64, error)
+
 	IsErrNotFound(err error) bool
 }
 

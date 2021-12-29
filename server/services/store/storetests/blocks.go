@@ -1,6 +1,8 @@
 package storetests
 
 import (
+	"fmt"
+	"strconv"
 	"testing"
 	"time"
 
@@ -70,6 +72,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		store, tearDown := setup(t)
 		defer tearDown()
 		testGetBlock(t, store, container)
+	})
+	t.Run("RunDataRetention", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testRunDataRetention(t, store, container)
 	})
 }
 
@@ -769,4 +776,25 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 		require.NoError(t, err)
 		require.Nil(t, fetchedBlock)
 	})
+}
+
+func testRunDataRetention(t *testing.T, store store.Store, container store.Container) {
+
+	blocks, errBlocks := store.GetAllBlocks(container)
+	require.NoError(t, errBlocks)
+	initialCount := len(blocks)
+
+	deletions, err := store.RunDataRetention(time.Now().UnixNano()+86800, time.Now().UnixNano(), 10)
+	require.NoError(t, err)
+	require.Equal(t, 0, deletions)
+
+	deletions, err = store.RunDataRetention(time.Now().UnixNano(), time.Now().UnixNano(), 10)
+	require.NoError(t, err)
+	fmt.Println("deletions " + strconv.FormatInt(deletions, 10))
+	require.True(t, deletions > int64(initialCount))
+
+	// expect all blocks to be deleted.
+	blocks, errBlocks = store.GetAllBlocks(container)
+	require.NoError(t, errBlocks)
+	require.Equal(t, 0, len(blocks))
 }
