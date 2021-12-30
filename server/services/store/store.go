@@ -91,7 +91,7 @@ type Store interface {
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
 
 	// @withTransaction
-	RunDataRetention(nowTime int64, batchSize int64) (int64, error)
+	RunDataRetention(globalRetentionDate int64, nowTime int64, batchSize int64) (int64, error)
 
 	IsErrNotFound(err error) bool
 }

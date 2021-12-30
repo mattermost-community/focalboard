@@ -791,20 +791,17 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 			return 0, err
 		}
 
-		mlog.Debug("DeleteIDs")
-		mlog.Debug(strings.Join(deleteIds, " "))
-
 		if len(deleteIds) > 0 {
-			mlog.Debug(strconv.FormatInt(int64(len(deleteIds)), 10))
+			mlog.Debug("DeleteIDs " + strings.Join(deleteIds, ", "))
 			for table, field := range deleteTables {
 				affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds)
 				if err != nil {
 					return int64(totalAffected), err
 				}
 				totalAffected += int(affected)
-				mlog.Debug("TotalAffected " + strconv.FormatInt(int64(totalAffected), 10))
 			}
 		}
+		mlog.Info("Boards Data Retention - TotalAffected " + strconv.FormatInt(int64(totalAffected), 10))
 	} else {
 		// if global and team policy supported
 		deleteIds, err := s.teamPolicySubQuery(builder, nowTime, limit)
