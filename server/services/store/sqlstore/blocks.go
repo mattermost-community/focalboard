@@ -765,7 +765,6 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 // See `genericPermanentDeleteBatchForRetentionPolicies` for details.
 func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, nowTime int64, limit int64) (int64, error) {
 	// func (s *SQLStore) PermanentDeleteBatchForRetentionPolicies(db sq.BaseRunner, now, globalPolicyEndTime, limit int64) (int64, error) {
-
 	deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id"}
 	// deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id", "boards": "id", "boards_history": "id"}
 	// deleteTables := map[string]string{"blocks": "board_id", "blocks_history": "board_id", "boards": "id", "boards_history": "id"}
@@ -801,7 +800,7 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 		if len(deleteIds) > 0 {
 			mlog.Debug(strconv.FormatInt(int64(len(deleteIds)), 10))
 			for table, field := range deleteTables {
-				affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds, limit)
+				affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds)
 				if err != nil {
 					return int64(totalAffected), err
 				}
@@ -811,14 +810,14 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 		}
 	} else {
 		// if global and team policy supported
-		deleteIds, err := s.teamPolicySubQuery(builder, globalRetentionDate, nowTime, limit)
+		deleteIds, err := s.teamPolicySubQuery(builder, nowTime, limit)
 		if err != nil {
 			return 0, err
 		}
 		for table, field := range deleteTables {
-			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds, limit)
-			if err != nil {
-				return int64(totalAffected), err
+			affected, err2 := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds)
+			if err2 != nil {
+				return int64(totalAffected), err2
 			}
 			totalAffected += int(affected)
 		}
@@ -828,7 +827,7 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 			return 0, err
 		}
 		for table, field := range deleteTables {
-			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds, limit)
+			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds)
 			if err != nil {
 				return int64(totalAffected), err
 			}
@@ -839,7 +838,6 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 }
 
 func (s *SQLStore) globalWithTeamPolicySubQuery(baseBuilder sq.SelectBuilder, globalPolicyEndTime int64, limit int64) ([]string, error) {
-
 	rows, err := baseBuilder.
 		LeftJoin("RetentionPoliciesTeams ON Boards.TeamId = RetentionPoliciesTeams.TeamId").
 		LeftJoin("RetentionPolicies ON RetentionPoliciesChannels.PolicyId = RetentionPolicies.Id").
@@ -857,7 +855,7 @@ func (s *SQLStore) globalWithTeamPolicySubQuery(baseBuilder sq.SelectBuilder, gl
 	return idsFromRows(rows)
 }
 
-func (s *SQLStore) teamPolicySubQuery(baseBuilder sq.SelectBuilder, globalPolicyEndTime int64, nowTime int64, limit int64) ([]string, error) {
+func (s *SQLStore) teamPolicySubQuery(baseBuilder sq.SelectBuilder, nowTime int64, limit int64) ([]string, error) {
 	const millisecondsInADay = 24 * 60 * 60 * 1000
 	nowStr := strconv.FormatInt(nowTime, 10)
 	fallsUnderGranularPolicy := sq.And{
@@ -883,14 +881,13 @@ func (s *SQLStore) teamPolicySubQuery(baseBuilder sq.SelectBuilder, globalPolicy
 }
 
 func (s *SQLStore) globalOnlySubQuery(baseBuilder sq.SelectBuilder, globalPolicyEndTime int64, limit int64) ([]string, error) {
-
 	query := baseBuilder.
 		Where(sq.Lt{"subQuery.maxDate": globalPolicyEndTime}).
 		Limit(uint64(limit))
 
-	s1, args, _ := query.ToSql()
-	mlog.Debug(s1)
-	mlog.Debug(fmt.Sprintf("&v", args))
+	// s1, args, _ := query.ToSql()
+	// mlog.Debug(s1)
+	// mlog.Debug(fmt.Sprintf("&v", args))
 
 	rows, err := query.Query()
 	if err != nil {
@@ -904,17 +901,17 @@ func (s *SQLStore) globalOnlySubQuery(baseBuilder sq.SelectBuilder, globalPolicy
 func idsFromRows(rows *sql.Rows) ([]string, error) {
 	deleteIds := []string{}
 	for rows.Next() {
-		var rootId string
+		var rootID string
 		// var boardId string
 		err := rows.Scan(
-			&rootId,
+			&rootID,
 			// &boardId,
 		)
 		if err != nil {
 			return nil, err
 		}
 		// deleteIds = append(deleteIds, boardId)
-		deleteIds = append(deleteIds, rootId)
+		deleteIds = append(deleteIds, rootID)
 	}
 	return deleteIds, nil
 }
@@ -926,7 +923,6 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 	table string,
 	deleteColumn string,
 	deleteIds []string,
-	limit int64,
 ) (int64, error) {
 	whereClause := deleteColumn + ` IN ('` + strings.Join(deleteIds, `','`) + `')`
 	deleteQuery := s.getQueryBuilder(db).
@@ -945,6 +941,6 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 	if err != nil {
 		return 0, errors.Wrap(err, "failed to get rows affected for "+table)
 	}
-	mlog.Debug("Rows Affected" + strconv.FormatInt(int64(rowsAffected), 10))
+	mlog.Debug("Rows Affected" + strconv.FormatInt(rowsAffected, 10))
 	return rowsAffected, nil
 }

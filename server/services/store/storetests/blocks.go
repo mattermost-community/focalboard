@@ -779,7 +779,6 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 }
 
 func testRunDataRetention(t *testing.T, store store.Store, container store.Container) {
-
 	blocks, errBlocks := store.GetAllBlocks(container)
 	require.NoError(t, errBlocks)
 	initialCount := len(blocks)

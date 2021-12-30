@@ -49,8 +49,8 @@ type Configuration struct {
 	LocalModeSocketLocation  string            `json:"localModeSocketLocation" mapstructure:"localModeSocketLocation"`
 	EnablePublicSharedBoards bool              `json:"enablePublicSharedBoards" mapstructure:"enablePublicSharedBoards"`
 	FeatureFlags             map[string]string `json:"featureFlags" mapstructure:"featureFlags"`
-	EnableDataRetention      bool              `json:"enable_data_retention", mapstructure:enable_data_retention"`
-	DataRetentionDays        *int              `json:"data_retention_days", mapstructure:data_retention_days"`
+	EnableDataRetention      bool              `json:"enable_data_retention" mapstructure:"enable_data_retention"`
+	DataRetentionDays        *int              `json:"data_retention_days" mapstructure:"data_retention_days"`
 
 	AuthMode string `json:"authMode" mapstructure:"authMode"`
 
