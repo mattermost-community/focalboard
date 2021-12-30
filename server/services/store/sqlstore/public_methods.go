@@ -337,12 +337,12 @@ func (s *SQLStore) RefreshSession(session *model.Session) error {
 
 }
 
-func (s *SQLStore) RunDataRetention(globalRetentionDate int64, nowTime int64, batchSize int64) (int64, error) {
+func (s *SQLStore) RunDataRetention(nowTime int64, batchSize int64) (int64, error) {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return 0, txErr
 	}
-	result, err := s.runDataRetention(tx, globalRetentionDate, nowTime, batchSize)
+	result, err := s.runDataRetention(tx, nowTime, batchSize)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "RunDataRetention"))

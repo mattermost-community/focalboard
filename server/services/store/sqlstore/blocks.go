@@ -760,9 +760,6 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 	return nil
 }
 
-// PermanentDeleteBatchForRetentionPolicies deletes a batch of records which are affected by
-// the global or a granular retention policy.
-// See `genericPermanentDeleteBatchForRetentionPolicies` for details.
 func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, nowTime int64, limit int64) (int64, error) {
 	// func (s *SQLStore) PermanentDeleteBatchForRetentionPolicies(db sq.BaseRunner, now, globalPolicyEndTime, limit int64) (int64, error) {
 	deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id"}
