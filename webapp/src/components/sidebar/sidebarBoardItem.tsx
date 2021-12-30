@@ -30,6 +30,8 @@ import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 
 import {getCurrentTeam} from '../../store/teams'
 
+import {UserSettings} from '../../userSettings'
+
 import DeleteBoardDialog from './deleteBoardDialog'
 
 type Props = {
@@ -49,7 +51,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const [deleteBoardOpen, setDeleteBoardOpen] = useState<boolean>(false)
     const [deleteBoard, setDeleteBoard] = useState<Board>()
 
-    const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, workspaceId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
     const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
     const me = useAppSelector<IUser|null>(getMe)
@@ -66,6 +68,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
             params.cardId = undefined
         }
         const newPath = generatePath(match.path, params)
+        console.log(`showBoard: ${newPath}`)
         history.push(newPath)
         props.hideSidebar()
     }, [match, history])

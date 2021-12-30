@@ -76,28 +76,25 @@ const BoardPage = (props: Props): JSX.Element => {
     console.log('########################################')
 
     useEffect(() => {
-        if (!match.params.boardId) {
-            return
+        if (match.params.boardId) {
+            // set the active board if we're able to pick one
+            dispatch(setCurrentBoard(match.params.boardId))
+
+            // and fetch its data
+            dispatch(loadBoardData(match.params.boardId))
+            console.log(`Setting last board: teamID: ${teamId} boardID: ${match.params.boardId}`)
+
+            // and set it as most recently viewed board
+            UserSettings.setLastBoardID(teamId, match.params.boardId)
         }
 
-        // set the active board if we're able to pick one
-        dispatch(setCurrentBoard(match.params.boardId))
+        if (match.params.viewId) {
+            dispatch(setCurrentView(match.params.viewId))
 
-        // and fetch its data
-        dispatch(loadBoardData(match.params.boardId))
-
-        // and set it as most recently viewed board
-        UserSettings.setLastBoardID(teamId, match.params.boardId)
-    }, [match.params.boardId])
-
-    useEffect(() => {
-        if (!match.params.viewId) {
-            return
+            console.log(`Setting last view: boardId: ${match.params.boardId} viewId: ${match.params.viewId}`)
+            UserSettings.setLastViewId(match.params.boardId, match.params.viewId)
         }
-
-        dispatch(setCurrentView(match.params.viewId))
-        UserSettings.setLastViewId(match.params.boardId, match.params.viewId)
-    }, [match.params.viewId])
+    }, [match.params.boardId, match.params.viewId])
 
     useEffect(() => {
         console.log(`Board exists: ${Boolean(board)}`)
@@ -139,7 +136,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
         // when a view isn't open,
         // but the data is available, try opening a view
-        if (!match.params.viewId && board && boardViews && boardViews.length > 0) {
+        if (!match.params.viewId && board && board.id === match.params.boardId && boardViews && boardViews.length > 0) {
             // most recent view gets the first preference
             viewID = UserSettings.lastViewId[boardID]
             if (viewID) {
