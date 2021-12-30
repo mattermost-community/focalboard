@@ -5,7 +5,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 import {CommentBlock} from '../blocks/commentBlock'
 
-import {initialLoad, initialReadOnlyLoad} from './initialLoad'
+import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
 
 import {RootState} from './index'
 
@@ -32,7 +32,7 @@ const commentsSlice = createSlice({
                 }
             }
         })
-        builder.addCase(initialLoad.fulfilled, (state, action) => {
+        builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.comments = {}
             for (const block of action.payload.blocks) {
                 if (block.type === 'comment') {

@@ -236,8 +236,8 @@ class OctoClient {
         return this.getBlocksWithPath(path)
     }
 
-    async getAllBlocks(): Promise<Block[]> {
-        const boardID = UserSettings.lastBoardId[this.teamId]
+    async getAllBlocks(boardID: string): Promise<Block[]> {
+        console.log(`fetching blocks for team ${this.teamId} and board: ${boardID}`)
         const path = `/api/v1/boards/${boardID}/blocks?all=true`
         return this.getBlocksWithPath(path)
     }

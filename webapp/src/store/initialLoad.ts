@@ -16,12 +16,12 @@ const getUserWorkspaces = async ():Promise<UserWorkspace[]> => {
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
-        const [blocks, team, boards] = await Promise.all([
+        const [team, boards] = await Promise.all([
 
             // ToDo: get board members maybe?
             // ToDo: get user boards
             // ToDo: replace getallblocks with get board blocks? or directly when loading the board?
-            client.getAllBlocks(),
+            // client.getAllBlocks(),
 
             // ToDo: probably add memberships here
             client.getTeam(),
@@ -34,7 +34,6 @@ export const initialLoad = createAsyncThunk(
         //     throw new Error('Workspace undefined')
         // }
         return {
-            blocks,
             team,
             boards,
 
@@ -48,5 +47,19 @@ export const initialReadOnlyLoad = createAsyncThunk(
     async (boardId: string) => {
         const blocks = client.getSubtree(boardId, 3)
         return blocks
+    },
+)
+
+export const loadBoardData = createAsyncThunk(
+    'loadBoardData',
+    async (boardID: string) => {
+        console.log('boardDataLoad called')
+        const [blocks] = await Promise.all([
+            client.getAllBlocks(boardID),
+        ])
+
+        return {
+            blocks,
+        }
     },
 )

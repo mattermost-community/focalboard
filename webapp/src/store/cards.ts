@@ -11,7 +11,7 @@ import {Utils} from '../utils'
 import {Constants} from '../constants'
 import {CardFilter} from '../cardFilter'
 
-import {initialLoad, initialReadOnlyLoad} from './initialLoad'
+import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
 import {getCurrentBoard} from './boards'
 import {getWorkspaceUsers} from './users'
 import {getCurrentView} from './views'
@@ -67,7 +67,7 @@ const cardsSlice = createSlice({
                 }
             }
         })
-        builder.addCase(initialLoad.fulfilled, (state, action) => {
+        builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.cards = {}
             state.templates = {}
             for (const block of action.payload.blocks) {

@@ -6,7 +6,7 @@ import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 import {ContentBlock} from '../blocks/contentBlock'
 
 import {getCards, getTemplates} from './cards'
-import {initialLoad, initialReadOnlyLoad} from './initialLoad'
+import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
 
 import {RootState} from './index'
 
@@ -33,7 +33,7 @@ const contentsSlice = createSlice({
                 }
             }
         })
-        builder.addCase(initialLoad.fulfilled, (state, action) => {
+        builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.contents = {}
             for (const block of action.payload.blocks) {
                 if (block.type !== 'board' && block.type !== 'view' && block.type !== 'comment') {

@@ -26,7 +26,7 @@ import {updateViews, getCurrentView, setCurrent as setCurrentView, getCurrentBoa
 import {updateCards} from '../store/cards'
 import {updateContents} from '../store/contents'
 import {updateComments} from '../store/comments'
-import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
+import {boardDataLoad, initialLoad, initialReadOnlyLoad, loadBoardData} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {UserSettings} from '../userSettings'
 
@@ -62,11 +62,6 @@ const BoardPage = (props: Props): JSX.Element => {
 
     const categories = useAppSelector(getSidebarCategories)
 
-    console.log(`Board: ${board && board.id}`)
-    console.log(`Views: ${boardViews}`)
-    console.log(`Categories: ${categories && categories.length}`)
-    console.log(`Categories: ${categories.length > 0 && categories[0].name}`)
-
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
         teamId = match.params.teamId || teamId
@@ -74,114 +69,166 @@ const BoardPage = (props: Props): JSX.Element => {
         octoClient.teamId = teamId
     }, [match.params.teamId])
 
+    console.log('########################################')
+    console.log(teamId)
+    console.log(board)
+    console.log(boardViews)
+    console.log('########################################')
+
     useEffect(() => {
-        // don't do anything if-
-        // 1. the URL already has a team ID, or
-        // 2. the team ID is unavailable.
-        // This also ensures once the team id is
-        // set in the URL, we don't update the history anymore.
-        if (props.readonly || (match.params.teamId && match.params.boardId && match.params.viewId)) {
+        if (!match.params.boardId) {
             return
         }
 
-        // TODO fetch all teams and send user to the first team
-        const teamID = match.params.teamId || UserSettings.lastTeamId || undefined
-        let boardID
-        if (teamID) {
-            const firstBoard = categories.length > 0 && categories[0].blockIDs.length > 0 ? categories[0].blockIDs[0] : undefined
-            boardID = match.params.boardId || UserSettings.lastBoardId[teamID] || firstBoard
+        // set the active board if we're able to pick one
+        dispatch(setCurrentBoard(match.params.boardId))
+
+        // and fetch its data
+        dispatch(loadBoardData(match.params.boardId))
+
+        // and set it as most recently viewed board
+        UserSettings.setLastBoardID(teamId, match.params.boardId)
+    }, [match.params.boardId])
+
+    useEffect(() => {
+        if (!match.params.viewId) {
+            return
         }
 
-        let viewID
-        if (boardID) {
-            const firstView = boardViews.length > 0 ? boardViews[0].id : undefined
-            viewID = match.params.viewId || UserSettings.lastViewId[boardID] || firstView
-        }
+        dispatch(setCurrentView(match.params.viewId))
+        UserSettings.setLastViewId(match.params.boardId, match.params.viewId)
+    }, [match.params.viewId])
 
-        if (teamID) {
-            if (boardID) {
-                UserSettings.setLastBoardID(teamID, boardID)
+    useEffect(() => {
+        console.log(`Board exists: ${Boolean(board)}`)
 
-                if (viewID) {
-                    UserSettings.setLastViewId(boardID, viewID)
+        let boardID = match.params.boardId
+        if (!match.params.boardId) {
+            // first preference is for last visited board
+            boardID = UserSettings.lastBoardId[teamId]
+
+            // if last visited board is unavailable, use the first board in categories list
+            if (!boardID && categories.length > 0) {
+                // a category may exist without any boards.
+                // find the first category with a board and pick it's first board
+                const categoryWithBoards = categories.find((category) => category.blockIDs.length > 0)
+
+                // there may even be no boards at all
+                if (categoryWithBoards) {
+                    boardID = categoryWithBoards.blockIDs[0]
                 }
             }
-        }
 
-        const newPath = Utils.buildOriginalPath(teamID, boardID, viewID, match.params.cardId)
-
-        console.log(`redirecting to ${newPath}`)
-        console.log(boardViews)
-
-        history.replace(`/team/${newPath}`)
-    }, [teamId, match.params.boardId, match.params.viewId, match.params.cardId])
-
-    useEffect(() => {
-        // Backward compatibility: This can be removed in the future, this is for
-        // transform the old query params into routes
-        const queryBoardId = queryString.get('id')
-        const params = {...match.params}
-        let needsRedirect = false
-        if (queryBoardId) {
-            params.boardId = queryBoardId
-            needsRedirect = true
-        }
-        const queryViewId = queryString.get('v')
-        if (queryViewId) {
-            params.viewId = queryViewId
-            needsRedirect = true
-        }
-        const queryCardId = queryString.get('c')
-        if (queryCardId) {
-            params.cardId = queryCardId
-            needsRedirect = true
-        }
-        if (needsRedirect) {
-            const newPath = generatePath(match.path, params)
-            history.replace(newPath)
-            return
-        }
-
-        // Backward compatibility end
-        const boardId = match.params.boardId
-        const viewId = match.params.viewId === '0' ? '' : match.params.viewId
-
-        // TODO use actual team ID here
-        const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
-
-        if (!boardId) {
-            // Load last viewed boardView
-            const lastBoardId = UserSettings.lastBoardId[teamID] || undefined
-            const lastViewId = lastBoardId ? UserSettings.lastViewId[lastBoardId] : undefined
-            if (lastBoardId) {
-                let newPath = generatePath(match.path, {...match.params, boardId: lastBoardId})
-                if (lastViewId) {
-                    newPath = generatePath(match.path, {...match.params, boardId: lastBoardId, viewId: lastViewId})
-                }
+            if (boardID) {
+                const newPath = generatePath(match.path, {...match.params, boardId: boardID, viewID: undefined})
+                console.log(`newPath AAA: ${newPath}`)
                 history.replace(newPath)
+
+                // return from here because the loadBoardData() call
+                // will fetch the data to be used below. We'll
+                // use it in the next render cycle.
                 return
             }
-            return
         }
 
-        Utils.log(`attachToBoard: ${boardId}`)
+        let viewID = match.params.viewId
 
-        // Ensure boardViews is for our boardId before redirecting
-        const isCorrectBoardView = boardViews.length > 0 && boardViews[0].parentId === boardId
-        if (!viewId && isCorrectBoardView) {
-            const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
-            history.replace(newPath)
-            return
+        console.log('!!!!!!!!')
+        console.log(board)
+        console.log('!!!!!!!!')
+
+        // when a view isn't open,
+        // but the data is available, try opening a view
+        if (!match.params.viewId && board && boardViews && boardViews.length > 0) {
+            // most recent view gets the first preference
+            viewID = UserSettings.lastViewId[boardID]
+            if (viewID) {
+                UserSettings.setLastViewId(boardID, viewID)
+                dispatch(setCurrentView(viewID))
+                return
+            }
+
+            // if most recent view is unavailable, pick the first view
+            if (boardViews.length > 0) {
+                viewID = boardViews[0].id
+                UserSettings.setLastViewId(boardID, viewID)
+                dispatch(setCurrentView(viewID))
+            }
+
+            if (viewID) {
+                const newPath = generatePath(match.path, {...match.params, viewId: viewID})
+                console.log(`newPath BBB: ${newPath}`)
+                history.replace(newPath)
+            }
         }
+    }, [match.params.boardId, match.params.viewId, categories.length, boardViews.length, board])
 
-        UserSettings.setLastBoardID(teamId, boardId || '')
-        if (boardId !== '') {
-            UserSettings.setLastViewId(boardId, viewId)
-        }
-
-        dispatch(setCurrentBoard(boardId || ''))
-        dispatch(setCurrentView(viewId || ''))
-    }, [match.params.boardId, match.params.viewId, boardViews])
+    // useEffect(() => {
+    //     // Backward compatibility: This can be removed in the future, this is for
+    //     // transform the old query params into routes
+    //     const queryBoardId = queryString.get('id')
+    //     const params = {...match.params}
+    //     let needsRedirect = false
+    //     if (queryBoardId) {
+    //         params.boardId = queryBoardId
+    //         needsRedirect = true
+    //     }
+    //     const queryViewId = queryString.get('v')
+    //     if (queryViewId) {
+    //         params.viewId = queryViewId
+    //         needsRedirect = true
+    //     }
+    //     const queryCardId = queryString.get('c')
+    //     if (queryCardId) {
+    //         params.cardId = queryCardId
+    //         needsRedirect = true
+    //     }
+    //     if (needsRedirect) {
+    //         const newPath = generatePath(match.path, params)
+    //         history.replace(newPath)
+    //         return
+    //     }
+    //
+    //     // Backward compatibility end
+    //     const boardId = match.params.boardId
+    //     const viewId = match.params.viewId === '0' ? '' : match.params.viewId
+    //
+    //     // TODO use actual team ID here
+    //     const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
+    //
+    //     if (!boardId) {
+    //         // Load last viewed boardView
+    //         const lastBoardId = UserSettings.lastBoardId[teamID] || undefined
+    //         const lastViewId = lastBoardId ? UserSettings.lastViewId[lastBoardId] : undefined
+    //         if (lastBoardId) {
+    //             let newPath = generatePath(match.path, {...match.params, boardId: lastBoardId})
+    //             if (lastViewId) {
+    //                 newPath = generatePath(match.path, {...match.params, boardId: lastBoardId, viewId: lastViewId})
+    //             }
+    //             history.replace(newPath)
+    //             return
+    //         }
+    //         return
+    //     }
+    //
+    //     Utils.log(`attachToBoard: ${boardId}`)
+    //
+    //     // Ensure boardViews is for our boardId before redirecting
+    //     const isCorrectBoardView = boardViews.length > 0 && boardViews[0].parentId === boardId
+    //     if (!viewId && isCorrectBoardView) {
+    //         const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
+    //         history.replace(newPath)
+    //         return
+    //     }
+    //
+    //     UserSettings.setLastBoardID(teamId, boardId || '')
+    //     if (boardId !== '') {
+    //         UserSettings.setLastViewId(boardId, viewId)
+    //     }
+    //
+    //     dispatch(setCurrentBoard(boardId || ''))
+    //     dispatch(setCurrentView(viewId || ''))
+    // }, [match.params.boardId, match.params.viewId, boardViews])
 
     useEffect(() => {
         Utils.setFavicon(board?.icon)

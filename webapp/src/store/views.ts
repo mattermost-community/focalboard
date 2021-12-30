@@ -5,7 +5,7 @@ import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {BoardView, createBoardView} from '../blocks/boardView'
 
-import {initialLoad, initialReadOnlyLoad} from './initialLoad'
+import {initialReadOnlyLoad, loadBoardData} from './initialLoad'
 import {getCurrentBoard} from './boards'
 
 import {RootState} from './index'
@@ -44,7 +44,7 @@ const viewsSlice = createSlice({
                 }
             }
         })
-        builder.addCase(initialLoad.fulfilled, (state, action) => {
+        builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.views = {}
             for (const block of action.payload.blocks) {
                 if (block.type === 'view') {
@@ -76,6 +76,7 @@ export const getCurrentBoardViews = createSelector(
     (state) => state.boards.current,
     getViews,
     (boardId, views) => {
+        console.log(`getCurrentBoardViews boardId: ${boardId} views: ${views.length}`)
         return Object.values(views).filter((v) => v.parentId === boardId).sort((a, b) => a.title.localeCompare(b.title)).map((v) => createBoardView(v))
     },
 )
