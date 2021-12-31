@@ -779,7 +779,7 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 
 	builder := s.getQueryBuilder(db).
 		// Select("subquery.root_id, subquery.board_id").
-		Select("subquery.root_id").
+		Select("root_id").
 		From("( " + subQuery + " ) As subquery")
 
 	totalAffected := 0
@@ -876,7 +876,7 @@ func (s *SQLStore) teamPolicySubQuery(baseBuilder sq.SelectBuilder, nowTime int6
 
 func (s *SQLStore) globalOnlySubQuery(baseBuilder sq.SelectBuilder, globalPolicyEndTime int64, limit int64) ([]string, error) {
 	query := baseBuilder.
-		Where(sq.Lt{"subQuery.maxDate": globalPolicyEndTime}).
+		Where(sq.Lt{"maxDate": globalPolicyEndTime}).
 		Limit(uint64(limit))
 
 	// s1, args, _ := query.ToSql()
