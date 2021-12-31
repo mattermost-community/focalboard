@@ -6,8 +6,6 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, Redirect, useHistory, useRouteMatch, useLocation} from 'react-router-dom'
 import {useHotkeys} from 'react-hotkeys-hook'
 
-import {first} from 'lodash'
-
 import {Block} from '../blocks/block'
 import {ContentBlock} from '../blocks/contentBlock'
 import {CommentBlock} from '../blocks/commentBlock'
@@ -26,7 +24,7 @@ import {updateViews, getCurrentView, setCurrent as setCurrentView, getCurrentBoa
 import {updateCards} from '../store/cards'
 import {updateContents} from '../store/contents'
 import {updateComments} from '../store/comments'
-import {boardDataLoad, initialLoad, initialReadOnlyLoad, loadBoardData} from '../store/initialLoad'
+import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {UserSettings} from '../userSettings'
 
@@ -69,12 +67,6 @@ const BoardPage = (props: Props): JSX.Element => {
         octoClient.teamId = teamId
     }, [match.params.teamId])
 
-    console.log('########################################')
-    console.log(teamId)
-    console.log(board)
-    console.log(boardViews)
-    console.log('########################################')
-
     useEffect(() => {
         if (match.params.boardId) {
             // set the active board if we're able to pick one
@@ -82,7 +74,6 @@ const BoardPage = (props: Props): JSX.Element => {
 
             // and fetch its data
             dispatch(loadBoardData(match.params.boardId))
-            console.log(`Setting last board: teamID: ${teamId} boardID: ${match.params.boardId}`)
 
             // and set it as most recently viewed board
             UserSettings.setLastBoardID(teamId, match.params.boardId)
@@ -90,15 +81,11 @@ const BoardPage = (props: Props): JSX.Element => {
 
         if (match.params.viewId) {
             dispatch(setCurrentView(match.params.viewId))
-
-            console.log(`Setting last view: boardId: ${match.params.boardId} viewId: ${match.params.viewId}`)
             UserSettings.setLastViewId(match.params.boardId, match.params.viewId)
         }
     }, [match.params.boardId, match.params.viewId])
 
     useEffect(() => {
-        console.log(`Board exists: ${Boolean(board)}`)
-
         let boardID = match.params.boardId
         if (!match.params.boardId) {
             // first preference is for last visited board
@@ -118,7 +105,6 @@ const BoardPage = (props: Props): JSX.Element => {
 
             if (boardID) {
                 const newPath = generatePath(match.path, {...match.params, boardId: boardID, viewID: undefined})
-                console.log(`newPath AAA: ${newPath}`)
                 history.replace(newPath)
 
                 // return from here because the loadBoardData() call
@@ -129,10 +115,6 @@ const BoardPage = (props: Props): JSX.Element => {
         }
 
         let viewID = match.params.viewId
-
-        console.log('!!!!!!!!')
-        console.log(board)
-        console.log('!!!!!!!!')
 
         // when a view isn't open,
         // but the data is available, try opening a view
@@ -151,7 +133,6 @@ const BoardPage = (props: Props): JSX.Element => {
 
             if (viewID) {
                 const newPath = generatePath(match.path, {...match.params, viewId: viewID})
-                console.log(`newPath BBB: ${newPath}`)
                 history.replace(newPath)
             }
         }
@@ -267,10 +248,7 @@ const BoardPage = (props: Props): JSX.Element => {
             subscribedToTeam = true
         }
 
-        const incrementalUpdate = (_: WSClient, boards: Board[], blocks: Block[]) => {
-            // only takes into account the entities that belong to the team or the user boards
-            const teamBoards = boards.filter((b: Board) => b.teamId === '0' || b.teamId === teamId)
-
+        const incrementalBlockUpdate = (_: WSClient, blocks: Block[]) => {
             // ToDo: update this
             // - create a selector to get user boards
             // - replace the teamId check of blocks by a "is in my boards" check
@@ -278,12 +256,17 @@ const BoardPage = (props: Props): JSX.Element => {
             const teamBlocks = blocks
 
             batch(() => {
-                dispatch(updateBoards(teamBoards.filter((b: Board) => b.deleteAt !== 0)))
                 dispatch(updateViews(teamBlocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
                 dispatch(updateCards(teamBlocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
                 dispatch(updateComments(teamBlocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
                 dispatch(updateContents(teamBlocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
             })
+        }
+
+        const incrementalBoardUpdate = (_: WSClient, boards: Board[]) => {
+            // only takes into account the entities that belong to the team or the user boards
+            const teamBoards = boards.filter((b: Board) => b.teamId === '0' || b.teamId === teamId)
+            dispatch(updateBoards(teamBoards.filter((b: Board) => b.deleteAt !== 0)))
         }
 
         let timeout: ReturnType<typeof setTimeout>
@@ -309,7 +292,8 @@ const BoardPage = (props: Props): JSX.Element => {
             }
         }
 
-        wsClient.addOnChange(incrementalUpdate, 'block')
+        wsClient.addOnChange(incrementalBlockUpdate, 'block')
+        wsClient.addOnChange(incrementalBoardUpdate, 'board')
         wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
         return () => {
@@ -319,7 +303,8 @@ const BoardPage = (props: Props): JSX.Element => {
             if (subscribedToTeam) {
                 wsClient.unsubscribeToTeam(match.params.teamId || '0')
             }
-            wsClient.removeOnChange(incrementalUpdate, 'block')
+            wsClient.removeOnChange(incrementalBlockUpdate, 'block')
+            wsClient.removeOnChange(incrementalBoardUpdate, 'board')
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
             wsClient.removeOnStateChange(updateWebsocketState)
         }

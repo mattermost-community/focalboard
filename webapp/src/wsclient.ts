@@ -21,6 +21,7 @@ type WSCommand = {
 export type WSMessage = {
     action?: string
     block?: Block
+    board?: Board
     category?: Category
     blockCategories?: BlockCategoryWebsocketData
     error?: string
@@ -49,13 +50,13 @@ export interface MMWebSocketClient {
     setCloseCallback(callback: (connectFailCount: number) => void): void
 }
 
-type OnChangeHandler = (client: WSClient, items: any[], boards: Board[], blocks: Block[]) => void
+type OnChangeHandler = (client: WSClient, items: any[]) => void
 type OnReconnectHandler = (client: WSClient) => void
 type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close') => void
 type OnErrorHandler = (client: WSClient, e: Event) => void
 type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => void
 
-export type ChangeHandlerType = 'block' | 'category' | 'blockCategories'
+export type ChangeHandlerType = 'block' | 'category' | 'blockCategories' | 'board'
 
 type UpdatedData = {
     Blocks: Block[]
@@ -68,7 +69,7 @@ type ChangeHandlers = {
     Block: OnChangeHandler[]
     Category: OnChangeHandler[]
     BlockCategory: OnChangeHandler[]
-    Board: []
+    Board: OnChangeHandler[]
 }
 
 class WSClient {
@@ -135,26 +136,46 @@ class WSClient {
     }
 
     addOnChange(handler: OnChangeHandler, type: ChangeHandlerType): void {
-        if (type === 'block') {
+        switch (type) {
+        case 'block':
             this.onChange.Block.push(handler)
-        } else if (type === 'category') {
+            break
+        case 'category':
             this.onChange.Category.push(handler)
-        } else if (type === 'blockCategories') {
+            break
+        case 'blockCategories':
             this.onChange.BlockCategory.push(handler)
+            break
+        case 'board':
+            this.onChange.Board.push(handler)
+            break
         }
     }
 
-    removeOnChange(handler: OnChangeHandler, type: ChangeHandlerType): void {
-        if (type === 'block') {
-            const index = this.onChange.Block.indexOf(handler)
-            if (index !== -1) {
-                this.onChange.Block.splice(index, 1)
-            }
-        } else if (type === 'category') {
-            const index = this.onChange.Category.indexOf(handler)
-            if (index !== -1) {
-                this.onChange.Category.splice(index, 1)
-            }
+    removeOnChange(needle: OnChangeHandler, type: ChangeHandlerType): void {
+        let haystack = []
+        switch (type) {
+        case 'block':
+            haystack = this.onChange.Block
+            break
+        case 'blockCategories':
+            haystack = this.onChange.BlockCategory
+            break
+        case 'board':
+            haystack = this.onChange.Board
+            break
+        case 'category':
+            haystack = this.onChange.Category
+            break
+        }
+
+        if (!haystack) {
+            return
+        }
+
+        const index = haystack.indexOf(needle)
+        if (index !== -1) {
+            haystack.splice(index, 1)
         }
     }
 
@@ -481,6 +502,9 @@ class WSClient {
         } else if (type === 'blockCategories') {
             this.updatedData.BlockCategories = this.updatedData.BlockCategories.filter((b) => b.blockID === (data as BlockCategoryWebsocketData).blockID)
             this.updatedData.BlockCategories.push(data as BlockCategoryWebsocketData)
+        } else if (type === 'board') {
+            this.updatedData.Boards = this.updatedData.Boards.filter((b) => b.id !== (data as Board).id)
+            this.updatedData.Boards.push(data as Board)
         }
 
         if (this.updateTimeout) {
@@ -493,22 +517,22 @@ class WSClient {
         }, this.notificationDelay)
     }
 
-    private queueUpdateBoardNotification(board: Board) {
-        this.updatedBoards = this.updatedBoards.filter((o) => o.id !== board.id) // Remove existing queued update
-        // ToDo: hydrate required?
-        // this.updatedBoards.push(OctoUtils.hydrateBoard(board))
-        this.updatedBoards.push(board)
-        if (this.updateTimeout) {
-            clearTimeout(this.updateTimeout)
-            this.updateTimeout = undefined
-        }
+    // private queueUpdateBoardNotification(board: Board) {
+    //     this.updatedBoards = this.updatedBoards.filter((o) => o.id !== board.id) // Remove existing queued update
+    //     // ToDo: hydrate required?
+    //     // this.updatedBoards.push(OctoUtils.hydrateBoard(board))
+    //     this.updatedBoards.push(board)
+    //     if (this.updateTimeout) {
+    //         clearTimeout(this.updateTimeout)
+    //         this.updateTimeout = undefined
+    //     }
+    //
+    //     this.updateTimeout = setTimeout(() => {
+    //         this.flushUpdateNotifications()
+    //     }, this.notificationDelay)
+    // }
 
-        this.updateTimeout = setTimeout(() => {
-            this.flushUpdateNotifications()
-        }, this.notificationDelay)
-    }
-
-    private flushUpdateNotifications() {
+    private logUpdateNotification() {
         for (const block of this.updatedData.Blocks) {
             Utils.log(`WSClient flush update block: ${block.id}`)
         }
@@ -524,6 +548,10 @@ class WSClient {
         for (const board of this.updatedData.Boards) {
             Utils.log(`WSClient flush update board: ${board.id}`)
         }
+    }
+
+    private flushUpdateNotifications() {
+        this.logUpdateNotification()
 
         for (const handler of this.onChange.Block) {
             handler(this, this.updatedData.Blocks)
@@ -545,8 +573,8 @@ class WSClient {
             Blocks: [],
             Categories: [],
             BlockCategories: [],
+            Boards: [],
         }
->>>>>>> sidebar-categories
     }
 
     close(): void {
@@ -559,7 +587,7 @@ class WSClient {
         // Use this sequence so the onclose method doesn't try to re-open
         const ws = this.ws
         this.ws = null
-        this.onChange = {Block: [], Category: [], BlockCategory: []}
+        this.onChange = {Block: [], Category: [], BlockCategory: [], Board: []}
         this.onReconnect = []
         this.onStateChange = []
         this.onError = []

@@ -105,7 +105,7 @@ CREATE TABLE {{.prefix}}boards_history (
 {{if .plugin}}
   {{if .postgres}}
   INSERT INTO {{.prefix}}boards (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->'description')::text,
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->>'description')::text,
                  B.fields->>'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
                  '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
                  B.update_at, B.delete_at
@@ -114,7 +114,7 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE B.type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->'description')::text,
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->>'description')::text,
                  B.fields->>'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
                  '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
                  B.update_at, B.delete_at
@@ -125,7 +125,7 @@ CREATE TABLE {{.prefix}}boards_history (
   {{end}}
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, B.fields->'$.description',
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, B.fields->>'$.description',
                  B.fields->>'$.icon', B.fields->'$.showDescription', B.fields->'$.isTemplate',
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
@@ -134,7 +134,7 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE B.type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, B.fields->'$.description',
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, B.fields->>'$.description',
                  B.fields->>'$.icon', B.fields->'$.showDescription', B.fields->'$.isTemplate',
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
@@ -146,7 +146,7 @@ CREATE TABLE {{.prefix}}boards_history (
 {{else}}
   {{if .postgres}}
   INSERT INTO {{.prefix}}boards (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->'description')::text,
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->>'description')::text,
                  fields->>'icon', (fields->'showDescription')::text::boolean, (fields->'isTemplate')::text::boolean,
                  '{}', fields->'cardProperties', fields->'columnCalculations', create_at,
                  update_at, delete_at
@@ -154,7 +154,7 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->'description')::text,
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->>'description')::text,
                  fields->>'icon', (fields->'showDescription')::text::boolean, (fields->'isTemplate')::text::boolean,
                  '{}', fields->'cardProperties', fields->'columnCalculations', create_at,
                  update_at, delete_at
@@ -164,7 +164,7 @@ CREATE TABLE {{.prefix}}boards_history (
   {{end}}
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, fields->'$.description',
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, fields->>'$.description',
                  fields->>'$.icon', fields->'$.showDescription', fields->'$.isTemplate',
                  '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
                  update_at, delete_at
@@ -172,7 +172,7 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, fields->'$.description',
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, fields->>'$.description',
                  fields->>'$.icon', fields->'$.showDescription', fields->'$.isTemplate',
                  '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
                  update_at, delete_at

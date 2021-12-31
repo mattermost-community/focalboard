@@ -527,7 +527,7 @@ func (pa *PluginAdapter) sendBoardMessage(teamID, boardID string, payload map[st
 }
 
 func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block model.Block) {
-	pa.api.LogInfo("BroadcastingBlockChange",
+	pa.api.LogDebug("BroadcastingBlockChange",
 		"teamID", teamID,
 		"boardID", block.BoardID,
 		"blockID", block.ID,
@@ -540,6 +540,41 @@ func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block model.Block) 
 	}
 
 	pa.sendBoardMessage(teamID, block.BoardID, utils.StructToMap(message))
+}
+
+func (pa *PluginAdapter) BroadcastCategoryChange(teamID, userID string, category model.Category) {
+	pa.api.LogDebug(
+		"BroadcastCategoryChange",
+		"userID", userID,
+		"teamID", teamID,
+		"categoryID", category.ID,
+	)
+
+	message := UpdateCategoryMessage{
+		Action:   websocketActionUpdateCategory,
+		TeamID:   teamID,
+		Category: &category,
+	}
+
+	pa.sendTeamMessage(teamID, utils.StructToMap(message))
+}
+
+func (pa *PluginAdapter) BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData) {
+	pa.api.LogDebug(
+		"BroadcastCategoryBlockChange",
+		"userID", userID,
+		"teamID", teamID,
+		"categoryID", blockCategory.CategoryID,
+		"blockID", blockCategory.BlockID,
+	)
+
+	message := UpdateCategoryMessage{
+		Action:          websocketActionUpdateCategoryBlock,
+		TeamID:          teamID,
+		BlockCategories: &blockCategory,
+	}
+
+	pa.sendTeamMessage(teamID, utils.StructToMap(message))
 }
 
 func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {
