@@ -777,7 +777,6 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 }
 
 func testRunDataRetention(t *testing.T, store store.Store, container store.Container) {
-
 	validBlock := model.Block{
 		ID:         "id-test",
 		RootID:     "id-test",
