@@ -1,8 +1,6 @@
 package storetests
 
 import (
-	"fmt"
-	"strconv"
 	"testing"
 	"time"
 
@@ -20,7 +18,7 @@ const (
 
 func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	container := store.Container{
-		WorkspaceID: "0",
+		WorkspaceID: "abcde",
 	}
 
 	t.Run("InsertBlock", func(t *testing.T) {
@@ -779,21 +777,43 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 }
 
 func testRunDataRetention(t *testing.T, store store.Store, container store.Container) {
-	blocks, errBlocks := store.GetAllBlocks(container)
-	require.NoError(t, errBlocks)
+
+	validBlock := model.Block{
+		ID:         "id-test",
+		RootID:     "id-test",
+		ModifiedBy: "user-id-1",
+	}
+
+	validBlock2 := model.Block{
+		ID:         "id-test2",
+		RootID:     "id-test",
+		ModifiedBy: "user-id-1",
+	}
+
+	newBlocks := []model.Block{validBlock, validBlock2}
+
+	err := store.InsertBlocks(container, newBlocks, "user-id-1")
+	require.NoError(t, err)
+
+	blocks, err := store.GetAllBlocks(container)
+	require.NoError(t, err)
+	require.Len(t, blocks, len(newBlocks))
 	initialCount := len(blocks)
 
-	deletions, err := store.RunDataRetention(time.Now().UnixNano()+86800, time.Now().UnixNano(), 10)
-	require.NoError(t, err)
-	require.Equal(t, 0, deletions)
+	t.Run("test no deletions", func(t *testing.T) {
+		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(-time.Hour*1)), time.Now().UnixNano(), 10)
+		require.NoError(t, err)
+		require.Equal(t, int64(0), deletions)
+	})
 
-	deletions, err = store.RunDataRetention(time.Now().UnixNano(), time.Now().UnixNano(), 10)
-	require.NoError(t, err)
-	fmt.Println("deletions " + strconv.FormatInt(deletions, 10))
-	require.True(t, deletions > int64(initialCount))
+	t.Run("test all deletions", func(t *testing.T) {
+		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(time.Hour*1)), time.Now().UnixNano(), 10)
+		require.NoError(t, err)
+		require.True(t, deletions > int64(initialCount))
 
-	// expect all blocks to be deleted.
-	blocks, errBlocks = store.GetAllBlocks(container)
-	require.NoError(t, errBlocks)
-	require.Equal(t, 0, len(blocks))
+		// expect all blocks to be deleted.
+		blocks, errBlocks := store.GetAllBlocks(container)
+		require.NoError(t, errBlocks)
+		require.Equal(t, 0, len(blocks))
+	})
 }

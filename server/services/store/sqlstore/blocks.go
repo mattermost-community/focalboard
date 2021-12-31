@@ -881,7 +881,7 @@ func (s *SQLStore) globalOnlySubQuery(baseBuilder sq.SelectBuilder, globalPolicy
 
 	// s1, args, _ := query.ToSql()
 	// mlog.Debug(s1)
-	// mlog.Debug(fmt.Sprintf("&v", args))
+	// mlog.Debug(fmt.Sprint("&v", args))
 
 	rows, err := query.Query()
 	if err != nil {
