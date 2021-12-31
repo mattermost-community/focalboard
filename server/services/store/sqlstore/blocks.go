@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/pkg/errors"
@@ -761,12 +762,10 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 }
 
 func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, nowTime int64, limit int64) (int64, error) {
-	// func (s *SQLStore) PermanentDeleteBatchForRetentionPolicies(db sq.BaseRunner, now, globalPolicyEndTime, limit int64) (int64, error) {
 	deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id"}
 	// deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id", "boards": "id", "boards_history": "id"}
 	// deleteTables := map[string]string{"blocks": "board_id", "blocks_history": "board_id", "boards": "id", "boards_history": "id"}
 
-	// templateWSId := "0"
 	subBuilder := s.getQueryBuilder(db).
 		// Select("root_id, board_id, MAX(update_at) AS maxDate").
 		Select("root_id, MAX(update_at) AS maxDate").
@@ -801,6 +800,7 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 				totalAffected += int(affected)
 			}
 		}
+		mlog.Info("Boards Data Retention - Global Retention Date - " + time.Unix(globalRetentionDate/1000, 0).String() + "( " + strconv.FormatInt(globalRetentionDate, 10) + ")")
 		mlog.Info("Boards Data Retention - TotalAffected " + strconv.FormatInt(int64(totalAffected), 10))
 	} else {
 		// if global and team policy supported
