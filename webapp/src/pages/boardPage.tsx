@@ -142,11 +142,8 @@ const BoardPage = (props: Props): JSX.Element => {
             if (viewID) {
                 UserSettings.setLastViewId(boardID, viewID)
                 dispatch(setCurrentView(viewID))
-                return
-            }
-
-            // if most recent view is unavailable, pick the first view
-            if (boardViews.length > 0) {
+            } else if (boardViews.length > 0) {
+                // if most recent view is unavailable, pick the first view
                 viewID = boardViews[0].id
                 UserSettings.setLastViewId(boardID, viewID)
                 dispatch(setCurrentView(viewID))
