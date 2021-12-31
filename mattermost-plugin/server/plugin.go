@@ -505,10 +505,8 @@ func isBoardsLink(link string) bool {
 func (p *Plugin) RunDataRetention(nowTime, batchSize int64) (int64, error) {
 	if p.server.Config().EnableDataRetention {
 		boardsRetentionDays := p.server.Config().DataRetentionDays
-		if boardsRetentionDays != nil {
-			endTimeBoards := convertDaysToCutoff(*boardsRetentionDays, time.Unix(nowTime/1000, 0))
-			return p.server.Store().RunDataRetention(endTimeBoards, nowTime, batchSize)
-		}
+		endTimeBoards := convertDaysToCutoff(boardsRetentionDays, time.Unix(nowTime/1000, 0))
+		return p.server.Store().RunDataRetention(endTimeBoards, nowTime, batchSize)
 	}
 	return 0, nil
 }
