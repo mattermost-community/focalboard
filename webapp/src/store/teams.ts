@@ -9,7 +9,7 @@ import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
 
-interface Team {
+export interface Team {
     id: string
     title: string
     signupToken: string

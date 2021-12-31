@@ -457,7 +457,8 @@ func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*mode
 
 // searchBoardsForUserAndTeam returns all boards that match with the
 // term that are either private and which the user is a member of, or
-// they're open, regardless of the user membership
+// they're open, regardless of the user membership.
+// Search is case-insensitive
 func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, teamID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
@@ -473,8 +474,23 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 		})
 
 	if term != "" {
-		query = query.Where("b.title LIKE ?", fmt.Sprint("%", term, "%"))
+		// break search query into space separated words
+		// and search for each word.
+		// This should later be upgraded to industrial-strength
+		// work tokenizer, that uses much more than space
+		// to break words.
+
+		conditions := sq.Or{}
+
+		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
+			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+		}
+
+		query = query.Where(conditions)
 	}
+
+	q, _, _ := query.ToSql()
+	fmt.Println(q)
 
 	rows, err := query.Query()
 	if err != nil {

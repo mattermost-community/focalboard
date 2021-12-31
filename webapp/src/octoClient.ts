@@ -9,7 +9,7 @@ import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
 import {Category, CategoryBlocks} from './store/sidebar'
-import {Team} from './store/team'
+import {Team} from './store/teams'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -237,7 +237,6 @@ class OctoClient {
     }
 
     async getAllBlocks(boardID: string): Promise<Block[]> {
-        console.log(`fetching blocks for team ${this.teamId} and board: ${boardID}`)
         const path = `/api/v1/boards/${boardID}/blocks?all=true`
         return this.getBlocksWithPath(path)
     }
@@ -322,8 +321,7 @@ class OctoClient {
         if (response.status !== 200) {
             return undefined
         }
-        const sharing = (await this.getJson(response, undefined)) as ISharing
-        return sharing
+        return this.getJson(response, undefined)
     }
 
     async setSharing(sharing: ISharing): Promise<boolean> {
@@ -424,14 +422,14 @@ class OctoClient {
         return URL.createObjectURL(blob)
     }
 
-    async getTeam(): Promise<Team> {
+    async getTeam(): Promise<Team | null> {
         const path = this.teamPath()
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
-            return []
+            return null
         }
 
-        return (await this.getJson(response, null)) as Team
+        return this.getJson(response, null)
     }
 
     async getTeams(): Promise<Array<Team>> {
@@ -557,6 +555,20 @@ class OctoClient {
             headers: this.headers(),
             body,
         })
+    }
+
+    async search(teamID: string, query: string): Promise<Array<Board>> {
+        const url = `${this.teamPath()}/boards/search?q=${encodeURIComponent(query)}`
+        const response = await fetch(this.getBaseURL() + url, {
+            method: 'GET',
+            headers: this.headers(),
+        })
+
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as Array<Board>
     }
 }
 

@@ -11,6 +11,9 @@ import octoClient from '../../octoClient'
 import SearchDialog from '../searchDialog/searchDialog'
 import Globe from '../../widgets/icons/globe'
 import LockOutline from '../../widgets/icons/lockOutline'
+import {useAppSelector} from '../../store/hooks'
+import {getCurrentTeam} from '../../store/teams'
+import {BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
 
 type Props = {
     onClose: () => void
@@ -18,6 +21,7 @@ type Props = {
 
 const BoardSwitcherDialog = (props: Props): JSX.Element => {
     const intl = useIntl()
+    const team = useAppSelector(getCurrentTeam)
     const title = intl.formatMessage({id: 'FindBoardsDialog.Title', defaultMessage: 'Find Boards'})
     const subTitle = intl.formatMessage(
         {
@@ -39,21 +43,39 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
     }
 
     const searchHandler = async (query: string): Promise<Array<ReactNode>> => {
-        if (query === 'empty') {
+        // if (query === 'empty') {
+        //     return []
+        // }
+        //
+        // const blocks = (await octoClient.getAllBlocks()).filter((block) => block.type === 'board' && !block.fields.isTemplate)
+        // const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
+        // return blocks.map((block, i) => (
+        //     <div
+        //         key={block.id}
+        //         className='blockSearchResult'
+        //         onClick={() => showBoard(block.id)}
+        //     >
+        //         {/*TODO decide icon from board is public or private*/}
+        //         {i % 2 === 0 ? <Globe/> : <LockOutline/>}
+        //         <span>{block.title || untitledBoardTitle}</span>
+        //     </div>
+        // ))
+
+        if (query.trim().length === 0 || !team) {
             return []
         }
 
-        const blocks = (await octoClient.getAllBlocks()).filter((block) => block.type === 'board' && !block.fields.isTemplate)
+        const items = await octoClient.search(team.id, query)
         const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
-        return blocks.map((block, i) => (
+        return items.map((item) => (
             <div
-                key={block.id}
+                key={item.id}
                 className='blockSearchResult'
-                onClick={() => showBoard(block.id)}
+                onClick={() => showBoard(item.id)}
             >
-                {/*TODO decide icon from board is public or private*/}
-                {i % 2 === 0 ? <Globe/> : <LockOutline/>}
-                <span>{block.title || untitledBoardTitle}</span>
+                {item.type === BoardTypeOpen && <Globe/>}
+                {item.type === BoardTypePrivate && <LockOutline/>}
+                <span>{item.title || untitledBoardTitle}</span>
             </div>
         ))
     }

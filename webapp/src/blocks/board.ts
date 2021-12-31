@@ -5,15 +5,13 @@ import {Utils, IDType} from '../utils'
 import {Block, createBlock} from './block'
 import {Card} from './card'
 
-
-
-
-
 // ----------------------------------------------------------------
 // -         NEW
 // ----------------------------------------------------------------
 
-const boardTypes = ['O', 'P']
+const BoardTypeOpen = 'O'
+const BoardTypePrivate = 'P'
+const boardTypes = [BoardTypeOpen, BoardTypePrivate]
 type BoardTypes = typeof boardTypes[number]
 
 type Board = {
@@ -49,8 +47,6 @@ type BoardMember = {
 }
 
 // ----------------------------------------------------------------
-
-
 
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
 
@@ -133,4 +129,15 @@ type BoardGroup = {
     cards: Card[]
 }
 
-export {Board, BoardMember, PropertyType, IPropertyOption, IPropertyTemplate, BoardGroup, createBoard}
+export {
+    Board,
+    BoardMember,
+    PropertyType,
+    IPropertyOption,
+    IPropertyTemplate,
+    BoardGroup,
+    createBoard,
+    BoardTypes,
+    BoardTypeOpen,
+    BoardTypePrivate,
+}
