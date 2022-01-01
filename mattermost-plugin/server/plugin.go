@@ -229,8 +229,8 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		FeatureFlags:             featureFlags,
 		NotifyFreqCardSeconds:    getPluginSettingInt(mmconfig, notifyFreqCardSecondsKey, 120),
 		NotifyFreqBoardSeconds:   getPluginSettingInt(mmconfig, notifyFreqBoardSecondsKey, 86400),
-		EnableDataRetention:      true, //*mmconfig.DataRetentionSettings.EnableBoardsDeletion,
-		DataRetentionDays:        1,    //mmconfig.DataRetentionSettings.BoardsRetentionDays,
+		EnableDataRetention:      true, // *mmconfig.DataRetentionSettings.EnableBoardsDeletion,
+		DataRetentionDays:        1,    // *mmconfig.DataRetentionSettings.BoardsRetentionDays,
 	}
 }
 
