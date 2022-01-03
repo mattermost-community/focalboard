@@ -3,7 +3,7 @@
 exports[`components/cardBadges should match snapshot 1`] = `
 <div>
   <div
-    class="cardBadges "
+    class="CardBadges "
   >
     <span
       title="This card has a description"

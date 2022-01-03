@@ -85,7 +85,7 @@ const CardBadges = (props: Props) => {
     const intl = useIntl()
     const {checkboxes} = badges
     return (
-        <div className={`cardBadges ${className || ''}`}>
+        <div className={`CardBadges ${className || ''}`}>
             {badges.description &&
                 <span title={intl.formatMessage({id: 'CardBadges.title-description', defaultMessage: 'This card has a description'})}>
                     <TextIcon/>
