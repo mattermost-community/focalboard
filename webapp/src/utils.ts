@@ -13,6 +13,7 @@ import {IAppWindow} from './types'
 
 declare let window: IAppWindow
 
+const imageURLForUser = (window as any).Components?.imageURLForUser
 const IconClass = 'octo-icon'
 const OpenButtonClass = 'open-button'
 const SpacerClass = 'octo-spacer'
@@ -55,6 +56,12 @@ class Utils {
             break
         }
         return ret
+    }
+
+    static getProfilePicture(userId?: string): string {
+        const defaultImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
+
+        return imageURLForUser && userId ? imageURLForUser(userId) : defaultImageUrl
     }
 
     static randomArray(size: number): Uint8Array {
