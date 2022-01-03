@@ -762,7 +762,9 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 }
 
 func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, limit int64) (int64, error) {
-	mlog.Info("Start Boards Data Retention", mlog.String("Global Retention Date", time.Unix(globalRetentionDate/1000, 0).String()), mlog.Int64("Raw Date", globalRetentionDate))
+	mlog.Info("Start Boards Data Retention",
+		mlog.String("Global Retention Date", time.Unix(globalRetentionDate/1000, 0).String()),
+		mlog.Int64("Raw Date", globalRetentionDate))
 	deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id"}
 	// deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id", "boards": "id", "boards_history": "id"}
 	// deleteTables := map[string]string{"blocks": "board_id", "blocks_history": "board_id", "boards": "id", "boards_history": "id"}
