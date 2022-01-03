@@ -800,13 +800,13 @@ func testRunDataRetention(t *testing.T, store store.Store, container store.Conta
 	initialCount := len(blocks)
 
 	t.Run("test no deletions", func(t *testing.T) {
-		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(-time.Hour*1)), time.Now().UnixNano(), 10)
+		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(-time.Hour*1)), 10)
 		require.NoError(t, err)
 		require.Equal(t, int64(0), deletions)
 	})
 
 	t.Run("test all deletions", func(t *testing.T) {
-		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(time.Hour*1)), time.Now().UnixNano(), 10)
+		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(time.Hour*1)), 10)
 		require.NoError(t, err)
 		require.True(t, deletions > int64(initialCount))
 

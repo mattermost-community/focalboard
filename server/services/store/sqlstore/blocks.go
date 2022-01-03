@@ -761,7 +761,7 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 	return nil
 }
 
-func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, nowTime int64, limit int64) (int64, error) {
+func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, limit int64) (int64, error) {
 	mlog.Info("Start Boards Data Retention", mlog.String("Global Retention Date", time.Unix(globalRetentionDate/1000, 0).String()), mlog.Int64("Raw Date", globalRetentionDate))
 	deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id"}
 	// deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id", "boards": "id", "boards_history": "id"}
@@ -800,49 +800,6 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 	}
 	mlog.Info("Complete Boards Data Retention", mlog.Int("total deletion ids", len(deleteIds)), mlog.Int("TotalAffected", totalAffected))
 	return int64(totalAffected), nil
-}
-
-func (s *SQLStore) globalWithTeamPolicySubQuery(baseBuilder sq.SelectBuilder, globalPolicyEndTime int64, limit int64) ([]string, error) {
-	rows, err := baseBuilder.
-		LeftJoin("RetentionPoliciesTeams ON Boards.TeamId = RetentionPoliciesTeams.TeamId").
-		LeftJoin("RetentionPolicies ON RetentionPoliciesChannels.PolicyId = RetentionPolicies.Id").
-		Where(
-			sq.Eq{"RetentionPoliciesTeams.PolicyId": nil},
-		).
-		Where(sq.Lt{"subQuery.maxDate": globalPolicyEndTime}).
-		Limit(uint64(limit)).
-		Query()
-	if err != nil {
-		s.logger.Error(`dataRetention subquery ERROR`, mlog.Err(err))
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-	return idsFromRows(rows)
-}
-
-func (s *SQLStore) teamPolicySubQuery(baseBuilder sq.SelectBuilder, nowTime int64, limit int64) ([]string, error) {
-	const millisecondsInADay = 24 * 60 * 60 * 1000
-	nowStr := strconv.FormatInt(nowTime, 10)
-	fallsUnderGranularPolicy := sq.And{
-		sq.GtOrEq{"RetentionPolicies.BoardsDuration": 0},
-		sq.Expr(nowStr + " - " + "subQuery.maxDate" + " > RetentionPolicies.BoardsDuration * " + strconv.FormatInt(millisecondsInADay, 10)),
-	}
-
-	rows, err := baseBuilder.
-		InnerJoin("RetentionPoliciesTeams ON Channels.TeamId = RetentionPoliciesTeams.TeamId").
-		InnerJoin("RetentionPolicies ON RetentionPoliciesTeams.PolicyId = RetentionPolicies.Id").
-		Where(sq.And{
-			sq.Expr("RetentionPoliciesTeams.PolicyId = RetentionPolicies.Id"),
-		}).
-		Where(fallsUnderGranularPolicy).
-		Limit(uint64(limit)).
-		Query()
-	if err != nil {
-		s.logger.Error(`dataRetention subquery ERROR`, mlog.Err(err))
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-	return idsFromRows(rows)
 }
 
 func (s *SQLStore) globalOnlySubQuery(baseBuilder sq.SelectBuilder, globalPolicyEndTime int64, limit int64) ([]string, error) {
