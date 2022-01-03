@@ -30,8 +30,9 @@ func diff2Markdown(oldText string, newText string) string {
 }
 
 const (
-	changeLenInserts = 1024
-	changeLenDeletes = 60
+	truncLenEquals  = 60
+	truncLenInserts = 1024
+	truncLenDeletes = 60
 )
 
 type markDownCfg struct {
@@ -42,58 +43,33 @@ type markDownCfg struct {
 }
 
 func generateMarkdown(diffs []diffmatchpatch.Diff, cfg markDownCfg) string {
-	var sb strings.Builder
-	inserts := &strings.Builder{}
-	deletes := &strings.Builder{}
-
-	flush := func(newline bool) {
-		if inserts.Len() > 0 {
-			sb.WriteString(cfg.insertOpen)
-			sb.WriteString(strings.TrimSpace(inserts.String()))
-			sb.WriteString(cfg.insertClose)
-			if newline {
-				sb.WriteString("\n")
-			}
-			inserts.Reset()
-		}
-
-		if deletes.Len() > 0 {
-			sb.WriteString(cfg.deleteOpen)
-			sb.WriteString(strings.TrimSpace(deletes.String()))
-			sb.WriteString(cfg.deleteClose)
-			if newline {
-				sb.WriteString("\n")
-			}
-			deletes.Reset()
-		}
-	}
+	sb := &strings.Builder{}
+	equals := newBuffer("", "", truncLenEquals)
+	inserts := newBuffer(cfg.insertOpen, cfg.insertClose, truncLenInserts)
+	deletes := newBuffer(cfg.deleteOpen, cfg.deleteClose, truncLenDeletes)
+	var lastType diffmatchpatch.Operation
 
 	for _, diff := range diffs {
+		if diff.Type != lastType {
+			equals.flushToBuilder(sb)
+			inserts.flushToBuilder(sb)
+			deletes.flushToBuilder(sb)
+		}
+
 		switch diff.Type {
 		case diffmatchpatch.DiffInsert:
-			if inserts.Len()+len(diff.Text) > changeLenInserts {
-				inserts.WriteString(diff.Text[:changeLenInserts])
-				inserts.WriteString("...")
-				flush(true)
-				break
-			}
-			inserts.WriteString(diff.Text)
+			inserts.append(diff.Text)
 
 		case diffmatchpatch.DiffDelete:
-			if deletes.Len()+len(diff.Text) > changeLenDeletes {
-				deletes.WriteString(diff.Text[:changeLenDeletes])
-				deletes.WriteString("...")
-				flush(true)
-				break
-			}
-			deletes.WriteString(diff.Text)
+			deletes.append(diff.Text)
 
 		case diffmatchpatch.DiffEqual:
-			flush(false)
-			sb.WriteString(diff.Text)
+			equals.append(diff.Text)
 		}
 	}
-	flush(false)
+	equals.flushToBuilder(sb)
+	inserts.flushToBuilder(sb)
+	deletes.flushToBuilder(sb)
 
 	return sb.String()
 }
@@ -104,4 +80,53 @@ func normalizeText(s string) string {
 	s = strings.ReplaceAll(s, "  ", " ")
 	s = strings.ReplaceAll(s, "\t", " ")
 	return s
+}
+
+// buffer is a simple string builder with associated properties.
+type buffer struct {
+	sb       *strings.Builder
+	opener   string
+	closer   string
+	truncLen int
+}
+
+func newBuffer(opener string, closer string, truncLen int) *buffer {
+	return &buffer{
+		sb:       &strings.Builder{},
+		opener:   opener,
+		closer:   closer,
+		truncLen: truncLen,
+	}
+}
+
+func (b *buffer) append(s string) {
+	b.sb.WriteString(s)
+}
+
+func (b *buffer) flushToBuilder(sb *strings.Builder) {
+	if b.sb.Len() == 0 {
+		return
+	}
+
+	defer sb.Reset()
+
+	var truncated bool
+	s := b.sb.String()
+	if len(s) > b.truncLen {
+		s = s[len(s)-b.truncLen:]
+		truncated = true
+	}
+
+	sb.WriteString(b.opener)
+
+	sb.WriteString(s)
+	if truncated {
+		sb.WriteString("...")
+	}
+
+	sb.WriteString(b.closer)
+
+	if truncated {
+		sb.WriteByte('\n')
+	}
 }
