@@ -227,8 +227,8 @@ class OctoClient {
         return this.getBlocksWithPath(path)
     }
 
-    async getBlocksWithBlockID(blockID: string, teamID?: string, optionalReadToken?: string): Promise<Block[]> {
-        let path = this.teamPath(teamID) + `/blocks?block_id=${blockID}`
+    async getBlocksWithBlockID(blockID: string, boardID: string, optionalReadToken?: string): Promise<Block[]> {
+        let path = `/api/v1/boards/${boardID}/blocks?block_id=${blockID}`
         const readToken = optionalReadToken || Utils.getReadToken()
         if (readToken) {
             path += `&read_token=${readToken}`
@@ -484,6 +484,20 @@ class OctoClient {
     async getBoards(): Promise<Board[]> {
         const path = this.teamPath() + '/boards'
         return this.getBoardsWithPath(path)
+    }
+
+    async getBoard(boardID: string): Promise<Board | undefined> {
+        const path = `/api/v1/boards/${boardID}`
+        const response = await fetch(this.getBaseURL() + path, {
+            method: 'GET',
+            headers: this.headers(),
+        })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return this.getJson<Board>(response, {} as Board)
     }
 
     async getBlocksForBoard(teamId: string, boardId: string): Promise<Board[]> {
