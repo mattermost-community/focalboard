@@ -45,6 +45,8 @@
   "Calculations.Options.range.label": "Range",
   "Calculations.Options.sum.displayName": "Sum",
   "Calculations.Options.sum.label": "Sum",
+  "CardDetail.Follow": "Follow",
+  "CardDetail.Following": "Following",
   "CardDetail.add-content": "Add content",
   "CardDetail.add-icon": "Add icon",
   "CardDetail.add-property": "+ Add a property",
