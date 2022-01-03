@@ -54,7 +54,7 @@
   "EmptyCenterPanel.plugin.end-message": "Podètz cambiar de canal en utilizant l’alternator al panèl lateral.",
   "EmptyCenterPanel.plugin.new-template": "Modèl novèl",
   "EmptyCenterPanel.plugin.no-content-or": "o",
-  "EmptyCenterPanel.plugin.no-content-title": "Crear un tablèu dins {workspaceName}",
+  "EmptyCenterPanel.plugin.no-content-title": "Crear un tablèu dins {teamName}",
   "Error.websocket-closed": "Connexion al websocket tampada, connexion interrompuda. S’aquò ten de se produire, verificatz la configuracion del servidor o del servidor mandatari.",
   "Filter.includes": "inclutz",
   "Filter.is-empty": "es void",

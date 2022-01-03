@@ -8,7 +8,6 @@ import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 import {getSortedBoards} from '../../store/boards'
-import {getCurrentWorkspace} from '../../store/workspace'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 
@@ -33,7 +32,7 @@ import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
-import {addMissingBlocks} from './utils'
+import {addMissingItems} from './utils'
 
 type Props = {
     activeBoardId?: string
@@ -55,7 +54,7 @@ const Sidebar = React.memo((props: Props) => {
     const boards = useAppSelector(getSortedBoards)
     const dispatch = useAppDispatch()
     const partialCategories = useAppSelector<Array<CategoryBlocks>>(getSidebarCategories)
-    const sidebarCategories = addMissingBlocks(partialCategories, boards)
+    const sidebarCategories = addMissingItems(partialCategories, boards)
 
     useEffect(() => {
         wsClient.addOnChange((_: WSClient, categories: Category[]) => {
@@ -92,7 +91,6 @@ const Sidebar = React.memo((props: Props) => {
         hideSidebar()
     }, [windowDimensions])
 
-    const workspace = useAppSelector(getCurrentWorkspace)
     if (!boards) {
         return <div/>
     }
@@ -154,7 +152,7 @@ const Sidebar = React.memo((props: Props) => {
                     </div>
                 </div>}
 
-            {workspace && workspace.id !== '0' &&
+            {team && team.id !== '0' &&
                 <div className='WorkspaceTitle'>
                     {Utils.isFocalboardPlugin() &&
                     <>

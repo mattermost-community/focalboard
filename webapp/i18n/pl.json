@@ -103,7 +103,7 @@
   "EmptyCenterPanel.plugin.new-template": "Nowy szablon",
   "EmptyCenterPanel.plugin.no-content-description": "Dodaj tablicę do paska bocznego używając jednego z szablonów zdefiniowanych poniżej lub zacznij od zera.{lineBreak} Członkowie \"{workspaceName}\" będą mieli dostęp do tablic utworzonych tutaj.",
   "EmptyCenterPanel.plugin.no-content-or": "lub",
-  "EmptyCenterPanel.plugin.no-content-title": "Utwórz tablicę w {workspaceName}",
+  "EmptyCenterPanel.plugin.no-content-title": "Utwórz tablicę w {teamName}",
   "Error.mobileweb": "Obsługa mobilnej strony internetowej jest obecnie we wczesnej wersji beta. Nie wszystkie funkcje mogą być dostępne.",
   "Error.websocket-closed": "Połączenie websocket zamknięte, połączenie przerwane. Jeśli problem się powtarza, sprawdź konfigurację serwera lub serwera proxy.",
   "Filter.includes": "zawiera",

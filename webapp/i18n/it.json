@@ -103,7 +103,7 @@
   "EmptyCenterPanel.plugin.new-template": "Nuovo template",
   "EmptyCenterPanel.plugin.no-content-description": "Aggiungi una scheda alla barra laterale usando uno dei modelli definiti di seguito o inizia da zero.{lineBreak} I membri di \"{workspaceName}\" avranno accesso alle schede create qui.",
   "EmptyCenterPanel.plugin.no-content-or": "o",
-  "EmptyCenterPanel.plugin.no-content-title": "Crea una Board in {workspaceName}",
+  "EmptyCenterPanel.plugin.no-content-title": "Crea una Board in {teamName}",
   "Error.mobileweb": "Il supporto web mobile è attualmente in fase di beta iniziale. Non tutte le funzionalità potrebbero essere presenti.",
   "Error.websocket-closed": "Connessione interrotta col Websocket. Se il problema persiste, controlla la configurazione del tuo server o del proxy web.",
   "Filter.includes": "include",

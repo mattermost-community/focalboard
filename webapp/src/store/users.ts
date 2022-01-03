@@ -6,8 +6,6 @@ import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@red
 import {default as client} from '../octoClient'
 import {IUser} from '../user'
 
-import {initialLoad} from './initialLoad'
-
 import {RootState} from './index'
 
 export const fetchMe = createAsyncThunk(

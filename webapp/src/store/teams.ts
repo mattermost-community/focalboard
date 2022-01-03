@@ -5,6 +5,8 @@ import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 import octoClient from '../octoClient'
 
+import {SuiteWindow} from '../types'
+
 import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
@@ -36,11 +38,21 @@ const teamSlice = createSlice({
     reducers: {
         setTeam: (state, action: PayloadAction<Team>) => {
             state.current = action.payload
+
+            const windowAny = (window as any)
+            if (windowAny.setTeam) {
+                windowAny.setTeam(action.payload.id)
+            }
         },
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             state.current = action.payload.team
+
+            const windowAny = (window as any)
+            if (windowAny.setTeam && action.payload?.team?.id) {
+                windowAny.setTeam(action.payload.team?.id)
+            }
         })
         builder.addCase(fetchTeams.fulfilled, (state, action) => {
             state.allTeams = action.payload

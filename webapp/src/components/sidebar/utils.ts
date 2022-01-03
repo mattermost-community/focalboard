@@ -4,8 +4,9 @@
 import {CategoryBlocks, DefaultCategory} from '../../store/sidebar'
 
 import {Block} from '../../blocks/block'
+import {Board} from '../../blocks/board'
 
-export function addMissingBlocks(sidebarCategories: Array<CategoryBlocks>, allBlocks: Array<Block>): Array<CategoryBlocks> {
+export function addMissingItems(sidebarCategories: Array<CategoryBlocks>, allItems: Array<Block | Board>): Array<CategoryBlocks> {
     const blocksInCategories = new Map<string, boolean>()
     sidebarCategories.forEach(
         (category) => category.blockIDs.forEach(
@@ -18,7 +19,7 @@ export function addMissingBlocks(sidebarCategories: Array<CategoryBlocks>, allBl
         blockIDs: [],
     }
 
-    allBlocks.forEach((block) => {
+    allItems.forEach((block) => {
         if (!blocksInCategories.get(block.id)) {
             defaultCategory.blockIDs.push(block.id)
         }

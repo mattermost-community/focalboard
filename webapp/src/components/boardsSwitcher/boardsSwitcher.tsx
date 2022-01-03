@@ -15,18 +15,19 @@ import {UserSettings} from '../../userSettings'
 import {setCurrent as setCurrentBoard} from '../../store/boards'
 import {setCurrent as setCurrentView} from '../../store/views'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {getCurrentWorkspace} from '../../store/workspace'
 import {Utils} from '../../utils'
 import {getCurrentTeam} from '../../store/teams'
 
 const BoardsSwitcher = (): JSX.Element => {
     const intl = useIntl()
+    const team = useAppSelector(getCurrentTeam)
 
     const [showSwitcher, setShowSwitcher] = useState<boolean>(false)
 
     // Disabling this for now as Cmd+K
     // is being used by Firefox for activating
     // Search Bar. Unable to prevent browser default right now.
+    // It doesn't work when the search input has the focus.
     //
     // useHotkeys('ctrl+k,cmd+k',
     //     (e) => {
@@ -47,18 +48,13 @@ const BoardsSwitcher = (): JSX.Element => {
     const dispatch = useAppDispatch()
     const history = useHistory()
 
-    const team = useAppSelector(getCurrentTeam)
-
-    const workspace = useAppSelector(getCurrentWorkspace)
-
     const goToEmptyCenterPanel = () => {
         UserSettings.setLastBoardID(team?.id || '', '')
 
-        // TODO see if this works or do we need a solutiion
-        // UserSettings.lastViewId = null
+        // TODO see if this works or do we need a solution
         dispatch(setCurrentBoard(''))
         dispatch(setCurrentView(''))
-        history.replace(`/workspace/${workspace?.id}`)
+        history.replace(`/team/${team?.id}`)
     }
 
     return (

@@ -103,7 +103,7 @@
   "EmptyCenterPanel.plugin.new-template": "New template",
   "EmptyCenterPanel.plugin.no-content-description": "Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of '{workspaceName}' will have access to boards created here.",
   "EmptyCenterPanel.plugin.no-content-or": "or",
-  "EmptyCenterPanel.plugin.no-content-title": "Create a Board in {workspaceName}",
+  "EmptyCenterPanel.plugin.no-content-title": "Create a Board in {teamName}",
   "Error.mobileweb": "Mobile web support is currently in early beta. Not all functionality may be present.",
   "Error.websocket-closed": "Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.",
   "Filter.includes": "includes",

@@ -103,7 +103,7 @@
   "EmptyCenterPanel.plugin.new-template": "Neue Vorlage",
   "EmptyCenterPanel.plugin.no-content-description": "Fügen Sie ein Board zur Seitenleiste hinzu, indem Sie eine der unten definierten Vorlagen verwenden, oder fangen Sie von vorne an.{lineBreak} Mitglieder von \"{workspaceName}\" haben Zugriff auf die hier erstellten Boards.",
   "EmptyCenterPanel.plugin.no-content-or": "oder",
-  "EmptyCenterPanel.plugin.no-content-title": "Ein Board in {workspaceName} erstellen",
+  "EmptyCenterPanel.plugin.no-content-title": "Ein Board in {teamName} erstellen",
   "Error.mobileweb": "Die Unterstützung für das mobile Web befindet sich derzeit in einer frühen Betaphase. Möglicherweise sind nicht alle Funktionen vorhanden.",
   "Error.websocket-closed": "Websocket-Verbindung geschlossen, Verbindung unterbrochen. Wenn dieses Problem weiterhin besteht, überprüfen Sie bitte die Konfiguration Ihres Servers oder Web-Proxys.",
   "Filter.includes": "beinhaltet",

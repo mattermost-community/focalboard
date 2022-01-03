@@ -4,7 +4,6 @@ import React, {useCallback, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
-import {getCurrentWorkspace} from '../store/workspace'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {Utils} from '../utils'
 import {Board} from '../blocks/board'
@@ -18,6 +17,7 @@ import {addBoardTemplateClicked, addBoardClicked} from './sidebar/sidebarAddBoar
 import {addBoardFromTemplate, BoardTemplateButtonMenu} from './sidebar/boardTemplateMenuItem'
 
 import './emptyCenterPanel.scss'
+import {getCurrentTeam} from '../store/teams'
 
 type ButtonProps = {
     buttonIcon: string | React.ReactNode,
@@ -50,7 +50,7 @@ const PanelButton = React.memo((props: ButtonProps) => {
 })
 
 const EmptyCenterPanel = React.memo(() => {
-    const workspace = useAppSelector(getCurrentWorkspace)
+    const team = useAppSelector(getCurrentTeam)
     const templates = useAppSelector(getSortedTemplates)
     const globalTemplates = useAppSelector<Board[]>(getGlobalTemplates)
     const history = useHistory()
@@ -93,16 +93,16 @@ const EmptyCenterPanel = React.memo(() => {
                 <span className='title'>
                     <FormattedMessage
                         id='EmptyCenterPanel.plugin.no-content-title'
-                        defaultMessage='Create a Board in {workspaceName}'
-                        values={{workspaceName: workspace?.title}}
+                        defaultMessage='Create a Board in {teamName}'
+                        values={{teamName: team?.title}}
                     />
                 </span>
                 <span className='description'>
+                    {/*TODO verify this text*/}
                     <FormattedMessage
                         id='EmptyCenterPanel.plugin.no-content-description'
-                        defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of "{workspaceName}" will have access to boards created here.'
+                        defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} The board created will not be accessible by other members of the team unless shared with.'
                         values={{
-                            workspaceName: <b>{workspace?.title}</b>,
                             lineBreak: <br/>,
                         }}
                     />

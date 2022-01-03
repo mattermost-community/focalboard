@@ -8,3 +8,7 @@ export interface IAppWindow extends Window {
     openInNewBrowser?: ((href: string) => void) | null
     webkit?: {messageHandlers: {nativeApp?: {postMessage: <T>(message: T) => void}}}
 }
+
+export interface SuiteWindow {
+    setTeam(teamID: string): void
+}
