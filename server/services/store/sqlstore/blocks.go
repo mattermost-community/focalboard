@@ -762,6 +762,7 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 }
 
 func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, nowTime int64, limit int64) (int64, error) {
+	mlog.Info("Start Boards Data Retention", mlog.String("Global Retention Date", time.Unix(globalRetentionDate/1000, 0).String()), mlog.Int64("Raw Date", globalRetentionDate))
 	deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id"}
 	// deleteTables := map[string]string{"blocks": "root_id", "blocks_history": "root_id", "boards": "id", "boards_history": "id"}
 	// deleteTables := map[string]string{"blocks": "board_id", "blocks_history": "board_id", "boards": "id", "boards_history": "id"}
@@ -777,49 +778,18 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 	subQuery, _, _ := subBuilder.ToSql()
 
 	builder := s.getQueryBuilder(db).
-		// Select("subquery.root_id, subquery.board_id").
+		// Select("root_id, board_id").
 		Select("root_id").
 		From("( " + subQuery + " ) As subquery")
 
 	totalAffected := 0
-	globalOnlyDelete := true
-	if globalOnlyDelete {
-		// global only section
-		deleteIds, err := s.globalOnlySubQuery(builder, globalRetentionDate, limit)
-		if err != nil {
-			return 0, err
-		}
+	deleteIds, err := s.globalOnlySubQuery(builder, globalRetentionDate, limit)
+	if err != nil {
+		return 0, err
+	}
 
-		if len(deleteIds) > 0 {
-			mlog.Debug("DeleteIDs " + strings.Join(deleteIds, ", "))
-			for table, field := range deleteTables {
-				affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds)
-				if err != nil {
-					return int64(totalAffected), err
-				}
-				totalAffected += int(affected)
-			}
-		}
-		mlog.Info("Boards Data Retention - Global Retention Date - " + time.Unix(globalRetentionDate/1000, 0).String() + "( " + strconv.FormatInt(globalRetentionDate, 10) + ")")
-		mlog.Info("Boards Data Retention - TotalAffected " + strconv.FormatInt(int64(totalAffected), 10))
-	} else {
-		// if global and team policy supported
-		deleteIds, err := s.teamPolicySubQuery(builder, nowTime, limit)
-		if err != nil {
-			return 0, err
-		}
-		for table, field := range deleteTables {
-			affected, err2 := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds)
-			if err2 != nil {
-				return int64(totalAffected), err2
-			}
-			totalAffected += int(affected)
-		}
-
-		deleteIds, err = s.globalWithTeamPolicySubQuery(builder, globalRetentionDate, limit)
-		if err != nil {
-			return 0, err
-		}
+	if len(deleteIds) > 0 {
+		mlog.Debug("Data Retention DeleteIDs " + strings.Join(deleteIds, ", "))
 		for table, field := range deleteTables {
 			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds)
 			if err != nil {
@@ -828,6 +798,7 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 			totalAffected += int(affected)
 		}
 	}
+	mlog.Info("Complete Boards Data Retention", mlog.Int("total deletion ids", len(deleteIds)), mlog.Int("TotalAffected", totalAffected))
 	return int64(totalAffected), nil
 }
 
