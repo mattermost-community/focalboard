@@ -140,10 +140,18 @@ export default class Plugin {
                 lastViewedChannel = currentChannel
             }
 
+            // Watch for change in active team.
+            // This handles the user selecting a team from the team sidebar.
             const currentTeamID = mmStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
                 console.log(`Switched team from: ${prevTeamID} to ${currentTeamID}`)
                 prevTeamID = currentTeamID
+
+                if (windowAny.setTeamInFocalboard) {
+                    windowAny.setTeamInFocalboard(currentTeamID)
+                } else {
+                    console.log('setTeamInFocalboard not set')
+                }
             }
         })
 
@@ -227,7 +235,7 @@ export default class Plugin {
                 }
             }
         })
-        windowAny.setTeam = (teamID: string) => {
+        windowAny.setTeamInSidebar = (teamID: string) => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             mmStore.dispatch(selectTeam(teamID))

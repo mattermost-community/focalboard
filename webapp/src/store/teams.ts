@@ -3,9 +3,11 @@
 
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
+import * as Util from 'util'
+
 import octoClient from '../octoClient'
 
-import {SuiteWindow} from '../types'
+import {Utils} from '../utils'
 
 import {initialLoad} from './initialLoad'
 
@@ -36,12 +38,19 @@ const teamSlice = createSlice({
         allTeams: [],
     } as TeamState,
     reducers: {
-        setTeam: (state, action: PayloadAction<Team>) => {
-            state.current = action.payload
+        setTeam: (state, action: PayloadAction<string>) => {
+            const teamID = action.payload
+            const team = state.allTeams.find((t) => t.id === teamID)
+            if (!team) {
+                Utils.log(`Unable to find team in store. TeamID: ${teamID}`)
+                return
+            }
+
+            state.current = team
 
             const windowAny = (window as any)
-            if (windowAny.setTeam) {
-                windowAny.setTeam(action.payload.id)
+            if (windowAny.setTeamInSidebar) {
+                windowAny.setTeamInSidebar(action.payload.id)
             }
         },
     },
@@ -50,8 +59,8 @@ const teamSlice = createSlice({
             state.current = action.payload.team
 
             const windowAny = (window as any)
-            if (windowAny.setTeam && action.payload?.team?.id) {
-                windowAny.setTeam(action.payload.team?.id)
+            if (windowAny.setTeamInSidebar && action.payload?.team?.id) {
+                windowAny.setTeamInSidebar(action.payload.team?.id)
             }
         })
         builder.addCase(fetchTeams.fulfilled, (state, action) => {

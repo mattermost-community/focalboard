@@ -33,6 +33,8 @@ import CloseIcon from '../widgets/icons/close'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {getSidebarCategories} from '../store/sidebar'
+import {setTeam} from '../store/teams'
+import {history} from '../app'
 type Props = {
     readonly?: boolean
 }
@@ -57,6 +59,14 @@ const BoardPage = (props: Props): JSX.Element => {
     if (Utils.isFocalboardLegacy() && !props.readonly) {
         window.location.href = window.location.href.replace('/plugins/focalboard', '/boards')
     }
+
+    useEffect(() => {
+        (window as any).setTeamInFocalboard = (teamID: string) => {
+            dispatch(setTeam(teamID))
+            const params = {teamId: teamID}
+            history.push(generatePath(match.path, params))
+        }
+    }, [])
 
     const categories = useAppSelector(getSidebarCategories)
 
