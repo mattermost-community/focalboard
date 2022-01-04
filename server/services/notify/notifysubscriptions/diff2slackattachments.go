@@ -213,7 +213,7 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 				continue
 			}
 
-			markdown := diff2Markdown(oldTitle, newTitle, opts.Logger)
+			markdown := generateMarkdownDiff(oldTitle, newTitle, opts.Logger)
 			if markdown == "" {
 				continue
 			}
