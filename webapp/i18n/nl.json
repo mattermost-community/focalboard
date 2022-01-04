@@ -56,7 +56,7 @@
   "CardDetailProperty.confirm-delete-heading": "Bevestig verwijderen eigenschap",
   "CardDetailProperty.confirm-delete-subtext": "Weet je zeker dat je de eigenschap \"{propertyName}\" wilt verwijderen? Dit verwijderen zal de eigenschap van alle kaarten in dit bord verwijderen.",
   "CardDetailProperty.confirm-property-name-change-subtext": "Weet je zeker dat je de eigenschap \"{propertyName}\" {customText} wilt wijzigen? Dit zal invloed hebben op de waarde(n) op de {numOfCards} kaart(en) in dit bord, en kan resulteren in data verlies.",
-  "CardDetailProperty.confirm-property-type-change": "Bevestig  Wijziging Type Eigenschap!",
+  "CardDetailProperty.confirm-property-type-change": "Bevestig Wijziging Type Eigenschap!",
   "CardDetailProperty.delete-action-button": "Verwijderen",
   "CardDetailProperty.property-change-action-button": "Wijzig eigenschap",
   "CardDetailProperty.property-changed": "Eigenschap succesvol gewijzigd!",
