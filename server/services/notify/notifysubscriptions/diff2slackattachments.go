@@ -15,6 +15,7 @@ import (
 	"github.com/wiggin77/merror"
 
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -34,6 +35,7 @@ var (
 type DiffConvOpts struct {
 	Language     string
 	MakeCardLink func(block *model.Block) string
+	Logger       *mlog.Logger
 }
 
 // getTemplate returns a new or cached named template based on the language specified.
@@ -88,6 +90,9 @@ func Diffs2SlackAttachments(diffs []*Diff, opts DiffConvOpts) ([]*mm_model.Slack
 			a, err := cardDiff2SlackAttachment(d, opts)
 			if err != nil {
 				merr.Append(err)
+				continue
+			}
+			if a == nil {
 				continue
 			}
 			attachments = append(attachments, a)
@@ -208,7 +213,10 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 				continue
 			}
 
-			markdown := diff2Markdown(oldTitle, newTitle)
+			markdown := diff2Markdown(oldTitle, newTitle, opts.Logger)
+			if markdown == "" {
+				continue
+			}
 
 			attachment.Fields = append(attachment.Fields, &mm_model.SlackAttachmentField{
 				Short: false,
@@ -216,6 +224,10 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 				Value: markdown,
 			})
 		}
+	}
+
+	if len(attachment.Fields) == 0 {
+		return nil, nil
 	}
 	return attachment, nil
 }

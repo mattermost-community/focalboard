@@ -4,9 +4,11 @@ import (
 	"strings"
 
 	"github.com/sergi/go-diff/diffmatchpatch"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func diff2Markdown(oldText string, newText string) string {
+func diff2Markdown(oldText string, newText string, logger *mlog.Logger) string {
 	oldTxtNorm := normalizeText(oldText)
 	newTxtNorm := normalizeText(newText)
 
@@ -16,6 +18,20 @@ func diff2Markdown(oldText string, newText string) string {
 
 	diffs = dmp.DiffCleanupSemantic(diffs)
 	diffs = dmp.DiffCleanupEfficiency(diffs)
+
+	// check there is at least one insert or delete
+	var editFound bool
+	for _, d := range diffs {
+		if (d.Type == diffmatchpatch.DiffInsert || d.Type == diffmatchpatch.DiffDelete) && strings.TrimSpace(d.Text) != "" {
+			editFound = true
+			break
+		}
+	}
+
+	if !editFound {
+		logger.Debug("skipping notification for superficial diff")
+		return ""
+	}
 
 	cfg := markDownCfg{
 		insertOpen:  "`",
@@ -31,8 +47,8 @@ func diff2Markdown(oldText string, newText string) string {
 
 const (
 	truncLenEquals  = 60
-	truncLenInserts = 1024
-	truncLenDeletes = 60
+	truncLenInserts = 120
+	truncLenDeletes = 80
 )
 
 type markDownCfg struct {
@@ -44,89 +60,122 @@ type markDownCfg struct {
 
 func generateMarkdown(diffs []diffmatchpatch.Diff, cfg markDownCfg) string {
 	sb := &strings.Builder{}
-	equals := newBuffer("", "", truncLenEquals)
-	inserts := newBuffer(cfg.insertOpen, cfg.insertClose, truncLenInserts)
-	deletes := newBuffer(cfg.deleteOpen, cfg.deleteClose, truncLenDeletes)
-	var lastType diffmatchpatch.Operation
 
-	for _, diff := range diffs {
-		if diff.Type != lastType {
-			equals.flushToBuilder(sb)
-			inserts.flushToBuilder(sb)
-			deletes.flushToBuilder(sb)
-		}
+	var first, last bool
+
+	for i, diff := range diffs {
+		first = i == 0
+		last = i == len(diffs)-1
 
 		switch diff.Type {
 		case diffmatchpatch.DiffInsert:
-			inserts.append(diff.Text)
+			sb.WriteString(cfg.insertOpen)
+			sb.WriteString(truncate(diff.Text, truncLenInserts, first, last))
+			sb.WriteString(cfg.insertClose)
 
 		case diffmatchpatch.DiffDelete:
-			deletes.append(diff.Text)
+			sb.WriteString(cfg.deleteOpen)
+			sb.WriteString(truncate(diff.Text, truncLenDeletes, first, last))
+			sb.WriteString(cfg.deleteClose)
 
 		case diffmatchpatch.DiffEqual:
-			equals.append(diff.Text)
+			sb.WriteString(truncate(diff.Text, truncLenEquals, first, last))
 		}
 	}
-	equals.flushToBuilder(sb)
-	inserts.flushToBuilder(sb)
-	deletes.flushToBuilder(sb)
-
 	return sb.String()
 }
 
+func truncate(s string, maxLen int, first bool, last bool) string {
+	if len(s) < maxLen {
+		return s
+	}
+
+	var result string
+
+	switch {
+	case first:
+		// truncate left
+		result = " ... " + rightWords(s, maxLen)
+	case last:
+		// truncate right
+		result = leftWords(s, maxLen) + " ... "
+	default:
+		// truncate in the middle
+		half := len(s) / 2
+
+		left := leftWords(s[:half], maxLen/2)
+		right := rightWords(s[half:], maxLen/2)
+
+		result = left + " ... " + right
+	}
+
+	return strings.ReplaceAll(result, "¶", "↩")
+}
+
 func normalizeText(s string) string {
+	s = strings.ReplaceAll(s, "\t", " ")
+	s = strings.ReplaceAll(s, "  ", " ")
 	s = strings.ReplaceAll(s, "\n\n", "\n")
 	s = strings.ReplaceAll(s, "\n", "¶")
-	s = strings.ReplaceAll(s, "  ", " ")
-	s = strings.ReplaceAll(s, "\t", " ")
 	return s
 }
 
-// buffer is a simple string builder with associated properties.
-type buffer struct {
-	sb       *strings.Builder
-	opener   string
-	closer   string
-	truncLen int
+// leftWords returns approximately maxLen characters from the left part of the source string by truncating on the right,
+// with best effort to include whole words.
+func leftWords(s string, maxLen int) string {
+	if len(s) < maxLen {
+		return s
+	}
+	fields := strings.Fields(s)
+	fields = words(fields, maxLen)
+
+	return strings.Join(fields, " ")
 }
 
-func newBuffer(opener string, closer string, truncLen int) *buffer {
-	return &buffer{
-		sb:       &strings.Builder{},
-		opener:   opener,
-		closer:   closer,
-		truncLen: truncLen,
+// rightWords returns approximately maxLen from the right part of the source string by truncating from the left,
+// with best effort to include whole words.
+func rightWords(s string, maxLen int) string {
+	if len(s) < maxLen {
+		return s
+	}
+	fields := strings.Fields(s)
+
+	// reverse the fields so that the right-most words end up at the beginning.
+	reverse(fields)
+
+	fields = words(fields, maxLen)
+
+	// reverse the fields again so that the original order is restored.
+	reverse(fields)
+
+	return strings.Join(fields, " ")
+}
+
+func reverse(ss []string) {
+	ssLen := len(ss)
+	for i := 0; i < ssLen/2; i++ {
+		ss[i], ss[ssLen-i-1] = ss[ssLen-i-1], ss[i]
 	}
 }
 
-func (b *buffer) append(s string) {
-	b.sb.WriteString(s)
-}
+// words returns a subslice containing approximately maxChars of characters. The last item may be truncated.
+func words(words []string, maxChars int) []string {
+	var count int
+	result := make([]string, 0, len(words))
 
-func (b *buffer) flushToBuilder(sb *strings.Builder) {
-	if b.sb.Len() == 0 {
-		return
+	for i, w := range words {
+		wordLen := len(w)
+		if wordLen+count > maxChars {
+			switch {
+			case i == 0:
+				result = append(result, w[:maxChars])
+			case wordLen < 8:
+				result = append(result, w)
+			}
+			return result
+		}
+		count += wordLen
+		result = append(result, w)
 	}
-
-	defer sb.Reset()
-
-	var truncated bool
-	s := b.sb.String()
-	if len(s) > b.truncLen {
-		s = s[len(s)-b.truncLen:]
-		truncated = true
-	}
-
-	sb.WriteString(b.opener)
-
-	sb.WriteString(s)
-	if truncated {
-		sb.WriteString("...")
-	}
-
-	sb.WriteString(b.closer)
-
-	if truncated {
-		sb.WriteByte('\n')
-	}
+	return result
 }
