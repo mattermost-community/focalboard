@@ -8,13 +8,16 @@ import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/r
 
 import {GlobalState} from 'mattermost-redux/types/store'
 
-const windowAny = (window as any)
+import {ClientConfig} from 'mattermost-redux/types/config'
+
+import {selectTeam} from 'mattermost-redux/actions/teams'
+
+import {SuiteWindow} from '../../../webapp/src/types/index'
+
+const windowAny = (window as SuiteWindow)
 windowAny.baseURL = '/plugins/focalboard'
 windowAny.frontendBaseURL = '/boards'
 windowAny.isFocalboardPlugin = true
-windowAny.setTeam = undefined
-
-import {ClientConfig} from 'mattermost-redux/types/config'
 
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
@@ -44,9 +47,6 @@ import ErrorBoundary from './error_boundary'
 import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
-
-import {TeamTypes} from 'mattermost-redux/action_types'
-import {selectTeam} from 'mattermost-redux/actions/teams'
 
 function getSubpath(siteURL: string): string {
     const url = new URL(siteURL)
@@ -144,13 +144,9 @@ export default class Plugin {
             // This handles the user selecting a team from the team sidebar.
             const currentTeamID = mmStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
-                console.log(`Switched team from: ${prevTeamID} to ${currentTeamID}`)
                 prevTeamID = currentTeamID
-
                 if (windowAny.setTeamInFocalboard) {
                     windowAny.setTeamInFocalboard(currentTeamID)
-                } else {
-                    console.log('setTeamInFocalboard not set')
                 }
             }
         })

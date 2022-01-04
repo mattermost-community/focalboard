@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 
 import {useHistory} from 'react-router-dom'
 
@@ -8,42 +8,19 @@ import {useIntl} from 'react-intl'
 
 import SearchIllustration from '../../svg/search-illustration'
 
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {setUserWorkspaces} from '../../store/workspace'
-import octoClient from '../../octoClient'
+import {useAppSelector} from '../../store/hooks'
 import Switch from '../../widgets/switch'
 
 import SearchIcon from '../../widgets/icons/search'
 import {UserSettings} from '../../userSettings'
 import {getSortedBoards} from '../../store/boards'
 
-// const checkBoardCount = (numsArr: RegExpMatchArray, boardCount: number) => {
-//     for (const n of numsArr) {
-//         if (Number(n) === boardCount) {
-//             return true
-//         }
-//     }
-//
-//     return false
-// }
-
 const DashboardCenterContent = (): JSX.Element => {
-    // const rawWorkspaces = useAppSelector<UserWorkspace[]>(getUserWorkspaceList) || []
-    const dispatch = useAppDispatch()
     const history = useHistory()
     const intl = useIntl()
     const [searchFilter, setSearchFilter] = useState('')
     const [showEmptyWorkspaces, setShowEmptyWorkspaces] = useState(UserSettings.dashboardShowEmpty)
     const allBoards = useAppSelector(getSortedBoards)
-
-    const initializeUserWorkspaces = async () => {
-        const userWorkspaces = await octoClient.getUserWorkspaces()
-        dispatch(setUserWorkspaces(userWorkspaces))
-    }
-
-    useEffect(() => {
-        initializeUserWorkspaces()
-    }, [])
 
     const titlePattern = new RegExp(searchFilter.split(' ').join('|'), 'i')
 

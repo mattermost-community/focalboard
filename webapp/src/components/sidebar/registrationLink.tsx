@@ -3,12 +3,10 @@
 import React, {useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
 
-import {sendFlashMessage} from '../../components/flashMessages'
-import client from '../../octoClient'
+import {sendFlashMessage} from '../flashMessages'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
-import {getCurrentWorkspace, fetchWorkspace} from '../../store/workspace'
-import {useAppSelector, useAppDispatch} from '../../store/hooks'
+import {useAppDispatch} from '../../store/hooks'
 
 import Modal from '../modal'
 
@@ -21,6 +19,7 @@ type Props = {
 const RegistrationLink = React.memo((props: Props) => {
     const {onClose} = props
     const intl = useIntl()
+
     // ToDo: this is only used for personal server, and there will only be a team 0
     /* const workspace = useAppSelector<IWorkspace|null>(getCurrentWorkspace) */
     // ToDo: fix this

@@ -7,12 +7,6 @@ import {default as client} from '../octoClient'
 import {UserWorkspace} from '../user'
 import {Utils} from '../utils'
 
-const getUserWorkspaces = async ():Promise<UserWorkspace[]> => {
-    // Concept of workspaces is only applicable when running as a plugin.
-    // There is always only one, single workspace in personal server edition.
-    return Utils.isFocalboardPlugin() ? client.getUserWorkspaces() : []
-}
-
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
@@ -20,10 +14,8 @@ export const initialLoad = createAsyncThunk(
 
             // ToDo: get board members maybe?
             // ToDo: get user boards
-            // ToDo: replace getallblocks with get board blocks? or directly when loading the board?
-            // client.getAllBlocks(),
-
             // ToDo: probably add memberships here
+
             client.getTeam(),
             client.getBoards(),
         ])
@@ -53,7 +45,6 @@ export const initialReadOnlyLoad = createAsyncThunk(
 export const loadBoardData = createAsyncThunk(
     'loadBoardData',
     async (boardID: string) => {
-        console.log('boardDataLoad called')
         const [blocks] = await Promise.all([
             client.getAllBlocks(boardID),
         ])

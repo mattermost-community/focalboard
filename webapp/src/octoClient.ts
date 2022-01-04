@@ -452,15 +452,15 @@ class OctoClient {
     }
 
     // ToDo: delete??
-    async getUserWorkspaces(): Promise<UserWorkspace[]> {
-        const path = '/api/v1/workspaces'
-        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return []
-        }
-
-        return (await this.getJson(response, [])) as UserWorkspace[]
-    }
+    // async getUserWorkspaces(): Promise<UserWorkspace[]> {
+    //     const path = '/api/v1/workspaces'
+    //     const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+    //     if (response.status !== 200) {
+    //         return []
+    //     }
+    //
+    //     return (await this.getJson(response, [])) as UserWorkspace[]
+    // }
 
     // ToDo: modify to get local templates
     // async getGlobalTemplates(): Promise<Block[]> {

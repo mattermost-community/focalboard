@@ -34,7 +34,6 @@ import CloseIcon from '../widgets/icons/close'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {getSidebarCategories} from '../store/sidebar'
 import {setTeam} from '../store/teams'
-import {history} from '../app'
 type Props = {
     readonly?: boolean
 }

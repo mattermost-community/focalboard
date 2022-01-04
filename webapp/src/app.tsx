@@ -5,7 +5,7 @@ import {
     Router,
     Redirect,
     Route,
-    Switch, useRouteMatch, generatePath,
+    Switch,
 } from 'react-router-dom'
 import {IntlProvider} from 'react-intl'
 import {DndProvider} from 'react-dnd'
@@ -36,7 +36,6 @@ import {fetchClientConfig} from './store/clientConfig'
 
 import {IUser} from './user'
 import {UserSettings} from './userSettings'
-import {setTeam} from './store/teams'
 
 declare let window: IAppWindow
 

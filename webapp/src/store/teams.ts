@@ -3,11 +3,11 @@
 
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-import * as Util from 'util'
-
 import octoClient from '../octoClient'
 
 import {Utils} from '../utils'
+
+import {SuiteWindow} from '../types'
 
 import {initialLoad} from './initialLoad'
 
@@ -48,9 +48,9 @@ const teamSlice = createSlice({
 
             state.current = team
 
-            const windowAny = (window as any)
-            if (windowAny.setTeamInSidebar) {
-                windowAny.setTeamInSidebar(action.payload.id)
+            const suiteWindow = (window as SuiteWindow)
+            if (suiteWindow.setTeamInSidebar) {
+                suiteWindow.setTeamInSidebar(teamID)
             }
         },
     },

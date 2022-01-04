@@ -9,6 +9,14 @@ export interface IAppWindow extends Window {
     webkit?: {messageHandlers: {nativeApp?: {postMessage: <T>(message: T) => void}}}
 }
 
-export interface SuiteWindow {
-    setTeam(teamID: string): void
+// SuiteWindow documents all custom properties
+// which may be defined on global
+// window object when operating in
+// the Mattermost suite environment
+export type SuiteWindow = Window & {
+    setTeamInSidebar?: (teamID: string) => void
+    setTeamInFocalboard?: (teamID: string) => void
+    baseURL?: string
+    frontendBaseURL?: string
+    isFocalboardPlugin?: boolean
 }
