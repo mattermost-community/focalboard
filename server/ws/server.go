@@ -231,7 +231,9 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				// if not in single user mode validate that the session
 				// has permissions to the team
 			} else {
+				ws.logger.Debug("Not single user mode")
 				if !ws.auth.DoesUserHaveTeamAccess(wsSession.userID, command.TeamID) {
+					ws.logger.Error("WS user doesn't have team access", mlog.String("teamID", command.TeamID), mlog.String("userID", wsSession.userID))
 					continue
 				}
 			}

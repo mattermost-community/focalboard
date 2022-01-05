@@ -279,10 +279,10 @@ class OctoClient {
         return fixedBlocks
     }
 
-    async patchBlock(blockId: string, blockPatch: BlockPatch): Promise<Response> {
+    async patchBlock(boardId: string, blockId: string, blockPatch: BlockPatch): Promise<Response> {
         Utils.log(`patchBlock: ${blockId} block`)
         const body = JSON.stringify(blockPatch)
-        return fetch(this.getBaseURL() + this.teamPath() + '/blocks/' + blockId, {
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}/blocks/${blockId}`, {
             method: 'PATCH',
             headers: this.headers(),
             body,

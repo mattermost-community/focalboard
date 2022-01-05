@@ -52,6 +52,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const queryString = new URLSearchParams(useLocation().search)
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
     let teamId = match.params.teamId || UserSettings.lastTeamId || '0'
+    const categories = useAppSelector(getSidebarCategories)
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -60,14 +61,15 @@ const BoardPage = (props: Props): JSX.Element => {
     }
 
     useEffect(() => {
-        (window as any).setTeamInFocalboard = (teamID: string) => {
-            dispatch(setTeam(teamID))
-            const params = {teamId: teamID}
+        // This function is called when the user selected a team from the team sidebar.
+        (window as any).setTeamInFocalboard = (newTeamID: string) => {
+            // wsClient.unsubscribeToTeam(teamId)
+            dispatch(setTeam(newTeamID))
+            const params = {teamId: newTeamID}
             history.push(generatePath(match.path, params))
+            wsClient.subscribeToTeam(newTeamID)
         }
     }, [])
-
-    const categories = useAppSelector(getSidebarCategories)
 
     // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
@@ -86,11 +88,11 @@ const BoardPage = (props: Props): JSX.Element => {
 
             // and set it as most recently viewed board
             UserSettings.setLastBoardID(teamId, match.params.boardId)
-        }
 
-        if (match.params.viewId) {
-            dispatch(setCurrentView(match.params.viewId))
-            UserSettings.setLastViewId(match.params.boardId, match.params.viewId)
+            if (match.params.viewId) {
+                dispatch(setCurrentView(match.params.viewId))
+                UserSettings.setLastViewId(match.params.boardId, match.params.viewId)
+            }
         }
     }, [match.params.boardId, match.params.viewId])
 
@@ -310,7 +312,7 @@ const BoardPage = (props: Props): JSX.Element => {
                 clearTimeout(timeout)
             }
             if (subscribedToTeam) {
-                wsClient.unsubscribeToTeam(match.params.teamId || '0')
+                // wsClient.unsubscribeToTeam(match.params.teamId || '0')
             }
             wsClient.removeOnChange(incrementalBlockUpdate, 'block')
             wsClient.removeOnChange(incrementalBoardUpdate, 'board')

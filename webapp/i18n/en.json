@@ -101,7 +101,7 @@
   "EmptyCenterPanel.plugin.empty-board": "Start with an Empty Board",
   "EmptyCenterPanel.plugin.end-message": "You can change the channel using the switcher in the sidebar.",
   "EmptyCenterPanel.plugin.new-template": "New template",
-  "EmptyCenterPanel.plugin.no-content-description": "Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} The board created will not be accessible by other members of the team unless shared with.",
+  "EmptyCenterPanel.plugin.no-content-description": "Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} New boards will be private to you unless explicitly shared with other team members.",
   "EmptyCenterPanel.plugin.no-content-or": "or",
   "EmptyCenterPanel.plugin.no-content-title": "Create a Board in {teamName}",
   "Error.mobileweb": "Mobile web support is currently in early beta. Not all functionality may be present.",

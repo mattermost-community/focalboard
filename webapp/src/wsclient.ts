@@ -449,6 +449,8 @@ class WSClient {
             return
         }
 
+        console.log('sending ACTION_UNSUBSCRIBE_TEAM')
+
         const command: WSCommand = {
             action: ACTION_UNSUBSCRIBE_TEAM,
             teamId,

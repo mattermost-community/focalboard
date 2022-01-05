@@ -101,7 +101,7 @@ const EmptyCenterPanel = React.memo(() => {
                     {/*TODO verify this text*/}
                     <FormattedMessage
                         id='EmptyCenterPanel.plugin.no-content-description'
-                        defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} The board created will not be accessible by other members of the team unless shared with.'
+                        defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} New boards will be private to you unless explicitly shared with other team members.'
                         values={{
                             lineBreak: <br/>,
                         }}
