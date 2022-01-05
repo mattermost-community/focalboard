@@ -21,11 +21,6 @@ exports[`src/components/topBar should match snapshot for focalboardPlugin 1`] = 
       >
         v1.0.0
       </div>
-      <div
-        class="versionBadge"
-      >
-        BETA
-      </div>
     </div>
   </div>
 </div>

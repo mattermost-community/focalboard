@@ -151,6 +151,11 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 		return err
 	}
 
+	if block == nil {
+		// deleting non-existing block not considered an error
+		return nil
+	}
+
 	err = a.store.DeleteBlock(c, blockID, modifiedBy)
 	if err != nil {
 		return err
