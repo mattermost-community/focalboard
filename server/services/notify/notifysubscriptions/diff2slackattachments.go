@@ -15,6 +15,7 @@ import (
 	"github.com/wiggin77/merror"
 
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -34,6 +35,7 @@ var (
 type DiffConvOpts struct {
 	Language     string
 	MakeCardLink func(block *model.Block) string
+	Logger       *mlog.Logger
 }
 
 // getTemplate returns a new or cached named template based on the language specified.
@@ -90,6 +92,9 @@ func Diffs2SlackAttachments(diffs []*Diff, opts DiffConvOpts) ([]*mm_model.Slack
 				merr.Append(err)
 				continue
 			}
+			if a == nil {
+				continue
+			}
 			attachments = append(attachments, a)
 		}
 	}
@@ -140,7 +145,7 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 		attachment.Fields = append(attachment.Fields, &mm_model.SlackAttachmentField{
 			Short: false,
 			Title: "Title",
-			Value: fmt.Sprintf("%s  ~~`%s`~~", cardDiff.NewBlock.Title, cardDiff.OldBlock.Title),
+			Value: fmt.Sprintf("%s  ~~`%s`~~", stripNewlines(cardDiff.NewBlock.Title), stripNewlines(cardDiff.OldBlock.Title)),
 		})
 	}
 
@@ -153,7 +158,7 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 
 			var val string
 			if propDiff.OldValue != "" {
-				val = fmt.Sprintf("%s  ~~`%s`~~", propDiff.NewValue, propDiff.OldValue)
+				val = fmt.Sprintf("%s  ~~`%s`~~", stripNewlines(propDiff.NewValue), stripNewlines(propDiff.OldValue))
 			} else {
 				val = propDiff.NewValue
 			}
@@ -208,33 +213,21 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 				continue
 			}
 
-			/*
-				TODO: use diff lib for content changes which can be many paragraphs.
-				      Unfortunately `github.com/sergi/go-diff` is not suitable for
-					  markdown display. An alternate markdown friendly lib is being
-					  worked on at github.com/wiggin77/go-difflib and will be substituted
-					  here when ready.
-
-				newTxt := cleanBlockTitle(child.NewBlock)
-				oldTxt := cleanBlockTitle(child.OldBlock)
-
-				dmp := diffmatchpatch.New()
-				txtDiffs := dmp.DiffMain(oldTxt, newTxt, true)
-
-				_, _ = w.Write([]byte(dmp.DiffPrettyText(txtDiffs)))
-
-			*/
-
-			if oldTitle != "" {
-				oldTitle = fmt.Sprintf("\n~~`%s`~~", oldTitle)
+			markdown := generateMarkdownDiff(oldTitle, newTitle, opts.Logger)
+			if markdown == "" {
+				continue
 			}
 
 			attachment.Fields = append(attachment.Fields, &mm_model.SlackAttachmentField{
 				Short: false,
 				Title: "Description",
-				Value: newTitle + oldTitle,
+				Value: markdown,
 			})
 		}
+	}
+
+	if len(attachment.Fields) == 0 {
+		return nil, nil
 	}
 	return attachment, nil
 }
