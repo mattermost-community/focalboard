@@ -4,8 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	sq "github.com/Masterminds/squirrel"
 	"strconv"
+
+	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
@@ -375,7 +376,7 @@ func (s *SQLStore) updateCategoryBlocksIDs(db sq.BaseRunner) error {
 
 func (s *SQLStore) updateCategoryBlocksID(db sq.BaseRunner, oldID, newID string) error {
 	// update in category table
-	_, err := s.getQueryBuilder(db).
+	rows, err := s.getQueryBuilder(db).
 		Update(s.tablePrefix+"category_blocks").
 		Set("id", newID).
 		Where(sq.Eq{"id": oldID}).
@@ -385,6 +386,7 @@ func (s *SQLStore) updateCategoryBlocksID(db sq.BaseRunner, oldID, newID string)
 		s.logger.Error("updateCategoryBlocksID update category error", mlog.Err(err))
 		return err
 	}
+	rows.Close()
 
 	return nil
 }
