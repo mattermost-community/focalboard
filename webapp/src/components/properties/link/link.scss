@@ -1,39 +1,34 @@
-.property-link {
+.URLProperty {
     display: flex;
     align-items: center;
+    overflow: hidden;
 
-    &.url {
-        width: 100%;
-        display: flex;
+    .link {
+        flex: 1 1 auto;
+        padding-left: 1px;
+        margin-right: 4px;
+        white-space: nowrap;
         overflow: hidden;
+        color: rgb(var(--center-channel-color-rgb));
+        text-overflow: ellipsis;
+        text-decoration: underline rgb(var(--center-channel-color-rgb), 0.5);
     }
 
-    .Link__button {
+    .link:hover {
+        background-color: rgb(var(--center-channel-color-rgb), 0.1);
+    }
+
+    .Button_Edit {
         display: none;
-        flex: 0 0 24px;
-        width: 24px;
-        height: 24px;
-        align-items: center;
-        justify-content: center;
-        border-radius: 4px;
-        color: rgba(var(--center-channel-color-rgb), 0.56);
-        font-size: 14.4px;
-        margin-left: 8px;
-
-        &:hover {
-            color: rgba(var(--center-channel-color-rgb), 0.72);
-            background: rgba(var(--center-channel-color-rgb), 0.08);
-        }
-
-        &:active {
-            color: var(--button-bg-rgb);
-            background-color: rgb(var(--button-bg-rgb), 0.16);
-        }
     }
 
     &:hover {
-        .Link__button {
+        .Button_Edit {
             display: flex;
         }
     }
+}
+
+#focalboard-app .URLProperty .link:visited {
+    color: rgb(var(--center-channel-color-rgb));
 }
