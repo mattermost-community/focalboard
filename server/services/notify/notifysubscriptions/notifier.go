@@ -196,6 +196,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		MakeCardLink: func(block *model.Block) string {
 			return fmt.Sprintf("[%s](%s)", block.Title, utils.MakeCardLink(n.serverRoot, board.WorkspaceID, board.ID, card.ID))
 		},
+		Logger: n.logger,
 	}
 
 	attachments, err := Diffs2SlackAttachments(diffs, opts)
@@ -204,28 +205,35 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	}
 
 	merr := merror.New()
-	for _, sub := range subs {
-		// don't notify the author of their own changes.
-		if sub.SubscriberID == hint.ModifiedByID {
-			n.logger.Debug("notifySubscribers - deliver, skipping author",
+	if len(attachments) > 0 {
+		for _, sub := range subs {
+			// don't notify the author of their own changes.
+			if sub.SubscriberID == hint.ModifiedByID {
+				n.logger.Debug("notifySubscribers - deliver, skipping author",
+					mlog.Any("hint", hint),
+					mlog.String("modified_by_id", hint.ModifiedByID),
+					mlog.String("modified_by_username", hint.Username),
+				)
+				continue
+			}
+
+			n.logger.Debug("notifySubscribers - deliver",
 				mlog.Any("hint", hint),
 				mlog.String("modified_by_id", hint.ModifiedByID),
-				mlog.String("modified_by_username", hint.Username),
+				mlog.String("subscriber_id", sub.SubscriberID),
+				mlog.String("subscriber_type", string(sub.SubscriberType)),
 			)
-			continue
-		}
 
-		n.logger.Debug("notifySubscribers - deliver",
+			if err = n.delivery.SubscriptionDeliverSlackAttachments(hint.WorkspaceID, sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
+				merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
+					sub.SubscriberID, sub.SubscriberType, err))
+			}
+		}
+	} else {
+		n.logger.Debug("notifySubscribers - skip delivery; no chg",
 			mlog.Any("hint", hint),
 			mlog.String("modified_by_id", hint.ModifiedByID),
-			mlog.String("subscriber_id", sub.SubscriberID),
-			mlog.String("subscriber_type", string(sub.SubscriberType)),
 		)
-
-		if err = n.delivery.SubscriptionDeliverSlackAttachments(hint.WorkspaceID, sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
-			merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
-				sub.SubscriberID, sub.SubscriberType, err))
-		}
 	}
 
 	// find the new NotifiedAt based on the newest diff.

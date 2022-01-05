@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback} from 'react'
+import React, {useCallback, useMemo} from 'react'
 
 import {FormattedMessage, useIntl} from 'react-intl'
 
@@ -108,13 +108,17 @@ const TableHeaders = (props: Props): JSX.Element => {
         mutator.updateBlock(newView, activeView, 'autosize column')
     }, [activeView, board, cards])
 
+    const visiblePropertyTemplates = useMemo(() => (
+        activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
+    ), [board.fields.cardProperties, activeView.fields.visiblePropertyIds])
+
     const onDropToColumn = useCallback(async (template: IPropertyTemplate, container: IPropertyTemplate) => {
         Utils.log(`ondrop. Source column: ${template.name}, dest column: ${container.name}`)
 
         // Move template to new index
-        const destIndex = container ? board.fields.cardProperties.indexOf(container) : 0
-        await mutator.changePropertyTemplateOrder(board, template, destIndex >= 0 ? destIndex : 0)
-    }, [board])
+        const destIndex = container ? activeView.fields.visiblePropertyIds.indexOf(container.id) : 0
+        await mutator.changeViewVisiblePropertiesOrder(activeView, template, destIndex >= 0 ? destIndex : 0)
+    }, [activeView.fields.visiblePropertyIds])
 
     const titleSortOption = activeView.fields.sortOptions?.find((o) => o.propertyId === Constants.titleColumnId)
     let titleSorted: 'up' | 'down' | 'none' = 'none'
@@ -147,14 +151,12 @@ const TableHeaders = (props: Props): JSX.Element => {
             />
 
             {/* Table header row */}
-
-            {board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
+            {visiblePropertyTemplates.map((template) => {
                 let sorted: 'up' | 'down' | 'none' = 'none'
                 const sortOption = activeView.fields.sortOptions.find((o: ISortOption) => o.propertyId === template.id)
                 if (sortOption) {
                     sorted = sortOption.reversed ? 'down' : 'up'
                 }
-
                 return (
                     <TableHeader
                         name={template.name}

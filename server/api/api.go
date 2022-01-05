@@ -1594,8 +1594,8 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check for valid block
-	_, err = a.app.GetBlockWithID(*container, sub.BlockID)
-	if err != nil {
+	block, err := a.app.GetBlockWithID(*container, sub.BlockID)
+	if err != nil || block == nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid blockID", err)
 		return
 	}
