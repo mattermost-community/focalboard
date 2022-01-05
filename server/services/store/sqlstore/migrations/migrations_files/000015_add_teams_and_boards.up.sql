@@ -125,8 +125,8 @@ CREATE TABLE {{.prefix}}boards_history (
   {{end}}
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, B.fields->>'$.description',
-                 B.fields->>'$.icon', B.fields->'$.showDescription', B.fields->'$.isTemplate',
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
+                 JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')), B.fields->'$.showDescription', B.fields->'$.isTemplate',
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
@@ -134,8 +134,8 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE B.type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, B.fields->>'$.description',
-                 B.fields->>'$.icon', B.fields->'$.showDescription', B.fields->'$.isTemplate',
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
+                 JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')), B.fields->'$.showDescription', B.fields->'$.isTemplate',
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B
@@ -164,16 +164,16 @@ CREATE TABLE {{.prefix}}boards_history (
   {{end}}
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, fields->>'$.description',
-                 fields->>'$.icon', fields->'$.showDescription', fields->'$.isTemplate',
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, JSON_UNQUOTE(JSON_EXTRACT(fields,'$.description')),
+                 JSON_UNQUOTE(JSON_EXTRACT(fields,'$.icon')), fields->'$.showDescription', fields->'$.isTemplate',
                  '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks
           WHERE type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, fields->>'$.description',
-                 fields->>'$.icon', fields->'$.showDescription', fields->'$.isTemplate',
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, JSON_UNQUOTE(JSON_EXTRACT(fields,'$.description')),
+                 JSON_UNQUOTE(JSON_EXTRACT(fields,'$.icon')), fields->'$.showDescription', fields->'$.isTemplate',
                  '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history
