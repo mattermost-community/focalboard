@@ -6,6 +6,11 @@ This changelog summarizes updates to our open source project. You can also find 
 
 ## [Work In Progress] - vNext Release - [Date TBD]
 
+## v0.12 Release - January, 2022
+* Change notifications. Thanks @wiggin77!
+* Person avatars. Thanks @asaadmahmood!
+* Updated comment sort order. Thanks @asaadmahmood!
+
 ## v0.11 Release - December, 2021
 * Calendar view. Thanks @sbishel!
 * `@mention` autocomplete. Thanks @hahmadia!
