@@ -201,9 +201,16 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 }
 
 func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema model.PropSchema) (*Diff, error) {
+	dg.logger.Debug("generateDiffForBlock - new block",
+		mlog.String("block_id", newBlock.ID),
+		mlog.String("block_type", string(newBlock.Type)),
+		mlog.String("modified_by", newBlock.ModifiedBy),
+		mlog.Int64("update_at", newBlock.UpdateAt),
+	)
+
 	// find the version of the block as it was at the time of last notify.
 	opts := model.QueryBlockHistoryOptions{
-		BeforeUpdateAt: dg.lastNotifyAt,
+		BeforeUpdateAt: dg.lastNotifyAt + 1,
 		Limit:          1,
 		Descending:     true,
 	}
@@ -215,17 +222,31 @@ func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema mode
 	var oldBlock *model.Block
 	if len(history) != 0 {
 		oldBlock = &history[0]
+
+		dg.logger.Debug("generateDiffForBlock - old block",
+			mlog.String("block_id", oldBlock.ID),
+			mlog.String("block_type", string(oldBlock.Type)),
+			mlog.Int64("before_update_at", dg.lastNotifyAt),
+			mlog.String("modified_by", oldBlock.ModifiedBy),
+			mlog.Int64("update_at", oldBlock.UpdateAt),
+		)
 	}
 
 	// find all the versions of the blocks that changed so we can gather all the author usernames.
 	opts = model.QueryBlockHistoryOptions{
 		AfterUpdateAt: dg.lastNotifyAt,
+		Descending:    true,
 	}
 	chgBlocks, err := dg.store.GetBlockHistory(dg.container, newBlock.ID, opts)
 	if err != nil {
 		return nil, fmt.Errorf("error getting block history for block %s: %w", newBlock.ID, err)
 	}
 	authors := make(StringMap)
+
+	dg.logger.Debug("generateDiffForBlock - authors",
+		mlog.Int64("after_update_at", dg.lastNotifyAt),
+		mlog.Int("history_count", len(chgBlocks)),
+	)
 
 	// have to loop through history slice because GetBlockHistory does not return pointers.
 	for _, b := range chgBlocks {
@@ -246,7 +267,6 @@ func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema mode
 	dg.logger.Debug("generateDiffForBlock - results",
 		mlog.String("block_id", newBlock.ID),
 		mlog.String("block_type", string(newBlock.Type)),
-		mlog.Int64("before_update_at", opts.BeforeUpdateAt),
 		mlog.Array("author_names", authors.Values()),
 		mlog.Int("history_count", len(history)),
 		mlog.Int("prop_diff_count", len(propDiffs)),
