@@ -262,8 +262,9 @@ class Mutator {
         const oldBlocks: Block[] = [board]
 
         const newBoard = createBoard(board)
-        const startIndex = (index >= 0) ? index : board.fields.cardProperties.length
-        newBoard.fields.cardProperties.splice(startIndex, 0, newTemplate)
+
+        // insert at end of board.fields.cardProperties
+        newBoard.fields.cardProperties.push(newTemplate)
         const changedBlocks: Block[] = [newBoard]
 
         let description = 'add property'
@@ -272,7 +273,10 @@ class Mutator {
             oldBlocks.push(activeView)
 
             const newActiveView = createBoardView(activeView)
-            newActiveView.fields.visiblePropertyIds.push(newTemplate.id)
+
+            // insert in proper location in activeview.fields.visiblePropetyIds
+            const viewIndex = index > 0 ? index : activeView.fields.visiblePropertyIds.length
+            newActiveView.fields.visiblePropertyIds.splice(viewIndex, 0, newTemplate.id)
             changedBlocks.push(newActiveView)
 
             description = 'add column'
@@ -556,6 +560,27 @@ class Mutator {
             },
             'display by',
             this.undoDisplayId,
+        )
+    }
+
+    async changeViewVisiblePropertiesOrder(view: BoardView, template: IPropertyTemplate, destIndex: number, description = 'change property order'): Promise<void> {
+        const oldVisiblePropertyIds = view.fields.visiblePropertyIds
+        const newOrder = oldVisiblePropertyIds.slice()
+
+        const srcIndex = oldVisiblePropertyIds.indexOf(template.id)
+        Utils.log(`srcIndex: ${srcIndex}, destIndex: ${destIndex}`)
+
+        newOrder.splice(destIndex, 0, newOrder.splice(srcIndex, 1)[0])
+
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(view.id, {updatedFields: {visiblePropertyIds: newOrder}})
+            },
+            async () => {
+                await octoClient.patchBlock(view.id, {updatedFields: {visiblePropertyIds: oldVisiblePropertyIds}})
+            },
+            description,
+            this.undoGroupId,
         )
     }
 
