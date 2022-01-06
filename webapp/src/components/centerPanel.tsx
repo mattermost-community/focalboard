@@ -247,7 +247,7 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
-            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCardId], 'add-card')
+            await mutator.changeViewCardOrder(this.props.board.id, activeView, [...activeView.fields.cardOrder, newCardId], 'add-card')
         })
     }
 
@@ -292,7 +292,7 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
-            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
+            await mutator.changeViewCardOrder(this.props.board.id, activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }
 

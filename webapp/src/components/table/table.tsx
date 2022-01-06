@@ -72,7 +72,7 @@ const Table = (props: Props): JSX.Element => {
                 newView.fields.columnWidths = columnWidths
                 try {
                     dispatch(updateView(newView))
-                    await mutator.updateBlock(newView, activeView, 'resize column')
+                    await mutator.updateBlock(board.id, newView, activeView, 'resize column')
                 } catch {
                     dispatch(updateView(activeView))
                 }
@@ -153,7 +153,7 @@ const Table = (props: Props): JSX.Element => {
         columnWidths[columnID] = longestSize
         const newView = createBoardView(activeView)
         newView.fields.columnWidths = columnWidths
-        mutator.updateBlock(newView, activeView, 'autosize column')
+        mutator.updateBlock(board.id, newView, activeView, 'autosize column')
     }, [activeView, board, cards])
 
     const hideGroup = useCallback((groupById: string): void => {
@@ -168,7 +168,7 @@ const Table = (props: Props): JSX.Element => {
         const newView = createBoardView(activeView)
         newView.fields.collapsedOptionIds = newValue
         mutator.performAsUndoGroup(async () => {
-            await mutator.updateBlock(newView, activeView, 'hide group')
+            await mutator.updateBlock(board.id, newView, activeView, 'hide group')
         })
     }, [activeView])
 
@@ -192,7 +192,7 @@ const Table = (props: Props): JSX.Element => {
             visibleOptionIds.splice(srcIndex, 0, visibleOptionIds.splice(destIndex, 1)[0])
             Utils.log(`ondrop. updated visibleoptionids: ${visibleOptionIds}`)
 
-            await mutator.changeViewVisibleOptionIds(activeView.id, activeView.fields.visibleOptionIds, visibleOptionIds)
+            await mutator.changeViewVisibleOptionIds(board.id, activeView.id, activeView.fields.visibleOptionIds, visibleOptionIds)
         }
     }, [activeView, visibleGroups])
 
@@ -225,7 +225,7 @@ const Table = (props: Props): JSX.Element => {
                     Utils.log(`ondrop. oldValue: ${oldOptionId}`)
 
                     if (groupID !== oldOptionId) {
-                        awaits.push(mutator.changePropertyValue(draggedCard, groupByProperty!.id, groupID, description))
+                        awaits.push(mutator.changePropertyValue(board.id, draggedCard, groupByProperty!.id, groupID, description))
                     }
                 }
                 await Promise.all(awaits)
@@ -256,7 +256,7 @@ const Table = (props: Props): JSX.Element => {
             }
 
             mutator.performAsUndoGroup(async () => {
-                await mutator.changeViewCardOrder(activeView, cardOrder, description)
+                await mutator.changeViewCardOrder(board.id, activeView, cardOrder, description)
             })
         }
     }, [activeView, cards, props.selectedCardIds, groupByProperty])

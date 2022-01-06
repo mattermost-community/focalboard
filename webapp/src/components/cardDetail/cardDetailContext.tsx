@@ -60,7 +60,7 @@ export const CardDetailProvider = (props: CardDetailProps): ReactElement => {
                     id: insertedBlock.id,
                     autoAdded: auto,
                 })
-                await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
+                await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, contentOrder, description)
             })
         },
         deleteBlock: async (block: Block, index: number) => {
@@ -69,7 +69,7 @@ export const CardDetailProvider = (props: CardDetailProps): ReactElement => {
             const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
             await mutator.performAsUndoGroup(async () => {
                 await mutator.deleteBlock(block, description)
-                await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
+                await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, contentOrder, description)
             })
         },
     }), [card, lastAddedBlock, intl])

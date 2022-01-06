@@ -3,15 +3,10 @@
 import React, {useCallback} from 'react'
 
 import {BlockIcons} from '../blockIcons'
-import {Board} from '../blocks/board'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
+
 import IconSelector from './iconSelector'
-import EmojiPicker from '../widgets/emojiPicker'
-import DeleteIcon from '../widgets/icons/delete'
-import EmojiIcon from '../widgets/icons/emoji'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
 
 type Props = {
     block: Card
@@ -23,11 +18,11 @@ const BlockIconSelector = React.memo((props: Props) => {
     const {block, size} = props
 
     const onSelectEmoji = useCallback((emoji: string) => {
-        mutator.changeBlockIcon(block.id, block.fields.icon, emoji)
+        mutator.changeBlockIcon(block.boardId, block.id, block.fields.icon, emoji)
         document.body.click()
     }, [block.id, block.fields.icon])
-    const onAddRandomIcon = useCallback(() => mutator.changeBlockIcon(block.id, block.fields.icon, BlockIcons.shared.randomIcon()), [block.id, block.fields.icon])
-    const onRemoveIcon = useCallback(() => mutator.changeBlockIcon(block.id, block.fields.icon, '', 'remove icon'), [block.id, block.fields.icon])
+    const onAddRandomIcon = useCallback(() => mutator.changeBlockIcon(block.boardId, block.id, block.fields.icon, BlockIcons.shared.randomIcon()), [block.id, block.fields.icon])
+    const onRemoveIcon = useCallback(() => mutator.changeBlockIcon(block.boardId, block.id, block.fields.icon, '', 'remove icon'), [block.id, block.fields.icon])
 
     if (!block.fields.icon) {
         return null

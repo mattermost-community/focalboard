@@ -45,14 +45,14 @@ const CardDetail = (props: Props): JSX.Element|null => {
     const titleRef = useRef<Focusable>(null)
     const saveTitle = useCallback(() => {
         if (title !== card.title) {
-            mutator.changeTitle(card.id, card.title, title)
+            mutator.changeTitle(props.board.id, card.id, card.title, title)
         }
     }, [card.title, title])
 
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
 
-    useImagePaste(card.id, card.fields.contentOrder, card.rootId)
+    useImagePaste(props.board.id, card.id, card.fields.contentOrder, card.rootId)
 
     useEffect(() => {
         if (!title) {
@@ -76,7 +76,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
     const setRandomIcon = useCallback(() => {
         const newIcon = BlockIcons.shared.randomIcon()
-        mutator.changeBlockIcon(card.id, card.fields.icon, newIcon)
+        mutator.changeBlockIcon(props.board.id, card.id, card.fields.icon, newIcon)
     }, [card.id, card.fields.icon])
 
     if (!card) {

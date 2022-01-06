@@ -143,7 +143,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         propertyId: data.propertyId,
                     }
 
-                    mutator.changeViewKanbanCalculations(props.activeView.id, props.activeView.fields.kanbanCalculations, newCalculations)
+                    mutator.changeViewKanbanCalculations(board.id, props.activeView.id, props.activeView.fields.kanbanCalculations, newCalculations)
                 }}
             />
             <div className='octo-spacer'/>
@@ -156,7 +156,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                                 id='hide'
                                 icon={<HideIcon/>}
                                 name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
-                                onClick={() => mutator.hideViewColumn(activeView, group.option.id || '')}
+                                onClick={() => mutator.hideViewColumn(board.id, activeView, group.option.id || '')}
                             />
                             {group.option.id &&
                                 <>

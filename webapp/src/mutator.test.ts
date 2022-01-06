@@ -19,15 +19,17 @@ beforeAll(() => {
 
 describe('Mutator', () => {
     test('changePropertyValue', async () => {
+        const board = TestBlockFactory.createBoard()
         const card = TestBlockFactory.createCard()
+        card.boardId = board.id
         card.fields.properties.property_1 = 'hello'
 
-        await mutator.changePropertyValue(card, 'property_1', 'hello')
+        await mutator.changePropertyValue(board.id, card, 'property_1', 'hello')
 
         // No API call should be made as property value DIDN'T CHANGE
         expect(FetchMock.fn).toBeCalledTimes(0)
 
-        await mutator.changePropertyValue(card, 'property_1', 'hello world')
+        await mutator.changePropertyValue(board.id, card, 'property_1', 'hello world')
 
         // 1 API call should be made as property value DID CHANGE
         expect(FetchMock.fn).toBeCalledTimes(1)

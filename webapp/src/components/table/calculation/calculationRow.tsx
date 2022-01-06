@@ -72,7 +72,7 @@ const CalculationRow = (props: Props): JSX.Element => {
                                 calculations[template.id] = v
                                 const newBoard = createBoard(props.board)
                                 newBoard.columnCalculations = calculations
-                                mutator.updateBoard(newBoard, props.board, 'update_calculation')
+                                mutator.updateBoard(props.board.id, newBoard, props.board, 'update_calculation')
                                 setHovered(false)
                             }}
                             cards={props.cards}
