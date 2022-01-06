@@ -339,20 +339,16 @@ func defaultLoggingConfig() string {
 }
 
 func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) {
-	return postWithBoardsEmbed(post, p.API.GetConfig().FeatureFlags.BoardsUnfurl), ""
+	return postWithBoardsEmbed(post), ""
 }
 
 func (p *Plugin) MessageWillBeUpdated(_ *plugin.Context, newPost, _ *mmModel.Post) (*mmModel.Post, string) {
-	return postWithBoardsEmbed(newPost, p.API.GetConfig().FeatureFlags.BoardsUnfurl), ""
+	return postWithBoardsEmbed(newPost), ""
 }
 
-func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) *mmModel.Post {
+func postWithBoardsEmbed(post *mmModel.Post) *mmModel.Post {
 	if _, ok := post.GetProps()["boards"]; ok {
 		post.AddProp("boards", nil)
-	}
-
-	if !showBoardsUnfurl {
-		return post
 	}
 
 	firstLink, newPostMessage := getFirstLinkAndShortenAllBoardsLink(post.Message)
