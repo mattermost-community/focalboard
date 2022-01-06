@@ -37,7 +37,7 @@ import wsClient, {
     MMWebSocketClient,
     ACTION_UPDATE_BLOCK,
     ACTION_UPDATE_CLIENT_CONFIG,
-    ACTION_UPDATE_CATEGORY, ACTION_UPDATE_BLOCK_CATEGORY,
+    ACTION_UPDATE_CATEGORY, ACTION_UPDATE_BLOCK_CATEGORY, ACTION_UPDATE_BOARD,
 } from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
@@ -210,7 +210,7 @@ export default class Plugin {
         }
 
         // register websocket handlers
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))

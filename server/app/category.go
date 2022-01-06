@@ -12,9 +12,7 @@ var (
 )
 
 func (a *App) CreateCategory(category *model.Category) (*model.Category, error) {
-	a.logger.Info("received: " + category.ID)
 	category.Hydrate()
-	a.logger.Info("set: " + category.ID)
 	if err := category.IsValid(); err != nil {
 		return nil, err
 	}

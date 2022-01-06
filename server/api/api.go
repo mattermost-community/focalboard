@@ -524,9 +524,6 @@ func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) 
 	categoryID := vars["categoryID"]
 	blockID := vars["blockID"]
 
-	a.logger.Debug("############ categoryID " + categoryID)
-	a.logger.Debug("############ blockID " + blockID)
-
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
