@@ -11,7 +11,7 @@ type FilterGroup = {
 }
 
 function isAFilterGroupInstance(object: (FilterClause | FilterGroup)): object is FilterGroup {
-    return 'innerOperation' in object && 'filters' in object
+    return 'operation' in object && 'filters' in object
 }
 
 function createFilterGroup(o?: FilterGroup): FilterGroup {

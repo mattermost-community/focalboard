@@ -20,10 +20,37 @@ func createTestSubscriptions(client *client.Client, num int, workspaceID string)
 		return nil, "", fmt.Errorf("cannot get current user: %w", resp.Error)
 	}
 
+	board := model.Block{
+		ID:       utils.NewID(utils.IDTypeBoard),
+		RootID:   workspaceID,
+		CreateAt: 1,
+		UpdateAt: 1,
+		Type:     model.TypeBoard,
+	}
+	boards, resp := client.InsertBlocks([]model.Block{board})
+	if resp.Error != nil {
+		return nil, "", fmt.Errorf("cannot insert test board block: %w", resp.Error)
+	}
+	board = boards[0]
+
 	for n := 0; n < num; n++ {
+		newBlock := model.Block{
+			ID:       utils.NewID(utils.IDTypeCard),
+			RootID:   board.ID,
+			CreateAt: 1,
+			UpdateAt: 1,
+			Type:     model.TypeCard,
+		}
+
+		newBlocks, resp := client.InsertBlocks([]model.Block{newBlock})
+		if resp.Error != nil {
+			return nil, "", fmt.Errorf("cannot insert test card block: %w", resp.Error)
+		}
+		newBlock = newBlocks[0]
+
 		sub := &model.Subscription{
-			BlockType:      model.TypeCard,
-			BlockID:        utils.NewID(utils.IDTypeCard),
+			BlockType:      newBlock.Type,
+			BlockID:        newBlock.ID,
 			WorkspaceID:    workspaceID,
 			SubscriberType: model.SubTypeUser,
 			SubscriberID:   user.ID,
