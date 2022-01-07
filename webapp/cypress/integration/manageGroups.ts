@@ -9,9 +9,9 @@ describe('Manage groups', () => {
     })
 
     it('MM-T4284 Adding a group', () => {
+        // Visit a page and create new empty board
         cy.visit('/')
-        cy.contains('+ Add board').click({force: true})
-        cy.contains('Empty board').click({force: true})
+        cy.uiCreateBoard('Empty board')
 
         cy.contains('+ Add a group').click({force: true})
         cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('exist')
@@ -24,10 +24,10 @@ describe('Manage groups', () => {
     })
 
     it('MM-T4285 Adding group color', () => {
+        // Visit a page and create new empty board
         cy.visit('/')
+        cy.uiCreateBoard('Empty board')
 
-        cy.contains('+ Add board').click({force: true})
-        cy.contains('Empty board').click({force: true})
         cy.contains('+ Add a group').click({force: true})
         cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('exist')
 
@@ -43,8 +43,11 @@ describe('Manage groups', () => {
                 cy.contains('Orange').should('exist')
 
                 // Click on green
-                cy.contains('Green').should('exist').click({force: true})
+                cy.contains('Green').should('be.visible').click().wait(1000) // eslint-disable-line cypress/no-unnecessary-waiting
             })
+        })
+
+        cy.get('.KanbanColumnHeader').last().within(() => {
             cy.get('.Label.propColorGreen').should('exist')
         })
     })
