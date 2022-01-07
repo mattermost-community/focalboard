@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
+	"runtime/debug"
 	"strconv"
 	"strings"
 	"time"
@@ -115,6 +116,17 @@ func (a *API) RegisterAdminRoutes(r *mux.Router) {
 
 func (a *API) requireCSRFToken(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			if p := recover(); p != nil {
+				a.logger.Error("Http handler panic",
+					mlog.Any("panic", p),
+					mlog.String("stack", string(debug.Stack())),
+					mlog.String("uri", r.URL.Path),
+				)
+				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", nil)
+			}
+		}()
+
 		if !a.checkCSRFToken(r) {
 			a.logger.Error("checkCSRFToken FAILED")
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "checkCSRFToken FAILED", nil)
