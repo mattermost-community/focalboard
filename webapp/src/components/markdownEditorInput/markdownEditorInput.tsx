@@ -47,13 +47,12 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     , [workspaceUsers])
     const ref = useRef<Editor>(null)
 
-    const generateEditorState = (text?: string) => {
-        const state = EditorState.createWithContent(ContentState.createFromText(text || ''))
-        return EditorState.moveSelectionToEnd(state)
+    const generateEditorState = (text?: string): EditorState => {
+        return EditorState.createWithContent(ContentState.createFromText(text || ''))
     }
 
     const [editorState, setEditorState] = useState(() => {
-        return generateEditorState(initialText)
+        return EditorState.moveSelectionToEnd(generateEditorState(initialText))
     })
 
     // avoiding stale closure
