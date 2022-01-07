@@ -191,6 +191,11 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		return nil
 	}
 
+	diffAuthors := make(StringMap)
+	for _, d := range diffs {
+		diffAuthors.Append(d.Authors)
+	}
+
 	opts := DiffConvOpts{
 		Language: "en", // TODO: use correct language with i18n available on server.
 		MakeCardLink: func(block *model.Block) string {
@@ -208,11 +213,12 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	if len(attachments) > 0 {
 		for _, sub := range subs {
 			// don't notify the author of their own changes.
-			if sub.SubscriberID == hint.ModifiedByID {
+			authorName, isAuthor := diffAuthors[sub.SubscriberID]
+			if isAuthor && len(diffAuthors) == 1 {
 				n.logger.Debug("notifySubscribers - deliver, skipping author",
 					mlog.Any("hint", hint),
-					mlog.String("modified_by_id", hint.ModifiedByID),
-					mlog.String("modified_by_username", hint.Username),
+					mlog.String("author_id", sub.SubscriberID),
+					mlog.String("author_username", authorName),
 				)
 				continue
 			}

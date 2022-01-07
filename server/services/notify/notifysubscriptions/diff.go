@@ -15,9 +15,9 @@ import (
 
 // Diff represents a difference between two versions of a block.
 type Diff struct {
-	Board    *model.Block
-	Card     *model.Block
-	Username string
+	Board   *model.Block
+	Card    *model.Block
+	Authors StringMap
 
 	BlockType model.BlockType
 	OldBlock  *model.Block
@@ -74,16 +74,6 @@ func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
 
 	if dg.board == nil || dg.card == nil {
 		return nil, fmt.Errorf("cannot generate diff for block %s; must have a valid board and card: %w", dg.hint.BlockID, err)
-	}
-
-	user, err := dg.store.GetUserByID(dg.hint.ModifiedByID)
-	if err != nil {
-		return nil, fmt.Errorf("could not lookup user %s: %w", dg.hint.ModifiedByID, err)
-	}
-	if user != nil {
-		dg.hint.Username = user.Username
-	} else {
-		dg.hint.Username = "unknown user" // TODO: localize this when server gets i18n
 	}
 
 	// parse board's property schema here so it only happens once.
@@ -163,6 +153,8 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 		return nil, fmt.Errorf("could not get subtree for card %s: %w", card.ID, err)
 	}
 
+	authors := make(StringMap)
+
 	// walk child blocks
 	var childDiffs []*Diff
 	for i := range blocks {
@@ -176,11 +168,14 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 		}
 		if blockDiff != nil {
 			childDiffs = append(childDiffs, blockDiff)
+			authors.Append(blockDiff.Authors)
 		}
 	}
 
 	dg.logger.Debug("generateDiffsForCard",
+		mlog.Bool("has_top_changes", cardDiff != nil),
 		mlog.Int("subtree", len(blocks)),
+		mlog.Array("author_names", authors.Values()),
 		mlog.Int("child_diffs", len(childDiffs)),
 	)
 
@@ -189,7 +184,7 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 			cardDiff = &Diff{
 				Board:       dg.board,
 				Card:        card,
-				Username:    dg.hint.Username,
+				Authors:     make(StringMap),
 				BlockType:   card.Type,
 				OldBlock:    card,
 				NewBlock:    card,
@@ -200,13 +195,22 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 		}
 		cardDiff.Diffs = childDiffs
 	}
+	cardDiff.Authors.Append(authors)
+
 	return cardDiff, nil
 }
 
 func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema model.PropSchema) (*Diff, error) {
+	dg.logger.Debug("generateDiffForBlock - new block",
+		mlog.String("block_id", newBlock.ID),
+		mlog.String("block_type", string(newBlock.Type)),
+		mlog.String("modified_by", newBlock.ModifiedBy),
+		mlog.Int64("update_at", newBlock.UpdateAt),
+	)
+
 	// find the version of the block as it was at the time of last notify.
 	opts := model.QueryBlockHistoryOptions{
-		BeforeUpdateAt: dg.lastNotifyAt,
+		BeforeUpdateAt: dg.lastNotifyAt + 1,
 		Limit:          1,
 		Descending:     true,
 	}
@@ -218,13 +222,52 @@ func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema mode
 	var oldBlock *model.Block
 	if len(history) != 0 {
 		oldBlock = &history[0]
+
+		dg.logger.Debug("generateDiffForBlock - old block",
+			mlog.String("block_id", oldBlock.ID),
+			mlog.String("block_type", string(oldBlock.Type)),
+			mlog.Int64("before_update_at", dg.lastNotifyAt),
+			mlog.String("modified_by", oldBlock.ModifiedBy),
+			mlog.Int64("update_at", oldBlock.UpdateAt),
+		)
+	}
+
+	// find all the versions of the blocks that changed so we can gather all the author usernames.
+	opts = model.QueryBlockHistoryOptions{
+		AfterUpdateAt: dg.lastNotifyAt,
+		Descending:    true,
+	}
+	chgBlocks, err := dg.store.GetBlockHistory(dg.container, newBlock.ID, opts)
+	if err != nil {
+		return nil, fmt.Errorf("error getting block history for block %s: %w", newBlock.ID, err)
+	}
+	authors := make(StringMap)
+
+	dg.logger.Debug("generateDiffForBlock - authors",
+		mlog.Int64("after_update_at", dg.lastNotifyAt),
+		mlog.Int("history_count", len(chgBlocks)),
+	)
+
+	// have to loop through history slice because GetBlockHistory does not return pointers.
+	for _, b := range chgBlocks {
+		user, err := dg.store.GetUserByID(b.ModifiedBy)
+		if err != nil || user == nil {
+			dg.logger.Error("could not fetch username for block",
+				mlog.String("modified_by", b.ModifiedBy),
+				mlog.Err(err),
+			)
+			authors.Add(b.ModifiedBy, "unknown_user") // todo: localize this when server has i18n
+		} else {
+			authors.Add(user.ID, user.Username)
+		}
 	}
 
 	propDiffs := dg.generatePropDiffs(oldBlock, newBlock, schema)
 
 	dg.logger.Debug("generateDiffForBlock - results",
 		mlog.String("block_id", newBlock.ID),
-		mlog.Int64("before_update_at", opts.BeforeUpdateAt),
+		mlog.String("block_type", string(newBlock.Type)),
+		mlog.Array("author_names", authors.Values()),
 		mlog.Int("history_count", len(history)),
 		mlog.Int("prop_diff_count", len(propDiffs)),
 	)
@@ -232,7 +275,7 @@ func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema mode
 	diff := &Diff{
 		Board:       dg.board,
 		Card:        dg.card,
-		Username:    dg.hint.Username,
+		Authors:     authors,
 		BlockType:   newBlock.Type,
 		OldBlock:    oldBlock,
 		NewBlock:    newBlock,

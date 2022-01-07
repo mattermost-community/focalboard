@@ -30,3 +30,31 @@ func getBoardDescription(board *model.Block) string {
 func stripNewlines(s string) string {
 	return strings.TrimSpace(strings.ReplaceAll(s, "\n", "¶ "))
 }
+
+type StringMap map[string]string
+
+func (sm StringMap) Add(k string, v string) {
+	sm[k] = v
+}
+
+func (sm StringMap) Append(m StringMap) {
+	for k, v := range m {
+		sm[k] = v
+	}
+}
+
+func (sm StringMap) Keys() []string {
+	keys := make([]string, 0, len(sm))
+	for k := range sm {
+		keys = append(keys, k)
+	}
+	return keys
+}
+
+func (sm StringMap) Values() []string {
+	values := make([]string, 0, len(sm))
+	for _, v := range sm {
+		values = append(values, v)
+	}
+	return values
+}
