@@ -20,9 +20,9 @@ import (
 
 const (
 	// card change notifications.
-	defAddCardNotify    = "@{{.Username}} has added the card {{.NewBlock | makeLink}}\n"
-	defModifyCardNotify = "###### @{{.Username}} has modified the card {{.Card | makeLink}}\n"
-	defDeleteCardNotify = "@{{.Username}} has deleted the card {{.Card | makeLink}}\n"
+	defAddCardNotify    = "{{.Authors | printAuthors \"unknown_user\" }} has added the card {{.NewBlock | makeLink}}\n"
+	defModifyCardNotify = "###### {{.Authors | printAuthors \"unknown_user\" }} has modified the card {{.Card | makeLink}}\n"
+	defDeleteCardNotify = "{{.Authors | printAuthors \"unknown_user\" }} has deleted the card {{.Card | makeLink}}\n"
 )
 
 var (
@@ -57,6 +57,9 @@ func getTemplate(name string, opts DiffConvOpts, def string) (*template.Template
 			"stripNewlines": func(s string) string {
 				return strings.TrimSpace(strings.ReplaceAll(s, "\n", "¶ "))
 			},
+			"printAuthors": func(empty string, authors StringMap) string {
+				return makeAuthorsList(authors, empty)
+			},
 		}
 		t.Funcs(myFuncs)
 
@@ -68,6 +71,21 @@ func getTemplate(name string, opts DiffConvOpts, def string) (*template.Template
 		templateCache[key] = t2
 	}
 	return t, nil
+}
+
+func makeAuthorsList(authors StringMap, empty string) string {
+	if len(authors) == 0 {
+		return empty
+	}
+	prefix := ""
+	sb := &strings.Builder{}
+	for _, name := range authors.Values() {
+		sb.WriteString(prefix)
+		sb.WriteString("@")
+		sb.WriteString(strings.TrimSpace(name))
+		prefix = ", "
+	}
+	return sb.String()
 }
 
 // execTemplate executes the named template corresponding to the template name and language specified.
@@ -191,7 +209,7 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 			if format != "" {
 				attachment.Fields = append(attachment.Fields, &mm_model.SlackAttachmentField{
 					Short: false,
-					Title: "Comment",
+					Title: "Comment by " + makeAuthorsList(child.Authors, "unknown_user"), // todo:  localize this when server has i18n
 					Value: fmt.Sprintf(format, stripNewlines(block.Title)),
 				})
 			}
