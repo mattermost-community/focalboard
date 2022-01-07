@@ -1,9 +1,5 @@
-//
-//  CustomWKWebView.swift
-//  Focalboard
-//
-//  Created by Chen-I Lim on 1/7/22.
-//
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 
 import Foundation
 import WebKit
