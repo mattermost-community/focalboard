@@ -19,7 +19,6 @@ import {useAppSelector} from '../../store/hooks'
 import ModalWrapper from '../modalWrapper'
 import ShareBoardComponent from '../shareBoardComponent'
 import {sendFlashMessage} from '../flashMessages'
-import mutator from '../../mutator'
 
 type Props = {
     board: Board
@@ -106,23 +105,12 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
     const intl = useIntl()
 
     const showShareBoard = user && user.id !== 'single-user' && props.showShared
-    const canShowCardBadges = (activeView.fields.viewType === 'board') || (activeView.fields.viewType === 'gallery')
-    const badgesVisible = Boolean(activeView.fields.cardBadgesVisible)
 
     return (
         <ModalWrapper>
             <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
                 <IconButton icon={<OptionsIcon/>}/>
                 <Menu>
-                    {canShowCardBadges &&
-                        <Menu.Text
-                            id='cardBadges'
-                            name={intl.formatMessage({
-                                id: badgesVisible ? 'ViewHeader.hide-card-badges' : 'ViewHeader.show-card-badges',
-                                defaultMessage: `${badgesVisible ? 'Hide' : 'Show'}  card badges`,
-                            })}
-                            onClick={() => mutator.changeViewCardBadges(activeView.id, badgesVisible, !badgesVisible)}
-                        />}
                     <Menu.Text
                         id='exportCsv'
                         name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}

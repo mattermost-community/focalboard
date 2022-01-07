@@ -636,19 +636,6 @@ class Mutator {
         )
     }
 
-    async changeViewCardBadges(viewId: string, oldVisible: boolean, visible: boolean): Promise<void> {
-        await undoManager.perform(
-            async () => {
-                await octoClient.patchBlock(viewId, {updatedFields: {cardBadgesVisible: visible}})
-            },
-            async () => {
-                await octoClient.patchBlock(viewId, {updatedFields: {cardBadgesVisible: oldVisible}})
-            },
-            'card badges',
-            this.undoGroupId,
-        )
-    }
-
     async hideViewColumn(view: BoardView, columnOptionId: string): Promise<void> {
         if (view.fields.hiddenOptionIds.includes(columnOptionId)) {
             return

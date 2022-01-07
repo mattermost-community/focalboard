@@ -53,6 +53,7 @@ const Gallery = (props: Props): JSX.Element => {
     }
 
     const visibleTitle = activeView.fields.visiblePropertyIds.includes(Constants.titleColumnId)
+    const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
 
     return (
         <div className='Gallery'>
@@ -65,8 +66,8 @@ const Gallery = (props: Props): JSX.Element => {
                         onClick={props.onCardClicked}
                         visiblePropertyTemplates={visiblePropertyTemplates}
                         visibleTitle={visibleTitle}
+                        visibleBadges={visibleBadges}
                         isSelected={props.selectedCardIds.includes(card.id)}
-                        badgesVisible={Boolean(activeView.fields.cardBadgesVisible)}
                         readonly={props.readonly}
                         onDrop={onDropToCard}
                         isManualSort={isManualSort}

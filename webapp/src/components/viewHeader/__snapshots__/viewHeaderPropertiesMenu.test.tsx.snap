@@ -3,7 +3,7 @@
 exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1`] = `
 <div>
   <div
-    aria-label="menuwrapper"
+    aria-label="Properties menu"
     class="MenuWrapper"
     role="button"
   >
@@ -25,7 +25,9 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
           class="menu-options"
         >
           <div
+            aria-label="Status"
             class="MenuOption SwitchOption menu-option"
+            role="button"
           >
             <div
               class="noicon"
@@ -44,7 +46,9 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
             </div>
           </div>
           <div
+            aria-label="Property 1"
             class="MenuOption SwitchOption menu-option"
+            role="button"
           >
             <div
               class="noicon"
@@ -63,7 +67,9 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
             </div>
           </div>
           <div
+            aria-label="Property 2"
             class="MenuOption SwitchOption menu-option"
+            role="button"
           >
             <div
               class="noicon"
@@ -82,7 +88,9 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
             </div>
           </div>
           <div
+            aria-label="Property 3"
             class="MenuOption SwitchOption menu-option"
+            role="button"
           >
             <div
               class="noicon"
@@ -91,6 +99,27 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
               class="menu-name"
             >
               Property 3
+            </div>
+            <div
+              class="Switch"
+            >
+              <div
+                class="octo-switch-inner"
+              />
+            </div>
+          </div>
+          <div
+            aria-label="Comments and Description"
+            class="MenuOption SwitchOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Comments and Description
             </div>
             <div
               class="Switch"
@@ -134,7 +163,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
 exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu with gallery typeview 1`] = `
 <div>
   <div
-    aria-label="menuwrapper"
+    aria-label="Properties menu"
     class="MenuWrapper"
     role="button"
   >
@@ -156,7 +185,9 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
           class="menu-options"
         >
           <div
+            aria-label="Title"
             class="MenuOption SwitchOption menu-option"
+            role="button"
           >
             <div
               class="noicon"
@@ -175,7 +206,9 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
             </div>
           </div>
           <div
+            aria-label="Status"
             class="MenuOption SwitchOption menu-option"
+            role="button"
           >
             <div
               class="noicon"
@@ -194,7 +227,9 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
             </div>
           </div>
           <div
+            aria-label="Property 1"
             class="MenuOption SwitchOption menu-option"
+            role="button"
           >
             <div
               class="noicon"
@@ -213,7 +248,9 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
             </div>
           </div>
           <div
+            aria-label="Property 2"
             class="MenuOption SwitchOption menu-option"
+            role="button"
           >
             <div
               class="noicon"
@@ -232,7 +269,9 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
             </div>
           </div>
           <div
+            aria-label="Property 3"
             class="MenuOption SwitchOption menu-option"
+            role="button"
           >
             <div
               class="noicon"
@@ -241,6 +280,27 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
               class="menu-name"
             >
               Property 3
+            </div>
+            <div
+              class="Switch"
+            >
+              <div
+                class="octo-switch-inner"
+              />
+            </div>
+          </div>
+          <div
+            aria-label="Comments and Description"
+            class="MenuOption SwitchOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Comments and Description
             </div>
             <div
               class="Switch"

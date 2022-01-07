@@ -18,8 +18,6 @@ import {Archiver} from '../../archiver'
 
 import {CsvExporter} from '../../csvExporter'
 
-import {mutator} from '../../mutator'
-
 import ViewHeaderActionsMenu from './viewHeaderActionsMenu'
 
 jest.mock('../../archiver')
@@ -27,7 +25,6 @@ jest.mock('../../csvExporter')
 jest.mock('../../mutator')
 const mockedArchiver = mocked(Archiver, true)
 const mockedCsvExporter = mocked(CsvExporter, true)
-const mockedMutator = mocked(mutator, true)
 
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
@@ -126,25 +123,5 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
         userEvent.click(buttonExportBoardArchive)
         expect(mockedArchiver.exportBoardArchive).toBeCalledTimes(1)
         expect(mockedArchiver.exportBoardArchive).toBeCalledWith(board)
-    })
-
-    test('show menu and verify the call for showing card badges', () => {
-        render(
-            wrapIntl(
-                <ReduxProvider store={store}>
-                    <ViewHeaderActionsMenu
-                        board={board}
-                        activeView={activeView}
-                        cards={[card]}
-                        showShared={true}
-                    />
-                </ReduxProvider>,
-            ),
-        )
-        const menuButton = screen.getByRole('button', {name: 'View menu'})
-        userEvent.click(menuButton)
-        const badgesButton = screen.getByRole('button', {name: 'Show card badges'})
-        userEvent.click(badgesButton)
-        expect(mockedMutator.changeViewCardBadges).toHaveBeenCalledWith(expect.anything(), false, true)
     })
 })
