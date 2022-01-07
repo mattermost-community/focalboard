@@ -256,10 +256,10 @@ class WSClient {
 
         ws.onopen = () => {
             Utils.log('WSClient webSocket opened.')
+            this.state = 'open'
             for (const handler of this.onStateChange) {
                 handler(this, 'open')
             }
-            this.state = 'open'
         }
 
         ws.onerror = (e) => {
@@ -427,6 +427,7 @@ class WSClient {
         }
 
         this.sendCommand(command)
+        console.log('unsubscribeToWorkspace')
     }
 
     subscribeToWorkspace(workspaceId: string): void {
@@ -441,6 +442,7 @@ class WSClient {
         }
 
         this.sendCommand(command)
+        console.log('subscribeToWorkspace')
     }
 
     unsubscribeFromBlocks(workspaceId: string, blockIds: string[], readToken = ''): void {
