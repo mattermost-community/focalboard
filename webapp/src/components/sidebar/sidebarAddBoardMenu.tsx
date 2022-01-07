@@ -28,55 +28,55 @@ type Props = {
 export const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
     const oldBoardId = activeBoardId
 
-    const board = createBoard()
-    board.rootId = board.id
+    let board = createBoard()
+    await mutator.insertBoard(
+        board,
+        'add board',
+        async (newBoard: Board) => {
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoard.id})
+            board = newBoard
+        }
+    )
 
     const view = createBoardView()
     view.fields.viewType = 'board'
-    view.parentId = board.id
-    view.rootId = board.rootId
+    view.boardId = board.id
     view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
-    await mutator.insertBlocks(
-        [board, view],
+    await mutator.insertBlock(
+        view,
         'add board',
-        async (newBlocks: Block[]) => {
-            const newBoardId = newBlocks[0].id
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoardId})
-            showBoard(newBoardId)
-        },
-        async () => {
-            if (oldBoardId) {
-                showBoard(oldBoardId)
-            }
-        },
+        async (newBlock: Block) => {
+            showBoard(newBlock.id)
+        }
     )
 }
 
 export const addBoardTemplateClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
-    const boardTemplate = createBoard()
-    boardTemplate.rootId = boardTemplate.id
-    boardTemplate.fields.isTemplate = true
+    let boardTemplate = createBoard()
+    boardTemplate.isTemplate = true
     boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled Template'})
+
+    await mutator.insertBoard(
+        boardTemplate,
+        'add board template',
+        async (newBoard: Board) => {
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardTemplate, {board: newBoard.id})
+            boardTemplate = newBoard
+        }
+    )
 
     const view = createBoardView()
     view.fields.viewType = 'board'
-    view.parentId = boardTemplate.id
-    view.rootId = boardTemplate.rootId
+    view.boardId = boardTemplate.id
     view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
-    await mutator.insertBlocks(
-        [boardTemplate, view],
-        'add board template',
-        async (newBlocks: Block[]) => {
-            const newBoardId = newBlocks[0].id
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardTemplate, {board: newBoardId})
-            showBoard(newBoardId)
-        }, async () => {
-            if (activeBoardId) {
-                showBoard(activeBoardId)
-            }
-        },
+    await mutator.insertBlock(
+        view,
+        'add board template initial view',
+        async (newBlock: Block) => {
+            showBoard(newBlock.boardId)
+        }
     )
 }
 
@@ -94,10 +94,11 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
     }, [match, history])
 
     useEffect(() => {
-        if (octoClient.workspaceId !== '0' && globalTemplates.length === 0) {
+        if (octoClient.teamId !== '0' && globalTemplates.length === 0) {
+            // ToDo: fetch team templates
             dispatch(fetchGlobalTemplates())
         }
-    }, [octoClient.workspaceId])
+    }, [octoClient.teamId])
 
     const intl = useIntl()
     const templates = useAppSelector(getSortedTemplates)

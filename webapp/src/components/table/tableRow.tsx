@@ -99,7 +99,7 @@ const TableRow = React.memo((props: Props) => {
                         placeholderText='Untitled'
                         onChange={(newTitle: string) => setTitle(newTitle)}
                         onSave={(saveType) => {
-                            mutator.changeTitle(card.id, card.title, title)
+                            mutator.changeTitle(props.board.id, card.id, card.title, title)
                             if (saveType === 'onEnter') {
                                 onSaveWithEnter()
                             }
@@ -122,7 +122,7 @@ const TableRow = React.memo((props: Props) => {
 
             {/* Columns, one per property */}
 
-            {board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
+            {board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
                 if (!columnRefs.get(template.id)) {
                     columnRefs.set(template.id, React.createRef())
                 }

@@ -6,8 +6,6 @@ import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@red
 import {default as client} from '../octoClient'
 import {IUser} from '../user'
 
-import {initialLoad} from './initialLoad'
-
 import {RootState} from './index'
 
 export const fetchMe = createAsyncThunk(
@@ -44,12 +42,14 @@ const usersSlice = createSlice({
             state.me = null
             state.loggedIn = false
         })
-        builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.workspaceUsers = action.payload.workspaceUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
-                acc[user.id] = user
-                return acc
-            }, {})
-        })
+
+        // ToDo: readd with members
+        // builder.addCase(initialLoad.fulfilled, (state, action) => {
+        //     state.workspaceUsers = action.payload.workspaceUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
+        //         acc[user.id] = user
+        //         return acc
+        //     }, {})
+        // })
     },
 })
 

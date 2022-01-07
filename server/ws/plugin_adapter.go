@@ -3,6 +3,7 @@ package ws
 
 import (
 	"fmt"
+	"math/rand"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -388,12 +389,98 @@ func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) 
 	pa.sendMessageToAll(utils.StructToMap(pluginConfig))
 }
 
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func randSeq(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
+}
+
 // sendTeamMessageSkipCluster sends a message to all the users
 // with a websocket client subscribed to a given team.
 func (pa *PluginAdapter) sendTeamMessageSkipCluster(teamID string, payload map[string]interface{}) {
 	userIDs := pa.getUserIDsForTeam(teamID)
 	for _, userID := range userIDs {
 		pa.api.PublishWebSocketEvent(websocketActionUpdateBlock, payload, &mmModel.WebsocketBroadcast{UserId: userID})
+
+		// TODO remove this demo code
+		//category := model.Category{
+		//	ID:       "7uph4t9n1ri8xjcfeknr8y1hboc",
+		//	Name:     "Space X - " + randSeq(5),
+		//	UserID:   userID,
+		//	TeamID:   "atjjg8ofqb8kjnwy15yhezdgoh",
+		//	CreateAt: utils.GetMillis(),
+		//	UpdateAt: utils.GetMillis(),
+		//	DeleteAt: 0,
+		//}
+		//message := UpdateMsg{
+		//	Action:   websocketActionUpdateCategory,
+		//	Category: &category,
+		//}
+		//
+		//pa.api.PublishWebSocketEvent("UPDATE_CATEGORY", utils.StructToMap(message), &mmModel.WebsocketBroadcast{UserId: userID})
+		//
+		//categoryTesla := model.Category{
+		//	ID:       "763zggj7k43r3p8u9wra5dswsqr",
+		//	Name:     "Tesla",
+		//	UserID:   userID,
+		//	TeamID:   "atjjg8ofqb8kjnwy15yhezdgoh",
+		//	CreateAt: utils.GetMillis(),
+		//	UpdateAt: utils.GetMillis(),
+		//	DeleteAt: 0,
+		//}
+		//messageTesla := UpdateMsg{
+		//	Action:   websocketActionUpdateCategory,
+		//	Category: &categoryTesla,
+		//}
+		//pa.api.PublishWebSocketEvent("UPDATE_CATEGORY", utils.StructToMap(messageTesla), &mmModel.WebsocketBroadcast{UserId: userID})
+		//
+		//categoryTataMotors := model.Category{
+		//	ID:       "7guagyjdymjnpzxa7qmq1oz9000",
+		//	Name:     "Tata Motors",
+		//	UserID:   userID,
+		//	TeamID:   "atjjg8ofqb8kjnwy15yhezdgoh",
+		//	CreateAt: utils.GetMillis(),
+		//	UpdateAt: utils.GetMillis(),
+		//	DeleteAt: 0,
+		//}
+		//messageTataMotors := UpdateMsg{
+		//	Action:   websocketActionUpdateCategory,
+		//	Category: &categoryTataMotors,
+		//}
+		//pa.api.PublishWebSocketEvent("UPDATE_CATEGORY", utils.StructToMap(messageTataMotors), &mmModel.WebsocketBroadcast{UserId: userID})
+		//
+		//messageUpdateBlockCategory := UpdateMsg{
+		//	Action: websocketActionUpdateCategoryBlock,
+		//	BlockCategories: &model.BlockCategoryWebsocketData{
+		//		BlockID:    "btiignq6363goxnrcpeoj7zbhqw",
+		//		CategoryID: "7fp1itqxiktnr5nuzxd1hi6fupw",
+		//	},
+		//}
+		//pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
+		//
+		//messageUpdateBlockCategory.BlockCategories.BlockID = "btiignq6363goxnrcpeoj7zbhqw"
+		//messageUpdateBlockCategory.BlockCategories.CategoryID = "7fp1itqxiktnr5nuzxd1hi6fupw"
+		//pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
+		//
+		//messageUpdateBlockCategory.BlockCategories.BlockID = "btiignq6363goxnrcpeoj7zbhqw"
+		//messageUpdateBlockCategory.BlockCategories.CategoryID = "7fp1itqxiktnr5nuzxd1hi6fupw"
+		//pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
+		//
+		//messageUpdateBlockCategory.BlockCategories.BlockID = "b8bbwjqm4oi8m8rmmwobdphoazc"
+		//messageUpdateBlockCategory.BlockCategories.CategoryID = "7qefs6kcf3fdcfdx7q5irjkrzoo"
+		//pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
+		//
+		//messageUpdateBlockCategory.BlockCategories.BlockID = "bco3k38hgnb8t98trdokabahgmh"
+		//messageUpdateBlockCategory.BlockCategories.CategoryID = ""
+		//pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
+		//
+		//messageUpdateBlockCategory.BlockCategories.BlockID = "bao8i9i67jjyhdde6hynn3f8t9r"
+		//messageUpdateBlockCategory.BlockCategories.CategoryID = ""
+		//pa.api.PublishWebSocketEvent("UPDATE_BLOCK_CATEGORY", utils.StructToMap(messageUpdateBlockCategory), &mmModel.WebsocketBroadcast{UserId: userID})
 	}
 }
 
@@ -440,7 +527,7 @@ func (pa *PluginAdapter) sendBoardMessage(teamID, boardID string, payload map[st
 }
 
 func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block model.Block) {
-	pa.api.LogInfo("BroadcastingBlockChange",
+	pa.api.LogDebug("BroadcastingBlockChange",
 		"teamID", teamID,
 		"boardID", block.BoardID,
 		"blockID", block.ID,
@@ -453,6 +540,41 @@ func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block model.Block) 
 	}
 
 	pa.sendBoardMessage(teamID, block.BoardID, utils.StructToMap(message))
+}
+
+func (pa *PluginAdapter) BroadcastCategoryChange(teamID, userID string, category model.Category) {
+	pa.api.LogDebug(
+		"BroadcastCategoryChange",
+		"userID", userID,
+		"teamID", teamID,
+		"categoryID", category.ID,
+	)
+
+	message := UpdateCategoryMessage{
+		Action:   websocketActionUpdateCategory,
+		TeamID:   teamID,
+		Category: &category,
+	}
+
+	pa.sendTeamMessage(teamID, utils.StructToMap(message))
+}
+
+func (pa *PluginAdapter) BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData) {
+	pa.api.LogDebug(
+		"BroadcastCategoryBlockChange",
+		"userID", userID,
+		"teamID", teamID,
+		"categoryID", blockCategory.CategoryID,
+		"blockID", blockCategory.BlockID,
+	)
+
+	message := UpdateCategoryMessage{
+		Action:          websocketActionUpdateCategoryBlock,
+		TeamID:          teamID,
+		BlockCategories: &blockCategory,
+	}
+
+	pa.sendTeamMessage(teamID, utils.StructToMap(message))
 }
 
 func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {

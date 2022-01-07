@@ -6,7 +6,7 @@ import {IntlShape} from 'react-intl'
 import {DateUtils} from 'react-day-picker'
 
 import {Block, createBlock} from './blocks/block'
-import {IPropertyTemplate, createBoard} from './blocks/board'
+import {IPropertyTemplate} from './blocks/board'
 import {BoardView, createBoardView} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
@@ -81,7 +81,6 @@ class OctoUtils {
 
     static hydrateBlock(block: Block): Block {
         switch (block.type) {
-        case 'board': { return createBoard(block) }
         case 'view': { return createBoardView(block) }
         case 'card': { return createCard(block) }
         case 'text': { return createTextBlock(block) }

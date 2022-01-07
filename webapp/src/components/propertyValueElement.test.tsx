@@ -19,7 +19,7 @@ describe('components/propertyValueElement', () => {
     const comments = TestBlockFactory.createComment(card)
 
     test('should match snapshot, select', async () => {
-        const propertyTemplate = board.fields.cardProperties.find((p) => p.id === 'property1')
+        const propertyTemplate = board.cardProperties.find((p) => p.id === 'property1')
         const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
@@ -27,7 +27,7 @@ describe('components/propertyValueElement', () => {
                 card={card}
                 contents={[]}
                 comments={[comments]}
-                propertyTemplate={propertyTemplate || board.fields.cardProperties[0]}
+                propertyTemplate={propertyTemplate || board.cardProperties[0]}
                 showEmptyPlaceholder={true}
             />,
         )
@@ -37,7 +37,7 @@ describe('components/propertyValueElement', () => {
     })
 
     test('should match snapshot, select, read-only', async () => {
-        const propertyTemplate = board.fields.cardProperties.find((p) => p.id === 'property1')
+        const propertyTemplate = board.cardProperties.find((p) => p.id === 'property1')
         const component = wrapDNDIntl(
             <PropertyValueElement
                 board={board}
@@ -45,7 +45,7 @@ describe('components/propertyValueElement', () => {
                 card={card}
                 contents={[]}
                 comments={[comments]}
-                propertyTemplate={propertyTemplate || board.fields.cardProperties[0]}
+                propertyTemplate={propertyTemplate || board.cardProperties[0]}
                 showEmptyPlaceholder={true}
             />,
         )

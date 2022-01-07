@@ -48,7 +48,7 @@ const Kanban = (props: Props) => {
     const propertyValues = groupByProperty.options || []
     Utils.log(`${propertyValues.length} propertyValues`)
 
-    const visiblePropertyTemplates = board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+    const visiblePropertyTemplates = board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
     const isManualSort = activeView.fields.sortOptions.length === 0
 
     const propertyNameChanged = useCallback(async (option: IPropertyOption, text: string): Promise<void> => {
@@ -104,11 +104,11 @@ const Kanban = (props: Props) => {
                     Utils.log(`ondrop. Card: ${draggedCard.title}, column: ${optionId}`)
                     const oldValue = draggedCard.fields.properties[groupByProperty!.id]
                     if (optionId !== oldValue) {
-                        awaits.push(mutator.changePropertyValue(draggedCard, groupByProperty!.id, optionId, description))
+                        awaits.push(mutator.changePropertyValue(props.board.id, draggedCard, groupByProperty!.id, optionId, description))
                     }
                 }
                 const newOrder = orderAfterMoveToColumn(draggedCardIds, optionId)
-                awaits.push(mutator.changeViewCardOrder(activeView, newOrder, description))
+                awaits.push(mutator.changeViewCardOrder(props.board.id, activeView, newOrder, description))
                 await Promise.all(awaits)
             })
         } else if (dstOption) {
@@ -132,7 +132,7 @@ const Kanban = (props: Props) => {
                 moveTo,
             }) as string[]
 
-            await mutator.changeViewVisibleOptionIds(activeView.id, activeView.fields.visibleOptionIds, visibleOptionIdsRearranged)
+            await mutator.changeViewVisibleOptionIds(props.board.id, activeView.id, activeView.fields.visibleOptionIds, visibleOptionIdsRearranged)
         }
     }, [cards, visibleGroups, activeView, groupByProperty, props.selectedCardIds])
 
@@ -171,11 +171,11 @@ const Kanban = (props: Props) => {
                 Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
                 const oldOptionId = draggedCard.fields.properties[groupByProperty!.id]
                 if (optionId !== oldOptionId) {
-                    awaits.push(mutator.changePropertyValue(draggedCard, groupByProperty!.id, optionId, description))
+                    awaits.push(mutator.changePropertyValue(props.board.id, draggedCard, groupByProperty!.id, optionId, description))
                 }
             }
             await Promise.all(awaits)
-            await mutator.changeViewCardOrder(activeView, cardOrder, description)
+            await mutator.changeViewCardOrder(props.board.id, activeView, cardOrder, description)
         })
     }, [cards, activeView, groupByProperty, props.selectedCardIds])
 

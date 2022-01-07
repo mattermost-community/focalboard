@@ -24,7 +24,7 @@ import {updateViews, getCurrentView, setCurrent as setCurrentView, getCurrentBoa
 import {updateCards} from '../store/cards'
 import {updateContents} from '../store/contents'
 import {updateComments} from '../store/comments'
-import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
+import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {UserSettings} from '../userSettings'
 
@@ -32,6 +32,8 @@ import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import {getSidebarCategories} from '../store/sidebar'
+import {setTeam} from '../store/teams'
 type Props = {
     readonly?: boolean
 }
@@ -44,14 +46,13 @@ const BoardPage = (props: Props): JSX.Element => {
     const activeView = useAppSelector(getCurrentView)
     const boardViews = useAppSelector(getCurrentBoardViews)
     const dispatch = useAppDispatch()
-
     const history = useHistory()
-    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const [websocketClosed, setWebsocketClosed] = useState(false)
     const queryString = new URLSearchParams(useLocation().search)
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
-
-    let workspaceId = match.params.workspaceId || UserSettings.lastWorkspaceId || '0'
+    let teamId = match.params.teamId || UserSettings.lastTeamId || '0'
+    const categories = useAppSelector(getSidebarCategories)
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -59,101 +60,165 @@ const BoardPage = (props: Props): JSX.Element => {
         window.location.href = window.location.href.replace('/plugins/focalboard', '/boards')
     }
 
-    // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
-        workspaceId = match.params.workspaceId || workspaceId
-        UserSettings.lastWorkspaceId = workspaceId
-        octoClient.workspaceId = workspaceId
-    }, [match.params.workspaceId])
-
-    // Backward compatibility: This can be removed in the future, this is for
-    // transform the old query params into routes
-    useEffect(() => {
+        // This function is called when the user selected a team from the team sidebar.
+        (window as any).setTeamInFocalboard = (newTeamID: string) => {
+            // wsClient.unsubscribeToTeam(teamId)
+            dispatch(setTeam(newTeamID))
+            const params = {teamId: newTeamID}
+            history.push(generatePath(match.path, params))
+            wsClient.subscribeToTeam(newTeamID)
+        }
     }, [])
 
+    // TODO: Make this less brittle. This only works because this is the root render function
     useEffect(() => {
-        // don't do anything if-
-        // 1. the URL already has a workspace ID, or
-        // 2. the workspace ID is unavailable.
-        // This also ensures once the workspace id is
-        // set in the URL, we don't update the history anymore.
-        if (props.readonly || match.params.workspaceId || !workspaceId || workspaceId === '0') {
-            return
-        }
-
-        // we can pick workspace ID from board if it's not available anywhere,
-        const workspaceIDToUse = workspaceId || board.workspaceId
-
-        const newPath = Utils.buildOriginalPath(workspaceIDToUse, match.params.boardId, match.params.viewId, match.params.cardId)
-        history.replace(`/workspace/${newPath}`)
-    }, [workspaceId, match.params.boardId, match.params.viewId, match.params.cardId])
+        teamId = match.params.teamId || teamId
+        UserSettings.lastTeamId = teamId
+        octoClient.teamId = teamId
+    }, [match.params.teamId])
 
     useEffect(() => {
-        // Backward compatibility: This can be removed in the future, this is for
-        // transform the old query params into routes
-        const queryBoardId = queryString.get('id')
-        const params = {...match.params}
-        let needsRedirect = false
-        if (queryBoardId) {
-            params.boardId = queryBoardId
-            needsRedirect = true
-        }
-        const queryViewId = queryString.get('v')
-        if (queryViewId) {
-            params.viewId = queryViewId
-            needsRedirect = true
-        }
-        const queryCardId = queryString.get('c')
-        if (queryCardId) {
-            params.cardId = queryCardId
-            needsRedirect = true
-        }
-        if (needsRedirect) {
-            const newPath = generatePath(match.path, params)
-            history.replace(newPath)
-            return
-        }
+        if (match.params.boardId) {
+            // set the active board if we're able to pick one
+            dispatch(setCurrentBoard(match.params.boardId))
 
-        // Backward compatibility end
-        const boardId = match.params.boardId
-        const viewId = match.params.viewId === '0' ? '' : match.params.viewId
+            // and fetch its data
+            dispatch(loadBoardData(match.params.boardId))
 
-        if (!boardId) {
-            // Load last viewed boardView
-            const lastBoardId = UserSettings.lastBoardId || undefined
-            const lastViewId = UserSettings.lastViewId || undefined
-            if (lastBoardId) {
-                let newPath = generatePath(match.path, {...match.params, boardId: lastBoardId})
-                if (lastViewId) {
-                    newPath = generatePath(match.path, {...match.params, boardId: lastBoardId, viewId: lastViewId})
+            // and set it as most recently viewed board
+            UserSettings.setLastBoardID(teamId, match.params.boardId)
+
+            if (match.params.viewId) {
+                dispatch(setCurrentView(match.params.viewId))
+                UserSettings.setLastViewId(match.params.boardId, match.params.viewId)
+            }
+        }
+    }, [match.params.boardId, match.params.viewId])
+
+    useEffect(() => {
+        let boardID = match.params.boardId
+        if (!match.params.boardId) {
+            // first preference is for last visited board
+            boardID = UserSettings.lastBoardId[teamId]
+
+            // if last visited board is unavailable, use the first board in categories list
+            if (!boardID && categories.length > 0) {
+                // a category may exist without any boards.
+                // find the first category with a board and pick it's first board
+                const categoryWithBoards = categories.find((category) => category.blockIDs.length > 0)
+
+                // there may even be no boards at all
+                if (categoryWithBoards) {
+                    boardID = categoryWithBoards.blockIDs[0]
                 }
+            }
+
+            if (boardID) {
+                const newPath = generatePath(match.path, {...match.params, boardId: boardID, viewID: undefined})
                 history.replace(newPath)
+
+                // return from here because the loadBoardData() call
+                // will fetch the data to be used below. We'll
+                // use it in the next render cycle.
                 return
             }
-            return
         }
 
-        Utils.log(`attachToBoard: ${boardId}`)
+        let viewID = match.params.viewId
 
-        // Ensure boardViews is for our boardId before redirecting
-        const isCorrectBoardView = boardViews.length > 0 && boardViews[0].parentId === boardId
-        if (!viewId && isCorrectBoardView) {
-            const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
-            history.replace(newPath)
-            return
+        // when a view isn't open,
+        // but the data is available, try opening a view
+        if (!match.params.viewId && board && board.id === match.params.boardId && boardViews && boardViews.length > 0) {
+            // most recent view gets the first preference
+            viewID = UserSettings.lastViewId[boardID]
+            if (viewID) {
+                UserSettings.setLastViewId(boardID, viewID)
+                dispatch(setCurrentView(viewID))
+            } else if (boardViews.length > 0) {
+                // if most recent view is unavailable, pick the first view
+                viewID = boardViews[0].id
+                UserSettings.setLastViewId(boardID, viewID)
+                dispatch(setCurrentView(viewID))
+            }
+
+            if (viewID) {
+                const newPath = generatePath(match.path, {...match.params, viewId: viewID})
+                history.replace(newPath)
+            }
         }
+    }, [match.params.boardId, match.params.viewId, categories.length, boardViews.length, board])
 
-        UserSettings.lastBoardId = boardId || ''
-        UserSettings.lastViewId = viewId || ''
-        UserSettings.lastWorkspaceId = workspaceId
-
-        dispatch(setCurrentBoard(boardId || ''))
-        dispatch(setCurrentView(viewId || ''))
-    }, [match.params.boardId, match.params.viewId, boardViews])
+    // useEffect(() => {
+    //     // Backward compatibility: This can be removed in the future, this is for
+    //     // transform the old query params into routes
+    //     const queryBoardId = queryString.get('id')
+    //     const params = {...match.params}
+    //     let needsRedirect = false
+    //     if (queryBoardId) {
+    //         params.boardId = queryBoardId
+    //         needsRedirect = true
+    //     }
+    //     const queryViewId = queryString.get('v')
+    //     if (queryViewId) {
+    //         params.viewId = queryViewId
+    //         needsRedirect = true
+    //     }
+    //     const queryCardId = queryString.get('c')
+    //     if (queryCardId) {
+    //         params.cardId = queryCardId
+    //         needsRedirect = true
+    //     }
+    //     if (needsRedirect) {
+    //         const newPath = generatePath(match.path, params)
+    //         history.replace(newPath)
+    //         return
+    //     }
+    //
+    //     // Backward compatibility end
+    //     const boardId = match.params.boardId
+    //     const viewId = match.params.viewId === '0' ? '' : match.params.viewId
+    //
+    //     // TODO use actual team ID here
+    //     const teamID = 'atjjg8ofqb8kjnwy15yhezdgoh'
+    //
+    //     if (!boardId) {
+    //         // Load last viewed boardView
+    //         const lastBoardId = UserSettings.lastBoardId[teamID] || undefined
+    //         const lastViewId = lastBoardId ? UserSettings.lastViewId[lastBoardId] : undefined
+    //         if (lastBoardId) {
+    //             let newPath = generatePath(match.path, {...match.params, boardId: lastBoardId})
+    //             if (lastViewId) {
+    //                 newPath = generatePath(match.path, {...match.params, boardId: lastBoardId, viewId: lastViewId})
+    //             }
+    //             history.replace(newPath)
+    //             return
+    //         }
+    //         return
+    //     }
+    //
+    //     Utils.log(`attachToBoard: ${boardId}`)
+    //
+    //     // Ensure boardViews is for our boardId before redirecting
+    //     const isCorrectBoardView = boardViews.length > 0 && boardViews[0].parentId === boardId
+    //     if (!viewId && isCorrectBoardView) {
+    //         const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
+    //         history.replace(newPath)
+    //         return
+    //     }
+    //
+    //     UserSettings.setLastBoardID(teamId, boardId || '')
+    //     if (boardId !== '') {
+    //         UserSettings.setLastViewId(boardId, viewId)
+    //     }
+    //
+    //     dispatch(setCurrentBoard(boardId || ''))
+    //     dispatch(setCurrentView(viewId || ''))
+    // }, [match.params.boardId, match.params.viewId, boardViews])
 
     useEffect(() => {
-        Utils.setFavicon(board?.fields.icon)
-    }, [board?.fields.icon])
+        Utils.setFavicon(board?.icon)
+    }, [board?.icon])
 
     useEffect(() => {
         if (board) {
@@ -187,33 +252,41 @@ const BoardPage = (props: Props): JSX.Element => {
 
         dispatch(loadAction(match.params.boardId))
 
-        let subscribedToWorkspace = false
+        let subscribedToTeam = false
         if (wsClient.state === 'open') {
-            wsClient.authenticate(match.params.workspaceId || '0', token)
-            wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
-            subscribedToWorkspace = true
+            wsClient.authenticate(match.params.teamId || '0', token)
+            wsClient.subscribeToTeam(match.params.teamId || '0')
+            subscribedToTeam = true
         }
 
-        const incrementalUpdate = (_: WSClient, blocks: Block[]) => {
-            // only takes into account the blocks that belong to the workspace
-            const workspaceBlocks = blocks.filter((b: Block) => b.workspaceId === '0' || b.workspaceId === workspaceId)
+        const incrementalBlockUpdate = (_: WSClient, blocks: Block[]) => {
+            // ToDo: update this
+            // - create a selector to get user boards
+            // - replace the teamId check of blocks by a "is in my boards" check
+            /* const teamBlocks = blocks.filter((b: Block) => b.teamId === '0' || b.boardId in userBoardIds) */
+            const teamBlocks = blocks
 
             batch(() => {
-                dispatch(updateBoards(workspaceBlocks.filter((b: Block) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
-                dispatch(updateViews(workspaceBlocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
-                dispatch(updateCards(workspaceBlocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
-                dispatch(updateComments(workspaceBlocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
-                dispatch(updateContents(workspaceBlocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
+                dispatch(updateViews(teamBlocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+                dispatch(updateCards(teamBlocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
+                dispatch(updateComments(teamBlocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
+                dispatch(updateContents(teamBlocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
             })
+        }
+
+        const incrementalBoardUpdate = (_: WSClient, boards: Board[]) => {
+            // only takes into account the entities that belong to the team or the user boards
+            const teamBoards = boards.filter((b: Board) => b.teamId === '0' || b.teamId === teamId)
+            dispatch(updateBoards(teamBoards.filter((b: Board) => b.deleteAt !== 0)))
         }
 
         let timeout: ReturnType<typeof setTimeout>
         const updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
             if (newState === 'open') {
                 const newToken = localStorage.getItem('focalboardSessionId') || ''
-                wsClient.authenticate(match.params.workspaceId || '0', newToken)
-                wsClient.subscribeToWorkspace(match.params.workspaceId || '0')
-                subscribedToWorkspace = true
+                wsClient.authenticate(match.params.teamId || '0', newToken)
+                wsClient.subscribeToTeam(match.params.teamId || '0')
+                subscribedToTeam = true
             }
 
             if (timeout) {
@@ -223,28 +296,30 @@ const BoardPage = (props: Props): JSX.Element => {
             if (newState === 'close') {
                 timeout = setTimeout(() => {
                     setWebsocketClosed(true)
-                    subscribedToWorkspace = false
+                    subscribedToTeam = false
                 }, websocketTimeoutForBanner)
             } else {
                 setWebsocketClosed(false)
             }
         }
 
-        wsClient.addOnChange(incrementalUpdate)
+        wsClient.addOnChange(incrementalBlockUpdate, 'block')
+        wsClient.addOnChange(incrementalBoardUpdate, 'board')
         wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
         return () => {
             if (timeout) {
                 clearTimeout(timeout)
             }
-            if (subscribedToWorkspace) {
-                wsClient.unsubscribeToWorkspace(match.params.workspaceId || '0')
+            if (subscribedToTeam) {
+                // wsClient.unsubscribeToTeam(match.params.teamId || '0')
             }
-            wsClient.removeOnChange(incrementalUpdate)
+            wsClient.removeOnChange(incrementalBlockUpdate, 'block')
+            wsClient.removeOnChange(incrementalBoardUpdate, 'board')
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
             wsClient.removeOnStateChange(updateWebsocketState)
         }
-    }, [match.params.workspaceId, props.readonly, match.params.boardId])
+    }, [match.params.teamId, props.readonly, match.params.boardId])
 
     useHotkeys('ctrl+z,cmd+z', () => {
         Utils.log('Undo')
@@ -280,7 +355,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
     // this is needed to redirect to dashboard
     // when opening Focalboard for the first time
-    const shouldGoToDashboard = Utils.isFocalboardPlugin() && workspaceId === '0' && !match.params.boardId && !match.params.viewId
+    const shouldGoToDashboard = Utils.isFocalboardPlugin() && teamId === '0' && !match.params.boardId && !match.params.viewId
     if (shouldGoToDashboard) {
         return (<Redirect to={'/dashboard'}/>)
     }

@@ -25,7 +25,7 @@ mockedUtils.createGuid.mockReturnValue('test-id')
 describe('components/centerPanel', () => {
     const board = TestBlockFactory.createBoard()
     board.id = '1'
-    board.rootId = '1'
+    board.teamId = 'team-id'
     const activeView = TestBlockFactory.createBoardView(board)
     activeView.id = '1'
     const card1 = TestBlockFactory.createCard(board)

@@ -2,6 +2,8 @@
 
 PACKAGE_FOLDER = focalboard
 
+BUILD_TAGS += json1
+
 # Build Flags
 BUILD_NUMBER ?= $(BUILD_NUMBER:)
 BUILD_DATE = $(shell date -u)

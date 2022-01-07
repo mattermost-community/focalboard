@@ -10,15 +10,16 @@ import {createFilterClause} from '../blocks/filterClause'
 import {createFilterGroup} from '../blocks/filterGroup'
 import {ImageBlock, createImageBlock} from '../blocks/imageBlock'
 import {TextBlock, createTextBlock} from '../blocks/textBlock'
+import {Category, CategoryBlocks} from '../store/sidebar'
+import {Utils} from '../utils'
 
 class TestBlockFactory {
     static createBoard(): Board {
         const board = createBoard()
-        board.rootId = board.id
         board.title = 'board title'
-        board.fields.description = 'description'
-        board.fields.showDescription = true
-        board.fields.icon = 'i'
+        board.description = 'description'
+        board.showDescription = true
+        board.icon = 'i'
 
         for (let i = 0; i < 3; i++) {
             const propertyOption: IPropertyOption = {
@@ -32,7 +33,7 @@ class TestBlockFactory {
                 type: 'select',
                 options: [propertyOption],
             }
-            board.fields.cardProperties.push(propertyTemplate)
+            board.cardProperties.push(propertyTemplate)
         }
 
         return board
@@ -40,8 +41,7 @@ class TestBlockFactory {
 
     static createBoardView(board?: Board): BoardView {
         const view = createBoardView()
-        view.parentId = board ? board.id : 'parent'
-        view.rootId = board ? board.rootId : 'root'
+        view.boardId = board ? board.id : 'board'
         view.title = 'view title'
         view.fields.viewType = 'board'
         view.fields.groupById = 'property1'
@@ -76,8 +76,7 @@ class TestBlockFactory {
 
     static createTableView(board?: Board): BoardView {
         const view = createBoardView()
-        view.parentId = board ? board.id : 'parent'
-        view.rootId = board ? board.rootId : 'root'
+        view.boardId = board ? board.id : 'board'
         view.title = 'view title'
         view.fields.viewType = 'table'
         view.fields.groupById = 'property1'
@@ -112,8 +111,7 @@ class TestBlockFactory {
 
     static createCard(board?: Board): Card {
         const card = createCard()
-        card.parentId = board ? board.id : 'parent'
-        card.rootId = board ? board.rootId : 'root'
+        card.boardId = board ? board.id : 'board'
         card.title = 'title'
         card.fields.icon = 'i'
         card.fields.properties.property1 = 'value1'
@@ -155,6 +153,27 @@ class TestBlockFactory {
         block.title = 'title'
 
         return block
+    }
+
+    static createCategory(): Category {
+        const now = Date.now()
+
+        return {
+            id: Utils.createGuid(Utils.blockTypeToIDType('7')),
+            name: 'Category',
+            createAt: now,
+            updateAt: now,
+            deleteAt: 0,
+            userID: '',
+            teamID: '',
+        }
+    }
+
+    static createCategoryBlocks(): CategoryBlocks {
+        return {
+            ...TestBlockFactory.createCategory(),
+            blockIDs: [],
+        }
     }
 }
 

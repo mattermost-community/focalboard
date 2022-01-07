@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -118,6 +119,14 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
 	apiv1.HandleFunc("/clientConfig", a.getClientConfig).Methods("GET")
 
+	// Category Routes
+	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleCreateCategory)).Methods(http.MethodPost)
+	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleUpdateCategory)).Methods(http.MethodPut)
+	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
+
+	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBlocks)).Methods(http.MethodGet)
+	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}/blocks/{blockID}", a.sessionRequired(a.handleUpdateCategoryBlock)).Methods(http.MethodPost)
+
 	// Get Files API
 	files := r.PathPrefix("/files").Subrouter()
 	files.HandleFunc("/boards/{boardID}/{rootID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
@@ -232,6 +241,8 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	a.logger.Debug("AAAA")
+
 	auditRec := a.makeAuditRecord(r, "getBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("boardID", boardID)
@@ -240,13 +251,17 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("all", all)
 	auditRec.AddMeta("blockID", blockID)
 
+	a.logger.Debug("BBBB")
+
 	var blocks []model.Block
 	var block *model.Block
 	var err error
 	switch {
 	case all != "":
+		a.logger.Debug("CCCC")
 		blocks, err = a.app.GetBlocksForBoard(boardID)
 		if err != nil {
+			a.logger.Debug("DDDD")
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
 		}
@@ -265,6 +280,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			blocks = append(blocks, *block)
 		}
 	default:
+		a.logger.Debug("EEEE")
 		blocks, err = a.app.GetBlocks(boardID, parentID, blockType)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -307,6 +323,219 @@ func stampModificationMetadata(r *http.Request, blocks []model.Block, auditRec *
 			auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), blocks[i])
 		}
 	}
+}
+
+func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var category model.Category
+
+	err = json.Unmarshal(requestBody, &category)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "createCategory", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	// user can only create category for themselves
+	if category.UserID != session.UserID {
+		a.errorResponse(
+			w,
+			r.URL.Path,
+			http.StatusBadRequest,
+			fmt.Sprintf("userID %s and category userID %s mismatch", session.UserID, category.UserID),
+			nil,
+		)
+		return
+	}
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+
+	if category.TeamID != teamID {
+		a.errorResponse(
+			w,
+			r.URL.Path,
+			http.StatusBadRequest,
+			"teamID mismatch",
+			nil,
+		)
+		return
+	}
+
+	createdCategory, err := a.app.CreateCategory(&category)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(createdCategory)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.AddMeta("categoryID", createdCategory.ID)
+	auditRec.Success()
+}
+
+func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	categoryID := vars["categoryID"]
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var category model.Category
+	err = json.Unmarshal(requestBody, &category)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "updateCategory", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	if categoryID != category.ID {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "categoryID mismatch in patch and body", nil)
+		return
+	}
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	// user can only update category for themselves
+	if category.UserID != session.UserID {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "user ID mismatch in session and category", nil)
+		return
+	}
+
+	teamID := vars["teamID"]
+	if category.TeamID != teamID {
+		a.errorResponse(
+			w,
+			r.URL.Path,
+			http.StatusBadRequest,
+			"teamID mismatch",
+			nil,
+		)
+		return
+	}
+
+	updatedCategory, err := a.app.UpdateCategory(&category)
+	if err != nil {
+		if errors.Is(err, app.ErrorCategoryDeleted) {
+			a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", err)
+		} else if errors.Is(err, app.ErrorCategoryPermissionDenied) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		} else {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		}
+		return
+	}
+
+	data, err := json.Marshal(updatedCategory)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.Success()
+}
+
+func (a *API) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	vars := mux.Vars(r)
+
+	userID := session.UserID
+	teamID := vars["teamID"]
+	categoryID := vars["categoryID"]
+
+	auditRec := a.makeAuditRecord(r, "deleteCategory", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	deletedCategory, err := a.app.DeleteCategory(categoryID, userID, teamID)
+	if err != nil {
+		if errors.Is(err, app.ErrorCategoryPermissionDenied) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		} else {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		}
+		return
+	}
+
+	data, err := json.Marshal(deletedCategory)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.Success()
+}
+
+func (a *API) handleGetUserCategoryBlocks(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+
+	auditRec := a.makeAuditRecord(r, "getUserCategoryBlocks", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	categoryBlocks, err := a.app.GetUserCategoryBlocks(userID, teamID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(categoryBlocks)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.Success()
+}
+
+func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) {
+	auditRec := a.makeAuditRecord(r, "updateCategoryBlock", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	vars := mux.Vars(r)
+	categoryID := vars["categoryID"]
+	blockID := vars["blockID"]
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	err := a.app.AddUpdateUserCategoryBlock(userID, categoryID, blockID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, []byte("ok"))
+	auditRec.Success()
 }
 
 func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
@@ -877,7 +1106,7 @@ func filterOrphanBlocks(blocks []model.Block) (ret []model.Block) {
 		blocks = append(blocks, block)
 		children := childrenOfBlockWithID[block.ID]
 		if children != nil {
-			queue = append(queue, (*children)...)
+			queue = append(queue, *children...)
 		}
 	}
 
@@ -958,7 +1187,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	jsonStringResponse(w, http.StatusOK, "{}")
 
-	a.logger.Debug("IMPORT Blocks", mlog.Int("block_count", len(blocks)))
+	a.logger.Debug("IMPORT BlockIDs", mlog.Int("block_count", len(blocks)))
 	auditRec.AddMeta("blockCount", len(blocks))
 	auditRec.Success()
 }
@@ -1553,21 +1782,30 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
+	a.logger.Info("AAA")
+
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
 		return
 	}
 
+	a.logger.Info("BBB")
+
 	auditRec := a.makeAuditRecord(r, "getBoards", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("teamID", teamID)
 
+	a.logger.Info("CCC")
+
 	// retrieve boards list
 	boards, err := a.app.GetBoardsForUserAndTeam(userID, teamID)
 	if err != nil {
+		a.logger.Info("EEE")
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
+
+	a.logger.Info("DDD")
 
 	a.logger.Debug("GetBoards",
 		mlog.String("teamID", teamID),
@@ -1576,9 +1814,12 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(boards)
 	if err != nil {
+		a.logger.Info("GGG")
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
+
+	a.logger.Info("FFF")
 
 	// response
 	jsonBytesResponse(w, http.StatusOK, data)
@@ -2684,6 +2925,7 @@ func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message
 		mlog.String("msg", message),
 		mlog.String("api", api),
 	)
+
 	w.Header().Set("Content-Type", "application/json")
 	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: code})
 	if err != nil {

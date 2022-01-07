@@ -4,7 +4,6 @@ import React, {useCallback, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
-import {getCurrentWorkspace} from '../store/workspace'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {Utils} from '../utils'
 import {Board} from '../blocks/board'
@@ -18,6 +17,7 @@ import {addBoardTemplateClicked, addBoardClicked} from './sidebar/sidebarAddBoar
 import {addBoardFromTemplate, BoardTemplateButtonMenu} from './sidebar/boardTemplateMenuItem'
 
 import './emptyCenterPanel.scss'
+import {getCurrentTeam} from '../store/teams'
 
 type ButtonProps = {
     buttonIcon: string | React.ReactNode,
@@ -50,7 +50,7 @@ const PanelButton = React.memo((props: ButtonProps) => {
 })
 
 const EmptyCenterPanel = React.memo(() => {
-    const workspace = useAppSelector(getCurrentWorkspace)
+    const team = useAppSelector(getCurrentTeam)
     const templates = useAppSelector(getSortedTemplates)
     const globalTemplates = useAppSelector<Board[]>(getGlobalTemplates)
     const history = useHistory()
@@ -59,10 +59,10 @@ const EmptyCenterPanel = React.memo(() => {
     const match = useRouteMatch<{boardId: string, viewId?: string}>()
 
     useEffect(() => {
-        if (octoClient.workspaceId !== '0' && globalTemplates.length === 0) {
+        if (octoClient.teamId !== '0' && globalTemplates.length === 0) {
             dispatch(fetchGlobalTemplates())
         }
-    }, [octoClient.workspaceId])
+    }, [octoClient.teamId])
 
     const showBoard = useCallback((boardId) => {
         const params = {...match.params, boardId: boardId || ''}
@@ -93,16 +93,16 @@ const EmptyCenterPanel = React.memo(() => {
                 <span className='title'>
                     <FormattedMessage
                         id='EmptyCenterPanel.plugin.no-content-title'
-                        defaultMessage='Create a Board in {workspaceName}'
-                        values={{workspaceName: workspace?.title}}
+                        defaultMessage='Create a Board in {teamName}'
+                        values={{teamName: team?.title}}
                     />
                 </span>
                 <span className='description'>
+                    {/*TODO verify this text*/}
                     <FormattedMessage
                         id='EmptyCenterPanel.plugin.no-content-description'
-                        defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of "{workspaceName}" will have access to boards created here.'
+                        defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} New boards will be private to you unless explicitly shared with other team members.'
                         values={{
-                            workspaceName: <b>{workspace?.title}</b>,
                             lineBreak: <br/>,
                         }}
                     />
@@ -119,7 +119,7 @@ const EmptyCenterPanel = React.memo(() => {
                             <PanelButton
                                 key={template.id}
                                 title={template.title}
-                                buttonIcon={template.fields.icon}
+                                buttonIcon={template.icon}
                                 readonly={false}
                                 onClick={() => addBoardFromTemplate(intl, showBoard, template.id)}
                                 showBoard={showBoard}
@@ -132,7 +132,7 @@ const EmptyCenterPanel = React.memo(() => {
                             <PanelButton
                                 key={template.id}
                                 title={template.title}
-                                buttonIcon={template.fields.icon}
+                                buttonIcon={template.icon}
                                 readonly={true}
                                 onClick={() => addBoardFromTemplate(intl, showBoard, template.id, undefined, true)}
                             />

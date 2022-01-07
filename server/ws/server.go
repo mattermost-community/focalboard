@@ -231,7 +231,9 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				// if not in single user mode validate that the session
 				// has permissions to the team
 			} else {
+				ws.logger.Debug("Not single user mode")
 				if !ws.auth.DoesUserHaveTeamAccess(wsSession.userID, command.TeamID) {
+					ws.logger.Error("WS user doesn't have team access", mlog.String("teamID", command.TeamID), mlog.String("userID", wsSession.userID))
 					continue
 				}
 			}
@@ -561,6 +563,66 @@ func (ws *Server) BroadcastBlockChange(teamID string, block model.Block) {
 		err := listener.WriteJSON(message)
 		if err != nil {
 			ws.logger.Error("broadcast error", mlog.Err(err))
+			listener.conn.Close()
+		}
+	}
+}
+
+func (ws *Server) BroadcastCategoryChange(teamID, userID string, category model.Category) {
+	message := UpdateCategoryMessage{
+		Action:   websocketActionUpdateCategory,
+		TeamID:   teamID,
+		Category: &category,
+	}
+
+	listeners := ws.getListenersForTeam(teamID)
+	ws.logger.Debug("listener(s) for teamID",
+		mlog.Int("listener_count", len(listeners)),
+		mlog.String("teamID", teamID),
+		mlog.String("categoryID", category.ID),
+	)
+
+	for _, listener := range listeners {
+		ws.logger.Debug("Broadcast block change",
+			mlog.Int("listener_count", len(listeners)),
+			mlog.String("teamID", teamID),
+			mlog.String("categoryID", category.ID),
+			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
+		)
+
+		if err := listener.WriteJSON(message); err != nil {
+			ws.logger.Error("broadcast category change error", mlog.Err(err))
+			listener.conn.Close()
+		}
+	}
+}
+
+func (ws *Server) BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData) {
+	message := UpdateCategoryMessage{
+		Action:          websocketActionUpdateCategoryBlock,
+		TeamID:          teamID,
+		BlockCategories: &blockCategory,
+	}
+
+	listeners := ws.getListenersForTeam(teamID)
+	ws.logger.Debug("listener(s) for teamID",
+		mlog.Int("listener_count", len(listeners)),
+		mlog.String("teamID", teamID),
+		mlog.String("categoryID", blockCategory.CategoryID),
+		mlog.String("blockID", blockCategory.BlockID),
+	)
+
+	for _, listener := range listeners {
+		ws.logger.Debug("Broadcast block change",
+			mlog.Int("listener_count", len(listeners)),
+			mlog.String("teamID", teamID),
+			mlog.String("categoryID", blockCategory.CategoryID),
+			mlog.String("blockID", blockCategory.BlockID),
+			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
+		)
+
+		if err := listener.WriteJSON(message); err != nil {
+			ws.logger.Error("broadcast category change error", mlog.Err(err))
 			listener.conn.Close()
 		}
 	}

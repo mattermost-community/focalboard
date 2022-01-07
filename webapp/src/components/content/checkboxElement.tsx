@@ -10,9 +10,9 @@ import mutator from '../../mutator'
 import Editable, {Focusable} from '../../widgets/editable'
 import {useCardDetailContext} from '../cardDetail/cardDetailContext'
 
-import {contentRegistry} from './contentRegistry'
-
 import './checkboxElement.scss'
+
+import {contentRegistry} from './contentRegistry'
 
 type Props = {
     block: ContentBlock
@@ -55,7 +55,7 @@ const CheckboxElement = React.memo((props: Props) => {
                     newBlock.fields.value = !active
                     newBlock.title = title
                     setActive(newBlock.fields.value)
-                    mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckbox', defaultMessage: 'toggled-checkbox'}))
+                    mutator.updateBlock(block.boardId, newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckbox', defaultMessage: 'toggled-checkbox'}))
                 }}
             />
             <Editable
@@ -72,7 +72,7 @@ const CheckboxElement = React.memo((props: Props) => {
                         const newBlock = createCheckboxBlock(block)
                         newBlock.title = title
                         newBlock.fields.value = active
-                        await mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
+                        await mutator.updateBlock(block.boardId, newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
                         if (saveType === 'onEnter' && title !== '' && props.onAddElement) {
                             props.onAddElement()
                         }

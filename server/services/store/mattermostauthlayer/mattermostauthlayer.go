@@ -207,7 +207,7 @@ func (s *MattermostAuthLayer) GetTeam(id string) (*model.Team, error) {
 	}
 
 	query := s.getQueryBuilder().
-		Select("DisplayName, Type").
+		Select("DisplayName").
 		From("Teams").
 		Where(sq.Eq{"ID": id})
 
@@ -215,6 +215,7 @@ func (s *MattermostAuthLayer) GetTeam(id string) (*model.Team, error) {
 	var displayName string
 	err := row.Scan(&displayName)
 	if err != nil {
+		s.logger.Error("GetTeam scan error", mlog.Err(err))
 		return nil, err
 	}
 
@@ -237,7 +238,7 @@ func (s *MattermostAuthLayer) GetTeamsForUser(userID string) ([]*model.Team, err
 
 	teams := []*model.Team{}
 	for rows.Next() {
-		var team *model.Team
+		var team model.Team
 
 		err := rows.Scan(
 			&team.ID,
@@ -247,7 +248,7 @@ func (s *MattermostAuthLayer) GetTeamsForUser(userID string) ([]*model.Team, err
 			return nil, err
 		}
 
-		teams = append(teams, team)
+		teams = append(teams, &team)
 	}
 
 	return teams, nil

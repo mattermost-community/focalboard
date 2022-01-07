@@ -25,7 +25,7 @@ type Props = {
 
 const Gallery = (props: Props): JSX.Element => {
     const {activeView, board, cards} = props
-    const visiblePropertyTemplates = board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+    const visiblePropertyTemplates = board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
     const isManualSort = activeView.fields.sortOptions.length === 0
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
@@ -46,7 +46,7 @@ const Gallery = (props: Props): JSX.Element => {
         cardOrder.splice(destIndex, 0, ...draggedCardIds)
 
         mutator.performAsUndoGroup(async () => {
-            await mutator.changeViewCardOrder(activeView, cardOrder, description)
+            await mutator.changeViewCardOrder(board.id, activeView, cardOrder, description)
         })
     }
 

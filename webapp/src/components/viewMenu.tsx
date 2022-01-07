@@ -92,8 +92,7 @@ const ViewMenu = React.memo((props: Props) => {
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
         view.fields.viewType = 'board'
-        view.parentId = board.id
-        view.rootId = board.rootId
+        view.boardId = board.id
 
         const oldViewId = activeView.id
 
@@ -118,9 +117,8 @@ const ViewMenu = React.memo((props: Props) => {
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewTableTitle', defaultMessage: 'Table view'})
         view.fields.viewType = 'table'
-        view.parentId = board.id
-        view.rootId = board.rootId
-        view.fields.visiblePropertyIds = board.fields.cardProperties.map((o: IPropertyTemplate) => o.id)
+        view.boardId = board.id
+        view.fields.visiblePropertyIds = board.cardProperties.map((o: IPropertyTemplate) => o.id)
         view.fields.columnWidths = {}
         view.fields.columnWidths[Constants.titleColumnId] = Constants.defaultTitleColumnWidth
 
@@ -148,8 +146,7 @@ const ViewMenu = React.memo((props: Props) => {
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewGalleryTitle', defaultMessage: 'Gallery view'})
         view.fields.viewType = 'gallery'
-        view.parentId = board.id
-        view.rootId = board.rootId
+        view.boardId = board.id
         view.fields.visiblePropertyIds = [Constants.titleColumnId]
 
         const oldViewId = activeView.id
@@ -177,13 +174,14 @@ const ViewMenu = React.memo((props: Props) => {
         view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar View'})
         view.fields.viewType = 'calendar'
         view.parentId = board.id
-        view.rootId = board.rootId
+        view.rootId = board.id
+        view.boardId = board.id
         view.fields.visiblePropertyIds = [Constants.titleColumnId]
 
         const oldViewId = activeView.id
 
         // Find first date property
-        view.fields.dateDisplayPropertyId = board.fields.cardProperties.find((o: IPropertyTemplate) => o.type === 'date')?.id
+        view.fields.dateDisplayPropertyId = board.cardProperties.find((o: IPropertyTemplate) => o.type === 'date')?.id
 
         mutator.insertBlock(
             view,

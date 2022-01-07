@@ -12,7 +12,7 @@ import EmojiIcon from '../widgets/icons/emoji'
 import HideIcon from '../widgets/icons/hide'
 import ShowIcon from '../widgets/icons/show'
 
-import BlockIconSelector from './blockIconSelector'
+import BoardIconSelector from './boardIconSelector'
 import {MarkdownEditor} from './markdownEditor'
 import './viewTitle.scss'
 
@@ -25,22 +25,22 @@ const ViewTitle = React.memo((props: Props) => {
     const {board} = props
 
     const [title, setTitle] = useState(board.title)
-    const onEditTitleSave = useCallback(() => mutator.changeTitle(board.id, board.title, title), [board.id, board.title, title])
+    const onEditTitleSave = useCallback(() => mutator.changeTitle(board.id, board.id, board.title, title), [board.id, board.title, title])
     const onEditTitleCancel = useCallback(() => setTitle(board.title), [board.title])
-    const onDescriptionBlur = useCallback((text) => mutator.changeDescription(board.id, board.fields.description, text), [board.id, board.fields.description])
+    const onDescriptionBlur = useCallback((text) => mutator.changeDescription(board.id, board.id, board.description, text), [board.id, board.description])
     const onAddRandomIcon = useCallback(() => {
         const newIcon = BlockIcons.shared.randomIcon()
-        mutator.changeIcon(board.id, board.fields.icon, newIcon)
-    }, [board.id, board.fields.icon])
-    const onShowDescription = useCallback(() => mutator.showDescription(board.id, Boolean(board.fields.showDescription), true), [board.id, board.fields.showDescription])
-    const onHideDescription = useCallback(() => mutator.showDescription(board.id, Boolean(board.fields.showDescription), false), [board.id, board.fields.showDescription])
+        mutator.changeBoardIcon(board.id, board.icon, newIcon)
+    }, [board.id, board.icon])
+    const onShowDescription = useCallback(() => mutator.showDescription(board.id, Boolean(board.showDescription), true), [board.id, board.showDescription])
+    const onHideDescription = useCallback(() => mutator.showDescription(board.id, Boolean(board.showDescription), false), [board.id, board.showDescription])
 
     const intl = useIntl()
 
     return (
         <div className='ViewTitle'>
             <div className='add-buttons add-visible'>
-                {!props.readonly && !board.fields.icon &&
+                {!props.readonly && !board.icon &&
                     <Button
                         onClick={onAddRandomIcon}
                         icon={<EmojiIcon/>}
@@ -51,7 +51,7 @@ const ViewTitle = React.memo((props: Props) => {
                         />
                     </Button>
                 }
-                {!props.readonly && board.fields.showDescription &&
+                {!props.readonly && board.showDescription &&
                     <Button
                         onClick={onHideDescription}
                         icon={<HideIcon/>}
@@ -62,7 +62,7 @@ const ViewTitle = React.memo((props: Props) => {
                         />
                     </Button>
                 }
-                {!props.readonly && !board.fields.showDescription &&
+                {!props.readonly && !board.showDescription &&
                     <Button
                         onClick={onShowDescription}
                         icon={<ShowIcon/>}
@@ -76,7 +76,7 @@ const ViewTitle = React.memo((props: Props) => {
             </div>
 
             <div className='title'>
-                <BlockIconSelector block={board}/>
+                <BoardIconSelector board={board}/>
                 <Editable
                     className='title'
                     value={title}
@@ -90,10 +90,10 @@ const ViewTitle = React.memo((props: Props) => {
                 />
             </div>
 
-            {board.fields.showDescription &&
+            {board.showDescription &&
                 <div className='description'>
                     <MarkdownEditor
-                        text={board.fields.description}
+                        text={board.description}
                         placeholderText='Add a description...'
                         onBlur={onDescriptionBlur}
                         readonly={props.readonly}

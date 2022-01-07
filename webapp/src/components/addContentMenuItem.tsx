@@ -46,7 +46,7 @@ const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
                 mutator.performAsUndoGroup(async () => {
                     const insertedBlock = await mutator.insertBlock(newBlock, description)
                     contentOrder.splice(index, 0, insertedBlock.id)
-                    await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
+                    await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, contentOrder, description)
                 })
             }}
         />

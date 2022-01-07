@@ -24,7 +24,7 @@ const mockedUtils = mocked(Utils, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
 const defaultBlock: TextBlock = {
     id: 'test-id',
-    workspaceId: 'test-id',
+    boardId: 'test-id',
     parentId: 'test-id',
     rootId: 'test-id',
     modifiedBy: 'test-user-id',

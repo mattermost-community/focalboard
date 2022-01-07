@@ -48,7 +48,7 @@ describe('components/calendar/toolbar', () => {
         expect(container).toMatchSnapshot()
     })
     test('return calendar, with date property not set', () => {
-        board.fields.cardProperties.push(dateDisplayProperty)
+        board.cardProperties.push(dateDisplayProperty)
         card.fields.properties['12345'] = JSON.stringify(rObject)
         const {container} = render(
             wrapIntl(
@@ -67,7 +67,7 @@ describe('components/calendar/toolbar', () => {
     })
 
     test('return calendar, with date property set', () => {
-        board.fields.cardProperties.push(dateDisplayProperty)
+        board.cardProperties.push(dateDisplayProperty)
         card.fields.properties['12345'] = JSON.stringify(rObject)
         const {container} = render(
             wrapIntl(

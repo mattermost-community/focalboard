@@ -180,7 +180,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const dateCreatedId = Utils.createGuid(IDType.User)
-        board.fields.cardProperties.push({
+        board.cardProperties.push({
             id: dateCreatedId,
             name: 'Date Created',
             type: 'createdTime',
@@ -237,7 +237,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const dateUpdatedId = Utils.createGuid(IDType.User)
-        board.fields.cardProperties.push({
+        board.cardProperties.push({
             id: dateUpdatedId,
             name: 'Date Updated',
             type: 'updatedTime',
@@ -316,7 +316,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const createdById = Utils.createGuid(IDType.User)
-        board.fields.cardProperties.push({
+        board.cardProperties.push({
             id: createdById,
             name: 'Created By',
             type: 'createdBy',
@@ -374,7 +374,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const modifiedById = Utils.createGuid(IDType.User)
-        board.fields.cardProperties.push({
+        board.cardProperties.push({
             id: modifiedById,
             name: 'Last Modified By',
             type: 'updatedBy',

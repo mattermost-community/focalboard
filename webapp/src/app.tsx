@@ -22,7 +22,6 @@ import {FlashMessages} from './components/flashMessages'
 import NewVersionBanner from './components/newVersionBanner'
 import BoardPage from './pages/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
-import DashboardPage from './pages/dashboard/dashboardPage'
 import WelcomePage from './pages/welcome/welcomePage'
 import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
@@ -159,8 +158,13 @@ const App = React.memo((): JSX.Element => {
                                                 return <Redirect to={'/welcome'}/>
                                             }
 
-                                            if (Utils.isFocalboardPlugin() && UserSettings.lastWorkspaceId) {
-                                                return <Redirect to={`/workspace/${UserSettings.lastWorkspaceId}/${UserSettings.lastBoardId}/${UserSettings.lastViewId}`}/>
+                                            if (Utils.isFocalboardPlugin() && UserSettings.lastTeamId) {
+                                                // TODO use incoming team ID if opened from channels
+                                                const teamID = UserSettings.lastTeamId
+                                                const lastBoardID = UserSettings.lastBoardId[teamID]
+                                                const lastViewID = UserSettings.lastViewId[lastBoardID]
+
+                                                return <Redirect to={`/team/${teamID}/${lastBoardID}/${lastViewID}`}/>
                                             }
 
                                             if (loggedIn === true) {
@@ -207,12 +211,20 @@ const App = React.memo((): JSX.Element => {
                                     }}
                                 />
                                 <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?/:cardId?'>
+                                    {/* ToDo: redirect component here */}
                                     <BoardPage readonly={true}/>
                                 </Route>
+
+                                <Route path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'>
+                                    {/* ToDo: redirect component here */}
+                                </Route>
                                 <Route
-                                    path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'
-                                    render={({match: {params: {workspaceId, boardId, viewId, cardId}}}) => {
-                                        const originalPath = `/workspace/${Utils.buildOriginalPath(workspaceId, boardId, viewId, cardId)}`
+                                    path='/team/:teamId/:boardId?/:viewId?/:cardId?'
+                                    render={({match: {params: {teamId, boardId, viewId, cardId}}}) => {
+                                        const originalPath = `/team/${Utils.buildOriginalPath(teamId, boardId, viewId, cardId)}`
+
+                                        // ToDo: redirect component here, and this one needs to be migrated
+
                                         if (loggedIn === false) {
                                             let redirectUrl = '/' + Utils.buildURL(originalPath)
                                             if (redirectUrl.indexOf('//') === 0) {
@@ -232,12 +244,14 @@ const App = React.memo((): JSX.Element => {
                                         return null
                                     }}
                                 />
-                                <Route
-                                    exact={true}
-                                    path='/dashboard'
-                                >
-                                    <DashboardPage/>
-                                </Route>
+
+                                {/* TODO: enable this when new dashboard is implemented*/}
+                                {/*<Route*/}
+                                {/*    exact={true}*/}
+                                {/*    path='/dashboard'*/}
+                                {/*>*/}
+                                {/*    <DashboardPage/>*/}
+                                {/*</Route>*/}
                                 <Route
                                     exact={true}
                                     path='/welcome'
@@ -249,9 +263,9 @@ const App = React.memo((): JSX.Element => {
                                     <Route
                                         path='/:boardId?/:viewId?/:cardId?'
                                         render={({match: {params: {boardId, viewId, cardId}}}) => {
-                                            // Since these 3 path values are optional and they can be anything, we can pass /x/y/z and it will
-                                            // match this route however these values may not be valid so we should at the very least check
-                                            // board id for descisions made below
+                                        // Since these 3 path values are optional and they can be anything, we can pass /x/y/z and it will
+                                        // match this route however these values may not be valid so we should at the very least check
+                                        // board id for descisions made below
                                             const boardIdIsValidUUIDV4 = UUID_REGEX.test(boardId || '')
 
                                             if (loggedIn === false) {

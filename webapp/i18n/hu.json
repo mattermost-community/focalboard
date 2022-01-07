@@ -103,7 +103,7 @@
   "EmptyCenterPanel.plugin.new-template": "Új sablon",
   "EmptyCenterPanel.plugin.no-content-description": "Adjon hozzá egy táblát az oldalsávhoz bármelyik lenti sablon használatával vagy induljon üressel.{lineBreak} A \"{workspaceName}\" munkaterült tagjai hozzá fognak férni az itt létrehozott táblákhoz.",
   "EmptyCenterPanel.plugin.no-content-or": "vagy",
-  "EmptyCenterPanel.plugin.no-content-title": "Hozzon létre táblát a {workspaceName} munkaterületen",
+  "EmptyCenterPanel.plugin.no-content-title": "Hozzon létre táblát a {teamName} munkaterületen",
   "Error.mobileweb": "Mobil web támogatás jelenleg előzetes béta állapotban van. Nem minden funkcionalitás érhető el.",
   "Error.websocket-closed": "Websocket kapcsolat bezárult, kapcsolat megszakadt, Ha ez továbbra is fennáll, akkor ellenőrizze le a kiszolgáló vagy web proxy beállítását.",
   "Filter.includes": "tartalmazza",

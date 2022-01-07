@@ -1,61 +1,34 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 
 import {useHistory} from 'react-router-dom'
 
-import {FormattedMessage, useIntl} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import SearchIllustration from '../../svg/search-illustration'
 
-import {UserWorkspace} from '../../user'
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {getUserWorkspaceList, setUserWorkspaces} from '../../store/workspace'
-import octoClient from '../../octoClient'
+import {useAppSelector} from '../../store/hooks'
 import Switch from '../../widgets/switch'
 
 import SearchIcon from '../../widgets/icons/search'
 import {UserSettings} from '../../userSettings'
-
-const checkBoardCount = (numsArr: RegExpMatchArray, boardCount: number) => {
-    for (const n of numsArr) {
-        if (Number(n) === boardCount) {
-            return true
-        }
-    }
-
-    return false
-}
+import {getSortedBoards} from '../../store/boards'
 
 const DashboardCenterContent = (): JSX.Element => {
-    const rawWorkspaces = useAppSelector<UserWorkspace[]>(getUserWorkspaceList) || []
-    const dispatch = useAppDispatch()
     const history = useHistory()
     const intl = useIntl()
     const [searchFilter, setSearchFilter] = useState('')
     const [showEmptyWorkspaces, setShowEmptyWorkspaces] = useState(UserSettings.dashboardShowEmpty)
-
-    const initializeUserWorkspaces = async () => {
-        const userWorkspaces = await octoClient.getUserWorkspaces()
-        dispatch(setUserWorkspaces(userWorkspaces))
-    }
-
-    useEffect(() => {
-        initializeUserWorkspaces()
-    }, [])
+    const allBoards = useAppSelector(getSortedBoards)
 
     const titlePattern = new RegExp(searchFilter.split(' ').join('|'), 'i')
-    const extractedNumbers = searchFilter.match(/(\d+)/g)
 
-    const userWorkspaces = rawWorkspaces.
-        filter((workspace) => (workspace.boardCount > 0 || showEmptyWorkspaces) && (titlePattern.test(workspace.title) || (extractedNumbers && checkBoardCount(extractedNumbers, workspace.boardCount)))).
-        sort((a, b) => {
-            if ((a.boardCount === 0 && b.boardCount === 0) || (a.boardCount !== 0 && b.boardCount !== 0)) {
-                return a.title.localeCompare(b.title)
-            }
+    // const extractedNumbers = searchFilter.match(/(\d+)/g)
 
-            return b.boardCount - a.boardCount
-        })
+    const filteredBoards = allBoards.
+        filter((board) => titlePattern.test(board.title)).
+        sort((a, b) => a.title.localeCompare(b.title))
 
     return (
         <div className='DashboardCenterContent'>
@@ -84,12 +57,12 @@ const DashboardCenterContent = (): JSX.Element => {
             </div>
             <div className='DashboardPage__content'>
                 {
-                    userWorkspaces.length !== 0 &&
+                    filteredBoards.length !== 0 &&
                     <div className='text-heading3'>{'All Channels'}</div>
                 }
                 <div className='DashboardPage__workspace-container'>
                     {
-                        userWorkspaces.length === 0 &&
+                        filteredBoards.length === 0 &&
                             <div className='DashboardPage__emptyResult'>
                                 <SearchIllustration/>
                                 <h3>{intl.formatMessage({id: 'DashboardPage.CenterPanel.NoWorkspaces', defaultMessage: 'Sorry, we could not find any channels matching that term'})}</h3>
@@ -97,24 +70,24 @@ const DashboardCenterContent = (): JSX.Element => {
                             </div>
                     }
                     {
-                        userWorkspaces.map((workspace) => (
+                        filteredBoards.map((board) => (
                             <div
-                                key={workspace.id}
+                                key={board.id}
                                 className='DashboardPage__workspace'
                                 onClick={() => {
-                                    history.push(`/workspace/${workspace.id}`)
+                                    history.push(`/workspace/${board.id}`)
                                 }}
                             >
                                 <div className='text-heading2'>
-                                    {workspace.title}
+                                    {board.title}
                                 </div>
-                                <div className='small'>
-                                    <FormattedMessage
-                                        values={{count: workspace.boardCount}}
-                                        id='General.BoardCount'
-                                        defaultMessage='{count, plural, one {# Board} other {# Boards}}'
-                                    />
-                                </div>
+                                {/*<div className='small'>*/}
+                                {/*    <FormattedMessage*/}
+                                {/*        values={{count: board.boardCount}}*/}
+                                {/*        id='General.BoardCount'*/}
+                                {/*        defaultMessage='{count, plural, one {# Board} other {# Boards}}'*/}
+                                {/*    />*/}
+                                {/*</div>*/}
                             </div>
                         ))
                     }

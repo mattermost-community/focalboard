@@ -103,7 +103,7 @@
   "EmptyCenterPanel.plugin.new-template": "Yeni kalıp",
   "EmptyCenterPanel.plugin.no-content-description": "Aşağıda tanımlanan kalıplardan herhangi birini kullanarak yan çubuğa bir pano ekleyin veya sıfırdan başlayın.{lineBreak} \"{workspaceName}\" üyeleri burada oluşturulan panolara erişebilir.",
   "EmptyCenterPanel.plugin.no-content-or": "ya da",
-  "EmptyCenterPanel.plugin.no-content-title": "{workspaceName} içinde bir pano oluşturun",
+  "EmptyCenterPanel.plugin.no-content-title": "{teamName} içinde bir pano oluşturun",
   "Error.mobileweb": "Mobil web desteği şu anda erken beta aşamasındadır. Tüm işlevler kullanılamıyor olabilir.",
   "Error.websocket-closed": "Websoket bağlantısı kesildi. Bu sorun sürerse, sunucu ya da web vekil sunucu yapılandırmanızı denetleyin.",
   "Filter.includes": "şunu içeren",

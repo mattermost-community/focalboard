@@ -247,7 +247,7 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
-            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCardId], 'add-card')
+            await mutator.changeViewCardOrder(this.props.board.id, activeView, [...activeView.fields.cardOrder, newCardId], 'add-card')
         })
     }
 
@@ -259,8 +259,9 @@ class CenterPanel extends React.Component<Props, State> {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCard, {board: board.id, view: activeView.id, card: card.id})
 
         card.parentId = board.id
-        card.rootId = board.rootId
-        const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.fields.cardProperties)
+        card.rootId = board.id
+        card.boardId = board.id
+        const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.cardProperties)
         if ((activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table') && groupByProperty) {
             if (groupByOptionId) {
                 propertiesThatMeetFilters[groupByProperty.id] = groupByOptionId
@@ -291,7 +292,7 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
-            await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
+            await mutator.changeViewCardOrder(this.props.board.id, activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }
 
@@ -301,7 +302,8 @@ class CenterPanel extends React.Component<Props, State> {
         const cardTemplate = createCard()
         cardTemplate.fields.isTemplate = true
         cardTemplate.parentId = board.id
-        cardTemplate.rootId = board.rootId
+        cardTemplate.rootId = board.id
+        cardTemplate.boardId = board.id
 
         await mutator.insertBlock(
             cardTemplate,

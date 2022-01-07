@@ -3,15 +3,17 @@
 import {useEffect} from 'react'
 
 import {Block} from '../blocks/block'
+import {Board} from '../blocks/board'
 import wsClient, {WSClient} from '../wsclient'
 
 export default function useCardListener(onChange: (blocks: Block[]) => void, onReconnect: () => void): void {
     useEffect(() => {
+        // ToDo: does this onChange need boards as well??
         const onChangeHandler = (_: WSClient, blocks: Block[]) => onChange(blocks)
-        wsClient.addOnChange(onChangeHandler)
+        wsClient.addOnChange(onChangeHandler, 'block')
         wsClient.addOnReconnect(onReconnect)
         return () => {
-            wsClient.removeOnChange(onChangeHandler)
+            wsClient.removeOnChange(onChangeHandler, 'block')
             wsClient.removeOnReconnect(onReconnect)
         }
     }, [])

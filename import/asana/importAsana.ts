@@ -129,7 +129,7 @@ function convert(input: Asana): Block[] {
         type: 'select',
         options
     }
-    board.fields.cardProperties = [cardProperty]
+    board.cardProperties = [cardProperty]
     blocks.push(board)
 
     // Board view

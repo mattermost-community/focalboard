@@ -10,6 +10,18 @@ ALTER TABLE {{.prefix}}blocks_history RENAME COLUMN workspace_id TO channel_id;
 ALTER TABLE {{.prefix}}blocks ADD COLUMN board_id VARCHAR(36);
 ALTER TABLE {{.prefix}}blocks_history ADD COLUMN board_id VARCHAR(36);
 
+{{- /* cleanup incorrect data format in column calculations */ -}}
+{{if .mysql}}
+UPDATE {{.prefix}}blocks SET fields = JSON_SET(fields, '$.columnCalculations', cast('{}' as json))  WHERE fields->'$.columnCalculations' = cast('[]' as json);
+{{end}}
+
+{{if .postgres}}
+UPDATE {{.prefix}}blocks SET fields = fields::jsonb - 'columnCalculations' || '{"columnCalculations": {}}' WHERE fields->>'columnCalculations' = '[]';
+{{end}}
+
+{{if .sqlite}}
+UPDATE blocks SET fields = replace(fields, '"columnCalculations":[]', '"columnCalculations":{}');
+{{end}}
 
 {{- /* add boards tables */ -}}
 CREATE TABLE {{.prefix}}boards (
@@ -93,8 +105,8 @@ CREATE TABLE {{.prefix}}boards_history (
 {{if .plugin}}
   {{if .postgres}}
   INSERT INTO {{.prefix}}boards (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->'description')::text,
-                 B.fields->'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->>'description')::text,
+                 B.fields->>'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
                  '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
@@ -102,8 +114,8 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE B.type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->'description')::text,
-                 B.fields->'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->>'description')::text,
+                 B.fields->>'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
                  '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B
@@ -113,8 +125,8 @@ CREATE TABLE {{.prefix}}boards_history (
   {{end}}
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, B.fields->'$.description',
-                 B.fields->'$.icon', B.fields->'$.showDescription', B.fields->'$.isTemplate',
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
+                 JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')), B.fields->'$.showDescription', B.fields->'$.isTemplate',
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
@@ -122,8 +134,8 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE B.type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, B.fields->'$.description',
-                 B.fields->'$.icon', B.fields->'$.showDescription', B.fields->'$.isTemplate',
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
+                 JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')), B.fields->'$.showDescription', B.fields->'$.isTemplate',
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B
@@ -134,16 +146,16 @@ CREATE TABLE {{.prefix}}boards_history (
 {{else}}
   {{if .postgres}}
   INSERT INTO {{.prefix}}boards (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->'description')::text,
-                 fields->'icon', (fields->'showDescription')::text::boolean, (fields->'isTemplate')::text::boolean,
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->>'description')::text,
+                 fields->>'icon', (fields->'showDescription')::text::boolean, (fields->'isTemplate')::text::boolean,
                  '{}', fields->'cardProperties', fields->'columnCalculations', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks
           WHERE type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->'description')::text,
-                 fields->'icon', (fields->'showDescription')::text::boolean, (fields->'isTemplate')::text::boolean,
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->>'description')::text,
+                 fields->>'icon', (fields->'showDescription')::text::boolean, (fields->'isTemplate')::text::boolean,
                  '{}', fields->'cardProperties', fields->'columnCalculations', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history
@@ -152,16 +164,16 @@ CREATE TABLE {{.prefix}}boards_history (
   {{end}}
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, fields->'$.description',
-                 fields->'$.icon', fields->'$.showDescription', fields->'$.isTemplate',
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, JSON_UNQUOTE(JSON_EXTRACT(fields,'$.description')),
+                 JSON_UNQUOTE(JSON_EXTRACT(fields,'$.icon')), fields->'$.showDescription', fields->'$.isTemplate',
                  '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks
           WHERE type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, fields->'$.description',
-                 fields->'$.icon', fields->'$.showDescription', fields->'$.isTemplate',
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, JSON_UNQUOTE(JSON_EXTRACT(fields,'$.description')),
+                 JSON_UNQUOTE(JSON_EXTRACT(fields,'$.icon')), fields->'$.showDescription', fields->'$.isTemplate',
                  '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history

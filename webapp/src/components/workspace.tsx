@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 
 import {getCurrentBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
-import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
+import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 import {getClientConfig, setClientConfig} from '../store/clientConfig'
@@ -59,7 +59,7 @@ function CenterContent(props: Props) {
     if (board && activeView) {
         let property = groupByProperty
         if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
-            property = board?.fields.cardProperties.find((o) => o.type === 'select')
+            property = board?.cardProperties.find((o) => o.type === 'select')
         }
 
         const displayProperty = dateDisplayProperty
@@ -87,18 +87,16 @@ function CenterContent(props: Props) {
 
 const Workspace = React.memo((props: Props) => {
     const board = useAppSelector(getCurrentBoard)
-    const view = useAppSelector(getCurrentView)
 
     return (
         <div className='Workspace'>
             {!props.readonly &&
                 <Sidebar
                     activeBoardId={board?.id}
-                    activeViewId={view?.id}
                 />
             }
             <div className='mainFrame'>
-                {(board?.fields.isTemplate) &&
+                {(board?.isTemplate) &&
                 <div className='banner'>
                     <FormattedMessage
                         id='Workspace.editing-board-template'

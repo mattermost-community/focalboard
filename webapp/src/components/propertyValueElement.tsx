@@ -50,7 +50,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const saveTextProperty = useCallback(() => {
         if (editableFields.includes(props.propertyTemplate.type)) {
             if (value !== (props.card.fields.properties[props.propertyTemplate.id] || '')) {
-                mutator.changePropertyValue(card, propertyTemplate.id, value)
+                mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, value)
             }
         }
     }, [props.card, props.propertyTemplate, value])
@@ -71,7 +71,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         }
     }, [])
 
-    const onDeleteValue = useCallback(() => mutator.changePropertyValue(card, propertyTemplate.id, ''), [card, propertyTemplate.id])
+    const onDeleteValue = useCallback(() => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, ''), [card, propertyTemplate.id])
 
     const validateProp = (propType: string, val: string): boolean => {
         if (val === '') {
@@ -104,7 +104,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 emptyValue={emptyDisplayValue}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
+                onChange={(newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue)}
                 onChangeColor={(option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board, propertyTemplate, option, colorId)}
                 onDeleteOption={(option: IPropertyOption) => mutator.deletePropertyOption(board, propertyTemplate, option)}
                 onCreate={
@@ -116,10 +116,15 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                         }
                         currentValues.push(option)
                         await mutator.insertPropertyOption(board, propertyTemplate, option, 'add property option')
-                        mutator.changePropertyValue(card, propertyTemplate.id, currentValues.map((v) => v.id))
+                        mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, currentValues.map((v) => v.id))
                     }
                 }
-                onDeleteValue={(valueToDelete, currentValues) => mutator.changePropertyValue(card, propertyTemplate.id, currentValues.filter((currentValue) => currentValue.id !== valueToDelete.id).map((currentValue) => currentValue.id))}
+                onDeleteValue={(valueToDelete, currentValues) => {
+                    const newValues = currentValues.
+                        filter((currentValue) => currentValue.id !== valueToDelete.id).
+                        map((currentValue) => currentValue.id)
+                    mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValues)
+                }}
             />
         )
     }
@@ -139,11 +144,11 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                             color: 'propColorDefault',
                         }
                         await mutator.insertPropertyOption(board, propertyTemplate, option, 'add property option')
-                        mutator.changePropertyValue(card, propertyTemplate.id, option.id)
+                        mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, option.id)
                     }
                 }
                 onChange={(newValue) => {
-                    mutator.changePropertyValue(card, propertyTemplate.id, newValue)
+                    mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue)
                 }}
                 onChangeColor={(option: IPropertyOption, colorId: string): void => {
                     mutator.changePropertyOptionColor(board, propertyTemplate, option, colorId)
@@ -159,7 +164,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <UserProperty
                 value={propertyValue?.toString()}
                 readonly={readOnly}
-                onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
+                onChange={(newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue)}
             />
         )
     } else if (propertyTemplate.type === 'date') {
@@ -171,7 +176,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 className='octo-propertyvalue'
                 value={value.toString()}
                 showEmptyPlaceholder={showEmptyPlaceholder}
-                onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
+                onChange={(newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue)}
             />
         )
     } else if (propertyTemplate.type === 'url') {
@@ -192,7 +197,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 isOn={Boolean(propertyValue)}
                 onChanged={(newBool) => {
                     const newValue = newBool ? 'true' : ''
-                    mutator.changePropertyValue(card, propertyTemplate.id, newValue)
+                    mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue)
                 }}
                 readOnly={readOnly}
             />

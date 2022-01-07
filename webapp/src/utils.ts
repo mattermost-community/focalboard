@@ -5,11 +5,13 @@ import {IntlShape} from 'react-intl'
 import moment from 'moment'
 
 import {Block} from './blocks/block'
-import {createBoard} from './blocks/board'
+import {Board, createBoard} from './blocks/board'
 import {createBoardView} from './blocks/boardView'
 import {createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
 import {IAppWindow} from './types'
+import {ChangeHandlerType, WSMessage} from './wsclient'
+import {BlockCategoryWebsocketData, Category} from './store/sidebar'
 
 declare let window: IAppWindow
 
@@ -18,6 +20,8 @@ const OpenButtonClass = 'open-button'
 const SpacerClass = 'octo-spacer'
 const HorizontalGripClass = 'HorizontalGrip'
 const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
+
+export type WSMessagePayloads = Block | Category | BlockCategoryWebsocketData | Board | null
 
 // eslint-disable-next-line no-shadow
 enum IDType {
@@ -515,10 +519,21 @@ class Utils {
         return window.location.pathname.includes('/plugins/focalboard')
     }
 
+    static fixWSData(message: WSMessage): [WSMessagePayloads, ChangeHandlerType] {
+        if (message.block) {
+            return [this.fixBlock(message.block), 'block']
+        } else if (message.board) {
+            return [message.board, 'board']
+        } else if (message.category) {
+            return [message.category, 'category']
+        } else if (message.blockCategories) {
+            return [message.blockCategories, 'blockCategories']
+        }
+        return [null, 'block']
+    }
+
     static fixBlock(block: Block): Block {
         switch (block.type) {
-        case 'board':
-            return createBoard(block)
         case 'view':
             return createBoardView(block)
         case 'card':
@@ -591,11 +606,11 @@ class Utils {
         return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
     }
 
-    static buildOriginalPath(workspaceId = '', boardId = '', viewId = '', cardId = ''): string {
+    static buildOriginalPath(teamID = '', boardId = '', viewId = '', cardId = ''): string {
         let originalPath = ''
 
-        if (workspaceId) {
-            originalPath += `${workspaceId}/`
+        if (teamID) {
+            originalPath += `${teamID}/`
         }
 
         if (boardId) {
@@ -611,6 +626,10 @@ class Utils {
         }
 
         return originalPath
+    }
+
+    static uuid(): string {
+        return (window as any).URL.createObjectURL(new Blob([])).substr(-36)
     }
 }
 

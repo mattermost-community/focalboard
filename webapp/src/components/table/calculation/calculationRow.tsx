@@ -39,10 +39,10 @@ const CalculationRow = (props: Props): JSX.Element => {
 
     const templates: IPropertyTemplate[] = [
         titleTemplate,
-        ...props.board.fields.cardProperties.filter((template) => props.activeView.fields.visiblePropertyIds.includes(template.id)),
+        ...props.board.cardProperties.filter((template) => props.activeView.fields.visiblePropertyIds.includes(template.id)),
     ]
 
-    const selectedCalculations = props.board.fields.columnCalculations || []
+    const selectedCalculations = props.board.columnCalculations || []
 
     const [hovered, setHovered] = useState(false)
 
@@ -71,8 +71,8 @@ const CalculationRow = (props: Props): JSX.Element => {
                                 const calculations = {...selectedCalculations}
                                 calculations[template.id] = v
                                 const newBoard = createBoard(props.board)
-                                newBoard.fields.columnCalculations = calculations
-                                mutator.updateBlock(newBoard, props.board, 'update_calculation')
+                                newBoard.columnCalculations = calculations
+                                mutator.updateBoard(props.board.id, newBoard, props.board, 'update_calculation')
                                 setHovered(false)
                             }}
                             cards={props.cards}

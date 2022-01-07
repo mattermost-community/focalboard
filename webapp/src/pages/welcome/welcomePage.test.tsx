@@ -42,7 +42,7 @@ describe('pages/welcome', () => {
         const exploreButton = screen.getByText('Explore')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
-        expect(history.replace).toBeCalledWith('/dashboard')
+        expect(history.replace).toBeCalledWith('/')
     })
 
     test('Welcome Page does not render explore page the second time we visit it', () => {
@@ -53,7 +53,7 @@ describe('pages/welcome', () => {
                 <WelcomePage/>
             </Router>,
         ))
-        expect(history.replace).toBeCalledWith('/dashboard')
+        expect(history.replace).toBeCalledWith('/')
     })
 
     test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to true', () => {

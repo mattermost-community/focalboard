@@ -8,7 +8,7 @@ import {Utils} from './utils'
 enum UserSettingKey {
     Language = 'language',
     Theme = 'theme',
-    LastWorkspaceId = 'lastWorkspaceId',
+    LastTeamId = 'lastTeamId',
     LastBoardId = 'lastBoardId',
     LastViewId = 'lastViewId',
     EmojiMartSkin = 'emoji-mart.skin',
@@ -61,28 +61,58 @@ export class UserSettings {
         UserSettings.set(UserSettingKey.Theme, newValue)
     }
 
-    static get lastWorkspaceId(): string | null {
-        return UserSettings.get(UserSettingKey.LastWorkspaceId)
+    static get lastTeamId(): string | null {
+        return UserSettings.get(UserSettingKey.LastTeamId)
     }
 
-    static set lastWorkspaceId(newValue: string | null) {
-        UserSettings.set(UserSettingKey.LastWorkspaceId, newValue)
+    static set lastTeamId(newValue: string | null) {
+        UserSettings.set(UserSettingKey.LastTeamId, newValue)
     }
 
-    static get lastBoardId(): string | null {
-        return UserSettings.get(UserSettingKey.LastBoardId)
+    // maps last board ID for each team
+    // maps teamID -> board ID
+    static get lastBoardId(): {[key: string]: string} {
+        let rawData = UserSettings.get(UserSettingKey.LastBoardId) || '{}'
+        if (rawData[0] !== '{') {
+            rawData = '{}'
+        }
+
+        let mapping: {[key: string]: string}
+        try {
+            mapping = JSON.parse(rawData)
+        } catch {
+            // revert to empty data if JSON conversion fails.
+            // This will happen when users run the new code for the first time
+            mapping = {}
+        }
+
+        return mapping
     }
 
-    static set lastBoardId(newValue: string | null) {
-        UserSettings.set(UserSettingKey.LastBoardId, newValue)
+    static setLastBoardID(teamID: string, boardID: string): void {
+        const data = this.lastBoardId
+        data[teamID] = boardID
+        UserSettings.set(UserSettingKey.LastBoardId, JSON.stringify(data))
     }
 
-    static get lastViewId(): string | null {
-        return UserSettings.get(UserSettingKey.LastViewId)
+    static get lastViewId(): {[key: string]: string} {
+        const rawData = UserSettings.get(UserSettingKey.LastViewId) || '{}'
+        let mapping: {[key: string]: string}
+        try {
+            mapping = JSON.parse(rawData)
+        } catch {
+            // revert to empty data if JSON conversion fails.
+            // This will happen when users run the new code for the first time
+            mapping = {}
+        }
+
+        return mapping
     }
 
-    static set lastViewId(newValue: string | null) {
-        UserSettings.set(UserSettingKey.LastViewId, newValue)
+    static setLastViewId(boardID: string, viewID: string): void {
+        const data = this.lastViewId
+        data[boardID] = viewID
+        UserSettings.set(UserSettingKey.LastViewId, JSON.stringify(data))
     }
 
     static get prefillRandomIcons(): boolean {

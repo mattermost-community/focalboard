@@ -6,16 +6,18 @@ import (
 )
 
 const (
-	websocketActionAuth              = "AUTH"
-	websocketActionSubscribeTeam     = "SUBSCRIBE_TEAM"
-	websocketActionUnsubscribeTeam   = "UNSUBSCRIBE_TEAM"
-	websocketActionSubscribeBlocks   = "SUBSCRIBE_BLOCKS"
-	websocketActionUnsubscribeBlocks = "UNSUBSCRIBE_BLOCKS"
-	websocketActionUpdateBoard       = "UPDATE_BOARD"
-	websocketActionUpdateMember      = "UPDATE_MEMBER"
-	websocketActionDeleteMember      = "DELETE_MEMBER"
-	websocketActionUpdateBlock       = "UPDATE_BLOCK"
-	websocketActionUpdateConfig      = "UPDATE_CLIENT_CONFIG"
+	websocketActionAuth                = "AUTH"
+	websocketActionSubscribeTeam       = "SUBSCRIBE_TEAM"
+	websocketActionUnsubscribeTeam     = "UNSUBSCRIBE_TEAM"
+	websocketActionSubscribeBlocks     = "SUBSCRIBE_BLOCKS"
+	websocketActionUnsubscribeBlocks   = "UNSUBSCRIBE_BLOCKS"
+	websocketActionUpdateBoard         = "UPDATE_BOARD"
+	websocketActionUpdateMember        = "UPDATE_MEMBER"
+	websocketActionDeleteMember        = "DELETE_MEMBER"
+	websocketActionUpdateBlock         = "UPDATE_BLOCK"
+	websocketActionUpdateConfig        = "UPDATE_CLIENT_CONFIG"
+	websocketActionUpdateCategory      = "UPDATE_CATEGORY"
+	websocketActionUpdateCategoryBlock = "UPDATE_BLOCK_CATEGORY"
 )
 
 type Store interface {
@@ -31,4 +33,6 @@ type Adapter interface {
 	BroadcastMemberChange(teamID, boardID string, member *model.BoardMember)
 	BroadcastMemberDelete(teamID, boardID, userID string)
 	BroadcastConfigChange(clientConfig model.ClientConfig)
+	BroadcastCategoryChange(teamID, userID string, category model.Category)
+	BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData)
 }

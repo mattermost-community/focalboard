@@ -82,7 +82,7 @@ function convert(input: Todoist, project: Project): Block[] {
     console.log(`Board: ${project.name}`)
     board.rootId = board.id
     board.title = project.name
-    board.fields.description = project.name
+    board.description = project.name
 
     // Convert lists (columns) to a Select property
     const optionIdMap = new Map<string, string>()
@@ -114,7 +114,7 @@ function convert(input: Todoist, project: Project): Block[] {
         type: 'select',
         options
     }
-    board.fields.cardProperties = [cardProperty]
+    board.cardProperties = [cardProperty]
     blocks.push(board)
 
     // Board view

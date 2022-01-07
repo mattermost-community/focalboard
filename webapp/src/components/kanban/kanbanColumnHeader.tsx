@@ -77,7 +77,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
 
     const groupCalculation = props.activeView.fields.kanbanCalculations[props.group.option.id]
     const calculationValue = groupCalculation ? groupCalculation.calculation : defaultCalculation
-    const calculationProperty = groupCalculation ? props.board.fields.cardProperties.find((property) => property.id === groupCalculation.propertyId) || defaultProperty : defaultProperty
+    const calculationProperty = groupCalculation ? props.board.cardProperties.find((property) => property.id === groupCalculation.propertyId) || defaultProperty : defaultProperty
 
     return (
         <div
@@ -128,7 +128,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                 property={calculationProperty}
                 onMenuClose={props.onCalculationMenuClose}
                 onMenuOpen={props.onCalculationMenuOpen}
-                cardProperties={board.fields.cardProperties}
+                cardProperties={board.cardProperties}
                 readonly={props.readonly}
                 onChange={(data: {calculation: string, propertyId: string}) => {
                     if (data.calculation === calculationValue && data.propertyId === calculationProperty.id) {
@@ -143,7 +143,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         propertyId: data.propertyId,
                     }
 
-                    mutator.changeViewKanbanCalculations(props.activeView.id, props.activeView.fields.kanbanCalculations, newCalculations)
+                    mutator.changeViewKanbanCalculations(board.id, props.activeView.id, props.activeView.fields.kanbanCalculations, newCalculations)
                 }}
             />
             <div className='octo-spacer'/>
@@ -156,7 +156,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                                 id='hide'
                                 icon={<HideIcon/>}
                                 name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
-                                onClick={() => mutator.hideViewColumn(activeView, group.option.id || '')}
+                                onClick={() => mutator.hideViewColumn(board.id, activeView, group.option.id || '')}
                             />
                             {group.option.id &&
                                 <>

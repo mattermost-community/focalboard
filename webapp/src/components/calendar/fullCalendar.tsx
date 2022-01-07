@@ -57,8 +57,8 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const isSelectable = !readonly
 
     const visiblePropertyTemplates = useMemo(() => (
-        board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
-    ), [board.fields.cardProperties, activeView.fields.visiblePropertyIds])
+        board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+    ), [board.cardProperties, activeView.fields.visiblePropertyIds])
 
     let {initialDate} = props
     if (!initialDate) {
@@ -154,7 +154,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         const dateProperty = createDatePropertyFromCalendarDates(startDate, endDate)
         const card = cards.find((o) => o.id === event.id)
         if (card && dateDisplayProperty) {
-            mutator.changePropertyValue(card, dateDisplayProperty.id, JSON.stringify(dateProperty))
+            mutator.changePropertyValue(board.id, card, dateDisplayProperty.id, JSON.stringify(dateProperty))
         }
     }, [cards, dateDisplayProperty])
 

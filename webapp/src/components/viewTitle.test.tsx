@@ -31,7 +31,6 @@ beforeAll(() => {
 describe('components/viewTitle', () => {
     const board = TestBlockFactory.createBoard()
     board.id = 'test-id'
-    board.rootId = board.id
     const state = {
         users: {
             workspaceUsers: {
@@ -82,7 +81,7 @@ describe('components/viewTitle', () => {
     })
 
     test('show description', async () => {
-        board.fields.showDescription = true
+        board.showDescription = true
         let container
         await act(async () => {
             const result = render(wrapIntl(
@@ -102,7 +101,7 @@ describe('components/viewTitle', () => {
     })
 
     test('hide description', async () => {
-        board.fields.showDescription = false
+        board.showDescription = false
         let container
         await act(async () => {
             const result = render(wrapIntl(
@@ -122,7 +121,7 @@ describe('components/viewTitle', () => {
     })
 
     test('add random icon', async () => {
-        board.fields.icon = ''
+        board.icon = ''
         let container
         await act(async () => {
             const result = render(wrapIntl(
@@ -138,7 +137,7 @@ describe('components/viewTitle', () => {
         expect(container).toMatchSnapshot()
         const randomIconButton = screen.getAllByRole('button')[0]
         userEvent.click(randomIconButton)
-        expect(mockedMutator.changeIcon).toBeCalledTimes(1)
+        expect(mockedMutator.changeBoardIcon).toBeCalledTimes(1)
     })
 
     test('change title', async () => {
