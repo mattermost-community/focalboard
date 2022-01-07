@@ -83,7 +83,10 @@ describe('Create and delete board / card', () => {
 
         // Close card dialog
         cy.log('**Close card dialog**')
-        cy.get('.Dialog Button[title=\'Close dialog\']').should('be.visible').click()
+        cy.get('.Dialog Button[title=\'Close dialog\']').
+            should('be.visible').
+            click().
+            wait(500)
 
         // Create a card by clicking on the + button
         cy.log('**Create a card by clicking on the + button**')
@@ -126,6 +129,7 @@ describe('Create and delete board / card', () => {
         cy.log('**Delete board**')
         cy.get('.Sidebar .octo-sidebar-list').
             contains(boardTitle).
+            parent().
             parent().
             find('.MenuWrapper').
             find('.Button.IconButton').
