@@ -427,7 +427,6 @@ class WSClient {
         }
 
         this.sendCommand(command)
-        console.log('unsubscribeToWorkspace')
     }
 
     subscribeToWorkspace(workspaceId: string): void {
@@ -442,7 +441,6 @@ class WSClient {
         }
 
         this.sendCommand(command)
-        console.log('subscribeToWorkspace')
     }
 
     unsubscribeFromBlocks(workspaceId: string, blockIds: string[], readToken = ''): void {
