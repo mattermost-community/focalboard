@@ -9,7 +9,7 @@ class ViewController:
 	WKUIDelegate,
 	WKNavigationDelegate,
 	WKScriptMessageHandler {
-	@IBOutlet var webView: WKWebView!
+	@IBOutlet var webView: CustomWKWebView!
 	private var didLoad = false
 	private var refreshWebViewOnLoad = true
 
