@@ -24,6 +24,10 @@ func (a *App) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, er
 	return a.store.GetBoardsForUserAndTeam(userID, teamID)
 }
 
+func (a *App) GetTeamTemplates(teamID string) ([]*model.Board, error) {
+	return a.store.GetTeamTemplates(teamID)
+}
+
 func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*model.Board, error) {
 	if board.ID != "" {
 		return nil, fmt.Errorf("new board cannot have an ID")

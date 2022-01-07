@@ -104,6 +104,7 @@ type Archive struct {
 	Version int64   `json:"version"`
 	Date    int64   `json:"date"`
 	Blocks  []Block `json:"blocks"`
+	Boards  []Board `json:"boards"`
 }
 
 func BlocksFromJSON(data io.Reader) []Block {

@@ -95,8 +95,7 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
 
     useEffect(() => {
         if (octoClient.teamId !== '0' && globalTemplates.length === 0) {
-            // ToDo: fetch team templates
-            dispatch(fetchGlobalTemplates())
+            dispatch(fetchGlobalTemplates(octoClient.teamId))
         }
     }, [octoClient.teamId])
 

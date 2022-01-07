@@ -60,7 +60,7 @@ const EmptyCenterPanel = React.memo(() => {
 
     useEffect(() => {
         if (octoClient.teamId !== '0' && globalTemplates.length === 0) {
-            dispatch(fetchGlobalTemplates())
+            dispatch(fetchGlobalTemplates(octoClient.teamId))
         }
     }, [octoClient.teamId])
 

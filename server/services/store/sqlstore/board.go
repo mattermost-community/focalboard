@@ -188,6 +188,23 @@ func (s *SQLStore) getBoard(db sq.BaseRunner, boardID string) (*model.Board, err
 	return s.getBoardByCondition(db, sq.Eq{"id": boardID})
 }
 
+func (s *SQLStore) getTeamTemplates(db sq.BaseRunner, teamID string) ([]*model.Board, error) {
+	query := s.getQueryBuilder(db).
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards as b").
+		Where(sq.Eq{"b.team_id": teamID}).
+		Where(sq.Eq{"b.is_template": true})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getTeamTemplates ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.boardsFromRows(rows)
+}
+
 func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).

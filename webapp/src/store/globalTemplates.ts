@@ -12,9 +12,9 @@ import {RootState} from './index'
 
 export const fetchGlobalTemplates = createAsyncThunk(
     'globalTemplates/fetch',
-    async () => {
-        const rootClient = new OctoClient(client.serverUrl, '0')
-        const templates = await rootClient.getTeamTemplates('0') // ToDo: pass team id?
+    async (teamId: string) => {
+        const rootClient = new OctoClient(client.serverUrl, teamId)
+        const templates = await rootClient.getTeamTemplates(teamId) // ToDo: pass team id?
         return templates.sort((a, b) => a.title.localeCompare(b.title))
     },
 )

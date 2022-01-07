@@ -55,7 +55,7 @@ func New(params Params) (*SQLStore, error) {
 		return nil, err
 	}
 
-	if err := store.InitializeTemplates(); err != nil {
+	if err := store.initializeTemplates(); err != nil {
 		params.Logger.Error(`InitializeTemplates failed`, mlog.Err(err))
 	}
 

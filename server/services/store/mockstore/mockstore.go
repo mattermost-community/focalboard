@@ -564,6 +564,21 @@ func (mr *MockStoreMockRecorder) GetTeamCount() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamCount", reflect.TypeOf((*MockStore)(nil).GetTeamCount))
 }
 
+// GetTeamTemplates mocks base method.
+func (m *MockStore) GetTeamTemplates(arg0 string) ([]*model.Board, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTeamTemplates", arg0)
+	ret0, _ := ret[0].([]*model.Board)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTeamTemplates indicates an expected call of GetTeamTemplates.
+func (mr *MockStoreMockRecorder) GetTeamTemplates(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamTemplates", reflect.TypeOf((*MockStore)(nil).GetTeamTemplates), arg0)
+}
+
 // GetTeamsForUser mocks base method.
 func (m *MockStore) GetTeamsForUser(arg0 string) ([]*model.Team, error) {
 	m.ctrl.T.Helper()
