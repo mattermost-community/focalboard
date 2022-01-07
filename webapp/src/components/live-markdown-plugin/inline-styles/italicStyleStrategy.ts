@@ -11,10 +11,22 @@ const createItalicStyleStrategy = (): InlineStrategy => {
 		'(?<=\\*\\*)(\\*)(?!\\*)(.*?[^\\*]+)(?<!\\*)\\*(?![^\\*]\\*)|(?<!\\*)(\\*)(?!\\*)(.*?[^\\*]+)(?<!\\*)\\*(?=\\*\\*)' // ***italic* and bold** **bold and *italic***
     const boldWrappedUnderscoreRegex =
 		'(?<=__)(_)(?!_)(.*?[^_]+)(?<!_)_(?![^_]_)|(?<!_)(_)(?!_)(.*?[^_]+)(?<!_)_(?=__)' // ___italic_ and bold__ __bold and _italic___
-    const italicRegex = new RegExp(
-        `${asteriskDelimitedRegex}|${underscoreDelimitedRegex}|${strongEmphasisRegex}|${boldWrappedAsteriskRegex}|${boldWrappedUnderscoreRegex}`,
-        'g',
-    )
+    let italicRegex: RegExp
+    try {
+        italicRegex = new RegExp(
+            `${asteriskDelimitedRegex}|${underscoreDelimitedRegex}|${strongEmphasisRegex}|${boldWrappedAsteriskRegex}|${boldWrappedUnderscoreRegex}`,
+            'g',
+        )
+    } catch {
+        // Safari (as of 15.2) doesn't support RegEx lookbacks (https://caniuse.com/js-regexp-lookbehind)
+        const altAsteriskDelimitedRegex = '([^\\*]|^)(\\*)([^\\*]+)(\\*)(?!\\*)' // *italic*
+        const altUnderscoreDelimitedRegex = '([^_]|^)(_)([^_]+)(_)(?!_)' // _italic_
+        // TODO: Add support for boldWrappedAsteriskRegex and boldWrappedUnderscoreRegex
+        italicRegex = new RegExp(
+            `${altAsteriskDelimitedRegex}|${altUnderscoreDelimitedRegex}|${strongEmphasisRegex}`,
+            'g',
+        )
+    }
 
     const italicDelimiterRegex = /^(\*\*\*|\*|___|_)|(\*\*\*|\*|___|_)$/g
 

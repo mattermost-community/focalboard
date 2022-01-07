@@ -32,7 +32,6 @@ const TopBar = React.memo((): JSX.Element => {
                     <div className='version'>
                         {`v${Constants.versionString}`}
                     </div>
-                    <div className='versionBadge'>{'BETA'}</div>
                 </div>
             </div>
         )

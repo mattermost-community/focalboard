@@ -694,7 +694,7 @@ func _000015_blocks_history_no_nullsUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000015_blocks_history_no_nulls.up.sql", size: 3143, mode: os.FileMode(436), modTime: time.Unix(1639144692, 0)}
+	info := bindataFileInfo{name: "000015_blocks_history_no_nulls.up.sql", size: 3143, mode: os.FileMode(436), modTime: time.Unix(1639153400, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -714,7 +714,7 @@ func _000016_subscriptions_tableDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000016_subscriptions_table.down.sql", size: 79, mode: os.FileMode(436), modTime: time.Unix(1639144681, 0)}
+	info := bindataFileInfo{name: "000016_subscriptions_table.down.sql", size: 79, mode: os.FileMode(436), modTime: time.Unix(1639153400, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -734,7 +734,7 @@ func _000016_subscriptions_tableUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000016_subscriptions_table.up.sql", size: 618, mode: os.FileMode(436), modTime: time.Unix(1639144681, 0)}
+	info := bindataFileInfo{name: "000016_subscriptions_table.up.sql", size: 618, mode: os.FileMode(436), modTime: time.Unix(1639153400, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
