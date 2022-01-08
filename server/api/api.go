@@ -66,6 +66,7 @@ func NewAPI(app *app.App, singleUserToken string, authService string, logger *ml
 
 func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1 := r.PathPrefix("/api/v1").Subrouter()
+	apiv1.Use(a.panicHandler)
 	apiv1.Use(a.requireCSRFToken)
 
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
@@ -114,7 +115,7 @@ func (a *API) RegisterAdminRoutes(r *mux.Router) {
 	r.HandleFunc("/api/v1/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
 }
 
-func (a *API) requireCSRFToken(next http.Handler) http.Handler {
+func (a *API) panicHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if p := recover(); p != nil {
@@ -127,6 +128,12 @@ func (a *API) requireCSRFToken(next http.Handler) http.Handler {
 			}
 		}()
 
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (a *API) requireCSRFToken(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !a.checkCSRFToken(r) {
 			a.logger.Error("checkCSRFToken FAILED")
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "checkCSRFToken FAILED", nil)
