@@ -6,6 +6,21 @@ func (a *App) GetUserCategoryBlocks(userID, teamID string) ([]model.CategoryBloc
 	return a.store.GetUserCategoryBlocks(userID, teamID)
 }
 
-func (a *App) AddUpdateUserCategoryBlock(userID, categoryID, blockID string) error {
-	return a.store.AddUpdateCategoryBlock(userID, categoryID, blockID)
+func (a *App) AddUpdateUserCategoryBlock(teamID, userID, categoryID, blockID string) error {
+	err := a.store.AddUpdateCategoryBlock(userID, categoryID, blockID)
+	if err != nil {
+		return err
+	}
+
+	go func() {
+		a.wsAdapter.BroadcastCategoryBlockChange(
+			teamID,
+			userID,
+			model.BlockCategoryWebsocketData{
+				BlockID:    blockID,
+				CategoryID: categoryID,
+			})
+	}()
+
+	return nil
 }

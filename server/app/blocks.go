@@ -57,8 +57,13 @@ func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, userID st
 		return nil
 	}
 	go func() {
+		// broadcast on websocket
 		a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
+
+		// broadcast on webhooks
 		a.webhook.NotifyUpdate(*block)
+
+		// send notifications
 		a.notifyBlockChanged(notify.Update, block, oldBlock, userID)
 	}()
 	return nil

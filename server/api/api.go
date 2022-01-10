@@ -119,11 +119,12 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
 	apiv1.HandleFunc("/clientConfig", a.getClientConfig).Methods("GET")
 
-	// Category Routes
+	// Category APIs
 	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleCreateCategory)).Methods(http.MethodPost)
 	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleUpdateCategory)).Methods(http.MethodPut)
 	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
 
+	// Category Block APIs
 	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBlocks)).Methods(http.MethodGet)
 	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}/blocks/{blockID}", a.sessionRequired(a.handleUpdateCategoryBlock)).Methods(http.MethodPost)
 
@@ -523,12 +524,13 @@ func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) 
 	vars := mux.Vars(r)
 	categoryID := vars["categoryID"]
 	blockID := vars["blockID"]
+	teamID := vars["teamID"]
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
 
-	err := a.app.AddUpdateUserCategoryBlock(userID, categoryID, blockID)
+	err := a.app.AddUpdateUserCategoryBlock(teamID, userID, categoryID, blockID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

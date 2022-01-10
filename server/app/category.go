@@ -21,8 +21,16 @@ func (a *App) CreateCategory(category *model.Category) (*model.Category, error) 
 		return nil, err
 	}
 
-	a.logger.Info("fetching: " + category.ID)
-	return a.store.GetCategory(category.ID)
+	createdCategory, err := a.store.GetCategory(category.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		a.wsAdapter.BroadcastCategoryChange(*createdCategory)
+	}()
+
+	return createdCategory, nil
 }
 
 func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) {
@@ -48,7 +56,16 @@ func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) 
 		return nil, err
 	}
 
-	return a.store.GetCategory(category.ID)
+	updatedCategory, err := a.store.GetCategory(category.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		a.wsAdapter.BroadcastCategoryChange(*updatedCategory)
+	}()
+
+	return updatedCategory, nil
 }
 
 func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category, error) {
@@ -72,5 +89,14 @@ func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category
 		return nil, err
 	}
 
-	return a.store.GetCategory(categoryID)
+	deletedCategory, err := a.store.GetCategory(categoryID)
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		a.wsAdapter.BroadcastCategoryChange(*deletedCategory)
+	}()
+
+	return deletedCategory, nil
 }
