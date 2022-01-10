@@ -4,6 +4,8 @@
 import React, {useCallback, useState} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
+import withScrolling, {createHorizontalStrength, createVerticalStrength} from 'react-dnd-scrolling'
+
 import {Position} from '../cardDetail/cardDetailContents'
 
 import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
@@ -187,8 +189,16 @@ const Kanban = (props: Props) => {
         setShowCalculationsMenu(newShowOptions)
     }
 
+    const ScrollingComponent = withScrolling('div')
+    const hStrength = createHorizontalStrength(Utils.isMobile() ? 60 : 250)
+    const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
+
     return (
-        <div className='Kanban'>
+        <ScrollingComponent
+            className='Kanban'
+            horizontalStrength={hStrength}
+            verticalStrength={vStrength}
+        >
             <div
                 className='octo-board-header'
                 id='mainBoardHeader'
@@ -298,7 +308,7 @@ const Kanban = (props: Props) => {
                     ))}
                 </div>}
             </div>
-        </div>
+        </ScrollingComponent>
     )
 }
 

@@ -38,13 +38,9 @@ describe('Create and delete board / card', () => {
     })
 
     it('Can create and delete a board and a card', () => {
+        // Visit a page and create new empty board
         cy.visit('/')
-
-        // Create new empty board
-        cy.log('**Create new empty board**')
-        cy.contains('+ Add board').click({force: true})
-        cy.contains('Empty board').click({force: true})
-        cy.get('.BoardComponent').should('exist')
+        cy.uiCreateBoard('Empty board')
 
         // Change board title
         cy.log('**Change board title**')
@@ -87,7 +83,10 @@ describe('Create and delete board / card', () => {
 
         // Close card dialog
         cy.log('**Close card dialog**')
-        cy.get('.Dialog.dialog-back .wrapper').click({force: true})
+        cy.get('.Dialog Button[title=\'Close dialog\']').
+            should('be.visible').
+            click().
+            wait(500)
 
         // Create a card by clicking on the + button
         cy.log('**Create a card by clicking on the + button**')
@@ -131,11 +130,51 @@ describe('Create and delete board / card', () => {
         cy.get('.Sidebar .octo-sidebar-list').
             contains(boardTitle).
             parent().
-            next().
+            parent().
+            find('.MenuWrapper').
             find('.Button.IconButton').
             click({force: true})
         cy.contains('Delete board').click({force: true})
         cy.get('.DeleteBoardDialog button.danger').click({force: true})
         cy.contains(boardTitle).should('not.exist')
+    })
+
+    it('MM-T4433 Scrolls the kanban board when dragging card to edge', () => {
+        // Visit a page and create new empty board
+        cy.visit('/')
+        cy.uiCreateBoard('Empty board')
+
+        // Create 10 empty groups
+        cy.log('**Create new empty groups**')
+        for (let i = 0; i < 10; i++) {
+            cy.contains('+ Add a group').scrollIntoView().should('be.visible').click()
+            cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('have.length', i + 1)
+        }
+
+        // Create empty card in last group
+        cy.log('**Create new empty card in first group**')
+        cy.get('.octo-board-column').last().contains('+ New').scrollIntoView().click()
+        cy.get('.Dialog').should('exist')
+        cy.get('.Dialog Button[title=\'Close dialog\']').should('be.visible').click()
+        cy.get('.KanbanCard').scrollIntoView().should('exist')
+
+        // Drag card to right corner and expect scroll to occur
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.get('.Kanban').invoke('scrollLeft').should('not.equal', 0).wait(1000)
+
+        // wait necessary to let state change propagate
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.get('.KanbanCard').
+            trigger('dragstart').
+            wait(500)
+
+        // wait necessary to trigger scroll animation for some time
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.get('.Kanban').
+            trigger('dragover', {clientX: 400, clientY: Cypress.config().viewportHeight / 2}).
+            wait(3500).
+            trigger('dragend')
+
+        cy.get('.Kanban').invoke('scrollLeft').should('equal', 0)
     })
 })

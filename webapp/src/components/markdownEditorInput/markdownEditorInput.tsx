@@ -46,10 +46,20 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             }))
     , [workspaceUsers])
     const ref = useRef<Editor>(null)
+
+    const generateEditorState = (text?: string): EditorState => {
+        return EditorState.createWithContent(ContentState.createFromText(text || ''))
+    }
+
     const [editorState, setEditorState] = useState(() => {
-        const state = EditorState.createWithContent(ContentState.createFromText(initialText || ''))
-        return EditorState.moveSelectionToEnd(state)
+        return EditorState.moveSelectionToEnd(generateEditorState(initialText))
     })
+
+    // avoiding stale closure
+    useEffect(() => {
+        setEditorState(generateEditorState(initialText))
+    }, [initialText])
+
     const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false)
     const [isEmojiPopoverOpen, setIsEmojiPopoverOpen] = useState(false)
     const [suggestions, setSuggestions] = useState(mentions)

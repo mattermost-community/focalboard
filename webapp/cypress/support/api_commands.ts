@@ -111,6 +111,7 @@ Cypress.Commands.add('uiCreateNewBoard', (title?: string) => {
         cy.findByPlaceholderText('Untitled board').type(`${title}{enter}`)
         cy.findByRole('textbox', {name: title}).should('exist')
     }
+    cy.wait(500)
 })
 
 Cypress.Commands.add('uiAddNewGroup', (name?: string) => {
@@ -123,4 +124,5 @@ Cypress.Commands.add('uiAddNewGroup', (name?: string) => {
         cy.findByRole('textbox', {name: 'New group'}).type(`{selectall}${name}{enter}`)
         cy.findByRole('textbox', {name}).should('exist')
     }
+    cy.wait(500)
 })

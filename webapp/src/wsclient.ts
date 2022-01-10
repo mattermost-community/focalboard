@@ -256,10 +256,10 @@ class WSClient {
 
         ws.onopen = () => {
             Utils.log('WSClient webSocket opened.')
+            this.state = 'open'
             for (const handler of this.onStateChange) {
                 handler(this, 'open')
             }
-            this.state = 'open'
         }
 
         ws.onerror = (e) => {
