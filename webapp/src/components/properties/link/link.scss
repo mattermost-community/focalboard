@@ -18,12 +18,17 @@
         background-color: rgb(var(--center-channel-color-rgb), 0.1);
     }
 
-    .Button_Edit {
+    .IconButton {
         display: none;
+        margin-right: 4px;
+
+        &:hover {
+            background-color: rgb(var(--center-channel-color-rgb), 0.1);
+        }
     }
 
     &:hover {
-        .Button_Edit {
+        .IconButton {
             display: flex;
         }
     }
