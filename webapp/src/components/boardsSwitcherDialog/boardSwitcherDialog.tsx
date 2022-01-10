@@ -43,24 +43,6 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
     }
 
     const searchHandler = async (query: string): Promise<Array<ReactNode>> => {
-        // if (query === 'empty') {
-        //     return []
-        // }
-        //
-        // const blocks = (await octoClient.getAllBlocks()).filter((block) => block.type === 'board' && !block.fields.isTemplate)
-        // const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
-        // return blocks.map((block, i) => (
-        //     <div
-        //         key={block.id}
-        //         className='blockSearchResult'
-        //         onClick={() => showBoard(block.id)}
-        //     >
-        //         {/*TODO decide icon from board is public or private*/}
-        //         {i % 2 === 0 ? <Globe/> : <LockOutline/>}
-        //         <span>{block.title || untitledBoardTitle}</span>
-        //     </div>
-        // ))
-
         if (query.trim().length === 0 || !team) {
             return []
         }

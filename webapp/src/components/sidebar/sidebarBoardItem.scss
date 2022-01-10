@@ -91,6 +91,10 @@
         &.category {
             .MenuWrapper {
                 display: none;
+
+                &.menuOpen {
+                    display: block;
+                }
             }
 
             &:hover {
@@ -158,10 +162,6 @@
         }
 
         .MenuOption {
-            &:hover {
-                background: rgba(var(--sidebar-text-rgb), 0.08);
-            }
-
             .menu-name {
                 text-overflow: ellipsis;
                 overflow: hidden;
