@@ -107,6 +107,10 @@
         &.subitem {
             .MenuWrapper {
                 display: none;
+
+                &.menuOpen {
+                    display: block;
+                }
             }
 
             &:hover {

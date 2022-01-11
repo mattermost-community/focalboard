@@ -52,6 +52,7 @@ const SidebarBoardItem = React.memo((props: Props) => {
     const [deleteBoard, setDeleteBoard] = useState<Board>()
     const [showDeleteCategoryDialog, setShowDeleteCategoryDialog] = useState<boolean>(false)
     const [categoryMenuOpen, setCategoryMenuOpen] = useState<boolean>(false)
+    const [boardsMenuOpen, setBoardsMenuOpen] = useState<{[key: string]: boolean}>({})
 
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
@@ -174,8 +175,8 @@ const SidebarBoardItem = React.memo((props: Props) => {
             {!collapsed && blocks.length === 0 &&
                 <div className='octo-sidebar-item subitem no-views'>
                     <FormattedMessage
-                        id='Sidebar.no-views-in-board'
-                        defaultMessage='No pages inside'
+                        id='Sidebar.no-boards-in-category'
+                        defaultMessage='No boards inside'
                     />
                 </div>}
             {!collapsed && blocks.map((blockID) => {
@@ -196,7 +197,17 @@ const SidebarBoardItem = React.memo((props: Props) => {
                         >
                             {title}
                         </div>
-                        <MenuWrapper stopPropagationOnToggle={true}>
+                        <MenuWrapper
+                            className={boardsMenuOpen[blockID] ? 'menuOpen' : 'x'}
+                            stopPropagationOnToggle={true}
+                            onToggle={(open) => {
+                                setBoardsMenuOpen((menuState) => {
+                                    const newState = {...menuState}
+                                    newState[blockID] = open
+                                    return newState
+                                })
+                            }}
+                        >
                             <IconButton icon={<OptionsIcon/>}/>
                             <Menu position='left'>
                                 <Menu.Text
