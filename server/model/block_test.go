@@ -220,7 +220,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 			Fields: map[string]interface{}{
 				"contentOrder": []interface{}{
 					blockID1,
-					[]string{
+					[]interface{}{
 						blockID2,
 						blockID3,
 					},
@@ -245,10 +245,10 @@ func TestGenerateBlockIDs(t *testing.T) {
 		block4ContentOrder, ok := block4.Fields["contentOrder"].([]interface{})
 		require.True(t, ok)
 		require.NotEqual(t, blockID1, block4ContentOrder[0].(string))
-		require.NotEqual(t, blockID2, block4ContentOrder[1].([]string)[0])
-		require.NotEqual(t, blockID3, block4ContentOrder[1].([]string)[1])
+		require.NotEqual(t, blockID2, block4ContentOrder[1].([]interface{})[0])
+		require.NotEqual(t, blockID3, block4ContentOrder[1].([]interface{})[1])
 		require.Equal(t, blocks[0].ID, block4ContentOrder[0].(string))
-		require.Equal(t, blocks[1].ID, block4ContentOrder[1].([]string)[0])
-		require.Equal(t, blocks[2].ID, block4ContentOrder[1].([]string)[1])
+		require.Equal(t, blocks[1].ID, block4ContentOrder[1].([]interface{})[0])
+		require.Equal(t, blocks[2].ID, block4ContentOrder[1].([]interface{})[1])
 	})
 }
