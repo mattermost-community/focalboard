@@ -57,6 +57,9 @@
             font-size: 14px;
             padding: 4px 8px;
             height: 32px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
 
             &:not(.readonly) {
                 min-width: 180px;
@@ -91,6 +94,7 @@
     }
 
     .octo-propertyname {
+        flex: 0 0 150px;
         width: 150px;
         margin-right: 5px;
         color: rgba(var(--center-channel-color-rgb), 0.6);
