@@ -13,7 +13,7 @@
 
     .octo-editor-preview {
         a {
-            & .product-wrapper {
+            .product-wrapper & {
                 color: rgba(var(--link-color-rgb), 1);
             }
 
