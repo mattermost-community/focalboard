@@ -47,12 +47,13 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     , [workspaceUsers])
     const ref = useRef<Editor>(null)
 
-    const generateEditorState = (text?: string): EditorState => {
-        return EditorState.createWithContent(ContentState.createFromText(text || ''))
+    const generateEditorState = (text?: string) => {
+        const state = EditorState.createWithContent(ContentState.createFromText(text || ''))
+        return EditorState.moveSelectionToEnd(state)
     }
 
     const [editorState, setEditorState] = useState(() => {
-        return EditorState.moveSelectionToEnd(generateEditorState(initialText))
+        return generateEditorState(initialText)
     })
 
     // avoiding stale closure
@@ -91,7 +92,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             }
             setTimeout(() => ref.current?.focus(), 200)
         }
-    }, [isEditing])
+    }, [isEditing, initialText])
 
     const customKeyBindingFn = useCallback((e: React.KeyboardEvent) => {
         if (isMentionPopoverOpen || isEmojiPopoverOpen) {
