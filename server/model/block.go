@@ -219,8 +219,8 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 			for _, blockID := range contentOrder {
 				switch v := blockID.(type) {
 				case []interface{}:
-					for _, columnBlockId := range v {
-						referenceIDs[columnBlockId.(string)] = true
+					for _, columnBlockID := range v {
+						referenceIDs[columnBlockID.(string)] = true
 					}
 				case string:
 					referenceIDs[v] = true
