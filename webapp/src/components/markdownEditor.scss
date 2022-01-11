@@ -1,5 +1,13 @@
 /* Markdown Editor */
 
+.product-wrapper {
+    .octo-editor-preview {
+        a {
+            color: rgba(var(--link-color-rgb), 1);
+        }
+    }
+}
+
 .MarkdownEditor {
     cursor: text;
 
@@ -13,8 +21,6 @@
 
     .octo-editor-preview {
         a {
-            color: rgba(var(--link-color-rgb), 1);
-
             &:hover {
                 text-decoration: underline;
             }
