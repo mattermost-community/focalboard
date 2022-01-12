@@ -56,9 +56,19 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         return generateEditorState(initialText)
     })
 
+    const [initialTextCache, setInitialTextCache] = useState<string | undefined>(initialText)
+
     // avoiding stale closure
     useEffect(() => {
-        setEditorState(generateEditorState(initialText))
+        // only change editor state when initialText actually changes from one defined value to another.
+        // This is needed to make the mentions plugin work. For some reason, if we don't check
+        // for this if condition here, mentions don't work. I suspect it's because without
+        // the in condition, we're changing editor state twice during component initialization
+        // and for some reason it causes mentions to not show up.
+        if (initialText && initialText !== initialTextCache) {
+            setEditorState(generateEditorState(initialText || ''))
+            setInitialTextCache(initialText)
+        }
     }, [initialText])
 
     const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false)
