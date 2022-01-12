@@ -110,18 +110,22 @@ func (pd PropDef) GetValue(v interface{}) (string, error) {
 }
 
 func (pd PropDef) ParseDate(s string) (string, error) {
-	// s is a JSON snippet of the form: {"from":1642161600000} in milliseconds UTC
+	// s is a JSON snippet of the form: {"from":1642161600000, "to":1642161600000} in milliseconds UTC
 	// The UI does not yet support date ranges.
 	var m map[string]int64
 	if err := json.Unmarshal([]byte(s), &m); err != nil {
 		return s, err
 	}
-	ts, ok := m["from"]
+	tsFrom, ok := m["from"]
 	if !ok {
 		return s, ErrInvalidDate
 	}
-	date := utils.GetTimeForMillis(ts)
-	return date.Format("January 02, 2006"), nil
+	date := utils.GetTimeForMillis(tsFrom).Format("January 02, 2006")
+	tsTo, ok := m["to"]
+	if ok {
+		date += " -> " + utils.GetTimeForMillis(tsTo).Format("January 02, 2006")
+	}
+	return date, nil
 }
 
 // ParsePropertySchema parses a board block's `Fields` to extract the properties
