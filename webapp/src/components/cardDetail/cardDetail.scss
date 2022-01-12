@@ -57,9 +57,12 @@
             font-size: 14px;
             padding: 4px 8px;
             height: 32px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+
+            &.octo-propertyvalue--readonly {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
 
             &:not(.readonly) {
                 min-width: 180px;
@@ -93,8 +96,13 @@
         }
     }
 
+    .octo-propertyrow {
+        .octo-propertyname {
+            flex: 0 0 150px;
+        }
+    }
+
     .octo-propertyname {
-        flex: 0 0 150px;
         width: 150px;
         margin-right: 5px;
         color: rgba(var(--center-channel-color-rgb), 0.6);
