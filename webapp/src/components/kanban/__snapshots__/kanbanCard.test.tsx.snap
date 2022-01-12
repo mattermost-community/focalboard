@@ -127,7 +127,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
       data-tooltip="name"
     >
       <div
-        class="octo-propertyvalue"
+        class="octo-propertyvalue octo-propertyvalue--readonly"
       />
     </div>
   </div>
@@ -261,7 +261,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
       data-tooltip="name"
     >
       <div
-        class="octo-propertyvalue"
+        class="octo-propertyvalue octo-propertyvalue--readonly"
       />
     </div>
   </div>
@@ -395,7 +395,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
       data-tooltip="name"
     >
       <div
-        class="octo-propertyvalue"
+        class="octo-propertyvalue octo-propertyvalue--readonly"
       />
     </div>
   </div>
@@ -442,7 +442,7 @@ exports[`src/components/kanban/kanbanCard should match snapshot 1`] = `
       data-tooltip="name"
     >
       <div
-        class="octo-propertyvalue"
+        class="octo-propertyvalue octo-propertyvalue--readonly"
       />
     </div>
   </div>
@@ -475,7 +475,7 @@ exports[`src/components/kanban/kanbanCard should match snapshot with readonly 1`
       data-tooltip="name"
     >
       <div
-        class="octo-propertyvalue"
+        class="octo-propertyvalue octo-propertyvalue--readonly"
       />
     </div>
   </div>
