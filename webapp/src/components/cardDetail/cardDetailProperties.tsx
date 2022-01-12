@@ -141,7 +141,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                         key={propertyTemplate.id + '-' + propertyTemplate.type + '-' + propertyValue}
                         className='octo-propertyrow'
                     >
-                        {props.readonly && <div className='octo-propertyname'>{propertyTemplate.name}</div>}
+                        {props.readonly && <div className='octo-propertyname octo-propertyname--readonly'>{propertyTemplate.name}</div>}
                         {!props.readonly &&
                             <MenuWrapper isOpen={propertyTemplate.id === newTemplateId}>
                                 <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
