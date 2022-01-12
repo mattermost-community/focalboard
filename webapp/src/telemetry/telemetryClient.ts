@@ -28,6 +28,7 @@ export const TelemetryActions = {
     DeleteCard: 'deleteCard',
     AddTemplateFromCard: 'addTemplateFromCard',
     ViewSharedBoard: 'viewSharedBoard',
+    ClickImportHelp: 'clickImportHelp',
 }
 
 interface IEventProps {
@@ -39,6 +40,7 @@ interface IEventProps {
     cardTemplateId?: string,
     boardTemplateId?: string,
     shareBoardEnabled?: boolean,
+    importType?: string,
 }
 
 class TelemetryClient {
