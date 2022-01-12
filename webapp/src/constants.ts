@@ -23,6 +23,33 @@ class Constants {
     static readonly versionString = '0.14.0'
     static readonly versionDisplayString = 'Feb 2022'
 
+    static readonly imports = [
+        {
+            id: 'trello',
+            displayName: 'Trello',
+            href: 'https://www.w3schools.com',
+        },
+        {
+            id: 'asana',
+            displayName: 'Asana',
+            href: 'https://www.w3schools.com',
+        },
+        {
+            id: 'notion',
+            displayName: 'Notion',
+            href: 'https://www.w3schools.com',
+        },
+        {
+            id: 'jira',
+            displayName: 'Jira',
+            href: 'https://www.w3schools.com',
+        },
+        {
+            id: 'todoist',
+            displayName: 'Todoist',
+            href: 'https://www.w3schools.com',
+        },
+    ]
     static readonly languages = [
         {
             code: 'en',
