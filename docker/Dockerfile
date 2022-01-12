@@ -15,6 +15,7 @@ ADD . /go/src/focalboard
 
 RUN  make server-linux
 RUN mkdir /data
+RUN mkdir /config
 
 ## Final image
 FROM gcr.io/distroless/base-debian10
@@ -25,7 +26,7 @@ COPY --from=gobuild --chown=nobody:nobody /data /data
 COPY --from=nodebuild --chown=nobody:nobody /webapp/pack pack/
 COPY --from=gobuild --chown=nobody:nobody /go/src/focalboard/bin/linux/focalboard-server bin/
 COPY --from=gobuild --chown=nobody:nobody /go/src/focalboard/LICENSE.txt LICENSE.txt
-COPY --from=gobuild --chown=nobody:nobody /go/src/focalboard/docker/server_config.json config.json
+COPY --from=gobuild --chown=nobody:nobody /go/src/focalboard/docker/server_config.json /config/config.json
 
 USER nobody
 
@@ -33,7 +34,7 @@ EXPOSE 8000/tcp
 
 EXPOSE 8000/tcp 9092/tcp
 
-VOLUME /opt/focalboard
+VOLUME /config
 VOLUME /data
 
-CMD ["/opt/focalboard/bin/focalboard-server"]
+ENTRYPOINT ["/opt/focalboard/bin/focalboard-server", "--config", "/config/config.json"]

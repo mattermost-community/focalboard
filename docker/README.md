@@ -6,7 +6,9 @@ The Dockerfile gives a quick and easy way to pull the latest Focalboard server a
 
 ```
 docker build -t focalboard .
-docker run -it -v "/home/user/focalboard-data:/data" -p 80:8000 focalboard
+docker run -it  -v "/home/user/focalboard-data:/data" \
+                -v "/home/user/focalboard-config:/config" \
+                -p 80:8000 focalboard 
 ```
 
 > The `-v` flag can be used to store Focalboard's database and uploaded files in a directory on the Docker host
