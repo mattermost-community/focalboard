@@ -184,4 +184,71 @@ func TestGenerateBlockIDs(t *testing.T) {
 		require.NotEqual(t, blockID1, block2ContentOrder[0].(string))
 		require.Equal(t, blocks[0].ID, block2ContentOrder[0].(string))
 	})
+
+	t.Run("Should update content order when it contain slices", func(t *testing.T) {
+		blockID1 := utils.NewID(utils.IDTypeBlock)
+		rootID1 := utils.NewID(utils.IDTypeBlock)
+		parentID1 := utils.NewID(utils.IDTypeBlock)
+		block1 := Block{
+			ID:       blockID1,
+			RootID:   rootID1,
+			ParentID: parentID1,
+		}
+
+		blockID2 := utils.NewID(utils.IDTypeBlock)
+		block2 := Block{
+			ID:       blockID2,
+			RootID:   rootID1,
+			ParentID: parentID1,
+		}
+
+		blockID3 := utils.NewID(utils.IDTypeBlock)
+		block3 := Block{
+			ID:       blockID3,
+			RootID:   rootID1,
+			ParentID: parentID1,
+		}
+
+		blockID4 := utils.NewID(utils.IDTypeBlock)
+		rootID2 := utils.NewID(utils.IDTypeBlock)
+		parentID2 := utils.NewID(utils.IDTypeBlock)
+
+		block4 := Block{
+			ID:       blockID4,
+			RootID:   rootID2,
+			ParentID: parentID2,
+			Fields: map[string]interface{}{
+				"contentOrder": []interface{}{
+					blockID1,
+					[]interface{}{
+						blockID2,
+						blockID3,
+					},
+				},
+			},
+		}
+
+		blocks := []Block{block1, block2, block3, block4}
+
+		blocks = GenerateBlockIDs(blocks, &mlog.Logger{})
+
+		require.NotEqual(t, blockID1, blocks[0].ID)
+		require.Equal(t, rootID1, blocks[0].RootID)
+		require.Equal(t, parentID1, blocks[0].ParentID)
+
+		require.NotEqual(t, blockID4, blocks[3].ID)
+		require.Equal(t, rootID2, blocks[3].RootID)
+		require.Equal(t, parentID2, blocks[3].ParentID)
+
+		// since block 1 was referenced in block 2,
+		// the ID should have been changed in content order
+		block4ContentOrder, ok := block4.Fields["contentOrder"].([]interface{})
+		require.True(t, ok)
+		require.NotEqual(t, blockID1, block4ContentOrder[0].(string))
+		require.NotEqual(t, blockID2, block4ContentOrder[1].([]interface{})[0])
+		require.NotEqual(t, blockID3, block4ContentOrder[1].([]interface{})[1])
+		require.Equal(t, blocks[0].ID, block4ContentOrder[0].(string))
+		require.Equal(t, blocks[1].ID, block4ContentOrder[1].([]interface{})[0])
+		require.Equal(t, blocks[2].ID, block4ContentOrder[1].([]interface{})[1])
+	})
 }

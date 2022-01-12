@@ -217,7 +217,15 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 			}
 
 			for _, blockID := range contentOrder {
-				referenceIDs[blockID.(string)] = true
+				switch v := blockID.(type) {
+				case []interface{}:
+					for _, columnBlockID := range v {
+						referenceIDs[columnBlockID.(string)] = true
+					}
+				case string:
+					referenceIDs[v] = true
+				default:
+				}
 			}
 		}
 	}
@@ -264,7 +272,15 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 				)
 			} else {
 				for j := range contentOrder {
-					contentOrder[j] = getExistingOrOldID(contentOrder[j].(string))
+					switch v := contentOrder[j].(type) {
+					case string:
+						contentOrder[j] = getExistingOrOldID(v)
+					case []interface{}:
+						subOrder := contentOrder[j].([]interface{})
+						for k := range v {
+							subOrder[k] = getExistingOrOldID(v[k].(string))
+						}
+					}
 				}
 			}
 		}

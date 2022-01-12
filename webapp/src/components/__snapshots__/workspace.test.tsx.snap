@@ -671,7 +671,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -715,7 +715,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -759,7 +759,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1059,7 +1059,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1089,7 +1089,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1119,7 +1119,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1830,7 +1830,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1874,7 +1874,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1918,7 +1918,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -2218,7 +2218,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -2248,7 +2248,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -2278,7 +2278,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
