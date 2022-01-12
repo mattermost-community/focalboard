@@ -154,11 +154,6 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		return nil
 	}
 
-	n.logger.Debug("notifySubscribers - subscribers",
-		mlog.Any("hint", hint),
-		mlog.Int("sub_count", len(subs)),
-	)
-
 	// subs slice is sorted by `NotifiedAt`, therefore subs[0] contains the oldest NotifiedAt needed
 	oldestNotifiedAt := subs[0].NotifiedAt
 
@@ -167,6 +162,13 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	if err != nil || board == nil || card == nil {
 		return fmt.Errorf("could not get board & card for block %s: %w", hint.BlockID, err)
 	}
+
+	n.logger.Debug("notifySubscribers - subscribers",
+		mlog.Any("hint", hint),
+		mlog.String("board_id", board.ID),
+		mlog.String("card_id", card.ID),
+		mlog.Int("sub_count", len(subs)),
+	)
 
 	dg := &diffGenerator{
 		container:    c,
@@ -198,7 +200,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 
 	opts := DiffConvOpts{
 		Language: "en", // TODO: use correct language with i18n available on server.
-		MakeCardLink: func(block *model.Block) string {
+		MakeCardLink: func(block *model.Block, board *model.Block, card *model.Block) string {
 			return fmt.Sprintf("[%s](%s)", block.Title, utils.MakeCardLink(n.serverRoot, board.WorkspaceID, board.ID, card.ID))
 		},
 		Logger: n.logger,
