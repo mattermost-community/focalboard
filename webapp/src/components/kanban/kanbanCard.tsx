@@ -25,12 +25,14 @@ import PropertyValueElement from '../propertyValueElement'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import './kanbanCard.scss'
+import CardBadges from '../cardBadges'
 
 type Props = {
     card: Card
     board: Board
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
+    visibleBadges: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     readonly: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
@@ -165,6 +167,7 @@ const KanbanCard = React.memo((props: Props) => {
                         />
                     </Tooltip>
                 ))}
+                {props.visibleBadges && <CardBadges card={card}/>}
             </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}

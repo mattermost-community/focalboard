@@ -234,8 +234,27 @@ class Utils {
             return `<div class="table-responsive"><table class="markdown__table"><thead>${header}</thead><tbody>${body}</tbody></table></div>`
         }
 
+        return this.htmlFromMarkdownWithRenderer(text, renderer)
+    }
+
+    static htmlFromMarkdownWithRenderer(text: string, renderer: marked.Renderer): string {
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
         return html.trim()
+    }
+
+    static countCheckboxesInMarkdown(text: string): {total: number, checked: number} {
+        let total = 0
+        let checked = 0
+        const renderer = new marked.Renderer()
+        renderer.checkbox = (isChecked) => {
+            ++total
+            if (isChecked) {
+                ++checked
+            }
+            return ''
+        }
+        this.htmlFromMarkdownWithRenderer(text, renderer)
+        return {total, checked}
     }
 
     // Date and Time

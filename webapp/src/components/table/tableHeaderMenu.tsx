@@ -5,7 +5,7 @@ import React, {FC} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Constants} from '../../constants'
-import {Board, IPropertyTemplate} from '../../blocks/board'
+import {Board} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
@@ -42,7 +42,9 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                         // eslint-disable-next-line no-warning-comments
                         // TODO: Handle name column
                     } else {
-                        const index = board.fields.cardProperties.findIndex((o: IPropertyTemplate) => o.id === templateId)
+                        const index = activeView.fields.visiblePropertyIds.findIndex((i) => i === templateId)
+
+                        // const index = board.fields.cardProperties.findIndex((o: IPropertyTemplate) => o.id === templateId)
                         mutator.insertPropertyTemplate(board, activeView, index)
                     }
                 }}
@@ -55,7 +57,9 @@ const TableHeaderMenu: FC<Props> = (props: Props): JSX.Element => {
                         // eslint-disable-next-line no-warning-comments
                         // TODO: Handle title column
                     } else {
-                        const index = board.fields.cardProperties.findIndex((o: IPropertyTemplate) => o.id === templateId) + 1
+                        const index = activeView.fields.visiblePropertyIds.findIndex((i) => i === templateId) + 1
+
+                        // const index = board.fields.cardProperties.findIndex((o: IPropertyTemplate) => o.id === templateId) + 1
                         mutator.insertPropertyTemplate(board, activeView, index)
                     }
                 }}

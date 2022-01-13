@@ -11,6 +11,7 @@ type Props = {
     className?: string
     disabled?: boolean
     isOpen?: boolean
+    label?: string
 }
 
 const MenuWrapper = React.memo((props: Props) => {
@@ -84,7 +85,7 @@ const MenuWrapper = React.memo((props: Props) => {
     return (
         <div
             role='button'
-            aria-label='menuwrapper'
+            aria-label={props.label || 'menuwrapper'}
             className={className}
             onClick={toggle}
             ref={node}

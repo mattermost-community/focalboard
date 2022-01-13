@@ -111,6 +111,7 @@ Cypress.Commands.add('uiCreateNewBoard', (title?: string) => {
         cy.findByPlaceholderText('Untitled board').type(`${title}{enter}`)
         cy.findByRole('textbox', {name: title}).should('exist')
     }
+    cy.wait(500)
 })
 
 Cypress.Commands.add('uiAddNewGroup', (name?: string) => {
@@ -122,5 +123,17 @@ Cypress.Commands.add('uiAddNewGroup', (name?: string) => {
         cy.log('**Rename group**')
         cy.findByRole('textbox', {name: 'New group'}).type(`{selectall}${name}{enter}`)
         cy.findByRole('textbox', {name}).should('exist')
+    }
+    cy.wait(500)
+})
+
+Cypress.Commands.add('uiAddNewCard', (title?: string, columnIndex?: number) => {
+    cy.log('**Add a new card**')
+    cy.findByRole('button', {name: '+ New'}).eq(columnIndex || 0).click()
+    cy.findByRole('dialog').should('exist')
+
+    if (title) {
+        cy.log('**Change card title**')
+        cy.findByPlaceholderText('Untitled').type(title)
     }
 })

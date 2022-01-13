@@ -20,9 +20,9 @@ import (
 
 const (
 	// card change notifications.
-	defAddCardNotify    = "@{{.Username}} has added the card {{.NewBlock | makeLink}}\n"
-	defModifyCardNotify = "###### @{{.Username}} has modified the card {{.Card | makeLink}}\n"
-	defDeleteCardNotify = "@{{.Username}} has deleted the card {{.Card | makeLink}}\n"
+	defAddCardNotify    = "{{.Authors | printAuthors \"unknown_user\" }} has added the card {{. | makeLink}}\n"
+	defModifyCardNotify = "###### {{.Authors | printAuthors \"unknown_user\" }} has modified the card {{. | makeLink}}\n"
+	defDeleteCardNotify = "{{.Authors | printAuthors \"unknown_user\" }} has deleted the card {{. | makeLink}}\n"
 )
 
 var (
@@ -34,7 +34,7 @@ var (
 // DiffConvOpts provides options when converting diffs to slack attachments.
 type DiffConvOpts struct {
 	Language     string
-	MakeCardLink func(block *model.Block) string
+	MakeCardLink func(block *model.Block, board *model.Block, card *model.Block) string
 	Logger       *mlog.Logger
 }
 
@@ -49,13 +49,20 @@ func getTemplate(name string, opts DiffConvOpts, def string) (*template.Template
 		t = template.New(key)
 
 		if opts.MakeCardLink == nil {
-			opts.MakeCardLink = func(block *model.Block) string { return fmt.Sprintf("`%s`", block.Title) }
+			opts.MakeCardLink = func(block *model.Block, _ *model.Block, _ *model.Block) string {
+				return fmt.Sprintf("`%s`", block.Title)
+			}
 		}
 		myFuncs := template.FuncMap{
 			"getBoardDescription": getBoardDescription,
-			"makeLink":            opts.MakeCardLink,
+			"makeLink": func(diff *Diff) string {
+				return opts.MakeCardLink(diff.NewBlock, diff.Board, diff.Card)
+			},
 			"stripNewlines": func(s string) string {
 				return strings.TrimSpace(strings.ReplaceAll(s, "\n", "¶ "))
+			},
+			"printAuthors": func(empty string, authors StringMap) string {
+				return makeAuthorsList(authors, empty)
 			},
 		}
 		t.Funcs(myFuncs)
@@ -68,6 +75,21 @@ func getTemplate(name string, opts DiffConvOpts, def string) (*template.Template
 		templateCache[key] = t2
 	}
 	return t, nil
+}
+
+func makeAuthorsList(authors StringMap, empty string) string {
+	if len(authors) == 0 {
+		return empty
+	}
+	prefix := ""
+	sb := &strings.Builder{}
+	for _, name := range authors.Values() {
+		sb.WriteString(prefix)
+		sb.WriteString("@")
+		sb.WriteString(strings.TrimSpace(name))
+		prefix = ", "
+	}
+	return sb.String()
 }
 
 // execTemplate executes the named template corresponding to the template name and language specified.
@@ -133,6 +155,13 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 
 	// at this point new and old block are non-nil
 
+	opts.Logger.Debug("cardDiff2SlackAttachment",
+		mlog.String("board_id", cardDiff.Board.ID),
+		mlog.String("card_id", cardDiff.Card.ID),
+		mlog.String("new_block_id", cardDiff.NewBlock.ID),
+		mlog.String("old_block_id", cardDiff.OldBlock.ID),
+	)
+
 	buf.Reset()
 	if err := execTemplate(buf, "ModifyCardNotify", opts, defModifyCardNotify, cardDiff); err != nil {
 		return nil, fmt.Errorf("cannot write notification for card %s: %w", cardDiff.NewBlock.ID, err)
@@ -191,7 +220,7 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 			if format != "" {
 				attachment.Fields = append(attachment.Fields, &mm_model.SlackAttachmentField{
 					Short: false,
-					Title: "Comment",
+					Title: "Comment by " + makeAuthorsList(child.Authors, "unknown_user"), // todo:  localize this when server has i18n
 					Value: fmt.Sprintf(format, stripNewlines(block.Title)),
 				})
 			}

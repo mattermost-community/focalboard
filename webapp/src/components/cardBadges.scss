@@ -1,0 +1,13 @@
+.CardBadges {
+    display: flex;
+    align-items: center;
+
+    span {
+        margin-right: 8px;
+
+        .Icon,
+        .CompassIcon {
+            margin-right: 4px;
+        }
+    }
+}
