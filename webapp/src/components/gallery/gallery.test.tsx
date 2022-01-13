@@ -10,11 +10,13 @@ import userEvent from '@testing-library/user-event'
 
 import {mocked} from 'ts-jest/utils'
 
-import {wrapDNDIntl, mockStateStore} from '../../testUtils'
+import {wrapDNDIntl, mockStateStore, blocksById} from '../../testUtils'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import mutator from '../../mutator'
+
+import {RootState} from '../../store'
 
 import Gallery from './gallery'
 
@@ -28,12 +30,16 @@ describe('src/components/gallery/Gallery', () => {
     const card = TestBlockFactory.createCard(board)
     const card2 = TestBlockFactory.createCard(board)
     const contents = [TestBlockFactory.createDivider(card), TestBlockFactory.createDivider(card), TestBlockFactory.createDivider(card2)]
-    const state = {
-        contents,
+    const state: Partial<RootState> = {
+        contents: {
+            contents: blocksById(contents),
+        },
         cards: {
+            current: '',
             cards: {
                 [card.id]: card,
             },
+            templates: {},
         },
         comments: {
             comments: {},

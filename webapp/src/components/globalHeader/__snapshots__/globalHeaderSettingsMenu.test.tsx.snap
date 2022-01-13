@@ -414,7 +414,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
               </div>
             </div>
             <div
+              aria-label="Random icons"
               class="MenuOption SwitchOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -569,7 +571,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
               </div>
             </div>
             <div
+              aria-label="Random icons"
               class="MenuOption SwitchOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"

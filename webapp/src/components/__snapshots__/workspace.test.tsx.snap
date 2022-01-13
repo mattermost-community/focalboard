@@ -400,7 +400,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="octo-spacer"
             />
             <div
-              aria-label="menuwrapper"
+              aria-label="Properties menu"
               class="MenuWrapper"
               role="button"
             >
@@ -465,7 +465,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="ModalWrapper"
             >
               <div
-                aria-label="menuwrapper"
+                aria-label="View menu"
                 class="MenuWrapper"
                 role="button"
               >
@@ -1559,7 +1559,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="octo-spacer"
             />
             <div
-              aria-label="menuwrapper"
+              aria-label="Properties menu"
               class="MenuWrapper"
               role="button"
             >
@@ -1624,7 +1624,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="ModalWrapper"
             >
               <div
-                aria-label="menuwrapper"
+                aria-label="View menu"
                 class="MenuWrapper"
                 role="button"
               >

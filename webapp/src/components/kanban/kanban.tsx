@@ -14,6 +14,7 @@ import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils, IDType} from '../../utils'
 import Button from '../../widgets/buttons/button'
+import {Constants} from '../../constants'
 
 import {dragAndDropRearrange} from '../cardDetail/cardDetailContentsUtility'
 
@@ -53,6 +54,7 @@ const Kanban = (props: Props) => {
     const visiblePropertyTemplates =
         activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
     const isManualSort = activeView.fields.sortOptions.length === 0
+    const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
 
     const propertyNameChanged = useCallback(async (option: IPropertyOption, text: string): Promise<void> => {
         await mutator.changePropertyOptionValue(board, groupByProperty!, option, text)
@@ -266,6 +268,7 @@ const Kanban = (props: Props) => {
                                 card={card}
                                 board={board}
                                 visiblePropertyTemplates={visiblePropertyTemplates}
+                                visibleBadges={visibleBadges}
                                 key={card.id}
                                 readonly={props.readonly}
                                 isSelected={props.selectedCardIds.includes(card.id)}

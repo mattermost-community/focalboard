@@ -18,8 +18,21 @@ type Props = {
 const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
     const {properties, activeView} = props
     const intl = useIntl()
+    const {viewType, visiblePropertyIds} = activeView.fields
+    const canShowBadges = viewType === 'board' || viewType === 'gallery' || viewType === 'calendar'
+
+    const toggleVisibility = (propertyId: string) => {
+        let newVisiblePropertyIds = []
+        if (visiblePropertyIds.includes(propertyId)) {
+            newVisiblePropertyIds = visiblePropertyIds.filter((o: string) => o !== propertyId)
+        } else {
+            newVisiblePropertyIds = [...visiblePropertyIds, propertyId]
+        }
+        mutator.changeViewVisibleProperties(activeView.id, visiblePropertyIds, newVisiblePropertyIds)
+    }
+
     return (
-        <MenuWrapper>
+        <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.properties-menu', defaultMessage: 'Properties menu'})}>
             <Button>
                 <FormattedMessage
                     id='ViewHeader.properties'
@@ -32,34 +45,26 @@ const ViewHeaderPropertiesMenu = React.memo((props: Props) => {
                         key={Constants.titleColumnId}
                         id={Constants.titleColumnId}
                         name={intl.formatMessage({id: 'default-properties.title', defaultMessage: 'Title'})}
-                        isOn={activeView.fields.visiblePropertyIds.includes(Constants.titleColumnId)}
-                        onClick={(propertyId: string) => {
-                            let newVisiblePropertyIds = []
-                            if (activeView.fields.visiblePropertyIds.includes(propertyId)) {
-                                newVisiblePropertyIds = activeView.fields.visiblePropertyIds.filter((o: string) => o !== propertyId)
-                            } else {
-                                newVisiblePropertyIds = [...activeView.fields.visiblePropertyIds, propertyId]
-                            }
-                            mutator.changeViewVisibleProperties(activeView.id, activeView.fields.visiblePropertyIds, newVisiblePropertyIds)
-                        }}
+                        isOn={visiblePropertyIds.includes(Constants.titleColumnId)}
+                        onClick={toggleVisibility}
                     />}
                 {properties?.map((option: IPropertyTemplate) => (
                     <Menu.Switch
                         key={option.id}
                         id={option.id}
                         name={option.name}
-                        isOn={activeView.fields.visiblePropertyIds.includes(option.id)}
-                        onClick={(propertyId: string) => {
-                            let newVisiblePropertyIds = []
-                            if (activeView.fields.visiblePropertyIds.includes(propertyId)) {
-                                newVisiblePropertyIds = activeView.fields.visiblePropertyIds.filter((o: string) => o !== propertyId)
-                            } else {
-                                newVisiblePropertyIds = [...activeView.fields.visiblePropertyIds, propertyId]
-                            }
-                            mutator.changeViewVisibleProperties(activeView.id, activeView.fields.visiblePropertyIds, newVisiblePropertyIds)
-                        }}
+                        isOn={visiblePropertyIds.includes(option.id)}
+                        onClick={toggleVisibility}
                     />
                 ))}
+                {canShowBadges &&
+                    <Menu.Switch
+                        key={Constants.badgesColumnId}
+                        id={Constants.badgesColumnId}
+                        name={intl.formatMessage({id: 'default-properties.badges', defaultMessage: 'Comments and Description'})}
+                        isOn={visiblePropertyIds.includes(Constants.badgesColumnId)}
+                        onClick={toggleVisibility}
+                    />}
             </Menu>
         </MenuWrapper>
     )
