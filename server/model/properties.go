@@ -214,7 +214,7 @@ func getMapString(key string, m map[string]interface{}) string {
 }
 
 // ParseProperties parses a block's `Fields` to extract the properties. Properties typically exist on
-// card blocks.  A resolver can optionally be provided to fetch usernames for `people` prop type.
+// card blocks.  A resolver can optionally be provided to fetch usernames for `person` prop type.
 func ParseProperties(block *Block, schema PropSchema, resolver PropValueResolver) (BlockProperties, error) {
 	props := make(map[string]BlockProp)
 
