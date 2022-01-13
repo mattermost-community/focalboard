@@ -61,7 +61,7 @@ describe('Card badges', () => {
 
     const addComment = (text: string) => {
         cy.findByText('Add a comment...').click()
-        cy.findByRole('combobox').type(text)
+        cy.findByRole('combobox').type(text).blur()
         cy.findByRole('button', {name: 'Send'}).click()
     }
 })
