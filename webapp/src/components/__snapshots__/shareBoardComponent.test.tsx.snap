@@ -41,11 +41,11 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
       >
         <a
           class="shareUrl"
-          href="http://localhost/plugins/focalboard/workspace/1/shared/1/1?r=oneToken"
+          href="http://localhost/workspace/1/shared/1/1?r=oneToken"
           rel="noreferrer"
           target="_blank"
         >
-          http://localhost/plugins/focalboard/workspace/1/shared/1/1?r=oneToken
+          http://localhost/workspace/1/shared/1/1?r=oneToken
         </a>
         <button
           type="button"
@@ -112,11 +112,11 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
       >
         <a
           class="shareUrl"
-          href="http://localhost/plugins/focalboard/workspace/1/shared/1/1?r=oneToken"
+          href="http://localhost/workspace/1/shared/1/1?r=oneToken"
           rel="noreferrer"
           target="_blank"
         >
-          http://localhost/plugins/focalboard/workspace/1/shared/1/1?r=oneToken
+          http://localhost/workspace/1/shared/1/1?r=oneToken
         </a>
         <button
           type="button"
@@ -183,11 +183,11 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
       >
         <a
           class="shareUrl"
-          href="http://localhost/plugins/focalboard/workspace/1/shared/1/1?r=oneToken"
+          href="http://localhost/workspace/1/shared/1/1?r=oneToken"
           rel="noreferrer"
           target="_blank"
         >
-          http://localhost/plugins/focalboard/workspace/1/shared/1/1?r=oneToken
+          http://localhost/workspace/1/shared/1/1?r=oneToken
         </a>
         <button
           type="button"
@@ -254,11 +254,11 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
       >
         <a
           class="shareUrl"
-          href="http://localhost/plugins/focalboard/workspace/1/shared/1/1?r=aToken"
+          href="http://localhost/workspace/1/shared/1/1?r=aToken"
           rel="noreferrer"
           target="_blank"
         >
-          http://localhost/plugins/focalboard/workspace/1/shared/1/1?r=aToken
+          http://localhost/workspace/1/shared/1/1?r=aToken
         </a>
         <button
           type="button"
@@ -366,11 +366,82 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing 1
       >
         <a
           class="shareUrl"
-          href="http://localhost/plugins/focalboard/workspace/1/shared/1/1?r=oneToken"
+          href="http://localhost/workspace/1/shared/1/1?r=oneToken"
           rel="noreferrer"
           target="_blank"
         >
-          http://localhost/plugins/focalboard/workspace/1/shared/1/1?r=oneToken
+          http://localhost/workspace/1/shared/1/1?r=oneToken
+        </a>
+        <button
+          type="button"
+        >
+          <span>
+            Copy link
+          </span>
+        </button>
+      </div>
+      <div
+        class="row"
+      >
+        <button
+          type="button"
+        >
+          <span>
+            Regenerate token
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoardComponent should match snapshot with sharing and subpath 1`] = `
+<div>
+  <div
+    class="Modal bottom"
+  >
+    <div
+      class="toolbar hideOnWidescreen"
+    >
+      <button
+        aria-label="Close"
+        class="Button IconButton"
+        title="Close"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-close CloseIcon"
+        />
+      </button>
+    </div>
+    <div
+      class="ShareBoardComponent"
+    >
+      <div
+        class="row"
+      >
+        <div>
+          Anyone with the link can view this board and all cards in it.
+        </div>
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <a
+          class="shareUrl"
+          href="http://localhost/test-subpath/plugins/boards/workspace/1/shared/1/1?r=oneToken"
+          rel="noreferrer"
+          target="_blank"
+        >
+          http://localhost/test-subpath/plugins/boards/workspace/1/shared/1/1?r=oneToken
         </a>
         <button
           type="button"
@@ -442,6 +513,77 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing a
           target="_blank"
         >
           http://localhost/shared/1/1?r=oneToken
+        </a>
+        <button
+          type="button"
+        >
+          <span>
+            Copy link
+          </span>
+        </button>
+      </div>
+      <div
+        class="row"
+      >
+        <button
+          type="button"
+        >
+          <span>
+            Regenerate token
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoardComponent should match snapshot with sharing and without workspaceId and subpath 1`] = `
+<div>
+  <div
+    class="Modal bottom"
+  >
+    <div
+      class="toolbar hideOnWidescreen"
+    >
+      <button
+        aria-label="Close"
+        class="Button IconButton"
+        title="Close"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-close CloseIcon"
+        />
+      </button>
+    </div>
+    <div
+      class="ShareBoardComponent"
+    >
+      <div
+        class="row"
+      >
+        <div>
+          Anyone with the link can view this board and all cards in it.
+        </div>
+        <div
+          class="Switch on"
+        >
+          <div
+            class="octo-switch-inner"
+          />
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <a
+          class="shareUrl"
+          href="http://localhost/test-subpath/plugins/boards/shared/1/1?r=oneToken"
+          rel="noreferrer"
+          target="_blank"
+        >
+          http://localhost/test-subpath/plugins/boards/shared/1/1?r=oneToken
         </a>
         <button
           type="button"
