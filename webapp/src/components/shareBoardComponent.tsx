@@ -84,13 +84,13 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
             viewId: match.params.viewId,
             workspaceId: match.params.workspaceId,
         })
-        shareUrl.pathname = newPath
+        shareUrl.pathname = Utils.buildURL(newPath)
     } else {
         const newPath = generatePath('/shared/:boardId/:viewId', {
             boardId: match.params.boardId,
             viewId: match.params.viewId,
         })
-        shareUrl.pathname = newPath
+        shareUrl.pathname = Utils.buildURL(newPath)
     }
 
     return (
