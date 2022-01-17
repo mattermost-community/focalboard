@@ -23,8 +23,10 @@ const viewId = boardId
 
 jest.mock('../octoClient')
 jest.mock('../utils')
+
 const mockedOctoClient = mocked(client, true)
 const mockedUtils = mocked(Utils, true)
+
 let params = {}
 jest.mock('react-router', () => {
     const originalModule = jest.requireActual('react-router')
@@ -45,14 +47,24 @@ const board = TestBlockFactory.createBoard()
 board.id = boardId
 
 describe('src/components/shareBoardComponent', () => {
+    const w = (window as any)
+    const oldBaseURL = w.baseURL
+
     beforeEach(() => {
         jest.clearAllMocks()
+        mockedUtils.buildURL.mockImplementation((path) => (w.baseURL || '') + path)
+
         params = {
             boardId,
             viewId,
             workspaceId,
         }
     })
+
+    afterEach(() => {
+        w.baseURL = oldBaseURL
+    })
+
     test('should match snapshot', async () => {
         mockedOctoClient.getSharing.mockResolvedValue(undefined)
         let container
@@ -213,6 +225,50 @@ describe('src/components/shareBoardComponent', () => {
         expect(mockedOctoClient.setSharing).toBeCalledTimes(1)
         expect(mockedOctoClient.getSharing).toBeCalledTimes(2)
         expect(mockedUtils.createGuid).toBeCalledTimes(1)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('should match snapshot with sharing and without workspaceId and subpath', async () => {
+        w.baseURL = '/test-subpath/plugins/boards'
+        const sharing:ISharing = {
+            id: boardId,
+            enabled: true,
+            token: 'oneToken',
+        }
+        params = {
+            boardId,
+            viewId,
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
+        let container
+        await act(async () => {
+            const result = render(wrapDNDIntl(
+                <ShareBoardComponent
+                    boardId={board.id}
+                    onClose={jest.fn()}
+                />), {wrapper: MemoryRouter})
+            container = result.container
+        })
+        expect(container).toMatchSnapshot()
+    })
+
+    test('should match snapshot with sharing and subpath', async () => {
+        w.baseURL = '/test-subpath/plugins/boards'
+        const sharing:ISharing = {
+            id: boardId,
+            enabled: true,
+            token: 'oneToken',
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
+        let container
+        await act(async () => {
+            const result = render(wrapDNDIntl(
+                <ShareBoardComponent
+                    boardId={board.id}
+                    onClose={jest.fn()}
+                />), {wrapper: MemoryRouter})
+            container = result.container
+        })
         expect(container).toMatchSnapshot()
     })
 })
