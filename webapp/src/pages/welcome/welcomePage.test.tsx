@@ -40,7 +40,7 @@ describe('pages/welcome', () => {
     })
 
     test('Welcome Page shows Explore Page with subpath', () => {
-        w.baseURL = "/subpath"
+        w.baseURL = '/subpath'
         const {container} = render(wrapIntl(
             <Router history={history}>
                 <WelcomePage/>
