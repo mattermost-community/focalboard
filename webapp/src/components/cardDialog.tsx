@@ -52,7 +52,6 @@ const CardDialog = (props: Props): JSX.Element => {
     const comments = useAppSelector(getCardComments(props.cardId))
     const intl = useIntl()
     const me = useAppSelector<IUser|null>(getMe)
-    const clientConfig = useAppSelector(getClientConfig)
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
@@ -163,7 +162,7 @@ const CardDialog = (props: Props): JSX.Element => {
 
     const followingCards = useAppSelector(getUserBlockSubscriptionList)
     const isFollowingCard = Boolean(followingCards.find((following) => following.blockId === props.cardId))
-    const toolbar = clientConfig.featureFlags.subscriptions ? followActionButton(isFollowingCard) : null
+    const toolbar = followActionButton(isFollowingCard)
 
     return (
         <>
