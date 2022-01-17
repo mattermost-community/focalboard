@@ -26,8 +26,6 @@ import {getUserBlockSubscriptionList} from '../store/initialLoad'
 import {IUser} from '../user'
 import {getMe} from '../store/users'
 
-import {getClientConfig} from '../store/clientConfig'
-
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 import {sendFlashMessage} from './flashMessages'
