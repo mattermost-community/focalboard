@@ -25,7 +25,6 @@ import (
 	"github.com/mattermost/focalboard/server/services/notify/notifylogger"
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/services/telemetry"
 	"github.com/mattermost/focalboard/server/services/webhook"
@@ -232,13 +231,6 @@ func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, e
 	db, err = sqlstore.New(storeParams)
 	if err != nil {
 		return nil, err
-	}
-	if config.AuthMode == MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(config.DBType, db.(*sqlstore.SQLStore).DBHandle(), db, logger)
-		if err2 != nil {
-			return nil, err2
-		}
-		db = layeredStore
 	}
 	return db, nil
 }

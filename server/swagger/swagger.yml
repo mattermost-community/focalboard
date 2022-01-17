@@ -109,6 +109,23 @@ definitions:
         x-go-name: UpdatedFields
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
+  UserPropPatch:
+    description: UserConfigPatch is a patch for use config
+    properties:
+      deletedFields:
+        description: The config fields removed
+        items:
+          type: string
+        type: array
+        x-go-name: DeletedFields
+      updatedFields:
+        additionalProperties:
+          type: object
+        description: The updated config
+        type: object
+        x-go-name: UpdatedFields
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
   BlockPatchBatch:
     description: BlockPatchBatch is a batch of IDs and patches for modify blocks
     properties:

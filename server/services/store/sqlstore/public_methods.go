@@ -332,6 +332,11 @@ func (s *SQLStore) PatchBlocks(c store.Container, blockPatches *model.BlockPatch
 
 }
 
+func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
+	return s.patchUserProps(s.db, userID, patch)
+
+}
+
 func (s *SQLStore) RefreshSession(session *model.Session) error {
 	return s.refreshSession(s.db, session)
 

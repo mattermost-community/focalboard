@@ -731,6 +731,20 @@ func (mr *MockStoreMockRecorder) PatchBlocks(arg0, arg1, arg2 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchBlocks", reflect.TypeOf((*MockStore)(nil).PatchBlocks), arg0, arg1, arg2)
 }
 
+// PatchUserProps mocks base method.
+func (m *MockStore) PatchUserProps(arg0 string, arg1 model.UserPropPatch) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PatchUserProps", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PatchUserProps indicates an expected call of PatchUserProps.
+func (mr *MockStoreMockRecorder) PatchUserProps(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchUserProps", reflect.TypeOf((*MockStore)(nil).PatchUserProps), arg0, arg1)
+}
+
 // RefreshSession mocks base method.
 func (m *MockStore) RefreshSession(arg0 *model.Session) error {
 	m.ctrl.T.Helper()

@@ -36,7 +36,7 @@ import {useAppSelector, useAppDispatch} from './store/hooks'
 import {fetchClientConfig} from './store/clientConfig'
 
 import {IUser} from './user'
-import {UserSettings} from './userSettings'
+import {UserSettingKey, UserSettings} from './userSettings'
 
 declare let window: IAppWindow
 
@@ -127,7 +127,7 @@ const App = React.memo((): JSX.Element => {
     }
 
     const continueToWelcomeScreen = () => {
-        return Utils.isFocalboardPlugin() && loggedIn === true && !UserSettings.welcomePageViewed
+        return Utils.isFocalboardPlugin() && loggedIn === true && !me?.props[UserSettingKey.WelcomePageViewed]
     }
 
     return (
