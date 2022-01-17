@@ -118,7 +118,7 @@ module.exports = {
                         options: {
                             name: '[name].[ext]',
                             outputPath: 'static',
-                            publicPath: '/plugins/focalboard/static/',
+                            publicPath: '/static/',
                         },
                     },
                     {
