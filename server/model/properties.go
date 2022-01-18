@@ -19,6 +19,12 @@ var ErrInvalidPropertyValue = errors.New("invalid property value")
 var ErrInvalidPropertyValueType = errors.New("invalid property value type")
 var ErrInvalidDate = errors.New("invalid date property")
 
+// PropValueResolver allows PropDef.GetValue to further decode property values, such as
+// looking up usernames from ids.
+type PropValueResolver interface {
+	GetUserByID(userID string) (*User, error)
+}
+
 // BlockProperties is a map of Prop's keyed by property id.
 type BlockProperties map[string]BlockProp
 
@@ -52,7 +58,7 @@ type PropDef struct {
 
 // GetValue resolves the value of a property if the passed value is an ID for an option,
 // otherwise returns the original value.
-func (pd PropDef) GetValue(v interface{}) (string, error) {
+func (pd PropDef) GetValue(v interface{}, resolver PropValueResolver) (string, error) {
 	switch pd.Type {
 	case "select":
 		// v is the id of an option
@@ -76,12 +82,18 @@ func (pd PropDef) GetValue(v interface{}) (string, error) {
 
 	case "person":
 		// v is a userid
-		userid, ok := v.(string)
+		userID, ok := v.(string)
 		if !ok {
 			return "", ErrInvalidPropertyValueType
 		}
-		// TODO
-		return userid, nil
+		if resolver != nil {
+			user, err := resolver.GetUserByID(userID)
+			if err != nil {
+				return "", err
+			}
+			return user.Username, nil
+		}
+		return userID, nil
 
 	case "multiSelect":
 		// v is a slice of strings containing option ids
@@ -202,8 +214,8 @@ func getMapString(key string, m map[string]interface{}) string {
 }
 
 // ParseProperties parses a block's `Fields` to extract the properties. Properties typically exist on
-// card blocks.
-func ParseProperties(block *Block, schema PropSchema) (BlockProperties, error) {
+// card blocks.  A resolver can optionally be provided to fetch usernames for `person` prop type.
+func ParseProperties(block *Block, schema PropSchema, resolver PropValueResolver) (BlockProperties, error) {
 	props := make(map[string]BlockProp)
 
 	if block == nil {
@@ -236,7 +248,7 @@ func ParseProperties(block *Block, schema PropSchema) (BlockProperties, error) {
 
 		def, ok := schema[k]
 		if ok {
-			val, err := def.GetValue(v)
+			val, err := def.GetValue(v, resolver)
 			if err != nil {
 				return props, fmt.Errorf("could not parse property value (%s): %w", fmt.Sprintf("%v", v), err)
 			}
