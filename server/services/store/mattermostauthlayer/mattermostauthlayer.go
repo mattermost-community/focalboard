@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/mattermost/mattermost-server/v6/plugin"
 	"strings"
+
+	"github.com/mattermost/mattermost-server/v6/plugin"
 
 	"github.com/pkg/errors"
 
