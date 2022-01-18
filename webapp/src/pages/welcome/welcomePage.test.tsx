@@ -8,9 +8,11 @@ import {createMemoryHistory} from 'history'
 
 import {Router} from 'react-router-dom'
 
+import {Provider as ReduxProvider} from 'react-redux'
+
 import userEvent from '@testing-library/user-event'
 
-import {UserSettings} from '../../userSettings'
+import configureStore from 'redux-mock-store'
 
 import {wrapIntl} from '../../testUtils'
 
@@ -19,45 +21,75 @@ import WelcomePage from './welcomePage'
 const w = (window as any)
 const oldBaseURL = w.baseURL
 
-beforeEach(() => {
-    UserSettings.welcomePageViewed = null
-})
-
 afterEach(() => {
     w.baseURL = oldBaseURL
 })
 
 describe('pages/welcome', () => {
     const history = createMemoryHistory()
+    const mockStore = configureStore([])
+    const store = mockStore({
+        users: {
+            me: {
+                props: {},
+            },
+        },
+    })
+
     test('Welcome Page shows Explore Page', () => {
-        const {container} = render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
-        expect(screen.getByText('Explore')).toBeDefined()
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+
+        const {container} = render(component)
+        expect(screen.getByText('Take a tour')).toBeDefined()
         expect(container).toMatchSnapshot()
     })
 
     test('Welcome Page shows Explore Page with subpath', () => {
         w.baseURL = '/subpath'
-        const {container} = render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
-        expect(screen.getByText('Explore')).toBeDefined()
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+
+        const {container} = render(component)
+        expect(screen.getByText('Take a tour')).toBeDefined()
         expect(container).toMatchSnapshot()
     })
 
     test('Welcome Page shows Explore Page And Then Proceeds after Clicking Explore', () => {
         history.replace = jest.fn()
-        render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
-        const exploreButton = screen.getByText('Explore')
+
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+
+        render(component)
+        const exploreButton = screen.getByText('Take a tour')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
         expect(history.replace).toBeCalledWith('/dashboard')
@@ -65,36 +97,78 @@ describe('pages/welcome', () => {
 
     test('Welcome Page does not render explore page the second time we visit it', () => {
         history.replace = jest.fn()
-        UserSettings.welcomePageViewed = 'true'
-        render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
+
+        const customStore = mockStore({
+            users: {
+                me: {
+                    props: {
+                        welcomePageViewed: 'true',
+                    },
+                },
+            },
+        })
+
+        const component = (
+            <ReduxProvider store={customStore}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+
+        render(component)
         expect(history.replace).toBeCalledWith('/dashboard')
     })
 
     test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to true', () => {
         history.replace = jest.fn()
         history.location.search = 'r=123'
-        UserSettings.welcomePageViewed = 'true'
-        render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
+
+        const customStore = mockStore({
+            users: {
+                me: {
+                    props: {
+                        welcomePageViewed: 'true',
+                    },
+                },
+            },
+        })
+        const component = (
+            <ReduxProvider store={customStore}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+
+        render(component)
         expect(history.replace).toBeCalledWith('123')
     })
 
     test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to null', () => {
         history.replace = jest.fn()
         history.location.search = 'r=123'
-        render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
-        const exploreButton = screen.getByText('Explore')
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+        render(component)
+        const exploreButton = screen.getByText('Take a tour')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
         expect(history.replace).toBeCalledWith('123')
