@@ -241,6 +241,10 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 		return err
 	}
 
+	if user.Props == nil {
+		user.Props = map[string]interface{}{}
+	}
+
 	for _, key := range patch.DeletedFields {
 		delete(user.Props, key)
 	}
