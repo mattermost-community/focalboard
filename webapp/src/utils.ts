@@ -36,7 +36,7 @@ enum IDType {
 class Utils {
     static createGuid(idType: IDType): string {
         const data = Utils.randomArray(16)
-        return idType + this.base32encode(data, false)
+        return idType + Utils.base32encode(data, false)
     }
 
     static blockTypeToIDType(blockType: string | undefined): IDType {
@@ -128,10 +128,10 @@ class Utils {
     static canvas : HTMLCanvasElement | undefined
     static getTextWidth(displayText: string, fontDescriptor: string): number {
         if (displayText !== '') {
-            if (!this.canvas) {
-                this.canvas = document.createElement('canvas') as HTMLCanvasElement
+            if (!Utils.canvas) {
+                Utils.canvas = document.createElement('canvas') as HTMLCanvasElement
             }
-            const context = this.canvas.getContext('2d')
+            const context = Utils.canvas.getContext('2d')
             if (context) {
                 context.font = fontDescriptor
                 const metrics = context.measureText(displayText)
@@ -500,7 +500,7 @@ class Utils {
     }
 
     static getFrontendBaseURL(absolute?: boolean): string {
-        let frontendBaseURL = window.frontendBaseURL || this.getBaseURL(absolute)
+        let frontendBaseURL = window.frontendBaseURL || Utils.getBaseURL(absolute)
         frontendBaseURL = frontendBaseURL.replace(/\/+$/, '')
         if (frontendBaseURL.indexOf('/') === 0) {
             frontendBaseURL = frontendBaseURL.slice(1)
@@ -512,7 +512,7 @@ class Utils {
     }
 
     static buildURL(path: string, absolute?: boolean): string {
-        const baseURL = this.getBaseURL()
+        const baseURL = Utils.getBaseURL()
         let finalPath = baseURL + path
         if (path.indexOf('/') !== 0) {
             finalPath = baseURL + '/' + path
