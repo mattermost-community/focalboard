@@ -16,10 +16,21 @@ import configureStore from 'redux-mock-store'
 
 import {wrapIntl} from '../../testUtils'
 
+import {FetchMock} from '../../test/fetchMock'
+
 import WelcomePage from './welcomePage'
+
+import 'isomorphic-fetch'
 
 const w = (window as any)
 const oldBaseURL = w.baseURL
+
+global.fetch = FetchMock.fn
+
+beforeEach(() => {
+    FetchMock.fn.mockReset()
+    FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify({})))
+})
 
 afterEach(() => {
     w.baseURL = oldBaseURL
