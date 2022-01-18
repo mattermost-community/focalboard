@@ -43,8 +43,11 @@ const SidebarUserMenu = React.memo(() => {
                             <FocalboardLogoIcon/>
                             <span>{'Focalboard'}</span>
                             <div className='versionFrame'>
-                                <div className='version'>
-                                    {`v${Constants.versionString}`}
+                                <div
+                                    className='version'
+                                    title={`v${Constants.versionString}`}
+                                >
+                                    {Constants.versionDisplayString}
                                 </div>
                             </div>
                         </div>

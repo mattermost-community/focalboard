@@ -54,8 +54,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                     >
                       <div
                         class="version"
+                        title="v1.0.0"
                       >
-                        v1.0.0
+                        Feb 2022
                       </div>
                     </div>
                   </div>
@@ -1213,8 +1214,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
                     >
                       <div
                         class="version"
+                        title="v1.0.0"
                       >
-                        v1.0.0
+                        Feb 2022
                       </div>
                     </div>
                   </div>
