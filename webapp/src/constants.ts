@@ -26,27 +26,27 @@ class Constants {
         {
             id: 'trello',
             displayName: 'Trello',
-            href: 'https://www.w3schools.com',
+            href: 'https://github.com/mattermost/focalboard/tree/main/import/trello',
         },
         {
             id: 'asana',
             displayName: 'Asana',
-            href: 'https://www.w3schools.com',
+            href: 'https://github.com/mattermost/focalboard/tree/main/import/asana',
         },
         {
             id: 'notion',
             displayName: 'Notion',
-            href: 'https://www.w3schools.com',
+            href: 'https://github.com/mattermost/focalboard/tree/main/import/notion',
         },
         {
             id: 'jira',
             displayName: 'Jira',
-            href: 'https://www.w3schools.com',
+            href: 'https://github.com/mattermost/focalboard/tree/main/import/jira',
         },
         {
             id: 'todoist',
             displayName: 'Todoist',
-            href: 'https://www.w3schools.com',
+            href: 'https://github.com/mattermost/focalboard/tree/main/import/todoist',
         },
     ]
     static readonly languages = [
