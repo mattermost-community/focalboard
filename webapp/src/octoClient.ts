@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {Block, BlockPatch} from './blocks/block'
-import {Board, BoardMember} from './blocks/board'
+import {Board, BoardPatch, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
 import {IUser, UserWorkspace} from './user'
@@ -289,25 +289,25 @@ class OctoClient {
         })
     }
 
-    async deleteBlock(blockId: string): Promise<Response> {
-        Utils.log(`deleteBlock: ${blockId}`)
-        return fetch(this.getBaseURL() + this.teamPath() + `/blocks/${encodeURIComponent(blockId)}`, {
+    async deleteBlock(boardId: string, blockId: string): Promise<Response> {
+        Utils.log(`deleteBlock: ${blockId} on board ${boardId}`)
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}/blocks/${encodeURIComponent(blockId)}`, {
             method: 'DELETE',
             headers: this.headers(),
         })
     }
 
-    async insertBlock(block: Block): Promise<Response> {
-        return this.insertBlocks([block])
+    async insertBlock(boardId: string, block: Block): Promise<Response> {
+        return this.insertBlocks(boardId, [block])
     }
 
-    async insertBlocks(blocks: Block[]): Promise<Response> {
-        Utils.log(`insertBlocks: ${blocks.length} blocks(s)`)
+    async insertBlocks(boardId: string, blocks: Block[]): Promise<Response> {
+        Utils.log(`insertBlocks: ${blocks.length} blocks(s) on board ${boardId}`)
         blocks.forEach((block) => {
             Utils.log(`\t ${block.type}, ${block.id}, ${block.title?.substr(0, 50) || ''}`)
         })
         const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.teamPath() + '/blocks', {
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}/blocks`, {
             method: 'POST',
             headers: this.headers(),
             body,
@@ -516,6 +516,16 @@ class OctoClient {
             method: 'POST',
             headers: this.headers(),
             body: JSON.stringify(board),
+        })
+    }
+
+    async patchBoard(boardId: string, boardPatch: BoardPatch): Promise<Response> {
+        Utils.log(`patchBoard: ${boardId} board`)
+        const body = JSON.stringify(boardPatch)
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}`, {
+            method: 'PATCH',
+            headers: this.headers(),
+            body,
         })
     }
 

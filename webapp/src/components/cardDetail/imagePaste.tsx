@@ -37,7 +37,7 @@ export default function useImagePaste(boardID: string, cardId: string, contentOr
         }
 
         mutator.performAsUndoGroup(async () => {
-            const newContentBlocks = await mutator.insertBlocks(blocksToInsert, 'pasted images')
+            const newContentBlocks = await mutator.insertBlocks(boardID, blocksToInsert, 'pasted images')
             const newContentOrder = JSON.parse(JSON.stringify(contentOrder))
             newContentOrder.push(...newContentBlocks.map((b: ImageBlock) => b.id))
 

@@ -44,6 +44,7 @@ export const addBoardClicked = async (showBoard: (id: string) => void, intl: Int
     view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
     await mutator.insertBlock(
+        view.boardId,
         view,
         'add board',
         async (newBlock: Block) => {
@@ -72,6 +73,7 @@ export const addBoardTemplateClicked = async (showBoard: (id: string) => void, i
     view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
     await mutator.insertBlock(
+        view.boardId,
         view,
         'add board template initial view',
         async (newBlock: Block) => {

@@ -49,6 +49,7 @@ const ViewMenu = React.memo((props: Props) => {
         newView.title = `${activeView.title} copy`
         newView.id = Utils.createGuid(IDType.View)
         mutator.insertBlock(
+            newView.boardId,
             newView,
             'duplicate view',
             async (block: Block) => {
@@ -97,6 +98,7 @@ const ViewMenu = React.memo((props: Props) => {
         const oldViewId = activeView.id
 
         mutator.insertBlock(
+            view.boardId,
             view,
             'add view',
             async (block: Block) => {
@@ -125,6 +127,7 @@ const ViewMenu = React.memo((props: Props) => {
         const oldViewId = activeView.id
 
         mutator.insertBlock(
+            view.boardId,
             view,
             'add view',
             async (block: Block) => {
@@ -152,6 +155,7 @@ const ViewMenu = React.memo((props: Props) => {
         const oldViewId = activeView.id
 
         mutator.insertBlock(
+            view.boardId,
             view,
             'add view',
             async (block: Block) => {
@@ -184,6 +188,7 @@ const ViewMenu = React.memo((props: Props) => {
         view.fields.dateDisplayPropertyId = board.cardProperties.find((o: IPropertyTemplate) => o.type === 'date')?.id
 
         mutator.insertBlock(
+            view.boardId,
             view,
             'add view',
             async (block: Block) => {
