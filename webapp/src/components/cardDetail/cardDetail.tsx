@@ -136,6 +136,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 <CommentsList
                     comments={comments}
                     rootId={card.rootId}
+                    boardId={card.boardId}
                     cardId={card.id}
                     readonly={props.readonly}
                 />

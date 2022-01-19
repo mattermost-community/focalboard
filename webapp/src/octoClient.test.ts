@@ -46,7 +46,7 @@ test('OctoClient: get blocks', async () => {
 test('OctoClient: insert blocks', async () => {
     const blocks = createBlocks()
 
-    await octoClient.insertBlocks(blocks)
+    await octoClient.insertBlocks('board-id', blocks)
 
     expect(FetchMock.fn).toBeCalledTimes(1)
     expect(FetchMock.fn).toHaveBeenCalledWith(

@@ -289,25 +289,25 @@ class OctoClient {
         })
     }
 
-    async deleteBlock(blockId: string): Promise<Response> {
-        Utils.log(`deleteBlock: ${blockId}`)
-        return fetch(this.getBaseURL() + this.teamPath() + `/blocks/${encodeURIComponent(blockId)}`, {
+    async deleteBlock(boardId: string, blockId: string): Promise<Response> {
+        Utils.log(`deleteBlock: ${blockId} on board ${boardId}`)
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}/blocks/${encodeURIComponent(blockId)}`, {
             method: 'DELETE',
             headers: this.headers(),
         })
     }
 
-    async insertBlock(block: Block): Promise<Response> {
-        return this.insertBlocks([block])
+    async insertBlock(boardId: string, block: Block): Promise<Response> {
+        return this.insertBlocks(boardId, [block])
     }
 
-    async insertBlocks(blocks: Block[]): Promise<Response> {
-        Utils.log(`insertBlocks: ${blocks.length} blocks(s) on board ${blocks[0]?.boardId}`)
+    async insertBlocks(boardId: string, blocks: Block[]): Promise<Response> {
+        Utils.log(`insertBlocks: ${blocks.length} blocks(s) on board ${boardId}`)
         blocks.forEach((block) => {
             Utils.log(`\t ${block.type}, ${block.id}, ${block.title?.substr(0, 50) || ''}`)
         })
         const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.teamPath() + '/blocks', {
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}/blocks`, {
             method: 'POST',
             headers: this.headers(),
             body,

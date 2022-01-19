@@ -96,10 +96,10 @@ class Mutator {
     }
 
     //eslint-disable-next-line no-shadow
-    async insertBlock(block: Block, description = 'add', afterRedo?: (block: Block) => Promise<void>, beforeUndo?: (block: Block) => Promise<void>): Promise<Block> {
+    async insertBlock(boardId: string, block: Block, description = 'add', afterRedo?: (block: Block) => Promise<void>, beforeUndo?: (block: Block) => Promise<void>): Promise<Block> {
         return undoManager.perform(
             async () => {
-                const res = await octoClient.insertBlock(block)
+                const res = await octoClient.insertBlock(boardId, block)
                 const jsonres = await res.json()
                 const newBlock = jsonres[0] as Block
                 await afterRedo?.(newBlock)
@@ -107,7 +107,7 @@ class Mutator {
             },
             async (newBlock: Block) => {
                 await beforeUndo?.(newBlock)
-                await octoClient.deleteBlock(newBlock.id)
+                await octoClient.deleteBlock(boardId, newBlock.id)
             },
             description,
             this.undoGroupId,
@@ -115,10 +115,10 @@ class Mutator {
     }
 
     //eslint-disable-next-line no-shadow
-    async insertBlocks(blocks: Block[], description = 'add', afterRedo?: (blocks: Block[]) => Promise<void>, beforeUndo?: () => Promise<void>) {
+    async insertBlocks(boardId: string, blocks: Block[], description = 'add', afterRedo?: (blocks: Block[]) => Promise<void>, beforeUndo?: () => Promise<void>) {
         return undoManager.perform(
             async () => {
-                const res = await octoClient.insertBlocks(blocks)
+                const res = await octoClient.insertBlocks(boardId, blocks)
                 const newBlocks = (await res.json()) as Block[]
                 await afterRedo?.(newBlocks)
                 return newBlocks
@@ -127,7 +127,7 @@ class Mutator {
                 await beforeUndo?.()
                 const awaits = []
                 for (const block of newBlocks) {
-                    awaits.push(octoClient.deleteBlock(block.id))
+                    awaits.push(octoClient.deleteBlock(boardId, block.id))
                 }
                 await Promise.all(awaits)
             },
@@ -142,10 +142,10 @@ class Mutator {
         await undoManager.perform(
             async () => {
                 await beforeRedo?.()
-                await octoClient.deleteBlock(block.id)
+                await octoClient.deleteBlock(block.boardId, block.id)
             },
             async () => {
-                await octoClient.insertBlock(block)
+                await octoClient.insertBlock(block.boardId, block)
                 await afterUndo?.()
             },
             actualDescription,
@@ -767,6 +767,7 @@ class Mutator {
         newCard.rootId = board.id
         newCard.parentId = board.id
         await this.insertBlocks(
+            board.id,
             newBlocks,
             description,
             async (respBlocks: Block[]) => {
