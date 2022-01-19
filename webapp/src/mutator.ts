@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
-import {Board, IPropertyOption, IPropertyTemplate, PropertyType, createBoard, createPatchesFromBoards} from './blocks/board'
+import {Board, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyType, createBoard, createPatchesFromBoards} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {FilterGroup} from './blocks/filterGroup'
@@ -153,24 +153,24 @@ class Mutator {
         )
     }
 
-    async insertBoard(board: Board, description = 'add', afterRedo?: (board: Board) => Promise<void>, beforeUndo?: (board: Board) => Promise<void>): Promise<Board> {
-        // ToDo: implement
-        // return undoManager.perform(
-        //     async () => {
-        //         const res = await octoClient.insertBlock(block)
-        //         const jsonres = await res.json()
-        //         const newBlock = jsonres[0] as Block
-        //         await afterRedo?.(newBlock)
-        //         return newBlock
-        //     },
-    //     async (newBlock: Block) => {
-        //         await beforeUndo?.(newBlock)
-        //         await octoClient.deleteBlock(newBlock.id)
-        //     },
-    //     description,
-    //     this.undoGroupId,
-    // )
-        return createBoard()
+    async createBoardsAndBlocks(bab: BoardsAndBlocks, description = 'add', afterRedo?: (bab: BoardsAndBlocks) => Promise<void>, beforeUndo?: (bab: BoardsAndBlocks) => Promise<void>): Promise<BoardsAndBlocks> {
+        return undoManager.perform(
+            async () => {
+                const res = await octoClient.createBoardsAndBlocks(bab)
+                const newBab = (await res.json()) as BoardsAndBlocks
+                await afterRedo?.(newBab)
+                return newBab
+            },
+            async (newBab: BoardsAndBlocks) => {
+                await beforeUndo?.(newBab)
+
+                const boardIds = newBab.boards.map(b => b.id)
+                const blockIds = newBab.blocks.map(b => b.id)
+                await octoClient.deleteBoardsAndBlocks(boardIds, blockIds)
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
     async updateBoard(newBoard: Board, oldBoard: Board, description: string): Promise<void> {
@@ -188,7 +188,16 @@ class Mutator {
     }
 
     async deleteBoard(board: Board, description?: string, beforeRedo?: () => Promise<void>, afterUndo?: () => Promise<void>) {
-        // ToDo: implement
+        await undoManager.perform(
+            async () => {
+                await octoClient.deleteBoard(board.id)
+            },
+            async () => {
+                await octoClient.createBoard(board)
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
     async changeBlockTitle(boardId: string, blockId: string, oldTitle: string, newTitle: string, description = 'change block title') {

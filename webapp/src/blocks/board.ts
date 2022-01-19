@@ -62,6 +62,11 @@ type BoardMember = {
     schemeViewer: boolean
 }
 
+type BoardsAndBlocks = {
+    boards: Board[],
+    blocks: Block[],
+}
+
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
 
 interface IPropertyOption {
@@ -114,7 +119,7 @@ function createBoard(board?: Board): Board {
     }
 
     return {
-        id: board?.id || '',
+        id: board?.id || Utils.createGuid(IDType.Board),
         teamId: board?.teamId || '',
         channelId: board?.channelId || '',
         createdBy: board?.createdBy || '',
@@ -281,6 +286,7 @@ export {
     Board,
     BoardPatch,
     BoardMember,
+    BoardsAndBlocks,
     PropertyType,
     IPropertyOption,
     IPropertyTemplate,
