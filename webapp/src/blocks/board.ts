@@ -36,6 +36,23 @@ type Board = {
     deleteAt: number
 }
 
+type BoardPatch = {
+    type?: BoardTypes
+    title?: string
+    description?: string
+    icon?: string
+    showDescription?: boolean
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    updatedProperties?: Record<string, any>
+    deletedProperties?: string[]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    updatedCardProperties?: Record<string, any>
+    deletedCardProperties?: string[]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    updatedColumnCalculations?: Record<string, any>
+    deletedColumnCalculations?: string[]
+}
+
 type BoardMember = {
     boardId: string
     userId: string
@@ -131,6 +148,7 @@ type BoardGroup = {
 
 export {
     Board,
+    BoardPatch,
     BoardMember,
     PropertyType,
     IPropertyOption,

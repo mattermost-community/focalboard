@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {Block, BlockPatch} from './blocks/block'
-import {Board, BoardMember} from './blocks/board'
+import {Board, BoardPatch, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
 import {IUser, UserWorkspace} from './user'
@@ -302,7 +302,7 @@ class OctoClient {
     }
 
     async insertBlocks(blocks: Block[]): Promise<Response> {
-        Utils.log(`insertBlocks: ${blocks.length} blocks(s)`)
+        Utils.log(`insertBlocks: ${blocks.length} blocks(s) on board ${blocks[0]?.boardId}`)
         blocks.forEach((block) => {
             Utils.log(`\t ${block.type}, ${block.id}, ${block.title?.substr(0, 50) || ''}`)
         })
@@ -516,6 +516,16 @@ class OctoClient {
             method: 'POST',
             headers: this.headers(),
             body: JSON.stringify(board),
+        })
+    }
+
+    async patchBoard(boardId: string, boardPatch: BoardPatch): Promise<Response> {
+        Utils.log(`patchBoard: ${boardId} board`)
+        const body = JSON.stringify(boardPatch)
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}`, {
+            method: 'PATCH',
+            headers: this.headers(),
+            body,
         })
     }
 

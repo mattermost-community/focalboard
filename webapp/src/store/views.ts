@@ -77,7 +77,7 @@ export const getCurrentBoardViews = createSelector(
     getViews,
     (boardId, views) => {
         console.log(`getCurrentBoardViews boardId: ${boardId} views: ${views.length}`)
-        return Object.values(views).filter((v) => v.parentId === boardId).sort((a, b) => a.title.localeCompare(b.title)).map((v) => createBoardView(v))
+        return Object.values(views).filter((v) => v.boardId === boardId).sort((a, b) => a.title.localeCompare(b.title)).map((v) => createBoardView(v))
     },
 )
 

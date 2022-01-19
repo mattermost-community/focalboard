@@ -65,7 +65,7 @@ const ViewHeader = React.memo((props: Props) => {
                 value={viewTitle}
                 placeholderText='Untitled View'
                 onSave={(): void => {
-                    mutator.changeTitle(board.id, activeView.id, activeView.title, viewTitle)
+                    mutator.changeBlockTitle(board.id, activeView.id, activeView.title, viewTitle)
                 }}
                 onCancel={(): void => {
                     setViewTitle(activeView.title)

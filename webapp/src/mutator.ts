@@ -193,13 +193,26 @@ class Mutator {
         // ToDo: implement
     }
 
-    async changeTitle(boardId: string, blockId: string, oldTitle: string, newTitle: string, description = 'change title') {
+    async changeBlockTitle(boardId: string, blockId: string, oldTitle: string, newTitle: string, description = 'change block title') {
         await undoManager.perform(
             async () => {
                 await octoClient.patchBlock(boardId, blockId, {title: newTitle})
             },
             async () => {
                 await octoClient.patchBlock(boardId, blockId, {title: oldTitle})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    async changeBoardTitle(boardId: string, oldTitle: string, newTitle: string, description = 'change board title') {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBoard(boardId, {title: newTitle})
+            },
+            async () => {
+                await octoClient.patchBoard(boardId, {title: oldTitle})
             },
             description,
             this.undoGroupId,
@@ -233,7 +246,16 @@ class Mutator {
     }
 
     async changeBoardIcon(boardId: string, oldIcon: string|undefined, icon: string, description = 'change board icon') {
-        // ToDo: implement
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBoard(boardId, {icon})
+            },
+            async () => {
+                await octoClient.patchBoard(boardId, {icon: oldIcon})
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
     async changeBlockIcon(boardId: string, blockId: string, oldIcon: string|undefined, icon: string, description = 'change block icon') {
@@ -249,20 +271,20 @@ class Mutator {
         )
     }
 
-    async changeDescription(boardId: string, blockId: string, oldBlockDescription: string|undefined, blockDescription: string, description = 'change description') {
+    async changeBoardDescription(boardId: string, blockId: string, oldBlockDescription: string|undefined, blockDescription: string, description = 'change description') {
         await undoManager.perform(
             async () => {
-                await octoClient.patchBlock(boardId, blockId, {updatedFields: {description: blockDescription}})
+                await octoClient.patchBoard(boardId, {description: blockDescription})
             },
             async () => {
-                await octoClient.patchBlock(boardId, blockId, {updatedFields: {description: oldBlockDescription}})
+                await octoClient.patchBoard(boardId, {description: oldBlockDescription})
             },
             description,
             this.undoGroupId,
         )
     }
 
-    async showDescription(boardId: string, oldShowDescription: boolean, showDescription = true, description?: string) {
+    async showBoardDescription(boardId: string, oldShowDescription: boolean, showDescription = true, description?: string) {
         let actionDescription = description
         if (!actionDescription) {
             actionDescription = showDescription ? 'show description' : 'hide description'
@@ -270,10 +292,10 @@ class Mutator {
 
         await undoManager.perform(
             async () => {
-                await octoClient.patchBlock(boardId, boardId, {updatedFields: {showDescription}})
+                await octoClient.patchBoard(boardId, {showDescription})
             },
             async () => {
-                await octoClient.patchBlock(boardId, boardId, {updatedFields: {showDescription: oldShowDescription}})
+                await octoClient.patchBoard(boardId, {showDescription: oldShowDescription})
             },
             actionDescription,
             this.undoGroupId,
