@@ -59,6 +59,11 @@ const usersSlice = createSlice({
             const oldSubscriptions = state.blockSubscriptions
             state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload.blockId)
         },
+        patchProps: (state, action: PayloadAction<Record<string, string>>) => {
+            if (state.me) {
+                state.me.props = action.payload
+            }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
@@ -100,4 +105,4 @@ export const getUser = (userId: string): (state: RootState) => IUser|undefined =
     }
 }
 
-export const {followBlock, unfollowBlock} = usersSlice.actions
+export const {followBlock, unfollowBlock, patchProps} = usersSlice.actions

@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {render, screen} from '@testing-library/react'
+import {render, screen, waitFor} from '@testing-library/react'
 
 import {createMemoryHistory} from 'history'
 
@@ -14,22 +14,25 @@ import userEvent from '@testing-library/user-event'
 
 import configureStore from 'redux-mock-store'
 
+import {mocked} from 'ts-jest/utils'
+
 import {wrapIntl} from '../../testUtils'
 
-import {FetchMock} from '../../test/fetchMock'
+import mutator from '../../mutator'
 
 import WelcomePage from './welcomePage'
-
-import 'isomorphic-fetch'
 
 const w = (window as any)
 const oldBaseURL = w.baseURL
 
-global.fetch = FetchMock.fn
+jest.mock('../../mutator')
+const mockedMutator = mocked(mutator, true)
 
 beforeEach(() => {
-    FetchMock.fn.mockReset()
-    FetchMock.fn.mockReturnValue(FetchMock.jsonResponse(JSON.stringify({})))
+    jest.resetAllMocks()
+    mockedMutator.patchUserConfig.mockImplementation(() => Promise.resolve({
+        welcomePageViewed: 'true',
+    }))
 })
 
 afterEach(() => {
@@ -84,7 +87,7 @@ describe('pages/welcome', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('Welcome Page shows Explore Page And Then Proceeds after Clicking Explore', () => {
+    test('Welcome Page shows Explore Page And Then Proceeds after Clicking Explore', async () => {
         history.replace = jest.fn()
 
         const component = (
@@ -103,10 +106,13 @@ describe('pages/welcome', () => {
         const exploreButton = screen.getByText('Take a tour')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
-        expect(history.replace).toBeCalledWith('/dashboard')
+        await waitFor(() => {
+            expect(history.replace).toBeCalledWith('/dashboard')
+            expect(mockedMutator.patchUserConfig).toBeCalledTimes(1)
+        })
     })
 
-    test('Welcome Page does not render explore page the second time we visit it', () => {
+    test('Welcome Page does not render explore page the second time we visit it', async () => {
         history.replace = jest.fn()
 
         const customStore = mockStore({
@@ -132,10 +138,12 @@ describe('pages/welcome', () => {
         )
 
         render(component)
-        expect(history.replace).toBeCalledWith('/dashboard')
+        await waitFor(() => {
+            expect(history.replace).toBeCalledWith('/dashboard')
+        })
     })
 
-    test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to true', () => {
+    test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to true', async () => {
         history.replace = jest.fn()
         history.location.search = 'r=123'
 
@@ -161,10 +169,12 @@ describe('pages/welcome', () => {
         )
 
         render(component)
-        expect(history.replace).toBeCalledWith('123')
+        await waitFor(() => {
+            expect(history.replace).toBeCalledWith('123')
+        })
     })
 
-    test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to null', () => {
+    test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to null', async () => {
         history.replace = jest.fn()
         history.location.search = 'r=123'
         const component = (
@@ -182,6 +192,9 @@ describe('pages/welcome', () => {
         const exploreButton = screen.getByText('Take a tour')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
-        expect(history.replace).toBeCalledWith('123')
+        await waitFor(() => {
+            expect(history.replace).toBeCalledWith('123')
+            expect(mockedMutator.patchUserConfig).toBeCalledTimes(1)
+        })
     })
 })

@@ -694,7 +694,7 @@ class Mutator {
         )
     }
 
-    async patchUserConfig(userID: string, patch: UserConfigPatch) {
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
         return octoClient.patchUserConfig(userID, patch)
     }
 

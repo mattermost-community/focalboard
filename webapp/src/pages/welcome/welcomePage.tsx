@@ -15,22 +15,26 @@ import {Utils} from '../../utils'
 
 import './welcomePage.scss'
 import mutator from '../../mutator'
-import {useAppSelector} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {IUser, UserConfigPatch} from '../../user'
-import {getMe} from '../../store/users'
+import {getMe, patchProps} from '../../store/users'
 
 const WelcomePage = React.memo(() => {
     const history = useHistory()
     const queryString = new URLSearchParams(useLocation().search)
     const me = useAppSelector<IUser|null>(getMe)
+    const dispatch = useAppDispatch()
 
-    const goForward = () => {
+    const goForward = async () => {
         if (me) {
             const patch: UserConfigPatch = {}
             patch.updatedFields = {}
             patch.updatedFields[UserSettingKey.WelcomePageViewed] = 'true'
 
-            mutator.patchUserConfig(me.id, patch)
+            const updatedProps = await mutator.patchUserConfig(me.id, patch)
+            if (updatedProps) {
+                await dispatch(patchProps(updatedProps))
+            }
         }
 
         if (queryString.get('r')) {
