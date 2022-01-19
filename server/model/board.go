@@ -206,15 +206,44 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 		delete(board.Properties, key)
 	}
 
-	//for key, cardProperty := range p.UpdatedCardProperties {
-	//	board.CardProperties[key] = cardProperty
-	//}
-	//
-	//for _, key := range p.DeletedCardProperties {
-	//	delete(board.CardProperties, key)
-	//}
+	if len(p.UpdatedCardProperties) != 0 || len(p.DeletedCardProperties) != 0 {
+		// first we accumulate all properties indexed by ID
+		cardPropertyMap := map[string]map[string]interface{}{}
+		for _, prop := range board.CardProperties {
+			id, ok := prop["id"].(string)
+			if !ok {
+				// bad property, skipping
+				continue
+			}
 
-	board.CardProperties = p.UpdatedCardProperties
+			cardPropertyMap[id] = prop
+		}
+
+		// if there are properties marked for removal, we delete them
+		for _, propertyID := range p.DeletedCardProperties {
+			delete(cardPropertyMap, propertyID)
+		}
+
+		// if there are properties marked for update, we replace the
+		// existing ones or add them
+		for _, newprop := range p.UpdatedCardProperties {
+			id, ok := newprop["id"].(string)
+			if !ok {
+				// bad new property, skipping
+				continue
+			}
+
+			cardPropertyMap[id] = newprop
+		}
+
+		// and finally we flatten and save the updated properties
+		newCardProperties := []map[string]interface{}{}
+		for _, p := range cardPropertyMap {
+			newCardProperties = append(newCardProperties, p)
+		}
+
+		board.CardProperties = newCardProperties
+	}
 
 	for key, columnCalculation := range p.UpdatedColumnCalculations {
 		board.ColumnCalculations[key] = columnCalculation
