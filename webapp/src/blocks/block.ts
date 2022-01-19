@@ -62,7 +62,7 @@ function createBlock(block?: Block): Block {
     }
 }
 
-// createPatchesFromBlock creates two BlockPatch instances, one that
+// createPatchesFromBlocks creates two BlockPatch instances, one that
 // contains the delta to update the block and another one for the undo
 // action, in case it happens
 function createPatchesFromBlocks(newBlock: Block, oldBlock: Block): BlockPatch[] {

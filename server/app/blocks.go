@@ -218,7 +218,7 @@ func (a *App) getBoardAndCard(block *model.Block) (board *model.Board, card *mod
 		}
 
 		iter, err = a.store.GetBlock(iter.ParentID)
-		if err != nil {
+		if err != nil || iter == nil {
 			return board, card, err
 		}
 	}
