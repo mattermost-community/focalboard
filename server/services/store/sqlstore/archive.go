@@ -47,7 +47,7 @@ func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r 
 			if err != nil {
 				return fmt.Errorf("error parsing archive line %d: %w", lineNum, err)
 			}
-			if err2 := s.importArchiveLine(container, &archiveLine, mod); err2 != nil {
+			if err2 := s.importArchiveLine(db, container, &archiveLine, mod); err2 != nil {
 				return fmt.Errorf("error importing archive line %d: %w", lineNum, err2)
 			}
 		}
@@ -65,7 +65,7 @@ func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r 
 }
 
 // importArchiveLine parses a single line from an archive and imports it to the database.
-func (s *SQLStore) importArchiveLine(container store.Container, line *model.ArchiveLine, mod model.BlockModifier) error {
+func (s *SQLStore) importArchiveLine(db sq.BaseRunner, container store.Container, line *model.ArchiveLine, mod model.BlockModifier) error {
 	switch line.Type {
 	case "block":
 		var block model.Block
@@ -82,7 +82,7 @@ func (s *SQLStore) importArchiveLine(container store.Container, line *model.Arch
 			mlog.String("block_type", block.Type.String()),
 			mlog.String("block_title", block.Title),
 		)
-		if err := s.InsertBlock(container, &block, "system"); err != nil {
+		if err := s.insertBlock(db, container, &block, "system"); err != nil {
 			return err
 		}
 
