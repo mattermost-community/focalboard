@@ -91,7 +91,10 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                         <Menu.Text
                             id='import_archive'
                             name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
-                            onClick={async () => Archiver.importFullArchive()}
+                            onClick={async () => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ImportArchive)
+                                Archiver.importFullArchive()
+                            }}
                         />
                         {
                             Constants.imports.map((i) => (
@@ -100,7 +103,7 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                                     id={`${i.id}-import`}
                                     name={i.displayName}
                                     onClick={() => {
-                                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickImportHelp, {importType: i.id})
+                                        TelemetryClient.trackEvent(TelemetryCategory, i.telemetryName)
                                         window.open(i.href)
                                     }}
                                 />
@@ -110,7 +113,10 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
                     <Menu.Text
                         id='export'
                         name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
-                        onClick={async () => Archiver.exportFullArchive()}
+                        onClick={async () => {
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ExportArchive)
+                            Archiver.exportFullArchive()
+                        }}
                     />
                     <Menu.SubMenu
                         id='lang'

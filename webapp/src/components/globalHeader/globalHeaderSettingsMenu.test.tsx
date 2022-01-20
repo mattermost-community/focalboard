@@ -76,6 +76,6 @@ describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
         expect(container).toMatchSnapshot()
 
         userEvent.click(container.querySelector('[aria-label="Asana"]') as Element)
-        expect(mockedTelemetry.trackEvent).toBeCalledWith(TelemetryCategory, TelemetryActions.ClickImportHelp, {importType: 'asana'})
+        expect(mockedTelemetry.trackEvent).toBeCalledWith(TelemetryCategory, TelemetryActions.ImportAsana)
     })
 })

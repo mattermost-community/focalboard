@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {TelemetryActions} from './telemetry/telemetryClient'
+
 class Constants {
     static readonly menuColors: {[key: string]: string} = {
         propColorDefault: 'Default',
@@ -26,29 +28,35 @@ class Constants {
         {
             id: 'trello',
             displayName: 'Trello',
+            telemetryName: TelemetryActions.ImportTrello,
             href: 'https://github.com/mattermost/focalboard/tree/main/import/trello',
         },
         {
             id: 'asana',
             displayName: 'Asana',
+            telemetryName: TelemetryActions.ImportAsana,
             href: 'https://github.com/mattermost/focalboard/tree/main/import/asana',
         },
         {
             id: 'notion',
             displayName: 'Notion',
+            telemetryName: TelemetryActions.ImportNotion,
             href: 'https://github.com/mattermost/focalboard/tree/main/import/notion',
         },
         {
             id: 'jira',
             displayName: 'Jira',
+            telemetryName: TelemetryActions.ImportJira,
             href: 'https://github.com/mattermost/focalboard/tree/main/import/jira',
         },
         {
             id: 'todoist',
             displayName: 'Todoist',
+            telemetryName: TelemetryActions.ImportTodoist,
             href: 'https://github.com/mattermost/focalboard/tree/main/import/todoist',
         },
     ]
+
     static readonly languages = [
         {
             code: 'en',
