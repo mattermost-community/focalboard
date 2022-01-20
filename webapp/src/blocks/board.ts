@@ -216,7 +216,6 @@ function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[]
     })
 
     const newData: Record<string, any> = {}
-    const protectedFields = ['properties', 'cardProperties', 'columnCalculations']
     Object.keys(newBoard).forEach((val) => {
         if (val !== 'properties' &&
             val !== 'cardProperties' &&
