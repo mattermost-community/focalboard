@@ -277,7 +277,7 @@ const BoardPage = (props: Props): JSX.Element => {
         const incrementalBoardUpdate = (_: WSClient, boards: Board[]) => {
             // only takes into account the entities that belong to the team or the user boards
             const teamBoards = boards.filter((b: Board) => b.teamId === '0' || b.teamId === teamId)
-            dispatch(updateBoards(teamBoards.filter((b: Board) => !b.deleteAt)))
+            dispatch(updateBoards(teamBoards)
         }
 
         let timeout: ReturnType<typeof setTimeout>
