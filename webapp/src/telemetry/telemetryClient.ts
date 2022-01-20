@@ -28,7 +28,13 @@ export const TelemetryActions = {
     DeleteCard: 'deleteCard',
     AddTemplateFromCard: 'addTemplateFromCard',
     ViewSharedBoard: 'viewSharedBoard',
-    ClickImportHelp: 'clickImportHelp',
+    ImportArchive: 'settings_importArchive',
+    ImportTrello: 'settings_importTrello',
+    ImportAsana: 'settings_importAsana',
+    ImportNotion: 'settings_importNotion',
+    ImportJira: 'settings_importJira',
+    ImportTodoist: 'settings_importTodoist',
+    ExportArchive: 'settings_exportArchive',
 }
 
 interface IEventProps {
@@ -40,7 +46,6 @@ interface IEventProps {
     cardTemplateId?: string,
     boardTemplateId?: string,
     shareBoardEnabled?: boolean,
-    importType?: string,
 }
 
 class TelemetryClient {
