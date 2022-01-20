@@ -1,0 +1,98 @@
+.BoardTemplateSelector {
+    position: absolute;
+    background-color: rgb(var(--center-channel-bg-rgb));
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    .toolbar {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        padding: 24px;
+    }
+    .header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        .description {
+            max-width: 640px;
+            text-align: center;
+        }
+    }
+    
+    .templates {
+        display: flex;
+        width: 100%;
+        padding: 0 10%;
+        justify-content: center;
+        .templates-list {
+            margin-right: 32px;
+            min-width: 200px;
+            .template-item, .new-template {
+                display: flex;
+                align-items: center;
+                padding: 8px 16px;
+                margin-bottom: 4px;
+                border-radius: var(--default-rad);
+                cursor: pointer;
+                .template-icon {
+                    margin-right: 5px;
+                }
+                &.active {
+                    background-color: rgba(var(--button-bg-rgb), 0.2);
+                }
+                &:hover {
+                    background-color: rgba(var(--center-channel-color-rgb), 0.1)
+                }
+            }
+        }
+        .template-preview-box {
+            position: relative;
+            background-color: rgb(var(--center-channel-bg-rgb));
+            box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
+                rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
+            border-radius: var(--modal-rad);
+            overflow: hidden;
+            width: 670px;
+            .preview {
+                position: relative;
+                .Kanban {
+                    overflow: hidden;
+                }
+                .prevent-click {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1100
+                }
+                transform: scale(0.6) translateX(-30%) translateY(-30%);
+                width: 158%;
+                height: 480px;
+                border-radius: var(--modal-rad);
+            }
+            .buttons {
+                display: flex;
+                position: absolute;
+                bottom: 10px;
+                width: 100%;
+                justify-content: center;
+                .Button {
+                    padding: 13px 20px;
+                    height: 40px;
+                    margin-right: 8px;
+                }
+                .empty-board {
+                    margin-left: 8px;
+                    border-radius: var(--default-rad);
+                    border: 1px solid rgb(var(--button-bg-rgb));
+                    color: rgb(var(--button-bg-rgb));
+                    background-color: rgb(var(--center-channel-bg-rgb));
+                }
+            }
+        }
+    }
+}

@@ -18,6 +18,7 @@ import WorkspaceOptions, {DashboardOption} from './workspaceOptions'
 
 type Props = {
     activeWorkspace?: IWorkspace
+    onBoardTemplateSelectorOpen?: () => void
 }
 
 const WorkspaceSwitcher = (props: Props): JSX.Element => {
@@ -71,7 +72,7 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
             {activeWorkspace &&
                 <span
                     className='add-workspace-icon'
-                    onClick={goToEmptyCenterPanel}
+                    onClick={props.onBoardTemplateSelectorOpen}
                 >
                     <AddIcon/>
                 </span>

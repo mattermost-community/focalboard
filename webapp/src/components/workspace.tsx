@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
@@ -17,6 +17,7 @@ import {Utils} from '../utils'
 
 import CenterPanel from './centerPanel'
 import EmptyCenterPanel from './emptyCenterPanel'
+import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 
 import Sidebar from './sidebar/sidebar'
 import './workspace.scss'
@@ -92,16 +93,28 @@ function CenterContent(props: Props) {
 const Workspace = React.memo((props: Props) => {
     const board = useAppSelector(getCurrentBoard)
     const view = useAppSelector(getCurrentView)
+    const [boardTemplateSelectorOpen, setBoardTemplateSelectorOpen] = useState(false)
+
+    const closeBoardTemplateSelector = useCallback(() => {
+        setBoardTemplateSelectorOpen(false)
+    }, [])
+    const openBoardTemplateSelector = useCallback(() => {
+        console.log('OPENING THE BOARD SELECTOR')
+        setBoardTemplateSelectorOpen(true)
+    }, [])
 
     return (
         <div className='Workspace'>
             {!props.readonly &&
                 <Sidebar
+                    onBoardTemplateSelectorOpen={openBoardTemplateSelector}
                     activeBoardId={board?.id}
                     activeViewId={view?.id}
                 />
             }
             <div className='mainFrame'>
+                {boardTemplateSelectorOpen &&
+                    <BoardTemplateSelector onClose={closeBoardTemplateSelector}/>}
                 {(board?.fields.isTemplate) &&
                 <div className='banner'>
                     <FormattedMessage

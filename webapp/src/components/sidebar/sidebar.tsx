@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
+import {FormattedMessage} from 'react-intl'
 
 import {useIntl} from 'react-intl'
 
@@ -30,6 +31,7 @@ type Props = {
     activeBoardId?: string
     activeViewId?: string
     isDashboard?: boolean
+    onBoardTemplateSelectorOpen?: () => void
 }
 
 function getWindowDimensions() {
@@ -148,14 +150,17 @@ const Sidebar = React.memo((props: Props) => {
 
             {
                 workspace && workspace.id !== '0' && !props.isDashboard &&
-                <WorkspaceSwitcher activeWorkspace={workspace}/>
+                <WorkspaceSwitcher
+                    activeWorkspace={workspace}
+                    onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}
+                />
             }
 
             {
                 props.isDashboard &&
                 (
                     <React.Fragment>
-                        <WorkspaceSwitcher/>
+                        <WorkspaceSwitcher onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}/>
                         <div className='Sidebar__onboarding'>
                             <DashboardOnboardingSvg/>
                             <div>
@@ -192,9 +197,15 @@ const Sidebar = React.memo((props: Props) => {
 
             {
                 (!props.isDashboard && !Utils.isFocalboardPlugin()) &&
-                <SidebarAddBoardMenu
-                    activeBoardId={props.activeBoardId}
-                />
+                <div
+                    className='menu-entry'
+                    onClick={props.onBoardTemplateSelectorOpen}
+                >
+                    <FormattedMessage
+                        id='Sidebar.add-board'
+                        defaultMessage='+ Add board'
+                    />
+                </div>
             }
 
             {!Utils.isFocalboardPlugin() &&
