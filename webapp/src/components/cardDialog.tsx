@@ -26,8 +26,6 @@ import {getUserBlockSubscriptionList} from '../store/initialLoad'
 import {IUser} from '../user'
 import {getMe} from '../store/users'
 
-import {getClientConfig} from '../store/clientConfig'
-
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 import {sendFlashMessage} from './flashMessages'
@@ -52,7 +50,6 @@ const CardDialog = (props: Props): JSX.Element => {
     const comments = useAppSelector(getCardComments(props.cardId))
     const intl = useIntl()
     const me = useAppSelector<IUser|null>(getMe)
-    const clientConfig = useAppSelector(getClientConfig)
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
@@ -163,7 +160,7 @@ const CardDialog = (props: Props): JSX.Element => {
 
     const followingCards = useAppSelector(getUserBlockSubscriptionList)
     const isFollowingCard = Boolean(followingCards.find((following) => following.blockId === props.cardId))
-    const toolbar = clientConfig.featureFlags.subscriptions ? followActionButton(isFollowingCard) : null
+    const toolbar = followActionButton(isFollowingCard)
 
     return (
         <>

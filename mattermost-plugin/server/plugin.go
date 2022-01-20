@@ -129,14 +129,12 @@ func (p *Plugin) OnActivate() error {
 	}
 	notifyBackends = append(notifyBackends, mentionsBackend)
 
-	if cfg.IsSubscriptionsEnabled() {
-		subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams, db, p.wsPluginAdapter)
-		if err2 != nil {
-			return fmt.Errorf("error creating subscription notifications backend: %w", err2)
-		}
-		notifyBackends = append(notifyBackends, subscriptionsBackend)
-		mentionsBackend.AddListener(subscriptionsBackend)
+	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams, db, p.wsPluginAdapter)
+	if err2 != nil {
+		return fmt.Errorf("error creating subscription notifications backend: %w", err2)
 	}
+	notifyBackends = append(notifyBackends, subscriptionsBackend)
+	mentionsBackend.AddListener(subscriptionsBackend)
 
 	params := server.Params{
 		Cfg:             cfg,

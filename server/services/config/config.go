@@ -62,14 +62,6 @@ type Configuration struct {
 	NotifyFreqBoardSeconds int `json:"notify_freq_board_seconds" mapstructure:"notify_freq_board_seconds"`
 }
 
-// IsSubscriptionsEnabled returns true if the block change notification subscription service should be enabled.
-func (c *Configuration) IsSubscriptionsEnabled() bool {
-	if enabled, ok := c.FeatureFlags["subscriptions"]; ok && enabled == "true" {
-		return true
-	}
-	return false
-}
-
 // ReadConfigFile read the configuration from the filesystem.
 func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	if configFilePath == "" {
