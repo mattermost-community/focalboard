@@ -70,12 +70,13 @@ func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, userID st
 }
 
 func (a *App) InsertBlock(block model.Block, userID string) error {
-	board, err := a.store.GetBoard(block.BoardID)
-	if err != nil {
-		return err
+	board, bErr := a.store.GetBoard(block.BoardID)
+	if bErr != nil {
+		return bErr
 	}
 
-	if err := a.store.InsertBlock(&block, userID); err == nil {
+	err := a.store.InsertBlock(&block, userID)
+	if err == nil {
 		go func() {
 			a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
 			a.metrics.IncrementBlocksInserted(1)
