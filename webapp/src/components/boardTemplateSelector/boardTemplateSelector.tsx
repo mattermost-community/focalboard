@@ -160,12 +160,16 @@ const BoardTemplateSelector = React.memo((props: Props) => {
     useEffect(() => {
         if (activeTemplate) {
             setActiveTemplateCards([])
-            octoClient.getSubtree(activeTemplate.id).then((blocks) => {
+            octoClient.getSubtree(activeTemplate.id, activeView?.fields.viewType === 'gallery' ? 3 : 2).then((blocks) => {
                 const cards = blocks.filter((b) => b.type === 'card')
                 setActiveTemplateCards(cards as Card[])
             })
         }
-    }, [activeTemplate])
+    }, [activeTemplate, activeView])
+
+    const dateDisplayProperty = useMemo(() => {
+        return activeTemplate.fields.cardProperties.find((o) => o.id === activeView.fields.dateDisplayPropertyId)
+    }, [activeView, activeTemplate])
 
     const groupByProperty = useMemo(() => {
         return activeTemplate.fields.cardProperties.find((o) => o.id === activeView?.fields.groupById) || activeTemplate.fields.cardProperties[0]
@@ -284,6 +288,26 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                                 addCard={() => Promise.resolve()}
                                 showCard={() => null}
                             />}
+                        {activeView.fields.viewType === 'gallery' &&
+                            <Gallery
+                                board={activeTemplate}
+                                cards={activeTemplateCards}
+                                activeView={activeView}
+                                readonly={false}
+                                selectedCardIds={[]}
+                                onCardClicked={() => null}
+                                addCard={() => Promise.resolve()}
+                            />}
+                        {activeView.fields.viewType === 'calendar' &&
+                            <CalendarFullView
+                                board={activeTemplate}
+                                cards={activeTemplateCards}
+                                activeView={activeView}
+                                readonly={false}
+                                dateDisplayProperty={dateDisplayProperty}
+                                showCard={() => null}
+                                addCard={() => Promise.resolve()}
+                            />}
                     </div>
                     <div className='buttons'>
                         <Button
@@ -314,26 +338,3 @@ const BoardTemplateSelector = React.memo((props: Props) => {
 
 export default BoardTemplateSelector
 
-                        // {activeView.fields.viewType === 'calendar' &&
-                        //     <CalendarFullView
-                        //         board={this.props.board}
-                        //         cards={this.props.cards}
-                        //         activeView={activeView}
-                        //         readonly={this.props.readonly}
-                        //         dateDisplayProperty={this.props.dateDisplayProperty}
-                        //         showCard={this.showCard}
-                        //         addCard={(properties: Record<string, string>) => {
-                        //             this.addCard('', true, properties)
-                        //         }}
-                        //     />}
-
-                        // {activeView.fields.viewType === 'gallery' &&
-                        //     <Gallery
-                        //         board={this.props.board}
-                        //         cards={this.props.cards}
-                        //         activeView={activeView}
-                        //         readonly={this.props.readonly}
-                        //         onCardClicked={this.cardClicked}
-                        //         selectedCardIds={this.state.selectedCardIds}
-                        //         addCard={(show) => this.addCard('', show)}
-                        //     />}

@@ -198,7 +198,7 @@ const Sidebar = React.memo((props: Props) => {
             {
                 (!props.isDashboard && !Utils.isFocalboardPlugin()) &&
                 <div
-                    className='menu-entry'
+                    className='add-board'
                     onClick={props.onBoardTemplateSelectorOpen}
                 >
                     <FormattedMessage
