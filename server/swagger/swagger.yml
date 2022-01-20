@@ -110,7 +110,7 @@ definitions:
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
   UserPropPatch:
-    description: UserConfigPatch is a patch for use config
+    description: UserConfigPatch is a patch for user config
     properties:
       deletedFields:
         description: The config fields removed
