@@ -1,7 +1,8 @@
 package sqlstore
 
 import (
-	"encoding/json"
+	"bytes"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
@@ -27,32 +28,22 @@ func (s *SQLStore) InitializeTemplates() error {
 
 func (s *SQLStore) importInitialTemplates() error {
 	s.logger.Debug("importInitialTemplates")
-	blocksJSON := initializations.MustAsset("templates.json")
-
-	var archive model.Archive
-	err := json.Unmarshal(blocksJSON, &archive)
-	if err != nil {
-		return err
-	}
+	blocksJSONL := initializations.MustAsset("templates.json")
 
 	globalContainer := store.Container{
 		WorkspaceID: "0",
 	}
 
-	s.logger.Debug("Inserting blocks", mlog.Int("block_count", len(archive.Blocks)))
-	for i := range archive.Blocks {
-		s.logger.Trace("insert block",
-			mlog.String("blockID", archive.Blocks[i].ID),
-			mlog.String("block_type", archive.Blocks[i].Type.String()),
-			mlog.String("block_title", archive.Blocks[i].Title),
-		)
-		err := s.InsertBlock(globalContainer, &archive.Blocks[i], "system")
-		if err != nil {
-			return err
-		}
-	}
+	return s.ImportArchive(globalContainer, bytes.NewReader(blocksJSONL), fixTemplateBlock)
+}
 
-	return nil
+// fixTemplateBlock fixes a block to be inserted as part of a template.
+func fixTemplateBlock(block *model.Block) {
+	// force template flag
+	block.Fields["isTemplate"] = true
+
+	// remove '(NEW)' from title
+	block.Title = strings.ReplaceAll(block.Title, "(NEW)", "")
 }
 
 // isInitializationNeeded returns true if the blocks table is empty.

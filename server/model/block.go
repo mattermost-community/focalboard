@@ -108,13 +108,22 @@ type BlockPatchBatch struct {
 	BlockPatches []BlockPatch `json:"block_patches"`
 }
 
-// Archive is an import / export archive.
-type Archive struct {
-	Version int64   `json:"version"`
-	Date    int64   `json:"date"`
-	Blocks  []Block `json:"blocks"`
+// ArchiveHeader is the first line of any archive file.
+type ArchiveHeader struct {
+	Version int   `json:"version"`
+	Date    int64 `json:"date"`
 }
 
+// ArchiveLine is any non-header line in an archive.
+type ArchiveLine struct {
+	Type string          `json:"type"`
+	Data json.RawMessage `json:"data"`
+}
+
+// BlockModifier is a callback that can modify each block during an import.
+type BlockModifier func(block *Block)
+
+// BlocksFromJSON creates a slice from blocks from a JSON stream, ignoring any errors.
 func BlocksFromJSON(data io.Reader) []Block {
 	var blocks []Block
 	_ = json.NewDecoder(data).Decode(&blocks)
