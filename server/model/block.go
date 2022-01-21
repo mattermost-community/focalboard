@@ -121,7 +121,10 @@ type ArchiveLine struct {
 }
 
 // BlockModifier is a callback that can modify each block during an import.
-type BlockModifier func(block *Block)
+// A cache of arbitrary data will be passed for each call and any changes
+// to the cache will be preserved for the next call.
+// Return true to import the block or false to skip import.
+type BlockModifier func(block *Block, cache map[string]interface{}) bool
 
 // BlocksFromJSON creates a slice from blocks from a JSON stream, ignoring any errors.
 func BlocksFromJSON(data io.Reader) []Block {

@@ -37,15 +37,6 @@ func (s *SQLStore) importInitialTemplates() error {
 	return s.ImportArchive(globalContainer, bytes.NewReader(blocksJSONL), fixTemplateBlock)
 }
 
-// fixTemplateBlock fixes a block to be inserted as part of a template.
-func fixTemplateBlock(block *model.Block) {
-	// force template flag
-	block.Fields["isTemplate"] = true
-
-	// remove '(NEW)' from title
-	block.Title = strings.ReplaceAll(block.Title, "(NEW)", "")
-}
-
 // isInitializationNeeded returns true if the blocks table is empty.
 func (s *SQLStore) isInitializationNeeded() (bool, error) {
 	query := s.getQueryBuilder(s.db).
@@ -63,4 +54,31 @@ func (s *SQLStore) isInitializationNeeded() (bool, error) {
 	}
 
 	return (count == 0), nil
+}
+
+// fixTemplateBlock fixes a block to be inserted as part of a template.
+func fixTemplateBlock(block *model.Block, cache map[string]interface{}) bool {
+	// cache contains ids of skipped blocks. Ensure their children are skipped as well.
+	if _, ok := cache[block.ParentID]; ok {
+		cache[block.ID] = struct{}{}
+		return false
+	}
+
+	// filter out template blocks; we only want the non-template
+	// blocks which we will turn into default template blocks.
+	if b, ok := block.Fields["isTemplate"]; ok {
+		if val, ok := b.(bool); ok && val {
+			cache[block.ID] = struct{}{}
+			return false
+		}
+	}
+
+	// force template flag
+	block.Fields["isTemplate"] = true
+
+	// remove '(NEW)' from title
+	if block.Type == "board" {
+		block.Title = strings.ReplaceAll(block.Title, "(NEW)", "")
+	}
+	return true
 }

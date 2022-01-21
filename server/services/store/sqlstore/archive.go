@@ -15,6 +15,11 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+type blockModifierInfo struct {
+	modifier model.BlockModifier
+	cache    map[string]interface{}
+}
+
 var (
 	ErrUnsupportedLineType = errors.New("unsupported line type")
 )
@@ -38,6 +43,11 @@ func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r 
 		return err
 	}
 
+	modInfo := blockModifierInfo{
+		modifier: mod,
+		cache:    make(map[string]interface{}),
+	}
+
 	lineNum := 1
 	for {
 		line, errRead := readLine(reader)
@@ -47,7 +57,7 @@ func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r 
 			if err != nil {
 				return fmt.Errorf("error parsing archive line %d: %w", lineNum, err)
 			}
-			if err2 := s.importArchiveLine(db, container, &archiveLine, mod); err2 != nil {
+			if err2 := s.importArchiveLine(db, container, &archiveLine, modInfo); err2 != nil {
 				return fmt.Errorf("error importing archive line %d: %w", lineNum, err2)
 			}
 		}
@@ -65,7 +75,7 @@ func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r 
 }
 
 // importArchiveLine parses a single line from an archive and imports it to the database.
-func (s *SQLStore) importArchiveLine(db sq.BaseRunner, container store.Container, line *model.ArchiveLine, mod model.BlockModifier) error {
+func (s *SQLStore) importArchiveLine(db sq.BaseRunner, container store.Container, line *model.ArchiveLine, modInfo blockModifierInfo) error {
 	switch line.Type {
 	case "block":
 		var block model.Block
@@ -73,8 +83,15 @@ func (s *SQLStore) importArchiveLine(db sq.BaseRunner, container store.Container
 		if err != nil {
 			return err
 		}
-		if mod != nil {
-			mod(&block)
+		if modInfo.modifier != nil {
+			if !modInfo.modifier(&block, modInfo.cache) {
+				s.logger.Trace("skipping insert block per block modifier",
+					mlog.String("blockID", block.ID),
+					mlog.String("block_type", block.Type.String()),
+					mlog.String("block_title", block.Title),
+				)
+				return nil
+			}
 		}
 
 		s.logger.Trace("insert block",
