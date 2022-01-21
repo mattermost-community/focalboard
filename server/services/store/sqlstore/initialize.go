@@ -73,12 +73,10 @@ func fixTemplateBlock(block *model.Block, cache map[string]interface{}) bool {
 		}
 	}
 
-	// force template flag
-	block.Fields["isTemplate"] = true
-
-	// remove '(NEW)' from title
+	// remove '(NEW)' from title & force template flag
 	if block.Type == "board" {
 		block.Title = strings.ReplaceAll(block.Title, "(NEW)", "")
+		block.Fields["isTemplate"] = true
 	}
 	return true
 }
