@@ -54,7 +54,6 @@ export const addBoardFromTemplate = async (intl: IntlShape, showBoard: (id: stri
     }
 }
 
-
 export const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
     const oldBoardId = activeBoardId
 

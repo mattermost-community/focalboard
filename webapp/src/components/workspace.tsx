@@ -99,7 +99,6 @@ const Workspace = React.memo((props: Props) => {
         setBoardTemplateSelectorOpen(false)
     }, [])
     const openBoardTemplateSelector = useCallback(() => {
-        console.log('OPENING THE BOARD SELECTOR')
         setBoardTemplateSelectorOpen(true)
     }, [])
 

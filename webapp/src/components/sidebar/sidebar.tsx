@@ -1,9 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
-import {FormattedMessage} from 'react-intl'
-
-import {useIntl} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import DashboardOnboardingSvg from '../../svg/dashboard-onboarding'
 
@@ -22,7 +20,6 @@ import './sidebar.scss'
 
 import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
 
-import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'

@@ -14,7 +14,7 @@ import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
 import octoClient from '../octoClient'
 
-import {addBoardTemplateClicked, addBoardClicked} from './sidebar/sidebarAddBoardMenu'
+import {addBoardTemplateClicked, addBoardClicked} from './boardTemplateSelector/boardTemplateSelector'
 import {addBoardFromTemplate, BoardTemplateButtonMenu} from './sidebar/boardTemplateMenuItem'
 
 import './emptyCenterPanel.scss'
