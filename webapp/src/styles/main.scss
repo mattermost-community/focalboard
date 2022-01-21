@@ -127,6 +127,10 @@ html {
         overflow: visible;
     }
 
+    .text-light {
+        color: rgba(var(--center-channel-color-rgb), 0.56);
+    }
+
     .octo-icontitle {
         flex: 0 0 auto;
         display: flex;
