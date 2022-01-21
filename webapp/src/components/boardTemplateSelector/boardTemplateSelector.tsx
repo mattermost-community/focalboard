@@ -14,9 +14,9 @@ import AddIcon from '../../widgets/icons/add'
 import Button from '../../widgets/buttons/button'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
-import {getSortedTemplates} from '../../store/boards'
+import {getSortedTemplates, getCurrentBoard} from '../../store/boards'
 import {fetchGlobalTemplates, getGlobalTemplates} from '../../store/globalTemplates'
-import {getViewsByBoard} from '../../store/views'
+import {getViewsByBoard, updateViews} from '../../store/views'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getVisibleAndHiddenGroups} from '../../boardUtils'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -116,6 +116,7 @@ type Props = {
 const BoardTemplateSelector = React.memo((props: Props) => {
     const globalTemplates = useAppSelector<Board[]>(getGlobalTemplates) || []
     const viewsByBoard = useAppSelector<{[key: string]: BoardView[]}>(getViewsByBoard) || {}
+    const currentBoard = useAppSelector<Board>(getCurrentBoard) || null
     const {onClose} = props
     const dispatch = useAppDispatch()
     const intl = useIntl()
@@ -147,9 +148,6 @@ const BoardTemplateSelector = React.memo((props: Props) => {
         activeView = viewsByBoard[activeTemplate?.id][0]
     }
 
-    if (!activeView) {
-        return null
-    }
     useEffect(() => {
         if (!activeTemplate) {
             setActiveTemplate(templates.concat(globalTemplates)[0])
@@ -159,15 +157,17 @@ const BoardTemplateSelector = React.memo((props: Props) => {
     useEffect(() => {
         if (activeTemplate) {
             setActiveTemplateCards([])
-            octoClient.getSubtree(activeTemplate.id, activeView?.fields.viewType === 'gallery' ? 3 : 2).then((blocks) => {
+            octoClient.getSubtree(activeTemplate.id, activeView?.fields.viewType === 'gallery' ? 3 : 2, activeTemplate.workspaceId).then((blocks) => {
                 const cards = blocks.filter((b) => b.type === 'card')
+                const views = blocks.filter((b) => b.type === 'view')
+                dispatch(updateViews(views as BoardView[]))
                 setActiveTemplateCards(cards as Card[])
             })
         }
-    }, [activeTemplate, activeView])
+    }, [activeTemplate])
 
     const dateDisplayProperty = useMemo(() => {
-        return activeTemplate.fields.cardProperties.find((o) => o.id === activeView.fields.dateDisplayPropertyId)
+        return activeTemplate.fields.cardProperties.find((o) => o.id === activeView?.fields.dateDisplayPropertyId)
     }, [activeView, activeTemplate])
 
     const groupByProperty = useMemo(() => {
@@ -237,26 +237,27 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                 <div className='template-preview-box'>
                     <div className='preview'>
                         <div className='prevent-click'/>
-                        <div className='top-head'>
-                            <ViewTitle
-                                key={activeTemplate?.id + activeTemplate?.title}
-                                board={activeTemplate}
-                                readonly={true}
-                            />
-                            <ViewHeader
-                                board={activeTemplate}
-                                activeView={activeView}
-                                cards={activeTemplateCards}
-                                views={viewsByBoard[activeTemplate.id]}
-                                groupByProperty={groupByProperty}
-                                addCard={() => null}
-                                addCardFromTemplate={() => null}
-                                addCardTemplate={() => null}
-                                editCardTemplate={() => null}
-                                readonly={false}
-                                showShared={false}
-                            />
-                        </div>
+                        {activeView &&
+                            <div className='top-head'>
+                                <ViewTitle
+                                    key={activeTemplate?.id + activeTemplate?.title}
+                                    board={activeTemplate}
+                                    readonly={true}
+                                />
+                                <ViewHeader
+                                    board={activeTemplate}
+                                    activeView={activeView}
+                                    cards={activeTemplateCards}
+                                    views={viewsByBoard[activeTemplate.id]}
+                                    groupByProperty={groupByProperty}
+                                    addCard={() => null}
+                                    addCardFromTemplate={() => null}
+                                    addCardTemplate={() => null}
+                                    editCardTemplate={() => null}
+                                    readonly={false}
+                                    showShared={false}
+                                />
+                            </div>}
 
                         {activeView?.fields.viewType === 'board' &&
                         <Kanban
@@ -272,7 +273,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                             addCard={() => Promise.resolve()}
                             showCard={() => null}
                         />}
-                        {activeView.fields.viewType === 'table' &&
+                        {activeView?.fields.viewType === 'table' &&
                             <Table
                                 board={activeTemplate}
                                 activeView={activeView}
@@ -287,7 +288,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                                 addCard={() => Promise.resolve()}
                                 showCard={() => null}
                             />}
-                        {activeView.fields.viewType === 'gallery' &&
+                        {activeView?.fields.viewType === 'gallery' &&
                             <Gallery
                                 board={activeTemplate}
                                 cards={activeTemplateCards}
@@ -297,7 +298,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                                 onCardClicked={() => null}
                                 addCard={() => Promise.resolve()}
                             />}
-                        {activeView.fields.viewType === 'calendar' &&
+                        {activeView?.fields.viewType === 'calendar' &&
                             <CalendarFullView
                                 board={activeTemplate}
                                 cards={activeTemplateCards}
@@ -311,7 +312,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                     <div className='buttons'>
                         <Button
                             filled={true}
-                            onClick={() => addBoardFromTemplate(intl, showBoard, activeTemplate.id)}
+                            onClick={() => addBoardFromTemplate(intl, showBoard, activeTemplate.id, currentBoard.id, activeTemplate.workspaceId === '0')}
                         >
                             <FormattedMessage
                                 id='BoardTemplateSelector.use-this-template'
@@ -321,7 +322,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                         <Button
                             filled={false}
                             className='empty-board'
-                            onClick={() => addBoardClicked(showBoard, intl)}
+                            onClick={() => addBoardClicked(showBoard, intl, currentBoard.id)}
                         >
                             <FormattedMessage
                                 id='BoardTemplateSelector.create-empty-board'
