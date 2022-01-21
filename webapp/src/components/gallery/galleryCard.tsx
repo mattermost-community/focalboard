@@ -27,6 +27,7 @@ import ImageElement from '../content/imageElement'
 import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
 import './galleryCard.scss'
+import CardBadges from '../cardBadges'
 
 type Props = {
     board: Board
@@ -35,6 +36,7 @@ type Props = {
     visiblePropertyTemplates: IPropertyTemplate[]
     visibleTitle: boolean
     isSelected: boolean
+    visibleBadges: boolean
     readonly: boolean
     isManualSort: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
@@ -176,6 +178,11 @@ const GalleryCard = React.memo((props: Props) => {
                         </Tooltip>
                     ))}
                 </div>}
+            {props.visibleBadges &&
+                <CardBadges
+                    card={card}
+                    className='gallery-badges'
+                />}
         </div>
     )
 })

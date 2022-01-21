@@ -871,7 +871,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
         data-tooltip="testTemplateProperty"
       >
         <div
-          class="octo-propertyvalue"
+          class="octo-propertyvalue octo-propertyvalue--readonly"
         />
       </div>
     </div>

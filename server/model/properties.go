@@ -4,13 +4,26 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
+
+	"github.com/mattermost/focalboard/server/utils"
 )
 
 var ErrInvalidBoardBlock = errors.New("invalid board block")
 var ErrInvalidPropSchema = errors.New("invalid property schema")
 var ErrInvalidProperty = errors.New("invalid property")
+var ErrInvalidPropertyValue = errors.New("invalid property value")
+var ErrInvalidPropertyValueType = errors.New("invalid property value type")
+var ErrInvalidDate = errors.New("invalid date property")
+
+// PropValueResolver allows PropDef.GetValue to further decode property values, such as
+// looking up usernames from ids.
+type PropValueResolver interface {
+	GetUserByID(userID string) (*User, error)
+}
 
 // BlockProperties is a map of Prop's keyed by property id.
 type BlockProperties map[string]BlockProp
@@ -45,13 +58,86 @@ type PropDef struct {
 
 // GetValue resolves the value of a property if the passed value is an ID for an option,
 // otherwise returns the original value.
-func (pd PropDef) GetValue(v string) string {
-	// v may be an id to an option.
-	opt, ok := pd.Options[v]
-	if ok {
-		return opt.Value
+func (pd PropDef) GetValue(v interface{}, resolver PropValueResolver) (string, error) {
+	switch pd.Type {
+	case "select":
+		// v is the id of an option
+		id, ok := v.(string)
+		if !ok {
+			return "", ErrInvalidPropertyValueType
+		}
+		opt, ok := pd.Options[id]
+		if !ok {
+			return "", ErrInvalidPropertyValue
+		}
+		return strings.ToUpper(opt.Value), nil
+
+	case "date":
+		// v is a JSON string
+		date, ok := v.(string)
+		if !ok {
+			return "", ErrInvalidPropertyValueType
+		}
+		return pd.ParseDate(date)
+
+	case "person":
+		// v is a userid
+		userID, ok := v.(string)
+		if !ok {
+			return "", ErrInvalidPropertyValueType
+		}
+		if resolver != nil {
+			user, err := resolver.GetUserByID(userID)
+			if err != nil {
+				return "", err
+			}
+			return user.Username, nil
+		}
+		return userID, nil
+
+	case "multiSelect":
+		// v is a slice of strings containing option ids
+		ms, ok := v.([]interface{})
+		if !ok {
+			return "", ErrInvalidPropertyValueType
+		}
+		var sb strings.Builder
+		prefix := ""
+		for _, optid := range ms {
+			id, ok := optid.(string)
+			if !ok {
+				return "", ErrInvalidPropertyValueType
+			}
+			opt, ok := pd.Options[id]
+			if !ok {
+				return "", ErrInvalidPropertyValue
+			}
+			sb.WriteString(prefix)
+			prefix = ", "
+			sb.WriteString(strings.ToUpper(opt.Value))
+		}
+		return sb.String(), nil
 	}
-	return v
+	return fmt.Sprintf("%v", v), nil
+}
+
+func (pd PropDef) ParseDate(s string) (string, error) {
+	// s is a JSON snippet of the form: {"from":1642161600000, "to":1642161600000} in milliseconds UTC
+	// The UI does not yet support date ranges.
+	var m map[string]int64
+	if err := json.Unmarshal([]byte(s), &m); err != nil {
+		return s, err
+	}
+	tsFrom, ok := m["from"]
+	if !ok {
+		return s, ErrInvalidDate
+	}
+	date := utils.GetTimeForMillis(tsFrom).Format("January 02, 2006")
+	tsTo, ok := m["to"]
+	if ok {
+		date += " -> " + utils.GetTimeForMillis(tsTo).Format("January 02, 2006")
+	}
+	return date, nil
 }
 
 // ParsePropertySchema parses a board block's `Fields` to extract the properties
@@ -128,8 +214,8 @@ func getMapString(key string, m map[string]interface{}) string {
 }
 
 // ParseProperties parses a block's `Fields` to extract the properties. Properties typically exist on
-// card blocks.
-func ParseProperties(block *Block, schema PropSchema) (BlockProperties, error) {
+// card blocks.  A resolver can optionally be provided to fetch usernames for `person` prop type.
+func ParseProperties(block *Block, schema PropSchema, resolver PropValueResolver) (BlockProperties, error) {
 	props := make(map[string]BlockProp)
 
 	if block == nil {
@@ -162,8 +248,12 @@ func ParseProperties(block *Block, schema PropSchema) (BlockProperties, error) {
 
 		def, ok := schema[k]
 		if ok {
+			val, err := def.GetValue(v, resolver)
+			if err != nil {
+				return props, fmt.Errorf("could not parse property value (%s): %w", fmt.Sprintf("%v", v), err)
+			}
 			prop.Name = def.Name
-			prop.Value = def.GetValue(s)
+			prop.Value = val
 			prop.Index = def.Index
 		}
 		props[k] = prop

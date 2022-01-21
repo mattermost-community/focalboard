@@ -25,7 +25,9 @@ type Props = {
 
 const Gallery = (props: Props): JSX.Element => {
     const {activeView, board, cards} = props
-    const visiblePropertyTemplates = board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+
+    const visiblePropertyTemplates =
+        activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
     const isManualSort = activeView.fields.sortOptions.length === 0
 
     const onDropToCard = (srcCard: Card, dstCard: Card) => {
@@ -51,6 +53,7 @@ const Gallery = (props: Props): JSX.Element => {
     }
 
     const visibleTitle = activeView.fields.visiblePropertyIds.includes(Constants.titleColumnId)
+    const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
 
     return (
         <div className='Gallery'>
@@ -63,6 +66,7 @@ const Gallery = (props: Props): JSX.Element => {
                         onClick={props.onCardClicked}
                         visiblePropertyTemplates={visiblePropertyTemplates}
                         visibleTitle={visibleTitle}
+                        visibleBadges={visibleBadges}
                         isSelected={props.selectedCardIds.includes(card.id)}
                         readonly={props.readonly}
                         onDrop={onDropToCard}

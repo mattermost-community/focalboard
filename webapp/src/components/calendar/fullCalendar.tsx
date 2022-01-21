@@ -17,6 +17,8 @@ import {Card} from '../../blocks/card'
 import {DateProperty, createDatePropertyFromString} from '../properties/dateRange/dateRange'
 import Tooltip from '../../widgets/tooltip'
 import PropertyValueElement from '../propertyValueElement'
+import {Constants} from '../../constants'
+import CardBadges from '../cardBadges'
 
 import './fullcalendar.scss'
 
@@ -66,7 +68,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const isSelectable = !readonly
 
     const visiblePropertyTemplates = useMemo(() => (
-        board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+        activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
     ), [board.fields.cardProperties, activeView.fields.visiblePropertyIds])
 
     let {initialDate} = props
@@ -113,6 +115,8 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         })
     ), [cards, dateDisplayProperty])
 
+    const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
+
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
         return (
@@ -140,6 +144,8 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                         />
                     </Tooltip>
                 ))}
+                {visibleBadges &&
+                <CardBadges card={cards.find((o) => o.id === event.id) || cards[0]}/> }
             </div>
         )
     }

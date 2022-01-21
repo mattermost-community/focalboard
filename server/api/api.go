@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
+	"runtime/debug"
 	"strconv"
 	"strings"
 	"time"
@@ -65,6 +66,7 @@ func NewAPI(app *app.App, singleUserToken string, authService string, logger *ml
 
 func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1 := r.PathPrefix("/api/v1").Subrouter()
+	apiv1.Use(a.panicHandler)
 	apiv1.Use(a.requireCSRFToken)
 
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
@@ -111,6 +113,23 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
 	r.HandleFunc("/api/v1/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
+}
+
+func (a *API) panicHandler(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			if p := recover(); p != nil {
+				a.logger.Error("Http handler panic",
+					mlog.Any("panic", p),
+					mlog.String("stack", string(debug.Stack())),
+					mlog.String("uri", r.URL.Path),
+				)
+				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", nil)
+			}
+		}()
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (a *API) requireCSRFToken(next http.Handler) http.Handler {
@@ -411,7 +430,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	blocks = model.GenerateBlockIDs(blocks)
+	blocks = model.GenerateBlockIDs(blocks, a.logger)
 
 	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
@@ -1005,7 +1024,7 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
-	_, err = a.app.InsertBlocks(*container, model.GenerateBlockIDs(blocks), session.UserID, false)
+	_, err = a.app.InsertBlocks(*container, model.GenerateBlockIDs(blocks, a.logger), session.UserID, false)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -1594,8 +1613,8 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check for valid block
-	_, err = a.app.GetBlockWithID(*container, sub.BlockID)
-	if err != nil {
+	block, err := a.app.GetBlockWithID(*container, sub.BlockID)
+	if err != nil || block == nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid blockID", err)
 		return
 	}

@@ -24,7 +24,6 @@ type NotificationHint struct {
 
 	// ModifiedByID is the id of the user who made the block change
 	ModifiedByID string `json:"modified_by_id"`
-	Username     string `json:"-"`
 
 	// CreatedAt is the timestamp this notification hint was created
 	// required: true

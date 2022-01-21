@@ -26,7 +26,14 @@ exports[`src/components/gallery/Gallery return Gallery and click new 1`] = `
       </div>
       <div
         class="gallery-item"
-      />
+      >
+        <div
+          class="DividerElement"
+        />
+        <div
+          class="DividerElement"
+        />
+      </div>
     </div>
     <div
       class="GalleryCard"
@@ -72,7 +79,14 @@ exports[`src/components/gallery/Gallery return Gallery readonly 1`] = `
     >
       <div
         class="gallery-item"
-      />
+      >
+        <div
+          class="DividerElement"
+        />
+        <div
+          class="DividerElement"
+        />
+      </div>
     </div>
     <div
       class="GalleryCard"
@@ -200,7 +214,14 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
       </div>
       <div
         class="gallery-item"
-      />
+      >
+        <div
+          class="DividerElement"
+        />
+        <div
+          class="DividerElement"
+        />
+      </div>
     </div>
     <div
       class="GalleryCard"

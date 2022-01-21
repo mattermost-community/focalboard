@@ -1,6 +1,6 @@
 {
 	"name": "focalboard",
-	"version": "0.11.0",
+	"version": "0.14.0",
 	"private": true,
 	"description": "",
 	"scripts": {
@@ -20,8 +20,7 @@
 		"cypress:run:firefox": "cypress run --browser firefox",
 		"cypress:run:edge": "cypress run --browser edge",
 		"cypress:run:electron": "cypress run --browser electron",
-		"cypress:open": "cypress open",
-		"updatesnapshots": "jest --updateSnapshot"
+		"cypress:open": "cypress open"
 	},
 	"dependencies": {
 		"@draft-js-plugins/editor": "^4.1.0",
@@ -51,6 +50,7 @@
 		"react-day-picker": "^7.4.10",
 		"react-dnd": "^14.0.2",
 		"react-dnd-html5-backend": "^14.0.0",
+		"react-dnd-scrolling": "^1.2.1",
 		"react-dnd-touch-backend": "^14.0.0",
 		"react-dom": "^17.0.2",
 		"react-hot-keys": "^2.6.2",
