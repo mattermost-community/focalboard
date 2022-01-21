@@ -512,8 +512,6 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 
 	auditRec := a.makeAuditRecord(r, "updateUserConfig", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	auditRec.AddMeta("performed_by", userID)
-	auditRec.AddMeta("performed_on", session.UserID)
 
 	// a user can update only own config
 	if userID != session.UserID {
