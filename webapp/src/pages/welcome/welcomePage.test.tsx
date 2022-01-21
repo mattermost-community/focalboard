@@ -2,25 +2,37 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {render, screen} from '@testing-library/react'
+import {render, screen, waitFor} from '@testing-library/react'
 
 import {createMemoryHistory} from 'history'
 
 import {Router} from 'react-router-dom'
 
+import {Provider as ReduxProvider} from 'react-redux'
+
 import userEvent from '@testing-library/user-event'
 
-import {UserSettings} from '../../userSettings'
+import configureStore from 'redux-mock-store'
+
+import {mocked} from 'ts-jest/utils'
 
 import {wrapIntl} from '../../testUtils'
+
+import mutator from '../../mutator'
 
 import WelcomePage from './welcomePage'
 
 const w = (window as any)
 const oldBaseURL = w.baseURL
 
+jest.mock('../../mutator')
+const mockedMutator = mocked(mutator, true)
+
 beforeEach(() => {
-    UserSettings.welcomePageViewed = null
+    jest.resetAllMocks()
+    mockedMutator.patchUserConfig.mockImplementation(() => Promise.resolve({
+        welcomePageViewed: 'true',
+    }))
 })
 
 afterEach(() => {
@@ -29,74 +41,160 @@ afterEach(() => {
 
 describe('pages/welcome', () => {
     const history = createMemoryHistory()
+    const mockStore = configureStore([])
+    const store = mockStore({
+        users: {
+            me: {
+                props: {},
+            },
+        },
+    })
+
     test('Welcome Page shows Explore Page', () => {
-        const {container} = render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
-        expect(screen.getByText('Explore')).toBeDefined()
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+
+        const {container} = render(component)
+        expect(screen.getByText('Take a tour')).toBeDefined()
         expect(container).toMatchSnapshot()
     })
 
     test('Welcome Page shows Explore Page with subpath', () => {
         w.baseURL = '/subpath'
-        const {container} = render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
-        expect(screen.getByText('Explore')).toBeDefined()
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+
+        const {container} = render(component)
+        expect(screen.getByText('Take a tour')).toBeDefined()
         expect(container).toMatchSnapshot()
     })
 
-    test('Welcome Page shows Explore Page And Then Proceeds after Clicking Explore', () => {
+    test('Welcome Page shows Explore Page And Then Proceeds after Clicking Explore', async () => {
         history.replace = jest.fn()
-        render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
-        const exploreButton = screen.getByText('Explore')
+
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+
+        render(component)
+        const exploreButton = screen.getByText('Take a tour')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
-        expect(history.replace).toBeCalledWith('/dashboard')
+        await waitFor(() => {
+            expect(history.replace).toBeCalledWith('/dashboard')
+            expect(mockedMutator.patchUserConfig).toBeCalledTimes(1)
+        })
     })
 
-    test('Welcome Page does not render explore page the second time we visit it', () => {
+    test('Welcome Page does not render explore page the second time we visit it', async () => {
         history.replace = jest.fn()
-        UserSettings.welcomePageViewed = 'true'
-        render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
-        expect(history.replace).toBeCalledWith('/dashboard')
+
+        const customStore = mockStore({
+            users: {
+                me: {
+                    props: {
+                        welcomePageViewed: 'true',
+                    },
+                },
+            },
+        })
+
+        const component = (
+            <ReduxProvider store={customStore}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+
+        render(component)
+        await waitFor(() => {
+            expect(history.replace).toBeCalledWith('/dashboard')
+        })
     })
 
-    test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to true', () => {
+    test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to true', async () => {
         history.replace = jest.fn()
         history.location.search = 'r=123'
-        UserSettings.welcomePageViewed = 'true'
-        render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
-        expect(history.replace).toBeCalledWith('123')
+
+        const customStore = mockStore({
+            users: {
+                me: {
+                    props: {
+                        welcomePageViewed: 'true',
+                    },
+                },
+            },
+        })
+        const component = (
+            <ReduxProvider store={customStore}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+
+        render(component)
+        await waitFor(() => {
+            expect(history.replace).toBeCalledWith('123')
+        })
     })
 
-    test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to null', () => {
+    test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to null', async () => {
         history.replace = jest.fn()
         history.location.search = 'r=123'
-        render(wrapIntl(
-            <Router history={history}>
-                <WelcomePage/>
-            </Router>,
-        ))
-        const exploreButton = screen.getByText('Explore')
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+        render(component)
+        const exploreButton = screen.getByText('Take a tour')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
-        expect(history.replace).toBeCalledWith('123')
+        await waitFor(() => {
+            expect(history.replace).toBeCalledWith('123')
+            expect(mockedMutator.patchUserConfig).toBeCalledTimes(1)
+        })
     })
 })

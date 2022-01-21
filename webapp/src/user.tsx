@@ -18,4 +18,9 @@ interface UserWorkspace {
     boardCount: number
 }
 
-export {IUser, UserWorkspace}
+interface UserConfigPatch {
+    updatedFields?: Record<string, any>
+    deletedFields?: string[]
+}
+
+export {IUser, UserWorkspace, UserConfigPatch}

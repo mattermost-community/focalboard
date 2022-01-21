@@ -4,7 +4,7 @@ import {Block, BlockPatch} from './blocks/block'
 import {ISharing} from './blocks/sharing'
 import {IWorkspace} from './blocks/workspace'
 import {OctoUtils} from './octoUtils'
-import {IUser, UserWorkspace} from './user'
+import {IUser, UserConfigPatch, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
@@ -169,6 +169,22 @@ class OctoClient {
         }
         const user = (await this.getJson(response, {})) as IUser
         return user
+    }
+
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
+        const path = `/api/v1/users/${encodeURIComponent(userID)}/config`
+        const body = JSON.stringify(patch)
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'PUT',
+            body,
+        })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as Record<string, string>
     }
 
     async getSubtree(rootId?: string, levels = 2, workspaceID?: string): Promise<Block[]> {

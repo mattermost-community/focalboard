@@ -12,6 +12,7 @@ import undoManager from './undomanager'
 import {Utils, IDType} from './utils'
 import {UserSettings} from './userSettings'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/telemetryClient'
+import {UserConfigPatch} from './user'
 
 //
 // The Mutator is used to make all changes to server state
@@ -691,6 +692,10 @@ class Mutator {
             'follow block',
             this.undoGroupId,
         )
+    }
+
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
+        return octoClient.patchUserConfig(userID, patch)
     }
 
     // Duplicate

@@ -90,6 +90,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
 	apiv1.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
 	apiv1.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
+	apiv1.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
 
 	apiv1.HandleFunc("/login", a.handleLogin).Methods("POST")
 	apiv1.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
@@ -457,6 +458,80 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, json)
 
 	auditRec.AddMeta("blockCount", len(blocks))
+	auditRec.Success()
+}
+
+func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation PATCH /api/v1/users/{userID}/config updateUserConfig
+	//
+	// Updates user config
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: userID
+	//   in: path
+	//   description: User ID
+	//   required: true
+	//   type: string
+	// - name: Body
+	//   in: body
+	//   description: User config patch to apply
+	//   required: true
+	//   schema:
+	//     "$ref": "#/definitions/UserPropPatch"
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var patch *model.UserPropPatch
+	err = json.Unmarshal(requestBody, &patch)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	vars := mux.Vars(r)
+	userID := vars["userID"]
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	auditRec := a.makeAuditRecord(r, "updateUserConfig", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	// a user can update only own config
+	if userID != session.UserID {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	updatedConfig, err := a.app.UpdateUserConfig(userID, *patch)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(updatedConfig)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
 	auditRec.Success()
 }
 

@@ -10,17 +10,32 @@ import BoardWelcomeSmallPNG from '../../../static/boards-welcome-small.png'
 
 import Button from '../../widgets/buttons/button'
 import CompassIcon from '../../widgets/icons/compassIcon'
-import {UserSettings} from '../../userSettings'
+import {UserSettingKey} from '../../userSettings'
 import {Utils} from '../../utils'
 
 import './welcomePage.scss'
+import mutator from '../../mutator'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
+import {IUser, UserConfigPatch} from '../../user'
+import {getMe, patchProps} from '../../store/users'
 
 const WelcomePage = React.memo(() => {
     const history = useHistory()
     const queryString = new URLSearchParams(useLocation().search)
+    const me = useAppSelector<IUser|null>(getMe)
+    const dispatch = useAppDispatch()
 
-    const goForward = () => {
-        UserSettings.welcomePageViewed = 'true'
+    const goForward = async () => {
+        if (me) {
+            const patch: UserConfigPatch = {}
+            patch.updatedFields = {}
+            patch.updatedFields[UserSettingKey.WelcomePageViewed] = 'true'
+
+            const updatedProps = await mutator.patchUserConfig(me.id, patch)
+            if (updatedProps) {
+                await dispatch(patchProps(updatedProps))
+            }
+        }
 
         if (queryString.get('r')) {
             history.replace(queryString.get('r')!)
@@ -30,14 +45,14 @@ const WelcomePage = React.memo(() => {
         history.replace('/dashboard')
     }
 
-    if (UserSettings.welcomePageViewed) {
+    if (me?.props[UserSettingKey.WelcomePageViewed]) {
         goForward()
         return null
     }
 
     return (
         <div className='WelcomePage'>
-            <div>
+            <div className='wrapper'>
                 <h1 className='text-heading9'>
                     <FormattedMessage
                         id='WelcomePage.Heading'
@@ -78,9 +93,16 @@ const WelcomePage = React.memo(() => {
                 >
                     <FormattedMessage
                         id='WelcomePage.Explore.Button'
-                        defaultMessage='Explore'
+                        defaultMessage='Take a tour'
                     />
                 </Button>
+
+                <a className='skip'>
+                    <FormattedMessage
+                        id='WelcomePage.NoThanks.Text'
+                        defaultMessage="No thanks, I'll figure it out myself"
+                    />
+                </a>
             </div>
         </div>
     )
