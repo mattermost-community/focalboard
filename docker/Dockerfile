@@ -26,7 +26,7 @@ COPY --from=gobuild --chown=nobody:nobody /data /data
 COPY --from=nodebuild --chown=nobody:nobody /webapp/pack pack/
 COPY --from=gobuild --chown=nobody:nobody /go/src/focalboard/bin/linux/focalboard-server bin/
 COPY --from=gobuild --chown=nobody:nobody /go/src/focalboard/LICENSE.txt LICENSE.txt
-COPY --from=gobuild --chown=nobody:nobody /go/src/focalboard/docker/server_config.json /config/config.json
+COPY --from=gobuild --chown=nobody:nobody /go/src/focalboard/docker/server_config.json config.json
 
 USER nobody
 
@@ -37,4 +37,6 @@ EXPOSE 8000/tcp 9092/tcp
 VOLUME /config
 VOLUME /data
 
+CMD [ echo "n" | cp -i /opt/focalboard/config.json /config/config.json ]
 ENTRYPOINT ["/opt/focalboard/bin/focalboard-server", "--config", "/config/config.json"]
+#ENTRYPOINT [ "sh" ]
