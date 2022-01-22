@@ -13,6 +13,12 @@
         }
     }
 
+    .EventContent {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
     .octo-tooltip {
         display: flex;
         max-width: 100%;

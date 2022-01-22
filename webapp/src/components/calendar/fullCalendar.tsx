@@ -120,7 +120,10 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
         return (
-            <div onClick={() => props.showCard(event.id)}>
+            <div
+                className='EventContent'
+                onClick={() => props.showCard(event.id)}
+            >
                 <div className='octo-icontitle'>
                     { event.extendedProps.icon ? <div className='octo-icon'>{event.extendedProps.icon}</div> : undefined }
                     <div
