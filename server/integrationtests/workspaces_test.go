@@ -13,7 +13,7 @@ func TestGetWorkspace(t *testing.T) {
 	t.Run("Root workspace for any id", func(t *testing.T) {
 		th := SetupTestHelper().InitBasic()
 		defer th.TearDown()
-		anyWorkspaceID := "-1"
+		anyWorkspaceID := "0"
 		workspace, resp := th.Client.GetWorkspace(anyWorkspaceID)
 		require.NoError(t, resp.Error)
 		assert.NotNil(t, workspace)
@@ -21,9 +21,9 @@ func TestGetWorkspace(t *testing.T) {
 	})
 
 	t.Run("Get not existing workspace", func(t *testing.T) {
-		th := SetupTestHelperWithMattermostAuthMode().InitBasic()
+		th := SetupTestHelperWithoutToken().InitBasic()
 		defer th.TearDown()
-		notExistingWorkspace := "0"
+		notExistingWorkspace := "-1"
 		workspace, resp := th.Client.GetWorkspace(notExistingWorkspace)
 		require.Nil(t, workspace)
 		require.Error(t, resp.Error)

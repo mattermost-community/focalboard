@@ -22,22 +22,10 @@ type TestHelper struct {
 	Client2 *client.Client
 }
 
-<<<<<<< HEAD
-func getTestConfig(authMode string) *config.Configuration {
-	dbType := os.Getenv("FB_STORE_TEST_DB_TYPE")
-	if dbType == "" {
-		dbType = "sqlite3"
-	}
-
-	connectionString := os.Getenv("FB_STORE_TEST_CONN_STRING")
-	if connectionString == "" {
-		connectionString = ":memory:"
-=======
 func getTestConfig() (*config.Configuration, error) {
 	dbType, connectionString, err := sqlstore.PrepareNewTestDatabase()
 	if err != nil {
 		return nil, err
->>>>>>> main
 	}
 
 	logging := `
@@ -73,18 +61,20 @@ func getTestConfig() (*config.Configuration, error) {
 		FilesPath:         "./files",
 		LoggingCfgJSON:    logging,
 		SessionExpireTime: int64(30 * time.Second),
-		AuthMode:          authMode,
-	}
+		AuthMode:          "native",
+	}, nil
 }
 
-func newTestServer(singleUserToken string, authMode string) *server.Server {
-	logger, _ := mlog.NewLogger()
-	cfg := getTestConfig(authMode)
-
-	if err := logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
+func newTestServer(singleUserToken string) *server.Server {
+	cfg, err := getTestConfig()
+	if err != nil {
 		panic(err)
 	}
 
+	logger, _ := mlog.NewLogger()
+	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
+		panic(err)
+	}
 	db, err := server.NewStore(cfg, logger)
 	if err != nil {
 		panic(err)
@@ -108,24 +98,16 @@ func newTestServer(singleUserToken string, authMode string) *server.Server {
 func SetupTestHelper() *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{}
-	th.Server = newTestServer(sessionToken, "native")
+	th.Server = newTestServer(sessionToken)
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
 	return th
 }
 
 func SetupTestHelperWithoutToken() *TestHelper {
 	th := &TestHelper{}
-	th.Server = newTestServer("", "native")
+	th.Server = newTestServer("")
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
 	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, "")
-	return th
-}
-
-func SetupTestHelperWithMattermostAuthMode() *TestHelper {
-	sessionToken := "TESTTOKEN"
-	th := &TestHelper{}
-	th.Server = newTestServer(sessionToken, server.MattermostAuthMod)
-	th.Client = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
 	return th
 }
 
