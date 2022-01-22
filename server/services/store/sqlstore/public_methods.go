@@ -249,8 +249,8 @@ func (s *SQLStore) HasWorkspaceAccess(userID string, workspaceID string) (bool, 
 
 }
 
-func (s *SQLStore) ImportArchive(container store.Container, r io.Reader, mod model.BlockModifier) error {
-	return s.importArchive(s.db, container, r, mod)
+func (s *SQLStore) ImportArchive(container store.Container, r io.Reader, userID string, mod model.BlockModifier) error {
+	return s.importArchive(s.db, container, r, userID, mod)
 
 }
 

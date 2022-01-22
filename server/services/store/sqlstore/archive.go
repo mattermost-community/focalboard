@@ -25,7 +25,7 @@ var (
 )
 
 // InitializeTemplates imports default templates if the blocks table is empty.
-func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r io.Reader, mod model.BlockModifier) error {
+func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r io.Reader, userID string, mod model.BlockModifier) error {
 	s.logger.Debug("importArchive")
 
 	// archives are stored in JSONL format so we must read them
@@ -48,6 +48,13 @@ func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r 
 		cache:    make(map[string]interface{}),
 	}
 
+	args := importArchiveLineArgs{
+		db:        db,
+		container: container,
+		userID:    userID,
+		modInfo:   modInfo,
+	}
+
 	lineNum := 1
 	for {
 		line, errRead := readLine(reader)
@@ -57,7 +64,7 @@ func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r 
 			if err != nil {
 				return fmt.Errorf("error parsing archive line %d: %w", lineNum, err)
 			}
-			if err2 := s.importArchiveLine(db, container, &archiveLine, modInfo); err2 != nil {
+			if err2 := s.importArchiveLine(&archiveLine, args); err2 != nil {
 				return fmt.Errorf("error importing archive line %d: %w", lineNum, err2)
 			}
 		}
@@ -74,8 +81,15 @@ func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r 
 	return nil
 }
 
+type importArchiveLineArgs struct {
+	db        sq.BaseRunner
+	container store.Container
+	userID    string
+	modInfo   blockModifierInfo
+}
+
 // importArchiveLine parses a single line from an archive and imports it to the database.
-func (s *SQLStore) importArchiveLine(db sq.BaseRunner, container store.Container, line *model.ArchiveLine, modInfo blockModifierInfo) error {
+func (s *SQLStore) importArchiveLine(line *model.ArchiveLine, args importArchiveLineArgs) error {
 	switch line.Type {
 	case "block":
 		var block model.Block
@@ -83,8 +97,8 @@ func (s *SQLStore) importArchiveLine(db sq.BaseRunner, container store.Container
 		if err != nil {
 			return err
 		}
-		if modInfo.modifier != nil {
-			if !modInfo.modifier(&block, modInfo.cache) {
+		if args.modInfo.modifier != nil {
+			if !args.modInfo.modifier(&block, args.modInfo.cache) {
 				s.logger.Trace("skipping insert block per block modifier",
 					mlog.String("blockID", block.ID),
 					mlog.String("block_type", block.Type.String()),
@@ -99,7 +113,7 @@ func (s *SQLStore) importArchiveLine(db sq.BaseRunner, container store.Container
 			mlog.String("block_type", block.Type.String()),
 			mlog.String("block_title", block.Title),
 		)
-		if err := s.insertBlock(db, container, &block, "system"); err != nil {
+		if err := s.insertBlock(args.db, args.container, &block, args.userID); err != nil {
 			return err
 		}
 
