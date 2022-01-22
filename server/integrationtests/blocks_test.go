@@ -362,12 +362,15 @@ func TestExportBlocks(t *testing.T) {
 	th := SetupTestHelper().InitBasic()
 	defer th.TearDown()
 
-	blocks, resp := th.Client.ExportBlocks(nil)
+	blocks, resp := th.Client.ExportBlocks("")
 	require.NoError(t, resp.Error)
 	initialCount := len(blocks)
 
 	blockID1 := utils.NewID(utils.IDTypeBlock)
 	blockID2 := utils.NewID(utils.IDTypeBlock)
+	blockID3 := utils.NewID(utils.IDTypeBlock)
+	blockID4 := utils.NewID(utils.IDTypeBlock)
+
 	newBlocks := []model.Block{
 		{
 			ID:       blockID1,
@@ -383,14 +386,28 @@ func TestExportBlocks(t *testing.T) {
 			UpdateAt: 1,
 			Type:     "board",
 		},
+		{
+			ID:       blockID3,
+			RootID:   blockID1,
+			CreateAt: 1,
+			UpdateAt: 1,
+			Type:     "board",
+		},
+		{
+			ID:       blockID4,
+			RootID:   blockID2,
+			CreateAt: 1,
+			UpdateAt: 1,
+			Type:     "board",
+		},
 	}
 	_, resp = th.Client.InsertBlocks(newBlocks)
 	require.NoError(t, resp.Error)
 
 	t.Run("export without root id", func(t *testing.T) {
-		blocks, resp = th.Client.ExportBlocks(nil)
+		blocks, resp = th.Client.ExportBlocks("")
 		require.NoError(t, resp.Error)
-		require.Len(t, blocks, initialCount+2)
+		require.Len(t, blocks, initialCount+len(newBlocks))
 
 		blockIDs := make([]string, len(blocks))
 		for i, b := range blocks {
@@ -401,9 +418,9 @@ func TestExportBlocks(t *testing.T) {
 	})
 
 	t.Run("export with root id", func(t *testing.T) {
-		blocks, resp = th.Client.ExportBlocks(&blockID2)
+		blocks, resp = th.Client.ExportBlocks(blockID2)
 		require.NoError(t, resp.Error)
-		require.Len(t, blocks, 1)
+		require.Len(t, blocks, 2)
 
 		blockIDs := make([]string, len(blocks))
 		for i, b := range blocks {
@@ -411,6 +428,8 @@ func TestExportBlocks(t *testing.T) {
 		}
 		require.NotContains(t, blockIDs, blockID1)
 		require.Contains(t, blockIDs, blockID2)
+		require.NotContains(t, blockIDs, blockID3)
+		require.Contains(t, blockIDs, blockID4)
 	})
 }
 
@@ -418,7 +437,7 @@ func TestImportBlocks(t *testing.T) {
 	th := SetupTestHelper().InitBasic()
 	defer th.TearDown()
 
-	blocks, resp := th.Client.ExportBlocks(nil)
+	blocks, resp := th.Client.ExportBlocks("")
 	require.NoError(t, resp.Error)
 	initialCount := len(blocks)
 
@@ -455,7 +474,7 @@ func TestImportBlocks(t *testing.T) {
 		_, resp := th.Client.InsertBlocks(blocks)
 		require.NoError(t, resp.Error)
 
-		resultBlocks, resp := th.Client.ExportBlocks(nil)
+		resultBlocks, resp := th.Client.ExportBlocks("")
 		require.NoError(t, resp.Error)
 		require.Len(t, resultBlocks, initialCount+3)
 

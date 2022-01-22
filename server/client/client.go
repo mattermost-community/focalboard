@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/mattermost/focalboard/server/api"
@@ -223,17 +222,8 @@ func (c *Client) GetSubtree(blockID string) ([]model.Block, *Response) {
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) ExportBlocks(rootID *string) ([]model.Block, *Response) {
-	route := c.ExportBlocksRoute()
-
-	if rootID != nil {
-		parsedURL, _ := url.Parse(route)
-		query := parsedURL.Query()
-		query.Set("root_id", *rootID)
-		parsedURL.RawQuery = query.Encode()
-
-		route = parsedURL.String()
-	}
+func (c *Client) ExportBlocks(rootID string) ([]model.Block, *Response) {
+	route := fmt.Sprintf("%s?root_id=%s", c.ExportBlocksRoute(), rootID)
 
 	r, err := c.DoAPIGet(route, "")
 	if err != nil {
