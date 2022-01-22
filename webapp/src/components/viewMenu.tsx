@@ -5,16 +5,19 @@ import {injectIntl, IntlShape} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board, IPropertyTemplate} from '../blocks/board'
-import {IViewType, BoardView, createBoardView} from '../blocks/boardView'
+import {BoardView, createBoardView, IViewType} from '../blocks/boardView'
 import {Constants} from '../constants'
 import mutator from '../mutator'
-import {Utils, IDType} from '../utils'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import {Block} from '../blocks/block'
+import {IDType, Utils} from '../utils'
 import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
+import CalendarIcon from '../widgets/icons/calendar'
 import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
-import TableIcon from '../widgets/icons/table'
 import GalleryIcon from '../widgets/icons/gallery'
+import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 
 type Props = {
@@ -38,8 +41,9 @@ const ViewMenu = React.memo((props: Props) => {
     }, [match, history])
 
     const handleDuplicateView = useCallback(() => {
-        const {activeView} = props
+        const {board, activeView} = props
         Utils.log('duplicateView')
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoardView, {board: board.id, view: activeView.id})
         const currentViewId = activeView.id
         const newView = createBoardView(activeView)
         newView.title = `${activeView.title} copy`
@@ -47,10 +51,10 @@ const ViewMenu = React.memo((props: Props) => {
         mutator.insertBlock(
             newView,
             'duplicate view',
-            async () => {
+            async (block: Block) => {
                 // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    showView(newView.id)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
@@ -60,8 +64,9 @@ const ViewMenu = React.memo((props: Props) => {
     }, [props.activeView, showView])
 
     const handleDeleteView = useCallback(() => {
-        const {activeView, views} = props
+        const {board, activeView, views} = props
         Utils.log('deleteView')
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardView, {board: board.id, view: activeView.id})
         const view = activeView
         const nextView = views.find((o) => o !== view)
         mutator.deleteBlock(view, 'delete view')
@@ -83,6 +88,7 @@ const ViewMenu = React.memo((props: Props) => {
     const handleAddViewBoard = useCallback(() => {
         const {board, activeView, intl} = props
         Utils.log('addview-board')
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardView, {board: board.id, view: activeView.id})
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
         view.fields.viewType = 'board'
@@ -94,10 +100,10 @@ const ViewMenu = React.memo((props: Props) => {
         mutator.insertBlock(
             view,
             'add view',
-            async () => {
+            async (block: Block) => {
                 // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    showView(view.id)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
@@ -123,11 +129,11 @@ const ViewMenu = React.memo((props: Props) => {
         mutator.insertBlock(
             view,
             'add view',
-            async () => {
+            async (block: Block) => {
                 // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    Utils.log(`showView: ${view.id}`)
-                    showView(view.id)
+                    Utils.log(`showView: ${block.id}`)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
@@ -151,11 +157,42 @@ const ViewMenu = React.memo((props: Props) => {
         mutator.insertBlock(
             view,
             'add view',
-            async () => {
+            async (block: Block) => {
                 // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    Utils.log(`showView: ${view.id}`)
-                    showView(view.id)
+                    Utils.log(`showView: ${block.id}`)
+                    showView(block.id)
+                }, 120)
+            },
+            async () => {
+                showView(oldViewId)
+            })
+    }, [props.board, props.activeView, props.intl, showView])
+
+    const handleAddViewCalendar = useCallback(() => {
+        const {board, activeView, intl} = props
+
+        Utils.log('addview-calendar')
+        const view = createBoardView()
+        view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar View'})
+        view.fields.viewType = 'calendar'
+        view.parentId = board.id
+        view.rootId = board.rootId
+        view.fields.visiblePropertyIds = [Constants.titleColumnId]
+
+        const oldViewId = activeView.id
+
+        // Find first date property
+        view.fields.dateDisplayPropertyId = board.fields.cardProperties.find((o: IPropertyTemplate) => o.type === 'date')?.id
+
+        mutator.insertBlock(
+            view,
+            'add view',
+            async (block: Block) => {
+                // This delay is needed because WSClient has a default 100 ms notification delay before updates
+                setTimeout(() => {
+                    Utils.log(`showView: ${block.id}`)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
@@ -185,12 +222,17 @@ const ViewMenu = React.memo((props: Props) => {
         id: 'View.Table',
         defaultMessage: 'Table',
     })
+    const galleryText = intl.formatMessage({
+        id: 'View.Gallery',
+        defaultMessage: 'Gallery',
+    })
 
     const iconForViewType = (viewType: IViewType) => {
         switch (viewType) {
         case 'board': return <BoardIcon/>
         case 'table': return <TableIcon/>
         case 'gallery': return <GalleryIcon/>
+        case 'calendar': return <CalendarIcon/>
         default: return <div/>
         }
     }
@@ -242,9 +284,15 @@ const ViewMenu = React.memo((props: Props) => {
                     />
                     <Menu.Text
                         id='gallery'
-                        name='Gallery'
+                        name={galleryText}
                         icon={<GalleryIcon/>}
                         onClick={handleAddViewGallery}
+                    />
+                    <Menu.Text
+                        id='calendar'
+                        name='Calendar'
+                        icon={<CalendarIcon/>}
+                        onClick={handleAddViewCalendar}
                     />
                 </Menu.SubMenu>
             }

@@ -140,6 +140,14 @@ func (m pluginAPIMock) GetChannelByID(channelID string) (*mm_model.Channel, erro
 	return nil, ErrNotFound{}
 }
 
+func (m pluginAPIMock) GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error) {
+	return nil, ErrNotFound{}
+}
+
+func (m pluginAPIMock) IsErrNotFound(err error) bool {
+	return false
+}
+
 type ErrNotFound struct{}
 
 func (e ErrNotFound) Error() string {

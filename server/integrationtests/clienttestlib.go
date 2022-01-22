@@ -1,22 +1,28 @@
 package integrationtests
 
 import (
+	"errors"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type TestHelper struct {
-	Server *server.Server
-	Client *client.Client
+	Server  *server.Server
+	Client  *client.Client
+	Client2 *client.Client
 }
 
+<<<<<<< HEAD
 func getTestConfig(authMode string) *config.Configuration {
 	dbType := os.Getenv("FB_STORE_TEST_DB_TYPE")
 	if dbType == "" {
@@ -26,6 +32,12 @@ func getTestConfig(authMode string) *config.Configuration {
 	connectionString := os.Getenv("FB_STORE_TEST_CONN_STRING")
 	if connectionString == "" {
 		connectionString = ":memory:"
+=======
+func getTestConfig() (*config.Configuration, error) {
+	dbType, connectionString, err := sqlstore.PrepareNewTestDatabase()
+	if err != nil {
+		return nil, err
+>>>>>>> main
 	}
 
 	logging := `
@@ -105,6 +117,7 @@ func SetupTestHelperWithoutToken() *TestHelper {
 	th := &TestHelper{}
 	th.Server = newTestServer("", "native")
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
+	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, "")
 	return th
 }
 
@@ -147,6 +160,51 @@ func (th *TestHelper) InitBasic() *TestHelper {
 	}
 
 	return th
+}
+
+var ErrRegisterFail = errors.New("register failed")
+
+func (th *TestHelper) InitUsers(username1 string, username2 string) error {
+	workspace, err := th.Server.App().GetRootWorkspace()
+	if err != nil {
+		return err
+	}
+
+	clients := []*client.Client{th.Client, th.Client2}
+	usernames := []string{username1, username2}
+
+	for i, client := range clients {
+		// register a new user
+		password := utils.NewID(utils.IDTypeNone)
+		registerRequest := &api.RegisterRequest{
+			Username: usernames[i],
+			Email:    usernames[i] + "@example.com",
+			Password: password,
+			Token:    workspace.SignupToken,
+		}
+		success, resp := client.Register(registerRequest)
+		if resp.Error != nil {
+			return resp.Error
+		}
+		if !success {
+			return ErrRegisterFail
+		}
+
+		// login
+		loginRequest := &api.LoginRequest{
+			Type:     "normal",
+			Username: registerRequest.Username,
+			Email:    registerRequest.Email,
+			Password: registerRequest.Password,
+		}
+		data, resp := client.Login(loginRequest)
+		if resp.Error != nil {
+			return resp.Error
+		}
+
+		client.Token = data.Token
+	}
+	return nil
 }
 
 func (th *TestHelper) TearDown() {

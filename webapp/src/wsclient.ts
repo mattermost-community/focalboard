@@ -22,6 +22,23 @@ type WSMessage = {
     error?: string
 }
 
+type WSSubscriptionMsg = {
+    action?: string
+    subscription?: Subscription
+    error?: string
+}
+
+export interface Subscription {
+    blockId: string
+    workspaceId: string
+    subscriberId: string
+    blockType: string
+    subscriberType: string
+    notifiedAt?: number
+    createAt?: number
+    deleteAt?: number
+}
+
 export const ACTION_UPDATE_BLOCK = 'UPDATE_BLOCK'
 export const ACTION_AUTH = 'AUTH'
 export const ACTION_SUBSCRIBE_BLOCKS = 'SUBSCRIBE_BLOCKS'
@@ -29,15 +46,16 @@ export const ACTION_SUBSCRIBE_WORKSPACE = 'SUBSCRIBE_WORKSPACE'
 export const ACTION_UNSUBSCRIBE_WORKSPACE = 'UNSUBSCRIBE_WORKSPACE'
 export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
 export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
+export const ACTION_UPDATE_SUBSCRIPTION = 'UPDATE_SUBSCRIPTION'
 
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
     conn: WebSocket | null;
     sendMessage(action: string, data: any, responseCallback?: () => void): void /* eslint-disable-line @typescript-eslint/no-explicit-any */
+    setFirstConnectCallback(callback: () => void): void
     setReconnectCallback(callback: () => void): void
     setErrorCallback(callback: (event: Event) => void): void
     setCloseCallback(callback: (connectFailCount: number) => void): void
-    connectionId: string
 }
 
 type OnChangeHandler = (client: WSClient, blocks: Block[]) => void
@@ -45,10 +63,15 @@ type OnReconnectHandler = (client: WSClient) => void
 type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close') => void
 type OnErrorHandler = (client: WSClient, e: Event) => void
 type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => void
+type FollowChangeHandler = (client: WSClient, subscription: Subscription) => void
 
 class WSClient {
     ws: WebSocket|null = null
     client: MMWebSocketClient|null = null
+    onPluginReconnect: null|(() => void) = null
+    pluginId = ''
+    pluginVersion = ''
+    onAppVersionChangeHandler: ((versionHasChanged: boolean) => void) | null = null
     clientPrefix = ''
     serverUrl: string | undefined
     state: 'init'|'open'|'close' = 'init'
@@ -57,8 +80,8 @@ class WSClient {
     onChange: OnChangeHandler[] = []
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
-    private mmWSMaxRetries = 100
-    private mmWSRetryDelay = 300
+    onFollowBlock: FollowChangeHandler = () => {}
+    onUnfollowBlock: FollowChangeHandler = () => {}
     private notificationDelay = 100
     private reopenDelay = 3000
     private updatedBlocks: Block[] = []
@@ -89,7 +112,9 @@ class WSClient {
         this.serverUrl = serverUrl
     }
 
-    initPlugin(pluginId: string, client: MMWebSocketClient): void {
+    initPlugin(pluginId: string, pluginVersion: string, client: MMWebSocketClient): void {
+        this.pluginId = pluginId
+        this.pluginVersion = pluginVersion
         this.clientPrefix = `custom_${pluginId}_`
         this.client = client
         Utils.log(`WSClient initialised for plugin id "${pluginId}"`)
@@ -163,14 +188,24 @@ class WSClient {
     open(): void {
         if (this.client !== null) {
             // configure the Mattermost websocket client callbacks
+            const onConnect = () => {
+                Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
+
+                for (const handler of this.onStateChange) {
+                    handler(this, 'open')
+                }
+                this.state = 'open'
+            }
+
             const onReconnect = () => {
                 Utils.logWarn('WSClient reconnected')
 
-                this.open()
+                onConnect()
                 for (const handler of this.onReconnect) {
                     handler(this)
                 }
             }
+            this.onPluginReconnect = onReconnect
 
             const onClose = (connectFailCount: number) => {
                 Utils.logError(`WSClient has been closed, connect fail count: ${connectFailCount}`)
@@ -204,34 +239,11 @@ class WSClient {
                 }
             }
 
+            this.client.setFirstConnectCallback(onConnect)
             this.client.setErrorCallback(onError)
             this.client.setCloseCallback(onClose)
             this.client.setReconnectCallback(onReconnect)
 
-            // WSClient needs to ensure that the Mattermost client has
-            // correctly stablished the connection before opening
-            let retries = 0
-            const setPluginOpen = () => {
-                if (this.client?.connectionId !== '') {
-                    Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
-
-                    for (const handler of this.onStateChange) {
-                        handler(this, 'open')
-                    }
-                    this.state = 'open'
-                    return
-                }
-
-                retries++
-                if (retries <= this.mmWSMaxRetries) {
-                    Utils.log('WSClient Mattermost Websocket not ready, retrying')
-                    setTimeout(setPluginOpen, this.mmWSRetryDelay)
-                } else {
-                    Utils.logError('WSClient error on open: Mattermost Websocket client is not ready')
-                }
-            }
-
-            setPluginOpen()
             return
         }
 
@@ -244,10 +256,10 @@ class WSClient {
 
         ws.onopen = () => {
             Utils.log('WSClient webSocket opened.')
+            this.state = 'open'
             for (const handler of this.onStateChange) {
                 handler(this, 'open')
             }
-            this.state = 'open'
         }
 
         ws.onerror = (e) => {
@@ -309,9 +321,63 @@ class WSClient {
         this.queueUpdateNotification(Utils.fixBlock(message.block!))
     }
 
+    setOnFollowBlock(handler: FollowChangeHandler): void {
+        this.onFollowBlock = handler
+    }
+
+    setOnUnfollowBlock(handler: FollowChangeHandler): void {
+        this.onUnfollowBlock = handler
+    }
+
     updateClientConfigHandler(config: ClientConfig): void {
         for (const handler of this.onConfigChange) {
             handler(this, config)
+        }
+    }
+
+    updateSubscriptionHandler(message: WSSubscriptionMsg): void {
+        Utils.log('updateSubscriptionHandler: ' + message.action + '; blockId=' + message.subscription?.blockId)
+
+        if (!message.subscription) {
+            return
+        }
+
+        const handler = message.subscription.deleteAt ? this.onUnfollowBlock : this.onFollowBlock
+        handler(this, message.subscription)
+    }
+
+    setOnAppVersionChangeHandler(fn: (versionHasChanged: boolean) => void): void {
+        this.onAppVersionChangeHandler = fn
+    }
+
+    pluginStatusesChangedHandler(data: any): void {
+        if (this.pluginId === '' || !this.onAppVersionChangeHandler) {
+            return
+        }
+
+        const focalboardStatusChange = data.plugin_statuses.find((s: any) => s.plugin_id === this.pluginId)
+        if (focalboardStatusChange) {
+            // if the plugin version is greater than the current one,
+            // show the new version banner
+            if (Utils.compareVersions(this.pluginVersion, focalboardStatusChange.version) > 0) {
+                Utils.log('Boards plugin has been updated')
+                this.onAppVersionChangeHandler(true)
+            }
+
+            // if the plugin version is greater or equal, trigger a
+            // reconnect to resubscribe in case the interface hasn't
+            // been reloaded
+            if (Utils.compareVersions(this.pluginVersion, focalboardStatusChange.version) >= 0) {
+                // this is a temporal solution that leaves a second
+                // between the message and the reconnect so the server
+                // has time to register the WS handler
+                setTimeout(() => {
+                    if (this.onPluginReconnect) {
+                        Utils.log('Reconnecting after plugin update')
+                        this.onPluginReconnect()
+                    }
+                }, 1000)
+            }
         }
     }
 

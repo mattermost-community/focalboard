@@ -13,6 +13,8 @@ windowAny.baseURL = '/plugins/focalboard'
 windowAny.frontendBaseURL = '/boards'
 windowAny.isFocalboardPlugin = true
 
+import {ClientConfig} from 'mattermost-redux/types/config'
+
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
@@ -26,7 +28,8 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
-import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG} from './../../../webapp/src/wsclient'
+import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
+import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG, ACTION_UPDATE_SUBSCRIPTION} from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
@@ -64,7 +67,7 @@ type Props = {
 }
 
 const MainApp = (props: Props) => {
-    wsClient.initPlugin(manifest.id, props.webSocketClient)
+    wsClient.initPlugin(manifest.id, manifest.version, props.webSocketClient)
 
     useEffect(() => {
         document.body.classList.add('focalboard-body')
@@ -120,12 +123,6 @@ export default class Plugin {
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
         mmStore.subscribe(() => {
-            const currentTheme = mmStore.getState().entities.preferences.myPreferences.theme
-            if (currentTheme !== theme && currentTheme) {
-                setMattermostTheme(currentTheme)
-                theme = currentTheme
-            }
-
             const currentUserId = mmStore.getState().entities.users.currentUserId
             const currentChannel = mmStore.getState().entities.channels.currentChannelId
             if (lastViewedChannel !== currentChannel && currentChannel) {
@@ -141,14 +138,15 @@ export default class Plugin {
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelHeader, {workspaceID: currentChannel})
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, '', 'Boards')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, 'Boards', 'Boards')
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
+            this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
-            }, '', 'Boards')
+            }, 'Boards', 'Boards')
             this.registry.registerCustomRoute('/', MainApp)
         }
 
@@ -181,6 +179,24 @@ export default class Plugin {
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
+        this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
+        this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
+            let preferences
+            try {
+                preferences = JSON.parse(e.data.preferences)
+            } catch {
+                preferences = []
+            }
+            if (preferences) {
+                for (const preference of preferences) {
+                    if (preference.category === 'theme' && theme !== preference.value) {
+                        setMattermostTheme(JSON.parse(preference.value))
+                        theme = preference.value
+                    }
+                }
+            }
+        })
     }
 
     uninitialize(): void {

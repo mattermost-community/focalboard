@@ -1,0 +1,483 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy link menu  1`] = `
+<div>
+  <div
+    class="KanbanCard"
+    draggable="true"
+    style="opacity: 1;"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper optionsMenu"
+      role="button"
+    >
+      <button
+        class="Button IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
+      <div
+        class="Menu noselect left"
+      >
+        <div
+          class="menu-contents"
+        >
+          <div
+            class="menu-options"
+          >
+            <div
+              aria-label="Delete"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline trash-can-outline"
+              />
+              <div
+                class="menu-name"
+              >
+                Delete
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              aria-label="Duplicate"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-content-copy content-copy"
+              />
+              <div
+                class="menu-name"
+              >
+                Duplicate
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              aria-label="Copy link"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-link-variant LinkIcon"
+              />
+              <div
+                class="menu-name"
+              >
+                Copy link
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+          <div
+            class="menu-spacer hideOnWidescreen"
+          />
+          <div
+            class="menu-options hideOnWidescreen"
+          >
+            <div
+              aria-label="Cancel"
+              class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="octo-icontitle"
+    >
+      <div
+        class="octo-icon"
+      >
+        i
+      </div>
+      <div
+        class="octo-titletext"
+      >
+        title
+      </div>
+    </div>
+    <div
+      class="octo-tooltip tooltip-top"
+      data-tooltip="name"
+    >
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete menu  1`] = `
+<div>
+  <div
+    class="KanbanCard"
+    draggable="true"
+    style="opacity: 1;"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper optionsMenu"
+      role="button"
+    >
+      <button
+        class="Button IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
+      <div
+        class="Menu noselect left"
+      >
+        <div
+          class="menu-contents"
+        >
+          <div
+            class="menu-options"
+          >
+            <div
+              aria-label="Delete"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline trash-can-outline"
+              />
+              <div
+                class="menu-name"
+              >
+                Delete
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              aria-label="Duplicate"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-content-copy content-copy"
+              />
+              <div
+                class="menu-name"
+              >
+                Duplicate
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              aria-label="Copy link"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-link-variant LinkIcon"
+              />
+              <div
+                class="menu-name"
+              >
+                Copy link
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+          <div
+            class="menu-spacer hideOnWidescreen"
+          />
+          <div
+            class="menu-options hideOnWidescreen"
+          >
+            <div
+              aria-label="Cancel"
+              class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="octo-icontitle"
+    >
+      <div
+        class="octo-icon"
+      >
+        i
+      </div>
+      <div
+        class="octo-titletext"
+      >
+        title
+      </div>
+    </div>
+    <div
+      class="octo-tooltip tooltip-top"
+      data-tooltip="name"
+    >
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplicate menu  1`] = `
+<div>
+  <div
+    class="KanbanCard"
+    draggable="true"
+    style="opacity: 1;"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper optionsMenu"
+      role="button"
+    >
+      <button
+        class="Button IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
+      <div
+        class="Menu noselect left"
+      >
+        <div
+          class="menu-contents"
+        >
+          <div
+            class="menu-options"
+          >
+            <div
+              aria-label="Delete"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline trash-can-outline"
+              />
+              <div
+                class="menu-name"
+              >
+                Delete
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              aria-label="Duplicate"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-content-copy content-copy"
+              />
+              <div
+                class="menu-name"
+              >
+                Duplicate
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              aria-label="Copy link"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-link-variant LinkIcon"
+              />
+              <div
+                class="menu-name"
+              >
+                Copy link
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+          <div
+            class="menu-spacer hideOnWidescreen"
+          />
+          <div
+            class="menu-options hideOnWidescreen"
+          >
+            <div
+              aria-label="Cancel"
+              class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="octo-icontitle"
+    >
+      <div
+        class="octo-icon"
+      >
+        i
+      </div>
+      <div
+        class="octo-titletext"
+      >
+        title
+      </div>
+    </div>
+    <div
+      class="octo-tooltip tooltip-top"
+      data-tooltip="name"
+    >
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/kanban/kanbanCard should match snapshot 1`] = `
+<div>
+  <div
+    class="KanbanCard"
+    draggable="true"
+    style="opacity: 1;"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper optionsMenu"
+      role="button"
+    >
+      <button
+        class="Button IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
+    </div>
+    <div
+      class="octo-icontitle"
+    >
+      <div
+        class="octo-icon"
+      >
+        i
+      </div>
+      <div
+        class="octo-titletext"
+      >
+        title
+      </div>
+    </div>
+    <div
+      class="octo-tooltip tooltip-top"
+      data-tooltip="name"
+    >
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/kanban/kanbanCard should match snapshot with readonly 1`] = `
+<div>
+  <div
+    class="KanbanCard"
+    draggable="false"
+    style="opacity: 1;"
+  >
+    <div
+      class="octo-icontitle"
+    >
+      <div
+        class="octo-icon"
+      >
+        i
+      </div>
+      <div
+        class="octo-titletext"
+      >
+        title
+      </div>
+    </div>
+    <div
+      class="octo-tooltip tooltip-top"
+      data-tooltip="name"
+    >
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      />
+    </div>
+  </div>
+</div>
+`;

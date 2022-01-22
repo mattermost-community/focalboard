@@ -6,29 +6,28 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {ContentBlock} from '../../blocks/contentBlock'
+import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
+import {getCardComments} from '../../store/comments'
+import {getCardContents} from '../../store/contents'
+import {useAppSelector} from '../../store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {Utils} from '../../utils'
-
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import DuplicateIcon from '../../widgets/icons/duplicate'
-import OptionsIcon from '../../widgets/icons/options'
 import LinkIcon from '../../widgets/icons/Link'
+import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {useSortable} from '../../hooks/sortable'
-
-import ImageElement from '../content/imageElement'
-import ContentElement from '../content/contentElement'
-import PropertyValueElement from '../propertyValueElement'
-import {sendFlashMessage} from '../flashMessages'
 import Tooltip from '../../widgets/tooltip'
-import {useAppSelector} from '../../store/hooks'
-import {getCardContents} from '../../store/contents'
-import {getCardComments} from '../../store/comments'
-
-import './galleryCard.scss'
 import {CardDetailProvider} from '../cardDetail/cardDetailContext'
+import ContentElement from '../content/contentElement'
+import ImageElement from '../content/imageElement'
+import {sendFlashMessage} from '../flashMessages'
+import PropertyValueElement from '../propertyValueElement'
+import './galleryCard.scss'
+import CardBadges from '../cardBadges'
 
 type Props = {
     board: Board
@@ -37,6 +36,7 @@ type Props = {
     visiblePropertyTemplates: IPropertyTemplate[]
     visibleTitle: boolean
     isSelected: boolean
+    visibleBadges: boolean
     readonly: boolean
     isManualSort: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
@@ -94,7 +94,8 @@ const GalleryCard = React.memo((props: Props) => {
                             id='duplicate'
                             name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
-                                mutator.duplicateCard(card.id)
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                                mutator.duplicateCard(card.id, board)
                             }}
                         />
                         <Menu.Text
@@ -177,6 +178,11 @@ const GalleryCard = React.memo((props: Props) => {
                         </Tooltip>
                     ))}
                 </div>}
+            {props.visibleBadges &&
+                <CardBadges
+                    card={card}
+                    className='gallery-badges'
+                />}
         </div>
     )
 })

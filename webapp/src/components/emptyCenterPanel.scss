@@ -20,14 +20,14 @@
 
         .title {
             font-size: 25px;
-            color: var(--sys-center-channel-color);
+            color: rgba(var(--center-channel-color-rgb));
             margin-bottom: 12px;
         }
 
         .description {
             text-align: center;
             margin-bottom: 32px;
-            color: var(--sys-center-channel-color);
+            color: rgba(var(--center-channel-color-rgb));
         }
 
         .choose-template-text {

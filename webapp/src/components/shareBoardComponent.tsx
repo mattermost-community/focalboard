@@ -14,6 +14,8 @@ import {sendFlashMessage} from '../components/flashMessages'
 import Button from '../widgets/buttons/button'
 import Switch from '../widgets/switch'
 
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+
 import Modal from './modal'
 import './shareBoardComponent.scss'
 
@@ -47,6 +49,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
         const newSharing: ISharing = sharing || createSharingInfo()
         newSharing.id = props.boardId
         newSharing.enabled = isOn
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: props.boardId, shareBoardEnabled: isOn})
         await client.setSharing(newSharing)
         await loadData()
     }
@@ -76,18 +79,18 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     shareUrl.searchParams.set('r', readToken)
 
     if (match.params.workspaceId) {
-        const newPath = generatePath('/plugins/focalboard/workspace/:workspaceId/shared/:boardId/:viewId', {
+        const newPath = generatePath('/workspace/:workspaceId/shared/:boardId/:viewId', {
             boardId: match.params.boardId,
             viewId: match.params.viewId,
             workspaceId: match.params.workspaceId,
         })
-        shareUrl.pathname = newPath
+        shareUrl.pathname = Utils.buildURL(newPath)
     } else {
         const newPath = generatePath('/shared/:boardId/:viewId', {
             boardId: match.params.boardId,
             viewId: match.params.viewId,
         })
-        shareUrl.pathname = newPath
+        shareUrl.pathname = Utils.buildURL(newPath)
     }
 
     return (

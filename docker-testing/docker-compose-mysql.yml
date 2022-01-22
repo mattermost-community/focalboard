@@ -1,0 +1,25 @@
+version: '2.4'
+services:
+  mysql:
+    image: "mysql/mysql-server:5.7.12"
+    restart: always
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: mostest
+      MYSQL_PASSWORD: mostest
+      MYSQL_USER: mmuser
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+    tmpfs: /var/lib/mysql
+    ports:
+      - 44445:3306
+
+  start_dependencies:
+    image: mattermost/mattermost-wait-for-dep:latest
+    depends_on:
+      - mysql
+    command: mysql
+

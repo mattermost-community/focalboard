@@ -1,0 +1,34 @@
+{
+  "manifest_version": 2,
+  "name": "Focalboard Web Clipper",
+  "version": "0.1.0",
+  "description": "Save websites directly into Focalboard",
+  "icons": {
+    "48": "icons/48.png",
+    "96": "icons/96.png"
+  },
+  "page_action": {
+    "browser_style": true,
+    "default_icon": {
+      "19": "icons/19.png",
+      "38": "icons/38.png"
+    },
+    "default_title": "Save to Focalboard",
+    "default_popup": "src/views/popup.html",
+    "show_matches": ["<all_urls>"]
+  },
+  "options_ui": {
+    "page": "src/views/options.html",
+    "browser_style": true
+  },
+  "web_accessible_resources": [],
+  "permissions": [
+    "<all_urls>",
+    "storage"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "focalboard-web-clipper@mattermost.com"
+    }
+  }
+}

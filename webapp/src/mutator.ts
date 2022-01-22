@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {BlockIcons} from './blockIcons'
-import {Block} from './blocks/block'
+import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType, createBoard} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
@@ -19,6 +19,7 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/
 //
 class Mutator {
     private undoGroupId?: string
+    private undoDisplayId?: string
 
     private beginUndoGroup(): string | undefined {
         if (this.undoGroupId) {
@@ -42,7 +43,7 @@ class Mutator {
         try {
             await actions()
         } catch (err) {
-            Utils.assertFailure(`ERROR: ${err?.toString?.()}`)
+            Utils.assertFailure(`ERROR: ${err}`)
         }
         if (groupId) {
             this.endUndoGroup(groupId)
@@ -50,12 +51,13 @@ class Mutator {
     }
 
     async updateBlock(newBlock: Block, oldBlock: Block, description: string): Promise<void> {
+        const [updatePatch, undoPatch] = createPatchesFromBlocks(newBlock, oldBlock)
         await undoManager.perform(
             async () => {
-                await octoClient.updateBlock(newBlock)
+                await octoClient.patchBlock(newBlock.id, updatePatch)
             },
             async () => {
-                await octoClient.updateBlock(oldBlock)
+                await octoClient.patchBlock(oldBlock.id, undoPatch)
             },
             description,
             this.undoGroupId,
@@ -63,43 +65,63 @@ class Mutator {
     }
 
     private async updateBlocks(newBlocks: Block[], oldBlocks: Block[], description: string): Promise<void> {
-        await undoManager.perform(
+        if (newBlocks.length !== oldBlocks.length) {
+            throw new Error('new and old blocks must have the same length when updating blocks')
+        }
+
+        const updatePatches = [] as BlockPatch[]
+        const undoPatches = [] as BlockPatch[]
+
+        newBlocks.forEach((newBlock, i) => {
+            const [updatePatch, undoPatch] = createPatchesFromBlocks(newBlock, oldBlocks[i])
+            updatePatches.push(updatePatch)
+            undoPatches.push(undoPatch)
+        })
+
+        return undoManager.perform(
             async () => {
-                await octoClient.updateBlocks(newBlocks)
+                await octoClient.patchBlocks(newBlocks, updatePatches)
             },
             async () => {
-                await octoClient.updateBlocks(oldBlocks)
+                await octoClient.patchBlocks(newBlocks, undoPatches)
             },
             description,
             this.undoGroupId,
         )
     }
 
-    async insertBlock(block: Block, description = 'add', afterRedo?: () => Promise<void>, beforeUndo?: () => Promise<void>) {
-        await undoManager.perform(
+    //eslint-disable-next-line no-shadow
+    async insertBlock(block: Block, description = 'add', afterRedo?: (block: Block) => Promise<void>, beforeUndo?: (block: Block) => Promise<void>): Promise<Block> {
+        return undoManager.perform(
             async () => {
-                await octoClient.insertBlock(block)
-                await afterRedo?.()
+                const res = await octoClient.insertBlock(block)
+                const jsonres = await res.json()
+                const newBlock = jsonres[0] as Block
+                await afterRedo?.(newBlock)
+                return newBlock
             },
-            async () => {
-                await beforeUndo?.()
-                await octoClient.deleteBlock(block.id)
+            async (newBlock: Block) => {
+                await beforeUndo?.(newBlock)
+                await octoClient.deleteBlock(newBlock.id)
             },
             description,
             this.undoGroupId,
         )
     }
 
-    async insertBlocks(blocks: Block[], description = 'add', afterRedo?: () => Promise<void>, beforeUndo?: () => Promise<void>) {
-        await undoManager.perform(
+    //eslint-disable-next-line no-shadow
+    async insertBlocks(blocks: Block[], description = 'add', afterRedo?: (blocks: Block[]) => Promise<void>, beforeUndo?: () => Promise<void>) {
+        return undoManager.perform(
             async () => {
-                await octoClient.insertBlocks(blocks)
-                await afterRedo?.()
+                const res = await octoClient.insertBlocks(blocks)
+                const newBlocks = (await res.json()) as Block[]
+                await afterRedo?.(newBlocks)
+                return newBlocks
             },
-            async () => {
+            async (newBlocks: Block[]) => {
                 await beforeUndo?.()
                 const awaits = []
-                for (const block of blocks) {
+                for (const block of newBlocks) {
                     awaits.push(octoClient.deleteBlock(block.id))
                 }
                 await Promise.all(awaits)
@@ -224,10 +246,10 @@ class Mutator {
 
     // Property Templates
 
-    async insertPropertyTemplate(board: Board, activeView: BoardView, index = -1, template?: IPropertyTemplate) {
+    async insertPropertyTemplate(board: Board, activeView: BoardView, index = -1, template?: IPropertyTemplate): Promise<string> {
         if (!activeView) {
             Utils.assertFailure('insertPropertyTemplate: no activeView')
-            return
+            return ''
         }
 
         const newTemplate = template || {
@@ -240,8 +262,9 @@ class Mutator {
         const oldBlocks: Block[] = [board]
 
         const newBoard = createBoard(board)
-        const startIndex = (index >= 0) ? index : board.fields.cardProperties.length
-        newBoard.fields.cardProperties.splice(startIndex, 0, newTemplate)
+
+        // insert at end of board.fields.cardProperties
+        newBoard.fields.cardProperties.push(newTemplate)
         const changedBlocks: Block[] = [newBoard]
 
         let description = 'add property'
@@ -250,13 +273,17 @@ class Mutator {
             oldBlocks.push(activeView)
 
             const newActiveView = createBoardView(activeView)
-            newActiveView.fields.visiblePropertyIds.push(newTemplate.id)
+
+            // insert in proper location in activeview.fields.visiblePropetyIds
+            const viewIndex = index > 0 ? index : activeView.fields.visiblePropertyIds.length
+            newActiveView.fields.visiblePropertyIds.splice(viewIndex, 0, newTemplate.id)
             changedBlocks.push(newActiveView)
 
             description = 'add column'
         }
 
         await this.updateBlocks(changedBlocks, oldBlocks, description)
+        return newTemplate.id
     }
 
     async duplicatePropertyTemplate(board: Board, activeView: BoardView, propertyId: string) {
@@ -408,7 +435,7 @@ class Mutator {
             delete newCard.fields.properties[propertyId]
         }
         await this.updateBlock(newCard, card, description)
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {card: card.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {board: card.rootId, card: card.id})
     }
 
     async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyType, newName: string) {
@@ -523,6 +550,40 @@ class Mutator {
         )
     }
 
+    async changeViewDateDisplayPropertyId(viewId: string, oldDateDisplayPropertyId: string|undefined, dateDisplayPropertyId: string): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {dateDisplayPropertyId}})
+            },
+            async () => {
+                await octoClient.patchBlock(viewId, {updatedFields: {dateDisplayPropertyId: oldDateDisplayPropertyId}})
+            },
+            'display by',
+            this.undoDisplayId,
+        )
+    }
+
+    async changeViewVisiblePropertiesOrder(view: BoardView, template: IPropertyTemplate, destIndex: number, description = 'change property order'): Promise<void> {
+        const oldVisiblePropertyIds = view.fields.visiblePropertyIds
+        const newOrder = oldVisiblePropertyIds.slice()
+
+        const srcIndex = oldVisiblePropertyIds.indexOf(template.id)
+        Utils.log(`srcIndex: ${srcIndex}, destIndex: ${destIndex}`)
+
+        newOrder.splice(destIndex, 0, newOrder.splice(srcIndex, 1)[0])
+
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(view.id, {updatedFields: {visiblePropertyIds: newOrder}})
+            },
+            async () => {
+                await octoClient.patchBlock(view.id, {updatedFields: {visiblePropertyIds: oldVisiblePropertyIds}})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
     async changeViewVisibleProperties(viewId: string, oldVisiblePropertyIds: string[], visiblePropertyIds: string[], description = 'show / hide property'): Promise<void> {
         await undoManager.perform(
             async () => {
@@ -606,10 +667,37 @@ class Mutator {
         await this.updateBlock(newView, view, description)
     }
 
+    async followBlock(blockId: string, blockType: string, userId: string) {
+        await undoManager.perform(
+            async () => {
+                await octoClient.followBlock(blockId, blockType, userId)
+            },
+            async () => {
+                await octoClient.unfollowBlock(blockId, blockType, userId)
+            },
+            'follow block',
+            this.undoGroupId,
+        )
+    }
+
+    async unfollowBlock(blockId: string, blockType: string, userId: string) {
+        await undoManager.perform(
+            async () => {
+                await octoClient.unfollowBlock(blockId, blockType, userId)
+            },
+            async () => {
+                await octoClient.followBlock(blockId, blockType, userId)
+            },
+            'follow block',
+            this.undoGroupId,
+        )
+    }
+
     // Duplicate
 
     async duplicateCard(
         cardId: string,
+        board: Board,
         description = 'duplicate card',
         asTemplate = false,
         afterRedo?: (newCardId: string) => Promise<void>,
@@ -635,11 +723,18 @@ class Mutator {
             }
         }
         newCard.fields.isTemplate = asTemplate
+        newCard.rootId = board.id
+        newCard.parentId = board.id
         await this.insertBlocks(
             newBlocks,
             description,
-            async () => {
-                await afterRedo?.(newCard.id)
+            async (respBlocks: Block[]) => {
+                const card = respBlocks.find((block) => block.type === 'card')
+                if (card) {
+                    await afterRedo?.(card.id)
+                } else {
+                    Utils.logError('card not found for opening.')
+                }
             },
             beforeUndo,
         )
@@ -667,15 +762,15 @@ class Mutator {
             // Board from template
         }
         newBoard.fields.isTemplate = asTemplate
-        await this.insertBlocks(
+        const createdBlocks = await this.insertBlocks(
             newBlocks,
             description,
-            async () => {
-                await afterRedo?.(newBoard.id)
+            async (respBlocks: Block[]) => {
+                await afterRedo?.(respBlocks[0].id)
             },
             beforeUndo,
         )
-        return [newBlocks, newBoard.id]
+        return [createdBlocks, createdBlocks[0].id]
     }
 
     async duplicateFromRootBoard(
@@ -700,15 +795,15 @@ class Mutator {
             // Board from template
         }
         newBoard.fields.isTemplate = asTemplate
-        await this.insertBlocks(
+        const createdBlocks = await this.insertBlocks(
             newBlocks,
             description,
-            async () => {
-                await afterRedo?.(newBoard.id)
+            async (respBlocks: Block[]) => {
+                await afterRedo?.(respBlocks[0].id)
             },
             beforeUndo,
         )
-        return [newBlocks, newBoard.id]
+        return [createdBlocks, createdBlocks[0].id]
     }
 
     // Other methods

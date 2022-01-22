@@ -7,7 +7,7 @@ import {
     CommonCalculationOptionProps,
     optionsByType,
 } from '../../calculations/options'
-import {IPropertyTemplate} from '../../../blocks/board'
+import {IPropertyTemplate, PropertyType} from '../../../blocks/board'
 
 import './calculationOption.scss'
 import {Option, OptionProps} from './kanbanOption'
@@ -15,6 +15,16 @@ import {Option, OptionProps} from './kanbanOption'
 type Props = CommonCalculationOptionProps & {
     cardProperties: IPropertyTemplate[]
     onChange: (data: {calculation: string, propertyId: string}) => void
+}
+
+// contains mapping of property types which are effectly the same as other property type.
+const equivalentPropertyType = new Map<PropertyType, PropertyType>([
+    ['createdTime', 'date'],
+    ['updatedTime', 'date'],
+])
+
+export function getEquivalentPropertyType(propertyType: PropertyType): PropertyType {
+    return equivalentPropertyType.get(propertyType) || propertyType
 }
 
 export const KanbanCalculationOptions = (props: Props): JSX.Element => {
@@ -34,10 +44,15 @@ export const KanbanCalculationOptions = (props: Props): JSX.Element => {
         }
     })
 
-    props.cardProperties.
-        map((property) => optionsByType.get(property.type) || []).
-        forEach((typeOptions) => {
-            typeOptions.forEach((typeOption) => {
+    const seen: Record<string, boolean> = {}
+    props.cardProperties.forEach((property) => {
+        // skip already processed property types
+        if (seen[getEquivalentPropertyType(property.type)]) {
+            return
+        }
+
+        (optionsByType.get(property.type) || []).
+            forEach((typeOption) => {
                 options.push({
                     ...typeOption,
                     cardProperties: props.cardProperties,
@@ -46,7 +61,9 @@ export const KanbanCalculationOptions = (props: Props): JSX.Element => {
                     activeProperty: props.property!,
                 })
             })
-        })
+
+        seen[getEquivalentPropertyType(property.type)] = true
+    })
 
     return (
         <CalculationOptions

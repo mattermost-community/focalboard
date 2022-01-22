@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState, useMemo} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
@@ -59,6 +59,10 @@ const TableRow = React.memo((props: Props) => {
             setTimeout(() => titleRef.current?.focus(), 10)
         }
     }, [])
+
+    const visiblePropertyTemplates = useMemo(() => (
+        activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
+    ), [board.fields.cardProperties, activeView.fields.visiblePropertyIds])
 
     let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
     if (isOver) {
@@ -121,8 +125,7 @@ const TableRow = React.memo((props: Props) => {
             </div>
 
             {/* Columns, one per property */}
-
-            {board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id)).map((template: IPropertyTemplate) => {
+            {visiblePropertyTemplates.map((template) => {
                 if (!columnRefs.get(template.id)) {
                     columnRefs.set(template.id, React.createRef())
                 }
@@ -142,7 +145,8 @@ const TableRow = React.memo((props: Props) => {
                             propertyTemplate={template}
                             showEmptyPlaceholder={false}
                         />
-                    </div>)
+                    </div>
+                )
             })}
         </div>
     )

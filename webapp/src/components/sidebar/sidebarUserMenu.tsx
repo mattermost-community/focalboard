@@ -43,8 +43,11 @@ const SidebarUserMenu = React.memo(() => {
                             <FocalboardLogoIcon/>
                             <span>{'Focalboard'}</span>
                             <div className='versionFrame'>
-                                <div className='version'>
-                                    {`v${Constants.versionString}`}
+                                <div
+                                    className='version'
+                                    title={`v${Constants.versionString}`}
+                                >
+                                    {Constants.versionDisplayString}
                                 </div>
                             </div>
                         </div>
@@ -56,7 +59,7 @@ const SidebarUserMenu = React.memo(() => {
                                 id='logout'
                                 name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
                                 onClick={async () => {
-                                    octoClient.logout()
+                                    await octoClient.logout()
                                     history.push('/login')
                                 }}
                             />

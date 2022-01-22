@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/sidebarBoardItem sidebar call hideSidebar 1`] = `
+<div>
+  <div
+    class="SidebarBoardItem"
+  >
+    <div
+      class="octo-sidebar-item ' expanded "
+    >
+      <button
+        class="Button IconButton"
+        type="button"
+      >
+        <svg
+          class="DisclosureTriangleIcon Icon"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polygon
+            points="37,35 37,65 63,50"
+          />
+        </svg>
+      </button>
+      <div
+        class="octo-sidebar-title"
+        title="board title"
+      >
+        <div
+          class="octo-icon"
+        >
+          i
+        </div>
+        <span
+          class="octo-sidebar-name"
+        >
+          board title
+        </span>
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="Button IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="octo-sidebar-item subitem "
+    >
+      <svg
+        class="BoardIcon Icon"
+        fill="currentColor"
+        height="24"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          opacity="0.8"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M4 4H20V20H4V4ZM2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4ZM8 6H6V12H8V6ZM11 6H13V16H11V6ZM18 6H16V9H18V6Z"
+            fill="currentColor"
+            fill-rule="evenodd"
+          />
+        </g>
+      </svg>
+      <div
+        class="octo-sidebar-title"
+        title="view title"
+      >
+        view title
+      </div>
+    </div>
+    <div
+      class="octo-sidebar-item subitem "
+    >
+      <svg
+        class="BoardIcon Icon"
+        fill="currentColor"
+        height="24"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          opacity="0.8"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M4 4H20V20H4V4ZM2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4ZM8 6H6V12H8V6ZM11 6H13V16H11V6ZM18 6H16V9H18V6Z"
+            fill="currentColor"
+            fill-rule="evenodd"
+          />
+        </g>
+      </svg>
+      <div
+        class="octo-sidebar-title"
+        title="view title"
+      >
+        view title
+      </div>
+    </div>
+  </div>
+</div>
+`;

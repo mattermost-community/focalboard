@@ -10,6 +10,8 @@ import {createFilterClause} from '../blocks/filterClause'
 import {createFilterGroup} from '../blocks/filterGroup'
 import {ImageBlock, createImageBlock} from '../blocks/imageBlock'
 import {TextBlock, createTextBlock} from '../blocks/textBlock'
+import {CheckboxBlock, createCheckboxBlock} from '../blocks/checkboxBlock'
+import {Block} from '../blocks/block'
 
 class TestBlockFactory {
     static createBoard(): Board {
@@ -74,6 +76,42 @@ class TestBlockFactory {
         return view
     }
 
+    static createTableView(board?: Board): BoardView {
+        const view = createBoardView()
+        view.parentId = board ? board.id : 'parent'
+        view.rootId = board ? board.rootId : 'root'
+        view.title = 'view title'
+        view.fields.viewType = 'table'
+        view.fields.groupById = 'property1'
+        view.fields.hiddenOptionIds = ['value1']
+        view.fields.cardOrder = ['card1', 'card2', 'card3']
+        view.fields.sortOptions = [
+            {
+                propertyId: 'property1',
+                reversed: true,
+            },
+            {
+                propertyId: 'property2',
+                reversed: false,
+            },
+        ]
+        view.fields.columnWidths = {
+            column1: 100,
+            column2: 200,
+        }
+
+        // Filter
+        const filterGroup = createFilterGroup()
+        const filter = createFilterClause()
+        filter.propertyId = 'property1'
+        filter.condition = 'includes'
+        filter.values = ['value1']
+        filterGroup.filters.push(filter)
+        view.fields.filter = filterGroup
+
+        return view
+    }
+
     static createCard(board?: Board): Card {
         const card = createCard()
         card.parentId = board ? board.id : 'parent'
@@ -85,39 +123,43 @@ class TestBlockFactory {
         return card
     }
 
-    static createComment(card: Card): CommentBlock {
-        const block = createCommentBlock()
+    private static addToCard<BlockType extends Block>(block: BlockType, card: Card, isContent = true): BlockType {
         block.parentId = card.id
         block.rootId = card.rootId
+        if (isContent) {
+            card.fields.contentOrder.push(block.id)
+        }
+        return block
+    }
+
+    static createComment(card: Card): CommentBlock {
+        const block = this.addToCard(createCommentBlock(), card, false)
         block.title = 'title'
 
         return block
     }
 
     static createText(card: Card): TextBlock {
-        const block = createTextBlock()
-        block.parentId = card.id
-        block.rootId = card.rootId
+        const block = this.addToCard(createTextBlock(), card)
         block.title = 'title'
-
         return block
     }
 
     static createImage(card: Card): ImageBlock {
-        const block = createImageBlock()
-        block.parentId = card.id
-        block.rootId = card.rootId
+        const block = this.addToCard(createImageBlock(), card)
         block.fields.fileId = 'fileId'
-
         return block
     }
 
     static createDivider(card: Card): DividerBlock {
-        const block = createDividerBlock()
-        block.parentId = card.id
-        block.rootId = card.rootId
+        const block = this.addToCard(createDividerBlock(), card)
         block.title = 'title'
+        return block
+    }
 
+    static createCheckbox(card: Card): CheckboxBlock {
+        const block = this.addToCard(createCheckboxBlock(), card)
+        block.title = 'title'
         return block
     }
 }

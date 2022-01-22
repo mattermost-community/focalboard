@@ -43,14 +43,28 @@ describe('utils', () => {
 
     describe('htmlFromMarkdown', () => {
         test('should not allow XSS on links href on the webapp', () => {
-            expect(Utils.htmlFromMarkdown('[]("xss-attack="true"other="whatever)')).toBe('<p><a target="_blank" rel="noreferrer" href="%22xss-attack=%22true%22other=%22whatever" title="" onclick="event.stopPropagation();"></a></p>')
+            expect(Utils.htmlFromMarkdown('[]("xss-attack="true"other="whatever)')).toBe('<p><a target="_blank" rel="noreferrer" href="%22xss-attack=%22true%22other=%22whatever" title="" onclick=""></a></p>')
         })
 
         test('should not allow XSS on links href on the desktop app', () => {
             window.openInNewBrowser = () => null
-            const expectedHtml = '<p><a target="_blank" rel="noreferrer" href="%22xss-attack=%22true%22other=%22whatever" title="" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(event.target.href);"></a></p>'
+            const expectedHtml = '<p><a target="_blank" rel="noreferrer" href="%22xss-attack=%22true%22other=%22whatever" title="" onclick=" openInNewBrowser && openInNewBrowser(event.target.href);"></a></p>'
             expect(Utils.htmlFromMarkdown('[]("xss-attack="true"other="whatever)')).toBe(expectedHtml)
             window.openInNewBrowser = null
+        })
+    })
+
+    describe('countCheckboxesInMarkdown', () => {
+        test('should count checkboxes', () => {
+            const text = `
+                ## Header
+                - [x] one
+                - [ ] two
+                - [x] three
+            `.replace(/\n\s+/gm, '\n')
+            const checkboxes = Utils.countCheckboxesInMarkdown(text)
+            expect(checkboxes.total).toBe(3)
+            expect(checkboxes.checked).toBe(2)
         })
     })
 
@@ -130,6 +144,20 @@ describe('utils', () => {
             const previousYear = currentYear - 1
             const date = new Date(previousYear, 6, 9, 5, 35)
             expect(Utils.displayDateTime(date, intl)).toBe(`July 09, ${previousYear}, 5:35 AM`)
+        })
+    })
+
+    describe('compare versions', () => {
+        it('should return one if b > a', () => {
+            expect(Utils.compareVersions('0.9.4', '0.10.0')).toBe(1)
+        })
+
+        it('should return zero if a = b', () => {
+            expect(Utils.compareVersions('1.2.3', '1.2.3')).toBe(0)
+        })
+
+        it('should return minus one if b < a', () => {
+            expect(Utils.compareVersions('10.9.4', '10.9.2')).toBe(-1)
         })
     })
 })

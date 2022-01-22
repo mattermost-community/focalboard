@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 const exec = require('child_process').exec;
 
-const webpack = require('webpack');
-
 const path = require('path');
+
+const webpack = require('webpack');
 
 const tsTransformer = require('@formatjs/ts-transformer');
 
@@ -118,7 +118,7 @@ module.exports = {
                         options: {
                             name: '[name].[ext]',
                             outputPath: 'static',
-                            publicPath: '/plugins/focalboard/static/',
+                            publicPath: '/static/',
                         },
                     },
                     {

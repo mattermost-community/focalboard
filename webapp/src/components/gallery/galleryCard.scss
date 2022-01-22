@@ -76,6 +76,7 @@
         padding: 5px 10px;
         display: flex;
         overflow-wrap: anywhere;
+        font-weight: 600;
 
         .octo-icon {
             margin-right: 5px;
@@ -94,5 +95,9 @@
         .octo-icon {
             margin-right: 5px;
         }
+    }
+
+    .gallery-badges {
+        padding: 5px 10px;
     }
 }

@@ -11,6 +11,7 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/lib/pq v1.10.2
 	github.com/magiconair/properties v1.8.5 // indirect
+	github.com/mattermost/mattermost-plugin-api v0.0.21
 	github.com/mattermost/mattermost-server/v6 v6.0.0-20210913141218-bb659d03fde0
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
@@ -18,6 +19,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.11.0
 	github.com/rudderlabs/analytics-go v3.3.1+incompatible
+	github.com/sergi/go-diff v1.0.0
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
