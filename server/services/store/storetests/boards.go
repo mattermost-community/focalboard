@@ -381,11 +381,11 @@ func testPatchBoard(t *testing.T, store store.Store) {
 		columnCalculations := map[string]interface{}{"calc3": "val3"}
 
 		board := &model.Board{
-			ID:     boardID,
-			TeamID: "team-id",
-			Type:   model.BoardTypeOpen,
-			Properties: properties,
-			CardProperties: cardProperties,
+			ID:                 boardID,
+			TeamID:             "team-id",
+			Type:               model.BoardTypeOpen,
+			Properties:         properties,
+			CardProperties:     cardProperties,
 			ColumnCalculations: columnCalculations,
 		}
 
@@ -418,9 +418,9 @@ func testPatchBoard(t *testing.T, store store.Store) {
 		cardProperties := []map[string]interface{}{prop1, prop2, prop3}
 
 		board := &model.Board{
-			ID:     boardID,
-			TeamID: "team-id",
-			Type:   model.BoardTypeOpen,
+			ID:             boardID,
+			TeamID:         "team-id",
+			Type:           model.BoardTypeOpen,
 			CardProperties: cardProperties,
 		}
 

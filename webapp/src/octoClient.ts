@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {Block, BlockPatch} from './blocks/block'
-import {Board, BoardPatch, BoardMember} from './blocks/board'
+import {Board, BoardsAndBlocks, BoardPatch, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
 import {IUser, UserWorkspace} from './user'
@@ -314,6 +314,36 @@ class OctoClient {
         })
     }
 
+    async createBoardsAndBlocks(bab: BoardsAndBlocks): Promise<Response> {
+        Utils.log(`createBoardsAndBlocks: ${bab.boards.length} board(s) ${bab.blocks.length} block(s)`)
+        bab.boards.forEach((board: Board) => {
+            Utils.log(`\t Board ${board.id}, ${board.type}, ${board.title?.substr(0, 50) || ''}`)
+        })
+        bab.blocks.forEach((block: Block) => {
+            Utils.log(`\t Block ${block.id}, ${block.type}, ${block.title?.substr(0, 50) || ''}`)
+        })
+
+        const body = JSON.stringify(bab)
+        return fetch(this.getBaseURL() + '/api/v1/boards-and-blocks', {
+            method: 'POST',
+            headers: this.headers(),
+            body,
+        })
+    }
+
+    async deleteBoardsAndBlocks(boardIds: string[], blockIds: string[]): Promise<Response> {
+        Utils.log(`deleteBoardsAndBlocks: ${boardIds.length} board(s) ${blockIds.length} block(s)`)
+        Utils.log(`\t Boards ${boardIds.join(', ')}`)
+        Utils.log(`\t Blocks ${boardIds.join(', ')}`)
+
+        const body = JSON.stringify({boards: boardIds, blocks: blockIds})
+        return fetch(this.getBaseURL() + '/api/v1/boards-and-blocks', {
+            method: 'DELETE',
+            headers: this.headers(),
+            body,
+        })
+    }
+
     // Sharing
     async getSharing(rootId: string): Promise<ISharing | undefined> {
         const path = this.teamPath() + `/sharing/${rootId}`
@@ -526,6 +556,14 @@ class OctoClient {
             method: 'PATCH',
             headers: this.headers(),
             body,
+        })
+    }
+
+    async deleteBoard(boardId: string): Promise<Response> {
+        Utils.log(`deleteBoard: ${boardId}`)
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}`, {
+            method: 'DELETE',
+            headers: this.headers(),
         })
     }
 

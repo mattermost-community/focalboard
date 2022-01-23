@@ -1,13 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+
+import difference from 'lodash/difference'
+
 import {Utils, IDType} from '../utils'
 
 import {Block, createBlock} from './block'
 import {Card} from './card'
-
-// ----------------------------------------------------------------
-// -         NEW
-// ----------------------------------------------------------------
 
 const BoardTypeOpen = 'O'
 const BoardTypePrivate = 'P'
@@ -46,7 +45,7 @@ type BoardPatch = {
     updatedProperties?: Record<string, any>
     deletedProperties?: string[]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    updatedCardProperties?: Record<string, any>
+    updatedCardProperties?: IPropertyTemplate[]
     deletedCardProperties?: string[]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updatedColumnCalculations?: Record<string, any>
@@ -63,7 +62,10 @@ type BoardMember = {
     schemeViewer: boolean
 }
 
-// ----------------------------------------------------------------
+type BoardsAndBlocks = {
+    boards: Board[],
+    blocks: Block[],
+}
 
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
 
@@ -90,10 +92,6 @@ type BoardFields = {
     columnCalculations: Record<string, string>
 }
 
-// type Board = Block & {
-//     fields: BoardFields
-// }
-//
 function createBoard(board?: Board): Board {
     const now = Date.now()
     let cardProperties: IPropertyTemplate[] = []
@@ -121,7 +119,7 @@ function createBoard(board?: Board): Board {
     }
 
     return {
-        id: board?.id || '',
+        id: board?.id || Utils.createGuid(IDType.Board),
         teamId: board?.teamId || '',
         channelId: board?.channelId || '',
         createdBy: board?.createdBy || '',
@@ -146,10 +144,148 @@ type BoardGroup = {
     cards: Card[]
 }
 
+// getPropertiesDifference returns a list of the property IDs that are
+// contained in propsA but are not contained in propsB
+function getPropertiesDifference(propsA: IPropertyTemplate[], propsB: IPropertyTemplate[]): string[] {
+    const diff: string[] = []
+    propsA.forEach((val) => {
+        if (!propsB.find((p) => p.id === val.id)) {
+            diff.push(val.id)
+        }
+    })
+
+    return diff
+}
+
+// isPropertyEqual checks that both the contents of the property and
+// its options are equal
+function isPropertyEqual(propA: IPropertyTemplate, propB: IPropertyTemplate): boolean {
+    for (const val of Object.keys(propA)) {
+        if (val !== 'options' && (propA as any)[val] !== (propB as any)[val]) {
+            return false
+        }
+    }
+
+    if (propA.options.length !== propB.options.length) {
+        return false
+    }
+
+    for (const opt of propA.options) {
+        const optionB = propB.options.find((o) => o.id === opt.id)
+        if (!optionB) {
+            return false
+        }
+
+        for (const val of Object.keys(opt)) {
+            if ((opt as any)[val] !== (optionB as any)[val]) {
+                return false
+            }
+        }
+    }
+
+    return true
+}
+
+// createPatchesFromBoards creates two BoardPatch instances, one that
+// contains the delta to update the board and another one for the undo
+// action, in case it happens
+function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[] {
+    const newDeletedProperties = difference(Object.keys(newBoard.properties), Object.keys(oldBoard.properties))
+    const newDeletedCardProperties = getPropertiesDifference(newBoard.cardProperties, oldBoard.cardProperties)
+    const newDeletedColumnCalculations = difference(Object.keys(newBoard.columnCalculations), Object.keys(oldBoard.columnCalculations))
+
+    const newUpdatedProperties: Record<string, any> = {}
+    Object.keys(newBoard.properties).forEach((val) => {
+        if (oldBoard.properties[val] !== newBoard.properties[val]) {
+            newUpdatedProperties[val] = newBoard.properties[val]
+        }
+    })
+    const newUpdatedCardProperties: IPropertyTemplate[] = []
+    newBoard.cardProperties.forEach((val) => {
+
+        const oldCardProperty = oldBoard.cardProperties.find((o) => o.id === val.id)
+        if (!oldCardProperty || !isPropertyEqual(val, oldCardProperty)) {
+            newUpdatedCardProperties.push(val)
+        }
+    })
+    const newUpdatedColumnCalculations: Record<string, any> = {}
+    Object.keys(newBoard.columnCalculations).forEach((val) => {
+        if (oldBoard.columnCalculations[val] !== newBoard.columnCalculations[val]) {
+            newUpdatedColumnCalculations[val] = newBoard.columnCalculations[val]
+        }
+    })
+
+    const newData: Record<string, any> = {}
+    Object.keys(newBoard).forEach((val) => {
+        if (val !== 'properties' &&
+            val !== 'cardProperties' &&
+            val !== 'columnCalculations' &&
+            (oldBoard as any)[val] !== (newBoard as any)[val]) {
+            newData[val] = (newBoard as any)[val]
+        }
+    })
+
+    const oldDeletedProperties = difference(Object.keys(oldBoard.properties), Object.keys(newBoard.properties))
+    const oldDeletedCardProperties = getPropertiesDifference(oldBoard.cardProperties, newBoard.cardProperties)
+    const oldDeletedColumnCalculations = difference(Object.keys(oldBoard.columnCalculations), Object.keys(newBoard.columnCalculations))
+
+    const oldUpdatedProperties: Record<string, any> = {}
+    Object.keys(oldBoard.properties).forEach((val) => {
+        if (newBoard.properties[val] !== oldBoard.properties[val]) {
+            oldUpdatedProperties[val] = oldBoard.properties[val]
+        }
+    })
+    const oldUpdatedCardProperties: IPropertyTemplate[] = []
+    oldBoard.cardProperties.forEach((val) => {
+        const newCardProperty = newBoard.cardProperties.find((o) => o.id === val.id)
+        if (!newCardProperty || !isPropertyEqual(val, newCardProperty)) {
+            oldUpdatedCardProperties.push(val)
+        }
+    })
+    const oldUpdatedColumnCalculations: Record<string, any> = {}
+    Object.keys(oldBoard.columnCalculations).forEach((val) => {
+        if (newBoard.columnCalculations[val] !== oldBoard.columnCalculations[val]) {
+            oldUpdatedColumnCalculations[val] = oldBoard.columnCalculations[val]
+        }
+    })
+
+    const oldData: Record<string, any> = {}
+    Object.keys(oldBoard).forEach((val) => {
+        if (val !== 'properties' &&
+            val !== 'cardProperties' &&
+            val !== 'columnCalculations' &&
+            (newBoard as any)[val] !== (oldBoard as any)[val]) {
+            oldData[val] = (oldBoard as any)[val]
+        }
+    })
+
+    return [
+        {
+            ...newData,
+            updatedProperties: newUpdatedProperties,
+            deletedProperties: oldDeletedProperties,
+            updatedCardProperties: newUpdatedCardProperties,
+            deletedCardProperties: oldDeletedCardProperties,
+            updatedColumnCalculations: newUpdatedColumnCalculations,
+            deletedColumnCalculations: oldDeletedColumnCalculations,
+        },
+        {
+            ...oldData,
+            updatedProperties: oldUpdatedProperties,
+            deletedProperties: newDeletedProperties,
+            updatedCardProperties: oldUpdatedCardProperties,
+            deletedCardProperties: newDeletedCardProperties,
+            updatedColumnCalculations: oldUpdatedColumnCalculations,
+            deletedColumnCalculations: newDeletedColumnCalculations,
+        }
+    ]
+}
+
 export {
     Board,
     BoardPatch,
     BoardMember,
+    BoardsAndBlocks,
     PropertyType,
     IPropertyOption,
     IPropertyTemplate,
@@ -158,4 +294,5 @@ export {
     BoardTypes,
     BoardTypeOpen,
     BoardTypePrivate,
+    createPatchesFromBoards,
 }

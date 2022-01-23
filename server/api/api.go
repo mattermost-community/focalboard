@@ -242,8 +242,6 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.logger.Debug("AAAA")
-
 	auditRec := a.makeAuditRecord(r, "getBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("boardID", boardID)
@@ -252,17 +250,13 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("all", all)
 	auditRec.AddMeta("blockID", blockID)
 
-	a.logger.Debug("BBBB")
-
 	var blocks []model.Block
 	var block *model.Block
 	var err error
 	switch {
 	case all != "":
-		a.logger.Debug("CCCC")
 		blocks, err = a.app.GetBlocksForBoard(boardID)
 		if err != nil {
-			a.logger.Debug("DDDD")
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
 		}
@@ -281,7 +275,6 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			blocks = append(blocks, *block)
 		}
 	default:
-		a.logger.Debug("EEEE")
 		blocks, err = a.app.GetBlocks(boardID, parentID, blockType)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -1784,30 +1777,21 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
-	a.logger.Info("AAA")
-
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
 		return
 	}
 
-	a.logger.Info("BBB")
-
 	auditRec := a.makeAuditRecord(r, "getBoards", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("teamID", teamID)
 
-	a.logger.Info("CCC")
-
 	// retrieve boards list
 	boards, err := a.app.GetBoardsForUserAndTeam(userID, teamID)
 	if err != nil {
-		a.logger.Info("EEE")
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
-
-	a.logger.Info("DDD")
 
 	a.logger.Debug("GetBoards",
 		mlog.String("teamID", teamID),
@@ -1816,12 +1800,9 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(boards)
 	if err != nil {
-		a.logger.Info("GGG")
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
-
-	a.logger.Info("FFF")
 
 	// response
 	jsonBytesResponse(w, http.StatusOK, data)

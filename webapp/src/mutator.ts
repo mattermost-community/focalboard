@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
-import {Board, IPropertyOption, IPropertyTemplate, PropertyType, createBoard} from './blocks/board'
+import {Board, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyType, createBoard, createPatchesFromBoards} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {FilterGroup} from './blocks/filterGroup'
@@ -153,44 +153,51 @@ class Mutator {
         )
     }
 
-    async insertBoard(board: Board, description = 'add', afterRedo?: (board: Board) => Promise<void>, beforeUndo?: (board: Board) => Promise<void>): Promise<Board> {
-        // ToDo: implement
-        // return undoManager.perform(
-        //     async () => {
-        //         const res = await octoClient.insertBlock(block)
-        //         const jsonres = await res.json()
-        //         const newBlock = jsonres[0] as Block
-        //         await afterRedo?.(newBlock)
-        //         return newBlock
-        //     },
-    //     async (newBlock: Block) => {
-        //         await beforeUndo?.(newBlock)
-        //         await octoClient.deleteBlock(newBlock.id)
-        //     },
-    //     description,
-    //     this.undoGroupId,
-    // )
-        return createBoard()
+    async createBoardsAndBlocks(bab: BoardsAndBlocks, description = 'add', afterRedo?: (bab: BoardsAndBlocks) => Promise<void>, beforeUndo?: (bab: BoardsAndBlocks) => Promise<void>): Promise<BoardsAndBlocks> {
+        return undoManager.perform(
+            async () => {
+                const res = await octoClient.createBoardsAndBlocks(bab)
+                const newBab = (await res.json()) as BoardsAndBlocks
+                await afterRedo?.(newBab)
+                return newBab
+            },
+            async (newBab: BoardsAndBlocks) => {
+                await beforeUndo?.(newBab)
+
+                const boardIds = newBab.boards.map(b => b.id)
+                const blockIds = newBab.blocks.map(b => b.id)
+                await octoClient.deleteBoardsAndBlocks(boardIds, blockIds)
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
-    async updateBoard(boardId: string, newBoard: Board, oldBoard: Board, description: string): Promise<void> {
-        // ToDo: implement
-
-        // const [updatePatch, undoPatch] = createPatchesFromBlocks(newBlock, oldBlock)
-        // await undoManager.perform(
-        //     async () => {
-        //         await octoClient.patchBlock(boardId, newBlock.id, updatePatch)
-        //     },
-    //     async () => {
-        //         await octoClient.patchBlock(boardId, oldBlock.id, undoPatch)
-        //     },
-    //     description,
-    //     this.undoGroupId,
-    // )
+    async updateBoard(newBoard: Board, oldBoard: Board, description: string): Promise<void> {
+        const [updatePatch, undoPatch] = createPatchesFromBoards(newBoard, oldBoard)
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBoard(newBoard.id, updatePatch)
+            },
+            async () => {
+                await octoClient.patchBoard(oldBoard.id, undoPatch)
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
     async deleteBoard(board: Board, description?: string, beforeRedo?: () => Promise<void>, afterUndo?: () => Promise<void>) {
-        // ToDo: implement
+        await undoManager.perform(
+            async () => {
+                await octoClient.deleteBoard(board.id)
+            },
+            async () => {
+                await octoClient.createBoard(board)
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
     async changeBlockTitle(boardId: string, blockId: string, oldTitle: string, newTitle: string, description = 'change block title') {
@@ -406,7 +413,7 @@ class Mutator {
         const newBoard = createBoard(board)
         newBoard.cardProperties = newValue
 
-        await this.updateBoard(board.id, newBoard, board, 'reorder properties')
+        await this.updateBoard(newBoard, board, 'reorder properties')
     }
 
     async deleteProperty(board: Board, views: BoardView[], cards: Card[], propertyId: string) {
@@ -436,7 +443,7 @@ class Mutator {
         })
 
         // ToDo: both operations should go in the same endpoint, as one tx
-        await this.updateBoard(board.id, newBoard, board, 'delete property')
+        await this.updateBoard(newBoard, board, 'delete property')
         await this.updateBlocks(board.id, changedBlocks, oldBlocks, 'delete property')
     }
 
@@ -449,7 +456,7 @@ class Mutator {
         const newTemplate = newBoard.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         newTemplate.options.push(option)
 
-        await this.updateBoard(board.id, newBoard, board, description)
+        await this.updateBoard(newBoard, board, description)
     }
 
     async deletePropertyOption(board: Board, template: IPropertyTemplate, option: IPropertyOption) {
@@ -457,7 +464,7 @@ class Mutator {
         const newTemplate = newBoard.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         newTemplate.options = newTemplate.options.filter((o) => o.id !== option.id)
 
-        await this.updateBoard(board.id, newBoard, board, 'delete option')
+        await this.updateBoard(newBoard, board, 'delete option')
     }
 
     async changePropertyOptionOrder(board: Board, template: IPropertyTemplate, option: IPropertyOption, destIndex: number) {
@@ -468,7 +475,7 @@ class Mutator {
         const newTemplate = newBoard.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         newTemplate.options.splice(destIndex, 0, newTemplate.options.splice(srcIndex, 1)[0])
 
-        await this.updateBoard(board.id, newBoard, board, 'reorder options')
+        await this.updateBoard(newBoard, board, 'reorder options')
     }
 
     async changePropertyOptionValue(board: Board, propertyTemplate: IPropertyTemplate, option: IPropertyOption, value: string) {
@@ -477,7 +484,7 @@ class Mutator {
         const newOption = newTemplate.options.find((o) => o.id === option.id)!
         newOption.value = value
 
-        await this.updateBoard(board.id, newBoard, board, 'rename option')
+        await this.updateBoard(newBoard, board, 'rename option')
 
         return newBoard
     }
@@ -487,7 +494,7 @@ class Mutator {
         const newTemplate = newBoard.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         const newOption = newTemplate.options.find((o) => o.id === option.id)!
         newOption.color = color
-        await this.updateBoard(board.id, newBoard, board, 'change option color')
+        await this.updateBoard(newBoard, board, 'change option color')
     }
 
     async changePropertyValue(boardId: string, card: Card, propertyId: string, value?: string | string[], description = 'change property') {
