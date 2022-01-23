@@ -101,7 +101,7 @@ describe('components/emptyCenterPanel', () => {
             const divNewTemplate = container.querySelector('div.button.new-template')
             expect(divNewTemplate).not.toBeNull()
             userEvent.click(divNewTemplate!)
-            expect(mockedMutator.insertBlocks).toBeCalledTimes(1)
+            expect(mockedMutator.addEmptyBoardTemplate).toBeCalledTimes(1)
         })
         test('return emptyCenterPanel and click empty board', () => {
             render(wrapDNDIntl(
@@ -113,7 +113,7 @@ describe('components/emptyCenterPanel', () => {
             const divEmptyboard = screen.getByText('Start with an Empty Board').parentElement
             expect(divEmptyboard).not.toBeNull()
             userEvent.click(divEmptyboard!)
-            expect(mockedMutator.insertBlocks).toBeCalledTimes(1)
+            expect(mockedMutator.addEmptyBoard).toBeCalledTimes(1)
         })
         test('return emptyCenterPanel and click to add board from template', async () => {
             render(wrapDNDIntl(
@@ -126,7 +126,8 @@ describe('components/emptyCenterPanel', () => {
             expect(divAddBoard).not.toBeNull()
             userEvent.click(divAddBoard!)
             await waitFor(async () => {
-                expect(mockedMutator.duplicateBoard).toBeCalledTimes(1)
+                expect(mockedMutator.addBoardFromTemplate).toBeCalledTimes(1)
+                expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(expect.anything(), expect.anything(), expect.anything(), expect.anything())
             })
         })
         test('return emptyCenterPanel and click to add board from global template', async () => {
@@ -140,7 +141,8 @@ describe('components/emptyCenterPanel', () => {
             expect(divAddBoard).not.toBeNull()
             userEvent.click(divAddBoard!)
             await waitFor(async () => {
-                expect(mockedMutator.duplicateFromRootBoard).toBeCalledTimes(1)
+                expect(mockedMutator.addBoardFromTemplate).toBeCalledTimes(1)
+                expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(expect.anything(), expect.anything(), expect.anything(), expect.anything(), true)
             })
         })
     })

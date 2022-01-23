@@ -202,19 +202,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
         class="octo-spacer"
       />
       <div
-        class="SidebarAddBoardMenu"
+        class="add-board"
       >
-        <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
-        >
-          <div
-            class="menu-entry"
-          >
-            + Add board
-          </div>
-        </div>
+        + Add board
       </div>
       <div
         class="SidebarSettingsMenu"
@@ -1362,19 +1352,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
         class="octo-spacer"
       />
       <div
-        class="SidebarAddBoardMenu"
+        class="add-board"
       >
-        <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
-        >
-          <div
-            class="menu-entry"
-          >
-            + Add board
-          </div>
-        </div>
+        + Add board
       </div>
       <div
         class="SidebarSettingsMenu"
