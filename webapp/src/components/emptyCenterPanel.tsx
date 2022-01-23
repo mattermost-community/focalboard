@@ -8,14 +8,14 @@ import {getCurrentWorkspace} from '../store/workspace'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {Utils} from '../utils'
 import {Board} from '../blocks/board'
+import mutator from '../mutator'
 import {getGlobalTemplates, fetchGlobalTemplates} from '../store/globalTemplates'
 import {getSortedTemplates} from '../store/boards'
 import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
 import octoClient from '../octoClient'
 
-import {addBoardTemplateClicked, addBoardClicked} from './boardTemplateSelector/boardTemplateSelector'
-import {addBoardFromTemplate, BoardTemplateButtonMenu} from './sidebar/boardTemplateMenuItem'
+import {BoardTemplateButtonMenu} from './sidebar/boardTemplateMenuItem'
 
 import './emptyCenterPanel.scss'
 
@@ -64,15 +64,15 @@ const EmptyCenterPanel = React.memo(() => {
         }
     }, [octoClient.workspaceId])
 
-    const showBoard = useCallback((boardId) => {
+    const showBoard = useCallback(async (boardId) => {
         const params = {...match.params, boardId: boardId || ''}
         delete params.viewId
         const newPath = generatePath(match.path, params)
         history.push(newPath)
     }, [match, history])
 
-    const newTemplateClicked = () => addBoardTemplateClicked(showBoard, intl)
-    const emptyBoardClicked = () => addBoardClicked(showBoard, intl)
+    const newTemplateClicked = () => mutator.addEmptyBoardTemplate(intl, showBoard, () => Promise.resolve())
+    const emptyBoardClicked = () => mutator.addEmptyBoard(intl, showBoard, () => Promise.resolve())
 
     if (!Utils.isFocalboardPlugin()) {
         return (
@@ -121,7 +121,7 @@ const EmptyCenterPanel = React.memo(() => {
                                 title={template.title}
                                 buttonIcon={template.fields.icon}
                                 readonly={false}
-                                onClick={() => addBoardFromTemplate(intl, showBoard, template.id)}
+                                onClick={() => mutator.addBoardFromTemplate(intl, showBoard, () => Promise.resolve(), template.id)}
                                 showBoard={showBoard}
                                 boardTemplate={template}
                             />
@@ -134,7 +134,7 @@ const EmptyCenterPanel = React.memo(() => {
                                 title={template.title}
                                 buttonIcon={template.fields.icon}
                                 readonly={true}
-                                onClick={() => addBoardFromTemplate(intl, showBoard, template.id, undefined, true)}
+                                onClick={() => mutator.addBoardFromTemplate(intl, showBoard, () => Promise.resolve(), template.id, true)}
                             />
                         ),
                     )}

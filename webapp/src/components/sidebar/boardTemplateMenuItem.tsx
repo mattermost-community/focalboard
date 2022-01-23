@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {useIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import {Board} from '../../blocks/board'
 import mutator from '../../mutator'
@@ -11,28 +11,6 @@ import EditIcon from '../../widgets/icons/edit'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
-
-export const addBoardFromTemplate = async (intl: IntlShape, showBoard: (id: string) => void, boardTemplateId: string, activeBoardId?: string, global = false) => {
-    const oldBoardId = activeBoardId
-    const afterRedo = async (newBoardId: string) => {
-        showBoard(newBoardId)
-    }
-    const beforeUndo = async () => {
-        if (oldBoardId) {
-            showBoard(oldBoardId)
-        }
-    }
-    const asTemplate = false
-    const actionDescription = intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'})
-
-    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId})
-    if (global) {
-        await mutator.duplicateFromRootBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
-    } else {
-        await mutator.duplicateBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
-    }
-}
 
 type ButtonProps = {
     showBoard: (id: string) => void
@@ -71,7 +49,7 @@ export const BoardTemplateButtonMenu = React.memo((props: ButtonProps) => {
 type Props = {
     boardTemplate: Board
     isGlobal: boolean
-    showBoard: (id: string) => void
+    showBoard: (id: string) => Promise<void>
     activeBoardId?: string
 }
 
@@ -88,7 +66,7 @@ const BoardTemplateMenuItem = React.memo((props: Props) => {
             name={displayName}
             icon={<div className='Icon'>{boardTemplate.fields.icon}</div>}
             onClick={() => {
-                addBoardFromTemplate(intl, showBoard, boardTemplate.id || '', activeBoardId, isGlobal)
+                mutator.addBoardFromTemplate(intl, showBoard, () => showBoard(activeBoardId || ''), boardTemplate.id || '', isGlobal)
             }}
             rightIcon={!isGlobal &&
                 <BoardTemplateButtonMenu

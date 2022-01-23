@@ -1,5 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+
+import {IntlShape} from 'react-intl'
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType, createBoard} from './blocks/board'
@@ -804,6 +806,77 @@ class Mutator {
             beforeUndo,
         )
         return [createdBlocks, createdBlocks[0].id]
+    }
+
+    async addBoardFromTemplate(
+        intl: IntlShape,
+        afterRedo: (id: string) => Promise<void>,
+        beforeUndo: () => Promise<void>,
+        boardTemplateId: string,
+        global = false,
+    ): Promise<[Block[], string]> {
+        const asTemplate = false
+        const actionDescription = intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'})
+
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId})
+        if (global) {
+            return mutator.duplicateFromRootBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
+        }
+        return mutator.duplicateBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
+    }
+
+    async addEmptyBoard(
+        intl: IntlShape,
+        afterRedo: (id: string) => Promise<void>,
+        beforeUndo: () => Promise<void>,
+    ): Promise<Block[]> {
+        const board = createBoard()
+        board.rootId = board.id
+
+        const view = createBoardView()
+        view.fields.viewType = 'board'
+        view.parentId = board.id
+        view.rootId = board.rootId
+        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
+
+        return mutator.insertBlocks(
+            [board, view],
+            'add board',
+            async (newBlocks: Block[]) => {
+                const newBoardId = newBlocks[0].id
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoardId})
+                await afterRedo(newBoardId)
+            },
+            beforeUndo,
+        )
+    }
+
+    async addEmptyBoardTemplate(
+        intl: IntlShape,
+        afterRedo: (id: string) => Promise<void>,
+        beforeUndo: () => Promise<void>,
+    ): Promise<Block[]> {
+        const boardTemplate = createBoard()
+        boardTemplate.rootId = boardTemplate.id
+        boardTemplate.fields.isTemplate = true
+        boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled Template'})
+
+        const view = createBoardView()
+        view.fields.viewType = 'board'
+        view.parentId = boardTemplate.id
+        view.rootId = boardTemplate.rootId
+        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
+
+        return mutator.insertBlocks(
+            [boardTemplate, view],
+            'add board template',
+            async (newBlocks: Block[]) => {
+                const newBoardId = newBlocks[0].id
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardTemplate, {board: newBoardId})
+                afterRedo(newBoardId)
+            },
+            beforeUndo,
+        )
     }
 
     // Other methods
