@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 
 import {IntlShape} from 'react-intl'
+
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType, createBoard} from './blocks/board'

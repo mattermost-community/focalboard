@@ -6,12 +6,14 @@
     left: 0;
     width: 100%;
     height: 100%;
+
     .toolbar {
         display: flex;
         width: 100%;
         justify-content: flex-end;
         padding: 24px;
     }
+
     .header {
         width: 100%;
         display: flex;
@@ -23,33 +25,40 @@
             text-align: center;
         }
     }
-    
+
     .templates {
         display: flex;
         width: 100%;
         padding: 0 10%;
         justify-content: center;
+
         .templates-list {
             margin-right: 32px;
             min-width: 200px;
-            .template-item, .new-template {
+
+            .template-item,
+            .new-template {
                 display: flex;
                 align-items: center;
                 padding: 8px 16px;
                 margin-bottom: 4px;
                 border-radius: var(--default-rad);
                 cursor: pointer;
+
                 .template-icon {
                     margin-right: 5px;
                 }
+
                 &.active {
                     background-color: rgba(var(--button-bg-rgb), 0.2);
                 }
+
                 &:hover {
-                    background-color: rgba(var(--center-channel-color-rgb), 0.1)
+                    background-color: rgba(var(--center-channel-color-rgb), 0.1);
                 }
             }
         }
+
         .template-preview-box {
             position: relative;
             background-color: rgb(var(--center-channel-bg-rgb));
@@ -58,17 +67,20 @@
             border-radius: var(--modal-rad);
             overflow: hidden;
             width: 670px;
+
             .buttons {
                 display: flex;
                 position: absolute;
                 bottom: 10px;
                 width: 100%;
                 justify-content: center;
+
                 .Button {
                     padding: 13px 20px;
                     height: 40px;
                     margin-right: 8px;
                 }
+
                 .empty-board {
                     margin-left: 8px;
                     border-radius: var(--default-rad);
