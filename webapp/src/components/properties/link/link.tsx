@@ -55,7 +55,9 @@ const URLProperty = (props: Props): JSX.Element => {
                         setIsEditing(false)
                         props.onCancel()
                     }}
-                    onFocus={() => setIsEditing(true)}
+                    onFocus={() => {
+                        setIsEditing(true)
+                    }}
                     validator={props.validator}
                 />
             </div>
