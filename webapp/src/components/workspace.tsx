@@ -90,14 +90,14 @@ function CenterContent(props: Props) {
         <BoardTemplateSelector
             title={
                 <FormattedMessage
-                    id='EmptyCenterPanel.plugin.no-content-title'
+                    id='BoardTemplateSelector.plugin.no-content-title'
                     defaultMessage='Create a Board in {workspaceName}'
                     values={{workspaceName: workspace?.title}}
                 />
             }
             description={
                 <FormattedMessage
-                    id='EmptyCenterPanel.plugin.no-content-description'
+                    id='BoardTemplateSelector.plugin.no-content-description'
                     defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of "{workspaceName}" will have access to boards created here.'
                     values={{
                         workspaceName: <b>{workspace?.title}</b>,

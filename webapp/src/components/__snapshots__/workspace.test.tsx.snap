@@ -1128,7 +1128,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
 </div>
 `;
 
-exports[`src/components/workspace return workspace with EmptyCenterPanel component 1`] = `
+exports[`src/components/workspace return workspace with BoardTemplateSelector component 1`] = `
 <div>
   <div
     class="Workspace"
@@ -1137,12 +1137,76 @@ exports[`src/components/workspace return workspace with EmptyCenterPanel compone
       class="mainFrame"
     >
       <div
-        class="EmptyCenterPanel"
+        class="BoardTemplateSelector"
       >
         <div
-          class="Hint"
+          class="toolbar"
+        />
+        <div
+          class="header"
         >
-          Add or select a board from the sidebar to get started.
+          <h1
+            class="title"
+          >
+            Create a Board in Workspace 1
+          </h1>
+          <p
+            class="description"
+          >
+            Add a board to the sidebar using any of the templates defined below or start from scratch.
+            <br />
+             Members of "
+            <b>
+              Workspace 1
+            </b>
+            " will have access to boards created here.
+          </p>
+        </div>
+        <div
+          class="templates"
+        >
+          <div
+            class="templates-list"
+          >
+            <div
+              class="new-template"
+            >
+              <span
+                class="template-icon"
+              >
+                <i
+                  class="CompassIcon icon-plus AddIcon"
+                />
+              </span>
+              <span
+                class="template-name"
+              >
+                New template
+              </span>
+            </div>
+          </div>
+          <div
+            class="template-preview-box"
+          >
+            <div
+              class="buttons"
+            >
+              <button
+                type="button"
+              >
+                <span>
+                  Use this template
+                </span>
+              </button>
+              <button
+                type="button"
+              >
+                <span>
+                  Create empty board
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
