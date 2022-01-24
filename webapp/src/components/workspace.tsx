@@ -4,6 +4,7 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
+import {getCurrentWorkspace} from '../store/workspace'
 import {getCurrentBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
@@ -16,7 +17,6 @@ import {ClientConfig} from '../config/clientConfig'
 import {Utils} from '../utils'
 
 import CenterPanel from './centerPanel'
-import EmptyCenterPanel from './emptyCenterPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 
 import Sidebar from './sidebar/sidebar'
@@ -27,6 +27,7 @@ type Props = {
 }
 
 function CenterContent(props: Props) {
+    const workspace = useAppSelector(getCurrentWorkspace)
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const board = useAppSelector(getCurrentBoard)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
@@ -86,7 +87,25 @@ function CenterContent(props: Props) {
     }
 
     return (
-        <EmptyCenterPanel/>
+        <BoardTemplateSelector
+            title={
+                <FormattedMessage
+                    id='EmptyCenterPanel.plugin.no-content-title'
+                    defaultMessage='Create a Board in {workspaceName}'
+                    values={{workspaceName: workspace?.title}}
+                />
+            }
+            description={
+                <FormattedMessage
+                    id='EmptyCenterPanel.plugin.no-content-description'
+                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of "{workspaceName}" will have access to boards created here.'
+                    values={{
+                        workspaceName: <b>{workspace?.title}</b>,
+                        lineBreak: <br/>,
+                    }}
+                />
+            }
+        />
     )
 }
 

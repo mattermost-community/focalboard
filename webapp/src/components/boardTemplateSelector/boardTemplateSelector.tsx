@@ -24,13 +24,15 @@ import BoardTemplateSelectorPreview from './boardTemplateSelectorPreview'
 import './boardTemplateSelector.scss'
 
 type Props = {
-    onClose: () => void
+    title?: React.ReactNode
+    description?: React.ReactNode
+    onClose?: () => void
 }
 
 const BoardTemplateSelector = React.memo((props: Props) => {
     const globalTemplates = useAppSelector<Board[]>(getGlobalTemplates) || []
     const currentBoard = useAppSelector<Board>(getCurrentBoard) || null
-    const {onClose} = props
+    const {title, description, onClose} = props
     const dispatch = useAppDispatch()
     const intl = useIntl()
     const history = useHistory()
@@ -42,8 +44,10 @@ const BoardTemplateSelector = React.memo((props: Props) => {
         delete params.viewId
         const newPath = generatePath(match.path, params)
         history.push(newPath)
-        onClose()
-    }, [match, history])
+        if (onClose) {
+            onClose()
+        }
+    }, [match, history, onClose])
 
     useEffect(() => {
         if (octoClient.workspaceId !== '0' && globalTemplates.length === 0) {
@@ -70,24 +74,29 @@ const BoardTemplateSelector = React.memo((props: Props) => {
     return (
         <div className='BoardTemplateSelector'>
             <div className='toolbar'>
-                <IconButton
-                    onClick={onClose}
-                    icon={<CloseIcon/>}
-                    title={'Close'}
-                />
+                {onClose &&
+                    <IconButton
+                        onClick={onClose}
+                        icon={<CloseIcon/>}
+                        title={'Close'}
+                    />}
             </div>
             <div className='header'>
                 <h1 className='title'>
-                    <FormattedMessage
-                        id='BoardTemplateSelector.title'
-                        defaultMessage='Create a Board'
-                    />
+                    {title || (
+                        <FormattedMessage
+                            id='BoardTemplateSelector.title'
+                            defaultMessage='Create a Board'
+                        />
+                    )}
                 </h1>
                 <p className='description'>
-                    <FormattedMessage
-                        id='BoardTemplateSelector.description'
-                        defaultMessage='Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.'
-                    />
+                    {description || (
+                        <FormattedMessage
+                            id='BoardTemplateSelector.description'
+                            defaultMessage='Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.'
+                        />
+                    )}
                 </p>
             </div>
 

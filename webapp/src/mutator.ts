@@ -2,12 +2,15 @@
 // See LICENSE.txt for license information.
 
 import {IntlShape} from 'react-intl'
+import {batch} from 'react-redux'
 
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType, createBoard} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
+import {ContentBlock} from './blocks/contentBlock'
+import {CommentBlock} from './blocks/commentBlock'
 import {FilterGroup} from './blocks/filterGroup'
 import octoClient, {OctoClient} from './octoClient'
 import {OctoUtils} from './octoUtils'
@@ -15,6 +18,22 @@ import undoManager from './undomanager'
 import {Utils, IDType} from './utils'
 import {UserSettings} from './userSettings'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/telemetryClient'
+import store from './store'
+import {updateBoards} from './store/boards'
+import {updateViews} from './store/views'
+import {updateCards} from './store/cards'
+import {updateComments} from './store/comments'
+import {updateContents} from './store/contents'
+
+function updateAllBlocks(blocks: Block[]) {
+    return batch(() => {
+        store.dispatch(updateBoards(blocks.filter((b: Block) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
+        store.dispatch(updateViews(blocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+        store.dispatch(updateCards(blocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
+        store.dispatch(updateComments(blocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
+        store.dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
+    })
+}
 
 //
 // The Mutator is used to make all changes to server state
@@ -118,6 +137,7 @@ class Mutator {
             async () => {
                 const res = await octoClient.insertBlocks(blocks)
                 const newBlocks = (await res.json()) as Block[]
+                updateAllBlocks(newBlocks)
                 await afterRedo?.(newBlocks)
                 return newBlocks
             },
@@ -769,11 +789,13 @@ class Mutator {
             newBlocks,
             description,
             async (respBlocks: Block[]) => {
-                await afterRedo?.(respBlocks[0].id)
+                const board = respBlocks.find((b) => b.type === 'board')
+                await afterRedo?.(board?.id || '')
             },
             beforeUndo,
         )
-        return [createdBlocks, createdBlocks[0].id]
+        const board = createdBlocks.find((b: Block) => b.type === 'board')
+        return [createdBlocks, board.id]
     }
 
     async duplicateFromRootBoard(
@@ -802,11 +824,13 @@ class Mutator {
             newBlocks,
             description,
             async (respBlocks: Block[]) => {
-                await afterRedo?.(respBlocks[0].id)
+                const board = respBlocks.find((b) => b.type === 'board')
+                await afterRedo?.(board?.id || '')
             },
             beforeUndo,
         )
-        return [createdBlocks, createdBlocks[0].id]
+        const board = createdBlocks.find((b: Block) => b.type === 'board')
+        return [createdBlocks, board.id]
     }
 
     async addBoardFromTemplate(
@@ -844,9 +868,9 @@ class Mutator {
             [board, view],
             'add board',
             async (newBlocks: Block[]) => {
-                const newBoardId = newBlocks[0].id
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoardId})
-                await afterRedo(newBoardId)
+                const newBoard = newBlocks.find((b) => b.type === 'board')
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoard?.id})
+                await afterRedo(newBoard?.id || '')
             },
             beforeUndo,
         )
@@ -872,9 +896,9 @@ class Mutator {
             [boardTemplate, view],
             'add board template',
             async (newBlocks: Block[]) => {
-                const newBoardId = newBlocks[0].id
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardTemplate, {board: newBoardId})
-                afterRedo(newBoardId)
+                const newBoard = newBlocks.find((b) => b.type === 'board')
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardTemplate, {board: newBoard?.id})
+                afterRedo(newBoard?.id || '')
             },
             beforeUndo,
         )
