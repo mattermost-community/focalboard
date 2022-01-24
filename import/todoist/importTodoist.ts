@@ -4,11 +4,11 @@ import * as fs from 'fs'
 import minimist from 'minimist'
 import {exit} from 'process'
 import {ArchiveUtils} from '../../webapp/src/blocks/archive'
-import {IBlock} from '../../webapp/src/blocks/block'
-import {IPropertyOption, IPropertyTemplate, MutableBoard} from '../../webapp/src/blocks/board'
-import {MutableBoardView} from '../../webapp/src/blocks/boardView'
-import {MutableCard} from '../../webapp/src/blocks/card'
-import {MutableTextBlock} from '../../webapp/src/blocks/textBlock'
+import {Block} from '../../webapp/src/blocks/block'
+import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
+import {createBoardView} from '../../webapp/src/blocks/boardView'
+import {createCard} from '../../webapp/src/blocks/card'
+import {createTextBlock} from '../../webapp/src/blocks/textBlock'
 import {Item, Project, Section, Todoist} from './todoist'
 import {Utils} from './utils'
 
@@ -56,7 +56,7 @@ function main() {
     const inputData = fs.readFileSync(inputFile, 'utf-8')
     const input = JSON.parse(inputData) as Todoist
 
-    const blocks = [] as IBlock[]
+    const blocks = [] as Block[]
 
     input.projects.forEach(project => {
         blocks.push(...convert(input, project))
@@ -70,19 +70,19 @@ function main() {
     console.log(`Exported to ${outputFile}`)
 }
 
-function convert(input: Todoist, project: Project): IBlock[] {
-    const blocks: IBlock[] = []
+function convert(input: Todoist, project: Project): Block[] {
+    const blocks: Block[] = []
 
     if (project.name === 'Inbox') {
         return blocks
     }
 
     // Board
-    const board = new MutableBoard()
+    const board = createBoard()
     console.log(`Board: ${project.name}`)
     board.rootId = board.id
     board.title = project.name
-    board.description = project.name
+    board.fields.description = project.name
 
     // Convert lists (columns) to a Select property
     const optionIdMap = new Map<string, string>()
@@ -114,13 +114,13 @@ function convert(input: Todoist, project: Project): IBlock[] {
         type: 'select',
         options
     }
-    board.cardProperties = [cardProperty]
+    board.fields.cardProperties = [cardProperty]
     blocks.push(board)
 
     // Board view
-    const view = new MutableBoardView()
+    const view = createBoardView()
     view.title = 'Board View'
-    view.viewType = 'board'
+    view.fields.viewType = 'board'
     view.rootId = board.id
     view.parentId = board.id
     blocks.push(view)
@@ -128,7 +128,7 @@ function convert(input: Todoist, project: Project): IBlock[] {
     // Cards
     const cards = getProjectCards(input, project)
     cards.forEach(card => {
-        const outCard = new MutableCard()
+        const outCard = createCard()
         outCard.title = card.content
         outCard.rootId = board.id
         outCard.parentId = board.id
@@ -138,7 +138,7 @@ function convert(input: Todoist, project: Project): IBlock[] {
         const optionId = optionIdMap.get(String(cardSectionId))
 
         if (optionId) {
-            outCard.properties[cardProperty.id] = optionId
+            outCard.fields.properties[cardProperty.id] = optionId
         } else {
             console.warn(`Invalid idList: ${cardSectionId} for card: ${card.content}`)
         }
@@ -146,13 +146,13 @@ function convert(input: Todoist, project: Project): IBlock[] {
         blocks.push(outCard)
 
         // console.log(`\t${card.desc}`)
-        const text = new MutableTextBlock()
+        const text = createTextBlock()
         text.title = getCardDescription(input, card).join('\n\n')
         text.rootId = board.id
         text.parentId = outCard.id
         blocks.push(text)
 
-        outCard.contentOrder = [text.id]
+        outCard.fields.contentOrder = [text.id]
     })
 
     return blocks

@@ -2,9 +2,12 @@
     "extends": "../tsconfig.json",
     "compilerOptions": {
         "noEmit": true,
-        "types": ["cypress"]
+        "types": [
+            "cypress",
+            "@testing-library/cypress"
+        ]
     },
     "include": [
         "**/*.ts"
-      ]
+    ]
 }

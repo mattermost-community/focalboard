@@ -1,0 +1,1316 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/cardDialog already following card 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back undefined"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            class="cardToolbar"
+          >
+            <button
+              type="button"
+            >
+              <span>
+                Following
+              </span>
+            </button>
+          </div>
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              class="Button IconButton IconButton--large"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="CardDetail content"
+        >
+          <div
+            class="BlockIconSelector"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <div
+                class="octo-icon size-l"
+              >
+                <span>
+                  i
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="EditableAreaWrap"
+          >
+            <textarea
+              class="EditableArea Editable title"
+              height="0"
+              placeholder="Untitled"
+              rows="1"
+              spellcheck="true"
+              title="title"
+            >
+              title
+            </textarea>
+            <div
+              class="EditableAreaContainer"
+            >
+              <textarea
+                aria-hidden="true"
+                class="EditableAreaReference Editable title"
+                dir="auto"
+                disabled=""
+                rows="1"
+              >
+                title
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="octo-propertylist CardDetailProperties"
+          >
+            <div
+              class="octo-propertyname add-property"
+            >
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  type="button"
+                >
+                  <span>
+                    + Add a property
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div
+            class="CommentsList"
+          >
+            <div
+              class="CommentsList__new"
+            >
+              <img
+                class="comment-avatar"
+              />
+              <div
+                class="MarkdownEditor octo-editor newcomment "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                  data-testid="preview-element"
+                />
+                <div
+                  class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+                >
+                  <div
+                    class="DraftEditor-root"
+                  >
+                    <div
+                      class="DraftEditor-editorContainer"
+                    >
+                      <div
+                        aria-autocomplete="list"
+                        aria-expanded="false"
+                        class="notranslate public-DraftEditor-content"
+                        contenteditable="true"
+                        role="combobox"
+                        spellcheck="false"
+                        style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                      >
+                        <div
+                          data-contents="true"
+                        >
+                          <div
+                            class=""
+                            data-block="true"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
+                          >
+                            <div
+                              class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-offset-key="123-0-0"
+                              >
+                                <br
+                                  data-text="true"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <hr
+              class="CommentsList__divider"
+            />
+          </div>
+        </div>
+        <div
+          class="CardDetail content fullwidth content-blocks"
+        >
+          <div
+            class="octo-content CardDetailContents"
+          >
+            <div
+              class="octo-block"
+            >
+              <div
+                class="octo-block-margin"
+              />
+              <div
+                class="MarkdownEditor octo-editor  "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                  data-testid="preview-element"
+                />
+                <div
+                  class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+                >
+                  <div
+                    class="DraftEditor-root"
+                  >
+                    <div
+                      class="DraftEditor-editorContainer"
+                    >
+                      <div
+                        aria-autocomplete="list"
+                        aria-expanded="false"
+                        class="notranslate public-DraftEditor-content"
+                        contenteditable="true"
+                        role="combobox"
+                        spellcheck="false"
+                        style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                      >
+                        <div
+                          data-contents="true"
+                        >
+                          <div
+                            class=""
+                            data-block="true"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
+                          >
+                            <div
+                              class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-offset-key="123-0-0"
+                              >
+                                <br
+                                  data-text="true"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="CardDetailContentsMenu content add-content"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <span>
+                  Add content
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDialog return a cardDialog readonly 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back undefined"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            class="cardToolbar"
+          >
+            <button
+              type="button"
+            >
+              <span>
+                Follow
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="CardDetail content"
+        >
+          <div
+            class="BlockIconSelector"
+          >
+            <div
+              class="octo-icon size-l readonly"
+            >
+              <span>
+                i
+              </span>
+            </div>
+          </div>
+          <div
+            class="EditableAreaWrap"
+          >
+            <textarea
+              class="EditableArea Editable readonly title"
+              height="0"
+              placeholder="Untitled"
+              readonly=""
+              rows="1"
+              spellcheck="true"
+              title="title"
+            >
+              title
+            </textarea>
+            <div
+              class="EditableAreaContainer"
+            >
+              <textarea
+                aria-hidden="true"
+                class="EditableAreaReference Editable readonly title"
+                dir="auto"
+                disabled=""
+                rows="1"
+              >
+                title
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="octo-propertylist CardDetailProperties"
+          />
+          <hr />
+          <div
+            class="CommentsList"
+          />
+        </div>
+        <div
+          class="CardDetail content fullwidth content-blocks"
+        >
+          <div
+            class="octo-content CardDetailContents"
+          >
+            <div
+              class="octo-block"
+            >
+              <div
+                class="octo-block-margin"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDialog return cardDialog menu content 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back undefined"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            class="cardToolbar"
+          >
+            <button
+              type="button"
+            >
+              <span>
+                Follow
+              </span>
+            </button>
+          </div>
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              class="Button IconButton IconButton--large"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+            <div
+              class="Menu noselect left"
+            >
+              <div
+                class="menu-contents"
+              >
+                <div
+                  class="menu-options"
+                >
+                  <div
+                    aria-label="Delete"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline trash-can-outline"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Delete
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    aria-label="Copy link"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <i
+                      class="CompassIcon icon-link-variant LinkIcon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Copy link
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    aria-label="New template from card"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      New template from card
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="menu-spacer hideOnWidescreen"
+                />
+                <div
+                  class="menu-options hideOnWidescreen"
+                >
+                  <div
+                    aria-label="Cancel"
+                    class="MenuOption TextOption menu-option menu-cancel"
+                    role="button"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Cancel
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="CardDetail content"
+        >
+          <div
+            class="BlockIconSelector"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <div
+                class="octo-icon size-l"
+              >
+                <span>
+                  i
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="EditableAreaWrap"
+          >
+            <textarea
+              class="EditableArea Editable title"
+              height="0"
+              placeholder="Untitled"
+              rows="1"
+              spellcheck="true"
+              title="title"
+            >
+              title
+            </textarea>
+            <div
+              class="EditableAreaContainer"
+            >
+              <textarea
+                aria-hidden="true"
+                class="EditableAreaReference Editable title"
+                dir="auto"
+                disabled=""
+                rows="1"
+              >
+                title
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="octo-propertylist CardDetailProperties"
+          >
+            <div
+              class="octo-propertyname add-property"
+            >
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  type="button"
+                >
+                  <span>
+                    + Add a property
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div
+            class="CommentsList"
+          >
+            <div
+              class="CommentsList__new"
+            >
+              <img
+                class="comment-avatar"
+              />
+              <div
+                class="MarkdownEditor octo-editor newcomment "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                  data-testid="preview-element"
+                />
+                <div
+                  class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+                >
+                  <div
+                    class="DraftEditor-root"
+                  >
+                    <div
+                      class="DraftEditor-editorContainer"
+                    >
+                      <div
+                        aria-autocomplete="list"
+                        aria-expanded="false"
+                        class="notranslate public-DraftEditor-content"
+                        contenteditable="true"
+                        role="combobox"
+                        spellcheck="false"
+                        style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                      >
+                        <div
+                          data-contents="true"
+                        >
+                          <div
+                            class=""
+                            data-block="true"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
+                          >
+                            <div
+                              class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-offset-key="123-0-0"
+                              >
+                                <br
+                                  data-text="true"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <hr
+              class="CommentsList__divider"
+            />
+          </div>
+        </div>
+        <div
+          class="CardDetail content fullwidth content-blocks"
+        >
+          <div
+            class="octo-content CardDetailContents"
+          >
+            <div
+              class="octo-block"
+            >
+              <div
+                class="octo-block-margin"
+              />
+              <div
+                class="MarkdownEditor octo-editor  "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                  data-testid="preview-element"
+                />
+                <div
+                  class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+                >
+                  <div
+                    class="DraftEditor-root"
+                  >
+                    <div
+                      class="DraftEditor-editorContainer"
+                    >
+                      <div
+                        aria-autocomplete="list"
+                        aria-expanded="false"
+                        class="notranslate public-DraftEditor-content"
+                        contenteditable="true"
+                        role="combobox"
+                        spellcheck="false"
+                        style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                      >
+                        <div
+                          data-contents="true"
+                        >
+                          <div
+                            class=""
+                            data-block="true"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
+                          >
+                            <div
+                              class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-offset-key="123-0-0"
+                              >
+                                <br
+                                  data-text="true"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="CardDetailContentsMenu content add-content"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <span>
+                  Add content
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDialog return cardDialog menu content and cancel delete confirmation do nothing 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back undefined"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            class="cardToolbar"
+          >
+            <button
+              type="button"
+            >
+              <span>
+                Follow
+              </span>
+            </button>
+          </div>
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              class="Button IconButton IconButton--large"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="CardDetail content"
+        >
+          <div
+            class="BlockIconSelector"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <div
+                class="octo-icon size-l"
+              >
+                <span>
+                  i
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="EditableAreaWrap"
+          >
+            <textarea
+              class="EditableArea Editable title"
+              height="0"
+              placeholder="Untitled"
+              rows="1"
+              spellcheck="true"
+              title="title"
+            >
+              title
+            </textarea>
+            <div
+              class="EditableAreaContainer"
+            >
+              <textarea
+                aria-hidden="true"
+                class="EditableAreaReference Editable title"
+                dir="auto"
+                disabled=""
+                rows="1"
+              >
+                title
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="octo-propertylist CardDetailProperties"
+          >
+            <div
+              class="octo-propertyname add-property"
+            >
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  type="button"
+                >
+                  <span>
+                    + Add a property
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div
+            class="CommentsList"
+          >
+            <div
+              class="CommentsList__new"
+            >
+              <img
+                class="comment-avatar"
+              />
+              <div
+                class="MarkdownEditor octo-editor newcomment "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                  data-testid="preview-element"
+                />
+                <div
+                  class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+                >
+                  <div
+                    class="DraftEditor-root"
+                  >
+                    <div
+                      class="DraftEditor-editorContainer"
+                    >
+                      <div
+                        aria-autocomplete="list"
+                        aria-expanded="false"
+                        class="notranslate public-DraftEditor-content"
+                        contenteditable="true"
+                        role="combobox"
+                        spellcheck="false"
+                        style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                      >
+                        <div
+                          data-contents="true"
+                        >
+                          <div
+                            class=""
+                            data-block="true"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
+                          >
+                            <div
+                              class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-offset-key="123-0-0"
+                              >
+                                <br
+                                  data-text="true"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <hr
+              class="CommentsList__divider"
+            />
+          </div>
+        </div>
+        <div
+          class="CardDetail content fullwidth content-blocks"
+        >
+          <div
+            class="octo-content CardDetailContents"
+          >
+            <div
+              class="octo-block"
+            >
+              <div
+                class="octo-block-margin"
+              />
+              <div
+                class="MarkdownEditor octo-editor  "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                  data-testid="preview-element"
+                />
+                <div
+                  class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+                >
+                  <div
+                    class="DraftEditor-root"
+                  >
+                    <div
+                      class="DraftEditor-editorContainer"
+                    >
+                      <div
+                        aria-autocomplete="list"
+                        aria-expanded="false"
+                        class="notranslate public-DraftEditor-content"
+                        contenteditable="true"
+                        role="combobox"
+                        spellcheck="false"
+                        style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                      >
+                        <div
+                          data-contents="true"
+                        >
+                          <div
+                            class=""
+                            data-block="true"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
+                          >
+                            <div
+                              class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-offset-key="123-0-0"
+                              >
+                                <br
+                                  data-text="true"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="CardDetailContentsMenu content add-content"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <span>
+                  Add content
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDialog should match snapshot 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back undefined"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            class="cardToolbar"
+          >
+            <button
+              type="button"
+            >
+              <span>
+                Follow
+              </span>
+            </button>
+          </div>
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              class="Button IconButton IconButton--large"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="CardDetail content"
+        >
+          <div
+            class="BlockIconSelector"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <div
+                class="octo-icon size-l"
+              >
+                <span>
+                  i
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="EditableAreaWrap"
+          >
+            <textarea
+              class="EditableArea Editable title"
+              height="0"
+              placeholder="Untitled"
+              rows="1"
+              spellcheck="true"
+              title="title"
+            >
+              title
+            </textarea>
+            <div
+              class="EditableAreaContainer"
+            >
+              <textarea
+                aria-hidden="true"
+                class="EditableAreaReference Editable title"
+                dir="auto"
+                disabled=""
+                rows="1"
+              >
+                title
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="octo-propertylist CardDetailProperties"
+          >
+            <div
+              class="octo-propertyname add-property"
+            >
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  type="button"
+                >
+                  <span>
+                    + Add a property
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div
+            class="CommentsList"
+          >
+            <div
+              class="CommentsList__new"
+            >
+              <img
+                class="comment-avatar"
+              />
+              <div
+                class="MarkdownEditor octo-editor newcomment "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                  data-testid="preview-element"
+                />
+                <div
+                  class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+                >
+                  <div
+                    class="DraftEditor-root"
+                  >
+                    <div
+                      class="DraftEditor-editorContainer"
+                    >
+                      <div
+                        aria-autocomplete="list"
+                        aria-expanded="false"
+                        class="notranslate public-DraftEditor-content"
+                        contenteditable="true"
+                        role="combobox"
+                        spellcheck="false"
+                        style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                      >
+                        <div
+                          data-contents="true"
+                        >
+                          <div
+                            class=""
+                            data-block="true"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
+                          >
+                            <div
+                              class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-offset-key="123-0-0"
+                              >
+                                <br
+                                  data-text="true"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <hr
+              class="CommentsList__divider"
+            />
+          </div>
+        </div>
+        <div
+          class="CardDetail content fullwidth content-blocks"
+        >
+          <div
+            class="octo-content CardDetailContents"
+          >
+            <div
+              class="octo-block"
+            >
+              <div
+                class="octo-block-margin"
+              />
+              <div
+                class="MarkdownEditor octo-editor  "
+              >
+                <div
+                  class="octo-editor-preview octo-placeholder"
+                  data-testid="preview-element"
+                />
+                <div
+                  class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+                >
+                  <div
+                    class="DraftEditor-root"
+                  >
+                    <div
+                      class="DraftEditor-editorContainer"
+                    >
+                      <div
+                        aria-autocomplete="list"
+                        aria-expanded="false"
+                        class="notranslate public-DraftEditor-content"
+                        contenteditable="true"
+                        role="combobox"
+                        spellcheck="false"
+                        style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                      >
+                        <div
+                          data-contents="true"
+                        >
+                          <div
+                            class=""
+                            data-block="true"
+                            data-editor="123"
+                            data-offset-key="123-0-0"
+                          >
+                            <div
+                              class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-offset-key="123-0-0"
+                              >
+                                <br
+                                  data-text="true"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="CardDetailContentsMenu content add-content"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <span>
+                  Add content
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

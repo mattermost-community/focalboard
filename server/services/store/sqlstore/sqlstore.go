@@ -4,7 +4,9 @@ import (
 	"database/sql"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/mattermost/focalboard/server/services/mlog"
+
+	"github.com/mattermost/mattermost-plugin-api/cluster"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -19,33 +21,42 @@ type SQLStore struct {
 	dbType           string
 	tablePrefix      string
 	connectionString string
+	isPlugin         bool
 	logger           *mlog.Logger
+	NewMutexFn       MutexFactory
 }
 
+// MutexFactory is used by the store in plugin mode to generate
+// a cluster mutex.
+type MutexFactory func(name string) (*cluster.Mutex, error)
+
 // New creates a new SQL implementation of the store.
-func New(dbType, connectionString, tablePrefix string, logger *mlog.Logger, db *sql.DB) (*SQLStore, error) {
-	logger.Info("connectDatabase", mlog.String("dbType", dbType), mlog.String("connStr", connectionString))
+func New(params Params) (*SQLStore, error) {
+	if err := params.CheckValid(); err != nil {
+		return nil, err
+	}
+
+	params.Logger.Info("connectDatabase", mlog.String("dbType", params.DBType))
 	store := &SQLStore{
 		// TODO: add replica DB support too.
-		db:               db,
-		dbType:           dbType,
-		tablePrefix:      tablePrefix,
-		connectionString: connectionString,
-		logger:           logger,
+		db:               params.DB,
+		dbType:           params.DBType,
+		tablePrefix:      params.TablePrefix,
+		connectionString: params.ConnectionString,
+		logger:           params.Logger,
+		isPlugin:         params.IsPlugin,
+		NewMutexFn:       params.NewMutexFn,
 	}
 
 	err := store.Migrate()
 	if err != nil {
-		logger.Error(`Table creation / migration failed`, mlog.Err(err))
+		params.Logger.Error(`Table creation / migration failed`, mlog.Err(err))
 
 		return nil, err
 	}
 
-	err = store.InitializeTemplates()
-	if err != nil {
-		logger.Error(`InitializeTemplates failed`, mlog.Err(err))
-
-		return nil, err
+	if err := store.InitializeTemplates(); err != nil {
+		params.Logger.Error(`InitializeTemplates failed`, mlog.Err(err))
 	}
 
 	return store, nil
@@ -63,13 +74,13 @@ func (s *SQLStore) DBHandle() *sql.DB {
 	return s.db
 }
 
-func (s *SQLStore) getQueryBuilder() sq.StatementBuilderType {
+func (s *SQLStore) getQueryBuilder(db sq.BaseRunner) sq.StatementBuilderType {
 	builder := sq.StatementBuilder
 	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
 		builder = builder.PlaceholderFormat(sq.Dollar)
 	}
 
-	return builder.RunWith(s.db)
+	return builder.RunWith(db)
 }
 
 func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam

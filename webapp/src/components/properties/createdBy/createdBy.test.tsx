@@ -8,19 +8,19 @@ import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 
 import {IUser} from '../../../user'
-import {MutableCard} from '../../../blocks/card'
+import {createCard} from '../../../blocks/card'
 
 import CreatedBy from './createdBy'
 
 describe('components/properties/createdBy', () => {
     test('should match snapshot', () => {
-        const card = new MutableCard()
+        const card = createCard()
         card.createdBy = 'user-id-1'
 
         const mockStore = configureStore([])
         const store = mockStore({
-            currentWorkspaceUsers: {
-                byId: {
+            users: {
+                workspaceUsers: {
                     'user-id-1': {username: 'username_1'} as IUser,
                 },
             },

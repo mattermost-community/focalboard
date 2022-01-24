@@ -1,28 +1,4 @@
-// Package classification Focalboard Server
-//
 // Server for Focalboard
-//
-//     Schemes: http, https
-//     Host: localhost
-//     BasePath: /api/v1
-//     Version: 1.0.0
-//     License: Custom https://github.com/mattermost/focalboard/blob/main/LICENSE.txt
-//     Contact: Focalboard<api@focalboard.com> https://www.focalboard.com
-//
-//     Consumes:
-//     - application/json
-//
-//     Produces:
-//     - application/json
-//
-//     securityDefinitions:
-//       BearerAuth:
-//         type: apiKey
-//         name: Authorization
-//         in: header
-//         description: 'Pass session token using Bearer authentication, e.g. set header "Authorization: Bearer <session token>"'
-//
-// swagger:meta
 package main
 
 import (
@@ -39,7 +15,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/config"
 )
 import (
-	"github.com/mattermost/focalboard/server/services/mlog"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 // Active server used with shared code (dll)
@@ -87,20 +63,32 @@ func logInfo(logger *mlog.Logger) {
 }
 
 func main() {
-	// config.json file
-	config, err := config.ReadConfigFile()
+	// Command line args
+	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
+	pPort := flag.Int("port", 0, "the port number")
+	pSingleUser := flag.Bool("single-user", false, "single user mode")
+	pDBType := flag.String("dbtype", "", "Database type")
+	pDBConfig := flag.String("dbconfig", "", "Database config")
+	pConfigFilePath := flag.String(
+		"config",
+		"",
+		"Location of the JSON config file",
+	)
+	flag.Parse()
+
+	config, err := config.ReadConfigFile(*pConfigFilePath)
 	if err != nil {
 		log.Fatal("Unable to read the config file: ", err)
 		return
 	}
 
-	logger := mlog.NewLogger()
+	logger, _ := mlog.NewLogger()
 	cfgJSON := config.LoggingCfgJSON
 	if config.LoggingCfgFile == "" && cfgJSON == "" {
 		// if no logging defined, use default config (console output)
 		cfgJSON = defaultLoggingConfig()
 	}
-	err = logger.Configure(config.LoggingCfgFile, cfgJSON)
+	err = logger.Configure(config.LoggingCfgFile, cfgJSON, nil)
 	if err != nil {
 		log.Fatal("Error in config file for logger: ", err)
 		return
@@ -108,19 +96,11 @@ func main() {
 	defer func() { _ = logger.Shutdown() }()
 
 	if logger.HasTargets() {
-		restore := logger.RedirectStdLog(mlog.Info, mlog.String("src", "stdlog"))
+		restore := logger.RedirectStdLog(mlog.LvlInfo, mlog.String("src", "stdlog"))
 		defer restore()
 	}
 
 	logInfo(logger)
-
-	// Command line args
-	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
-	pPort := flag.Int("port", config.Port, "the port number")
-	pSingleUser := flag.Bool("single-user", false, "single user mode")
-	pDBType := flag.String("dbtype", "", "Database type")
-	pDBConfig := flag.String("dbconfig", "", "Database config")
-	flag.Parse()
 
 	singleUser := false
 	if pSingleUser != nil {
@@ -165,7 +145,14 @@ func main() {
 		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
 	}
 
-	server, err := server.New(config, singleUserToken, db, logger)
+	params := server.Params{
+		Cfg:             config,
+		SingleUserToken: singleUserToken,
+		DBStore:         db,
+		Logger:          logger,
+	}
+
+	server, err := server.New(params)
 	if err != nil {
 		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
@@ -186,13 +173,14 @@ func main() {
 
 // StartServer starts the server
 //export StartServer
-func StartServer(webPath *C.char, filesPath *C.char, port int, singleUserToken, dbConfigString *C.char) {
+func StartServer(webPath *C.char, filesPath *C.char, port int, singleUserToken, dbConfigString, configFilePath *C.char) {
 	startServer(
 		C.GoString(webPath),
 		C.GoString(filesPath),
 		port,
 		C.GoString(singleUserToken),
 		C.GoString(dbConfigString),
+		C.GoString(configFilePath),
 	)
 }
 
@@ -202,21 +190,21 @@ func StopServer() {
 	stopServer()
 }
 
-func startServer(webPath string, filesPath string, port int, singleUserToken, dbConfigString string) {
+func startServer(webPath string, filesPath string, port int, singleUserToken, dbConfigString, configFilePath string) {
 	if pServer != nil {
 		stopServer()
 		pServer = nil
 	}
 
 	// config.json file
-	config, err := config.ReadConfigFile()
+	config, err := config.ReadConfigFile(configFilePath)
 	if err != nil {
 		log.Fatal("Unable to read the config file: ", err)
 		return
 	}
 
-	logger := mlog.NewLogger()
-	err = logger.Configure(config.LoggingCfgFile, config.LoggingCfgJSON)
+	logger, _ := mlog.NewLogger()
+	err = logger.Configure(config.LoggingCfgFile, config.LoggingCfgJSON, nil)
 	if err != nil {
 		log.Fatal("Error in config file for logger: ", err)
 		return
@@ -245,7 +233,14 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
 	}
 
-	pServer, err = server.New(config, singleUserToken, db, logger)
+	params := server.Params{
+		Cfg:             config,
+		SingleUserToken: singleUserToken,
+		DBStore:         db,
+		Logger:          logger,
+	}
+
+	pServer, err = server.New(params)
 	if err != nil {
 		logger.Fatal("server.New ERROR", mlog.Err(err))
 	}
@@ -281,7 +276,8 @@ func defaultLoggingConfig() string {
 				"delim": " ",
 				"min_level_len": 5,
 				"min_msg_len": 40,
-				"enable_color": true				
+				"enable_color": true,
+				"enable_caller": true
 			},
 			"levels": [
 				{"id": 5, "name": "debug"},

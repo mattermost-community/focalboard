@@ -11,6 +11,8 @@ import LinkIcon from '../../../widgets/icons/Link'
 
 type Props = {
     value: string
+    readonly?: boolean
+    placeholder?: string
     onChange: (value: string) => void
     onSave: () => void
     onCancel: () => void
@@ -19,12 +21,15 @@ type Props = {
 
 const URLProperty = (props: Props): JSX.Element => {
     let link: ReactNode = null
-    if (props.value?.trim()) {
+    const hasValue = Boolean(props.value?.trim())
+    if (hasValue) {
         link = (
             <a
+                className='Link__button'
                 href={Utils.ensureProtocol(props.value.trim())}
                 target='_blank'
                 rel='noreferrer'
+                onClick={(event) => event.stopPropagation()}
             >
                 <LinkIcon/>
             </a>
@@ -33,15 +38,18 @@ const URLProperty = (props: Props): JSX.Element => {
 
     return (
         <div className='URLProperty property-link url'>
+            {(hasValue || props.placeholder) &&
             <Editable
                 className='octo-propertyvalue'
-                placeholderText='Empty'
+                placeholderText={props.placeholder}
                 value={props.value}
+                autoExpand={true}
+                readonly={props.readonly}
                 onChange={props.onChange}
                 onSave={props.onSave}
                 onCancel={props.onCancel}
                 validator={props.validator}
-            />
+            />}
             {link}
         </div>
     )

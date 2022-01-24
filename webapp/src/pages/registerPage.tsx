@@ -4,6 +4,9 @@ import React, {useState} from 'react'
 import {useHistory, Link} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
+import {useAppDispatch} from '../store/hooks'
+import {fetchMe} from '../store/users'
+
 import Button from '../widgets/buttons/button'
 import client from '../octoClient'
 import './registerPage.scss'
@@ -14,6 +17,7 @@ const RegisterPage = React.memo(() => {
     const [email, setEmail] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const history = useHistory()
+    const dispatch = useAppDispatch()
 
     const handleRegister = async (): Promise<void> => {
         const queryString = new URLSearchParams(window.location.search)
@@ -23,15 +27,13 @@ const RegisterPage = React.memo(() => {
         if (response.code === 200) {
             const logged = await client.login(username, password)
             if (logged) {
+                await dispatch(fetchMe())
                 history.push('/')
-
-                // HACKHACK: react-router-dom seems to require a refresh to navigate correctly
-                // this.setState({email: '', username: '', password: ''})
             }
         } else if (response.code === 401) {
             setErrorMessage('Invalid registration link, please contact your administrator')
         } else {
-            setErrorMessage(response.json?.error)
+            setErrorMessage(`${response.json?.error}`)
         }
     }
 
@@ -54,7 +56,7 @@ const RegisterPage = React.memo(() => {
                         id='login-email'
                         placeholder={'Enter email'}
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value.trim())}
                     />
                 </div>
                 <div className='username'>
@@ -62,7 +64,7 @@ const RegisterPage = React.memo(() => {
                         id='login-username'
                         placeholder={'Enter username'}
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value.trim())}
                     />
                 </div>
                 <div className='password'>
@@ -84,7 +86,7 @@ const RegisterPage = React.memo(() => {
             <Link to='/login'>
                 <FormattedMessage
                     id='register.login-button'
-                    defaultMessage={'or login if you already have an account'}
+                    defaultMessage={'or log in if you already have an account'}
                 />
             </Link>
             {errorMessage &&

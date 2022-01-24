@@ -1,7 +1,8 @@
 .CheckIcon {
-    stroke: rgba(var(--body-color), 0.5);
+    stroke: rgba(var(--center-channel-color-rgb), 0.5);
     stroke-width: 8px;
     fill: none;
-    width: 24px;
-    height: 24px;
+    width: 1em;
+    height: 1em;
+    line-height: 1em;
 }

@@ -1,14 +1,18 @@
 .Kanban {
+    overflow: auto;
+    flex: 1;
+
     .octo-board-header {
         display: flex;
         flex-direction: row;
-
+        width: max-content;
         min-height: 30px;
-        padding-bottom: 16px;
+        padding: 16px 0;
         color: #909090;
-        position: fixed;
+        position: sticky;
+        top: 0;
         z-index: 1;
-        background: rgb(var(--main-bg));
+        background: rgb(var(--center-channel-bg-rgb));
     }
 
     .octo-board-header-cell {
@@ -25,8 +29,6 @@
         }
 
         > div {
-            margin-right: 8px;
-
             &:last-child {
                 margin: 0;
             }
@@ -34,23 +36,28 @@
 
         .IconButton {
             background-color: unset;
+
             &:hover {
-                background-color: rgba(var(--body-color), 0.1);
+                background-color: rgba(var(--center-channel-color-rgb), 0.1);
             }
         }
 
         .Label {
             max-width: 165px;
             margin-right: 5px;
+            margin-bottom: 0;
+
             .Editable {
                 background: transparent;
             }
         }
+
         > .Button {
+            cursor: auto;
+
             &.IconButton {
                 cursor: pointer;
             }
-            cursor: auto;
         }
     }
 
@@ -58,7 +65,7 @@
         display: flex;
         flex-direction: row;
         flex: 0 1 auto;
-        margin-top: 50px;
+        margin-top: 2px;
     }
 
     .octo-board-column {
@@ -69,6 +76,7 @@
 
         width: 260px;
         margin-right: 15px;
+
         &.narrow {
             width: 220px;
         }
@@ -77,6 +85,7 @@
     .octo-board-hidden-item {
         display: flex;
         flex-direction: row;
+
         > div {
             margin-right: 5px;
         }

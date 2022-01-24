@@ -3,54 +3,65 @@
 import React, {useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
+import {Board} from '../blocks/board'
+import {BoardView} from '../blocks/boardView'
+import {Card} from '../blocks/card'
 import mutator from '../mutator'
+import {getCard} from '../store/cards'
+import {getCardComments} from '../store/comments'
+import {getCardContents} from '../store/contents'
+import {useAppSelector} from '../store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
-import {BoardTree} from '../viewModel/boardTree'
-import {CardTree, CardTreeContext, MutableCardTree} from '../viewModel/cardTree'
 import DeleteIcon from '../widgets/icons/delete'
+import LinkIcon from '../widgets/icons/Link'
 import Menu from '../widgets/menu'
 
-import useCardListener from '../hooks/cardListener'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/confirmationDialogBox'
+
+import Button from '../widgets/buttons/button'
+
+import {getUserBlockSubscriptionList} from '../store/initialLoad'
+
+import {IUser} from '../user'
+import {getMe} from '../store/users'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
+import {sendFlashMessage} from './flashMessages'
+
+import './cardDialog.scss'
 
 type Props = {
-    boardTree: BoardTree
+    board: Board
+    activeView: BoardView
+    views: BoardView[]
+    cards: Card[]
     cardId: string
     onClose: () => void
     showCard: (cardId?: string) => void
     readonly: boolean
 }
 
-const CardDialog = (props: Props) => {
-    const [syncComplete, setSyncComplete] = useState(false)
-    const [cardTree, setCardTree] = useState<CardTree>()
+const CardDialog = (props: Props): JSX.Element => {
+    const {board, activeView, cards, views} = props
+    const card = useAppSelector(getCard(props.cardId))
+    const contents = useAppSelector(getCardContents(props.cardId))
+    const comments = useAppSelector(getCardComments(props.cardId))
     const intl = useIntl()
-    useCardListener(
-        [props.cardId],
-        async (blocks) => {
-            Utils.log(`cardListener.onChanged: ${blocks.length}`)
-            const newCardTree = cardTree ? MutableCardTree.incrementalUpdate(cardTree, blocks) : await MutableCardTree.sync(props.cardId)
-            setCardTree(newCardTree)
-            setSyncComplete(true)
-        },
-        async () => {
-            Utils.log('cardListener.onReconnect')
-            const newCardTree = await MutableCardTree.sync(props.cardId)
-            setCardTree(newCardTree)
-            setSyncComplete(true)
-        },
-    )
+    const me = useAppSelector<IUser|null>(getMe)
 
+    const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
-        if (!cardTree) {
-            Utils.assertFailure('cardTree')
+        if (!card) {
+            Utils.assertFailure('card')
             return
         }
 
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromCard, {board: props.board.id, view: activeView.id, card: props.cardId})
         await mutator.duplicateCard(
-            cardTree.card.id,
+            props.cardId,
+            board,
             intl.formatMessage({id: 'Mutator.new-template-from-card', defaultMessage: 'new template from card'}),
             true,
             async (newCardId) => {
@@ -61,6 +72,36 @@ const CardDialog = (props: Props) => {
             },
         )
     }
+    const handleDeleteCard = async () => {
+        if (!card) {
+            Utils.assertFailure()
+            return
+        }
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: props.board.id, view: props.activeView.id, card: card.id})
+        await mutator.deleteBlock(card, 'delete card')
+        props.onClose()
+    }
+
+    const confirmDialogProps: ConfirmationDialogBoxProps = {
+        heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+        confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+        onConfirm: handleDeleteCard,
+        onClose: () => {
+            setShowConfirmationDialogBox(false)
+        },
+    }
+
+    const handleDeleteButtonOnClick = () => {
+        // use may be renaming a card title
+        // and accidently delete the card
+        // so adding des
+        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
+            handleDeleteCard()
+            return
+        }
+
+        setShowConfirmationDialogBox(true)
+    }
 
     const menu = (
         <Menu position='left'>
@@ -68,17 +109,24 @@ const CardDialog = (props: Props) => {
                 id='delete'
                 icon={<DeleteIcon/>}
                 name='Delete'
-                onClick={async () => {
-                    const card = cardTree?.card
-                    if (!card) {
-                        Utils.assertFailure()
-                        return
+                onClick={handleDeleteButtonOnClick}
+            />
+            <Menu.Text
+                icon={<LinkIcon/>}
+                id='copy'
+                name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
+                onClick={() => {
+                    let cardLink = window.location.href
+
+                    if (!cardLink.includes(props.cardId)) {
+                        cardLink += `/${props.cardId}`
                     }
-                    await mutator.deleteBlock(card, 'delete card')
-                    props.onClose()
+
+                    Utils.copyTextToClipboard(cardLink)
+                    sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                 }}
             />
-            {(cardTree && !cardTree.card.isTemplate) &&
+            {(card && !card.fields.isTemplate) &&
                 <Menu.Text
                     id='makeTemplate'
                     name='New template from card'
@@ -87,37 +135,71 @@ const CardDialog = (props: Props) => {
             }
         </Menu>
     )
+
+    const followActionButton = (following: boolean): React.ReactNode => {
+        const followBtn = (
+            <Button
+                className='cardFollowBtn follow'
+                onClick={() => mutator.followBlock(props.cardId, 'card', me!.id)}
+            >
+                {intl.formatMessage({id: 'CardDetail.Follow', defaultMessage: 'Follow'})}
+            </Button>
+        )
+
+        const unfollowBtn = (
+            <Button
+                className='cardFollowBtn unfollow'
+                onClick={() => mutator.unfollowBlock(props.cardId, 'card', me!.id)}
+            >
+                {intl.formatMessage({id: 'CardDetail.Following', defaultMessage: 'Following'})}
+            </Button>
+        )
+
+        return following ? unfollowBtn : followBtn
+    }
+
+    const followingCards = useAppSelector(getUserBlockSubscriptionList)
+    const isFollowingCard = Boolean(followingCards.find((following) => following.blockId === props.cardId))
+    const toolbar = followActionButton(isFollowingCard)
+
     return (
-        <Dialog
-            onClose={props.onClose}
-            toolsMenu={!props.readonly && menu}
-        >
-            {(cardTree?.card.isTemplate) &&
-                <div className='banner'>
-                    <FormattedMessage
-                        id='CardDialog.editing-template'
-                        defaultMessage="You're editing a template"
-                    />
-                </div>
-            }
-            {cardTree &&
-                <CardTreeContext.Provider value={cardTree}>
+        <>
+            <Dialog
+                onClose={props.onClose}
+                toolsMenu={!props.readonly && menu}
+                toolbar={toolbar}
+            >
+                {card && card.fields.isTemplate &&
+                    <div className='banner'>
+                        <FormattedMessage
+                            id='CardDialog.editing-template'
+                            defaultMessage="You're editing a template."
+                        />
+                    </div>}
+
+                {card &&
                     <CardDetail
-                        boardTree={props.boardTree}
-                        cardTree={cardTree}
+                        board={board}
+                        activeView={activeView}
+                        views={views}
+                        cards={cards}
+                        card={card}
+                        contents={contents}
+                        comments={comments}
                         readonly={props.readonly}
-                    />
-                </CardTreeContext.Provider>
-            }
-            {(!cardTree && syncComplete) &&
-                <div className='banner error'>
-                    <FormattedMessage
-                        id='CardDialog.nocard'
-                        defaultMessage="This card doesn't exist or is inaccessible"
-                    />
-                </div>
-            }
-        </Dialog>
+                    />}
+
+                {!card &&
+                    <div className='banner error'>
+                        <FormattedMessage
+                            id='CardDialog.nocard'
+                            defaultMessage="This card doesn't exist or is inaccessible."
+                        />
+                    </div>}
+            </Dialog>
+
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
+        </>
     )
 }
 

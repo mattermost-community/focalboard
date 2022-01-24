@@ -1,11 +1,16 @@
+.status-dropdown-menu {
+    > .Menu {
+        position: inherit;
+    }
+}
+
 .Menu {
     display: flex;
     flex-direction: column;
     position: absolute;
     z-index: 15;
-    min-width: 180px;
-    background-color: rgb(var(--main-bg));
-    color: rgb(var(--body-color));
+    background-color: rgb(var(--center-channel-bg-rgb));
+    color: rgb(var(--center-channel-color-rgb));
     border-radius: var(--default-rad);
     box-shadow: var(--elevation-4);
 
@@ -27,7 +32,17 @@
         padding: 0;
         margin: 0;
 
-        color: rgb(var(--body-color));
+        color: rgb(var(--center-channel-color-rgb));
+
+        .CompassIcon {
+            font-size: 18px;
+            opacity: 0.56;
+            width: 18px;
+
+            &::before {
+                margin: 0;
+            }
+        }
 
         > .menu-option {
             display: flex;
@@ -42,7 +57,7 @@
             cursor: pointer;
 
             &:hover {
-                background: rgba(var(--button-bg), 0.08);
+                background: rgba(var(--button-bg-rgb), 0.08);
             }
 
             > * {
@@ -60,19 +75,22 @@
             }
 
             > .SubmenuTriangleIcon {
-                fill: rgba(var(--body-color), 0.7);
+                fill: rgba(var(--center-channel-color-rgb), 0.7);
             }
 
             > .Icon {
                 opacity: 0.56;
-                width: 16px;
-                height: 16px;
-                line-height: 16px;
+                width: 18px;
+                height: 18px;
             }
 
             > .IconButton .Icon {
                 margin-right: 0;
             }
+        }
+
+        > .menu-option.bold-menu-text {
+            font-weight: bold;
         }
     }
 
@@ -102,7 +120,7 @@
         right: 0;
         bottom: 0;
         min-width: 0;
-        background-color: rgba(var(--body-color), 0.5);
+        background-color: rgba(var(--center-channel-color-rgb), 0.5);
         border-radius: 0;
         padding: 10px;
 
@@ -125,7 +143,7 @@
                 min-height: 44px;
                 width: 100%;
                 padding: 0 20px;
-                background-color: rgb(var(--main-bg));
+                background-color: rgb(var(--center-channel-bg-rgb));
 
                 > * {
                     flex: 0 0 auto;

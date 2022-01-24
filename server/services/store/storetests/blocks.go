@@ -8,6 +8,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/stretchr/testify/require"
 )
 
@@ -24,6 +25,21 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		store, tearDown := setup(t)
 		defer tearDown()
 		testInsertBlock(t, store, container)
+	})
+	t.Run("InsertBlocks", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testInsertBlocks(t, store, container)
+	})
+	t.Run("PatchBlock", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testPatchBlock(t, store, container)
+	})
+	t.Run("PatchBlocks", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testPatchBlocks(t, store, container)
 	})
 	t.Run("DeleteBlock", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -163,8 +179,8 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 			ID:         "id-10",
 			RootID:     "root-id",
 			Title:      "Old Title",
-			CreateAt:   createdAt.Unix(),
-			UpdateAt:   updateAt.Unix(),
+			CreateAt:   utils.GetMillisForTime(createdAt),
+			UpdateAt:   utils.GetMillisForTime(updateAt),
 			CreatedBy:  "user-id-5",
 			ModifiedBy: "user-id-6",
 		}
@@ -178,8 +194,224 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 		assert.NotNil(t, retrievedBlock)
 		assert.Equal(t, "user-id-1", retrievedBlock.CreatedBy)
 		assert.Equal(t, "user-id-1", retrievedBlock.ModifiedBy)
-		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.CreateAt/1000, 0), 1*time.Second, "create time should be current time")
-		assert.WithinDurationf(t, time.Now(), time.Unix(retrievedBlock.UpdateAt/1000, 0), 1*time.Second, "update time should be current time")
+		assert.WithinDurationf(t, time.Now(), utils.GetTimeForMillis(retrievedBlock.CreateAt), 1*time.Second, "create time should be current time")
+		assert.WithinDurationf(t, time.Now(), utils.GetTimeForMillis(retrievedBlock.UpdateAt), 1*time.Second, "update time should be current time")
+	})
+}
+
+func testInsertBlocks(t *testing.T, store store.Store, container store.Container) {
+	userID := testUserID
+
+	blocks, errBlocks := store.GetAllBlocks(container)
+	require.NoError(t, errBlocks)
+	initialCount := len(blocks)
+
+	t.Run("invalid block", func(t *testing.T) {
+		validBlock := model.Block{
+			ID:         "id-test",
+			RootID:     "id-test",
+			ModifiedBy: userID,
+		}
+
+		invalidBlock := model.Block{
+			ID:         "id-test",
+			RootID:     "",
+			ModifiedBy: userID,
+		}
+
+		newBlocks := []model.Block{validBlock, invalidBlock}
+
+		err := store.InsertBlocks(container, newBlocks, "user-id-1")
+		require.Error(t, err)
+
+		blocks, err := store.GetAllBlocks(container)
+		require.NoError(t, err)
+		// no blocks should have been inserted
+		require.Len(t, blocks, initialCount)
+	})
+}
+
+func testPatchBlock(t *testing.T, store store.Store, container store.Container) {
+	userID := testUserID
+
+	block := model.Block{
+		ID:         "id-test",
+		RootID:     "id-test",
+		Title:      "oldTitle",
+		ModifiedBy: userID,
+		Fields:     map[string]interface{}{"test": "test value", "test2": "test value 2"},
+	}
+
+	err := store.InsertBlock(container, &block, "user-id-1")
+	require.NoError(t, err)
+
+	blocks, errBlocks := store.GetAllBlocks(container)
+	require.NoError(t, errBlocks)
+	initialCount := len(blocks)
+
+	t.Run("not existing block", func(t *testing.T) {
+		err := store.PatchBlock(container, "invalid-block-id", &model.BlockPatch{}, "user-id-1")
+		require.Error(t, err)
+
+		blocks, err := store.GetAllBlocks(container)
+		require.NoError(t, err)
+		require.Len(t, blocks, initialCount)
+	})
+
+	t.Run("invalid rootid", func(t *testing.T) {
+		wrongRootID := ""
+		blockPatch := model.BlockPatch{
+			RootID: &wrongRootID,
+		}
+
+		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-1")
+		require.Error(t, err)
+
+		blocks, err := store.GetAllBlocks(container)
+		require.NoError(t, err)
+		require.Len(t, blocks, initialCount)
+	})
+
+	t.Run("invalid fields data", func(t *testing.T) {
+		blockPatch := model.BlockPatch{
+			UpdatedFields: map[string]interface{}{"no-serialiable-value": t.Run},
+		}
+
+		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-1")
+		require.Error(t, err)
+
+		blocks, err := store.GetAllBlocks(container)
+		require.NoError(t, err)
+		require.Len(t, blocks, initialCount)
+	})
+
+	t.Run("update block fields", func(t *testing.T) {
+		newTitle := "New title"
+		blockPatch := model.BlockPatch{
+			Title: &newTitle,
+		}
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+
+		// inserting
+		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-2")
+		require.NoError(t, err)
+
+		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
+
+		// created by populated from user id for new blocks
+		require.Equal(t, "user-id-2", retrievedBlock.ModifiedBy)
+		require.Equal(t, "New title", retrievedBlock.Title)
+	})
+
+	t.Run("update block custom fields", func(t *testing.T) {
+		blockPatch := model.BlockPatch{
+			UpdatedFields: map[string]interface{}{"test": "new test value", "test3": "new value"},
+		}
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+
+		// inserting
+		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-2")
+		require.NoError(t, err)
+
+		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
+
+		// created by populated from user id for new blocks
+		require.Equal(t, "user-id-2", retrievedBlock.ModifiedBy)
+		require.Equal(t, "new test value", retrievedBlock.Fields["test"])
+		require.Equal(t, "test value 2", retrievedBlock.Fields["test2"])
+		require.Equal(t, "new value", retrievedBlock.Fields["test3"])
+	})
+
+	t.Run("remove block custom fields", func(t *testing.T) {
+		blockPatch := model.BlockPatch{
+			DeletedFields: []string{"test", "test3", "test100"},
+		}
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+
+		// inserting
+		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-2")
+		require.NoError(t, err)
+
+		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
+
+		// created by populated from user id for new blocks
+		require.Equal(t, "user-id-2", retrievedBlock.ModifiedBy)
+		require.Equal(t, nil, retrievedBlock.Fields["test"])
+		require.Equal(t, "test value 2", retrievedBlock.Fields["test2"])
+		require.Equal(t, nil, retrievedBlock.Fields["test3"])
+	})
+}
+
+func testPatchBlocks(t *testing.T, store store.Store, container store.Container) {
+	block := model.Block{
+		ID:     "id-test",
+		RootID: "id-test",
+		Title:  "oldTitle",
+	}
+
+	block2 := model.Block{
+		ID:     "id-test2",
+		RootID: "id-test2",
+		Title:  "oldTitle2",
+	}
+
+	insertBlocks := []model.Block{block, block2}
+	err := store.InsertBlocks(container, insertBlocks, "user-id-1")
+	require.NoError(t, err)
+
+	t.Run("successful updated existing blocks", func(t *testing.T) {
+		title := "updatedTitle"
+		blockPatch := model.BlockPatch{
+			Title: &title,
+		}
+
+		blockPatch2 := model.BlockPatch{
+			Title: &title,
+		}
+
+		blockIds := []string{"id-test", "id-test2"}
+		blockPatches := []model.BlockPatch{blockPatch, blockPatch2}
+
+		err := store.PatchBlocks(container, &model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
+		require.NoError(t, err)
+
+		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
+		require.Equal(t, title, retrievedBlock.Title)
+
+		retrievedBlock2, err := store.GetBlock(container, "id-test2")
+		require.NoError(t, err)
+		require.Equal(t, title, retrievedBlock2.Title)
+	})
+
+	t.Run("invalid block id, nothing updated existing blocks", func(t *testing.T) {
+		title := "Another Title"
+		blockPatch := model.BlockPatch{
+			Title: &title,
+		}
+
+		blockPatch2 := model.BlockPatch{
+			Title: &title,
+		}
+
+		blockIds := []string{"id-test", "invalid id"}
+		blockPatches := []model.BlockPatch{blockPatch, blockPatch2}
+
+		err := store.PatchBlocks(container, &model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
+		require.Error(t, err)
+
+		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
+		require.NotEqual(t, title, retrievedBlock.Title)
 	})
 }
 
@@ -236,7 +468,7 @@ func testGetSubTree2(t *testing.T, store store.Store, container store.Container)
 	require.Len(t, blocks, initialCount+6)
 
 	t.Run("from root id", func(t *testing.T) {
-		blocks, err = store.GetSubTree2(container, "parent")
+		blocks, err = store.GetSubTree2(container, "parent", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 3)
 		require.True(t, ContainsBlockWithID(blocks, "parent"))
@@ -245,7 +477,7 @@ func testGetSubTree2(t *testing.T, store store.Store, container store.Container)
 	})
 
 	t.Run("from child id", func(t *testing.T) {
-		blocks, err = store.GetSubTree2(container, "child1")
+		blocks, err = store.GetSubTree2(container, "child1", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 2)
 		require.True(t, ContainsBlockWithID(blocks, "child1"))
@@ -253,7 +485,7 @@ func testGetSubTree2(t *testing.T, store store.Store, container store.Container)
 	})
 
 	t.Run("from not existing id", func(t *testing.T) {
-		blocks, err = store.GetSubTree2(container, "not-exists")
+		blocks, err = store.GetSubTree2(container, "not-exists", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
@@ -272,7 +504,7 @@ func testGetSubTree3(t *testing.T, store store.Store, container store.Container)
 	require.Len(t, blocks, initialCount+6)
 
 	t.Run("from root id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(container, "parent")
+		blocks, err = store.GetSubTree3(container, "parent", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 5)
 		require.True(t, ContainsBlockWithID(blocks, "parent"))
@@ -283,7 +515,7 @@ func testGetSubTree3(t *testing.T, store store.Store, container store.Container)
 	})
 
 	t.Run("from child id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(container, "child1")
+		blocks, err = store.GetSubTree3(container, "child1", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 3)
 		require.True(t, ContainsBlockWithID(blocks, "child1"))
@@ -292,7 +524,7 @@ func testGetSubTree3(t *testing.T, store store.Store, container store.Container)
 	})
 
 	t.Run("from not existing id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(container, "not-exists")
+		blocks, err = store.GetSubTree3(container, "not-exists", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
@@ -443,7 +675,6 @@ func testGetBlocks(t *testing.T, store store.Store, container store.Container) {
 			Type:       "test",
 		},
 	}
-
 	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
 	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
 
@@ -529,8 +760,8 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 		require.Equal(t, "root-id-1", fetchedBlock.RootID)
 		require.Equal(t, "user-id-1", fetchedBlock.CreatedBy)
 		require.Equal(t, "user-id-1", fetchedBlock.ModifiedBy)
-		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.CreateAt/1000, 0), 1*time.Second, "create time should be current time")
-		assert.WithinDurationf(t, time.Now(), time.Unix(fetchedBlock.UpdateAt/1000, 0), 1*time.Second, "update time should be current time")
+		assert.WithinDurationf(t, time.Now(), utils.GetTimeForMillis(fetchedBlock.CreateAt), 1*time.Second, "create time should be current time")
+		assert.WithinDurationf(t, time.Now(), utils.GetTimeForMillis(fetchedBlock.UpdateAt), 1*time.Second, "update time should be current time")
 	})
 
 	t.Run("get a non-existing block", func(t *testing.T) {

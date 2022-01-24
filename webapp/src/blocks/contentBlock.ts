@@ -1,10 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock, MutableBlock} from './block'
+import {Block, createBlock} from './block'
 
-type IContentBlock = IBlock
-
-class MutableContentBlock extends MutableBlock implements IContentBlock {
+type IContentBlockWithCords = {
+    block: Block,
+    cords: {x: number, y?: number, z?: number}
 }
 
-export {IContentBlock, MutableContentBlock}
+type ContentBlock = Block
+
+const createContentBlock = createBlock
+
+export {ContentBlock, IContentBlockWithCords, createContentBlock}

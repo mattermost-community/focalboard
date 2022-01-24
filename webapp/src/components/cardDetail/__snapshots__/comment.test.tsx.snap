@@ -1,0 +1,246 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/cardDetail/comment return comment 1`] = `
+<div>
+  <div
+    class="Comment comment"
+  >
+    <div
+      class="comment-header"
+    >
+      <img
+        class="comment-avatar"
+        src="data:image/svg+xml"
+      />
+      <div
+        class="comment-username"
+      />
+      <div
+        class="octo-tooltip tooltip-top"
+        data-tooltip="October 01, 2020, 12:00 AM"
+      >
+        <div
+          class="comment-date"
+        >
+          a day ago
+        </div>
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="Button IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+        <div
+          class="Menu noselect left"
+        >
+          <div
+            class="menu-contents"
+          >
+            <div
+              class="menu-options"
+            >
+              <div
+                aria-label="Delete"
+                class="MenuOption TextOption menu-option"
+                role="button"
+              >
+                <i
+                  class="CompassIcon icon-trash-can-outline trash-can-outline"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Delete
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+            <div
+              class="menu-spacer hideOnWidescreen"
+            />
+            <div
+              class="menu-options hideOnWidescreen"
+            >
+              <div
+                aria-label="Cancel"
+                class="MenuOption TextOption menu-option menu-cancel"
+                role="button"
+              >
+                <div
+                  class="noicon"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="comment-text"
+    >
+      <p>
+        Test comment
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDetail/comment return comment and delete comment 1`] = `
+<div>
+  <div
+    class="Comment comment"
+  >
+    <div
+      class="comment-header"
+    >
+      <img
+        class="comment-avatar"
+        src="data:image/svg+xml"
+      />
+      <div
+        class="comment-username"
+      />
+      <div
+        class="octo-tooltip tooltip-top"
+        data-tooltip="October 01, 2020, 12:00 AM"
+      >
+        <div
+          class="comment-date"
+        >
+          a day ago
+        </div>
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="Button IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+        <div
+          class="Menu noselect left"
+        >
+          <div
+            class="menu-contents"
+          >
+            <div
+              class="menu-options"
+            >
+              <div
+                aria-label="Delete"
+                class="MenuOption TextOption menu-option"
+                role="button"
+              >
+                <i
+                  class="CompassIcon icon-trash-can-outline trash-can-outline"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Delete
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+            <div
+              class="menu-spacer hideOnWidescreen"
+            />
+            <div
+              class="menu-options hideOnWidescreen"
+            >
+              <div
+                aria-label="Cancel"
+                class="MenuOption TextOption menu-option menu-cancel"
+                role="button"
+              >
+                <div
+                  class="noicon"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="comment-text"
+    >
+      <p>
+        Test comment
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDetail/comment return comment readonly 1`] = `
+<div>
+  <div
+    class="Comment comment"
+  >
+    <div
+      class="comment-header"
+    >
+      <img
+        class="comment-avatar"
+        src="data:image/svg+xml"
+      />
+      <div
+        class="comment-username"
+      />
+      <div
+        class="octo-tooltip tooltip-top"
+        data-tooltip="October 01, 2020, 12:00 AM"
+      >
+        <div
+          class="comment-date"
+        >
+          a day ago
+        </div>
+      </div>
+    </div>
+    <div
+      class="comment-text"
+    >
+      <p>
+        Test comment
+      </p>
+    </div>
+  </div>
+</div>
+`;

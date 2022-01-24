@@ -4,8 +4,8 @@
 // Disable console log
 console.log = jest.fn()
 
-import {IBlock} from './blocks/block'
-import {MutableBoard} from './blocks/board'
+import {Block} from './blocks/block'
+import {createBoard} from './blocks/board'
 import octoClient from './octoClient'
 import 'isomorphic-fetch'
 import {FetchMock} from './test/fetchMock'
@@ -69,11 +69,11 @@ test('OctoClient: importFullArchive', async () => {
         }))
 })
 
-function createBoards(): IBlock[] {
+function createBoards(): Block[] {
     const blocks = []
 
     for (let i = 0; i < 5; i++) {
-        const board = new MutableBoard()
+        const board = createBoard()
         board.id = `board${i + 1}`
         blocks.push(board)
     }

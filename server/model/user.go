@@ -1,5 +1,10 @@
 package model
 
+import (
+	"encoding/json"
+	"io"
+)
+
 // User is a user
 // swagger:model
 type User struct {
@@ -13,7 +18,7 @@ type User struct {
 
 	// The user's email
 	// required: true
-	Email string `json:"email"`
+	Email string `json:"-"`
 
 	// swagger:ignore
 	Password string `json:"-"`
@@ -42,6 +47,10 @@ type User struct {
 	// Deleted time, set to indicate user is deleted
 	// required: true
 	DeleteAt int64 `json:"delete_at"`
+
+	// If the user is a bot or not
+	// required: true
+	IsBot bool `json:"is_bot"`
 }
 
 type Session struct {
@@ -52,4 +61,12 @@ type Session struct {
 	Props       map[string]interface{} `json:"props"`
 	CreateAt    int64                  `json:"create_at,omitempty"`
 	UpdateAt    int64                  `json:"update_at,omitempty"`
+}
+
+func UserFromJSON(data io.Reader) (*User, error) {
+	var user User
+	if err := json.NewDecoder(data).Decode(&user); err != nil {
+		return nil, err
+	}
+	return &user, nil
 }

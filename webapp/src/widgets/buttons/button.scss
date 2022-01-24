@@ -1,4 +1,7 @@
 .Button {
+    --danger-button-bg-rgb: 247, 67, 67;
+
+    font-family: 'Open Sans', sans-serif;
     display: flex;
     flex: 0 0 auto;
     align-items: center;
@@ -9,32 +12,117 @@
     cursor: pointer;
     overflow: hidden;
     background: transparent;
-    border: none;
+    border: 0;
     transition: background 100ms ease-out 0s;
     color: inherit;
+    height: 32px;
+    padding: 0 10px;
+    font-weight: 600;
 
     &:hover {
-        background-color: rgba(var(--body-color), 0.1);
+        background-color: rgba(var(--center-channel-color-rgb), 0.08);
+    }
+
+    .Icon {
+        align-items: center;
+        display: flex;
+        height: 14px;
+        justify-content: center;
+        margin-right: 0;
+        width: 14px;
+    }
+
+    .Icon--right {
+        height: 14px;
+        margin-left: 4px;
+        width: 14px;
     }
 
     &.filled {
-        color: #ffffff;
-        background-color: rgb(var(--button-bg));
+        color: #fff;
+        background-color: rgb(var(--button-bg-rgb));
         padding: 6px 12px;
 
         &:hover {
-            background-color: rgb(var(--button-bg), 0.8);
+            background-color: rgb(var(--button-bg-rgb), 0.8);
+        }
+
+        &.danger {
+            background: linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
+
+            &:hover {
+                background: linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)), linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
+            }
+
+            &:active {
+                background: linear-gradient(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.16)), linear-gradient(rgb(var(--danger-button-bg-rgb)), rgb(var(--danger-button-bg-rgb)));
+            }
+        }
+    }
+
+    &.emphasis--secondary {
+        border: 1px solid rgb(var(--button-bg-rgb));
+        color: rgb(var(--button-bg-rgb));
+
+        &:hover {
+            background-color: rgb(var(--button-bg-rgb), 0.08);
+        }
+
+        &:active {
+            background-color: rgb(var(--button-bg-rgb), 0.16);
+        }
+    }
+
+    &.emphasis--tertiary {
+        background: rgba(var(--button-bg-rgb), 0.08);
+        color: rgb(var(--button-bg-rgb));
+
+        &:hover {
+            background-color: rgb(var(--button-bg-rgb), 0.12);
+        }
+
+        &:active {
+            background-color: rgb(var(--button-bg-rgb), 0.16);
+        }
+    }
+
+    &.emphasis--danger {
+        color: rgb(var(--button-danger-color-rgb));
+        background-color: rgb(var(--button-danger-bg-rgb));
+
+        &:hover {
+            background-color: rgb(var(--button-danger-bg-rgb), 0.8);
         }
     }
 
     &.active {
-        color: rgb(var(--link-color));
-        font-weight: 600;
+        background: rgba(var(--button-bg-rgb), 0.08);
+        color: rgb(var(--button-bg-rgb));
     }
 
-    .Icon {
-        width: 14px;
-        height: 14px;
-        margin-right: 0px;
+    &.size--small {
+        font-size: 12px;
+        padding: 0 16px;
+        height: 32px;
+    }
+
+    &.size--medium {
+        font-size: 14px;
+        font-weight: 600;
+        padding: 0 20px;
+        height: 40px;
+    }
+
+    &.size--large {
+        font-size: 16px;
+        height: 48px;
+        padding: 0 24px;
+
+        .Icon--right {
+            font-size: 24px;
+            height: 20px;
+            margin-left: 10px;
+            width: 20px;
+        }
     }
 }

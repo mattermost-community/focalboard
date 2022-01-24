@@ -13,14 +13,15 @@ import (
 )
 
 var mockUser = &model.User{
-	ID:       utils.CreateGUID(),
+	ID:       utils.NewID(utils.IDTypeUser),
 	Username: "testUsername",
 	Email:    "testEmail",
 	Password: auth.HashPassword("testPassword"),
 }
 
 func TestLogin(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
 
 	testcases := []struct {
 		title    string
@@ -58,7 +59,8 @@ func TestLogin(t *testing.T) {
 }
 
 func TestGetUser(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
 
 	testcases := []struct {
 		title   string
@@ -87,7 +89,8 @@ func TestGetUser(t *testing.T) {
 }
 
 func TestRegisterUser(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
 
 	testcases := []struct {
 		title    string
@@ -123,7 +126,8 @@ func TestRegisterUser(t *testing.T) {
 }
 
 func TestUpdateUserPassword(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
 
 	testcases := []struct {
 		title    string
@@ -153,7 +157,8 @@ func TestUpdateUserPassword(t *testing.T) {
 }
 
 func TestChangePassword(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
 
 	testcases := []struct {
 		title       string

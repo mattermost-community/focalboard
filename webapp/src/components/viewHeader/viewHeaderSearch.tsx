@@ -1,25 +1,54 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState, useRef, useEffect, useMemo} from 'react'
+import {useRouteMatch} from 'react-router-dom'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
+import {debounce} from 'lodash'
 
-import {BoardTree} from '../../viewModel/boardTree'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 
-type Props = {
-    boardTree: BoardTree
-    setSearchText: (text?: string) => void
-}
+import {useAppSelector, useAppDispatch} from '../../store/hooks'
+import {getSearchText, setSearchText} from '../../store/searchText'
 
-const ViewHeaderSearch = (props: Props) => {
-    const {boardTree, setSearchText} = props
+const ViewHeaderSearch = (): JSX.Element => {
+    const searchText = useAppSelector<string>(getSearchText)
+    const dispatch = useAppDispatch()
     const intl = useIntl()
+    const match = useRouteMatch<{viewId?: string}>()
 
     const searchFieldRef = useRef<{focus(selectAll?: boolean): void}>(null)
-    const [isSearching, setIsSearching] = useState(Boolean(boardTree.getSearchText()))
-    const [searchValue, setSearchValue] = useState(boardTree.getSearchText())
+    const [isSearching, setIsSearching] = useState(Boolean(searchText))
+    const [searchValue, setSearchValue] = useState(searchText)
+    const [currentView, setCurrentView] = useState(match.params?.viewId)
+
+    const dispatchSearchText = (value: string) => {
+        dispatch(setSearchText(value))
+    }
+
+    const debouncedDispatchSearchText = useMemo(
+        () => debounce(dispatchSearchText, 200), [])
+
+    useEffect(() => {
+        const viewId = match.params?.viewId
+        if (viewId !== currentView) {
+            setCurrentView(viewId)
+            setSearchValue('')
+            setIsSearching(false)
+
+            // Previously debounced calls to change the search text should be cancelled
+            // to avoid resetting the search text.
+            debouncedDispatchSearchText.cancel()
+            dispatchSearchText('')
+        }
+    }, [match.url])
+
+    useEffect(() => {
+        return () => {
+            debouncedDispatchSearchText.cancel()
+        }
+    }, [])
 
     useEffect(() => {
         searchFieldRef.current?.focus()
@@ -36,17 +65,20 @@ const ViewHeaderSearch = (props: Props) => {
                 ref={searchFieldRef}
                 value={searchValue}
                 placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search text'})}
-                onChange={setSearchValue}
+                onChange={(value) => {
+                    setSearchValue(value)
+                    debouncedDispatchSearchText(value)
+                }}
                 onCancel={() => {
                     setSearchValue('')
                     setIsSearching(false)
-                    setSearchText('')
+                    debouncedDispatchSearchText('')
                 }}
                 onSave={() => {
                     if (searchValue === '') {
                         setIsSearching(false)
                     }
-                    setSearchText(searchValue)
+                    debouncedDispatchSearchText(searchValue)
                 }}
             />
         )

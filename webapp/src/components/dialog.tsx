@@ -12,12 +12,16 @@ import './dialog.scss'
 
 type Props = {
     children: React.ReactNode
-    toolsMenu: React.ReactNode
+    toolsMenu?: React.ReactNode // some dialogs may not  require a toolmenu
+    toolbar?: React.ReactNode
+    hideCloseButton?: boolean
+    className?: string
     onClose: () => void,
 }
 
 const Dialog = React.memo((props: Props) => {
     const {toolsMenu} = props
+    const {toolbar} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
@@ -28,34 +32,37 @@ const Dialog = React.memo((props: Props) => {
     useHotkeys('esc', () => props.onClose())
 
     return (
-        <div className='Dialog dialog-back'>
+        <div className={`Dialog dialog-back ${props.className}`}>
             <div
                 className='wrapper'
-                onMouseDown={(e) => {
+                onClick={(e) => {
                     if (e.target === e.currentTarget) {
                         props.onClose()
                     }
                 }}
             >
-                <div className='dialog' >
+                <div
+                    role='dialog'
+                    className='dialog'
+                >
                     <div className='toolbar'>
-                        {toolsMenu &&
-                        <>
+                        {
+                            !props.hideCloseButton &&
                             <IconButton
                                 onClick={props.onClose}
                                 icon={<CloseIcon/>}
                                 title={closeDialogText}
                                 className='IconButton--large'
                             />
-                            <div className='octo-spacer'/>
-                            <MenuWrapper>
-                                <IconButton
-                                    className='IconButton--large'
-                                    icon={<OptionsIcon/>}
-                                />
-                                {toolsMenu}
-                            </MenuWrapper>
-                        </>
+                        }
+                        {toolbar && <div className='cardToolbar'>{toolbar}</div>}
+                        {toolsMenu && <MenuWrapper>
+                            <IconButton
+                                className='IconButton--large'
+                                icon={<OptionsIcon/>}
+                            />
+                            {toolsMenu}
+                        </MenuWrapper>
                         }
                     </div>
                     {props.children}

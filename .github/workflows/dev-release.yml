@@ -2,9 +2,9 @@ name: Dev-Release
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, release-** ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, release-** ]
   workflow_dispatch:
 
 jobs:
@@ -16,11 +16,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Replace token 1
+    - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
 
-    - name: Replace token 2
+    - name: Replace token 1 webapp
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+
+    - name: Replace token 2 server
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: Replace token 2 webapp
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
     - name: npm install
       run: cd webapp; npm install --no-optional
@@ -69,11 +75,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Replace token 1
+    - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
 
-    - name: Replace token 2
+    - name: Replace token 1 webapp
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+
+    - name: Replace token 2 server
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: Replace token 2 webapp
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
     - name: npm install
       run: cd webapp; npm install --no-optional
@@ -81,7 +93,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.15
+        go-version: 1.16
 
     - name: List Xcode versions
       run: ls -n /Applications/ | grep Xcode*
@@ -105,17 +117,20 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Replace token 1
+    - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
 
-    - name: Replace token 2
+    - name: Replace token 1 webapp
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+
+    - name: Replace token 2 server
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: Replace token 2 webapp
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
-
-    - name: win-node-env
-      run: npm install -g win-node-env
 
     - name: npm install
       run: cd webapp; npm install --no-optional
@@ -123,7 +138,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.15
+        go-version: 1.16
 
     - name: Setup NuGet
       uses: nuget/setup-nuget@v1
@@ -157,11 +172,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Replace token 1
+    - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
 
-    - name: Replace token 2
+    - name: Replace token 1 webapp
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+
+    - name: Replace token 2 server
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+
+    - name: Replace token 2 webapp
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
     - name: npm install
       run: cd webapp; npm install --no-optional
@@ -169,7 +190,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.15
+        go-version: 1.16
 
     - name: Set up Node
       uses: actions/setup-node@v2

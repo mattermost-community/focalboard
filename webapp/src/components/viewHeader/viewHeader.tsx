@@ -5,7 +5,9 @@ import {FormattedMessage} from 'react-intl'
 
 import ViewMenu from '../../components/viewMenu'
 import mutator from '../../mutator'
-import {BoardTree} from '../../viewModel/boardTree'
+import {Board, IPropertyTemplate} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
+import {Card} from '../../blocks/card'
 import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import DropdownIcon from '../../widgets/icons/dropdown'
@@ -17,6 +19,7 @@ import ModalWrapper from '../modalWrapper'
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
+import ViewHeaderDisplayByMenu from './viewHeaderDisplayByMenu'
 import ViewHeaderSortMenu from './viewHeaderSortMenu'
 import ViewHeaderActionsMenu from './viewHeaderActionsMenu'
 import ViewHeaderSearch from './viewHeaderSearch'
@@ -25,22 +28,28 @@ import FilterComponent from './filterComponent'
 import './viewHeader.scss'
 
 type Props = {
-    boardTree: BoardTree
-    setSearchText: (text?: string) => void
+    board: Board
+    activeView: BoardView
+    views: BoardView[]
+    cards: Card[]
+    groupByProperty?: IPropertyTemplate
     addCard: () => void
     addCardFromTemplate: (cardTemplateId: string) => void
     addCardTemplate: () => void
     editCardTemplate: (cardTemplateId: string) => void
     readonly: boolean
+    showShared: boolean
+    dateDisplayProperty?: IPropertyTemplate
 }
 
 const ViewHeader = React.memo((props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
 
-    const {boardTree} = props
-    const {board, activeView} = boardTree
+    const {board, activeView, views, groupByProperty, cards, showShared, dateDisplayProperty} = props
 
-    const withGroupBy = activeView.viewType === 'board' || activeView.viewType === 'table'
+    const withGroupBy = activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table'
+    const withDisplayBy = activeView.fields.viewType === 'calendar'
+    const withSortBy = activeView.fields.viewType !== 'calendar'
 
     const [viewTitle, setViewTitle] = useState(activeView.title)
 
@@ -48,7 +57,7 @@ const ViewHeader = React.memo((props: Props) => {
         setViewTitle(activeView.title)
     }, [activeView.title])
 
-    const hasFilter = activeView.filter && activeView.filter.filters?.length > 0
+    const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
 
     return (
         <div className='ViewHeader'>
@@ -56,7 +65,7 @@ const ViewHeader = React.memo((props: Props) => {
                 value={viewTitle}
                 placeholderText='Untitled View'
                 onSave={(): void => {
-                    mutator.changeTitle(activeView, viewTitle)
+                    mutator.changeTitle(activeView.id, activeView.title, viewTitle)
                 }}
                 onCancel={(): void => {
                     setViewTitle(activeView.title)
@@ -65,12 +74,14 @@ const ViewHeader = React.memo((props: Props) => {
                 saveOnEsc={true}
                 readonly={props.readonly}
                 spellCheck={true}
+                autoExpand={false}
             />
             <MenuWrapper>
                 <IconButton icon={<DropdownIcon/>}/>
                 <ViewMenu
                     board={board}
-                    boardTree={boardTree}
+                    activeView={activeView}
+                    views={views}
                     readonly={props.readonly}
                 />
             </MenuWrapper>
@@ -82,7 +93,7 @@ const ViewHeader = React.memo((props: Props) => {
                 {/* Card properties */}
 
                 <ViewHeaderPropertiesMenu
-                    properties={board.cardProperties}
+                    properties={board.fields.cardProperties}
                     activeView={activeView}
                 />
 
@@ -90,9 +101,18 @@ const ViewHeader = React.memo((props: Props) => {
 
                 {withGroupBy &&
                     <ViewHeaderGroupByMenu
-                        properties={board.cardProperties}
+                        properties={board.fields.cardProperties}
                         activeView={activeView}
-                        groupByPropertyName={boardTree.groupByProperty?.name}
+                        groupByProperty={groupByProperty}
+                    />}
+
+                {/* Display by */}
+
+                {withDisplayBy &&
+                    <ViewHeaderDisplayByMenu
+                        properties={board.fields.cardProperties}
+                        activeView={activeView}
+                        dateDisplayPropertyName={dateDisplayProperty?.name}
                     />}
 
                 {/* Filter */}
@@ -109,40 +129,42 @@ const ViewHeader = React.memo((props: Props) => {
                     </Button>
                     {showFilter &&
                     <FilterComponent
-                        boardTree={boardTree}
+                        board={board}
+                        activeView={activeView}
                         onClose={() => setShowFilter(false)}
                     />}
                 </ModalWrapper>
 
                 {/* Sort */}
 
-                <ViewHeaderSortMenu
-                    properties={board.cardProperties}
-                    activeView={activeView}
-                    orderedCards={boardTree.orderedCards()}
-                />
+                {withSortBy &&
+                    <ViewHeaderSortMenu
+                        properties={board.fields.cardProperties}
+                        activeView={activeView}
+                        orderedCards={cards}
+                    />
+                }
             </>
             }
 
             {/* Search */}
 
-            <ViewHeaderSearch
-                boardTree={boardTree}
-                setSearchText={props.setSearchText}
-            />
+            <ViewHeaderSearch/>
 
             {/* Options menu */}
 
             {!props.readonly &&
             <>
                 <ViewHeaderActionsMenu
-                    boardTree={boardTree}
+                    board={board}
+                    activeView={activeView}
+                    cards={cards}
+                    showShared={showShared}
                 />
 
                 {/* New card button */}
 
                 <NewCardButton
-                    boardTree={boardTree}
                     addCard={props.addCard}
                     addCardFromTemplate={props.addCardFromTemplate}
                     addCardTemplate={props.addCardTemplate}

@@ -1,14 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IContentBlock, MutableContentBlock} from './contentBlock'
+import {ContentBlock} from './contentBlock'
+import {Block, createBlock} from './block'
 
-type CheckboxBlock = IContentBlock
+type CheckboxBlock = ContentBlock & {
+    type: 'checkbox'
+}
 
-class MutableCheckboxBlock extends MutableContentBlock implements CheckboxBlock {
-    constructor(block: any = {}) {
-        super(block)
-        this.type = 'checkbox'
+function createCheckboxBlock(block?: Block): CheckboxBlock {
+    return {
+        ...createBlock(block),
+        type: 'checkbox',
     }
 }
 
-export {CheckboxBlock, MutableCheckboxBlock}
+export {CheckboxBlock, createCheckboxBlock}

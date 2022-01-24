@@ -22,7 +22,7 @@ const KanbanColumn = React.memo((props: Props) => {
                 props.onDrop(item)
             }
         },
-    }))
+    }), [props.onDrop])
 
     let className = 'octo-board-column'
     if (isOver) {

@@ -4,24 +4,26 @@ import {Utils} from '../utils'
 
 type FilterCondition = 'includes' | 'notIncludes' | 'isEmpty' | 'isNotEmpty'
 
-class FilterClause {
+type FilterClause = {
     propertyId: string
     condition: FilterCondition
     values: string[]
+}
 
-    constructor(o: any = {}) {
-        this.propertyId = o.propertyId || ''
-        this.condition = o.condition || 'includes'
-        this.values = o.values?.slice() || []
-    }
-
-    isEqual(o: FilterClause): boolean {
-        return (
-            this.propertyId === o.propertyId &&
-            this.condition === o.condition &&
-            Utils.arraysEqual(this.values, o.values)
-        )
+function createFilterClause(o?: FilterClause): FilterClause {
+    return {
+        propertyId: o?.propertyId || '',
+        condition: o?.condition || 'includes',
+        values: o?.values?.slice() || [],
     }
 }
 
-export {FilterClause, FilterCondition}
+function areEqual(a: FilterClause, b: FilterClause): boolean {
+    return (
+        a.propertyId === b.propertyId &&
+        a.condition === b.condition &&
+        Utils.arraysEqual(a.values, b.values)
+    )
+}
+
+export {FilterClause, FilterCondition, createFilterClause, areEqual}

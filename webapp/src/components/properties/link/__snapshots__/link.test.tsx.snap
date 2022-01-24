@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/properties/link returns link properties correctly 1`] = `
+<div>
+  <div
+    class="URLProperty property-link url"
+  >
+    <input
+      class="Editable octo-propertyvalue"
+      style="width: 5px;"
+      title="https://github.com/mattermost/focalboard"
+      value="https://github.com/mattermost/focalboard"
+    />
+    <a
+      class="Link__button"
+      href="https://github.com/mattermost/focalboard"
+      rel="noreferrer"
+      target="_blank"
+    >
+      <i
+        class="CompassIcon icon-link-variant LinkIcon"
+      />
+    </a>
+  </div>
+</div>
+`;

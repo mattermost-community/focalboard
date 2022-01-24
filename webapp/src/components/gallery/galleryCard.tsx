@@ -3,47 +3,67 @@
 import React from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {IPropertyTemplate} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
-import {CardTree} from '../../viewModel/cardTree'
-import {IContentBlock} from '../../blocks/contentBlock'
+import {ContentBlock} from '../../blocks/contentBlock'
+import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
-
+import {getCardComments} from '../../store/comments'
+import {getCardContents} from '../../store/contents'
+import {useAppSelector} from '../../store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import DuplicateIcon from '../../widgets/icons/duplicate'
+import LinkIcon from '../../widgets/icons/Link'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {useSortable} from '../../hooks/sortable'
-
-import ImageElement from '../content/imageElement'
-import ContentElement from '../content/contentElement'
-import PropertyValueElement from '../propertyValueElement'
 import Tooltip from '../../widgets/tooltip'
-
+import {CardDetailProvider} from '../cardDetail/cardDetailContext'
+import ContentElement from '../content/contentElement'
+import ImageElement from '../content/imageElement'
+import {sendFlashMessage} from '../flashMessages'
+import PropertyValueElement from '../propertyValueElement'
 import './galleryCard.scss'
+import CardBadges from '../cardBadges'
 
 type Props = {
-    cardTree: CardTree
+    board: Board
+    card: Card
     onClick: (e: React.MouseEvent, card: Card) => void
     visiblePropertyTemplates: IPropertyTemplate[]
     visibleTitle: boolean
     isSelected: boolean
+    visibleBadges: boolean
     readonly: boolean
     isManualSort: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
 const GalleryCard = React.memo((props: Props) => {
-    const {cardTree} = props
+    const {card, board} = props
     const intl = useIntl()
-    const [isDragging, isOver, cardRef] = useSortable('card', cardTree.card, props.isManualSort && !props.readonly, props.onDrop)
+    const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
+    const contents = useAppSelector(getCardContents(card.id))
+    const comments = useAppSelector(getCardComments(card.id))
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
-    let images: IContentBlock[] = []
-    images = cardTree.contents.filter((content) => content.type === 'image')
+    let image: ContentBlock | undefined
+    for (let i = 0; i < contents.length; ++i) {
+        if (Array.isArray(contents[i])) {
+            image = (contents[i] as ContentBlock[]).find((c) => c.type === 'image')
+        } else if ((contents[i] as ContentBlock).type === 'image') {
+            image = contents[i] as ContentBlock
+        }
+
+        if (image) {
+            break
+        }
+    }
+
     let className = props.isSelected ? 'GalleryCard selected' : 'GalleryCard'
     if (isOver) {
         className += ' dragover'
@@ -52,7 +72,7 @@ const GalleryCard = React.memo((props: Props) => {
     return (
         <div
             className={className}
-            onClick={(e: React.MouseEvent) => props.onClick(e, cardTree.card)}
+            onClick={(e: React.MouseEvent) => props.onClick(e, card)}
             style={{opacity: isDragging ? 0.5 : 1}}
             ref={cardRef}
         >
@@ -67,39 +87,71 @@ const GalleryCard = React.memo((props: Props) => {
                             icon={<DeleteIcon/>}
                             id='delete'
                             name={intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deleteBlock(cardTree.card, 'delete card')}
+                            onClick={() => mutator.deleteBlock(card, 'delete card')}
                         />
                         <Menu.Text
                             icon={<DuplicateIcon/>}
                             id='duplicate'
                             name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
-                                mutator.duplicateCard(cardTree.card.id)
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                                mutator.duplicateCard(card.id, board)
+                            }}
+                        />
+                        <Menu.Text
+                            icon={<LinkIcon/>}
+                            id='copy'
+                            name={intl.formatMessage({id: 'GalleryCard.copyLink', defaultMessage: 'Copy link'})}
+                            onClick={() => {
+                                let cardLink = window.location.href
+
+                                if (!cardLink.includes(card.id)) {
+                                    cardLink += `/${card.id}`
+                                }
+
+                                Utils.copyTextToClipboard(cardLink)
+                                sendFlashMessage({content: intl.formatMessage({id: 'GalleryCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                             }}
                         />
                     </Menu>
                 </MenuWrapper>
             }
 
-            {images?.length > 0 &&
+            {image &&
                 <div className='gallery-image'>
-                    <ImageElement block={images[0]}/>
+                    <ImageElement block={image}/>
                 </div>}
-            {images?.length === 0 &&
-                <div className='gallery-item'>
-                    {cardTree && images?.length === 0 && cardTree.contents.map((block) => (
-                        <ContentElement
-                            key={block.id}
-                            block={block}
-                            readonly={true}
-                        />
-                    ))}
-                </div>}
+            {!image &&
+                <CardDetailProvider card={card}>
+                    <div className='gallery-item'>
+                        {contents.map((block) => {
+                            if (Array.isArray(block)) {
+                                return block.map((b) => (
+                                    <ContentElement
+                                        key={b.id}
+                                        block={b}
+                                        readonly={true}
+                                        cords={{x: 0}}
+                                    />
+                                ))
+                            }
+
+                            return (
+                                <ContentElement
+                                    key={block.id}
+                                    block={block}
+                                    readonly={true}
+                                    cords={{x: 0}}
+                                />
+                            )
+                        })}
+                    </div>
+                </CardDetailProvider>}
             {props.visibleTitle &&
                 <div className='gallery-title'>
-                    { cardTree.card.icon ? <div className='octo-icon'>{cardTree.card.icon}</div> : undefined }
+                    { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
                     <div key='__title'>
-                        {cardTree.card.title ||
+                        {card.title ||
                             <FormattedMessage
                                 id='KanbanCard.untitled'
                                 defaultMessage='Untitled'
@@ -115,15 +167,22 @@ const GalleryCard = React.memo((props: Props) => {
                             placement='top'
                         >
                             <PropertyValueElement
+                                contents={contents}
+                                comments={comments}
+                                board={board}
                                 readOnly={true}
-                                card={cardTree.card}
-                                cardTree={cardTree}
+                                card={card}
                                 propertyTemplate={template}
-                                emptyDisplayValue=''
+                                showEmptyPlaceholder={false}
                             />
                         </Tooltip>
                     ))}
                 </div>}
+            {props.visibleBadges &&
+                <CardBadges
+                    card={card}
+                    className='gallery-badges'
+                />}
         </div>
     )
 })

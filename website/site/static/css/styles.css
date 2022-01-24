@@ -3213,11 +3213,8 @@ footer {
     padding: 50px 0 40px;
 }
 
-.footer__copyright {
-    margin-bottom: 2em;
-}
-
 .footer__icons a {
+    margin-top: 2em;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     border-radius: 50%;

@@ -5,30 +5,34 @@ import React from 'react'
 
 import {IUser} from '../../../user'
 import {Card} from '../../../blocks/card'
-import {BoardTree} from '../../../viewModel/boardTree'
-import {IBlock} from '../../../blocks/block'
-import {getCurrentWorkspaceUsersById} from '../../../store/currentWorkspaceUsers'
+import {ContentBlock} from '../../../blocks/contentBlock'
+import {CommentBlock} from '../../../blocks/commentBlock'
+import {Board} from '../../../blocks/board'
+import {Block} from '../../../blocks/block'
+import {getWorkspaceUsers} from '../../../store/users'
 import {useAppSelector} from '../../../store/hooks'
+import './lastModifiedBy.scss'
 
 type Props = {
     card: Card,
-    boardTree?: BoardTree,
+    board?: Board,
+    contents: Array<ContentBlock|ContentBlock[]>
+    comments: CommentBlock[],
 }
 
 const LastModifiedBy = (props: Props): JSX.Element => {
-    const workspaceUsersById = useAppSelector<{[key:string]: IUser}>(getCurrentWorkspaceUsersById)
+    const workspaceUsersById = useAppSelector<{[key:string]: IUser}>(getWorkspaceUsers)
 
-    let latestBlock: IBlock = props.card
-    if (props.boardTree) {
-        const sortedBlocks = props.boardTree?.allBlocks.
-            filter((block) => block.parentId === props.card.id || block.id === props.card.id).
-            sort((a, b) => b.updateAt - a.updateAt)
+    let latestBlock: Block = props.card
+    if (props.board) {
+        const allBlocks: Block[] = [props.card, ...props.contents.flat(), ...props.comments]
+        const sortedBlocks = allBlocks.sort((a, b) => b.updateAt - a.updateAt)
 
         latestBlock = sortedBlocks.length > 0 ? sortedBlocks[0] : latestBlock
     }
 
     return (
-        <div className='LastModifiedBy octo-propertyvalue'>
+        <div className='LastModifiedBy octo-propertyvalue readonly'>
             {(workspaceUsersById && workspaceUsersById[latestBlock.modifiedBy]?.username) || latestBlock.modifiedBy}
         </div>
     )

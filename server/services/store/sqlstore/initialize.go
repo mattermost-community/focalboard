@@ -5,9 +5,10 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/mlog"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/initializations"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 // InitializeTemplates imports default templates if the blocks table is empty.
@@ -42,7 +43,7 @@ func (s *SQLStore) importInitialTemplates() error {
 	for i := range archive.Blocks {
 		s.logger.Trace("insert block",
 			mlog.String("blockID", archive.Blocks[i].ID),
-			mlog.String("block_type", archive.Blocks[i].Type),
+			mlog.String("block_type", archive.Blocks[i].Type.String()),
 			mlog.String("block_title", archive.Blocks[i].Title),
 		)
 		err := s.InsertBlock(globalContainer, &archive.Blocks[i], "system")
@@ -56,7 +57,7 @@ func (s *SQLStore) importInitialTemplates() error {
 
 // isInitializationNeeded returns true if the blocks table is empty.
 func (s *SQLStore) isInitializationNeeded() (bool, error) {
-	query := s.getQueryBuilder().
+	query := s.getQueryBuilder(s.db).
 		Select("count(*)").
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"COALESCE(workspace_id, '0')": "0"})

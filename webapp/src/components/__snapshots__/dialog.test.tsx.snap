@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/dialog should match snapshot 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back undefined"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          id="test"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/dialog should return dialog and click on cancel button 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back undefined"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            class="Button IconButton IconButton--large"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              class="Button IconButton IconButton--large"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          id="test"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

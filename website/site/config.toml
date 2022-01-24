@@ -116,7 +116,7 @@ pygmentsStyle = "manni"
 
   [[params.intro.item]]
     title = "Read Guide"
-    description = "Read the User's Guide to ge the most out of Focalboard."
+    description = "Read the User's Guide to get the most out of Focalboard."
     url = "guide/user"
     button = "User's Guide"
     icon = "/img/use-icon.svg"

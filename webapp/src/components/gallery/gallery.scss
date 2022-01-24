@@ -1,11 +1,12 @@
 .Gallery {
     display: flex;
     flex-wrap: wrap;
+    overflow: auto;
 
     .octo-gallery-new {
-        border: 1px solid rgba(var(--body-color), 0.09);
+        border: 1px solid rgba(var(--center-channel-color-rgb), 0.09);
         border-radius: var(--default-rad);
-        color: rgba(var(--body-color), 0.3);
+        color: rgba(var(--center-channel-color-rgb), 0.3);
         cursor: pointer;
         width: 280px;
         min-height: 160px;
@@ -20,7 +21,7 @@
         }
 
         &:hover {
-            background-color: rgba(var(--body-color), 0.05);
+            background-color: rgba(var(--center-channel-color-rgb), 0.05);
         }
     }
 }

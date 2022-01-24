@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 )
 
 const (
@@ -30,9 +31,11 @@ type Metrics struct {
 	startTime prometheus.Gauge
 
 	loginCount     prometheus.Counter
+	logoutCount    prometheus.Counter
 	loginFailCount prometheus.Counter
 
 	blocksInsertedCount prometheus.Counter
+	blocksPatchedCount  prometheus.Counter
 	blocksDeletedCount  prometheus.Counter
 
 	blockCount     *prometheus.GaugeVec
@@ -46,11 +49,11 @@ func NewMetrics(info InstanceInfo) *Metrics {
 	m := &Metrics{}
 
 	m.registry = prometheus.NewRegistry()
-	options := prometheus.ProcessCollectorOpts{
+	options := collectors.ProcessCollectorOpts{
 		Namespace: MetricsNamespace,
 	}
-	m.registry.MustRegister(prometheus.NewProcessCollector(options))
-	m.registry.MustRegister(prometheus.NewGoCollector())
+	m.registry.MustRegister(collectors.NewProcessCollector(options))
+	m.registry.MustRegister(collectors.NewGoCollector())
 
 	additionalLabels := map[string]string{}
 	if info.InstallationID != "" {
@@ -65,6 +68,15 @@ func NewMetrics(info InstanceInfo) *Metrics {
 		ConstLabels: additionalLabels,
 	})
 	m.registry.MustRegister(m.loginCount)
+
+	m.logoutCount = prometheus.NewCounter(prometheus.CounterOpts{
+		Namespace:   MetricsNamespace,
+		Subsystem:   MetricsSubsystemSystem,
+		Name:        "logout_total",
+		Help:        "Total number of logouts.",
+		ConstLabels: additionalLabels,
+	})
+	m.registry.MustRegister(m.logoutCount)
 
 	m.loginFailCount = prometheus.NewCounter(prometheus.CounterOpts{
 		Namespace:   MetricsNamespace,
@@ -103,6 +115,15 @@ func NewMetrics(info InstanceInfo) *Metrics {
 		ConstLabels: additionalLabels,
 	})
 	m.registry.MustRegister(m.blocksInsertedCount)
+
+	m.blocksPatchedCount = prometheus.NewCounter(prometheus.CounterOpts{
+		Namespace:   MetricsNamespace,
+		Subsystem:   MetricsSubsystemBlocks,
+		Name:        "blocks_patched_total",
+		Help:        "Total number of blocks patched.",
+		ConstLabels: additionalLabels,
+	})
+	m.registry.MustRegister(m.blocksPatchedCount)
 
 	m.blocksDeletedCount = prometheus.NewCounter(prometheus.CounterOpts{
 		Namespace:   MetricsNamespace,
@@ -149,6 +170,12 @@ func (m *Metrics) IncrementLoginCount(num int) {
 	}
 }
 
+func (m *Metrics) IncrementLogoutCount(num int) {
+	if m != nil {
+		m.logoutCount.Add(float64(num))
+	}
+}
+
 func (m *Metrics) IncrementLoginFailCount(num int) {
 	if m != nil {
 		m.loginFailCount.Add(float64(num))
@@ -158,6 +185,13 @@ func (m *Metrics) IncrementLoginFailCount(num int) {
 func (m *Metrics) IncrementBlocksInserted(num int) {
 	if m != nil {
 		m.blocksInsertedCount.Add(float64(num))
+		m.blockLastActivity.SetToCurrentTime()
+	}
+}
+
+func (m *Metrics) IncrementBlocksPatched(num int) {
+	if m != nil {
+		m.blocksPatchedCount.Add(float64(num))
 		m.blockLastActivity.SetToCurrentTime()
 	}
 }

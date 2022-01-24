@@ -12,8 +12,8 @@ func TestSharing(t *testing.T) {
 	th := SetupTestHelper().InitBasic()
 	defer th.TearDown()
 
-	rootID := utils.CreateGUID()
-	token := utils.CreateGUID()
+	rootID := utils.NewID(utils.IDTypeBlock)
+	token := utils.NewID(utils.IDTypeToken)
 
 	t.Run("Check no initial sharing", func(t *testing.T) {
 		sharing, resp := th.Client.GetSharing(rootID)

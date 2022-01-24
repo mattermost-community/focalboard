@@ -1,0 +1,52 @@
+.confirmation-dialog-box {
+    .dialog {
+        max-width: 512px;
+        width: 100%;
+        position: fixed;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: max-content;
+        z-index: 300;
+
+        background-color: rgb(var(--center-channel-bg-rgb));
+        box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
+            rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
+
+        border-radius: var(--modal-rad);
+        padding: 0;
+        -webkit-overflow-scrolling: touch;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        > .toolbar {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 16px;
+        }
+    }
+
+}
+
+.box-area {
+    display: grid;
+    place-items: center;
+    padding: 48px 40px;
+
+
+    .text-heading5 {
+        margin: 0 0 8px;
+    }
+
+    .sub-text {
+        text-align: center;
+    }
+}
+
+.action-buttons {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 32px;
+}

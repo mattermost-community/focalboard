@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}sharing (
 	modified_by VARCHAR(36),
 	update_at BIGINT,
 	PRIMARY KEY (id)
-){{if .mysql}}CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci{{end}};
+) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};

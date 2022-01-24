@@ -1,13 +1,13 @@
 .Sidebar {
     flex: 0 0 240px;
-
+    max-width: 240px;
     display: flex;
     flex-direction: column;
 
     min-height: 100%;
-    color: rgb(var(--sidebar-fg));
-    background-color: rgb(var(--sidebar-bg));
-    padding: 12px 0;
+    color: rgb(var(--sidebar-text-rgb));
+    background-color: rgb(var(--sidebar-bg-rgb));
+    padding: 24px 0 12px;
 
     &.hidden {
         position: absolute;
@@ -19,6 +19,8 @@
         width: 50px;
         background: none;
         padding: 0;
+        padding-left: 10px;
+        display: block !important;
 
         > div {
             padding: 0;
@@ -30,8 +32,20 @@
         flex: 0 0 auto;
     }
 
+    &__onboarding {
+        text-align: center;
+        padding: 16px 32px;
+
+        div {
+            margin-top: 32px;
+            font-weight: 600;
+            opacity: 0.6;
+        }
+    }
+
     .IconButton {
         padding: 0;
+
         .Icon {
             width: 24px;
             height: 24px;
@@ -40,6 +54,8 @@
     }
 
     .WorkspaceTitle {
+        display: flex;
+        flex-direction: row;
         padding: 0 16px;
         font-weight: 600;
     }
@@ -47,7 +63,7 @@
     .octo-sidebar-list {
         flex: 1 1 auto;
         overflow-y: auto;
-        width: 250px;
+        max-width: 100%;
 
         > div {
             margin-bottom: 16px;
@@ -57,20 +73,14 @@
     .octo-sidebar-header {
         display: flex;
         flex-direction: row;
-
         font-weight: 600;
-        padding: 3px 20px;
+        padding: 3px 16px;
         margin-bottom: 16px;
         height: 48px;
         align-items: center;
 
         &:hover {
-            background-color: rgba(var(--sidebar-fg), 0.08);
-        }
-
-        button {
-            font-size: 16px;
-            font-weight: 600;
+            background-color: rgba(var(--sidebar-text-rgb), 0.08);
         }
 
         > .heading {
@@ -80,10 +90,10 @@
         }
 
         > .IconButton {
-            background-color: var(--sidebar-bg);
+            background-color: var(--sidebar-bg-rgb);
 
             &:hover {
-                background-color: rgba(var(--sidebar-fg), 0.1);
+                background-color: rgba(var(--sidebar-text-rgb), 0.1);
             }
         }
 
@@ -109,11 +119,12 @@
     }
 
     .OptionsIcon {
-        color: rgba(var(--sidebar-fg), 0.5);
+        color: rgba(var(--sidebar-text-rgb), 0.5);
     }
+
     .DisclosureTriangleIcon,
     .DotIcon {
-        fill: rgba(var(--sidebar-fg), 0.5);
+        fill: rgba(var(--sidebar-text-rgb), 0.5);
         flex-shrink: 0;
     }
 
@@ -122,12 +133,13 @@
     }
 
     .HideSidebarIcon {
-        stroke: rgba(var(--sidebar-fg), 0.5);
+        stroke: rgba(var(--sidebar-text-rgb), 0.5);
         stroke-width: 6px;
     }
 
-    .Button {
-        min-height: 30px;
-        min-width: 30px;
+    @media screen and (min-width: 768px) {
+        .WorkspaceTitle .sidebarSwitcher {
+            display: none;
+        }
     }
 }

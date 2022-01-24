@@ -3,12 +3,16 @@
 import React, {useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {CommentBlock, MutableCommentBlock} from '../../blocks/commentBlock'
+import {CommentBlock, createCommentBlock} from '../../blocks/commentBlock'
 import mutator from '../../mutator'
+import {useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
 
 import {MarkdownEditor} from '../markdownEditor'
+
+import {IUser} from '../../user'
+import {getMe} from '../../store/users'
 
 import Comment from './comment'
 import './commentsList.scss'
@@ -17,10 +21,12 @@ type Props = {
     comments: readonly CommentBlock[]
     rootId: string
     cardId: string
+    readonly: boolean
 }
 
 const CommentsList = React.memo((props: Props) => {
     const [newComment, setNewComment] = useState('')
+    const me = useAppSelector<IUser|null>(getMe)
 
     const onSendClicked = () => {
         const commentText = newComment
@@ -29,7 +35,7 @@ const CommentsList = React.memo((props: Props) => {
             Utils.log(`Send comment: ${commentText}`)
             Utils.assertValue(cardId)
 
-            const comment = new MutableCommentBlock()
+            const comment = createCommentBlock()
             comment.parentId = cardId
             comment.rootId = rootId
             comment.title = commentText
@@ -41,51 +47,54 @@ const CommentsList = React.memo((props: Props) => {
     const {comments} = props
     const intl = useIntl()
 
-    // TODO: Replace this placeholder
-    const userImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
+    const newCommentComponent = (
+        <div className='CommentsList__new'>
+            <img
+                className='comment-avatar'
+                src={Utils.getProfilePicture(me?.id)}
+            />
+            <MarkdownEditor
+                className='newcomment'
+                text={newComment}
+                placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
+                onChange={(value: string) => {
+                    if (newComment !== value) {
+                        setNewComment(value)
+                    }
+                }}
+            />
+
+            {newComment &&
+            <Button
+                filled={true}
+                onClick={onSendClicked}
+            >
+                <FormattedMessage
+                    id='CommentsList.send'
+                    defaultMessage='Send'
+                />
+            </Button>
+            }
+        </div>
+    )
 
     return (
         <div className='CommentsList'>
-            {comments.map((comment) => (
+            {/* New comment */}
+            {!props.readonly && newCommentComponent}
+
+            {comments.slice(0).reverse().map((comment) => (
                 <Comment
                     key={comment.id}
                     comment={comment}
-                    userImageUrl={userImageUrl}
+                    userImageUrl={Utils.getProfilePicture(comment.modifiedBy)}
                     userId={comment.modifiedBy}
+                    readonly={props.readonly}
                 />
             ))}
 
-            {/* New comment */}
-
-            <div className='commentrow'>
-                <img
-                    className='comment-avatar'
-                    src={userImageUrl}
-                />
-                <MarkdownEditor
-                    className='newcomment'
-                    text={newComment}
-                    placeholderText={intl.formatMessage({id: 'CardDetail.new-comment-placeholder', defaultMessage: 'Add a comment...'})}
-                    onChange={(value: string) => {
-                        if (newComment !== value) {
-                            setNewComment(value)
-                        }
-                    }}
-                    onAccept={onSendClicked}
-                />
-
-                {newComment &&
-                    <Button
-                        filled={true}
-                        onClick={onSendClicked}
-                    >
-                        <FormattedMessage
-                            id='CommentsList.send'
-                            defaultMessage='Send'
-                        />
-                    </Button>
-                }
-            </div>
+            {/* horizontal divider below comments */}
+            {!(comments.length === 0 && props.readonly) && <hr className='CommentsList__divider'/>}
         </div>
     )
 })

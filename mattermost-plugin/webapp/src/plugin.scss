@@ -1,0 +1,21 @@
+.boards-rhs-icon {
+    font-size: 20px;
+}
+
+.focalboard-body .feature-global-header>header {
+    z-index: 1000;
+
+    .Menu {
+        a, button {
+            color: inherit;
+
+            &:hover {
+                background: rgba(var(--center-channel-color-rgb), 0.08);
+
+                div {
+                    color: var(--link-color-rgb);
+                }
+            }
+        }
+    }
+}
