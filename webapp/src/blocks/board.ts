@@ -5,7 +5,7 @@ import difference from 'lodash/difference'
 
 import {Utils, IDType} from '../utils'
 
-import {Block, createBlock} from './block'
+import {Block, BlockPatch, createPatchesFromBlocks} from './block'
 import {Card} from './card'
 
 const BoardTypeOpen = 'O'
@@ -65,6 +65,13 @@ type BoardMember = {
 type BoardsAndBlocks = {
     boards: Board[],
     blocks: Block[],
+}
+
+type BoardsAndBlocksPatch = {
+    boardIDs: string[],
+    boardPatches: BoardPatch[],
+    blockIDs: string[],
+    blockPatches: BlockPatch[],
 }
 
 type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
@@ -202,7 +209,6 @@ function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[]
     })
     const newUpdatedCardProperties: IPropertyTemplate[] = []
     newBoard.cardProperties.forEach((val) => {
-
         const oldCardProperty = oldBoard.cardProperties.find((o) => o.id === val.id)
         if (!oldCardProperty || !isPropertyEqual(val, oldCardProperty)) {
             newUpdatedCardProperties.push(val)
@@ -277,8 +283,36 @@ function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[]
             deletedCardProperties: newDeletedCardProperties,
             updatedColumnCalculations: oldUpdatedColumnCalculations,
             deletedColumnCalculations: newDeletedColumnCalculations,
-        }
+        },
     ]
+}
+
+function createPatchesFromBoardsAndBlocks(updatedBoard: Board, oldBoard: Board, updatedBlockIDs: string[], updatedBlocks: Block[], oldBlocks: Block[]): BoardsAndBlocksPatch[] {
+    const blockUpdatePatches = [] as BlockPatch[]
+    const blockUndoPatches = [] as BlockPatch[]
+    updatedBlocks.forEach((newBlock, i) => {
+        const [updatePatch, undoPatch] = createPatchesFromBlocks(newBlock, oldBlocks[i])
+        blockUpdatePatches.push(updatePatch)
+        blockUndoPatches.push(undoPatch)
+    })
+
+    const [boardUpdatePatch, boardUndoPatch] = createPatchesFromBoards(updatedBoard, oldBoard)
+
+    const updatePatch: BoardsAndBlocksPatch = {
+        blockIDs: updatedBlockIDs,
+        blockPatches: blockUpdatePatches,
+        boardIDs: [updatedBoard.id],
+        boardPatches: [boardUpdatePatch],
+    }
+
+    const undoPatch: BoardsAndBlocksPatch = {
+        blockIDs: updatedBlockIDs,
+        blockPatches: blockUndoPatches,
+        boardIDs: [updatedBoard.id],
+        boardPatches: [boardUndoPatch],
+    }
+
+    return [updatePatch, undoPatch]
 }
 
 export {
@@ -286,6 +320,7 @@ export {
     BoardPatch,
     BoardMember,
     BoardsAndBlocks,
+    BoardsAndBlocksPatch,
     PropertyType,
     IPropertyOption,
     IPropertyTemplate,
@@ -295,4 +330,5 @@ export {
     BoardTypeOpen,
     BoardTypePrivate,
     createPatchesFromBoards,
+    createPatchesFromBoardsAndBlocks,
 }
