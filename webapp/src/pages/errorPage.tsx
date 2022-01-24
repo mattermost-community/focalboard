@@ -2,12 +2,15 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
+import {useHistory} from 'react-router-dom'
 
 import octoClient from '../octoClient'
 import Button from '../widgets/buttons/button'
 import './errorPage.scss'
 
 const ErrorPage = React.memo(() => {
+    const history = useHistory()
+
     return (
         <div className='ErrorPage'>
             <div className='title'>{'Error'}</div>
@@ -20,9 +23,9 @@ const ErrorPage = React.memo(() => {
             <br/>
             <Button
                 filled={true}
-                onClick={() => {
-                    octoClient.logout()
-                    window.location.href = '/login'
+                onClick={async () => {
+                    await octoClient.logout()
+                    history.push('/login')
                 }}
             >
                 <FormattedMessage

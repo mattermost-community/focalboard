@@ -54,6 +54,20 @@ describe('utils', () => {
         })
     })
 
+    describe('countCheckboxesInMarkdown', () => {
+        test('should count checkboxes', () => {
+            const text = `
+                ## Header
+                - [x] one
+                - [ ] two
+                - [x] three
+            `.replace(/\n\s+/gm, '\n')
+            const checkboxes = Utils.countCheckboxesInMarkdown(text)
+            expect(checkboxes.total).toBe(3)
+            expect(checkboxes.checked).toBe(2)
+        })
+    })
+
     describe('test - buildURL', () => {
         test('buildURL, no base', () => {
             expect(Utils.buildURL('test', true)).toBe('http://localhost/test')

@@ -1,28 +1,27 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {
-    ReactElement,
-    useEffect,
-    useMemo,
-    useCallback,
-    useRef,
-    useState,
-} from 'react'
-import {getDefaultKeyBinding, EditorState, ContentState, DraftHandleValue} from 'draft-js'
 import Editor from '@draft-js-plugins/editor'
+import createEmojiPlugin from '@draft-js-plugins/emoji'
+import '@draft-js-plugins/emoji/lib/plugin.css'
 import createMentionPlugin, {
     defaultSuggestionsFilter,
     MentionData,
 } from '@draft-js-plugins/mention'
 import '@draft-js-plugins/mention/lib/plugin.css'
+import {ContentState, DraftHandleValue, EditorState, getDefaultKeyBinding} from 'draft-js'
+import React, {
+    ReactElement, useCallback, useEffect,
+    useMemo, useRef,
+    useState,
+} from 'react'
+
+import {useAppSelector} from '../../store/hooks'
+import {getWorkspaceUsersList} from '../../store/users'
+import {IUser} from '../../user'
+import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin'
 import './markdownEditorInput.scss'
 
-import createEmojiPlugin from '@draft-js-plugins/emoji'
-import '@draft-js-plugins/emoji/lib/plugin.css'
-
-import {getWorkspaceUsersList} from '../../store/users'
-import {useAppSelector} from '../../store/hooks'
-import {IUser} from '../../user'
+import Entry from './entryComponent/entryComponent'
 
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
@@ -38,12 +37,40 @@ type Props = {
 const MarkdownEditorInput = (props: Props): ReactElement => {
     const {onChange, onFocus, onBlur, initialText, id, isEditing} = props
     const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
-    const mentions: MentionData[] = useMemo(() => workspaceUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`})), [workspaceUsers])
+    const mentions: MentionData[] = useMemo(() =>
+        workspaceUsers.map((user) =>
+            ({
+                name: user.username,
+                avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`,
+                isBot: user.is_bot,
+            }))
+    , [workspaceUsers])
     const ref = useRef<Editor>(null)
-    const [editorState, setEditorState] = useState(() => {
-        const state = EditorState.createWithContent(ContentState.createFromText(initialText || ''))
+
+    const generateEditorState = (text?: string) => {
+        const state = EditorState.createWithContent(ContentState.createFromText(text || ''))
         return EditorState.moveSelectionToEnd(state)
+    }
+
+    const [editorState, setEditorState] = useState(() => {
+        return generateEditorState(initialText)
     })
+
+    const [initialTextCache, setInitialTextCache] = useState<string | undefined>(initialText)
+
+    // avoiding stale closure
+    useEffect(() => {
+        // only change editor state when initialText actually changes from one defined value to another.
+        // This is needed to make the mentions plugin work. For some reason, if we don't check
+        // for this if condition here, mentions don't work. I suspect it's because without
+        // the in condition, we're changing editor state twice during component initialization
+        // and for some reason it causes mentions to not show up.
+        if (initialText && initialText !== initialTextCache) {
+            setEditorState(generateEditorState(initialText || ''))
+            setInitialTextCache(initialText)
+        }
+    }, [initialText])
+
     const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false)
     const [isEmojiPopoverOpen, setIsEmojiPopoverOpen] = useState(false)
     const [suggestions, setSuggestions] = useState(mentions)
@@ -51,6 +78,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const {MentionSuggestions, plugins, EmojiSuggestions} = useMemo(() => {
         const mentionPlugin = createMentionPlugin({mentionPrefix: '@'})
         const emojiPlugin = createEmojiPlugin()
+        const markdownPlugin = createLiveMarkdownPlugin()
 
         // eslint-disable-next-line no-shadow
         const {EmojiSuggestions} = emojiPlugin
@@ -60,32 +88,21 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         const plugins = [
             mentionPlugin,
             emojiPlugin,
+            markdownPlugin,
         ]
         return {plugins, MentionSuggestions, EmojiSuggestions}
     }, [])
 
     useEffect(() => {
-        setTimeout(() => ref.current?.focus(), 200)
-    })
-
-    useEffect(() => {
-        let isMounted = true
-        if (isEditing && isMounted) {
-            setEditorState(EditorState.moveSelectionToEnd(editorState))
-        }
-
-        return () => {
-            isMounted = false
-        }
-    }, [isEditing])
-
-    useEffect(() => {
-        if (initialText === '') {
-            setTimeout(() => {
+        if (isEditing) {
+            if (initialText === '') {
                 setEditorState(EditorState.createEmpty())
-            }, 200)
+            } else {
+                setEditorState(EditorState.moveSelectionToEnd(editorState))
+            }
+            setTimeout(() => ref.current?.focus(), 200)
         }
-    }, [initialText])
+    }, [isEditing, initialText])
 
     const customKeyBindingFn = useCallback((e: React.KeyboardEvent) => {
         if (isMentionPopoverOpen || isEmojiPopoverOpen) {
@@ -160,6 +177,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
                 onOpenChange={onMentionPopoverOpenChange}
                 suggestions={suggestions}
                 onSearchChange={onSearchChange}
+                entryComponent={Entry}
             />
             <EmojiSuggestions
                 onOpen={onEmojiPopoverOpen}

@@ -242,7 +242,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 />
             )
         }
-        return <div className='octo-propertyvalue'>{displayValue}</div>
+        return <div className='octo-propertyvalue octo-propertyvalue--readonly'>{displayValue}</div>
     }
     return <div className='octo-propertyvalue'>{finalDisplayValue}</div>
 }

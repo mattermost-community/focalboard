@@ -434,7 +434,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
               </svg>
             </div>
             <div
+              aria-label="Random icons"
               class="MenuOption SwitchOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -607,7 +609,9 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
               </svg>
             </div>
             <div
+              aria-label="Random icons"
               class="MenuOption SwitchOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"
@@ -870,7 +874,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
               </div>
             </div>
             <div
+              aria-label="Random icons"
               class="MenuOption SwitchOption menu-option"
+              role="button"
             >
               <div
                 class="noicon"

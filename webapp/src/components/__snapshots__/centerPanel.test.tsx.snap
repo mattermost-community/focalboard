@@ -168,7 +168,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -233,7 +233,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -493,7 +493,9 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               >
                 i
               </div>
-              <div>
+              <div
+                class="octo-titletext"
+              >
                 card1
               </div>
             </div>
@@ -525,7 +527,9 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               >
                 i
               </div>
-              <div>
+              <div
+                class="octo-titletext"
+              >
                 card2
               </div>
             </div>
@@ -723,7 +727,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -788,7 +792,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -833,7 +837,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -1342,7 +1346,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -1785,7 +1789,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -1850,7 +1854,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -1895,7 +1899,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -2404,7 +2408,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -2469,7 +2473,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -2514,7 +2518,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -3023,7 +3027,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -3088,7 +3092,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -3133,7 +3137,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -3642,7 +3646,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -3707,7 +3711,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -3752,7 +3756,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -4261,7 +4265,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -4326,7 +4330,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -4371,7 +4375,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -4880,7 +4884,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -4945,7 +4949,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -4990,7 +4994,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -5499,7 +5503,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -5564,7 +5568,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -5609,7 +5613,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -6118,7 +6122,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -6183,7 +6187,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -6228,7 +6232,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -6737,7 +6741,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -6802,7 +6806,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -6847,7 +6851,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div
@@ -7356,7 +7360,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -7403,7 +7407,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -7645,7 +7649,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -7710,7 +7714,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -7970,7 +7974,9 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               >
                 i
               </div>
-              <div>
+              <div
+                class="octo-titletext"
+              >
                 card1
               </div>
             </div>
@@ -8168,7 +8174,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="Properties menu"
           class="MenuWrapper"
           role="button"
         >
@@ -8233,7 +8239,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="menuwrapper"
+            aria-label="View menu"
             class="MenuWrapper"
             role="button"
           >
@@ -8278,7 +8284,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
         class="octo-table-body"
       >
         <div
-          class="octo-table-header"
+          class="octo-table-header TableHeaders"
           id="mainBoardHeader"
         >
           <div

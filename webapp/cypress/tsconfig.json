@@ -3,7 +3,8 @@
     "compilerOptions": {
         "noEmit": true,
         "types": [
-            "cypress"
+            "cypress",
+            "@testing-library/cypress"
         ]
     },
     "include": [

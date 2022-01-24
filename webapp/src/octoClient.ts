@@ -8,6 +8,7 @@ import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
+import {Subscription} from './wsclient'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -75,8 +76,18 @@ class OctoClient {
         return false
     }
 
-    logout(): void {
+    async logout(): Promise<boolean> {
+        const path = '/api/v1/logout'
+        const response = await fetch(this.getBaseURL() + path, {
+            method: 'POST',
+            headers: this.headers(),
+        })
         localStorage.removeItem('focalboardSessionId')
+
+        if (response.status !== 200) {
+            return false
+        }
+        return true
     }
 
     async getClientConfig(): Promise<ClientConfig | null> {
@@ -258,9 +269,46 @@ class OctoClient {
         })
     }
 
+    async patchBlocks(blocks: Block[], blockPatches: BlockPatch[]): Promise<Response> {
+        Utils.log(`patchBlocks: ${blocks.length} blocks`)
+        const blockIds = blocks.map((block) => block.id)
+        const body = JSON.stringify({block_ids: blockIds, block_patches: blockPatches})
+
+        const path = this.getBaseURL() + this.workspacePath() + '/blocks'
+        const response = fetch(path, {
+            method: 'PATCH',
+            headers: this.headers(),
+            body,
+        })
+        return response
+    }
+
     async deleteBlock(blockId: string): Promise<Response> {
         Utils.log(`deleteBlock: ${blockId}`)
         return fetch(this.getBaseURL() + this.workspacePath() + `/blocks/${encodeURIComponent(blockId)}`, {
+            method: 'DELETE',
+            headers: this.headers(),
+        })
+    }
+
+    async followBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
+        const body: Subscription = {
+            blockType,
+            blockId,
+            workspaceId: this.workspaceId,
+            subscriberType: 'user',
+            subscriberId: userId,
+        }
+
+        return fetch(this.getBaseURL() + `/api/v1/workspaces/${this.workspaceId}/subscriptions`, {
+            method: 'POST',
+            headers: this.headers(),
+            body: JSON.stringify(body),
+        })
+    }
+
+    async unfollowBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
+        return fetch(this.getBaseURL() + `/api/v1/workspaces/${this.workspaceId}/subscriptions/${blockId}/${userId}`, {
             method: 'DELETE',
             headers: this.headers(),
         })
@@ -413,6 +461,16 @@ class OctoClient {
     async getGlobalTemplates(): Promise<Block[]> {
         const path = this.workspacePath('0') + '/blocks?type=board'
         return this.getBlocksWithPath(path)
+    }
+
+    async getUserBlockSubscriptions(userId: string): Promise<Array<Subscription>> {
+        const path = `/api/v1/workspaces/${this.workspaceId}/subscriptions/${userId}`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as Subscription[]
     }
 }
 

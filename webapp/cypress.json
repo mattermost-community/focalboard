@@ -3,7 +3,10 @@
     "baseUrl": "http://localhost:8088",
     "testFiles": [
         "**/login*.ts",
-        "**/create*.ts"
+        "**/create*.ts",
+        "**/manage*.ts",
+        "**/group*.ts",
+        "**/card*.ts"
     ],
     "env": {
         "username": "test-user",

@@ -119,6 +119,18 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 	return session.Token, nil
 }
 
+// Logout invalidates the user session.
+func (a *App) Logout(sessionID string) error {
+	err := a.store.DeleteSession(sessionID)
+	if err != nil {
+		return errors.Wrap(err, "unable to delete the session")
+	}
+
+	a.metrics.IncrementLogoutCount(1)
+
+	return nil
+}
+
 // RegisterUser creates a new user if the provided data is valid.
 func (a *App) RegisterUser(username, email, password string) error {
 	var user *model.User

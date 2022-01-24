@@ -58,6 +58,12 @@
             padding: 4px 8px;
             height: 32px;
 
+            &.octo-propertyvalue--readonly {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
             &:not(.readonly) {
                 min-width: 180px;
                 transition: background 100ms ease-out 0s;
@@ -87,6 +93,12 @@
 
         .react-select__control {
             margin-top: 0;
+        }
+    }
+
+    .octo-propertyrow {
+        .octo-propertyname {
+            flex: 0 0 150px;
         }
     }
 

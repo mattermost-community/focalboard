@@ -103,7 +103,7 @@ const ViewHeader = React.memo((props: Props) => {
                     <ViewHeaderGroupByMenu
                         properties={board.fields.cardProperties}
                         activeView={activeView}
-                        groupByPropertyName={groupByProperty?.name}
+                        groupByProperty={groupByProperty}
                     />}
 
                 {/* Display by */}

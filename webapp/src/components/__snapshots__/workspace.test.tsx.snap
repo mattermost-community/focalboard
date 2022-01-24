@@ -54,8 +54,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                     >
                       <div
                         class="version"
+                        title="v1.0.0"
                       >
-                        v1.0.0
+                        Feb 2022
                       </div>
                     </div>
                   </div>
@@ -140,7 +141,16 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="octo-sidebar-title"
               title="board title"
             >
-              i board title
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <span
+                class="octo-sidebar-name"
+              >
+                board title
+              </span>
             </div>
             <div
               aria-label="menuwrapper"
@@ -391,7 +401,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="octo-spacer"
             />
             <div
-              aria-label="menuwrapper"
+              aria-label="Properties menu"
               class="MenuWrapper"
               role="button"
             >
@@ -456,7 +466,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="ModalWrapper"
             >
               <div
-                aria-label="menuwrapper"
+                aria-label="View menu"
                 class="MenuWrapper"
                 role="button"
               >
@@ -651,7 +661,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-1
                   </div>
                 </div>
@@ -660,7 +672,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -693,7 +705,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-2
                   </div>
                 </div>
@@ -702,7 +716,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -735,7 +749,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-3
                   </div>
                 </div>
@@ -744,7 +760,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1033,7 +1049,9 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-1
                   </div>
                 </div>
@@ -1042,7 +1060,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1061,7 +1079,9 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-2
                   </div>
                 </div>
@@ -1070,7 +1090,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1089,7 +1109,9 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-3
                   </div>
                 </div>
@@ -1098,7 +1120,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1192,8 +1214,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
                     >
                       <div
                         class="version"
+                        title="v1.0.0"
                       >
-                        v1.0.0
+                        Feb 2022
                       </div>
                     </div>
                   </div>
@@ -1278,7 +1301,16 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="octo-sidebar-title"
               title="board title"
             >
-              i board title
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <span
+                class="octo-sidebar-name"
+              >
+                board title
+              </span>
             </div>
             <div
               aria-label="menuwrapper"
@@ -1529,7 +1561,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="octo-spacer"
             />
             <div
-              aria-label="menuwrapper"
+              aria-label="Properties menu"
               class="MenuWrapper"
               role="button"
             >
@@ -1594,7 +1626,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="ModalWrapper"
             >
               <div
-                aria-label="menuwrapper"
+                aria-label="View menu"
                 class="MenuWrapper"
                 role="button"
               >
@@ -1789,7 +1821,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-1
                   </div>
                 </div>
@@ -1798,7 +1832,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1831,7 +1865,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-2
                   </div>
                 </div>
@@ -1840,7 +1876,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -1873,7 +1909,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-3
                   </div>
                 </div>
@@ -1882,7 +1920,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -2171,7 +2209,9 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-1
                   </div>
                 </div>
@@ -2180,7 +2220,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -2199,7 +2239,9 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-2
                   </div>
                 </div>
@@ -2208,7 +2250,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>
@@ -2227,7 +2269,9 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   >
                     i
                   </div>
-                  <div>
+                  <div
+                    class="octo-titletext"
+                  >
                     card-3
                   </div>
                 </div>
@@ -2236,7 +2280,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                   data-tooltip="Property 1"
                 >
                   <div
-                    class="octo-propertyvalue"
+                    class="octo-propertyvalue octo-propertyvalue--readonly"
                   >
                     value1
                   </div>

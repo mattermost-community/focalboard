@@ -79,18 +79,18 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     shareUrl.searchParams.set('r', readToken)
 
     if (match.params.workspaceId) {
-        const newPath = generatePath('/plugins/focalboard/workspace/:workspaceId/shared/:boardId/:viewId', {
+        const newPath = generatePath('/workspace/:workspaceId/shared/:boardId/:viewId', {
             boardId: match.params.boardId,
             viewId: match.params.viewId,
             workspaceId: match.params.workspaceId,
         })
-        shareUrl.pathname = newPath
+        shareUrl.pathname = Utils.buildURL(newPath)
     } else {
         const newPath = generatePath('/shared/:boardId/:viewId', {
             boardId: match.params.boardId,
             viewId: match.params.viewId,
         })
-        shareUrl.pathname = newPath
+        shareUrl.pathname = Utils.buildURL(newPath)
     }
 
     return (

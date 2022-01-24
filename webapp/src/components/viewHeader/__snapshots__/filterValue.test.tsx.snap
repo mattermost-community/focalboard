@@ -25,7 +25,9 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
           class="menu-options"
         >
           <div
+            aria-label="Status"
             class="MenuOption SwitchOption menu-option"
+            role="button"
           >
             <div
               class="noicon"

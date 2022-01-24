@@ -4,7 +4,7 @@
 import React, {useCallback, useMemo} from 'react'
 import {useIntl} from 'react-intl'
 
-import FullCalendar, {EventClickArg, EventChangeArg, EventInput, EventContentArg} from '@fullcalendar/react'
+import FullCalendar, {EventClickArg, EventChangeArg, EventInput, EventContentArg, DayCellContentArg} from '@fullcalendar/react'
 
 import interactionPlugin from '@fullcalendar/interaction'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -17,6 +17,8 @@ import {Card} from '../../blocks/card'
 import {DateProperty, createDatePropertyFromString} from '../properties/dateRange/dateRange'
 import Tooltip from '../../widgets/tooltip'
 import PropertyValueElement from '../propertyValueElement'
+import {Constants} from '../../constants'
+import CardBadges from '../cardBadges'
 
 import './fullcalendar.scss'
 
@@ -47,6 +49,15 @@ function createDatePropertyFromCalendarDates(start: Date, end: Date) : DatePrope
     return dateProperty
 }
 
+function createDatePropertyFromCalendarDate(start: Date) : DateProperty {
+    // save as noon local, expected from the date picker
+    start.setHours(12)
+    const dateFrom = start.getTime() - timeZoneOffset(start.getTime())
+
+    const dateProperty : DateProperty = {from: dateFrom}
+    return dateProperty
+}
+
 const timeZoneOffset = (date: number): number => {
     return new Date(date).getTimezoneOffset() * 60 * 1000
 }
@@ -57,7 +68,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const isSelectable = !readonly
 
     const visiblePropertyTemplates = useMemo(() => (
-        board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+        activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
     ), [board.fields.cardProperties, activeView.fields.visiblePropertyIds])
 
     let {initialDate} = props
@@ -104,6 +115,8 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         })
     ), [cards, dateDisplayProperty])
 
+    const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
+
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
         return (
@@ -131,6 +144,8 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                         />
                     </Tooltip>
                 ))}
+                {visibleBadges &&
+                <CardBadges card={cards.find((o) => o.id === event.id) || cards[0]}/> }
             </div>
         )
     }
@@ -159,7 +174,15 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     }, [cards, dateDisplayProperty])
 
     const onNewEvent = useCallback((args: {start: Date, end: Date}) => {
-        const dateProperty = createDatePropertyFromCalendarDates(args.start, args.end)
+        let dateProperty: DateProperty
+        if (args.start === args.end) {
+            dateProperty = createDatePropertyFromCalendarDate(args.start)
+        } else {
+            dateProperty = createDatePropertyFromCalendarDates(args.start, args.end)
+            if (dateProperty.to === undefined) {
+                return
+            }
+        }
 
         const properties: Record<string, string> = {}
         if (dateDisplayProperty) {
@@ -181,11 +204,32 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         week: intl.formatMessage({id: 'calendar.week', defaultMessage: 'Week'}),
     }), [])
 
+    const dayCellContent = useCallback((args: DayCellContentArg): JSX.Element|null => {
+        return (
+            <div
+                className='dateContainer'
+            >
+                <div
+                    className='addEvent'
+                    onClick={() => onNewEvent({start: args.date, end: args.date})}
+                >
+                    {'+'}
+                </div>
+                <div
+                    className='dateDisplay'
+                >
+                    {args.dayNumberText}
+                </div>
+            </div>
+        )
+    }, [dateDisplayProperty])
+
     return (
         <div
             className='CalendarContainer'
         >
             <FullCalendar
+                dayCellContent={dayCellContent}
                 dayMaxEventRows={5}
                 initialDate={initialDate}
                 plugins={[dayGridPlugin, interactionPlugin]}
@@ -198,6 +242,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 eventClick={eventClick}
                 eventContent={renderEventContent}
                 eventChange={eventChange}
+
                 selectable={isSelectable}
                 selectMirror={true}
                 select={onNewEvent}
