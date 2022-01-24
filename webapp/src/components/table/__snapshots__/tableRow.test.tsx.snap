@@ -32,10 +32,12 @@ exports[`components/table/TableRow should match snapshot 1`] = `
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button"
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
@@ -75,10 +77,12 @@ exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button"
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
@@ -118,10 +122,12 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button"
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
@@ -131,12 +137,17 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
           class="Label propColorBrown "
         >
-          value 1
+          <span
+            class="Label-text"
+          >
+            value 1
+          </span>
         </span>
       </div>
     </div>
@@ -146,11 +157,16 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
           class="Label empty "
-        />
+        >
+          <span
+            class="Label-text"
+          />
+        </span>
       </div>
     </div>
   </div>
@@ -189,10 +205,12 @@ exports[`components/table/TableRow should match snapshot, isSelected 1`] = `
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button"
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
@@ -233,10 +251,12 @@ exports[`components/table/TableRow should match snapshot, read-only 1`] = `
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button"
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
@@ -276,10 +296,12 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
         class="open-button"
       >
         <button
-          class="Button  "
+          class="Button"
           type="button"
         >
-          Open
+          <span>
+            Open
+          </span>
         </button>
       </div>
     </div>
@@ -289,12 +311,17 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
           class="Label propColorBrown "
         >
-          value 1
+          <span
+            class="Label-text"
+          >
+            value 1
+          </span>
         </span>
       </div>
     </div>
@@ -304,11 +331,16 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
     >
       <div
         class="octo-propertyvalue"
+        data-testid="select-non-editable"
         tabindex="0"
       >
         <span
           class="Label empty "
-        />
+        >
+          <span
+            class="Label-text"
+          />
+        </span>
       </div>
     </div>
   </div>

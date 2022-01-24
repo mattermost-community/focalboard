@@ -2,8 +2,6 @@ package main
 
 import (
 	"reflect"
-
-	"github.com/pkg/errors"
 )
 
 // configuration captures the plugin's external configuration as exposed in the Mattermost server
@@ -18,6 +16,7 @@ import (
 // If you add non-reference types to your configuration struct, be sure to rewrite Clone as a deep
 // copy appropriate for your types.
 type configuration struct {
+	EnablePublicSharedBoards bool
 }
 
 // Clone shallow copies the configuration. Your implementation may require a deep copy if
@@ -69,15 +68,27 @@ func (p *Plugin) setConfiguration(configuration *configuration) {
 }
 
 // OnConfigurationChange is invoked when configuration changes may have been made.
-func (p *Plugin) OnConfigurationChange() error {
-	var configuration = new(configuration)
-
-	// Load the public configuration fields from the Mattermost server configuration.
-	if err := p.API.LoadPluginConfiguration(configuration); err != nil {
-		return errors.Wrap(err, "failed to load plugin configuration")
+func (p *Plugin) OnConfigurationChange() error { //nolint
+	// Have we been setup by OnActivate?
+	if p.wsPluginAdapter == nil {
+		return nil
 	}
+	mmconfig := p.API.GetConfig()
 
+	// handle plugin configuration settings
+	enableShareBoards := false
+	if mmconfig.PluginSettings.Plugins[pluginName][sharedBoardsName] == true {
+		enableShareBoards = true
+	}
+	configuration := &configuration{
+		EnablePublicSharedBoards: enableShareBoards,
+	}
 	p.setConfiguration(configuration)
+	p.server.Config().EnablePublicSharedBoards = enableShareBoards
 
+	// handle feature flags
+	p.server.Config().FeatureFlags = parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
+	p.server.UpdateAppConfig()
+	p.wsPluginAdapter.BroadcastConfigChange(*p.server.App().GetClientConfig())
 	return nil
 }

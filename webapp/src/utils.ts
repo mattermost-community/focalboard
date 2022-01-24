@@ -2,31 +2,106 @@
 // See LICENSE.txt for license information.
 import marked from 'marked'
 import {IntlShape} from 'react-intl'
+import moment from 'moment'
 
-declare global {
-    interface Window {
-        msCrypto: Crypto
-    }
-}
+import {Block} from './blocks/block'
+import {createBoard} from './blocks/board'
+import {createBoardView} from './blocks/boardView'
+import {createCard} from './blocks/card'
+import {createCommentBlock} from './blocks/commentBlock'
+import {IAppWindow} from './types'
 
+declare let window: IAppWindow
+
+const imageURLForUser = (window as any).Components?.imageURLForUser
 const IconClass = 'octo-icon'
 const OpenButtonClass = 'open-button'
 const SpacerClass = 'octo-spacer'
 const HorizontalGripClass = 'HorizontalGrip'
+const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
+
+// eslint-disable-next-line no-shadow
+enum IDType {
+    None = '7',
+    Workspace = 'w',
+    Board = 'b',
+    Card = 'c',
+    View = 'v',
+    Session = 's',
+    User = 'u',
+    Token = 'k',
+    BlockID = 'a',
+}
 
 class Utils {
-    static createGuid(): string {
-        const crypto = window.crypto || window.msCrypto
-        function randomDigit() {
-            if (crypto && crypto.getRandomValues) {
-                const rands = new Uint8Array(1)
-                crypto.getRandomValues(rands)
-                return (rands[0] % 16).toString(16)
-            }
+    static createGuid(idType: IDType): string {
+        const data = Utils.randomArray(16)
+        return idType + Utils.base32encode(data, false)
+    }
 
-            return (Math.floor((Math.random() * 16))).toString(16)
+    static blockTypeToIDType(blockType: string | undefined): IDType {
+        let ret: IDType = IDType.None
+        switch (blockType) {
+        case 'workspace':
+            ret = IDType.Workspace
+            break
+        case 'board':
+            ret = IDType.Board
+            break
+        case 'card':
+            ret = IDType.Card
+            break
+        case 'view':
+            ret = IDType.View
+            break
         }
-        return 'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g, randomDigit)
+        return ret
+    }
+
+    static getProfilePicture(userId?: string): string {
+        const defaultImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
+
+        return imageURLForUser && userId ? imageURLForUser(userId) : defaultImageUrl
+    }
+
+    static randomArray(size: number): Uint8Array {
+        const crypto = window.crypto || window.msCrypto
+        const rands = new Uint8Array(size)
+        if (crypto && crypto.getRandomValues) {
+            crypto.getRandomValues(rands)
+        } else {
+            for (let i = 0; i < size; i++) {
+                rands[i] = Math.floor((Math.random() * 255))
+            }
+        }
+        return rands
+    }
+
+    static base32encode(data: Int8Array | Uint8Array | Uint8ClampedArray, pad: boolean): string {
+        const dview = new DataView(data.buffer, data.byteOffset, data.byteLength)
+        let bits = 0
+        let value = 0
+        let output = ''
+
+        // adapted from https://github.com/LinusU/base32-encode
+        for (let i = 0; i < dview.byteLength; i++) {
+            value = (value << 8) | dview.getUint8(i)
+            bits += 8
+
+            while (bits >= 5) {
+                output += base32Alphabet[(value >>> (bits - 5)) & 31]
+                bits -= 5
+            }
+        }
+        if (bits > 0) {
+            output += base32Alphabet[(value << (5 - bits)) & 31]
+        }
+        if (pad) {
+            while ((output.length % 8) !== 0) {
+                output += '='
+            }
+        }
+        return output
     }
 
     static htmlToElement(html: string): HTMLElement {
@@ -53,10 +128,10 @@ class Utils {
     static canvas : HTMLCanvasElement | undefined
     static getTextWidth(displayText: string, fontDescriptor: string): number {
         if (displayText !== '') {
-            if (!this.canvas) {
-                this.canvas = document.createElement('canvas') as HTMLCanvasElement
+            if (!Utils.canvas) {
+                Utils.canvas = document.createElement('canvas') as HTMLCanvasElement
             }
-            const context = this.canvas.getContext('2d')
+            const context = Utils.canvas.getContext('2d')
             if (context) {
                 context.font = fontDescriptor
                 const metrics = context.measureText(displayText)
@@ -68,7 +143,7 @@ class Utils {
 
     static getFontAndPaddingFromCell = (cell: Element) : {fontDescriptor: string, padding: number} => {
         const style = getComputedStyle(cell)
-        const padding = Utils.getHorizontalPadding(style)
+        const padding = Utils.getTotalHorizontalPadding(style)
         return Utils.getFontAndPaddingFromChildren(cell.children, padding)
     }
 
@@ -80,31 +155,64 @@ class Utils {
             padding: pad,
         }
         Array.from(children).forEach((element) => {
-            switch (element.className) {
-            case IconClass:
-            case HorizontalGripClass:
+            const style = getComputedStyle(element)
+            if (element.tagName === 'svg') {
+                // clientWidth already includes padding
                 myResults.padding += element.clientWidth
-                break
-            case SpacerClass:
-            case OpenButtonClass:
-                break
-            default: {
-                const style = getComputedStyle(element)
-                myResults.fontDescriptor = style.font
-                myResults.padding += Utils.getHorizontalPadding(style)
-                const childResults = Utils.getFontAndPaddingFromChildren(element.children, myResults.padding)
-                if (childResults.fontDescriptor !== '') {
-                    myResults.fontDescriptor = childResults.fontDescriptor
-                    myResults.padding = childResults.padding
+                myResults.padding += Utils.getHorizontalBorder(style)
+                myResults.padding += Utils.getHorizontalMargin(style)
+                myResults.fontDescriptor = Utils.getFontString(style)
+            } else {
+                switch (element.className) {
+                case IconClass:
+                case HorizontalGripClass:
+                    myResults.padding += element.clientWidth
+                    break
+                case SpacerClass:
+                case OpenButtonClass:
+                    break
+                default: {
+                    myResults.fontDescriptor = Utils.getFontString(style)
+                    myResults.padding += Utils.getTotalHorizontalPadding(style)
+                    const childResults = Utils.getFontAndPaddingFromChildren(element.children, myResults.padding)
+                    if (childResults.fontDescriptor !== '') {
+                        myResults.fontDescriptor = childResults.fontDescriptor
+                        myResults.padding = childResults.padding
+                    }
                 }
-            }
+                }
             }
         })
         return myResults
     }
 
-    static getHorizontalPadding = (style: CSSStyleDeclaration): number => {
-        return parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10) + parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10) + parseInt(style.borderLeft, 10) + parseInt(style.borderRight, 10)
+    private static getFontString(style: CSSStyleDeclaration): string {
+        if (style.font) {
+            return style.font
+        }
+        const {fontStyle, fontVariant, fontWeight, fontSize, lineHeight, fontFamily} = style
+        const props = [fontStyle, fontVariant, fontWeight]
+        if (fontSize) {
+            props.push(lineHeight ? `${fontSize} / ${lineHeight}` : fontSize)
+        }
+        props.push(fontFamily)
+        return props.join(' ')
+    }
+
+    private static getHorizontalMargin(style: CSSStyleDeclaration): number {
+        return parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10)
+    }
+
+    private static getHorizontalBorder(style: CSSStyleDeclaration): number {
+        return parseInt(style.borderLeftWidth, 10) + parseInt(style.borderRightWidth, 10)
+    }
+
+    private static getHorizontalPadding(style: CSSStyleDeclaration): number {
+        return parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10)
+    }
+
+    private static getTotalHorizontalPadding(style: CSSStyleDeclaration): number {
+        return Utils.getHorizontalPadding(style) + Utils.getHorizontalMargin(style) + Utils.getHorizontalBorder(style)
     }
 
     // Markdown
@@ -112,30 +220,77 @@ class Utils {
     static htmlFromMarkdown(text: string): string {
         // HACKHACK: Somehow, marked doesn't encode angle brackets
         const renderer = new marked.Renderer()
-        if ((window as any).openInNewBrowser) {
-            renderer.link = (href, title, contents) => `<a target="_blank" rel="noreferrer" href="${encodeURI(href || '')}" title="${title ? encodeURI(title) : ''}" onclick="event.stopPropagation(); openInNewBrowser && openInNewBrowser(event.target.href);">${contents}</a>`
+        renderer.link = (href, title, contents) => {
+            return '<a ' +
+                'target="_blank" ' +
+                'rel="noreferrer" ' +
+                `href="${encodeURI(href || '')}" ` +
+                `title="${title ? encodeURI(title) : ''}" ` +
+                `onclick="${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
+            '>' + contents + '</a>'
         }
+
+        renderer.table = (header, body) => {
+            return `<div class="table-responsive"><table class="markdown__table"><thead>${header}</thead><tbody>${body}</tbody></table></div>`
+        }
+
+        return this.htmlFromMarkdownWithRenderer(text, renderer)
+    }
+
+    static htmlFromMarkdownWithRenderer(text: string, renderer: marked.Renderer): string {
         const html = marked(text.replace(/</g, '&lt;'), {renderer, breaks: true})
         return html.trim()
     }
 
+    static countCheckboxesInMarkdown(text: string): {total: number, checked: number} {
+        let total = 0
+        let checked = 0
+        const renderer = new marked.Renderer()
+        renderer.checkbox = (isChecked) => {
+            ++total
+            if (isChecked) {
+                ++checked
+            }
+            return ''
+        }
+        this.htmlFromMarkdownWithRenderer(text, renderer)
+        return {total, checked}
+    }
+
     // Date and Time
+    private static yearOption(date: Date) {
+        const isCurrentYear = date.getFullYear() === new Date().getFullYear()
+        return isCurrentYear ? undefined : 'numeric'
+    }
 
-    static displayDate(date: Date, intl: IntlShape, dateFormat: string): string {
-        const text = intl.formatDate(date, {year: 'numeric', month: 'short', day: '2-digit', format: dateFormat})
+    static displayDate(date: Date, intl: IntlShape): string {
+        return intl.formatDate(date, {
+            year: Utils.yearOption(date),
+            month: 'long',
+            day: '2-digit',
+        })
+    }
 
-        return text
+    static inputDate(date: Date, intl: IntlShape): string {
+        return intl.formatDate(date, {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+        })
     }
 
     static displayDateTime(date: Date, intl: IntlShape): string {
-        const text = intl.formatDate(date, {
-            year: 'numeric',
-            month: 'short',
+        return intl.formatDate(date, {
+            year: Utils.yearOption(date),
+            month: 'long',
             day: '2-digit',
             hour: 'numeric',
             minute: 'numeric',
         })
-        return text
+    }
+
+    static relativeDisplayDateTime(date: Date, intl: IntlShape): string {
+        return moment(date).locale(intl.locale.toLowerCase()).fromNow()
     }
 
     static sleep(miliseconds: number): Promise<void> {
@@ -186,14 +341,32 @@ class Utils {
         /// #!endif
     }
 
+    static logWarn(message: string): void {
+        /// #!if ENV !== "production"
+        const timestamp = (Date.now() / 1000).toFixed(2)
+        // eslint-disable-next-line no-console
+        console.warn(`[${timestamp}] ${message}`)
+
+        /// #!endif
+    }
+
     // favicon
 
     static setFavicon(icon?: string): void {
-        const href = icon ? `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>` : ''
-        const link = (document.querySelector("link[rel*='icon']") || document.createElement('link')) as HTMLLinkElement
+        if (Utils.isFocalboardPlugin()) {
+            // Do not change the icon from focalboard plugin
+            return
+        }
+
+        if (!icon) {
+            document.querySelector("link[rel*='icon']")?.remove()
+            return
+        }
+        const link = document.createElement('link') as HTMLLinkElement
         link.type = 'image/x-icon'
         link.rel = 'shortcut icon'
-        link.href = href
+        link.href = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>`
+        document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
         document.getElementsByTagName('head')[0].appendChild(link)
     }
 
@@ -315,7 +488,7 @@ class Utils {
     }
 
     static getBaseURL(absolute?: boolean): string {
-        let baseURL = (window as any).baseURL || ''
+        let baseURL = window.baseURL || ''
         baseURL = baseURL.replace(/\/+$/, '')
         if (baseURL.indexOf('/') === 0) {
             baseURL = baseURL.slice(1)
@@ -326,8 +499,20 @@ class Utils {
         return baseURL
     }
 
+    static getFrontendBaseURL(absolute?: boolean): string {
+        let frontendBaseURL = window.frontendBaseURL || Utils.getBaseURL(absolute)
+        frontendBaseURL = frontendBaseURL.replace(/\/+$/, '')
+        if (frontendBaseURL.indexOf('/') === 0) {
+            frontendBaseURL = frontendBaseURL.slice(1)
+        }
+        if (absolute) {
+            return window.location.origin + '/' + frontendBaseURL
+        }
+        return frontendBaseURL
+    }
+
     static buildURL(path: string, absolute?: boolean): string {
-        const baseURL = this.getBaseURL()
+        const baseURL = Utils.getBaseURL()
         let finalPath = baseURL + path
         if (path.indexOf('/') !== 0) {
             finalPath = baseURL + '/' + path
@@ -340,6 +525,119 @@ class Utils {
         }
         return finalPath
     }
+
+    static roundTo(num: number, decimalPlaces: number): number {
+        return Math.round(num * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)
+    }
+
+    static isFocalboardPlugin(): boolean {
+        return Boolean(window.isFocalboardPlugin)
+    }
+
+    // this is a temporary solution while we're using legacy routes
+    // for shared boards as a way to check if we're accessing the
+    // legacy routes inside the plugin
+    static isFocalboardLegacy(): boolean {
+        return window.location.pathname.includes('/plugins/focalboard')
+    }
+
+    static fixBlock(block: Block): Block {
+        switch (block.type) {
+        case 'board':
+            return createBoard(block)
+        case 'view':
+            return createBoardView(block)
+        case 'card':
+            return createCard(block)
+        case 'comment':
+            return createCommentBlock(block)
+        default:
+            return block
+        }
+    }
+
+    static userAgent(): string {
+        return window.navigator.userAgent
+    }
+
+    static isDesktopApp(): boolean {
+        return Utils.userAgent().indexOf('Mattermost') !== -1 && Utils.userAgent().indexOf('Electron') !== -1
+    }
+
+    static getDesktopVersion(): string {
+        // use if the value window.desktop.version is not set yet
+        const regex = /Mattermost\/(\d+\.\d+\.\d+)/gm
+        const match = regex.exec(window.navigator.appVersion)?.[1] || ''
+        return match
+    }
+
+    /**
+     * Function to check how a version compares to another
+     *
+     * eg.  versionA = 4.16.0, versionB = 4.17.0 returns  1
+     *      versionA = 4.16.1, versionB = 4.16.1 returns  0
+     *      versionA = 4.16.1, versionB = 4.15.0 returns -1
+     */
+    static compareVersions(versionA: string, versionB: string): number {
+        if (versionA === versionB) {
+            return 0
+        }
+
+        // We only care about the numbers
+        const versionANumber = (versionA || '').split('.').filter((x) => (/^[0-9]+$/).exec(x) !== null)
+        const versionBNumber = (versionB || '').split('.').filter((x) => (/^[0-9]+$/).exec(x) !== null)
+
+        for (let i = 0; i < Math.max(versionANumber.length, versionBNumber.length); i++) {
+            const a = parseInt(versionANumber[i], 10) || 0
+            const b = parseInt(versionBNumber[i], 10) || 0
+            if (a > b) {
+                return -1
+            }
+
+            if (a < b) {
+                return 1
+            }
+        }
+
+        // If all components are equal, then return true
+        return 0
+    }
+
+    static isDesktop(): boolean {
+        return Utils.isDesktopApp() && (Utils.compareVersions(Utils.getDesktopVersion(), '5.0.0') <= 0)
+    }
+
+    static getReadToken(): string {
+        const queryString = new URLSearchParams(window.location.search)
+        const readToken = queryString.get('r') || ''
+        return readToken
+    }
+
+    static generateClassName(conditions: Record<string, boolean>): string {
+        return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
+    }
+
+    static buildOriginalPath(workspaceId = '', boardId = '', viewId = '', cardId = ''): string {
+        let originalPath = ''
+
+        if (workspaceId) {
+            originalPath += `${workspaceId}/`
+        }
+
+        if (boardId) {
+            originalPath += `${boardId}/`
+        }
+
+        if (viewId) {
+            originalPath += `${viewId}/`
+        }
+
+        if (cardId) {
+            originalPath += `${cardId}/`
+        }
+
+        return originalPath
+    }
 }
 
-export {Utils}
+export {Utils, IDType}

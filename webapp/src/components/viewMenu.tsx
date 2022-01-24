@@ -4,23 +4,26 @@ import React, {useCallback} from 'react'
 import {injectIntl, IntlShape} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
-import {Board} from '../blocks/board'
-import {BoardView, IViewType, MutableBoardView} from '../blocks/boardView'
+import {Board, IPropertyTemplate} from '../blocks/board'
+import {BoardView, createBoardView, IViewType} from '../blocks/boardView'
 import {Constants} from '../constants'
 import mutator from '../mutator'
-import {Utils} from '../utils'
-import {BoardTree} from '../viewModel/boardTree'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import {Block} from '../blocks/block'
+import {IDType, Utils} from '../utils'
 import AddIcon from '../widgets/icons/add'
 import BoardIcon from '../widgets/icons/board'
+import CalendarIcon from '../widgets/icons/calendar'
 import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
-import TableIcon from '../widgets/icons/table'
 import GalleryIcon from '../widgets/icons/gallery'
+import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 
 type Props = {
-    boardTree: BoardTree
     board: Board,
+    activeView: BoardView,
+    views: BoardView[],
     intl: IntlShape
     readonly: boolean
 }
@@ -30,148 +33,186 @@ const ViewMenu = React.memo((props: Props) => {
     const match = useRouteMatch()
 
     const showView = useCallback((viewId) => {
-        const newPath = generatePath(match.path, {...match.params, viewId: viewId || ''})
+        let newPath = generatePath(match.path, {...match.params, viewId: viewId || ''})
+        if (props.readonly) {
+            newPath += `?r=${Utils.getReadToken()}`
+        }
         history.push(newPath)
     }, [match, history])
 
     const handleDuplicateView = useCallback(() => {
-        const {boardTree} = props
+        const {board, activeView} = props
         Utils.log('duplicateView')
-        const currentViewId = boardTree.activeView.id
-        const newView = boardTree.activeView.duplicate()
-        newView.title = `${boardTree.activeView.title} copy`
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoardView, {board: board.id, view: activeView.id})
+        const currentViewId = activeView.id
+        const newView = createBoardView(activeView)
+        newView.title = `${activeView.title} copy`
+        newView.id = Utils.createGuid(IDType.View)
         mutator.insertBlock(
             newView,
             'duplicate view',
-            async () => {
-                // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+            async (block: Block) => {
+                // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    showView(newView.id)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
                 showView(currentViewId)
             },
         )
-    }, [props.boardTree, showView])
+    }, [props.activeView, showView])
 
     const handleDeleteView = useCallback(() => {
-        const {boardTree} = props
+        const {board, activeView, views} = props
         Utils.log('deleteView')
-        const view = boardTree.activeView
-        const nextView = boardTree.views.find((o) => o !== view)
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardView, {board: board.id, view: activeView.id})
+        const view = activeView
+        const nextView = views.find((o) => o !== view)
         mutator.deleteBlock(view, 'delete view')
         if (nextView) {
             showView(nextView.id)
         }
-    }, [props.boardTree, showView])
+    }, [props.views, props.activeView, showView])
 
     const handleViewClick = useCallback((id: string) => {
-        const {boardTree} = props
+        const {views} = props
         Utils.log('view ' + id)
-        const view = boardTree.views.find((o) => o.id === id)
+        const view = views.find((o) => o.id === id)
         Utils.assert(view, `view not found: ${id}`)
         if (view) {
             showView(view.id)
         }
-    }, [props.boardTree, showView])
+    }, [props.views, showView])
 
     const handleAddViewBoard = useCallback(() => {
-        const {board, boardTree, intl} = props
+        const {board, activeView, intl} = props
         Utils.log('addview-board')
-        const view = new MutableBoardView()
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardView, {board: board.id, view: activeView.id})
+        const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
-        view.viewType = 'board'
+        view.fields.viewType = 'board'
         view.parentId = board.id
         view.rootId = board.rootId
 
-        const oldViewId = boardTree.activeView.id
+        const oldViewId = activeView.id
 
         mutator.insertBlock(
             view,
             'add view',
-            async () => {
-                // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+            async (block: Block) => {
+                // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    showView(view.id)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
                 showView(oldViewId)
             })
-    }, [props.boardTree, props.board, props.intl, showView])
+    }, [props.activeView, props.board, props.intl, showView])
 
     const handleAddViewTable = useCallback(() => {
-        const {board, boardTree, intl} = props
+        const {board, activeView, intl} = props
 
         Utils.log('addview-table')
-        const view = new MutableBoardView()
+        const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewTableTitle', defaultMessage: 'Table view'})
-        view.viewType = 'table'
+        view.fields.viewType = 'table'
         view.parentId = board.id
         view.rootId = board.rootId
-        view.visiblePropertyIds = board.cardProperties.map((o) => o.id)
-        view.columnWidths = {}
-        view.columnWidths[Constants.titleColumnId] = Constants.defaultTitleColumnWidth
+        view.fields.visiblePropertyIds = board.fields.cardProperties.map((o: IPropertyTemplate) => o.id)
+        view.fields.columnWidths = {}
+        view.fields.columnWidths[Constants.titleColumnId] = Constants.defaultTitleColumnWidth
 
-        const oldViewId = boardTree.activeView.id
+        const oldViewId = activeView.id
 
         mutator.insertBlock(
             view,
             'add view',
-            async () => {
-                // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+            async (block: Block) => {
+                // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    Utils.log(`showView: ${view.id}`)
-                    showView(view.id)
+                    Utils.log(`showView: ${block.id}`)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
                 showView(oldViewId)
             })
-    }, [props.boardTree, props.board, props.intl, showView])
+    }, [props.activeView, props.board, props.intl, showView])
 
     const handleAddViewGallery = useCallback(() => {
-        const {board, boardTree, intl} = props
+        const {board, activeView, intl} = props
 
         Utils.log('addview-gallery')
-        const view = new MutableBoardView()
+        const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewGalleryTitle', defaultMessage: 'Gallery view'})
-        view.viewType = 'gallery'
+        view.fields.viewType = 'gallery'
         view.parentId = board.id
         view.rootId = board.rootId
-        view.visiblePropertyIds = [Constants.titleColumnId]
+        view.fields.visiblePropertyIds = [Constants.titleColumnId]
 
-        const oldViewId = boardTree.activeView.id
+        const oldViewId = activeView.id
 
         mutator.insertBlock(
             view,
             'add view',
-            async () => {
-                // This delay is needed because OctoListener has a default 100 ms notification delay before updates
+            async (block: Block) => {
+                // This delay is needed because WSClient has a default 100 ms notification delay before updates
                 setTimeout(() => {
-                    Utils.log(`showView: ${view.id}`)
-                    showView(view.id)
+                    Utils.log(`showView: ${block.id}`)
+                    showView(block.id)
                 }, 120)
             },
             async () => {
                 showView(oldViewId)
             })
-    }, [props.board, props.boardTree, props.intl, showView])
+    }, [props.board, props.activeView, props.intl, showView])
 
-    const {boardTree, intl} = props
+    const handleAddViewCalendar = useCallback(() => {
+        const {board, activeView, intl} = props
+
+        Utils.log('addview-calendar')
+        const view = createBoardView()
+        view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar View'})
+        view.fields.viewType = 'calendar'
+        view.parentId = board.id
+        view.rootId = board.rootId
+        view.fields.visiblePropertyIds = [Constants.titleColumnId]
+
+        const oldViewId = activeView.id
+
+        // Find first date property
+        view.fields.dateDisplayPropertyId = board.fields.cardProperties.find((o: IPropertyTemplate) => o.type === 'date')?.id
+
+        mutator.insertBlock(
+            view,
+            'add view',
+            async (block: Block) => {
+                // This delay is needed because WSClient has a default 100 ms notification delay before updates
+                setTimeout(() => {
+                    Utils.log(`showView: ${block.id}`)
+                    showView(block.id)
+                }, 120)
+            },
+            async () => {
+                showView(oldViewId)
+            })
+    }, [props.board, props.activeView, props.intl, showView])
+
+    const {views, intl} = props
 
     const duplicateViewText = intl.formatMessage({
         id: 'View.DuplicateView',
-        defaultMessage: 'Duplicate View',
+        defaultMessage: 'Duplicate view',
     })
     const deleteViewText = intl.formatMessage({
         id: 'View.DeleteView',
-        defaultMessage: 'Delete View',
+        defaultMessage: 'Delete view',
     })
     const addViewText = intl.formatMessage({
         id: 'View.AddView',
-        defaultMessage: 'Add View',
+        defaultMessage: 'Add view',
     })
     const boardText = intl.formatMessage({
         id: 'View.Board',
@@ -181,24 +222,29 @@ const ViewMenu = React.memo((props: Props) => {
         id: 'View.Table',
         defaultMessage: 'Table',
     })
+    const galleryText = intl.formatMessage({
+        id: 'View.Gallery',
+        defaultMessage: 'Gallery',
+    })
 
     const iconForViewType = (viewType: IViewType) => {
         switch (viewType) {
         case 'board': return <BoardIcon/>
         case 'table': return <TableIcon/>
         case 'gallery': return <GalleryIcon/>
+        case 'calendar': return <CalendarIcon/>
         default: return <div/>
         }
     }
 
     return (
         <Menu>
-            {boardTree.views.map((view: BoardView) => (
+            {views.map((view: BoardView) => (
                 <Menu.Text
                     key={view.id}
                     id={view.id}
                     name={view.title}
-                    icon={iconForViewType(view.viewType)}
+                    icon={iconForViewType(view.fields.viewType)}
                     onClick={handleViewClick}
                 />))}
             <Menu.Separator/>
@@ -210,7 +256,7 @@ const ViewMenu = React.memo((props: Props) => {
                     onClick={handleDuplicateView}
                 />
             }
-            {!props.readonly && boardTree.views.length > 1 &&
+            {!props.readonly && views.length > 1 &&
                 <Menu.Text
                     id='__deleteView'
                     name={deleteViewText}
@@ -238,9 +284,15 @@ const ViewMenu = React.memo((props: Props) => {
                     />
                     <Menu.Text
                         id='gallery'
-                        name='Gallery'
+                        name={galleryText}
                         icon={<GalleryIcon/>}
                         onClick={handleAddViewGallery}
+                    />
+                    <Menu.Text
+                        id='calendar'
+                        name='Calendar'
+                        icon={<CalendarIcon/>}
+                        onClick={handleAddViewCalendar}
                     />
                 </Menu.SubMenu>
             }

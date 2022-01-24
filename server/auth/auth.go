@@ -1,14 +1,21 @@
+//go:generate mockgen --build_flags=--mod=mod -destination=mocks/mockauth_interface.go -package mocks . AuthInterface
 package auth
 
 import (
 	"database/sql"
-	"time"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/pkg/errors"
 )
+
+type AuthInterface interface {
+	GetSession(token string) (*model.Session, error)
+	IsValidReadToken(c store.Container, blockID string, readToken string) (bool, error)
+	DoesUserHaveWorkspaceAccess(userID string, workspaceID string) bool
+}
 
 // Auth authenticates sessions.
 type Auth struct {
@@ -31,7 +38,7 @@ func (a *Auth) GetSession(token string) (*model.Session, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to get the session for the token")
 	}
-	if session.UpdateAt < (time.Now().Unix() - a.config.SessionRefreshTime) {
+	if session.UpdateAt < (utils.GetMillis() - utils.SecondsToMillis(a.config.SessionRefreshTime)) {
 		_ = a.store.RefreshSession(session)
 	}
 	return session, nil

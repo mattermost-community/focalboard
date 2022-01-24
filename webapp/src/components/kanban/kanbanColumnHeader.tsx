@@ -6,11 +6,10 @@ import {FormattedMessage, IntlShape} from 'react-intl'
 import {useDrop, useDrag} from 'react-dnd'
 
 import {Constants} from '../../constants'
-import {IPropertyOption} from '../../blocks/board'
+import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import mutator from '../../mutator'
-import {BoardTree, BoardTreeGroup} from '../../viewModel/boardTree'
-import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import AddIcon from '../../widgets/icons/add'
 import DeleteIcon from '../../widgets/icons/delete'
@@ -21,19 +20,30 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
 
+import {KanbanCalculation} from './calculation/calculation'
+
 type Props = {
-    boardTree: BoardTree
-    group: BoardTreeGroup
+    board: Board
+    activeView: BoardView
+    group: BoardGroup
+    groupByProperty?: IPropertyTemplate
     intl: IntlShape
     readonly: boolean
-    addCard: (groupByOptionId?: string) => Promise<void>
+    addCard: (groupByOptionId?: string, show?: boolean) => Promise<void>
     propertyNameChanged: (option: IPropertyOption, text: string) => Promise<void>
     onDropToColumn: (srcOption: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => void
+    calculationMenuOpen: boolean
+    onCalculationMenuOpen: () => void
+    onCalculationMenuClose: () => void
 }
 
+const defaultCalculation = 'count'
+const defaultProperty: IPropertyTemplate = {
+    id: Constants.titleColumnId,
+} as IPropertyTemplate
+
 export default function KanbanColumnHeader(props: Props): JSX.Element {
-    const {boardTree, intl, group} = props
-    const {activeView} = boardTree
+    const {board, activeView, intl, group, groupByProperty} = props
     const [groupTitle, setGroupTitle] = useState(group.option.value)
 
     const headerRef = useRef<HTMLDivElement>(null)
@@ -53,7 +63,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
         drop: (item: IPropertyOption) => {
             props.onDropToColumn(item, undefined, group.option)
         },
-    }))
+    }), [props.onDropToColumn])
 
     useEffect(() => {
         setGroupTitle(group.option.value)
@@ -64,6 +74,10 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
     if (isOver) {
         className += ' dragover'
     }
+
+    const groupCalculation = props.activeView.fields.kanbanCalculations[props.group.option.id]
+    const calculationValue = groupCalculation ? groupCalculation.calculation : defaultCalculation
+    const calculationProperty = groupCalculation ? props.board.fields.cardProperties.find((property) => property.id === groupCalculation.propertyId) || defaultProperty : defaultProperty
 
     return (
         <div
@@ -78,13 +92,13 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                     title={intl.formatMessage({
                         id: 'BoardComponent.no-property-title',
                         defaultMessage: 'Items with an empty {property} property will go here. This column cannot be removed.',
-                    }, {property: boardTree.groupByProperty!.name})}
+                    }, {property: groupByProperty!.name})}
                 >
                     <FormattedMessage
                         id='BoardComponent.no-property'
                         defaultMessage='No {property}'
                         values={{
-                            property: boardTree.groupByProperty!.name,
+                            property: groupByProperty!.name,
                         }}
                     />
                 </Label>}
@@ -107,7 +121,31 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         spellCheck={true}
                     />
                 </Label>}
-            <Button>{`${group.cards.length}`}</Button>
+            <KanbanCalculation
+                cards={group.cards}
+                menuOpen={props.calculationMenuOpen}
+                value={calculationValue}
+                property={calculationProperty}
+                onMenuClose={props.onCalculationMenuClose}
+                onMenuOpen={props.onCalculationMenuOpen}
+                cardProperties={board.fields.cardProperties}
+                readonly={props.readonly}
+                onChange={(data: {calculation: string, propertyId: string}) => {
+                    if (data.calculation === calculationValue && data.propertyId === calculationProperty.id) {
+                        return
+                    }
+
+                    const newCalculations = {
+                        ...props.activeView.fields.kanbanCalculations,
+                    }
+                    newCalculations[props.group.option.id] = {
+                        calculation: data.calculation,
+                        propertyId: data.propertyId,
+                    }
+
+                    mutator.changeViewKanbanCalculations(props.activeView.id, props.activeView.fields.kanbanCalculations, newCalculations)
+                }}
+            />
             <div className='octo-spacer'/>
             {!props.readonly &&
                 <>
@@ -126,7 +164,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                                         id='delete'
                                         icon={<DeleteIcon/>}
                                         name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
-                                        onClick={() => mutator.deletePropertyOption(boardTree, boardTree.groupByProperty!, group.option)}
+                                        onClick={() => mutator.deletePropertyOption(board, groupByProperty!, group.option)}
                                     />
                                     <Menu.Separator/>
                                     {Object.entries(Constants.menuColors).map(([key, color]) => (
@@ -134,7 +172,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                                             key={key}
                                             id={key}
                                             name={color}
-                                            onClick={() => mutator.changePropertyOptionColor(boardTree.board, boardTree.groupByProperty!, group.option, key)}
+                                            onClick={() => mutator.changePropertyOptionColor(board, groupByProperty!, group.option, key)}
                                         />
                                     ))}
                                 </>}
@@ -142,7 +180,9 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                     </MenuWrapper>
                     <IconButton
                         icon={<AddIcon/>}
-                        onClick={() => props.addCard(group.option.id)}
+                        onClick={() => {
+                            props.addCard(group.option.id, true)
+                        }}
                     />
                 </>
             }

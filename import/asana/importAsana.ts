@@ -4,11 +4,11 @@ import * as fs from 'fs'
 import minimist from 'minimist'
 import {exit} from 'process'
 import {ArchiveUtils} from '../../webapp/src/blocks/archive'
-import {IBlock} from '../../webapp/src/blocks/block'
-import {IPropertyOption, IPropertyTemplate, MutableBoard} from '../../webapp/src/blocks/board'
-import {MutableBoardView} from '../../webapp/src/blocks/boardView'
-import {MutableCard} from '../../webapp/src/blocks/card'
-import {MutableTextBlock} from '../../webapp/src/blocks/textBlock'
+import {Block} from '../../webapp/src/blocks/block'
+import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
+import {createBoardView} from '../../webapp/src/blocks/boardView'
+import {createCard} from '../../webapp/src/blocks/card'
+import {createTextBlock} from '../../webapp/src/blocks/textBlock'
 import {Asana, Workspace} from './asana'
 import {Utils} from './utils'
 
@@ -88,7 +88,7 @@ function getSections(input: Asana, projectId: string): Workspace[] {
     return [...sectionMap.values()]
 }
 
-function convert(input: Asana): IBlock[] {
+function convert(input: Asana): Block[] {
     const projects = getProjects(input)
     if (projects.length < 1) {
         console.error('No projects found')
@@ -98,10 +98,10 @@ function convert(input: Asana): IBlock[] {
     // TODO: Handle multiple projects
     const project = projects[0]
 
-    const blocks: IBlock[] = []
+    const blocks: Block[] = []
 
     // Board
-    const board = new MutableBoard()
+    const board = createBoard()
     console.log(`Board: ${project.name}`)
     board.rootId = board.id
     board.title = project.name
@@ -129,13 +129,13 @@ function convert(input: Asana): IBlock[] {
         type: 'select',
         options
     }
-    board.cardProperties = [cardProperty]
+    board.fields.cardProperties = [cardProperty]
     blocks.push(board)
 
     // Board view
-    const view = new MutableBoardView()
+    const view = createBoardView()
     view.title = 'Board View'
-    view.viewType = 'board'
+    view.fields.viewType = 'board'
     view.rootId = board.id
     view.parentId = board.id
     blocks.push(view)
@@ -144,7 +144,7 @@ function convert(input: Asana): IBlock[] {
     input.data.forEach(card => {
         console.log(`Card: ${card.name}`)
 
-        const outCard = new MutableCard()
+        const outCard = createCard()
         outCard.title = card.name
         outCard.rootId = board.id
         outCard.parentId = board.id
@@ -154,7 +154,7 @@ function convert(input: Asana): IBlock[] {
         if (membership) {
             const optionId = optionIdMap.get(membership.section.gid)
             if (optionId) {
-                outCard.properties[cardProperty.id] = optionId
+                outCard.fields.properties[cardProperty.id] = optionId
             } else {
                 console.warn(`Invalid idList: ${membership.section.gid} for card: ${card.name}`)
             }
@@ -166,13 +166,13 @@ function convert(input: Asana): IBlock[] {
 
         if (card.notes) {
             // console.log(`\t${card.notes}`)
-            const text = new MutableTextBlock()
+            const text = createTextBlock()
             text.title = card.notes
             text.rootId = board.id
             text.parentId = outCard.id
             blocks.push(text)
 
-            outCard.contentOrder = [text.id]
+            outCard.fields.contentOrder = [text.id]
         }
     })
 

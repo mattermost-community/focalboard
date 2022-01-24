@@ -19,7 +19,8 @@ func (be blockError) Error() string {
 }
 
 func TestGetParentID(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
 
 	container := st.Container{
 		WorkspaceID: "0",
@@ -40,7 +41,8 @@ func TestGetParentID(t *testing.T) {
 }
 
 func TestInsertBlock(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
 
 	container := st.Container{
 		WorkspaceID: "0",
@@ -57,6 +59,28 @@ func TestInsertBlock(t *testing.T) {
 		block := model.Block{}
 		th.Store.EXPECT().InsertBlock(gomock.Eq(container), gomock.Eq(&block), gomock.Eq("user-id-1")).Return(blockError{"error"})
 		err := th.App.InsertBlock(container, block, "user-id-1")
+		require.Error(t, err, "error")
+	})
+}
+
+func TestPatchBlocks(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	container := st.Container{
+		WorkspaceID: "0",
+	}
+	t.Run("patchBlocks success scenerio", func(t *testing.T) {
+		blockPatches := model.BlockPatchBatch{}
+		th.Store.EXPECT().PatchBlocks(gomock.Eq(container), gomock.Eq(&blockPatches), gomock.Eq("user-id-1")).Return(nil)
+		err := th.App.PatchBlocks(container, &blockPatches, "user-id-1")
+		require.NoError(t, err)
+	})
+
+	t.Run("patchBlocks error scenerio", func(t *testing.T) {
+		blockPatches := model.BlockPatchBatch{}
+		th.Store.EXPECT().PatchBlocks(gomock.Eq(container), gomock.Eq(&blockPatches), gomock.Eq("user-id-1")).Return(blockError{"error"})
+		err := th.App.PatchBlocks(container, &blockPatches, "user-id-1")
 		require.Error(t, err, "error")
 	})
 }

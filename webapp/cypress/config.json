@@ -1,11 +1,13 @@
 {
-	"serverRoot": "http://localhost:8088",
-	"port": 8088,
-	"dbtype": "sqlite3",
-	"dbconfig": "file::memory:?cache=shared",
-	"useSSL": false,
-	"webpath": "../pack",
-	"filespath": "../../files",
-	"telemetry": false,
-	"webhook_update": []
+    "serverRoot": "http://localhost:8088",
+    "port": 8088,
+    "dbtype": "sqlite3",
+    "dbconfig": "file::memory:?cache=shared",
+    "useSSL": false,
+    "webpath": "../pack",
+    "filespath": "../../files",
+    "telemetry": false,
+    "webhook_update": [],
+    "session_expire_time": 2592000,
+    "session_refresh_time": 18000
 }

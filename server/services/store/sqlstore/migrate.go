@@ -20,7 +20,13 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file" // fileystem driver
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	_ "github.com/lib/pq" // postgres driver
+
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
+	"github.com/mattermost/mattermost-plugin-api/cluster"
+)
+
+const (
+	uniqueIDsMigrationRequiredVersion = 14
 )
 
 type PrefixedMigration struct {
@@ -29,6 +35,7 @@ type PrefixedMigration struct {
 	postgres bool
 	sqlite   bool
 	mysql    bool
+	plugin   bool
 }
 
 func init() {
@@ -45,10 +52,18 @@ func (pm *PrefixedMigration) executeTemplate(r io.ReadCloser, identifier string)
 		return nil, "", err
 	}
 	buffer := bytes.NewBufferString("")
-	err = tmpl.Execute(buffer, map[string]interface{}{"prefix": pm.prefix, "postgres": pm.postgres, "sqlite": pm.sqlite, "mysql": pm.mysql})
+	params := map[string]interface{}{
+		"prefix":   pm.prefix,
+		"postgres": pm.postgres,
+		"sqlite":   pm.sqlite,
+		"mysql":    pm.mysql,
+		"plugin":   pm.plugin,
+	}
+	err = tmpl.Execute(buffer, params)
 	if err != nil {
 		return nil, "", err
 	}
+
 	return ioutil.NopCloser(bytes.NewReader(buffer.Bytes())), identifier, nil
 }
 
@@ -85,10 +100,14 @@ func appendMultipleStatementsFlag(connectionString string) (string, error) {
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
 // enabled.
-func (s *SQLStore) getMySQLMigrationConnection() (*sql.DB, error) {
-	connectionString, err := appendMultipleStatementsFlag(s.connectionString)
-	if err != nil {
-		return nil, err
+func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
+	connectionString := s.connectionString
+	if s.dbType == mysqlDBType {
+		var err error
+		connectionString, err = appendMultipleStatementsFlag(s.connectionString)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	db, err := sql.Open(s.dbType, connectionString)
@@ -115,20 +134,20 @@ func (s *SQLStore) Migrate() error {
 		}
 	}
 
+	db, err := s.getMigrationConnection()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
 	if s.dbType == postgresDBType {
-		driver, err = postgres.WithInstance(s.db, &postgres.Config{MigrationsTable: migrationsTable})
+		driver, err = postgres.WithInstance(db, &postgres.Config{MigrationsTable: migrationsTable})
 		if err != nil {
 			return err
 		}
 	}
 
 	if s.dbType == mysqlDBType {
-		db, err2 := s.getMySQLMigrationConnection()
-		if err2 != nil {
-			return err2
-		}
-		defer db.Close()
-
 		driver, err = mysql.WithInstance(db, &mysql.Config{MigrationsTable: migrationsTable})
 		if err != nil {
 			return err
@@ -141,9 +160,11 @@ func (s *SQLStore) Migrate() error {
 	if err != nil {
 		return err
 	}
+
 	prefixedData := &PrefixedMigration{
 		Bindata:  d.(*bindata.Bindata),
 		prefix:   s.tablePrefix,
+		plugin:   s.isPlugin,
 		postgres: s.dbType == postgresDBType,
 		sqlite:   s.dbType == sqliteDBType,
 		mysql:    s.dbType == mysqlDBType,
@@ -153,8 +174,59 @@ func (s *SQLStore) Migrate() error {
 	if err != nil {
 		return err
 	}
-	err = m.Up()
-	if err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
+
+	var mutex *cluster.Mutex
+	if s.isPlugin {
+		var mutexErr error
+		mutex, mutexErr = s.NewMutexFn("Boards_dbMutex")
+		if mutexErr != nil {
+			return fmt.Errorf("error creating database mutex: %w", mutexErr)
+		}
+	}
+
+	if err := ensureMigrationsAppliedUpToVersion(m, uniqueIDsMigrationRequiredVersion); err != nil {
+		return err
+	}
+
+	if s.isPlugin {
+		s.logger.Debug("Acquiring cluster lock for Unique IDs migration")
+		mutex.Lock()
+	}
+
+	if err := s.runUniqueIDsMigration(); err != nil {
+		if s.isPlugin {
+			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
+			mutex.Unlock()
+		}
+		return fmt.Errorf("error running unique IDs migration: %w", err)
+	}
+
+	if s.isPlugin {
+		s.logger.Debug("Releasing cluster lock for Unique IDs migration")
+		mutex.Unlock()
+	}
+
+	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
+
+	return nil
+}
+
+func ensureMigrationsAppliedUpToVersion(m *migrate.Migrate, version uint) error {
+	currentVersion, _, err := m.Version()
+	if err != nil && !errors.Is(err, migrate.ErrNilVersion) {
+		return err
+	}
+
+	// if the target version is below or equal to the current one, do
+	// not migrate either because is not needed (both are equal) or
+	// because it would downgrade the database (is below)
+	if version <= currentVersion {
+		return nil
+	}
+
+	if err := m.Migrate(version); err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
 		return err
 	}
 

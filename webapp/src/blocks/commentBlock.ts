@@ -1,14 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {IBlock, MutableBlock} from './block'
+import {Block, createBlock} from './block'
 
-type CommentBlock = IBlock
+type CommentBlock = Block & {
+    type: 'comment'
+}
 
-class MutableCommentBlock extends MutableBlock implements CommentBlock {
-    constructor(block: any = {}) {
-        super(block)
-        this.type = 'comment'
+function createCommentBlock(block?: Block): CommentBlock {
+    return {
+        ...createBlock(block),
+        type: 'comment',
     }
 }
 
-export {CommentBlock, MutableCommentBlock}
+export {CommentBlock, createCommentBlock}

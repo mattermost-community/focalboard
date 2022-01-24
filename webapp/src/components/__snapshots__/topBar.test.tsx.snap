@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`src/components/topBar should match snapshot for focalboardPlugin 1`] = `
+<div>
+  <div
+    class="TopBar"
+  >
+    <a
+      class="link"
+      href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
+      rel="noreferrer"
+      target="_blank"
+    >
+      Give Feedback
+    </a>
+    <div
+      class="versionFrame"
+    >
+      <div
+        class="version"
+        title="v1.0.0"
+      >
+        Feb 2022
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/topBar should match snapshot for none focalboardPlugin 1`] = `
+<div>
+  <div
+    class="TopBar"
+  >
+    <a
+      class="link"
+      href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+      rel="noreferrer"
+      target="_blank"
+    >
+      Give Feedback
+    </a>
+    <a
+      href="https://www.focalboard.com/guide/user?utm_source=webapp"
+      rel="noreferrer"
+      target="_blank"
+    >
+      <i
+        class="CompassIcon icon-help-circle-outline HelpIcon"
+      />
+    </a>
+  </div>
+</div>
+`;

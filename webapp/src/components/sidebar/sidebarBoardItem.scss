@@ -8,21 +8,39 @@
         align-items: center;
 
         &:hover {
-            background-color: rgba(var(--sidebar-fg), 0.08);
+            background-color: rgba(var(--sidebar-text-rgb), 0.08);
             display: flex;
         }
 
         &.subitem {
             padding-left: 20px;
-            color: rgba(var(--sidebar-fg), 0.64);
+            color: rgba(var(--sidebar-text-rgb), 0.64);
             font-weight: 400;
         }
 
+        &.active {
+            background: rgba(var(--sidebar-text-rgb), 0.1);
+            position: relative;
+            color: rgb(var(--sidebar-text-rgb));
+
+            &:not(.subitem) {
+                &::before {
+                    content: '';
+                    background: var(--sidebar-text-active-border);
+                    width: 2px;
+                    height: 100%;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+            }
+        }
+
         &.no-views {
-            color: rgba(var(--sidebar-fg), 0.4);
+            color: rgba(var(--sidebar-text-rgb), 0.4);
 
             &:hover {
-                background-color: rgba(var(--sidebar-bg));
+                background-color: rgba(var(--sidebar-bg-rgb));
             }
         }
 
@@ -31,22 +49,22 @@
         }
 
         > .Icon {
-            stroke: rgba(var(--sidebar-fg), 0.3);
-            height: 14px;
-            width: 14px;
+            height: 18px;
+            width: 18px;
             margin-right: 8px;
             flex-shrink: 0;
+
             &.GalleryIcon {
-                fill: rgba(var(--sidebar-fg), 0.3);
+                fill: rgba(var(--sidebar-text-rgb), 0.3);
                 stroke: unset;
             }
         }
 
         > .IconButton {
-            background-color: var(--sidebar-bg);
+            background-color: var(--sidebar-bg-rgb);
 
             &:hover {
-                background-color: rgba(var(--sidebar-fg), 0.1);
+                background-color: rgba(var(--sidebar-text-rgb), 0.1);
             }
         }
 
@@ -72,5 +90,18 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        display: flex;
+        align-items: baseline;
+
+        .octo-icon {
+            margin-right: 6px;
+        }
+
+        .octo-sidebar-name {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 }

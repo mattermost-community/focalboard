@@ -1,49 +1,34 @@
 /* Markdown Editor */
 
+.product-wrapper {
+    .octo-editor-preview {
+        a {
+            color: rgba(var(--link-color-rgb), 1);
+        }
+    }
+}
+
 .MarkdownEditor {
     cursor: text;
-    /* CodeMirror / SimpleMDE / EasyMDE overrides */
 
-    .CodeMirror {
-        padding: 0;
-        min-height: 0;
-        background: var(--main-bg);
-        color: var(--body-color);
+    .MarkdownEditorInput * {
+        user-select: text;
     }
 
-    pre.CodeMirror-line {
-        padding: 0;
-    }
-
-    .CodeMirror,
-    .CodeMirror-scroll {
-        flex: 1;
-        min-height: 0;
-        line-height: 1.3;
-        border: none;
-    }
-
-    .CodeMirror-cursor {
-        border-left: 2px solid var(--cursor-color);
-    }
-
-    .CodeMirror-selected {
-        background: rgba(147, 204, 231, 0.8) !important;
-    }
-
-    .CodeMirror-scroll {
-        overflow: hidden !important;
-    }
-    /* hide the scrollbars */
-    .CodeMirror-vscrollbar,
-    .octo-editor .CodeMirror-hscrollbar {
-        display: none !important;
+    .octo-editor-preview * {
+        user-select: text;
     }
 
     .octo-editor-preview {
+        a {
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
         p {
             margin: 0;
-            min-height: 32px;
+            word-break: break-word;
         }
     }
 

@@ -2,17 +2,19 @@
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {useRouteMatch} from 'react-router'
+import {generatePath, useRouteMatch} from 'react-router'
 
 import {ISharing} from '../blocks/sharing'
 
 import client from '../octoClient'
 
-import {Utils} from '../utils'
+import {Utils, IDType} from '../utils'
 import {sendFlashMessage} from '../components/flashMessages'
 
 import Button from '../widgets/buttons/button'
 import Switch from '../widgets/switch'
+
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 
 import Modal from './modal'
 import './shareBoardComponent.scss'
@@ -26,7 +28,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     const [wasCopied, setWasCopied] = useState(false)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
     const intl = useIntl()
-    const match = useRouteMatch<{workspaceId?: string}>()
+    const match = useRouteMatch<{workspaceId?: string, boardId: string, viewId: string}>()
 
     const loadData = async () => {
         const newSharing = await client.getSharing(props.boardId)
@@ -38,7 +40,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
         const newSharing: ISharing = {
             id: props.boardId,
             enabled: true,
-            token: Utils.createGuid(),
+            token: Utils.createGuid(IDType.Token),
         }
         return newSharing
     }
@@ -47,6 +49,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
         const newSharing: ISharing = sharing || createSharingInfo()
         newSharing.id = props.boardId
         newSharing.enabled = isOn
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: props.boardId, shareBoardEnabled: isOn})
         await client.setSharing(newSharing)
         await loadData()
     }
@@ -56,7 +59,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
         const accept = window.confirm(intl.formatMessage({id: 'ShareBoard.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
         if (accept) {
             const newSharing: ISharing = sharing || createSharingInfo()
-            newSharing.token = Utils.createGuid()
+            newSharing.token = Utils.createGuid(IDType.Token)
             await client.setSharing(newSharing)
             await loadData()
 
@@ -76,9 +79,18 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
     shareUrl.searchParams.set('r', readToken)
 
     if (match.params.workspaceId) {
-        shareUrl.pathname = Utils.buildURL(`/workspace/${match.params.workspaceId}/shared`)
+        const newPath = generatePath('/workspace/:workspaceId/shared/:boardId/:viewId', {
+            boardId: match.params.boardId,
+            viewId: match.params.viewId,
+            workspaceId: match.params.workspaceId,
+        })
+        shareUrl.pathname = Utils.buildURL(newPath)
     } else {
-        shareUrl.pathname = Utils.buildURL('/shared')
+        const newPath = generatePath('/shared/:boardId/:viewId', {
+            boardId: match.params.boardId,
+            viewId: match.params.viewId,
+        })
+        shareUrl.pathname = Utils.buildURL(newPath)
     }
 
     return (
@@ -91,15 +103,14 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
                         {isSharing &&
                             <FormattedMessage
                                 id='ShareBoard.unshare'
-                                defaultMessage='Anyone with the link can view this board'
+                                defaultMessage='Anyone with the link can view this board and all cards in it.'
                             />}
                         {!isSharing &&
                             <FormattedMessage
                                 id='ShareBoard.share'
-                                defaultMessage='Publish to web and share this board to anyone'
+                                defaultMessage='Publish and share this board with anyone who has the link'
                             />}
                     </div>
-                    <div className='spacer'/>
                     <Switch
                         isOn={Boolean(isSharing)}
                         onChanged={onShareChanged}
@@ -117,6 +128,7 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
                         </a>
                         <Button
                             filled={true}
+                            size='small'
                             onClick={() => {
                                 Utils.copyTextToClipboard(shareUrl.toString())
                                 setWasCopied(true)
@@ -135,7 +147,11 @@ const ShareBoardComponent = React.memo((props: Props): JSX.Element => {
                         </Button>
                     </div>
                     <div className='row'>
-                        <Button onClick={onRegenerateToken}>
+                        <Button
+                            onClick={onRegenerateToken}
+                            emphasis='secondary'
+                            size='small'
+                        >
                             <FormattedMessage
                                 id='ShareBoard.regenerateToken'
                                 defaultMessage='Regenerate token'

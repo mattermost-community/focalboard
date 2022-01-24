@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}blocks (
     modified_by VARCHAR(36),
     workspace_id VARCHAR(36),
     PRIMARY KEY (workspace_id,id)
-    ){{if .mysql}}CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci{{end}};
+    ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
 {{if .mysql}}
 INSERT IGNORE INTO {{.prefix}}blocks (SELECT * FROM {{.prefix}}blocks_old ORDER BY insert_at DESC);
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}blocks_history (
     modified_by VARCHAR(36),
     workspace_id VARCHAR(36),
     PRIMARY KEY (workspace_id,id)
-    ){{if .mysql}}CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci{{end}};
+    ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
 {{if .mysql}}
 INSERT IGNORE INTO {{.prefix}}blocks_history (SELECT * FROM {{.prefix}}blocks_history_old ORDER BY insert_at DESC);

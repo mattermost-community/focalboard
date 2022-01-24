@@ -8,7 +8,7 @@ import {sendFlashMessage} from '../../components/flashMessages'
 import client from '../../octoClient'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
-import {getCurrentWorkspace, fetchCurrentWorkspace} from '../../store/currentWorkspace'
+import {getCurrentWorkspace, fetchWorkspace} from '../../store/workspace'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 
 import Modal from '../modal'
@@ -28,7 +28,7 @@ const RegistrationLink = React.memo((props: Props) => {
     const [wasCopied, setWasCopied] = useState(false)
 
     useEffect(() => {
-        dispatch(fetchCurrentWorkspace())
+        dispatch(fetchWorkspace())
     }, [])
 
     const regenerateToken = async () => {
@@ -36,7 +36,7 @@ const RegistrationLink = React.memo((props: Props) => {
         const accept = window.confirm(intl.formatMessage({id: 'RegistrationLink.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
         if (accept) {
             await client.regenerateWorkspaceSignupToken()
-            await dispatch(fetchCurrentWorkspace())
+            await dispatch(fetchWorkspace())
             setWasCopied(false)
 
             const description = intl.formatMessage({id: 'RegistrationLink.tokenRegenerated', defaultMessage: 'Registration link regenerated'})
@@ -67,6 +67,7 @@ const RegistrationLink = React.memo((props: Props) => {
                         </a>
                         <Button
                             filled={true}
+                            size='small'
                             onClick={() => {
                                 Utils.copyTextToClipboard(registrationUrl)
                                 setWasCopied(true)
@@ -76,7 +77,11 @@ const RegistrationLink = React.memo((props: Props) => {
                         </Button>
                     </div>
                     <div className='row'>
-                        <Button onClick={regenerateToken}>
+                        <Button
+                            onClick={regenerateToken}
+                            emphasis='secondary'
+                            size='small'
+                        >
                             {intl.formatMessage({id: 'RegistrationLink.regenerateToken', defaultMessage: 'Regenerate token'})}
                         </Button>
                     </div>

@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>Page Moved</title>
+        <script type="text/javascript">
+            var urlParams = new URLSearchParams(window.location.search);
+            var version = urlParams.get('v');
+            var url = 'https://docs.google.com/forms/d/e/1FAIpQLSdTq7M69Pdlz71CwucaSEG0FCK1M_WRvIbZbPr2imfT2QvUCQ/viewform?usp=pp_url&entry.1003590493=' + version;
+
+            var link = document.getElementById("mainLink");
+            if (link && link.href) {
+                link.href = url;
+            }
+
+            window.location.replace(url);
+        </script>
+    </head>
+    <body>
+        This page has moved. Click <a id="mainLink" href="https://docs.google.com/forms/d/e/1FAIpQLSdTq7M69Pdlz71CwucaSEG0FCK1M_WRvIbZbPr2imfT2QvUCQ/viewform">here</a> to go to the new page.
+    </body>
+</html>

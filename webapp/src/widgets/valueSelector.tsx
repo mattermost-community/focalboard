@@ -32,6 +32,7 @@ type Props = {
     onDeleteOption: (option: IPropertyOption) => void
     isMulti?: boolean
     onDeleteValue?: (value: IPropertyOption) => void
+    onBlur?: () => void
 }
 
 type LabelProps = {
@@ -40,25 +41,29 @@ type LabelProps = {
     onChangeColor: (option: IPropertyOption, color: string) => void
     onDeleteOption: (option: IPropertyOption) => void
     onDeleteValue?: (value: IPropertyOption) => void
+    isMulti?: boolean
 }
 
 const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
-    const {option, onDeleteValue, meta} = props
+    const {option, onDeleteValue, meta, isMulti} = props
     const intl = useIntl()
     if (meta.context === 'value') {
+        let className = onDeleteValue ? 'Label-no-padding' : 'Label-single-select'
+        if (!isMulti) {
+            className += ' Label-no-margin'
+        }
         return (
             <Label
                 color={option.color}
-                classNames={`${onDeleteValue ? 'Label-no-padding' : 'Label-single-select'}`}
+                className={className}
             >
                 <span className='Label-text'>{option.value}</span>
                 {onDeleteValue &&
                     <IconButton
                         onClick={() => onDeleteValue(option)}
-                        onMouseDown={(e) => e.stopPropagation()}
                         icon={<CloseIcon/>}
-                        title='Close'
-                        className='margin-left'
+                        title='Clear'
+                        className='margin-left delete-value'
                     />
                 }
             </Label>
@@ -70,7 +75,10 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                 <Label color={option.color}>{option.value}</Label>
             </div>
             <MenuWrapper stopPropagationOnToggle={true}>
-                <IconButton icon={<OptionsIcon/>}/>
+                <IconButton
+                    title={intl.formatMessage({id: 'ValueSelectorLabel.openMenu', defaultMessage: 'Open menu'})}
+                    icon={<OptionsIcon/>}
+                />
                 <Menu position='left'>
                     <Menu.Text
                         id='delete'
@@ -79,7 +87,7 @@ const ValueSelectorLabel = React.memo((props: LabelProps): JSX.Element => {
                         onClick={() => props.onDeleteOption(option)}
                     />
                     <Menu.Separator/>
-                    {Object.entries(Constants.menuColors).map(([key, color]: any) => (
+                    {Object.entries(Constants.menuColors).map(([key, color]: [string, string]) => (
                         <Menu.Color
                             key={key}
                             id={key}
@@ -97,8 +105,8 @@ const valueSelectorStyle = {
     ...getSelectBaseStyle(),
     option: (provided: CSSObject, state: {isFocused: boolean}): CSSObject => ({
         ...provided,
-        background: state.isFocused ? 'rgba(var(--main-fg), 0.1)' : 'rgb(var(--main-bg))',
-        color: state.isFocused ? 'rgb(var(--main-fg))' : 'rgb(var(--main-fg))',
+        background: state.isFocused ? 'rgba(var(--center-channel-color-rgb), 0.1)' : 'rgb(var(--center-channel-bg-rgb))',
+        color: state.isFocused ? 'rgb(var(--center-channel-color-rgb))' : 'rgb(var(--center-channel-color-rgb))',
         padding: '8px',
     }),
     control: (): CSSObject => ({
@@ -110,6 +118,16 @@ const valueSelectorStyle = {
         ...provided,
         padding: '0 8px',
         overflow: 'unset',
+    }),
+    singleValue: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        position: 'static',
+        top: 'unset',
+        transform: 'unset',
+    }),
+    placeholder: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        color: 'rgba(var(--center-channel-color-rgb), 0.4)',
     }),
     multiValue: (provided: CSSObject): CSSObject => ({
         ...provided,
@@ -129,14 +147,17 @@ const valueSelectorStyle = {
     menu: (provided: CSSObject): CSSObject => ({
         ...provided,
         width: 'unset',
-        background: 'rgb(var(--main-bg))',
+        background: 'rgb(var(--center-channel-bg-rgb))',
         minWidth: '260px',
     }),
 }
 
 function ValueSelector(props: Props): JSX.Element {
+    const intl = useIntl()
     return (
         <CreatableSelect
+            noOptionsMessage={() => intl.formatMessage({id: 'ValueSelector.noOptions', defaultMessage: 'No options. Start typing to add the first one!'})}
+            aria-label={intl.formatMessage({id: 'ValueSelector.valueSelector', defaultMessage: 'Value selector'})}
             captureMenuScroll={true}
             maxMenuHeight={1200}
             isMulti={props.isMulti}
@@ -146,6 +167,7 @@ function ValueSelector(props: Props): JSX.Element {
                 <ValueSelectorLabel
                     option={option}
                     meta={meta}
+                    isMulti={props.isMulti}
                     onChangeColor={props.onChangeColor}
                     onDeleteOption={props.onDeleteOption}
                     onDeleteValue={props.onDeleteValue}
@@ -166,9 +188,10 @@ function ValueSelector(props: Props): JSX.Element {
                     props.onChange('')
                 }
             }}
+            onBlur={props.onBlur}
             onCreateOption={props.onCreate}
             autoFocus={true}
-            value={props.value}
+            value={props.value || null}
             closeMenuOnSelect={true}
             placeholder={props.emptyValue}
             hideSelectedOptions={false}

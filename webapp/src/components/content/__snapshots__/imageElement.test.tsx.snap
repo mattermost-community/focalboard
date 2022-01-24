@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/content/ImageElement should match snapshot 1`] = `
+<div>
+  <img
+    alt="test-title"
+    class="ImageElement"
+    src="test.jpg"
+  />
+</div>
+`;

@@ -1,39 +1,40 @@
 # Focalboard
 
 ![CI Status](https://github.com/mattermost/focalboard/actions/workflows/ci.yml/badge.svg)
-![Mac Build](https://github.com/mattermost/focalboard/actions/workflows/build-mac.yml/badge.svg)
-![Ubuntu Build](https://github.com/mattermost/focalboard/actions/workflows/build-ubuntu.yml/badge.svg)
-![Windows Build](https://github.com/mattermost/focalboard/actions/workflows/build-win-wpf.yml/badge.svg)
 ![CodeQL](https://github.com/mattermost/focalboard/actions/workflows/codeql-analysis.yml/badge.svg)
 ![Dev Release](https://github.com/mattermost/focalboard/actions/workflows/dev-release.yml/badge.svg)
-![Plugin Release](https://github.com/mattermost/focalboard/actions/workflows/plugin-release.yml/badge.svg)
 ![Prod Release](https://github.com/mattermost/focalboard/actions/workflows/prod-release.yml/badge.svg)
 
 Like what you see? :eyes: Give us a GitHub Star! :star:
 
 [![Focalboard](website/site/static/img/hero.jpg)](https://www.focalboard.com)
 
-[Focalboard](https://www.focalboard.com) is an open source, self-hosted alternative to Trello, Notion, and Asana.
+[Focalboard](https://www.focalboard.com) is an open source, self-hosted project management tool that's an alternative to Trello, Notion, and Asana.
 
-It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two editions:
+It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two main editions:
 
-* **Focalboard Personal Desktop**: A stand-alone desktop app for your todos and personal projects. This is a single-tenant locally run server running Focalboard for optimal speed and performance.
+* **[Personal Desktop](https://www.focalboard.com/download/personal-edition/desktop/)**: A stand-alone single-user Mac, Windows, or Linux desktop app for your todos and personal projects.
 
-* **Focalboard Personal Server**: A self-hosted server for your team to collaborate.
+* **[Mattermost Boards](https://www.focalboard.com/download/mattermost/)**: A self-hosted or cloud server for your team to plan and collaborate.
 
-The same MIT-licensed binary powers both desktop and server editions.
+Focalboard can also be installed as a standalone [personal server](https://www.focalboard.com/download/personal-edition/ubuntu/) for development and personal use.
 
 ## Try out Focalboard
 
-**Focalboard Personal Desktop (Windows, Mac or Linux Desktop)**
+### Focalboard Personal Desktop (Windows, Mac or Linux Desktop)
 
-Try out **Focalboard Personal Desktop** by going to the Windows Store or the Apple AppStore, searching for `Focalboard` and installing to run the compiled version locally.
+Try out the single-user **Focalboard Personal Desktop**:
+* macOS: Download from the [Mac App Store](https://apps.apple.com/us/app/focalboard-insiders/id1556908618?mt=12).
+* Windows: Download from the [Windows App Store](https://www.microsoft.com/store/productId/9NLN2T0SX9VF) or download `focalboard-win.zip` from the [latest release](https://github.com/mattermost/focalboard/releases), unpack, and run `Focalboard.exe`
+* Linux Desktop: Download `focalboard-linux.tar.gz` from the [latest release](https://github.com/mattermost/focalboard/releases), unpack, and open `focalboard-app`
 
-If you're running a Linux Desktop, [download the latest `focalboard-linux.tar.gz` release](https://github.com/mattermost/focalboard/releases), unpack the `.tar.gz` archive, and open `focalboard-app` from the `focalboard-app` folder.
+### Mattermost Boards
 
-Note: For Windows and Mac users, while we don't yet offer **Focalboard Personal Desktop** outside of Store-based installs, it is in [consideration for the future](https://github.com/mattermost/focalboard/issues/99) (please upvote the ticket if you're interested in this addition).
+Mattermost Boards combines project management tools with messaging and collaboration for teams of all sizes. To access and use Boards, install or upgrade to Mattermost v6.0 or later as a [self-hosted server](https://docs.mattermost.com/guides/deployment.html?utm_source=focalboard&utm_campaign=focalboard) or [Cloud server](https://mattermost.com/get-started/?utm_source=focalboard&utm_campaign=focalboard). After logging into Mattermost, select the menu in the top left corner of Mattermost and choose **Boards**.
 
-**Focalboard Personal Server (Ubuntu)**
+See the [setup guide](https://www.focalboard.com/download/mattermost/) for more details.
+
+### Focalboard Personal Server (Ubuntu)
 
 You can download and run the compiled **Focalboard Personal Server** by following [our latest install guide](https://www.focalboard.com/download/personal-edition/ubuntu/).
 
@@ -41,7 +42,7 @@ Download the latest server release from [GitHub releases](https://github.com/mat
 
 ## Building the server
 
-Please refer to the [Developer's Tips & Tricks](https://www.focalboard.com/contribute/getting-started/dev-tips/) for more detailed steps. Here's a summary:
+Most development can be done on the Personal Server edition. Please refer to the [Developer's Tips & Tricks](https://www.focalboard.com/contribute/getting-started/dev-tips/) for more detailed steps. Here's a summary:
 
 First, install basic dependencies:
 * Go 1.15+
@@ -57,7 +58,7 @@ make
 
 To start the server, run `./bin/focalboard-server`
 
-Server settings are in config.json.
+Server settings are in config.json (or the path specified with --config).
 
 Open a browser to [http://localhost:8000](http://localhost:8000) to start.
 
@@ -78,10 +79,16 @@ You can build standalone apps that package the server to run locally against SQL
     * *Tested with: Ubuntu 18.04*
 * Windows:
     * Open a git-bash prompt
-    * Install win-node-env `npm install -g win-node-env`
     * `make win-wpf-app`
     * run `cd win-wpf/msix && focalboard.exe`
     * *Requires: Windows 10*
+* Docker:
+    * To run it locally from Offical Image
+    * `docker run -it -p 80:8000 mattermost/focalboard`
+    * To Build it for your Current Architecture
+    * `docker build -f docker/Dockerfile .`
+    * To Build it for a custom Architecture (Experimental)
+    * `docker build -f docker/Dockerfile --platform linux/arm64 .`
 
 Cross-compilation currently isn't fully supported, so please build on the appropriate platform. Refer to the GitHub Actions workflows (build-mac.yml, build-win.yml, build-ubuntu.yml) for the detailed list of steps on each platform.
 

@@ -1,0 +1,183 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
+<div>
+  <div
+    class="ViewHeader"
+  >
+    <input
+      class="Editable undefined"
+      placeholder="Untitled View"
+      spellcheck="true"
+      title="view title"
+      value="view title"
+    />
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <button
+        class="Button IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-chevron-down DropdownIcon"
+        />
+      </button>
+    </div>
+    <div
+      class="octo-spacer"
+    />
+    <div
+      aria-label="Properties menu"
+      class="MenuWrapper"
+      role="button"
+    >
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Properties
+        </span>
+      </button>
+    </div>
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Group by: 
+          <span
+            id="groupByLabel"
+          >
+            Status
+          </span>
+        </span>
+      </button>
+    </div>
+    <div
+      class="ModalWrapper"
+    >
+      <button
+        class="Button active"
+        type="button"
+      >
+        <span>
+          Filter
+        </span>
+      </button>
+    </div>
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <button
+        class="Button active"
+        type="button"
+      >
+        <span>
+          Sort
+        </span>
+      </button>
+    </div>
+    <button
+      class="Button"
+      type="button"
+    >
+      <span>
+        Search
+      </span>
+    </button>
+    <div
+      class="ModalWrapper"
+    >
+      <div
+        aria-label="View menu"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="Button IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="ButtonWithMenu"
+    >
+      <div
+        class="button-text"
+      >
+        New
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="button-dropdown"
+        >
+          <i
+            class="CompassIcon icon-chevron-down DropdownIcon"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
+<div>
+  <div
+    class="ViewHeader"
+  >
+    <input
+      class="Editable readonly undefined"
+      placeholder="Untitled View"
+      readonly=""
+      spellcheck="true"
+      title="view title"
+      value="view title"
+    />
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <button
+        class="Button IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-chevron-down DropdownIcon"
+        />
+      </button>
+    </div>
+    <div
+      class="octo-spacer"
+    />
+    <button
+      class="Button"
+      type="button"
+    >
+      <span>
+        Search
+      </span>
+    </button>
+  </div>
+</div>
+`;

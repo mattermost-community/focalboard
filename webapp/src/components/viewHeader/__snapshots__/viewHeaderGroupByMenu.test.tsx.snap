@@ -1,0 +1,313 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
+<div>
+  <div
+    aria-label="menuwrapper"
+    class="MenuWrapper"
+    role="button"
+  >
+    <button
+      class="Button"
+      type="button"
+    >
+      <span>
+        Group by: 
+        <span
+          id="groupByLabel"
+        >
+          Status
+        </span>
+      </span>
+    </button>
+    <div
+      class="Menu noselect bottom"
+    >
+      <div
+        class="menu-contents"
+      >
+        <div
+          class="menu-options"
+        >
+          <div
+            aria-label="Status"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Status
+            </div>
+            <svg
+              class="CheckIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="20,60 40,80 80,40"
+              />
+            </svg>
+          </div>
+          <div
+            aria-label="Property 1"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Property 1
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+          <div
+            aria-label="Property 2"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Property 2
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+          <div
+            aria-label="Property 3"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Property 3
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+        </div>
+        <div
+          class="menu-spacer hideOnWidescreen"
+        />
+        <div
+          class="menu-options hideOnWidescreen"
+        >
+          <div
+            aria-label="Cancel"
+            class="MenuOption TextOption menu-option menu-cancel"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Cancel
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu and groupBy Status 1`] = `
+<div>
+  <div
+    aria-label="menuwrapper"
+    class="MenuWrapper"
+    role="button"
+  >
+    <button
+      class="Button"
+      type="button"
+    >
+      <span>
+        Group by: 
+        <span
+          id="groupByLabel"
+        >
+          Status
+        </span>
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu and ungroup in viewType table 1`] = `
+<div>
+  <div
+    aria-label="menuwrapper"
+    class="MenuWrapper"
+    role="button"
+  >
+    <button
+      class="Button"
+      type="button"
+    >
+      <span>
+        Group by: 
+        <span
+          id="groupByLabel"
+        >
+          Status
+        </span>
+      </span>
+    </button>
+    <div
+      class="Menu noselect bottom"
+    >
+      <div
+        class="menu-contents"
+      >
+        <div
+          class="menu-options"
+        >
+          <div
+            aria-label="Ungroup"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Ungroup
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+          <div
+            class="MenuOption MenuSeparator menu-separator"
+          />
+          <div
+            aria-label="Status"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Status
+            </div>
+            <svg
+              class="CheckIcon Icon"
+              viewBox="0 0 100 100"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="20,60 40,80 80,40"
+              />
+            </svg>
+          </div>
+          <div
+            aria-label="Property 1"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Property 1
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+          <div
+            aria-label="Property 2"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Property 2
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+          <div
+            aria-label="Property 3"
+            class="MenuOption TextOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Property 3
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+        </div>
+        <div
+          class="menu-spacer hideOnWidescreen"
+        />
+        <div
+          class="menu-options hideOnWidescreen"
+        >
+          <div
+            aria-label="Cancel"
+            class="MenuOption TextOption menu-option menu-cancel"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Cancel
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

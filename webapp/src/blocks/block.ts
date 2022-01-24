@@ -1,31 +1,31 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+
+import difference from 'lodash/difference'
+
 import {Utils} from '../utils'
 
 const contentBlockTypes = ['text', 'image', 'divider', 'checkbox'] as const
-const blockTypes = [...contentBlockTypes, 'board', 'view', 'card', 'comment'] as const
+const blockTypes = [...contentBlockTypes, 'board', 'view', 'card', 'comment', 'unknown'] as const
 type ContentBlockTypes = typeof contentBlockTypes[number]
 type BlockTypes = typeof blockTypes[number]
 
-interface IBlock {
-    readonly id: string
-    readonly parentId: string
-    readonly rootId: string
-    readonly createdBy: string
-    readonly modifiedBy: string
-
-    readonly schema: number
-    readonly type: BlockTypes
-    readonly title: string
-    readonly fields: Readonly<Record<string, any>>
-
-    readonly createAt: number
-    readonly updateAt: number
-    readonly deleteAt: number
+interface BlockPatch {
+    workspaceId?: string
+    parentId?: string
+    rootId?: string
+    schema?: number
+    type?: BlockTypes
+    title?: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    updatedFields?: Record<string, any>
+    deletedFields?: string[]
+    deleteAt?: number
 }
 
-interface IMutableBlock extends IBlock {
+interface Block {
     id: string
+    workspaceId: string
     parentId: string
     rootId: string
     createdBy: string
@@ -34,6 +34,7 @@ interface IMutableBlock extends IBlock {
     schema: number
     type: BlockTypes
     title: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fields: Record<string, any>
 
     createAt: number
@@ -41,40 +42,70 @@ interface IMutableBlock extends IBlock {
     deleteAt: number
 }
 
-class MutableBlock implements IMutableBlock {
-    id: string = Utils.createGuid()
-    schema: number
-    parentId: string
-    rootId: string
-    createdBy: string
-    modifiedBy: string
-    type: BlockTypes
-    title: string
-    fields: Record<string, any> = {}
-    createAt: number = Date.now()
-    updateAt = 0
-    deleteAt = 0
-
-    constructor(block: any = {}) {
-        this.id = block.id || Utils.createGuid()
-        this.schema = 1
-        this.parentId = block.parentId || ''
-        this.rootId = block.rootId || ''
-        this.createdBy = block.createdBy || ''
-        this.modifiedBy = block.modifiedBy || ''
-        this.type = block.type || ''
-
-        // Shallow copy here. Derived classes must make deep copies of their known properties in their constructors.
-        this.fields = block.fields ? {...block.fields} : {}
-
-        this.title = block.title || ''
-
-        const now = Date.now()
-        this.createAt = block.createAt || now
-        this.updateAt = block.updateAt || now
-        this.deleteAt = block.deleteAt || 0
+function createBlock(block?: Block): Block {
+    const now = Date.now()
+    return {
+        id: block?.id || Utils.createGuid(Utils.blockTypeToIDType(block?.type)),
+        schema: 1,
+        workspaceId: block?.workspaceId || '',
+        parentId: block?.parentId || '',
+        rootId: block?.rootId || '',
+        createdBy: block?.createdBy || '',
+        modifiedBy: block?.modifiedBy || '',
+        type: block?.type || 'unknown',
+        fields: block?.fields ? {...block?.fields} : {},
+        title: block?.title || '',
+        createAt: block?.createAt || now,
+        updateAt: block?.updateAt || now,
+        deleteAt: block?.deleteAt || 0,
     }
 }
 
+// createPatchesFromBlock creates two BlockPatch instances, one that
+// contains the delta to update the block and another one for the undo
+// action, in case it happens
+function createPatchesFromBlocks(newBlock: Block, oldBlock: Block): BlockPatch[] {
+    const newDeletedFields = difference(Object.keys(newBlock.fields), Object.keys(oldBlock.fields))
+    const newUpdatedFields: Record<string, any> = {}
+    const newUpdatedData: Record<string, any> = {}
+    Object.keys(newBlock.fields).forEach((val) => {
+        if (oldBlock.fields[val] !== newBlock.fields[val]) {
+            newUpdatedFields[val] = newBlock.fields[val]
+        }
+    })
+    Object.keys(newBlock).forEach((val) => {
+        if (val !== 'fields' && (oldBlock as any)[val] !== (newBlock as any)[val]) {
+            newUpdatedData[val] = (newBlock as any)[val]
+        }
+    })
+
+    const oldDeletedFields = difference(Object.keys(oldBlock.fields), Object.keys(newBlock.fields))
+    const oldUpdatedFields: Record<string, any> = {}
+    const oldUpdatedData: Record<string, any> = {}
+    Object.keys(oldBlock.fields).forEach((val) => {
+        if (oldBlock.fields[val] !== newBlock.fields[val]) {
+            oldUpdatedFields[val] = oldBlock.fields[val]
+        }
+    })
+    Object.keys(oldBlock).forEach((val) => {
+        if (val !== 'fields' && (oldBlock as any)[val] !== (newBlock as any)[val]) {
+            oldUpdatedData[val] = (oldBlock as any)[val]
+        }
+    })
+
+    return [
+        {
+            ...newUpdatedData,
+            updatedFields: newUpdatedFields,
+            deletedFields: oldDeletedFields,
+        },
+        {
+            ...oldUpdatedData,
+            updatedFields: oldUpdatedFields,
+            deletedFields: newDeletedFields,
+        },
+    ]
+}
+
 export type {ContentBlockTypes, BlockTypes}
-export {blockTypes, contentBlockTypes, IBlock, IMutableBlock, MutableBlock}
+export {blockTypes, contentBlockTypes, Block, BlockPatch, createBlock, createPatchesFromBlocks}

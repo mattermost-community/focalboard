@@ -7,6 +7,23 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// these system settings are created when running the data migrations,
+// so they will be present after the tests setup.
+var dataMigrationSystemSettings = map[string]string{
+	"UniqueIDsMigrationComplete": "true",
+}
+
+func addBaseSettings(m map[string]string) map[string]string {
+	r := map[string]string{}
+	for k, v := range dataMigrationSystemSettings {
+		r[k] = v
+	}
+	for k, v := range m {
+		r[k] = v
+	}
+	return r
+}
+
 func StoreTestSystemStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	container := store.Container{
 		WorkspaceID: "0",
@@ -23,7 +40,7 @@ func testSetGetSystemSettings(t *testing.T, store store.Store, _ /*container*/ s
 	t.Run("Get empty settings", func(t *testing.T) {
 		settings, err := store.GetSystemSettings()
 		require.NoError(t, err)
-		require.Equal(t, map[string]string{}, settings)
+		require.Equal(t, dataMigrationSystemSettings, settings)
 	})
 
 	t.Run("Set, update and get multiple settings", func(t *testing.T) {
@@ -33,12 +50,18 @@ func testSetGetSystemSettings(t *testing.T, store store.Store, _ /*container*/ s
 		require.NoError(t, err)
 		settings, err := store.GetSystemSettings()
 		require.NoError(t, err)
-		require.Equal(t, map[string]string{"test-1": "test-value-1", "test-2": "test-value-2"}, settings)
+		require.Equal(t, addBaseSettings(map[string]string{"test-1": "test-value-1", "test-2": "test-value-2"}), settings)
 
 		err = store.SetSystemSetting("test-2", "test-value-updated-2")
 		require.NoError(t, err)
 		settings, err = store.GetSystemSettings()
 		require.NoError(t, err)
-		require.Equal(t, map[string]string{"test-1": "test-value-1", "test-2": "test-value-updated-2"}, settings)
+		require.Equal(t, addBaseSettings(map[string]string{"test-1": "test-value-1", "test-2": "test-value-updated-2"}), settings)
+	})
+
+	t.Run("Get a single setting", func(t *testing.T) {
+		value, err := store.GetSystemSetting("test-1")
+		require.NoError(t, err)
+		require.Equal(t, "test-value-1", value)
 	})
 }

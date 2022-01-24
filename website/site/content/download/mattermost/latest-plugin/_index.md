@@ -13,7 +13,7 @@ Follow the steps in the [Mattermost admin guide to enable custom plugins](https:
 1. Manually set `PluginSettings > EnableUploads` to `true` in your `config.json`
 2. Restart the Mattermost server
 
-Download `mattermost-plugin-focalboard.tar.gz` from the build or release, e.g. the [Focalboard 0.7.0 release](https://github.com/mattermost/focalboard/releases/tag/v0.7.0).
+Download `mattermost-plugin-focalboard.tar.gz` from the latest build or [release](https://github.com/mattermost/focalboard/releases).
 
 Then upload the Focalboard plugin:
 1. Navigate to **System Console > Plugins > Plugin Management**
@@ -25,3 +25,7 @@ Then upload the Focalboard plugin:
 ## Update your web proxy configuration
 
 Follow the [steps here](../#with-nginx) to configure your web proxy (NGINX, Apache, etc.) to complete the setup.
+
+## Enable Reliable Websockets
+
+The Focalboard plugin requires [the Reliable Websockets feature](https://docs.mattermost.com/configure/configuration-settings.html?highlight=enablereliablewebsockets#enable-reliable-websockets) to be enabled. Check in the Mattermost server configuration that the property `ServiceSettings.EnableReliableWebSockets` is set to `true`. If it's not, enable it, restart the server and reload the clients before using the Focalboard plugin.

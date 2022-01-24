@@ -42,7 +42,7 @@ function makeCommonConfig() {
 
                 },
                 {
-                    test: /\.html$/,
+                    test: /\.(png|jpg|jpeg|gif|html)$/,
                     type: 'asset/resource',
                 },
                 {
@@ -67,7 +67,7 @@ function makeCommonConfig() {
                     exclude: [/node_modules/],
                 },
                 {
-                    test: /\.(png|eot|tiff|svg|woff2|woff|ttf|jpg)$/,
+                    test: /\.(eot|tiff|svg|woff2|woff|ttf)$/,
                     use: [
                         {
                             loader: 'file-loader',
@@ -96,7 +96,6 @@ function makeCommonConfig() {
             new CopyPlugin({
                 patterns: [
                     {from: path.resolve(__dirname, 'static'), to: 'static'},
-                    {from: path.resolve(__dirname, 'node_modules/easymde/dist/easymde.min.css'), to: 'static'},
                 ],
             }),
             new HtmlWebpackPlugin({
@@ -106,6 +105,7 @@ function makeCommonConfig() {
                 template: 'html-templates/page.ejs',
                 filename: 'index.html',
                 publicPath: '{{.BaseURL}}/',
+                hash: true,
             }),
         ],
         entry: ['./src/main.tsx', './src/userSettings.ts'],

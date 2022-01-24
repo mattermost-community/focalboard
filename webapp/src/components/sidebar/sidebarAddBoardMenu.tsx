@@ -1,37 +1,38 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useEffect, useCallback} from 'react'
-import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
+import React, {useCallback, useEffect} from 'react'
+import {FormattedMessage, IntlShape, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
-import {MutableBoard} from '../../blocks/board'
-import {MutableBoardView} from '../../blocks/boardView'
+import {Block} from '../../blocks/block'
+import {Board, createBoard} from '../../blocks/board'
+import {createBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
-import {GlobalTemplateTree, MutableGlobalTemplateTree} from '../../viewModel/globalTemplateTree'
-import {WorkspaceTree} from '../../viewModel/workspaceTree'
+import {getSortedTemplates} from '../../store/boards'
+import {fetchGlobalTemplates, getGlobalTemplates} from '../../store/globalTemplates'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import AddIcon from '../../widgets/icons/add'
 import BoardIcon from '../../widgets/icons/board'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
 import BoardTemplateMenuItem from './boardTemplateMenuItem'
-
 import './sidebarAddBoardMenu.scss'
 
 type Props = {
-    workspaceTree: WorkspaceTree,
     activeBoardId?: string
 }
 
-const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
+export const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
     const oldBoardId = activeBoardId
 
-    const board = new MutableBoard()
+    const board = createBoard()
     board.rootId = board.id
 
-    const view = new MutableBoardView()
-    view.viewType = 'board'
+    const view = createBoardView()
+    view.fields.viewType = 'board'
     view.parentId = board.id
     view.rootId = board.rootId
     view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
@@ -39,8 +40,10 @@ const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape,
     await mutator.insertBlocks(
         [board, view],
         'add board',
-        async () => {
-            showBoard(board.id)
+        async (newBlocks: Block[]) => {
+            const newBoardId = newBlocks[0].id
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoardId})
+            showBoard(newBoardId)
         },
         async () => {
             if (oldBoardId) {
@@ -50,15 +53,25 @@ const addBoardClicked = async (showBoard: (id: string) => void, intl: IntlShape,
     )
 }
 
-const addBoardTemplateClicked = async (showBoard: (id: string) => void, activeBoardId?: string) => {
-    const boardTemplate = new MutableBoard()
+export const addBoardTemplateClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
+    const boardTemplate = createBoard()
     boardTemplate.rootId = boardTemplate.id
-    boardTemplate.isTemplate = true
-    await mutator.insertBlock(
-        boardTemplate,
+    boardTemplate.fields.isTemplate = true
+    boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled Template'})
+
+    const view = createBoardView()
+    view.fields.viewType = 'board'
+    view.parentId = boardTemplate.id
+    view.rootId = boardTemplate.rootId
+    view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
+
+    await mutator.insertBlocks(
+        [boardTemplate, view],
         'add board template',
-        async () => {
-            showBoard(boardTemplate.id)
+        async (newBlocks: Block[]) => {
+            const newBoardId = newBlocks[0].id
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardTemplate, {board: newBoardId})
+            showBoard(newBoardId)
         }, async () => {
             if (activeBoardId) {
                 showBoard(activeBoardId)
@@ -68,28 +81,28 @@ const addBoardTemplateClicked = async (showBoard: (id: string) => void, activeBo
 }
 
 const SidebarAddBoardMenu = (props: Props): JSX.Element => {
-    const [globalTemplateTree, setGlobalTemplateTree] = useState<GlobalTemplateTree|null>(null)
+    const globalTemplates = useAppSelector<Board[]>(getGlobalTemplates)
+    const dispatch = useAppDispatch()
     const history = useHistory()
-    const match = useRouteMatch()
+    const match = useRouteMatch<{boardId: string, viewId?: string}>()
 
     const showBoard = useCallback((boardId) => {
-        const newPath = generatePath(match.path, {...match.params, boardId: boardId || ''})
+        const params = {...match.params, boardId: boardId || ''}
+        delete params.viewId
+        const newPath = generatePath(match.path, params)
         history.push(newPath)
     }, [match, history])
 
     useEffect(() => {
-        if (octoClient.workspaceId !== '0' && !globalTemplateTree) {
-            const syncFunc = async () => {
-                setGlobalTemplateTree(await MutableGlobalTemplateTree.sync())
-            }
-            syncFunc()
+        if (octoClient.workspaceId !== '0' && globalTemplates.length === 0) {
+            dispatch(fetchGlobalTemplates())
         }
-    }, [])
+    }, [octoClient.workspaceId])
 
-    const {workspaceTree} = props
     const intl = useIntl()
+    const templates = useAppSelector(getSortedTemplates)
 
-    if (!workspaceTree) {
+    if (!templates) {
         return <div/>
     }
 
@@ -99,11 +112,11 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                 <div className='menu-entry'>
                     <FormattedMessage
                         id='Sidebar.add-board'
-                        defaultMessage='+ Add Board'
+                        defaultMessage='+ Add board'
                     />
                 </div>
                 <Menu position='top'>
-                    {workspaceTree.boardTemplates.length > 0 && <>
+                    {templates.length > 0 && <>
                         <Menu.Label>
                             <b>
                                 <FormattedMessage
@@ -116,7 +129,7 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                         <Menu.Separator/>
                     </>}
 
-                    {workspaceTree.boardTemplates.map((boardTemplate) => (
+                    {templates.map((boardTemplate) => (
                         <BoardTemplateMenuItem
                             key={boardTemplate.id}
                             boardTemplate={boardTemplate}
@@ -126,7 +139,7 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                         />
                     ))}
 
-                    {globalTemplateTree && globalTemplateTree.boardTemplates.map((boardTemplate) => (
+                    {globalTemplates.map((boardTemplate: Board) => (
                         <BoardTemplateMenuItem
                             key={boardTemplate.id}
                             boardTemplate={boardTemplate}
@@ -147,7 +160,7 @@ const SidebarAddBoardMenu = (props: Props): JSX.Element => {
                         icon={<AddIcon/>}
                         id='add-template'
                         name={intl.formatMessage({id: 'Sidebar.add-template', defaultMessage: 'New template'})}
-                        onClick={() => addBoardTemplateClicked(showBoard, props.activeBoardId)}
+                        onClick={() => addBoardTemplateClicked(showBoard, intl, props.activeBoardId)}
                     />
                 </Menu>
             </MenuWrapper>

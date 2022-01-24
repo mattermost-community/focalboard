@@ -2,10 +2,11 @@
 // See LICENSE.txt for license information.
 interface UndoCommand {
     checkpoint: number
-    undo: () => Promise<void>
+    undo: (value?: any) => Promise<void>
     redo: () => Promise<void>
     description?: string
     groupId?: string
+    value?: any
 }
 
 //
@@ -50,30 +51,36 @@ class UndoManager {
         }
         this.isExecuting = true
 
-        await command[action]()
+        if (action === 'redo') {
+            command.value = await command[action]()
+        } else {
+            await command[action](command.value)
+        }
 
         this.isExecuting = false
         return this
     }
 
     async perform(
-        redo: () => Promise<void>,
-        undo: () => Promise<void>,
+        redo: () => Promise<any>,
+        undo: (value?: any) => Promise<void>,
         description?: string,
         groupId?: string,
         isDiscardable = false,
-    ): Promise<UndoManager> {
-        await redo()
-        return this.registerUndo({undo, redo}, description, groupId, isDiscardable)
+    ): Promise<any> {
+        const value = await redo()
+        this.registerUndo({undo, redo}, description, groupId, value, isDiscardable)
+        return value
     }
 
     registerUndo(
         command: {
-            undo: () => Promise<void>,
+            undo: (value?: any) => Promise<void>,
             redo: () => Promise<void>
         },
         description?: string,
         groupId?: string,
+        value?: any,
         isDiscardable = false,
     ): UndoManager {
         if (this.isExecuting) {
@@ -97,6 +104,7 @@ class UndoManager {
             redo: command.redo,
             description,
             groupId,
+            value,
         }
         this.commands.push(internalCommand)
 

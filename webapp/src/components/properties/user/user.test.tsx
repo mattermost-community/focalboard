@@ -3,23 +3,24 @@
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {IntlProvider} from 'react-intl'
+
 import {render, waitFor} from '@testing-library/react'
+
 import configureStore from 'redux-mock-store'
 
 import {act} from 'react-dom/test-utils'
 
 import userEvent from '@testing-library/user-event'
 
-import UserProperty from './user'
+import {wrapIntl} from '../../../testUtils'
 
-const wrapIntl = (children: any) => <IntlProvider locale='en'>{children}</IntlProvider>
+import UserProperty from './user'
 
 describe('components/properties/user', () => {
     const mockStore = configureStore([])
-    const store = mockStore({
-        currentWorkspaceUsers: {
-            byId: {
+    const state = {
+        users: {
+            workspaceUsers: {
                 'user-id-1': {
                     id: 'user-id-1',
                     username: 'username-1',
@@ -31,9 +32,10 @@ describe('components/properties/user', () => {
                 },
             },
         },
-    })
+    }
 
     test('not readonly not existing user', async () => {
+        const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <UserProperty
@@ -56,6 +58,7 @@ describe('components/properties/user', () => {
     })
 
     test('not readonly', async () => {
+        const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <UserProperty
@@ -78,6 +81,7 @@ describe('components/properties/user', () => {
     })
 
     test('readonly view', async () => {
+        const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <UserProperty
@@ -100,6 +104,7 @@ describe('components/properties/user', () => {
     })
 
     test('user dropdown open', async () => {
+        const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <UserProperty
