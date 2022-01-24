@@ -35,9 +35,12 @@
         .templates-list {
             margin-right: 32px;
             min-width: 200px;
+            max-height: 500px;
+            overflow-y: auto;
 
             .template-item,
             .new-template {
+                position: relative;
                 display: flex;
                 align-items: center;
                 padding: 8px 16px;
@@ -55,6 +58,25 @@
 
                 &:hover {
                     background-color: rgba(var(--center-channel-color-rgb), 0.1);
+                }
+
+                &:hover {
+                    .actions {
+                        opacity: 1;
+                    }
+                }
+
+                .actions {
+                    position: absolute;
+                    right: 5px;
+                    display: flex;
+                    opacity: 0;
+                }
+
+                .EditIcon {
+                    width: 16px;
+                    height: 16px;
+                    fill: rgb(var(--center-channel-color-rgb));
                 }
             }
         }

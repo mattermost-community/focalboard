@@ -15,6 +15,7 @@ type Props = {
     boardTitle: string;
     onClose: () => void;
     onDelete: () => Promise<void>
+    isTemplate?: boolean;
 }
 
 export default function DeleteBoardDialog(props: Props): JSX.Element {
@@ -29,19 +30,34 @@ export default function DeleteBoardDialog(props: Props): JSX.Element {
             >
                 <div className='container'>
                     <h2 className='header text-heading5'>
-                        <FormattedMessage
-                            id='DeleteBoardDialog.confirm-tite'
-                            defaultMessage='Confirm Delete Board'
-                        />
+                        {props.isTemplate &&
+                            <FormattedMessage
+                                id='DeleteBoardDialog.confirm-tite-template'
+                                defaultMessage='Confirm Delete Board Template'
+                            />}
+                        {!props.isTemplate &&
+                            <FormattedMessage
+                                id='DeleteBoardDialog.confirm-tite'
+                                defaultMessage='Confirm Delete Board'
+                            />}
                     </h2>
                     <p className='body'>
-                        <FormattedMessage
-                            id='DeleteBoardDialog.confirm-info'
-                            defaultMessage='Are you sure you want to delete the board “{boardTitle}”? Deleting it will delete all cards in the board.'
-                            values={{
-                                boardTitle: props.boardTitle,
-                            }}
-                        />
+                        {props.isTemplate &&
+                            <FormattedMessage
+                                id='DeleteBoardDialog.confirm-info'
+                                defaultMessage='Are you sure you want to delete the board template “{boardTitle}”?'
+                                values={{
+                                    boardTitle: props.boardTitle,
+                                }}
+                            />}
+                        {!props.isTemplate &&
+                            <FormattedMessage
+                                id='DeleteBoardDialog.confirm-info'
+                                defaultMessage='Are you sure you want to delete the board “{boardTitle}”? Deleting it will delete all cards in the board.'
+                                values={{
+                                    boardTitle: props.boardTitle,
+                                }}
+                            />}
                     </p>
                     <div className='footer'>
                         <Button
