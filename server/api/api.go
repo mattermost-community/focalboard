@@ -1145,18 +1145,6 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	userID := session.UserID
-	if userID == SingleUser {
-		userID = ""
-	}
-
-	if !a.app.GetClientConfig().EnablePublicSharedBoards {
-		a.logger.Info("Attempt to turn on sharing via API", mlog.String("userID", userID))
-		return
-	}
-
 	container, err := a.getContainer(r)
 	if err != nil {
 		a.noContainerErrorResponse(w, r.URL.Path, err)
@@ -1181,6 +1169,18 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("shareID", sharing.ID)
 	auditRec.AddMeta("enabled", sharing.Enabled)
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+	if userID == SingleUser {
+		userID = ""
+	}
+
+	if !a.app.GetClientConfig().EnablePublicSharedBoards {
+		a.logger.Info("Sharing off in configuration, attempted to turn on sharing for board via API, ", mlog.String("boardID", sharing.ID), mlog.String("userID", userID))
+		return
+	}
 
 	sharing.ModifiedBy = userID
 
