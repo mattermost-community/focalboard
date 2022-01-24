@@ -9,6 +9,7 @@ import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
 import {Subscription} from './wsclient'
+import {PrepareOnboardingResponse} from './onboardingTour'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -487,6 +488,20 @@ class OctoClient {
         }
 
         return (await this.getJson(response, [])) as Subscription[]
+    }
+
+    // onboarding
+    async prepareOnboarding(): Promise<PrepareOnboardingResponse | undefined> {
+        const path = '/api/v1/onboard'
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+        })
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, [])) as PrepareOnboardingResponse
     }
 }
 

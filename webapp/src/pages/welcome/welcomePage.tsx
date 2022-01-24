@@ -16,8 +16,9 @@ import {Utils} from '../../utils'
 import './welcomePage.scss'
 import mutator from '../../mutator'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {IUser, UserConfigPatch} from '../../user'
-import {getMe, patchProps} from '../../store/users'
+import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
+import {fetchMe, getMe, patchProps} from '../../store/users'
+import octoClient from '../../octoClient'
 
 const WelcomePage = React.memo(() => {
     const history = useHistory()
@@ -25,18 +26,20 @@ const WelcomePage = React.memo(() => {
     const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
 
-    const goForward = async () => {
-        if (me) {
-            const patch: UserConfigPatch = {}
-            patch.updatedFields = {}
-            patch.updatedFields[UserSettingKey.WelcomePageViewed] = 'true'
+    const setWelcomePageViewed = async (userID: string):Promise<any> => {
+        const patch: UserConfigPatch = {}
+        patch.updatedFields = {}
+        patch.updatedFields[UserPropPrefix + UserSettingKey.WelcomePageViewed] = true
 
-            const updatedProps = await mutator.patchUserConfig(me.id, patch)
-            if (updatedProps) {
-                await dispatch(patchProps(updatedProps))
-            }
+        const updatedProps = await mutator.patchUserConfig(userID, patch)
+        if (updatedProps) {
+            return dispatch(patchProps(updatedProps))
         }
 
+        return Promise.resolve()
+    }
+
+    const goForward = () => {
         if (queryString.get('r')) {
             history.replace(queryString.get('r')!)
             return
@@ -45,7 +48,27 @@ const WelcomePage = React.memo(() => {
         history.replace('/dashboard')
     }
 
-    if (me?.props[UserSettingKey.WelcomePageViewed]) {
+    const skipTour = async () => {
+        if (me) {
+            await setWelcomePageViewed(me.id)
+        }
+
+        goForward()
+    }
+
+    const startTour = async () => {
+        if (!me) {
+            return
+        }
+
+        await setWelcomePageViewed(me.id)
+        const onboardingData = await octoClient.prepareOnboarding()
+        await dispatch(fetchMe())
+        const newPath = `/workspace/${onboardingData?.workspaceID}/${onboardingData?.boardID}`
+        history.replace(newPath)
+    }
+
+    if (me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
         goForward()
         return null
     }
@@ -81,7 +104,7 @@ const WelcomePage = React.memo(() => {
                 />
 
                 <Button
-                    onClick={goForward}
+                    onClick={startTour}
                     filled={true}
                     size='large'
                     icon={
@@ -97,7 +120,10 @@ const WelcomePage = React.memo(() => {
                     />
                 </Button>
 
-                <a className='skip'>
+                <a
+                    className='skip'
+                    onClick={skipTour}
+                >
                     <FormattedMessage
                         id='WelcomePage.NoThanks.Text'
                         defaultMessage="No thanks, I'll figure it out myself"

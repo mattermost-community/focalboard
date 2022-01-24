@@ -56,7 +56,7 @@ type User struct {
 type UserPropPatch struct {
 	// The user prop updated fields
 	// required: false
-	UpdatedFields map[string]string `json:"updatedFields"`
+	UpdatedFields map[string]interface{} `json:"updatedFields"`
 
 	// The user prop removed fields
 	// required: false

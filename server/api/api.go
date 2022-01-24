@@ -110,6 +110,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
+
+	// onboarding tour endpoints
+	apiv1.HandleFunc("/onboard", a.sessionRequired(a.handleOnboardingPrepare)).Methods(http.MethodPost)
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -1863,6 +1866,29 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 
 	auditRec.AddMeta("subscription_count", len(subs))
 	auditRec.Success()
+}
+
+func (a *API) handleOnboardingPrepare(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	workspaceID, boardID, err := a.app.PrepareOnboardingTour(session.UserID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	response := map[string]string{
+		"workspaceID": workspaceID,
+		"boardID":     boardID,
+	}
+	data, err := json.Marshal(response)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
 }
 
 // Response helpers

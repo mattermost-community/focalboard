@@ -35,7 +35,7 @@ import {setGlobalError, getGlobalError} from './store/globalError'
 import {useAppSelector, useAppDispatch} from './store/hooks'
 import {fetchClientConfig} from './store/clientConfig'
 
-import {IUser} from './user'
+import {IUser, UserPropPrefix} from './user'
 import {UserSettingKey, UserSettings} from './userSettings'
 
 declare let window: IAppWindow
@@ -128,7 +128,7 @@ const App = React.memo((): JSX.Element => {
     }
 
     const continueToWelcomeScreen = () => {
-        return Utils.isFocalboardPlugin() && loggedIn === true && !me?.props[UserSettingKey.WelcomePageViewed]
+        return Utils.isFocalboardPlugin() && loggedIn === true && !me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]
     }
 
     return (

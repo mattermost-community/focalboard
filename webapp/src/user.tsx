@@ -23,4 +23,6 @@ interface UserConfigPatch {
     deletedFields?: string[]
 }
 
-export {IUser, UserWorkspace, UserConfigPatch}
+const UserPropPrefix = 'focalboard_'
+
+export {IUser, UserWorkspace, UserConfigPatch, UserPropPrefix}
