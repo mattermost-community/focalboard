@@ -35,7 +35,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
               role="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline trash-can-outline"
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
               />
               <div
                 class="menu-name"
@@ -169,7 +169,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
               role="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline trash-can-outline"
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
               />
               <div
                 class="menu-name"
@@ -303,7 +303,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
               role="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline trash-can-outline"
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
               />
               <div
                 class="menu-name"
