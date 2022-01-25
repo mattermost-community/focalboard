@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {render} from '@testing-library/react'
+import {render, within, act, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 
@@ -211,18 +211,21 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
             />
             ,
         ))
-        userEvent.click(container.querySelector('.BoardTemplateSelectorItem .DeleteIcon')!)
-        expect(onDelete).toBeCalledTimes(1)
-        expect(onDelete).toBeCalledWith(template)
+        userEvent.click(container.querySelector('.BoardTemplateSelectorItem .EditIcon')!)
+        expect(onEdit).toBeCalledTimes(1)
+        expect(onEdit).toBeCalledWith(template.id)
         expect(onSelect).not.toBeCalled()
-        expect(onEdit).not.toBeCalled()
+        expect(onDelete).not.toBeCalled()
     })
 
-    test('should trigger the onDelete (and not any other) when click the delete icon', async () => {
+    test('should trigger the onDelete (and not any other) when click the delete icon and confirm', async () => {
         const onSelect = jest.fn()
         const onDelete = jest.fn()
         const onEdit = jest.fn()
-        const {container} = render(wrapDNDIntl(
+
+        const root = document.createElement('div')
+        root.setAttribute('id', 'focalboard-root-portal')
+        render(wrapDNDIntl(
             <BoardTemplateSelectorItem
                 isActive={false}
                 template={template}
@@ -231,11 +234,21 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
                 onEdit={onEdit}
             />
             ,
-        ))
-        userEvent.click(container.querySelector('.BoardTemplateSelectorItem .EditIcon')!)
-        expect(onEdit).toBeCalledTimes(1)
-        expect(onEdit).toBeCalledWith(template.id)
-        expect(onSelect).not.toBeCalled()
-        expect(onDelete).not.toBeCalled()
+        ), {container: document.body.appendChild(root)})
+        act(() => {
+            userEvent.click(root.querySelector('.BoardTemplateSelectorItem .DeleteIcon')!)
+        })
+
+        expect(root).toMatchSnapshot()
+
+        const {getByText} = within(root)
+        act(() => {
+            userEvent.click(getByText('Delete')!)
+        })
+
+        await waitFor(async () => expect(onDelete).toBeCalledTimes(1))
+        await waitFor(async () => expect(onDelete).toBeCalledWith(template))
+        await waitFor(async () => expect(onSelect).not.toBeCalled())
+        await waitFor(async () => expect(onEdit).not.toBeCalled())
     })
 })

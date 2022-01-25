@@ -40,7 +40,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
         class="templates-list"
       >
         <div
-          class="template-item active"
+          class="BoardTemplateSelectorItem active"
         >
           <span
             class="template-icon"
@@ -54,7 +54,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           </span>
         </div>
         <div
-          class="template-item"
+          class="BoardTemplateSelectorItem"
         >
           <span
             class="template-icon"
@@ -185,7 +185,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
         class="templates-list"
       >
         <div
-          class="template-item active"
+          class="BoardTemplateSelectorItem active"
         >
           <span
             class="template-icon"
@@ -199,7 +199,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           </span>
         </div>
         <div
-          class="template-item"
+          class="BoardTemplateSelectorItem"
         >
           <span
             class="template-icon"
@@ -330,7 +330,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
         class="templates-list"
       >
         <div
-          class="template-item active"
+          class="BoardTemplateSelectorItem active"
         >
           <span
             class="template-icon"
@@ -344,7 +344,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           </span>
         </div>
         <div
-          class="template-item"
+          class="BoardTemplateSelectorItem"
         >
           <span
             class="template-icon"
@@ -486,7 +486,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
         class="templates-list"
       >
         <div
-          class="template-item active"
+          class="BoardTemplateSelectorItem active"
         >
           <span
             class="template-icon"
@@ -500,7 +500,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
           </span>
         </div>
         <div
-          class="template-item"
+          class="BoardTemplateSelectorItem"
         >
           <span
             class="template-icon"

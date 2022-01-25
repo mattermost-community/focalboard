@@ -36,6 +36,7 @@ const Dialog = React.memo((props: Props) => {
             <div
                 className='wrapper'
                 onClick={(e) => {
+                    e.stopPropagation()
                     if (e.target === e.currentTarget) {
                         props.onClose()
                     }

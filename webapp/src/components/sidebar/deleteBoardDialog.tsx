@@ -63,7 +63,10 @@ export default function DeleteBoardDialog(props: Props): JSX.Element {
                         <Button
                             size={'medium'}
                             emphasis={'tertiary'}
-                            onClick={() => !isSubmitting && props.onClose()}
+                            onClick={(e: React.MouseEvent) => {
+                                e.stopPropagation()
+                                !isSubmitting && props.onClose()
+                            }}
                         >
                             <FormattedMessage
                                 id='DeleteBoardDialog.confirm-cancel'
@@ -74,15 +77,16 @@ export default function DeleteBoardDialog(props: Props): JSX.Element {
                             size={'medium'}
                             filled={true}
                             danger={true}
-                            onClick={async () => {
+                            onClick={async (e: React.MouseEvent) => {
+                                e.stopPropagation()
                                 try {
                                     setSubmitting(true)
                                     await props.onDelete()
                                     setSubmitting(false)
                                     props.onClose()
-                                } catch (e) {
+                                } catch (err) {
                                     setSubmitting(false)
-                                    Utils.logError(`Delete board ERROR: ${e}`)
+                                    Utils.logError(`Delete board ERROR: ${err}`)
 
                                     // TODO: display error on screen
                                 }
