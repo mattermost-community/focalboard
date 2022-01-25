@@ -11,9 +11,13 @@ Personal Desktop is a fully contained, standalone app meant for a single user, t
 
 Download Focalboard from the [Mac App Store](https://apps.apple.com/app/apple-store/id1556908618?pt=2114704&ct=website&mt=8).
 
+<a href="https://apps.apple.com/app/apple-store/id1556908618?pt=2114704&ct=website&mt=8"><img src="/img/mac-app-store.svg" style="max-height: 40px;" /></a>
+
 #### Windows
 
 Download Focalboard from the [Microsoft App Store](https://www.microsoft.com/store/apps/9NLN2T0SX9VF?cid=website).
+
+<a href="https://www.microsoft.com/store/apps/9NLN2T0SX9VF?cid=website"><img src="/img/ms-app-store.svg" style="max-height: 40px;" /></a>
 
 Or download `focalboard-win.zip` from the latest [release on GitHub](https://github.com/mattermost/focalboard/releases).
 
