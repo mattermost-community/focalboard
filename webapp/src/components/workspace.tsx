@@ -120,6 +120,9 @@ const Workspace = React.memo((props: Props) => {
     const openBoardTemplateSelector = useCallback(() => {
         setBoardTemplateSelectorOpen(true)
     }, [])
+    useEffect(() => {
+        setBoardTemplateSelectorOpen(false)
+    }, [board, view])
 
     return (
         <div className='Workspace'>

@@ -8,15 +8,12 @@ import {Board} from '../../blocks/board'
 import IconButton from '../../widgets/buttons/iconButton'
 import CloseIcon from '../../widgets/icons/close'
 import AddIcon from '../../widgets/icons/add'
-import DeleteIcon from '../../widgets/icons/delete'
-import EditIcon from '../../widgets/icons/edit'
 import Button from '../../widgets/buttons/button'
 import octoClient from '../../octoClient'
 import mutator from '../../mutator'
 import {getTemplates, getCurrentBoard} from '../../store/boards'
 import {fetchGlobalTemplates, getGlobalTemplates} from '../../store/globalTemplates'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import DeleteBoardDialog from '../sidebar/deleteBoardDialog'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import BoardTemplateSelectorPreview from './boardTemplateSelectorPreview'
@@ -38,7 +35,6 @@ const BoardTemplateSelector = React.memo((props: Props) => {
     const intl = useIntl()
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId?: string}>()
-    const [deleteBoardTemplateOpen, setDeleteBoardTemplateOpen] = useState<Board|null>(null)
 
     const showBoard = useCallback(async (boardId) => {
         const params = {...match.params, boardId: boardId || ''}
@@ -55,6 +51,19 @@ const BoardTemplateSelector = React.memo((props: Props) => {
             dispatch(fetchGlobalTemplates())
         }
     }, [octoClient.workspaceId])
+
+    const onBoardTemplateDelete = useCallback((template: Board) => {
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardTemplate, {board: template.id})
+        mutator.deleteBlock(
+            template,
+            intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete template'}),
+            async () => {
+            },
+            async () => {
+                showBoard(template.id)
+            },
+        )
+    }, [showBoard])
 
     const unsortedTemplates = useAppSelector(getTemplates)
     const templates = useMemo(() => Object.values(unsortedTemplates).sort((a: Board, b: Board) => a.createAt - b.createAt), [unsortedTemplates])
@@ -109,7 +118,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                             isActive={activeTemplate?.id === boardTemplate.id}
                             template={boardTemplate}
                             onSelect={setActiveTemplate}
-                            onDelete={setDeleteBoardTemplateOpen}
+                            onDelete={onBoardTemplateDelete}
                             onEdit={showBoard}
                         />
                     ))}
@@ -151,24 +160,6 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                     </div>
                 </div>
             </div>
-            {deleteBoardTemplateOpen &&
-            <DeleteBoardDialog
-                boardTitle={deleteBoardTemplateOpen.title}
-                onClose={() => setDeleteBoardTemplateOpen(null)}
-                isTemplate={true}
-                onDelete={async () => {
-                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardTemplate, {board: deleteBoardTemplateOpen.id})
-                    mutator.deleteBlock(
-                        deleteBoardTemplateOpen,
-                        intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete template'}),
-                        async () => {
-                        },
-                        async () => {
-                            showBoard(deleteBoardTemplateOpen.id)
-                        },
-                    )
-                }}
-            />}
         </div>
     )
 })
