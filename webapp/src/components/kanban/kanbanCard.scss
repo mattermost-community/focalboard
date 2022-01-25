@@ -16,6 +16,7 @@
     color: rgb(var(--center-channel-color-rgb));
 
     transition: background 100ms ease-out 0s;
+    position: relative;
 
     &:hover {
         background-color: rgba(var(--center-channel-color-rgb), 0.1);

@@ -24,6 +24,10 @@ import './centerPanel.scss'
 
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
+import {useAppSelector} from '../store/hooks'
+
+import {getOnboardingTourStarted, getOnboardingTourStep} from '../store/users'
+
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
 import TopBar from './topBar'

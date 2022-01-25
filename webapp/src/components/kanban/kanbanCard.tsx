@@ -26,6 +26,8 @@ import PropertyValueElement from '../propertyValueElement'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import './kanbanCard.scss'
 import CardBadges from '../cardBadges'
+import {getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
+import OnboardingOpenACardTip from '../onboardingTour/open_card'
 
 type Props = {
     card: Card
@@ -80,6 +82,12 @@ const KanbanCard = React.memo((props: Props) => {
         }
         setShowConfirmationDialogBox(true)
     }
+
+    const isOnboardingBoard = board.title === 'Welcome to Boards!'
+    const isOnboardingCard = card.title === 'Create a new card'
+    const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
+    const onboardingTourStep = useAppSelector(getOnboardingTourStep)
+    const showTour = isOnboardingBoard && isOnboardingCard && onboardingTourStarted && onboardingTourStep === '1'
 
     return (
         <>
@@ -168,6 +176,7 @@ const KanbanCard = React.memo((props: Props) => {
                     </Tooltip>
                 ))}
                 {props.visibleBadges && <CardBadges card={card}/>}
+                {showTour && <OnboardingOpenACardTip/>}
             </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}

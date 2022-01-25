@@ -10,6 +10,7 @@ const (
 	KeyPrefix                = "focalboard_" // use key prefix to namespace focalboard props
 	KeyOnboardingTourStarted = KeyPrefix + "onboardingTourStarted"
 	KeyOnboardingTourStep    = KeyPrefix + "onboardingTourStep"
+	KeyOnboardingTourSkipped = KeyPrefix + "onboardingTourSkipped"
 	ValueOnboardingFirstStep = 1
 )
 
@@ -37,5 +38,5 @@ func (a *App) PrepareOnboardingTour(userID string) (string, string, error) {
 	}
 
 	// TODO return actual cloned board's ID
-	return workspaceID, "bi6bnq99gbpggzfgojywrxbbh9r", nil
+	return workspaceID, "b4nz53z5exin1ixxsq61kp3dkky", nil
 }

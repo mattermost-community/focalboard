@@ -24,6 +24,9 @@ import KanbanColumnHeader from './kanbanColumnHeader'
 import KanbanHiddenColumnItem from './kanbanHiddenColumnItem'
 
 import './kanban.scss'
+import {useAppSelector} from '../../store/hooks'
+import {getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
+import OnboardingOpenACardTip from '../onboardingTour/open_card'
 
 type Props = {
     board: Board

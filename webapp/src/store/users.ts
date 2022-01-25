@@ -105,4 +105,26 @@ export const getUser = (userId: string): (state: RootState) => IUser|undefined =
     }
 }
 
+export const getOnboardingTourStarted = createSelector(
+    getMe,
+    (me): boolean => {
+        if (!me) {
+            return false
+        }
+
+        return Boolean(me.props.focalboard_onboardingTourStarted)
+    },
+)
+
+export const getOnboardingTourStep = createSelector(
+    getMe,
+    (me): string => {
+        if (!me) {
+            return ''
+        }
+
+        return me.props.focalboard_onboardingTourStep
+    },
+)
+
 export const {followBlock, unfollowBlock, patchProps} = usersSlice.actions
