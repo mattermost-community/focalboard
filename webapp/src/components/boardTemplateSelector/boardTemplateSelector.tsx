@@ -20,6 +20,7 @@ import DeleteBoardDialog from '../sidebar/deleteBoardDialog'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import BoardTemplateSelectorPreview from './boardTemplateSelectorPreview'
+import BoardTemplateSelectorItem from './boardTemplateSelectorItem'
 
 import './boardTemplateSelector.scss'
 
@@ -103,31 +104,14 @@ const BoardTemplateSelector = React.memo((props: Props) => {
             <div className='templates'>
                 <div className='templates-list'>
                     {allTemplates.map((boardTemplate) => (
-                        <div
+                        <BoardTemplateSelectorItem
                             key={boardTemplate.id}
-                            className={activeTemplate?.id === boardTemplate.id ? 'template-item active' : 'template-item'}
-                            onClick={() => setActiveTemplate(boardTemplate)}
-                        >
-                            <span className='template-icon'>{boardTemplate.fields.icon}</span>
-                            <span className='template-name'>{boardTemplate.title}</span>
-                            {boardTemplate.workspaceId !== '0' &&
-                                <div className='actions'>
-                                    <IconButton
-                                        icon={<DeleteIcon/>}
-                                        title={intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete'})}
-                                        onClick={() => {
-                                            setDeleteBoardTemplateOpen(boardTemplate)
-                                        }}
-                                    />
-                                    <IconButton
-                                        icon={<EditIcon/>}
-                                        title={intl.formatMessage({id: 'BoardTemplateSelector.edit-template', defaultMessage: 'Edit'})}
-                                        onClick={() => {
-                                            showBoard(boardTemplate.id)
-                                        }}
-                                    />
-                                </div>}
-                        </div>
+                            isActive={activeTemplate?.id === boardTemplate.id}
+                            template={boardTemplate}
+                            onSelect={setActiveTemplate}
+                            onDelete={setDeleteBoardTemplateOpen}
+                            onEdit={showBoard}
+                        />
                     ))}
                     <div
                         className='new-template'

@@ -1,0 +1,39 @@
+.BoardTemplateSelectorItem {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    margin-bottom: 4px;
+    border-radius: var(--default-rad);
+    cursor: pointer;
+
+    .template-icon {
+        margin-right: 5px;
+    }
+
+    &.active {
+        background-color: rgba(var(--button-bg-rgb), 0.2);
+    }
+
+    &:hover {
+        background-color: rgba(var(--center-channel-color-rgb), 0.1);
+
+        .actions {
+            opacity: 1;
+        }
+    }
+
+    .actions {
+        position: absolute;
+        right: 5px;
+        display: flex;
+        opacity: 0;
+    }
+
+    .EditIcon {
+        width: 16px;
+        height: 16px;
+        fill: rgb(var(--center-channel-color-rgb));
+    }
+}
+
