@@ -90,7 +90,7 @@
   "DashboardPage.CenterPanel.ChangeChannels": "スイッチャーで簡単にチャンネルを変更できます",
   "DashboardPage.CenterPanel.NoWorkspaces": "その言葉に一致するチャンネルは見つかりませんでした",
   "DashboardPage.CenterPanel.NoWorkspacesDescription": "別の言葉で検索してみてください",
-  "DashboardPage.showEmpty": "空の表示",
+  "DashboardPage.showEmpty": "空のボードを表示",
   "DashboardPage.title": "ダッシュボード",
   "DeleteBoardDialog.confirm-cancel": "キャンセル",
   "DeleteBoardDialog.confirm-delete": "削除",
