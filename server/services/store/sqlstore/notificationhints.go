@@ -195,7 +195,7 @@ func (s *SQLStore) getNextNotificationHint(db sq.BaseRunner, remove bool) (*mode
 		if rows == 0 {
 			// another node likely has grabbed this hint for processing concurrently; let that node handle it
 			// and we'll return an error here so we try again.
-			return nil, fmt.Errorf("cannot delete missing hint while getting next notification hint: %w", err)
+			return nil, store.NewErrNotFound(hint.BlockID)
 		}
 	}
 
