@@ -191,7 +191,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             userEvent.click(divEmptyboard!)
             expect(mockedMutator.addEmptyBoard).toBeCalledTimes(1)
         })
-        test('return BoardTemplateSelector and click delete template icon', () => {
+        test('return BoardTemplateSelector and click delete template icon', async () => {
             const root = document.createElement('div')
             root.setAttribute('id', 'focalboard-root-portal')
             render(wrapDNDIntl(
@@ -209,7 +209,8 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             const {getByText} = within(root)
             const deleteConfirm = getByText('Delete')
             expect(deleteConfirm).not.toBeNull()
-            act(async () => {
+
+            await act(async () => {
                 await userEvent.click(deleteConfirm!)
             })
 
