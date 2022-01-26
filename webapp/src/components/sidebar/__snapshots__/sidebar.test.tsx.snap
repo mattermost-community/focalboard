@@ -387,7 +387,7 @@ exports[`components/sidebarSidebar sidebar hidden 2`] = `
         class="hamburger-icon"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <svg
@@ -411,7 +411,7 @@ exports[`components/sidebarSidebar sidebar hidden 2`] = `
         class="show-icon"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <svg

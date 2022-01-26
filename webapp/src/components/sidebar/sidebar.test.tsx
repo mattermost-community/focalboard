@@ -97,13 +97,13 @@ describe('components/sidebarSidebar', () => {
         const {container} = render(component)
         expect(container).toMatchSnapshot()
 
-        const hideSidebar = container.querySelector('.Button > .HideSidebarIcon')
+        const hideSidebar = container.querySelector('button > .HideSidebarIcon')
         expect(hideSidebar).toBeDefined()
 
         userEvent.click(hideSidebar as Element)
         expect(container).toMatchSnapshot()
 
-        const showSidebar = container.querySelector('.Button > .ShowSidebarIcon')
+        const showSidebar = container.querySelector('button > .ShowSidebarIcon')
         expect(showSidebar).toBeDefined()
     })
 
@@ -139,10 +139,10 @@ describe('components/sidebarSidebar', () => {
         const {container} = render(component)
         expect(container).toMatchSnapshot()
 
-        const hideSidebar = container.querySelector('.Button > .HideSidebarIcon')
+        const hideSidebar = container.querySelector('button > .HideSidebarIcon')
         expect(hideSidebar).toBeNull()
 
-        const showSidebar = container.querySelector('.Button > .ShowSidebarIcon')
+        const showSidebar = container.querySelector('button > .ShowSidebarIcon')
         expect(showSidebar).toBeDefined()
 
         customGlobal.innerWidth = 1024
