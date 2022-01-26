@@ -10,7 +10,7 @@ exports[`components/modal return Modal on position bottom 1`] = `
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
+        class="IconButton"
         title="Close"
         type="button"
       >
@@ -36,7 +36,7 @@ exports[`components/modal return Modal on position bottom-right 1`] = `
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
+        class="IconButton"
         title="Close"
         type="button"
       >
@@ -62,7 +62,7 @@ exports[`components/modal return Modal on position top 1`] = `
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
+        class="IconButton"
         title="Close"
         type="button"
       >
@@ -88,7 +88,7 @@ exports[`components/modal should match snapshot 1`] = `
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
+        class="IconButton"
         title="Close"
         type="button"
       >

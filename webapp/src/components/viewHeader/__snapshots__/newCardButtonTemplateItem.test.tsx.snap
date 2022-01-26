@@ -23,7 +23,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -165,7 +165,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -307,7 +307,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -342,7 +342,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -484,7 +484,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i

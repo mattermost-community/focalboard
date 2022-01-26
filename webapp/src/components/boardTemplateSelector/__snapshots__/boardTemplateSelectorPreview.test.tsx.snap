@@ -65,7 +65,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -147,7 +146,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -220,7 +218,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -229,7 +226,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             </button>
           </div>
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -274,7 +270,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -283,7 +278,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             </button>
           </div>
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -328,7 +322,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -337,7 +330,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             </button>
           </div>
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -375,7 +367,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
               role="button"
             >
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i

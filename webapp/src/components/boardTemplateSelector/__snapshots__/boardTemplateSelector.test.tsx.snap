@@ -10,7 +10,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
         title="Close"
         type="button"
       >
@@ -71,7 +70,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           >
             <button
               aria-label="Delete"
-              class="Button IconButton"
               title="Delete"
               type="button"
             >
@@ -81,7 +79,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             </button>
             <button
               aria-label="Edit"
-              class="Button IconButton"
               title="Edit"
               type="button"
             >
@@ -216,7 +213,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           >
             <button
               aria-label="Delete"
-              class="Button IconButton"
               title="Delete"
               type="button"
             >
@@ -226,7 +222,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             </button>
             <button
               aria-label="Edit"
-              class="Button IconButton"
               title="Edit"
               type="button"
             >
@@ -361,7 +356,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           >
             <button
               aria-label="Delete"
-              class="Button IconButton"
               title="Delete"
               type="button"
             >
@@ -371,7 +365,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             </button>
             <button
               aria-label="Edit"
-              class="Button IconButton"
               title="Edit"
               type="button"
             >
@@ -456,7 +449,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
         title="Close"
         type="button"
       >
@@ -517,7 +509,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
           >
             <button
               aria-label="Delete"
-              class="Button IconButton"
               title="Delete"
               type="button"
             >
@@ -527,7 +518,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
             </button>
             <button
               aria-label="Edit"
-              class="Button IconButton"
               title="Edit"
               type="button"
             >

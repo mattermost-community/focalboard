@@ -61,7 +61,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 role="button"
               >
                 <button
-                  class="Button IconButton"
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -180,7 +180,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 role="button"
               >
                 <button
-                  class="Button IconButton"
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -299,7 +299,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 role="button"
               >
                 <button
-                  class="Button IconButton"
+                  class="IconButton"
                   type="button"
                 >
                   <i

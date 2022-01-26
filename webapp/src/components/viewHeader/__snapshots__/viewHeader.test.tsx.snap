@@ -18,7 +18,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -105,7 +105,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i
@@ -159,7 +159,7 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i

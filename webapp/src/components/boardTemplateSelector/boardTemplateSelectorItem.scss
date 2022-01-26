@@ -1,4 +1,5 @@
 .BoardTemplateSelectorItem {
+    cursor: pointer;
     transition: all 100ms ease-out 0s;
     font-weight: 600;
     position: relative;
@@ -8,7 +9,14 @@
     margin-bottom: 4px;
     border-radius: var(--default-rad);
     color: rgba(var(--center-channel-color-rgb), 0.64);
-    cursor: pointer;
+    height: 40px;
+
+    .template-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+    }
 
     .template-icon {
         margin-right: 10px;
@@ -19,7 +27,7 @@
         color: rgba(var(--center-channel-color-rgb), 1);
 
         .actions {
-            opacity: 1;
+            display: flex;
         }
     }
 
@@ -29,16 +37,10 @@
     }
 
     .actions {
-        position: absolute;
-        right: 5px;
+        position: relative;
         display: flex;
-        opacity: 0;
-    }
-
-    .EditIcon {
-        width: 16px;
-        height: 16px;
-        fill: rgb(var(--center-channel-color-rgb));
+        display: none;
+        right: -8px;
     }
 }
 

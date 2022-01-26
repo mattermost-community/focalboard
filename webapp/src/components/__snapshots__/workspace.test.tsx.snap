@@ -72,7 +72,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
           class="sidebarSwitcher"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <svg
@@ -106,13 +105,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
             class="CompassIcon icon-chevron-down ChevronDownIcon"
           />
         </div>
-        <span
-          class="add-workspace-icon"
+        <button
+          type="button"
         >
           <i
             class="CompassIcon icon-plus AddIcon"
           />
-        </span>
+        </button>
       </div>
       <div
         class="octo-sidebar-list"
@@ -124,7 +123,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
             class="octo-sidebar-item ' expanded active"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <svg
@@ -158,7 +156,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               role="button"
             >
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -379,7 +376,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               role="button"
             >
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -461,7 +457,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -534,7 +529,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -543,7 +537,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -588,7 +581,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -597,7 +589,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -635,7 +626,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   role="button"
                 >
                   <button
-                    class="Button IconButton"
                     type="button"
                   >
                     <i
@@ -679,7 +669,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   role="button"
                 >
                   <button
-                    class="Button IconButton"
                     type="button"
                   >
                     <i
@@ -723,7 +712,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   role="button"
                 >
                   <button
-                    class="Button IconButton"
                     type="button"
                   >
                     <i
@@ -930,7 +918,6 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               role="button"
             >
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -1286,7 +1273,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
           class="sidebarSwitcher"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <svg
@@ -1320,13 +1306,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
             class="CompassIcon icon-chevron-down ChevronDownIcon"
           />
         </div>
-        <span
-          class="add-workspace-icon"
+        <button
+          type="button"
         >
           <i
             class="CompassIcon icon-plus AddIcon"
           />
-        </span>
+        </button>
       </div>
       <div
         class="octo-sidebar-list"
@@ -1338,7 +1324,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
             class="octo-sidebar-item ' expanded active"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <svg
@@ -1372,7 +1357,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
               role="button"
             >
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -1593,7 +1577,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
               role="button"
             >
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -1675,7 +1658,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -1748,7 +1730,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -1757,7 +1738,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -1802,7 +1782,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -1811,7 +1790,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -1849,7 +1827,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   role="button"
                 >
                   <button
-                    class="Button IconButton"
                     type="button"
                   >
                     <i
@@ -1893,7 +1870,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   role="button"
                 >
                   <button
-                    class="Button IconButton"
                     type="button"
                   >
                     <i
@@ -1937,7 +1913,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   role="button"
                 >
                   <button
-                    class="Button IconButton"
                     type="button"
                   >
                     <i
@@ -2144,7 +2119,6 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               role="button"
             >
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
