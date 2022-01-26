@@ -90,7 +90,7 @@ describe('Create and delete board / card', () => {
 
         // Create a card by clicking on the + button
         cy.log('**Create a card by clicking on the + button**')
-        cy.get('.KanbanColumnHeader .Button .AddIcon').click()
+        cy.get('.KanbanColumnHeader button .AddIcon').click()
         cy.get('.CardDetail').should('exist')
         cy.get('.Dialog.dialog-back .wrapper').click({force: true})
 
@@ -132,7 +132,7 @@ describe('Create and delete board / card', () => {
             parent().
             parent().
             find('.MenuWrapper').
-            find('.Button.IconButton').
+            find('button.IconButton').
             click({force: true})
         cy.contains('Delete board').click({force: true})
         cy.get('.DeleteBoardDialog button.danger').click({force: true})

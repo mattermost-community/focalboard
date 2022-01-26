@@ -150,6 +150,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                             />
                         </Button>
                         <Button
+                            className='empty-board'
                             filled={false}
                             emphasis={'secondary'}
                             size={'medium'}
