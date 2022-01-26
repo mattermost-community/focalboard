@@ -1320,6 +1320,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	// - application/json
 	// - image/jpg
 	// - image/png
+	// - image/gif
 	// parameters:
 	// - name: workspaceID
 	//   in: path
@@ -1368,6 +1369,10 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	fileExtension := strings.ToLower(filepath.Ext(filename))
 	if fileExtension == "png" {
 		contentType = "image/png"
+	}
+
+	if fileExtension == "gif" {
+		contentType = "image/gif"
 	}
 
 	w.Header().Set("Content-Type", contentType)
