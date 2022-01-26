@@ -10,7 +10,7 @@ Cypress.Commands.add('uiCreateBoard', (item: string) => {
 
     cy.contains(item).click()
 
-    cy.contains('Use this template').click().wait(1000)
+    cy.contains('Use this template').click({force: true}).wait(1000)
 })
 
 Cypress.Commands.add('uiCreateEmptyBoard', () => {
@@ -18,5 +18,5 @@ Cypress.Commands.add('uiCreateEmptyBoard', () => {
 
     cy.contains('+ Add board').should('be.visible').click()
 
-    return cy.contains('Create empty board').click().wait(1000)
+    return cy.contains('Create empty board').click({force: true}).wait(1000)
 })

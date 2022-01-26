@@ -18,7 +18,7 @@ describe('Create and delete board / card', () => {
         cy.contains('+ Add board').should('exist').click()
 
         // Tests for template selector
-        cy.contains('Select a template').should('exist')
+        cy.contains('Use this template').should('exist')
 
         // Some options are present
         cy.contains('Meeting Notes').should('exist')
@@ -26,7 +26,7 @@ describe('Create and delete board / card', () => {
         cy.contains('Project Tasks').should('exist')
 
         // Create empty board
-        cy.contains('Create empty board').should('exist').click()
+        cy.contains('Create empty board').should('exist').click({force: true})
         cy.get('.BoardComponent').should('exist')
         cy.get('.Editable.title').invoke('attr', 'placeholder').should('contain', 'Untitled board')
 
