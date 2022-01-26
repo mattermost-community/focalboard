@@ -29,7 +29,7 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch override-main on"
         >
           <div
             class="octo-switch-inner"
@@ -100,7 +100,7 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch override-main on"
         >
           <div
             class="octo-switch-inner"
@@ -171,7 +171,7 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch override-main on"
         >
           <div
             class="octo-switch-inner"
@@ -242,7 +242,7 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch override-main on"
         >
           <div
             class="octo-switch-inner"
@@ -313,7 +313,7 @@ exports[`src/components/shareBoardComponent should match snapshot 1`] = `
           Publish and share this board with anyone who has the link
         </div>
         <div
-          class="Switch"
+          class="Switch override-main"
         >
           <div
             class="octo-switch-inner"
@@ -354,7 +354,7 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing 1
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch override-main on"
         >
           <div
             class="octo-switch-inner"
@@ -425,7 +425,7 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing a
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch override-main on"
         >
           <div
             class="octo-switch-inner"
@@ -496,7 +496,7 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing a
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch override-main on"
         >
           <div
             class="octo-switch-inner"
@@ -567,7 +567,7 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing a
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch override-main on"
         >
           <div
             class="octo-switch-inner"

@@ -12,7 +12,7 @@ type Props = {
 
 // Switch is an on-off style switch / checkbox
 function Switch(props: Props): JSX.Element {
-    const className = props.isOn ? 'Switch on' : 'Switch'
+    const className = `Switch override-main${props.isOn ? ' on' : ''}`
     return (
         <div
             className={className}
