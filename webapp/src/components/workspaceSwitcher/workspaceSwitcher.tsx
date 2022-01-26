@@ -8,6 +8,7 @@ import {useHistory} from 'react-router-dom'
 import {IWorkspace} from '../../blocks/workspace'
 import ChevronDown from '../../widgets/icons/chevronDown'
 import AddIcon from '../../widgets/icons/add'
+import IconButton from '../../widgets/buttons/iconButton'
 
 import {UserSettings} from '../../userSettings'
 
@@ -58,12 +59,12 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                 />
             }
             {activeWorkspace &&
-                <span
-                    className='add-workspace-icon'
+                <IconButton
                     onClick={props.onBoardTemplateSelectorOpen}
-                >
-                    <AddIcon/>
-                </span>
+                    icon={<AddIcon/>}
+                    inverted={true}
+                    size='small'
+                />
             }
         </div>
     )

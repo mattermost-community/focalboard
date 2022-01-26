@@ -1,26 +1,31 @@
 .BoardTemplateSelectorItem {
+    transition: all 100ms ease-out 0s;
+    font-weight: 600;
     position: relative;
     display: flex;
     align-items: center;
     padding: 8px 16px;
     margin-bottom: 4px;
     border-radius: var(--default-rad);
+    color: rgba(var(--center-channel-color-rgb), 0.64);
     cursor: pointer;
 
     .template-icon {
-        margin-right: 5px;
-    }
-
-    &.active {
-        background-color: rgba(var(--button-bg-rgb), 0.2);
+        margin-right: 10px;
     }
 
     &:hover {
-        background-color: rgba(var(--center-channel-color-rgb), 0.1);
+        background-color: rgba(var(--center-channel-color-rgb), 0.08);
+        color: rgba(var(--center-channel-color-rgb), 1);
 
         .actions {
             opacity: 1;
         }
+    }
+
+    &.active {
+        background-color: rgba(var(--button-bg-rgb), 0.08);
+        color: rgba(var(--button-bg-rgb), 1);
     }
 
     .actions {

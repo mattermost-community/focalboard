@@ -86,6 +86,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
             <div className='toolbar'>
                 {onClose &&
                     <IconButton
+                        size='medium'
                         onClick={onClose}
                         icon={<CloseIcon/>}
                         title={'Close'}
@@ -140,6 +141,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                     <div className='buttons'>
                         <Button
                             filled={true}
+                            size={'medium'}
                             onClick={() => mutator.addBoardFromTemplate(intl, showBoard, () => showBoard(currentBoard.id), activeTemplate.id, activeTemplate.workspaceId === '0')}
                         >
                             <FormattedMessage
@@ -149,7 +151,8 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                         </Button>
                         <Button
                             filled={false}
-                            className='empty-board'
+                            emphasis={'secondary'}
+                            size={'medium'}
                             onClick={() => mutator.addEmptyBoard(intl, showBoard, () => showBoard(currentBoard.id))}
                         >
                             <FormattedMessage
