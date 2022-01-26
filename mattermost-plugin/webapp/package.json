@@ -75,7 +75,7 @@
   },
   "dependencies": {
     "core-js": "3.12.1",
-    "marked": ">=2.0.1",
+    "marked": ">=4.0.10",
     "mattermost-redux": "5.33.1",
     "react-intl": "^5.13.5",
     "react-router-dom": "5.2.0"
