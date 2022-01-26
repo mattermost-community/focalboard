@@ -1179,9 +1179,10 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 
 	if !a.app.GetClientConfig().EnablePublicSharedBoards {
 		a.logger.Info(
-			"Sharing off in configuration, attempted to turn on sharing for board via API",
+			"Attempt to turn on sharing for board via API failed, sharing off in configuration.",
 			mlog.String("boardID", sharing.ID),
 			mlog.String("userID", userID))
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "Turning on sharing for board failed, see log for details.", nil)
 		return
 	}
 
