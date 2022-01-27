@@ -23,9 +23,9 @@
 
     &__pulsating-dot-ctr {
         position: absolute;
-        left: 80%;
+        top: 0;
+        left: 12px;
         width: 12px;
-        top: calc(100% - 6px);
     }
 
     &__overlay {
@@ -142,9 +142,9 @@
         &:hover:not(.disabled) {
             background:
                 linear-gradient(
-                    0deg,
-                    rgba(var(--center-channel-color-rgb), 0.16),
-                    rgba(var(--center-channel-color-rgb), 0.16)
+                        0deg,
+                        rgba(var(--center-channel-color-rgb), 0.16),
+                        rgba(var(--center-channel-color-rgb), 0.16)
                 ),
                 var(--button-bg);
         }
@@ -152,9 +152,9 @@
         &:active {
             background:
                 linear-gradient(
-                    0deg,
-                    rgba(var(--center-channel-color-rgb), 0.32),
-                    rgba(var(--center-channel-color-rgb), 0.32)
+                        0deg,
+                        rgba(var(--center-channel-color-rgb), 0.32),
+                        rgba(var(--center-channel-color-rgb), 0.32)
                 ),
                 var(--button-bg);
         }

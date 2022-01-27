@@ -13,6 +13,6 @@ export const TourSteps = {
 
 export const TOUR_ONBOARDING = 'onboarding'
 
-export const TutorialSteps: {[key: string]: {[key: string]: number}} = {
+export const TTCategoriesMapToSteps: Record<string, Record<string, number>> = {
     [TOUR_ONBOARDING]: TourSteps,
 }
