@@ -7,31 +7,29 @@ import {bottom} from '@popperjs/core'
 import {FormattedMessage} from 'react-intl'
 
 import TourTip from '../tutorial_tour_tip/tutorial_tour_tip'
-import {Utils} from '../../utils'
-import BoardWelcomePNG from '../../../static/boards-welcome.png'
 import {useMeasurePunchouts} from '../tutorial_tour_tip/hooks'
 import {useAppSelector} from '../../store/hooks'
 import {getOnboardingTourStep} from '../../store/users'
 
 import {TOUR_ONBOARDING} from './index'
 
-import './open_card.scss'
+import './add_properties.scss'
 
-const OnboardingOpenACardTip = (): JSX.Element => {
+const AddProperties = (): JSX.Element => {
     const title = (
         <FormattedMessage
-            id='OnboardingTour.OpenACard.Title'
-            defaultMessage='Open a card'
+            id='OnboardingTour.AddProperties.Title'
+            defaultMessage='Add Properties'
         />
     )
     const screen = (
         <FormattedMessage
-            id='OnboardingTour.OpenACard.Body'
-            defaultMessage='The explore the powers of boards, open a card to view the various features we have!'
+            id='OnboardingTour.AddProperties.Body'
+            defaultMessage='Add various properties to cards to make them more powerful!'
         />
     )
 
-    const punchout = useMeasurePunchouts(['.KanbanCard'], [])
+    const punchout = useMeasurePunchouts(['.octo-propertyname.add-property'], [])
 
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
@@ -44,11 +42,11 @@ const OnboardingOpenACardTip = (): JSX.Element => {
             tutorialCategory={TOUR_ONBOARDING}
             autoTour={true}
             placement={bottom}
-            className='OnboardingOpenACardTip'
+            className='AddProperties'
             hideNavButtons={true}
             hideBackdrop={true}
         />
     )
 }
 
-export default OnboardingOpenACardTip
+export default AddProperties

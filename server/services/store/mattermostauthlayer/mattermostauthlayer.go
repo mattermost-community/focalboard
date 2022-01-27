@@ -174,10 +174,17 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 	}
 
 	for key, value := range patch.UpdatedFields {
-		valueJSON, err := json.Marshal(value)
-		if err != nil {
-			s.logger.Error("PatchUserProps failed to marshal updateField value", mlog.String("value", fmt.Sprintf("%v", value)), mlog.String("userID", userID), mlog.Err(err))
-			return err
+		var valueJSON []byte
+
+		if _, ok := value.(string); ok {
+			valueJSON = []byte(value.(string))
+		} else {
+			var err error
+			valueJSON, err = json.Marshal(value)
+			if err != nil {
+				s.logger.Error("PatchUserProps failed to marshal updateField value", mlog.String("value", fmt.Sprintf("%v", value)), mlog.String("userID", userID), mlog.Err(err))
+				return err
+			}
 		}
 
 		props[key] = string(valueJSON)

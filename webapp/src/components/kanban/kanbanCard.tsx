@@ -9,7 +9,7 @@ import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
 import {getCardComments} from '../../store/comments'
 import {getCardContents} from '../../store/contents'
-import {useAppSelector} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -26,8 +26,17 @@ import PropertyValueElement from '../propertyValueElement'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import './kanbanCard.scss'
 import CardBadges from '../cardBadges'
-import {getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
+import {
+    getMe,
+    getOnboardingTourCategory,
+    getOnboardingTourStarted,
+    getOnboardingTourStep,
+    patchProps,
+} from '../../store/users'
 import OnboardingOpenACardTip from '../onboardingTour/open_card'
+import {UserConfigPatch} from '../../user'
+import {TOUR_CARD, TOUR_ONBOARDING} from '../onboardingTour'
+import octoClient from '../../octoClient'
 
 type Props = {
     card: Card
@@ -86,8 +95,33 @@ const KanbanCard = React.memo((props: Props) => {
     const isOnboardingBoard = board.title === 'Welcome to Boards!'
     const isOnboardingCard = card.title === 'Create a new card'
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
+    const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
-    const showTour = isOnboardingBoard && isOnboardingCard && onboardingTourStarted && onboardingTourStep === '1'
+    const showTour = isOnboardingBoard && isOnboardingCard && onboardingTourStarted && onboardingTourCategory === TOUR_ONBOARDING && onboardingTourStep === '0'
+
+    const dispatch = useAppDispatch()
+    const me = useAppSelector(getMe)
+
+    const handleOnClick = async (e: React.MouseEvent<HTMLDivElement>) => {
+        if (showTour && me) {
+            // send the user to next tour
+            const patch: UserConfigPatch = {
+                updatedFields: {
+                    focalboard_tourCategory: TOUR_CARD,
+                    focalboard_onboardingTourStep: 0,
+                },
+            }
+
+            const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+            if (patchedProps) {
+                await dispatch(patchProps(patchedProps))
+            }
+        }
+
+        if (props.onClick) {
+            props.onClick(e)
+        }
+    }
 
     return (
         <>
@@ -96,7 +130,7 @@ const KanbanCard = React.memo((props: Props) => {
                 className={className}
                 draggable={!props.readonly}
                 style={{opacity: isDragging ? 0.5 : 1}}
-                onClick={props.onClick}
+                onClick={handleOnClick}
             >
                 {!props.readonly &&
                 <MenuWrapper

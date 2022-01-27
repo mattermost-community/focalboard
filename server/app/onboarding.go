@@ -7,11 +7,14 @@ import (
 )
 
 const (
-	KeyPrefix                = "focalboard_" // use key prefix to namespace focalboard props
-	KeyOnboardingTourStarted = KeyPrefix + "onboardingTourStarted"
-	KeyOnboardingTourStep    = KeyPrefix + "onboardingTourStep"
-	KeyOnboardingTourSkipped = KeyPrefix + "onboardingTourSkipped"
-	ValueOnboardingFirstStep = 1
+	KeyPrefix                 = "focalboard_" // use key prefix to namespace focalboard props
+	KeyOnboardingTourStarted  = KeyPrefix + "onboardingTourStarted"
+	KeyOnboardingTourCategory = KeyPrefix + "tourCategory"
+	KeyOnboardingTourStep     = KeyPrefix + "onboardingTourStep"
+	KeyOnboardingTourSkipped  = KeyPrefix + "onboardingTourSkipped"
+
+	ValueOnboardingFirstStep    = 0
+	ValueTourCategoryOnboarding = "onboarding"
 )
 
 func (a *App) PrepareOnboardingTour(userID string) (string, string, error) {
@@ -29,8 +32,9 @@ func (a *App) PrepareOnboardingTour(userID string) (string, string, error) {
 	// set user's tour state to initial state
 	userPropPatch := model.UserPropPatch{
 		UpdatedFields: map[string]interface{}{
-			KeyOnboardingTourStarted: true,
-			KeyOnboardingTourStep:    ValueOnboardingFirstStep,
+			KeyOnboardingTourStarted:  true,
+			KeyOnboardingTourStep:     ValueOnboardingFirstStep,
+			KeyOnboardingTourCategory: ValueTourCategoryOnboarding,
 		},
 	}
 	if err := a.store.PatchUserProps(userID, userPropPatch); err != nil {

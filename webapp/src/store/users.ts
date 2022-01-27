@@ -127,4 +127,9 @@ export const getOnboardingTourStep = createSelector(
     },
 )
 
+export const getOnboardingTourCategory = createSelector(
+    getMe,
+    (me): string => (me ? me.props.focalboard_tourCategory : ''),
+)
+
 export const {followBlock, unfollowBlock, patchProps} = usersSlice.actions

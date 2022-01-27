@@ -5,7 +5,7 @@ import React, {useCallback, useEffect, useState} from 'react'
 
 import {useDispatch} from 'react-redux'
 
-import {TourSteps, TTCategoriesMapToSteps} from '../onboardingTour'
+import {FINISHED, TourSteps, TTCategoriesMapToSteps} from '../onboardingTour'
 import {useAppSelector} from '../../store/hooks'
 import {getMe, getOnboardingTourStep} from '../../store/users'
 import {UserConfigPatch} from '../../user'
@@ -188,7 +188,7 @@ const useTutorialTourTipManager = ({
         }
 
         if (currentUserId) {
-            savePreferences(currentUserId, TourSteps.FINISHED.toString())
+            savePreferences(currentUserId, FINISHED.toString())
         }
     }
 

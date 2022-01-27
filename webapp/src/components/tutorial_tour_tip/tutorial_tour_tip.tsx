@@ -20,7 +20,11 @@ import TutorialTourTipBackdrop, {Coords, TutorialTourTipPunchout} from './tutori
 import './tutorial_tour_tip.scss'
 import useTutorialTourTipManager from './tutorial_tour_tip_manager'
 
-const TourTipOverlay = ({children, show, onClick}: {children: React.ReactNode ; show: boolean; onClick: (e: React.MouseEvent) => void}) =>
+const TourTipOverlay = ({
+    children,
+    show,
+    onClick,
+}: { children: React.ReactNode; show: boolean; onClick: (e: React.MouseEvent) => void }) =>
     (show ? ReactDOM.createPortal(
         <div
             className='tutorial-tour-tip__overlay'
@@ -32,23 +36,26 @@ const TourTipOverlay = ({children, show, onClick}: {children: React.ReactNode ; 
     ) : null)
 
 type Props = {
-    screen: JSX.Element;
-    title: JSX.Element;
-    imageURL?: string;
-    punchOut?: TutorialTourTipPunchout | null;
-    step: number;
-    singleTip?: boolean;
-    showOptOut?: boolean;
-    placement?: Placement;
-    telemetryTag?: string;
-    stopPropagation?: boolean;
-    preventDefault?: boolean;
-    tutorialCategory: string;
-    onNextNavigateTo?: () => void;
-    onPrevNavigateTo?: () => void;
-    autoTour?: boolean;
-    pulsatingDotPosition?: Coords | undefined;
-    width?: string | number;
+    screen: JSX.Element
+    title: JSX.Element
+    imageURL?: string
+    punchOut?: TutorialTourTipPunchout | null
+    step: number
+    singleTip?: boolean
+    showOptOut?: boolean
+    placement?: Placement
+    telemetryTag?: string
+    stopPropagation?: boolean
+    preventDefault?: boolean
+    tutorialCategory: string
+    onNextNavigateTo?: () => void
+    onPrevNavigateTo?: () => void
+    autoTour?: boolean
+    pulsatingDotPosition?: Coords | undefined
+    width?: string | number
+    className?: string
+    hideNavButtons?: boolean
+    hideBackdrop?: boolean
 }
 
 const TutorialTourTip: React.FC<Props> = ({
@@ -69,6 +76,9 @@ const TutorialTourTip: React.FC<Props> = ({
     stopPropagation = true,
     preventDefault = true,
     width = 320,
+    className,
+    hideNavButtons = false,
+    hideBackdrop = false,
 }: Props) => {
     const triggerRef = useRef(null)
     const {
@@ -180,7 +190,7 @@ const TutorialTourTip: React.FC<Props> = ({
                 <div className='tutorial-tour-tip__footer-buttons'>
                     <div className='tutorial-tour-tip__circles-ctr'>{dots}</div>
                     <div className={'tutorial-tour-tip__btn-ctr'}>
-                        {step !== 0 && (
+                        {!hideNavButtons && step !== 0 && (
                             <button
                                 id='tipPreviousButton'
                                 className='tutorial-tour-tip__btn tutorial-tour-tip__cancel-btn'
@@ -193,13 +203,18 @@ const TutorialTourTip: React.FC<Props> = ({
                                 />
                             </button>
                         )}
-                        <button
-                            id='tipNextButton'
-                            className='tutorial-tour-tip__btn tutorial-tour-tip__confirm-btn'
-                            onClick={handleNext}
-                        >
-                            {getButtonText()}
-                        </button>
+
+                        {
+                            !hideNavButtons && (
+                                <button
+                                    id='tipNextButton'
+                                    className='tutorial-tour-tip__btn tutorial-tour-tip__confirm-btn'
+                                    onClick={handleNext}
+                                >
+                                    {getButtonText()}
+                                </button>
+                            )
+                        }
                     </div>
                 </div>
                 {showOptOut && <div className='tutorial-tour-tip__opt'>
@@ -226,12 +241,12 @@ const TutorialTourTip: React.FC<Props> = ({
             <div
                 ref={triggerRef}
                 onClick={handleOpen}
-                className='tutorial-tour-tip__pulsating-dot-ctr'
+                className={`tutorial-tour-tip__pulsating-dot-ctr ${className || ''}`}
             >
                 <PulsatingDot coords={pulsatingDotPosition}/>
             </div>
             <TourTipOverlay
-                show={show}
+                show={!hideBackdrop && show}
                 onClick={handleHide}
             >
                 <TutorialTourTipBackdrop

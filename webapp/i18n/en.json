@@ -254,5 +254,9 @@
   "login.log-in-title": "Log in",
   "login.register-button": "or create an account if you don't have one",
   "register.login-button": "or log in if you already have an account",
-  "register.signup-title": "Sign up for your account"
+  "register.signup-title": "Sign up for your account",
+  "OnboardingTour.OpenACard.Title": "Open a card",
+  "OnboardingTour.OpenACard.Body": "The explore the powers of boards, open a card to view the various features we have!",
+  "OnboardingTour.AddProperties.Title": "Add Properties",
+  "OnboardingTour.AddProperties.Body": "Add various properties to cards to make them more powerful!"
 }
