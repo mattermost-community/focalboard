@@ -46,9 +46,6 @@ func (s *SQLStore) initializeTemplates() error {
 	return nil
 }
 
-// ToDo: needs a rewrite to loop over teams and insert boards and
-// blocks, commented to move forward with the rest of the store
-// changes
 func (s *SQLStore) importInitialTemplates(db sq.BaseRunner, teamIDs []string) error {
 	s.logger.Debug("importInitialTemplates")
 	blocksJSON := initializations.MustAsset("templates.json")
@@ -74,28 +71,27 @@ func (s *SQLStore) importInitialTemplates(db sq.BaseRunner, teamIDs []string) er
 
 			for _, block := range boardBlocks {
 				updatedBlock := block
-				if updatedBlock.ParentID == updatedBlock.ID {
+				if updatedBlock.ParentID == board.ID {
 					updatedBlock.ParentID = newBoardID
 				}
-				if updatedBlock.RootID == updatedBlock.ID {
+				if updatedBlock.RootID == board.ID {
 					updatedBlock.RootID = newBoardID
 				}
 				updatedBlock.BoardID = newBoardID
 				updatedBoardBlocks = append(updatedBoardBlocks, updatedBlock)
 			}
+			board.TemplateID = board.ID
 			board.ID = newBoardID
 			board.Type = model.BoardTypeOpen
 			board.TeamID = teamID
 			board.IsTemplate = true
 
 			for _, block := range updatedBoardBlocks {
-				err := s.insertBlock(db, &block, "system")
-				if err != nil {
+				if err = s.insertBlock(db, &block, "system"); err != nil {
 					return err
 				}
 			}
-			_, err := s.insertBoard(db, &board, "system")
-			if err != nil {
+			if _, err = s.insertBoard(db, &board, "system"); err != nil {
 				return err
 			}
 		}
@@ -106,7 +102,7 @@ func (s *SQLStore) importInitialTemplates(db sq.BaseRunner, teamIDs []string) er
 
 // getTeamsThatNeedInitialization returns a list of teams without templates
 func (s *SQLStore) getTeamsThatNeedInitialization(db sq.BaseRunner) ([]string, error) {
-	query := s.getQueryBuilder(s.db).
+	query := s.getQueryBuilder(db).
 		Select("T.Id").
 		From("Teams AS T").
 		LeftJoin(s.tablePrefix + "boards as B ON B.team_id = T.Id AND B.is_template = True").

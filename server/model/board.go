@@ -19,6 +19,10 @@ type Board struct {
 	// required: true
 	ID string `json:"id"`
 
+	// The TemplateID for the board
+	// required: true
+	TemplateID string `json:"templateId"`
+
 	// The ID of the team that the board belongs to
 	// required: true
 	TeamID string `json:"teamId"`

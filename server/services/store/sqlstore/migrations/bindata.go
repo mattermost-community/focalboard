@@ -34,6 +34,8 @@
 // migrations_files/000016_populate_categories.up.sql (1.67kB)
 // migrations_files/000017_populate_category_blocks.down.sql (40B)
 // migrations_files/000017_populate_category_blocks.up.sql (1.432kB)
+// migrations_files/000018_template_id_column.down.sql (118B)
+// migrations_files/000018_template_id_column.up.sql (142B)
 
 package migrations
 
@@ -782,6 +784,46 @@ func _000017_populate_category_blocksUpSql() (*asset, error) {
 	return a, nil
 }
 
+var __000018_template_id_columnDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\xf4\x09\x71\x0d\x52\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x4d\xca\x4f\x2c\x4a\x29\x56\x70\x09\xf2\x0f\x50\x70\xf6\xf7\x09\xf5\xf5\x53\x28\x49\xcd\x2d\xc8\x49\x2c\x49\x8d\xcf\x4c\xb1\xe6\xc2\xab\x2d\x3e\x23\xb3\xb8\x24\xbf\xa8\x12\xb7\x76\x40\x00\x00\x00\xff\xff\xcc\x27\x90\xa0\x76\x00\x00\x00")
+
+func _000018_template_id_columnDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000018_template_id_columnDownSql,
+		"000018_template_id_column.down.sql",
+	)
+}
+
+func _000018_template_id_columnDownSql() (*asset, error) {
+	bytes, err := _000018_template_id_columnDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000018_template_id_column.down.sql", size: 118, mode: os.FileMode(0644), modTime: time.Unix(1643309696, 0)}
+	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x9a, 0xc1, 0x7c, 0x5a, 0xc7, 0xe0, 0xb, 0xe9, 0x40, 0xbc, 0x19, 0xa, 0xf3, 0x30, 0xd7, 0xd7, 0x84, 0xd4, 0xb, 0x99, 0x4b, 0xd8, 0x66, 0x2d, 0xac, 0xb2, 0x47, 0xc7, 0x24, 0x98, 0x31, 0x50}}
+	return a, nil
+}
+
+var __000018_template_id_columnUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\xf4\x09\x71\x0d\x52\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x4d\xca\x4f\x2c\x4a\x29\x56\x70\x74\x71\x51\x70\xf6\xf7\x09\xf5\xf5\x53\x28\x49\xcd\x2d\xc8\x49\x2c\x49\x8d\xcf\x4c\x51\x08\x73\x0c\x72\xf6\x70\x0c\xd2\x30\x36\xd3\xb4\xe6\xc2\x6b\x42\x7c\x46\x66\x71\x49\x7e\x51\x25\x51\x26\x71\x71\x01\x02\x00\x00\xff\xff\x02\xee\xf1\xb4\x8e\x00\x00\x00")
+
+func _000018_template_id_columnUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000018_template_id_columnUpSql,
+		"000018_template_id_column.up.sql",
+	)
+}
+
+func _000018_template_id_columnUpSql() (*asset, error) {
+	bytes, err := _000018_template_id_columnUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000018_template_id_column.up.sql", size: 142, mode: os.FileMode(0644), modTime: time.Unix(1643309686, 0)}
+	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0xd2, 0xd8, 0xf2, 0x4, 0x72, 0x70, 0xd6, 0x4e, 0xcc, 0xa7, 0x78, 0xe7, 0xa1, 0x86, 0x4, 0x46, 0x49, 0x4b, 0x20, 0x3, 0xf0, 0x6, 0x60, 0x22, 0xef, 0x6b, 0xb3, 0xac, 0x5c, 0x0, 0xfb, 0x8e}}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -907,6 +949,8 @@ var _bindata = map[string]func() (*asset, error){
 	"000016_populate_categories.up.sql":        _000016_populate_categoriesUpSql,
 	"000017_populate_category_blocks.down.sql": _000017_populate_category_blocksDownSql,
 	"000017_populate_category_blocks.up.sql":   _000017_populate_category_blocksUpSql,
+	"000018_template_id_column.down.sql":       _000018_template_id_columnDownSql,
+	"000018_template_id_column.up.sql":         _000018_template_id_columnUpSql,
 }
 
 // AssetDebug is true if the assets were built with the debug flag enabled.
@@ -987,6 +1031,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"000016_populate_categories.up.sql": {_000016_populate_categoriesUpSql, map[string]*bintree{}},
 	"000017_populate_category_blocks.down.sql": {_000017_populate_category_blocksDownSql, map[string]*bintree{}},
 	"000017_populate_category_blocks.up.sql": {_000017_populate_category_blocksUpSql, map[string]*bintree{}},
+	"000018_template_id_column.down.sql": {_000018_template_id_columnDownSql, map[string]*bintree{}},
+	"000018_template_id_column.up.sql": {_000018_template_id_columnUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory.

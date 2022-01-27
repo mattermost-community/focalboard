@@ -25,6 +25,7 @@ func (be BoardNotFoundErr) Error() string {
 func boardFields(prefix string) []string {
 	fields := []string{
 		"id",
+		"template_id",
 		"team_id",
 		"channel_id",
 		"created_by",
@@ -79,6 +80,7 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 
 		err := rows.Scan(
 			&board.ID,
+			&board.TemplateID,
 			&board.TeamID,
 			&board.ChannelID,
 			&board.CreatedBy,
@@ -248,6 +250,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 
 	insertQueryValues := map[string]interface{}{
 		"id":                  board.ID,
+		"template_id":         board.TemplateID,
 		"team_id":             board.TeamID,
 		"channel_id":          board.ChannelID,
 		"created_by":          board.CreatedBy,
