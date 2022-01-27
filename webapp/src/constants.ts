@@ -25,36 +25,37 @@ class Constants {
     static readonly versionString = '0.14.0'
     static readonly versionDisplayString = 'Feb 2022'
 
+    static readonly archiveHelpPage = 'https://docs.mattermost.com/boards/data-and-archives.html'
     static readonly imports = [
         {
             id: 'trello',
             displayName: 'Trello',
             telemetryName: TelemetryActions.ImportTrello,
-            href: 'https://github.com/mattermost/focalboard/tree/main/import/trello',
+            href: Constants.archiveHelpPage + '#import-from-trello',
         },
         {
             id: 'asana',
             displayName: 'Asana',
             telemetryName: TelemetryActions.ImportAsana,
-            href: 'https://github.com/mattermost/focalboard/tree/main/import/asana',
+            href: Constants.archiveHelpPage + '#import-from-asana',
         },
         {
             id: 'notion',
             displayName: 'Notion',
             telemetryName: TelemetryActions.ImportNotion,
-            href: 'https://github.com/mattermost/focalboard/tree/main/import/notion',
+            href: Constants.archiveHelpPage + '#import-from-notion',
         },
         {
             id: 'jira',
             displayName: 'Jira',
             telemetryName: TelemetryActions.ImportJira,
-            href: 'https://github.com/mattermost/focalboard/tree/main/import/jira',
+            href: Constants.archiveHelpPage + '#import-from-jira',
         },
         {
             id: 'todoist',
             displayName: 'Todoist',
             telemetryName: TelemetryActions.ImportTodoist,
-            href: 'https://github.com/mattermost/focalboard/tree/main/import/todoist',
+            href: Constants.archiveHelpPage + '#import-from-todoist',
         },
     ]
 
