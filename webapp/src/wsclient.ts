@@ -339,6 +339,9 @@ class WSClient {
                 }
 
                 switch (message.action) {
+                case ACTION_UPDATE_BOARD:
+                    this.updateHandler(message)
+                    break
                 case ACTION_UPDATE_BLOCK:
                     this.updateHandler(message)
                     break
@@ -448,8 +451,6 @@ class WSClient {
             Utils.assertFailure('WSClient.subscribeToTeam: ws is not open')
             return
         }
-
-        console.log('sending ACTION_UNSUBSCRIBE_TEAM')
 
         const command: WSCommand = {
             action: ACTION_UNSUBSCRIBE_TEAM,

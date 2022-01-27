@@ -362,6 +362,7 @@ func testGetSubTree2(t *testing.T, store store.Store) {
 	initialCount := len(blocks)
 
 	InsertBlocks(t, store, subtreeSampleBlocks, "user-id-1")
+	time.Sleep(1 * time.Millisecond)
 	defer DeleteBlocks(t, store, subtreeSampleBlocks, "test")
 
 	blocks, err = store.GetBlocksForBoard(boardID)
@@ -399,6 +400,7 @@ func testGetSubTree3(t *testing.T, store store.Store) {
 	initialCount := len(blocks)
 
 	InsertBlocks(t, store, subtreeSampleBlocks, "user-id-1")
+	time.Sleep(1 * time.Millisecond)
 	defer DeleteBlocks(t, store, subtreeSampleBlocks, "test")
 
 	blocks, err = store.GetBlocksForBoard(boardID)

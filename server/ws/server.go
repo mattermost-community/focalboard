@@ -568,24 +568,24 @@ func (ws *Server) BroadcastBlockChange(teamID string, block model.Block) {
 	}
 }
 
-func (ws *Server) BroadcastCategoryChange(teamID, userID string, category model.Category) {
+func (ws *Server) BroadcastCategoryChange(category model.Category) {
 	message := UpdateCategoryMessage{
 		Action:   websocketActionUpdateCategory,
-		TeamID:   teamID,
+		TeamID:   category.TeamID,
 		Category: &category,
 	}
 
-	listeners := ws.getListenersForTeam(teamID)
+	listeners := ws.getListenersForTeam(category.TeamID)
 	ws.logger.Debug("listener(s) for teamID",
 		mlog.Int("listener_count", len(listeners)),
-		mlog.String("teamID", teamID),
+		mlog.String("teamID", category.TeamID),
 		mlog.String("categoryID", category.ID),
 	)
 
 	for _, listener := range listeners {
 		ws.logger.Debug("Broadcast block change",
 			mlog.Int("listener_count", len(listeners)),
-			mlog.String("teamID", teamID),
+			mlog.String("teamID", category.TeamID),
 			mlog.String("categoryID", category.ID),
 			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
 		)

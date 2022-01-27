@@ -523,7 +523,7 @@ class Utils {
         if (message.block) {
             return [this.fixBlock(message.block), 'block']
         } else if (message.board) {
-            return [message.board, 'board']
+            return [this.fixBoard(message.board), 'board']
         } else if (message.category) {
             return [message.category, 'category']
         } else if (message.blockCategories) {
@@ -543,6 +543,10 @@ class Utils {
         default:
             return block
         }
+    }
+
+    static fixBoard(board: Board): Board {
+        return createBoard(board)
     }
 
     static userAgent(): string {

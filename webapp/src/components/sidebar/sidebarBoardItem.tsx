@@ -30,7 +30,7 @@ import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 
 import {getCurrentTeam} from '../../store/teams'
 
-import {UserSettings} from '../../userSettings'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 
 import DeleteBoardDialog from './deleteBoardDialog'
 
@@ -50,6 +50,9 @@ const SidebarBoardItem = React.memo((props: Props) => {
 
     const [deleteBoardOpen, setDeleteBoardOpen] = useState<boolean>(false)
     const [deleteBoard, setDeleteBoard] = useState<Board>()
+    const [showDeleteCategoryDialog, setShowDeleteCategoryDialog] = useState<boolean>(false)
+    const [categoryMenuOpen, setCategoryMenuOpen] = useState<boolean>(false)
+    const [boardsMenuOpen, setBoardsMenuOpen] = useState<{[key: string]: boolean}>({})
 
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
@@ -68,65 +71,9 @@ const SidebarBoardItem = React.memo((props: Props) => {
             params.cardId = undefined
         }
         const newPath = generatePath(match.path, params)
-        console.log(`showBoard: ${newPath}`)
         history.push(newPath)
         props.hideSidebar()
     }, [match, history])
-
-    // const showView = useCallback((viewId, boardId) => {
-    //     const newPath = generatePath(match.path, {...match.params, boardId: boardId || '', viewId: viewId || ''})
-    //     history.push(newPath)
-    //     props.hideSidebar()
-    // }, [match, history])
-    //
-    // const iconForViewType = (viewType: IViewType): JSX.Element => {
-    //     switch (viewType) {
-    //     case 'board': return <BoardIcon/>
-    //     case 'table': return <TableIcon/>
-    //     case 'gallery': return <GalleryIcon/>
-    //     case 'calendar': return <CalendarIcon/>
-    //     default: return <div/>
-    //     }
-    // }
-    //
-    // const duplicateBoard = async (boardId: string) => {
-    //     // const oldBoardId = props.activeBoardId
-    //     const oldBoardId = ''
-    //
-    //     await mutator.duplicateBoard(
-    //         boardId,
-    //         intl.formatMessage({id: 'Mutator.duplicate-board', defaultMessage: 'duplicate board'}),
-    //         false,
-    //         async (newBoardId) => {
-    //             showBoard(newBoardId)
-    //         },
-    //         async () => {
-    //             if (oldBoardId) {
-    //                 showBoard(oldBoardId)
-    //             }
-    //         },
-    //     )
-    // }
-
-    // const addTemplateFromBoard = async (boardId: string) => {
-    //     // const oldBoardId = props.activeBoardId
-    //     const oldBoardId = ''
-    //
-    //     await mutator.duplicateBoard(
-    //         boardId,
-    //         intl.formatMessage({id: 'Mutator.new-template-from-board', defaultMessage: 'new template from board'}),
-    //         true,
-    //         async (newBoardId) => {
-    //             TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromBoard, {board: newBoardId})
-    //             showBoard(newBoardId)
-    //         },
-    //         async () => {
-    //             if (oldBoardId) {
-    //                 showBoard(oldBoardId)
-    //             }
-    //         },
-    //     )
-    // }
 
     const blocks = props.categoryBlocks.blockIDs || []
 
@@ -157,6 +104,25 @@ const SidebarBoardItem = React.memo((props: Props) => {
         ))
     }
 
+    const deleteCategoryProps: ConfirmationDialogBoxProps = {
+        heading: intl.formatMessage({
+            id: 'SidebarCategories.CategoryMenu.DeleteModal.Title',
+            defaultMessage: 'Delete this category?',
+        }),
+        subText: intl.formatMessage(
+            {
+                id: 'SidebarCategories.CategoryMenu.DeleteModal.Body',
+                defaultMessage: 'Boards in <b>{categoryName}</b> will move back to the Boards categories. You\'re not removed from any boards.',
+            },
+            {
+                categoryName: props.categoryBlocks.name,
+                b: (...chunks) => <b>{chunks}</b>,
+            },
+        ),
+        onConfirm: () => handleDeleteCategory(),
+        onClose: () => setShowDeleteCategoryDialog(false),
+    }
+
     return (
         <div className='SidebarBoardItem'>
             <div
@@ -172,7 +138,11 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 >
                     {props.categoryBlocks.name}
                 </div>
-                <MenuWrapper stopPropagationOnToggle={true}>
+                <MenuWrapper
+                    className={categoryMenuOpen ? 'menuOpen' : ''}
+                    stopPropagationOnToggle={true}
+                    onToggle={(open) => setCategoryMenuOpen(open)}
+                >
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
                         <Menu.Text
@@ -186,9 +156,10 @@ const SidebarBoardItem = React.memo((props: Props) => {
                             <React.Fragment>
                                 <Menu.Text
                                     id='deleteCategory'
+                                    className='text-danger'
                                     name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Delete', defaultMessage: 'Delete Category'})}
                                     icon={<DeleteIcon/>}
-                                    onClick={handleDeleteCategory}
+                                    onClick={() => setShowDeleteCategoryDialog(true)}
                                 />
                                 <Menu.Text
                                     id='updateCategory'
@@ -204,13 +175,13 @@ const SidebarBoardItem = React.memo((props: Props) => {
             {!collapsed && blocks.length === 0 &&
                 <div className='octo-sidebar-item subitem no-views'>
                     <FormattedMessage
-                        id='Sidebar.no-views-in-board'
-                        defaultMessage='No pages inside'
+                        id='Sidebar.no-boards-in-category'
+                        defaultMessage='No boards inside'
                     />
                 </div>}
             {!collapsed && blocks.map((blockID) => {
                 const thisBoard = props.boards.find((b) => b.id === blockID)
-                const title = thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: blockID})
+                const title = thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: blockID})
                 return (
                     <div
                         key={blockID}
@@ -222,11 +193,21 @@ const SidebarBoardItem = React.memo((props: Props) => {
                         </div>
                         <div
                             className='octo-sidebar-title'
-                            title={thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-boardAA', defaultMessage: '(asdasdsaUntitled Board)'})}
+                            title={thisBoard?.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})}
                         >
                             {title}
                         </div>
-                        <MenuWrapper stopPropagationOnToggle={true}>
+                        <MenuWrapper
+                            className={boardsMenuOpen[blockID] ? 'menuOpen' : 'x'}
+                            stopPropagationOnToggle={true}
+                            onToggle={(open) => {
+                                setBoardsMenuOpen((menuState) => {
+                                    const newState = {...menuState}
+                                    newState[blockID] = open
+                                    return newState
+                                })
+                            }}
+                        >
                             <IconButton icon={<OptionsIcon/>}/>
                             <Menu position='left'>
                                 <Menu.Text
@@ -302,35 +283,41 @@ const SidebarBoardItem = React.memo((props: Props) => {
                 )
             }
 
-            {deleteBoardOpen && deleteBoard &&
-            <DeleteBoardDialog
-                boardTitle={deleteBoard.title}
-                onClose={() => setDeleteBoardOpen(false)}
-                onDelete={async () => {
-                    telemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: deleteBoard.id})
-                    mutator.deleteBoard(
-                        deleteBoard,
-                        intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
-                        async () => {
-                            let nextBoardId: number | undefined
-                            if (props.boards.length > 1) {
-                                const deleteBoardIndex = props.boards.findIndex((board) => board.id === deleteBoard.id)
-                                nextBoardId = deleteBoardIndex + 1 === props.boards.length ? deleteBoardIndex - 1 : deleteBoardIndex + 1
-                            }
+            {
+                deleteBoardOpen && deleteBoard &&
+                <DeleteBoardDialog
+                    boardTitle={deleteBoard.title}
+                    onClose={() => setDeleteBoardOpen(false)}
+                    onDelete={async () => {
+                        telemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoard, {board: deleteBoard.id})
+                        mutator.deleteBoard(
+                            deleteBoard,
+                            intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'}),
+                            async () => {
+                                let nextBoardId: number | undefined
+                                if (props.boards.length > 1) {
+                                    const deleteBoardIndex = props.boards.findIndex((board) => board.id === deleteBoard.id)
+                                    nextBoardId = deleteBoardIndex + 1 === props.boards.length ? deleteBoardIndex - 1 : deleteBoardIndex + 1
+                                }
 
-                            if (nextBoardId) {
+                                if (nextBoardId) {
                                 // This delay is needed because WSClient has a default 100 ms notification delay before updates
-                                setTimeout(() => {
-                                    showBoard(props.boards[nextBoardId as number].id)
-                                }, 120)
-                            }
-                        },
-                        async () => {
-                            showBoard(deleteBoard.id)
-                        },
-                    )
-                }}
-            />}
+                                    setTimeout(() => {
+                                        showBoard(props.boards[nextBoardId as number].id)
+                                    }, 120)
+                                }
+                            },
+                            async () => {
+                                showBoard(deleteBoard.id)
+                            },
+                        )
+                    }}
+                />
+            }
+
+            {
+                showDeleteCategoryDialog && <ConfirmationDialogBox dialogBox={deleteCategoryProps}/>
+            }
         </div>
     )
 })

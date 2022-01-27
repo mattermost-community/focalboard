@@ -57,20 +57,26 @@ func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, userID st
 		return nil
 	}
 	go func() {
+		// broadcast on websocket
 		a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
+
+		// broadcast on webhooks
 		a.webhook.NotifyUpdate(*block)
+
+		// send notifications
 		a.notifyBlockChanged(notify.Update, block, oldBlock, userID)
 	}()
 	return nil
 }
 
 func (a *App) InsertBlock(block model.Block, userID string) error {
-	board, err := a.store.GetBoard(block.BoardID)
-	if err != nil {
-		return err
+	board, bErr := a.store.GetBoard(block.BoardID)
+	if bErr != nil {
+		return bErr
 	}
 
-	if err := a.store.InsertBlock(&block, userID); err == nil {
+	err := a.store.InsertBlock(&block, userID)
+	if err == nil {
 		go func() {
 			a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
 			a.metrics.IncrementBlocksInserted(1)
@@ -213,7 +219,7 @@ func (a *App) getBoardAndCard(block *model.Block) (board *model.Board, card *mod
 		}
 
 		iter, err = a.store.GetBlock(iter.ParentID)
-		if err != nil {
+		if err != nil || iter == nil {
 			return board, card, err
 		}
 	}

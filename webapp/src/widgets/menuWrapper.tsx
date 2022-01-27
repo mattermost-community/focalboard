@@ -11,6 +11,7 @@ type Props = {
     className?: string
     disabled?: boolean
     isOpen?: boolean
+    onToggle?: (open: boolean) => void
 }
 
 const MenuWrapper = React.memo((props: Props) => {
@@ -23,6 +24,7 @@ const MenuWrapper = React.memo((props: Props) => {
 
     const close = (): void => {
         setOpen(false)
+        props.onToggle && props.onToggle(false)
     }
 
     const closeOnBlur = (e: Event) => {
@@ -59,6 +61,7 @@ const MenuWrapper = React.memo((props: Props) => {
             e.stopPropagation()
         }
         setOpen(!open)
+        props.onToggle && props.onToggle(!open)
     }
 
     useEffect(() => {

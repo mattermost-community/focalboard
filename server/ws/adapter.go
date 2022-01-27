@@ -33,6 +33,6 @@ type Adapter interface {
 	BroadcastMemberChange(teamID, boardID string, member *model.BoardMember)
 	BroadcastMemberDelete(teamID, boardID, userID string)
 	BroadcastConfigChange(clientConfig model.ClientConfig)
-	BroadcastCategoryChange(teamID, userID string, category model.Category)
+	BroadcastCategoryChange(category model.Category)
 	BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData)
 }

@@ -120,11 +120,12 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
 	apiv1.HandleFunc("/clientConfig", a.getClientConfig).Methods("GET")
 
-	// Category Routes
+	// Category APIs
 	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleCreateCategory)).Methods(http.MethodPost)
 	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleUpdateCategory)).Methods(http.MethodPut)
 	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
 
+	// Category Block APIs
 	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBlocks)).Methods(http.MethodGet)
 	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}/blocks/{blockID}", a.sessionRequired(a.handleUpdateCategoryBlock)).Methods(http.MethodPost)
 
@@ -242,8 +243,6 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.logger.Debug("AAAA")
-
 	auditRec := a.makeAuditRecord(r, "getBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("boardID", boardID)
@@ -252,17 +251,13 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("all", all)
 	auditRec.AddMeta("blockID", blockID)
 
-	a.logger.Debug("BBBB")
-
 	var blocks []model.Block
 	var block *model.Block
 	var err error
 	switch {
 	case all != "":
-		a.logger.Debug("CCCC")
 		blocks, err = a.app.GetBlocksForBoard(boardID)
 		if err != nil {
-			a.logger.Debug("DDDD")
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
 		}
@@ -281,7 +276,6 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			blocks = append(blocks, *block)
 		}
 	default:
-		a.logger.Debug("EEEE")
 		blocks, err = a.app.GetBlocks(boardID, parentID, blockType)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -524,12 +518,13 @@ func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) 
 	vars := mux.Vars(r)
 	categoryID := vars["categoryID"]
 	blockID := vars["blockID"]
+	teamID := vars["teamID"]
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
 
-	err := a.app.AddUpdateUserCategoryBlock(userID, categoryID, blockID)
+	err := a.app.AddUpdateUserCategoryBlock(teamID, userID, categoryID, blockID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -1783,30 +1778,21 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
-	a.logger.Info("AAA")
-
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
 		return
 	}
 
-	a.logger.Info("BBB")
-
 	auditRec := a.makeAuditRecord(r, "getBoards", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("teamID", teamID)
 
-	a.logger.Info("CCC")
-
 	// retrieve boards list
 	boards, err := a.app.GetBoardsForUserAndTeam(userID, teamID)
 	if err != nil {
-		a.logger.Info("EEE")
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
-
-	a.logger.Info("DDD")
 
 	a.logger.Debug("GetBoards",
 		mlog.String("teamID", teamID),
@@ -1815,12 +1801,9 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(boards)
 	if err != nil {
-		a.logger.Info("GGG")
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
-
-	a.logger.Info("FFF")
 
 	// response
 	jsonBytesResponse(w, http.StatusOK, data)

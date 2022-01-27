@@ -5,7 +5,7 @@ import {FormattedMessage, IntlShape, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Block} from '../../blocks/block'
-import {Board, createBoard} from '../../blocks/board'
+import {Board, BoardsAndBlocks, createBoard} from '../../blocks/board'
 import {createBoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
@@ -29,53 +29,66 @@ export const addBoardClicked = async (showBoard: (id: string) => void, intl: Int
     const oldBoardId = activeBoardId
 
     let board = createBoard()
-    await mutator.insertBoard(
-        board,
-        'add board',
-        async (newBoard: Board) => {
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoard.id})
-            board = newBoard
-        }
-    )
-
-    const view = createBoardView()
+    board.teamId = octoClient.teamId
+    let view = createBoardView()
     view.fields.viewType = 'board'
     view.boardId = board.id
+    view.parentId = board.id
+    view.rootId = board.id
     view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
-    await mutator.insertBlock(
-        view,
-        'add board',
-        async (newBlock: Block) => {
-            showBoard(newBlock.id)
+    const bab = {
+        boards: [board],
+        blocks: [view],
+    } as BoardsAndBlocks
+
+    await mutator.createBoardsAndBlocks(
+        bab,
+        'add board and default view',
+        async ({boards, blocks}) => {
+            board = boards[0]
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: board.id})
+            showBoard(board.id)
+        },
+        async () => {
+            if (oldBoardId) {
+                showBoard(oldBoardId)
+            }
         }
     )
 }
 
 export const addBoardTemplateClicked = async (showBoard: (id: string) => void, intl: IntlShape, activeBoardId?: string) => {
+    const oldBoardId = activeBoardId
+
     let boardTemplate = createBoard()
+    boardTemplate.teamId = octoClient.teamId
     boardTemplate.isTemplate = true
     boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled Template'})
-
-    await mutator.insertBoard(
-        boardTemplate,
-        'add board template',
-        async (newBoard: Board) => {
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardTemplate, {board: newBoard.id})
-            boardTemplate = newBoard
-        }
-    )
-
-    const view = createBoardView()
+    let view = createBoardView()
     view.fields.viewType = 'board'
     view.boardId = boardTemplate.id
+    view.parentId = boardTemplate.id
+    view.rootId = boardTemplate.id
     view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
-    await mutator.insertBlock(
-        view,
-        'add board template initial view',
-        async (newBlock: Block) => {
-            showBoard(newBlock.boardId)
+    const bab = {
+        boards: [boardTemplate],
+        blocks: [view],
+    } as BoardsAndBlocks
+
+    await mutator.createBoardsAndBlocks(
+        bab,
+        'add board template and default view',
+        async ({boards, blocks}) => {
+            boardTemplate = boards[0]
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: boardTemplate.id})
+            showBoard(boardTemplate.id)
+        },
+        async () => {
+            if (oldBoardId) {
+                showBoard(oldBoardId)
+            }
         }
     )
 }

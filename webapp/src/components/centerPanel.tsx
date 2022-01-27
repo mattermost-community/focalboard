@@ -275,6 +275,7 @@ class CenterPanel extends React.Component<Props, State> {
         }
         mutator.performAsUndoGroup(async () => {
             const newCard = await mutator.insertBlock(
+                card.boardId,
                 card,
                 'add card',
                 async (block: Block) => {
@@ -306,6 +307,7 @@ class CenterPanel extends React.Component<Props, State> {
         cardTemplate.boardId = board.id
 
         await mutator.insertBlock(
+            cardTemplate.boardId,
             cardTemplate,
             'add card template',
             async (newBlock: Block) => {

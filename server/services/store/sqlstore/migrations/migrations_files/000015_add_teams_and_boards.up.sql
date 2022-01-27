@@ -20,7 +20,7 @@ UPDATE {{.prefix}}blocks SET fields = fields::jsonb - 'columnCalculations' || '{
 {{end}}
 
 {{if .sqlite}}
-UPDATE blocks SET fields = replace(fields, '"columnCalculations":[]', '"columnCalculations":{}');
+UPDATE {{.prefix}}blocks SET fields = replace(fields, '"columnCalculations":[]', '"columnCalculations":{}');
 {{end}}
 
 {{- /* add boards tables */ -}}

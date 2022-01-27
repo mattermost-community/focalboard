@@ -45,7 +45,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
     const titleRef = useRef<Focusable>(null)
     const saveTitle = useCallback(() => {
         if (title !== card.title) {
-            mutator.changeTitle(props.board.id, card.id, card.title, title)
+            mutator.changeBlockTitle(props.board.id, card.id, card.title, title)
         }
     }, [card.title, title])
 
@@ -136,6 +136,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 <CommentsList
                     comments={comments}
                     rootId={card.rootId}
+                    boardId={card.boardId}
                     cardId={card.id}
                     readonly={props.readonly}
                 />

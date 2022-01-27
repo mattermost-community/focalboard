@@ -1,5 +1,6 @@
 .confirmation-dialog-box {
     .dialog {
+        color: rgb(var(--center-channel-color-rgb));
         max-width: 512px;
         width: 100%;
         position: fixed;
@@ -26,7 +27,6 @@
             padding: 16px;
         }
     }
-
 }
 
 .box-area {

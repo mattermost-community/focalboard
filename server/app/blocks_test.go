@@ -5,8 +5,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 
-	"github.com/golang/mock/gomock"
-	st "github.com/mattermost/focalboard/server/services/store"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,21 +20,24 @@ func TestInsertBlock(t *testing.T) {
 	th, tearDown := SetupTestHelper(t)
 	defer tearDown()
 
-	container := st.Container{
-		TeamID: "0",
-	}
-
 	t.Run("success scenerio", func(t *testing.T) {
-		block := model.Block{}
-		th.Store.EXPECT().InsertBlock(gomock.Eq(container), gomock.Eq(&block), gomock.Eq("user-id-1")).Return(nil)
-		err := th.App.InsertBlock(container, block, "user-id-1")
+		boardID := "test-board-id"
+		block := model.Block{BoardID: boardID}
+		board := &model.Board{ID: boardID}
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(nil)
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+		err := th.App.InsertBlock(block, "user-id-1")
 		require.NoError(t, err)
 	})
 
 	t.Run("error scenerio", func(t *testing.T) {
-		block := model.Block{}
-		th.Store.EXPECT().InsertBlock(gomock.Eq(container), gomock.Eq(&block), gomock.Eq("user-id-1")).Return(blockError{"error"})
-		err := th.App.InsertBlock(container, block, "user-id-1")
+		boardID := "test-board-id"
+		block := model.Block{BoardID: boardID}
+		board := &model.Board{ID: boardID}
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(blockError{"error"})
+		err := th.App.InsertBlock(block, "user-id-1")
 		require.Error(t, err, "error")
 	})
 }

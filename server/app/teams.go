@@ -20,12 +20,12 @@ func (a *App) GetRootTeam() (*model.Team, error) {
 		}
 		err := a.store.UpsertTeamSignupToken(*team)
 		if err != nil {
-			a.logger.Fatal("Unable to initialize team", mlog.Err(err))
+			a.logger.Error("Unable to initialize team", mlog.Err(err))
 			return nil, err
 		}
 		team, err = a.store.GetTeam(teamID)
 		if err != nil {
-			a.logger.Fatal("Unable to get initialized team", mlog.Err(err))
+			a.logger.Error("Unable to get initialized team", mlog.Err(err))
 			return nil, err
 		}
 

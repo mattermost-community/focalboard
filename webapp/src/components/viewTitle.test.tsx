@@ -97,7 +97,7 @@ describe('components/viewTitle', () => {
         expect(container).toMatchSnapshot()
         const hideDescriptionButton = screen.getAllByRole('button')[0]
         userEvent.click(hideDescriptionButton)
-        expect(mockedMutator.showDescription).toBeCalledTimes(1)
+        expect(mockedMutator.showBoardDescription).toBeCalledTimes(1)
     })
 
     test('hide description', async () => {
@@ -117,7 +117,7 @@ describe('components/viewTitle', () => {
         expect(container).toMatchSnapshot()
         const showDescriptionButton = screen.getAllByRole('button')[0]
         userEvent.click(showDescriptionButton)
-        expect(mockedMutator.showDescription).toBeCalledTimes(1)
+        expect(mockedMutator.showBoardDescription).toBeCalledTimes(1)
     })
 
     test('add random icon', async () => {
@@ -154,6 +154,6 @@ describe('components/viewTitle', () => {
         const titleInput = screen.getAllByRole('textbox')[0]
         userEvent.type(titleInput, 'other title')
         fireEvent.blur(titleInput)
-        expect(mockedMutator.changeTitle).toBeCalledTimes(1)
+        expect(mockedMutator.changeBoardTitle).toBeCalledTimes(1)
     })
 })

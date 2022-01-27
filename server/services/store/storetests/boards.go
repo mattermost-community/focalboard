@@ -373,6 +373,76 @@ func testPatchBoard(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 		require.Equal(t, model.BoardTypePrivate, patchedBoard.Type)
 	})
+
+	t.Run("a patch that doesn't include any of the properties should not modify them", func(t *testing.T) {
+		boardID := utils.NewID(utils.IDTypeBoard)
+		properties := map[string]interface{}{"prop1": "val1"}
+		cardProperties := []map[string]interface{}{{"prop2": "val2"}}
+		columnCalculations := map[string]interface{}{"calc3": "val3"}
+
+		board := &model.Board{
+			ID:                 boardID,
+			TeamID:             "team-id",
+			Type:               model.BoardTypeOpen,
+			Properties:         properties,
+			CardProperties:     cardProperties,
+			ColumnCalculations: columnCalculations,
+		}
+
+		newBoard, err := store.InsertBoard(board, userID)
+		require.NoError(t, err)
+		require.NotNil(t, newBoard)
+		require.Equal(t, newBoard.Type, model.BoardTypeOpen)
+		require.Equal(t, properties, newBoard.Properties)
+		require.Equal(t, cardProperties, newBoard.CardProperties)
+		require.Equal(t, columnCalculations, newBoard.ColumnCalculations)
+
+		// wait to avoid hitting pk uniqueness constraint in history
+		time.Sleep(10 * time.Millisecond)
+
+		newType := model.BoardTypePrivate
+		patch := &model.BoardPatch{Type: &newType}
+		patchedBoard, err := store.PatchBoard(boardID, patch, userID)
+		require.NoError(t, err)
+		require.Equal(t, model.BoardTypePrivate, patchedBoard.Type)
+		require.Equal(t, properties, patchedBoard.Properties)
+		require.Equal(t, cardProperties, patchedBoard.CardProperties)
+		require.Equal(t, columnCalculations, patchedBoard.ColumnCalculations)
+	})
+
+	t.Run("a patch that removes a card property and updates another should work correctly", func(t *testing.T) {
+		boardID := utils.NewID(utils.IDTypeBoard)
+		prop1 := map[string]interface{}{"id": "prop1", "value": "val1"}
+		prop2 := map[string]interface{}{"id": "prop2", "value": "val2"}
+		prop3 := map[string]interface{}{"id": "prop3", "value": "val3"}
+		cardProperties := []map[string]interface{}{prop1, prop2, prop3}
+
+		board := &model.Board{
+			ID:             boardID,
+			TeamID:         "team-id",
+			Type:           model.BoardTypeOpen,
+			CardProperties: cardProperties,
+		}
+
+		newBoard, err := store.InsertBoard(board, userID)
+		require.NoError(t, err)
+		require.NotNil(t, newBoard)
+		require.Equal(t, newBoard.Type, model.BoardTypeOpen)
+		require.Equal(t, cardProperties, newBoard.CardProperties)
+
+		// wait to avoid hitting pk uniqueness constraint in history
+		time.Sleep(10 * time.Millisecond)
+
+		newProp1 := map[string]interface{}{"id": "prop1", "value": "newval1"}
+		expectedCardProperties := []map[string]interface{}{newProp1, prop3}
+		patch := &model.BoardPatch{
+			UpdatedCardProperties: []map[string]interface{}{newProp1},
+			DeletedCardProperties: []string{"prop2"},
+		}
+		patchedBoard, err := store.PatchBoard(boardID, patch, userID)
+		require.NoError(t, err)
+		require.ElementsMatch(t, expectedCardProperties, patchedBoard.CardProperties)
+	})
 }
 
 func testDeleteBoard(t *testing.T, store store.Store) {

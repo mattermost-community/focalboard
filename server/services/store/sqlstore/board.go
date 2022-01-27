@@ -211,7 +211,8 @@ func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID stri
 		From(s.tablePrefix + "boards as b").
 		Join(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		Where(sq.Eq{"b.team_id": teamID}).
-		Where(sq.Eq{"bm.user_id": userID})
+		Where(sq.Eq{"bm.user_id": userID}).
+		Where(sq.Eq{"b.is_template": false})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -482,6 +483,7 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		Where(sq.Eq{"b.team_id": teamID}).
+		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
 			sq.And{
