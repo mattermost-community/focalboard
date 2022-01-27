@@ -14,7 +14,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-// initializeTemplates imports default templates if the blocks table is empty.
+// initializeTemplates imports default templates if the boards table is empty for a team.
 func (s *SQLStore) initializeTemplates() error {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {

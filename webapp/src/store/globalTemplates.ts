@@ -14,7 +14,7 @@ export const fetchGlobalTemplates = createAsyncThunk(
     'globalTemplates/fetch',
     async (teamId: string) => {
         const rootClient = new OctoClient(client.serverUrl, teamId)
-        const templates = await rootClient.getTeamTemplates(teamId) // ToDo: pass team id?
+        const templates = await rootClient.getTeamTemplates(teamId)
         return templates.sort((a, b) => a.title.localeCompare(b.title))
     },
 )
