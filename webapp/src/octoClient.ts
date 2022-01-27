@@ -186,14 +186,9 @@ class OctoClient {
     }
 
     // If no boardID is provided, it will export the entire archive
-    async exportArchive(boardID = ''): Promise<Block[]> {
+    async exportArchive(boardID = ''): Promise<Response> {
         const path = `${this.workspacePath()}/blocks/export?root_id=${boardID}`
-        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return []
-        }
-        const blocks = (await this.getJson(response, [])) as Block[]
-        return this.fixBlocks(blocks)
+        return fetch(this.getBaseURL() + path, {headers: this.headers()})
     }
 
     async importFullArchive(blocks: readonly Block[]): Promise<Response> {

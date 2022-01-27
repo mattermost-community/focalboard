@@ -809,7 +809,7 @@ class Mutator {
     // Other methods
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
-    async exportArchive(boardID?: string): Promise<Block[]> {
+    async exportArchive(boardID?: string): Promise<Response> {
         return octoClient.exportArchive(boardID)
     }
 

@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import {IAppWindow} from './types'
-import {ArchiveUtils, ArchiveHeader, ArchiveLine, BlockArchiveLine} from './blocks/archive'
+import {ArchiveHeader, ArchiveLine, BlockArchiveLine} from './blocks/archive'
 import {Block} from './blocks/block'
 import {Board} from './blocks/board'
 import {LineReader} from './lineReader'
@@ -13,37 +13,39 @@ declare let window: IAppWindow
 
 class Archiver {
     static async exportBoardArchive(board: Board): Promise<void> {
-        const blocks = await mutator.exportArchive(board.id)
-        this.exportArchive(blocks)
+        this.exportArchive(mutator.exportArchive(board.id))
     }
 
     static async exportFullArchive(): Promise<void> {
-        const blocks = await mutator.exportArchive()
-        this.exportArchive(blocks)
+        this.exportArchive(mutator.exportArchive())
     }
 
-    private static exportArchive(blocks: readonly Block[]): void {
-        const content = ArchiveUtils.buildBlockArchive(blocks)
+    private static exportArchive(prom: Promise<Response>): void {
+        // TODO:  don't download whole archive before presenting SaveAs dialog.
+        prom.then((response) => {
+            response.blob().
+                then((blob) => {
+                    const link = document.createElement('a')
+                    link.style.display = 'none'
 
-        const date = new Date()
-        const filename = `archive-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.focalboard`
-        const link = document.createElement('a')
-        link.style.display = 'none'
+                    const date = new Date()
+                    const filename = `archive-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.focalboard`
 
-        // const file = new Blob([content], { type: "text/json" })
-        // link.href = URL.createObjectURL(file)
-        link.href = 'data:text/json,' + encodeURIComponent(content)
-        link.download = filename
-        document.body.appendChild(link)						// FireFox support
+                    const file = new Blob([blob], {type: 'application/octet-stream'})
+                    link.href = URL.createObjectURL(file)
+                    link.download = filename
+                    document.body.appendChild(link)						// FireFox support
 
-        link.click()
+                    link.click()
 
-        // TODO: Review if this is needed in the future, this is to fix the problem with linux webview links
-        if (window.openInNewBrowser) {
-            window.openInNewBrowser(link.href)
-        }
+                    // TODO: Review if this is needed in the future, this is to fix the problem with linux webview links
+                    if (window.openInNewBrowser) {
+                        window.openInNewBrowser(link.href)
+                    }
 
-        // TODO: Remove or reuse link
+                    // TODO: Remove or reuse link and revolkObjectURL to avoid memory leak
+                })
+        })
     }
 
     private static async importBlocksFromFile(file: File): Promise<void> {
