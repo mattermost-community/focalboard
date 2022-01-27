@@ -900,36 +900,29 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("rootID", rootID)
 
-	var blocks []model.Block
-	if rootID == "" {
-		blocks, err = a.app.GetAllBlocks(*container)
-	} else {
-		blocks, err = a.app.GetBlocksWithRootID(*container, rootID)
+	var boardIDs []string
+	if rootID != "" {
+		boardIDs = []string{rootID}
 	}
-	if err != nil {
+	opts := model.ExportArchiveOptions{
+		WorkspaceID: container.WorkspaceID,
+		BoardIDs:    boardIDs,
+	}
+
+	filename := fmt.Sprintf("archive-%s.fba", time.Now().Format("2006-01-02"))
+	w.Header().Set("Content-Type", "application/octet-stream")
+	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
+	w.Header().Set("Content-Transfer-Encoding", "binary")
+
+	if err := a.app.ExportArchive(w, opts); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
 	}
-
-	a.logger.Debug("raw blocks", mlog.Int("block_count", len(blocks)))
-	auditRec.AddMeta("rawCount", len(blocks))
-
-	blocks = filterOrphanBlocks(blocks)
-
-	a.logger.Debug("EXPORT filtered blocks", mlog.Int("block_count", len(blocks)))
-	auditRec.AddMeta("filteredCount", len(blocks))
-
-	json, err := json.Marshal(blocks)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, json)
 
 	auditRec.Success()
 }
 
+// TODO: move orphan block cleanup to a job service.
+//nolint:deadcode,unused
 func filterOrphanBlocks(blocks []model.Block) (ret []model.Block) {
 	queue := make([]model.Block, 0)
 	childrenOfBlockWithID := make(map[string]*[]model.Block)

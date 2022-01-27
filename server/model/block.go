@@ -108,13 +108,6 @@ type BlockPatchBatch struct {
 	BlockPatches []BlockPatch `json:"block_patches"`
 }
 
-// Archive is an import / export archive.
-type Archive struct {
-	Version int64   `json:"version"`
-	Date    int64   `json:"date"`
-	Blocks  []Block `json:"blocks"`
-}
-
 func BlocksFromJSON(data io.Reader) []Block {
 	var blocks []Block
 	_ = json.NewDecoder(data).Decode(&blocks)
