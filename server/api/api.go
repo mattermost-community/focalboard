@@ -909,7 +909,7 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 		BoardIDs:    boardIDs,
 	}
 
-	filename := fmt.Sprintf("archive-%s.fba", time.Now().Format("2006-01-02"))
+	filename := fmt.Sprintf("archive-%s.focalboard", time.Now().Format("2006-01-02"))
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
 	w.Header().Set("Content-Transfer-Encoding", "binary")
