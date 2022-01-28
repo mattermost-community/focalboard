@@ -25,13 +25,13 @@ const (
 func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 	zr := zipstream.NewReader(r)
 
-	// boardMap := make(map[string]string) // maps old board ids to new
+	boardMap := make(map[string]string) // maps old board ids to new
 
 	for {
 		hdr, err := zr.Next()
 		if err != nil {
 			if errors.Is(err, io.EOF) {
-				a.logger.Debug("import archive - done")
+				a.logger.Debug("import archive - done", mlog.Int("boards_imported", len(boardMap)))
 				return nil
 			}
 		}
