@@ -12,6 +12,8 @@ import EmojiIcon from '../widgets/icons/emoji'
 import HideIcon from '../widgets/icons/hide'
 import ShowIcon from '../widgets/icons/show'
 
+// import ShareBoardDialog from './shareBoard/shareBoard'
+
 import BlockIconSelector from './blockIconSelector'
 import {MarkdownEditor} from './markdownEditor'
 import './viewTitle.scss'
@@ -36,6 +38,8 @@ const ViewTitle = React.memo((props: Props) => {
     const onHideDescription = useCallback(() => mutator.showDescription(board.id, Boolean(board.fields.showDescription), false), [board.id, board.fields.showDescription])
 
     const intl = useIntl()
+
+    // const [showShareDialog, setShowShareDialog] = useState(false)
 
     return (
         <div className='ViewTitle'>
@@ -89,6 +93,11 @@ const ViewTitle = React.memo((props: Props) => {
                     spellCheck={true}
                 />
             </div>
+            {/* <button
+                onClick={() => setShowShareDialog(!showShareDialog)}
+            >
+                {'Show Share Modal'}
+            </button> */}
 
             {board.fields.showDescription &&
                 <div className='description'>
@@ -100,6 +109,7 @@ const ViewTitle = React.memo((props: Props) => {
                     />
                 </div>
             }
+            {/* {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>} */}
         </div>
     )
 })

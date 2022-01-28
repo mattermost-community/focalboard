@@ -44,7 +44,35 @@
         left: 0;
         background: rgb(var(--center-channel-bg-rgb));
         z-index: 100;
+        > .mid-head {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            > .button-head {
+                flex: 0 0 auto;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 8px;
+                .Button {
+                    margin: auto;
+                    // margin-top: auto;
+                    padding: 3px 10px;
+                    background-color: rgb(var(--button-bg-rgb));
+                    color: rgb(var(--button-color-rgb));
+                    border-radius: 5px;
+                    transition: background 100ms ease-out 0s;
+                    // height: 100%;
+            
+                    &:hover {
+                        background-color: rgba(var(--button-bg-rgb), 0.8);
+                    }
+                }
+            }
+        }
     }
+    
 
     > div:nth-child(2) {
         padding: 0 0 0 1px;
