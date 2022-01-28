@@ -123,6 +123,8 @@
     }
 
     &.content-blocks {
+        position: relative;
+
         &:hover,
         &:focus-within {
             .CardDetailContentsMenu {

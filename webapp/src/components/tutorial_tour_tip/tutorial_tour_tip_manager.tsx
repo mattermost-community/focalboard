@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux'
 
 import {FINISHED, TourSteps, TTCategoriesMapToSteps} from '../onboardingTour'
 import {useAppSelector} from '../../store/hooks'
-import {getMe, getOnboardingTourStep} from '../../store/users'
+import {getMe, getOnboardingTourStep, patchProps} from '../../store/users'
 import {UserConfigPatch} from '../../user'
 import octoClient from '../../octoClient'
 import {Utils, KeyCodes} from '../../utils'
@@ -75,7 +75,10 @@ const useTutorialTourTipManager = ({
                     focalboard_onboardingTourStep: stepValue,
                 },
             }
-            await octoClient.patchUserConfig(currentUserId, patch)
+            const patchedProps = await octoClient.patchUserConfig(currentUserId, patch)
+            if (patchedProps) {
+                await dispatch(patchProps(patchedProps))
+            }
         },
         [dispatch],
     )
@@ -138,7 +141,7 @@ const useTutorialTourTipManager = ({
         trackEvent('tutorial', tag)
     }
 
-    const handleSavePreferences = (nextStep: boolean | number): void => {
+    const handleSavePreferences = async (nextStep: boolean | number): Promise<void> => {
         if (!currentUserId) {
             return
         }
@@ -152,7 +155,7 @@ const useTutorialTourTipManager = ({
             stepValue = nextStep
         }
         handleHide()
-        savePreferences(currentUserId, stepValue.toString())
+        await savePreferences(currentUserId, stepValue.toString())
         if (onNextNavigateTo && nextStep === true && autoTour) {
             onNextNavigateTo()
         } else if (onPrevNavigateTo && nextStep === false && autoTour) {
@@ -166,6 +169,7 @@ const useTutorialTourTipManager = ({
     }
 
     const handleNext = (e?: React.MouseEvent): void => {
+        console.log('handling next')
         if (e) {
             handleEventPropagationAndDefault(e)
         }

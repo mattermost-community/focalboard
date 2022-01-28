@@ -6,18 +6,18 @@ import {bottom} from '@popperjs/core'
 
 import {FormattedMessage} from 'react-intl'
 
-import TourTip from '../tutorial_tour_tip/tutorial_tour_tip'
-import {Utils} from '../../utils'
-import BoardWelcomePNG from '../../../static/boards-welcome.png'
-import {useMeasurePunchouts} from '../tutorial_tour_tip/hooks'
-import {useAppSelector} from '../../store/hooks'
-import {getOnboardingTourStep} from '../../store/users'
+import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
+import {Utils} from '../../../utils'
+import BoardWelcomePNG from '../../../../static/boards-welcome.png'
+import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
+import {useAppSelector} from '../../../store/hooks'
+import {getOnboardingTourStep} from '../../../store/users'
 
-import {TOUR_ONBOARDING} from './index'
+import {TOUR_ONBOARDING} from '../index'
 
 import './open_card.scss'
 
-const OnboardingOpenACardTip = (): JSX.Element => {
+const OpenCardTourStep = (): JSX.Element => {
     const title = (
         <FormattedMessage
             id='OnboardingTour.OpenACard.Title'
@@ -44,14 +44,14 @@ const OnboardingOpenACardTip = (): JSX.Element => {
             tutorialCategory={TOUR_ONBOARDING}
             autoTour={true}
             placement={bottom}
-            className='OnboardingOpenACardTip'
-            hideNavButtons={true}
+            className='OpenCardTourStep'
             hideBackdrop={false}
             clickThroughPunchhole={true}
+            hideNavButtons={true}
 
             // stopPropagation={false}
         />
     )
 }
 
-export default OnboardingOpenACardTip
+export default OpenCardTourStep

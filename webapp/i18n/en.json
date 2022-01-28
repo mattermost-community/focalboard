@@ -257,6 +257,10 @@
   "register.signup-title": "Sign up for your account",
   "OnboardingTour.OpenACard.Title": "Open a card",
   "OnboardingTour.OpenACard.Body": "The explore the powers of boards, open a card to view the various features we have!",
-  "OnboardingTour.AddProperties.Title": "Add Properties",
-  "OnboardingTour.AddProperties.Body": "Add various properties to cards to make them more powerful!"
+  "OnboardingTour.AddProperties.Title": "Add properties",
+  "OnboardingTour.AddProperties.Body": "Add various properties to cards to make them more powerful!",
+  "OnboardingTour.AddComments.Title": "Add comments",
+  "OnboardingTour.AddComments.Body": "You can comment on issues, and even @mention your fellow Mattermost users to get their attention.",
+  "OnboardingTour.AddDescription.Title": "Add description",
+  "OnboardingTour.AddDescription.Body": "Add a description to your card so people know what the card is about."
 }

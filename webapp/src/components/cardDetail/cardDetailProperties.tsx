@@ -23,7 +23,7 @@ import {IDType, Utils} from '../../utils'
 import {useAppSelector} from '../../store/hooks'
 import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
 import {CardTourSteps, TOUR_CARD} from '../onboardingTour'
-import AddProperties from '../onboardingTour/add_properties'
+import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
 
 type Props = {
     board: Board
@@ -34,6 +34,7 @@ type Props = {
     activeView: BoardView
     views: BoardView[]
     readonly: boolean
+    showTour?: boolean
 }
 
 const CardDetailProperties = React.memo((props: Props) => {
@@ -50,13 +51,6 @@ const CardDetailProperties = React.memo((props: Props) => {
 
     const [confirmationDialogBox, setConfirmationDialogBox] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
     const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
-
-    const isOnboardingBoard = board.title === 'Welcome to Boards!'
-    const isOnboardingCard = card.title === 'Create a new card'
-    const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
-    const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
-    const onboardingTourStep = useAppSelector(getOnboardingTourStep)
-    const showTour = isOnboardingBoard && isOnboardingCard && onboardingTourStarted && onboardingTourCategory === TOUR_CARD && onboardingTourStep === CardTourSteps.ADD_PROPERTIES.toString()
 
     function onPropertyChangeSetAndOpenConfirmationDialog(newType: PropertyType, newName: string, propertyTemplate:IPropertyTemplate) {
         const oldType = propertyTemplate.type
@@ -210,7 +204,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                         </Menu>
                     </MenuWrapper>
 
-                    {showTour && <AddProperties/>}
+                    {props.showTour && <AddPropertiesTourStep/>}
                 </div>
             }
         </div>

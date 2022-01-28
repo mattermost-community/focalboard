@@ -112,7 +112,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
 
 	// onboarding tour endpoints
-	apiv1.HandleFunc("/onboard", a.sessionRequired(a.handleOnboardingPrepare)).Methods(http.MethodPost)
+	apiv1.HandleFunc("/onboard", a.sessionRequired(a.handlePrepareOnboarding)).Methods(http.MethodPost)
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -1873,7 +1873,7 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func (a *API) handleOnboardingPrepare(w http.ResponseWriter, r *http.Request) {
+func (a *API) handlePrepareOnboarding(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 

@@ -33,7 +33,7 @@ import {
     getOnboardingTourStep,
     patchProps,
 } from '../../store/users'
-import OnboardingOpenACardTip from '../onboardingTour/open_card'
+import OpenCardTourStep from '../onboardingTour/openCard/open_card'
 import {UserConfigPatch} from '../../user'
 import {TOUR_CARD, TOUR_ONBOARDING} from '../onboardingTour'
 import octoClient from '../../octoClient'
@@ -210,7 +210,7 @@ const KanbanCard = React.memo((props: Props) => {
                     </Tooltip>
                 ))}
                 {props.visibleBadges && <CardBadges card={card}/>}
-                {showTour && <OnboardingOpenACardTip/>}
+                {showTour && <OpenCardTourStep/>}
             </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}

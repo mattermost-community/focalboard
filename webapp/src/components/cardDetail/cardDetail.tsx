@@ -26,6 +26,9 @@ import CardDetailProperties from './cardDetailProperties'
 import useImagePaste from './imagePaste'
 
 import './cardDetail.scss'
+import {useAppSelector} from '../../store/hooks'
+import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
+import {CardTourSteps, TOUR_CARD} from '../onboardingTour'
 
 type Props = {
     board: Board
@@ -79,6 +82,16 @@ const CardDetail = (props: Props): JSX.Element|null => {
         mutator.changeIcon(card.id, card.fields.icon, newIcon)
     }, [card.id, card.fields.icon])
 
+    const isOnboardingBoard = props.board.title === 'Welcome to Boards!'
+    const isOnboardingCard = card.title === 'Create a new card'
+    const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
+    const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
+    const onboardingTourStep = useAppSelector(getOnboardingTourStep)
+    const showTour = isOnboardingBoard && isOnboardingCard && onboardingTourStarted && onboardingTourCategory === TOUR_CARD
+    const showAddPropertiesStep = showTour && onboardingTourStep === CardTourSteps.ADD_PROPERTIES.toString()
+    const showAddCommentsStep = showTour && onboardingTourStep === CardTourSteps.ADD_COMMENTS.toString()
+    const showAddDescriptionStep = showTour && onboardingTourStep === CardTourSteps.ADD_DESCRIPTION.toString()
+
     if (!card) {
         return null
     }
@@ -128,6 +141,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     activeView={props.activeView}
                     views={props.views}
                     readonly={props.readonly}
+                    showTour={showAddPropertiesStep}
                 />
 
                 {/* Comments */}
@@ -138,6 +152,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     rootId={card.rootId}
                     cardId={card.id}
                     readonly={props.readonly}
+                    showTour={showAddCommentsStep}
                 />
             </div>
 
@@ -149,6 +164,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         card={props.card}
                         contents={props.contents}
                         readonly={props.readonly}
+                        showTour={showAddDescriptionStep}
                     />
                     {!props.readonly && <CardDetailContentsMenu/>}
                 </CardDetailProvider>

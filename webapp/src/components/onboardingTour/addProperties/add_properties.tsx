@@ -2,26 +2,26 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {bottom} from '@popperjs/core'
+import {right} from '@popperjs/core'
 
 import {FormattedMessage} from 'react-intl'
 
-import TourTip from '../tutorial_tour_tip/tutorial_tour_tip'
-import {useMeasurePunchouts} from '../tutorial_tour_tip/hooks'
-import {useAppSelector} from '../../store/hooks'
-import {getOnboardingTourStep} from '../../store/users'
+import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
+import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
+import {useAppSelector} from '../../../store/hooks'
+import {getOnboardingTourStep} from '../../../store/users'
 
 import './add_properties.scss'
-import {Utils} from '../../utils'
-import addProperty from '../../../static/add-property.gif'
+import {Utils} from '../../../utils'
+import addProperty from '../../../../static/dummy.png'
 
-import {TOUR_ONBOARDING} from './index'
+import {TOUR_CARD} from '../index'
 
-const AddProperties = (): JSX.Element => {
+const AddPropertiesTourStep = (): JSX.Element => {
     const title = (
         <FormattedMessage
             id='OnboardingTour.AddProperties.Title'
-            defaultMessage='Add Properties'
+            defaultMessage='Add properties'
         />
     )
     const screen = (
@@ -41,15 +41,15 @@ const AddProperties = (): JSX.Element => {
             title={title}
             punchOut={punchout}
             step={currentStep}
-            tutorialCategory={TOUR_ONBOARDING}
+            tutorialCategory={TOUR_CARD}
             autoTour={true}
-            placement={bottom}
-            className='AddProperties'
-            hideNavButtons={true}
+            placement={'right-end'}
+            className='AddPropertiesTourStep'
             hideBackdrop={true}
             imageURL={Utils.buildURL(addProperty, true)}
+            stopPropagation={true}
         />
     )
 }
 
-export default AddProperties
+export default AddPropertiesTourStep
