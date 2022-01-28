@@ -13,7 +13,7 @@ import {IAppWindow} from './types'
 
 declare let window: IAppWindow
 
-const imageURLForUser = (window as any).Components?.imageURLForUser
+const imageURLForUser = typeof window === 'undefined' ? undefined : (window as any).Components?.imageURLForUser
 const IconClass = 'octo-icon'
 const OpenButtonClass = 'open-button'
 const SpacerClass = 'octo-spacer'
