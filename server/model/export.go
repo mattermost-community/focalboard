@@ -38,3 +38,8 @@ type ExportArchiveOptions struct {
 	// Empty slice means export all boards from workspace/team.
 	BoardIDs []string
 }
+
+// ImportArchiveOptions provides options when importing an archive.
+type ImportArchiveOptions struct {
+	WorkspaceID string
+}

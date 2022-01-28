@@ -966,20 +966,19 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	// ---
 	// produces:
 	// - application/json
+	// consumes:
+	// - multipart/form-data
 	// parameters:
 	// - name: workspaceID
 	//   in: path
 	//   description: Workspace ID
 	//   required: true
 	//   type: string
-	// - name: Body
-	//   in: body
-	//   description: array of blocks to import
+	// - name: file
+	//   in: formData
+	//   description: archive to import
 	//   required: true
-	//   schema:
-	//     type: array
-	//     items:
-	//       "$ref": "#/definitions/Block"
+	//   type: file
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -996,37 +995,43 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		fmt.Fprintf(w, "%v", err)
 		return
 	}
-
-	var blocks []model.Block
-
-	err = json.Unmarshal(requestBody, &blocks)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
+	defer file.Close()
 
 	auditRec := a.makeAuditRecord(r, "import", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("filename", handle.Filename)
+	auditRec.AddMeta("size", handle.Size)
 
-	stampModificationMetadata(r, blocks, auditRec)
+	opt := model.ImportArchiveOptions{
+		WorkspaceID: container.WorkspaceID,
+	}
 
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	_, err = a.app.InsertBlocks(*container, model.GenerateBlockIDs(blocks, a.logger), session.UserID, false)
-	if err != nil {
+	if err := a.app.ImportArchive(file, opt); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
+	/*
+		stampModificationMetadata(r, blocks, auditRec)
+
+		ctx := r.Context()
+		session := ctx.Value(sessionContextKey).(*model.Session)
+		_, err = a.app.InsertBlocks(*container, model.GenerateBlockIDs(blocks, a.logger), session.UserID, false)
+		if err != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			return
+		}
+	*/
+
 	jsonStringResponse(w, http.StatusOK, "{}")
 
-	a.logger.Debug("IMPORT Blocks", mlog.Int("block_count", len(blocks)))
-	auditRec.AddMeta("blockCount", len(blocks))
+	// a.logger.Debug("IMPORT Blocks", mlog.Int("block_count", len(blocks)))
+	// auditRec.AddMeta("blockCount", len(blocks))
 	auditRec.Success()
 }
 
