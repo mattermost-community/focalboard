@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React from 'react'
-import {injectIntl, IntlShape} from 'react-intl'
+import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
 import {connect} from 'react-redux'
 import Hotkeys from 'react-hot-keys'
 
@@ -19,10 +19,12 @@ import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
 import {addCard, addTemplate} from '../store/cards'
 import {updateView} from '../store/views'
+import Button from '../widgets/buttons/button'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
+
+import ShareBoardDialog from './shareBoard/shareBoard'
 
 import './centerPanel.scss'
-
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
@@ -34,6 +36,8 @@ import Kanban from './kanban/kanban'
 import Table from './table/table'
 
 import CalendarFullView from './calendar/fullCalendar'
+
+import DeleteIcon from '../widgets/icons/delete'
 
 import Gallery from './gallery/gallery'
 
@@ -58,9 +62,11 @@ type Props = {
 type State = {
     selectedCardIds: string[]
     cardIdToFocusOnRender: string
+    showShareDialog: boolean
 }
 
 class CenterPanel extends React.Component<Props, State> {
+    // const [showShareDialog, setShowShareDialog] = useState(false)
     private backgroundRef = React.createRef<HTMLDivElement>()
 
     private keydownHandler = (keyName: string, e: KeyboardEvent) => {
@@ -101,6 +107,7 @@ class CenterPanel extends React.Component<Props, State> {
         this.state = {
             selectedCardIds: [],
             cardIdToFocusOnRender: '',
+            showShareDialog: false,
         }
     }
 
@@ -145,11 +152,27 @@ class CenterPanel extends React.Component<Props, State> {
 
                 <div className='top-head'>
                     <TopBar/>
-                    <ViewTitle
-                        key={board.id + board.title}
-                        board={board}
-                        readonly={this.props.readonly}
-                    />
+                    <div className='mid-head'>
+                        <ViewTitle
+                            key={board.id + board.title}
+                            board={board}
+                            readonly={this.props.readonly}
+                        />
+                        <div className='button-head'>
+                            <Button
+                                title='Share board'
+                                size='medium'
+                                emphasis='tertiary'
+                                icon={<DeleteIcon/>}
+                                onClick={() => this.setState({showShareDialog: !this.state.showShareDialog})}
+                            >
+                                <FormattedMessage
+                                    id='CenterPanel.Share'
+                                    defaultMessage='Share'
+                                />
+                            </Button>
+                        </div>
+                    </div>
                     <ViewHeader
                         board={this.props.board}
                         activeView={this.props.activeView}
@@ -218,6 +241,7 @@ class CenterPanel extends React.Component<Props, State> {
                         selectedCardIds={this.state.selectedCardIds}
                         addCard={(show) => this.addCard('', show)}
                     />}
+                {this.state.showShareDialog && <ShareBoardDialog onClose={() => this.setState({showShareDialog: false})}/>}
             </div>
         )
     }

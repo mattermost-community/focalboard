@@ -28,6 +28,8 @@ import FilterComponent from './filterComponent'
 import './viewHeader.scss'
 import ShareBoardDialog from '../shareBoard/shareBoard'
 
+// import ShareBoardDialog from '../shareBoard/shareBoard'
+
 type Props = {
     board: Board
     activeView: BoardView
@@ -60,7 +62,7 @@ const ViewHeader = React.memo((props: Props) => {
 
     const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
 
-    const [showShareDialog, setShowShareDialog] = useState(false)
+    // const [showShareDialog, setShowShareDialog] = useState(false)
 
     return (
         <div className='ViewHeader'>
@@ -89,11 +91,11 @@ const ViewHeader = React.memo((props: Props) => {
                 />
             </MenuWrapper>
 
-            <button
+            {/* <button
                 onClick={() => setShowShareDialog(!showShareDialog)}
             >
                 {'Show Share Modal'}
-            </button>
+            </button> */}
 
             <div className='octo-spacer'/>
 
@@ -182,7 +184,7 @@ const ViewHeader = React.memo((props: Props) => {
             </>
             }
 
-            {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>}
+            {/* {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>} */}
         </div>
     )
 })
