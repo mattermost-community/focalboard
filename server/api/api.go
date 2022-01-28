@@ -1170,13 +1170,22 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("shareID", sharing.ID)
 	auditRec.AddMeta("enabled", sharing.Enabled)
 
-	// Stamp ModifiedBy
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
 	if userID == SingleUser {
 		userID = ""
 	}
+
+	if !a.app.GetClientConfig().EnablePublicSharedBoards {
+		a.logger.Info(
+			"Attempt to turn on sharing for board via API failed, sharing off in configuration.",
+			mlog.String("boardID", sharing.ID),
+			mlog.String("userID", userID))
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "Turning on sharing for board failed, see log for details.", nil)
+		return
+	}
+
 	sharing.ModifiedBy = userID
 
 	err = a.app.UpsertSharing(*container, sharing)
