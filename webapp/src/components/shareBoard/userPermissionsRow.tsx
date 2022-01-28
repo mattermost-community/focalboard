@@ -32,6 +32,7 @@ function updateBoardMember(member: BoardMember, newPermission: string) {
                 return
             }
             newMember.schemeAdmin = true
+            newMember.schemeEditor = true
             break
         case 'Editor':
             if (member.schemeEditor) {
@@ -39,6 +40,8 @@ function updateBoardMember(member: BoardMember, newPermission: string) {
             }
             newMember.schemeEditor = true
             break
+        default:
+            return
     }
 
     mutator.updateBoardMember(newMember, member)

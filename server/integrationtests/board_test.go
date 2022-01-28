@@ -877,6 +877,43 @@ func TestAddMember(t *testing.T) {
 			require.True(t, member.SchemeEditor)
 		})
 	})
+
+	t.Run("should do nothing if the member already exists", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		newBoard := &model.Board{
+			Title:  "title",
+			Type:   model.BoardTypePrivate,
+			TeamID: teamID,
+		}
+		board, err := th.Server.App().CreateBoard(newBoard, th.GetUser1().ID, true)
+		require.NoError(t, err)
+
+		newMember := &model.BoardMember{
+			UserID:       th.GetUser1().ID,
+			BoardID:      board.ID,
+			SchemeAdmin:  false,
+			SchemeEditor: true,
+		}
+
+		members, err := th.Server.App().GetMembersForBoard(board.ID)
+		require.NoError(t, err)
+		require.Len(t, members, 1)
+		require.True(t, members[0].SchemeAdmin)
+		require.True(t, members[0].SchemeEditor)
+
+		member, resp := th.Client.AddMemberToBoard(newMember)
+		th.CheckOK(resp)
+		require.True(t, member.SchemeAdmin)
+		require.True(t, member.SchemeEditor)
+
+		members, err = th.Server.App().GetMembersForBoard(board.ID)
+		require.NoError(t, err)
+		require.Len(t, members, 1)
+		require.True(t, members[0].SchemeAdmin)
+		require.True(t, members[0].SchemeEditor)
+	})
 }
 
 func TestUpdateMember(t *testing.T) {
@@ -971,12 +1008,13 @@ func TestUpdateMember(t *testing.T) {
 			UserID:      th.GetUser2().ID,
 			BoardID:     board.ID,
 			SchemeAdmin: true,
+			SchemeEditor: true,
 		}
 
 		updatedUser2Member, resp := th.Client.UpdateBoardMember(memberUpdate)
 		th.CheckOK(resp)
 		require.True(t, updatedUser2Member.SchemeAdmin)
-		require.False(t, updatedUser2Member.SchemeEditor)
+		require.True(t, updatedUser2Member.SchemeEditor)
 	})
 
 	t.Run("should not update a member if that means that a board will not have any admin", func(t *testing.T) {
