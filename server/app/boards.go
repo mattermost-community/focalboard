@@ -148,7 +148,15 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 			return nil, err
 		}
 
-		if len(members) < 2 {
+		isOnlyAdmin := true
+		for _, m := range members {
+			if (m.SchemeAdmin && m.UserID != member.UserID) {
+				isOnlyAdmin = false
+				break
+			}
+		}
+
+		if isOnlyAdmin {
 			return nil, BoardMemberIsLastAdminErr
 		}
 	}
@@ -190,7 +198,15 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 			return err
 		}
 
-		if len(members) < 2 {
+		isOnlyAdmin := true
+		for _, m := range members {
+			if (m.SchemeAdmin && m.UserID != userID) {
+				isOnlyAdmin = false
+				break
+			}
+		}
+
+		if isOnlyAdmin {
 			return BoardMemberIsLastAdminErr
 		}
 	}
