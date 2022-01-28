@@ -13,7 +13,7 @@ import {CardFilter} from '../cardFilter'
 
 import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
 import {getCurrentBoard} from './boards'
-import {getWorkspaceUsers} from './users'
+import {getBoardUsers} from './users'
 import {getCurrentView} from './views'
 import {getSearchText} from './searchText'
 
@@ -299,7 +299,7 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
     getCurrentBoard,
     getCurrentView,
     getSearchText,
-    getWorkspaceUsers,
+    getBoardUsers,
     (cards, board, view, searchText, users) => {
         if (!view || !board || !users || !cards) {
             return []

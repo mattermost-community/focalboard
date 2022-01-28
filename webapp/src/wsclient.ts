@@ -5,7 +5,7 @@ import {ClientConfig} from './config/clientConfig'
 
 import {Utils, WSMessagePayloads} from './utils'
 import {Block} from './blocks/block'
-import {Board} from './blocks/board'
+import {Board, BoardMember} from './blocks/board'
 import {OctoUtils} from './octoUtils'
 import {BlockCategoryWebsocketData, Category} from './store/sidebar'
 
@@ -25,6 +25,8 @@ export type WSMessage = {
     category?: Category
     blockCategories?: BlockCategoryWebsocketData
     error?: string
+    teamId?: string
+    member?: BoardMember
 }
 
 export const ACTION_UPDATE_BOARD = 'UPDATE_BOARD'
@@ -56,13 +58,14 @@ type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close')
 type OnErrorHandler = (client: WSClient, e: Event) => void
 type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => void
 
-export type ChangeHandlerType = 'block' | 'category' | 'blockCategories' | 'board'
+export type ChangeHandlerType = 'block' | 'category' | 'blockCategories' | 'board' | 'boardMembers'
 
 type UpdatedData = {
     Blocks: Block[]
     Categories: Category[]
     BlockCategories: Array<BlockCategoryWebsocketData>
     Boards: Board[]
+    BoardMembers: BoardMember[]
 }
 
 type ChangeHandlers = {
@@ -70,6 +73,7 @@ type ChangeHandlers = {
     Category: OnChangeHandler[]
     BlockCategory: OnChangeHandler[]
     Board: OnChangeHandler[]
+    BoardMember: OnChangeHandler[]
 }
 
 class WSClient {
@@ -78,18 +82,19 @@ class WSClient {
     onPluginReconnect: null|(() => void) = null
     pluginId = ''
     pluginVersion = ''
+    teamId = ''
     onAppVersionChangeHandler: ((versionHasChanged: boolean) => void) | null = null
     clientPrefix = ''
     serverUrl: string | undefined
     state: 'init'|'open'|'close' = 'init'
     onStateChange: OnStateChangeHandler[] = []
     onReconnect: OnReconnectHandler[] = []
-    onChange: ChangeHandlers = {Block: [], Category: [], BlockCategory: [], Board: []}
+    onChange: ChangeHandlers = {Block: [], Category: [], BlockCategory: [], Board: [], BoardMember: []}
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
     private notificationDelay = 100
     private reopenDelay = 3000
-    private updatedData: UpdatedData = {Blocks: [], Categories: [], BlockCategories: [], Boards: []}
+    private updatedData: UpdatedData = {Blocks: [], Categories: [], BlockCategories: [], Boards: [], BoardMembers: []}
     private updateTimeout?: NodeJS.Timeout
     private errorPollId?: NodeJS.Timeout
 
@@ -149,6 +154,9 @@ class WSClient {
         case 'board':
             this.onChange.Board.push(handler)
             break
+        case 'boardMembers':
+            this.onChange.BoardMember.push(handler)
+            break
         }
     }
 
@@ -163,6 +171,9 @@ class WSClient {
             break
         case 'board':
             haystack = this.onChange.Board
+            break
+        case 'boardMembers':
+            haystack = this.onChange.BoardMember
             break
         case 'category':
             haystack = this.onChange.Category
@@ -342,6 +353,12 @@ class WSClient {
                 case ACTION_UPDATE_BOARD:
                     this.updateHandler(message)
                     break
+                case ACTION_UPDATE_MEMBER:
+                    this.updateHandler(message)
+                    break
+                case ACTION_DELETE_MEMBER:
+                    this.updateHandler(message)
+                    break
                 case ACTION_UPDATE_BLOCK:
                     this.updateHandler(message)
                     break
@@ -365,6 +382,12 @@ class WSClient {
     }
 
     updateHandler(message: WSMessage): void {
+        // if messages are directed to a team, process only the ones
+        // for the current team
+        if (message.teamId && message.teamId !== this.teamId) {
+            return
+        }
+
         const [data, type] = Utils.fixWSData(message)
         if (data) {
             this.queueUpdateNotification(data, type)
@@ -508,6 +531,9 @@ class WSClient {
         } else if (type === 'board') {
             this.updatedData.Boards = this.updatedData.Boards.filter((b) => b.id !== (data as Board).id)
             this.updatedData.Boards.push(data as Board)
+        } else if (type === 'boardMembers') {
+            this.updatedData.BoardMembers = this.updatedData.BoardMembers.filter((m) => m.userId !== (data as BoardMember).userId || m.boardId !== (data as BoardMember).boardId)
+            this.updatedData.BoardMembers.push(data as BoardMember)
         }
 
         if (this.updateTimeout) {
@@ -551,6 +577,10 @@ class WSClient {
         for (const board of this.updatedData.Boards) {
             Utils.log(`WSClient flush update board: ${board.id}`)
         }
+
+        for (const boardMember of this.updatedData.BoardMembers) {
+            Utils.log(`WSClient flush update boardMember: ${boardMember.userId} ${boardMember.boardId}`)
+        }
     }
 
     private flushUpdateNotifications() {
@@ -572,11 +602,16 @@ class WSClient {
             handler(this, this.updatedData.Boards)
         }
 
+        for (const handler of this.onChange.BoardMember) {
+            handler(this, this.updatedData.BoardMembers)
+        }
+
         this.updatedData = {
             Blocks: [],
             Categories: [],
             BlockCategories: [],
             Boards: [],
+            BoardMembers: [],
         }
     }
 
@@ -590,7 +625,7 @@ class WSClient {
         // Use this sequence so the onclose method doesn't try to re-open
         const ws = this.ws
         this.ws = null
-        this.onChange = {Block: [], Category: [], BlockCategory: [], Board: []}
+        this.onChange = {Block: [], Category: [], BlockCategory: [], Board: [], BoardMember: []}
         this.onReconnect = []
         this.onStateChange = []
         this.onError = []

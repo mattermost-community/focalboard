@@ -92,7 +92,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}/members", a.sessionRequired(a.handleGetMembersForBoard)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}/members", a.sessionRequired(a.handleAddMember)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/members/{userID}", a.sessionRequired(a.handleUpdateMember)).Methods("PUT")
-	apiv1.HandleFunc("/boards/{boardID}/members/{userID}", a.sessionRequired(a.handleRemoveMember)).Methods("DELETE")
+	apiv1.HandleFunc("/boards/{boardID}/members/{userID}", a.sessionRequired(a.handleDeleteMember)).Methods("DELETE")
 
 	// Sharing APIs
 	apiv1.HandleFunc("/boards/{boardID}/sharing", a.sessionRequired(a.handlePostSharing)).Methods("POST")
@@ -2448,6 +2448,10 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("patchedUserID", paramsUserID)
 
 	member, err := a.app.UpdateBoardMember(newBoardMember)
+	if errors.Is(err, app.BoardMemberIsLastAdminErr) {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -2470,10 +2474,10 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func (a *API) handleRemoveMember(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation DELETE /api/v1/boards/{boardID}/members/{userID} removeMember
+func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation DELETE /api/v1/boards/{boardID}/members/{userID} deleteMember
 	//
-	// Removes a member from a board
+	// Deletes a member from a board
 	//
 	// ---
 	// produces:
@@ -2508,17 +2512,32 @@ func (a *API) handleRemoveMember(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auditRec := a.makeAuditRecord(r, "removeMember", audit.Fail)
+	board, err := a.app.GetBoard(boardID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if board == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "deleteMember", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("boardID", boardID)
 	auditRec.AddMeta("addedUserID", paramsUserID)
 
-	if err := a.app.DeleteBoardMember(boardID, paramsUserID); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+	deleteErr := a.app.DeleteBoardMember(boardID, paramsUserID)
+	if errors.Is(deleteErr, app.BoardMemberIsLastAdminErr) {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", deleteErr)
+		return
+	}
+	if deleteErr != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", deleteErr)
 		return
 	}
 
-	a.logger.Debug("RemoveMember",
+	a.logger.Debug("DeleteMember",
 		mlog.String("boardID", boardID),
 		mlog.String("addedUserID", paramsUserID),
 	)

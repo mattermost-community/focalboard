@@ -409,6 +409,16 @@ func (c *Client) PatchBoard(boardID string, patch *model.BoardPatch) (*model.Boa
 	return model.BoardFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) DeleteBoard(boardID string) (bool, *Response) {
+	r, err := c.DoAPIDelete(c.GetBoardRoute(boardID), "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
 func (c *Client) GetBoard(boardID, readToken string) (*model.Board, *Response) {
 	url := c.GetBoardRoute(boardID)
 	if readToken != "" {
@@ -442,6 +452,46 @@ func (c *Client) SearchBoardsForTeam(teamID, term string) ([]*model.Board, *Resp
 	defer closeBody(r)
 
 	return model.BoardsFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) GetMembersForBoard(boardID string) ([]*model.BoardMember, *Response) {
+	r, err := c.DoAPIGet(c.GetBoardRoute(boardID)+"/members", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardMembersFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, *Response) {
+	r, err := c.DoAPIPost(c.GetBoardRoute(member.BoardID)+"/members", toJSON(member))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardMemberFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, *Response) {
+	r, err := c.DoAPIPut(c.GetBoardRoute(member.BoardID)+"/members/"+member.UserID, toJSON(member))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardMemberFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) DeleteBoardMember(member *model.BoardMember) (bool, *Response) {
+	r, err := c.DoAPIDelete(c.GetBoardRoute(member.BoardID)+"/members/"+member.UserID, "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
 }
 
 func (c *Client) GetTeamUploadFileRoute(boardID, rootID string) string {

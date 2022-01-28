@@ -256,7 +256,7 @@ class OctoClient {
             return []
         }
         const boards = (await this.getJson(response, [])) as Board[]
-        return boards // ToDo: fix boards?
+        return boards
     }
 
     private async getBoardMembersWithPath(path: string): Promise<BoardMember[]> {
@@ -265,7 +265,7 @@ class OctoClient {
             return []
         }
         const boardMembers = (await this.getJson(response, [])) as BoardMember[]
-        return boardMembers // ToDo: fix board members?
+        return boardMembers
     }
 
     fixBlocks(blocks: Block[]): Block[] {
@@ -341,6 +341,38 @@ class OctoClient {
             method: 'DELETE',
             headers: this.headers(),
             body,
+        })
+    }
+
+    // BoardMember
+    async createBoardMember(member: BoardMember): Promise<Response> {
+        Utils.log(`createBoardMember: user ${member.userId} and board ${member.boardId}`)
+
+        const body = JSON.stringify(member)
+        return fetch(this.getBaseURL() + `/api/v1/boards/${member.boardId}/members`, {
+            method: 'POST',
+            headers: this.headers(),
+            body,
+        })
+    }
+
+    async updateBoardMember(member: BoardMember): Promise<Response> {
+        Utils.log(`udpateBoardMember: user ${member.userId} and board ${member.boardId}`)
+
+        const body = JSON.stringify(member)
+        return fetch(this.getBaseURL() + `/api/v1/boards/${member.boardId}/members/${member.userId}`, {
+            method: 'PUT',
+            headers: this.headers(),
+            body,
+        })
+    }
+
+    async deleteBoardMember(member: BoardMember): Promise<Response> {
+        Utils.log(`deleteBoardMember: user ${member.userId} and board ${member.boardId}`)
+
+        return fetch(this.getBaseURL() + `/api/v1/boards/${member.boardId}/members/${member.userId}`, {
+            method: 'DELETE',
+            headers: this.headers(),
         })
     }
 
@@ -536,7 +568,7 @@ class OctoClient {
     }
 
     async getBoardMembers(teamId: string, boardId: string): Promise<BoardMember[]> {
-        const path = this.teamPath(teamId) + `/boards/${boardId}/members`
+        const path = `/api/v1/boards/${boardId}/members`
         return this.getBoardMembersWithPath(path)
     }
 

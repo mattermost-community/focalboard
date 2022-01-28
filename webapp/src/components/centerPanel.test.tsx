@@ -61,7 +61,7 @@ describe('components/centerPanel', () => {
         searchText: '',
         users: {
             me: {},
-            workspaceUsers: [
+            boardUsers: [
                 {username: 'username_1'},
             ],
         },
