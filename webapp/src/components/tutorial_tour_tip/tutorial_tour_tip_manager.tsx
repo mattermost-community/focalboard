@@ -23,6 +23,7 @@ export interface TutorialTourTipManager {
     handleSavePreferences: (step: number) => void;
     handlePrevious: (e: React.MouseEvent) => void;
     handleNext: (e?: React.MouseEvent) => void;
+    handleEventPropagationAndDefault: (e: React.MouseEvent | KeyboardEvent) => void
 }
 
 type Props = {
@@ -116,9 +117,9 @@ const useTutorialTourTipManager = ({
     }, [])
 
     const handleHide = (e?: React.MouseEvent): void => {
-        if (e) {
-            handleEventPropagationAndDefault(e)
-        }
+        // if (e) {
+        //     handleEventPropagationAndDefault(e)
+        // }
         setShow(false)
     }
 
@@ -213,6 +214,7 @@ const useTutorialTourTipManager = ({
         handleSkipTutorial,
         handleSavePreferences,
         getLastStep,
+        handleEventPropagationAndDefault,
     }
 }
 

@@ -11,9 +11,11 @@ import {useMeasurePunchouts} from '../tutorial_tour_tip/hooks'
 import {useAppSelector} from '../../store/hooks'
 import {getOnboardingTourStep} from '../../store/users'
 
-import {TOUR_ONBOARDING} from './index'
-
 import './add_properties.scss'
+import {Utils} from '../../utils'
+import addProperty from '../../../static/add-property.gif'
+
+import {TOUR_ONBOARDING} from './index'
 
 const AddProperties = (): JSX.Element => {
     const title = (
@@ -45,6 +47,7 @@ const AddProperties = (): JSX.Element => {
             className='AddProperties'
             hideNavButtons={true}
             hideBackdrop={true}
+            imageURL={Utils.buildURL(addProperty, true)}
         />
     )
 }

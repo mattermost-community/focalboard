@@ -46,7 +46,10 @@ const OnboardingOpenACardTip = (): JSX.Element => {
             placement={bottom}
             className='OnboardingOpenACardTip'
             hideNavButtons={true}
-            hideBackdrop={true}
+            hideBackdrop={false}
+            clickThroughPunchhole={true}
+
+            // stopPropagation={false}
         />
     )
 }

@@ -56,6 +56,7 @@ type Props = {
     className?: string
     hideNavButtons?: boolean
     hideBackdrop?: boolean
+    clickThroughPunchhole?: boolean
 }
 
 const TutorialTourTip: React.FC<Props> = ({
@@ -79,6 +80,7 @@ const TutorialTourTip: React.FC<Props> = ({
     className,
     hideNavButtons = false,
     hideBackdrop = false,
+    clickThroughPunchhole = true,
 }: Props) => {
     const triggerRef = useRef(null)
     const {
@@ -92,6 +94,7 @@ const TutorialTourTip: React.FC<Props> = ({
         handleSkipTutorial,
         handleSavePreferences,
         getLastStep,
+        handleEventPropagationAndDefault,
     } = useTutorialTourTipManager({
         step,
         autoTour,
@@ -247,7 +250,12 @@ const TutorialTourTip: React.FC<Props> = ({
             </div>
             <TourTipOverlay
                 show={!hideBackdrop && show}
-                onClick={handleHide}
+                onClick={(e) => {
+                    if (!clickThroughPunchhole) {
+                        handleEventPropagationAndDefault(e)
+                        handleHide(e)
+                    }
+                }}
             >
                 <TutorialTourTipBackdrop
                     x={punchOut?.x}
