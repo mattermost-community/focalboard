@@ -109,6 +109,10 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
+
+	// archives
+	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/export", a.sessionRequired(a.handleArchiveExport)).Methods("GET")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -900,29 +904,36 @@ func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("rootID", rootID)
 
-	var boardIDs []string
-	if rootID != "" {
-		boardIDs = []string{rootID}
+	var blocks []model.Block
+	if rootID == "" {
+		blocks, err = a.app.GetAllBlocks(*container)
+	} else {
+		blocks, err = a.app.GetBlocksWithRootID(*container, rootID)
 	}
-	opts := model.ExportArchiveOptions{
-		WorkspaceID: container.WorkspaceID,
-		BoardIDs:    boardIDs,
-	}
-
-	filename := fmt.Sprintf("archive-%s.focalboard", time.Now().Format("2006-01-02"))
-	w.Header().Set("Content-Type", "application/octet-stream")
-	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
-	w.Header().Set("Content-Transfer-Encoding", "binary")
-
-	if err := a.app.ExportArchive(w, opts); err != nil {
+	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
 	}
+
+	a.logger.Debug("raw blocks", mlog.Int("block_count", len(blocks)))
+	auditRec.AddMeta("rawCount", len(blocks))
+
+	blocks = filterOrphanBlocks(blocks)
+
+	a.logger.Debug("EXPORT filtered blocks", mlog.Int("block_count", len(blocks)))
+	auditRec.AddMeta("filteredCount", len(blocks))
+
+	json, err := json.Marshal(blocks)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, json)
 
 	auditRec.Success()
 }
 
-// TODO: move orphan block cleanup to a job service.
-//nolint:deadcode,unused
 func filterOrphanBlocks(blocks []model.Block) (ret []model.Block) {
 	queue := make([]model.Block, 0)
 	childrenOfBlockWithID := make(map[string]*[]model.Block)
@@ -966,19 +977,20 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 	// ---
 	// produces:
 	// - application/json
-	// consumes:
-	// - multipart/form-data
 	// parameters:
 	// - name: workspaceID
 	//   in: path
 	//   description: Workspace ID
 	//   required: true
 	//   type: string
-	// - name: file
-	//   in: formData
-	//   description: archive to import
+	// - name: Body
+	//   in: body
+	//   description: array of blocks to import
 	//   required: true
-	//   type: file
+	//   schema:
+	//     type: array
+	//     items:
+	//       "$ref": "#/definitions/Block"
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -995,43 +1007,37 @@ func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	file, handle, err := r.FormFile(UploadFormFileKey)
+	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Fprintf(w, "%v", err)
-		return
-	}
-	defer file.Close()
-
-	auditRec := a.makeAuditRecord(r, "import", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	auditRec.AddMeta("filename", handle.Filename)
-	auditRec.AddMeta("size", handle.Size)
-
-	opt := model.ImportArchiveOptions{
-		WorkspaceID: container.WorkspaceID,
-	}
-
-	if err := a.app.ImportArchive(file, opt); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
-	/*
-		stampModificationMetadata(r, blocks, auditRec)
+	var blocks []model.Block
 
-		ctx := r.Context()
-		session := ctx.Value(sessionContextKey).(*model.Session)
-		_, err = a.app.InsertBlocks(*container, model.GenerateBlockIDs(blocks, a.logger), session.UserID, false)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-			return
-		}
-	*/
+	err = json.Unmarshal(requestBody, &blocks)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "import", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	stampModificationMetadata(r, blocks, auditRec)
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	_, err = a.app.InsertBlocks(*container, model.GenerateBlockIDs(blocks, a.logger), session.UserID, false)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
 
 	jsonStringResponse(w, http.StatusOK, "{}")
 
-	// a.logger.Debug("IMPORT Blocks", mlog.Int("block_count", len(blocks)))
-	// auditRec.AddMeta("blockCount", len(blocks))
+	a.logger.Debug("IMPORT Blocks", mlog.Int("block_count", len(blocks)))
+	auditRec.AddMeta("blockCount", len(blocks))
 	auditRec.Success()
 }
 
@@ -1318,6 +1324,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	// - application/json
 	// - image/jpg
 	// - image/png
+	// - image/gif
 	// parameters:
 	// - name: workspaceID
 	//   in: path
@@ -1366,6 +1373,10 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	fileExtension := strings.ToLower(filepath.Ext(filename))
 	if fileExtension == "png" {
 		contentType = "image/png"
+	}
+
+	if fileExtension == "gif" {
+		contentType = "image/gif"
 	}
 
 	w.Header().Set("Content-Type", contentType)

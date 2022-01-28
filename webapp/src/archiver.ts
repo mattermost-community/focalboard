@@ -2,10 +2,8 @@
 // See LICENSE.txt for license information.
 
 import {IAppWindow} from './types'
-import {ArchiveHeader, ArchiveLine, BlockArchiveLine} from './blocks/archive'
 import {Block} from './blocks/block'
 import {Board} from './blocks/board'
-import {LineReader} from './lineReader'
 import mutator from './mutator'
 import {Utils} from './utils'
 
@@ -34,7 +32,7 @@ class Archiver {
                     const file = new Blob([blob], {type: 'application/octet-stream'})
                     link.href = URL.createObjectURL(file)
                     link.download = filename
-                    document.body.appendChild(link)						// FireFox support
+                    document.body.appendChild(link)		// FireFox support
 
                     link.click()
 
@@ -48,56 +46,11 @@ class Archiver {
         })
     }
 
-    private static async importBlocksFromFile(file: File): Promise<void> {
-        let blockCount = 0
-        const maxBlocksPerImport = 1000
-        let blocks: Block[] = []
-
-        let isFirstLine = true
-        return new Promise<void>((resolve) => {
-            LineReader.readFile(file, async (line, completed) => {
-                if (completed) {
-                    if (blocks.length > 0) {
-                        await mutator.importFullArchive(blocks)
-                        blockCount += blocks.length
-                    }
-                    Utils.log(`Imported ${blockCount} blocks.`)
-                    resolve()
-                    return
-                }
-
-                if (isFirstLine) {
-                    isFirstLine = false
-                    const header = JSON.parse(line) as ArchiveHeader
-                    if (header.date && header.version >= 1) {
-                        const date = new Date(header.date)
-                        Utils.log(`Import archive, version: ${header.version}, date/time: ${date.toLocaleString()}.`)
-                    }
-                } else {
-                    const row = JSON.parse(line) as ArchiveLine
-                    if (!row || !row.type || !row.data) {
-                        Utils.logError('importFullArchive ERROR parsing line')
-                        return
-                    }
-                    switch (row.type) {
-                    case 'block': {
-                        const blockLine = row as BlockArchiveLine
-                        const block = blockLine.data
-                        if (Archiver.isValidBlock(block)) {
-                            blocks.push(block)
-                            if (blocks.length >= maxBlocksPerImport) {
-                                const blocksToSend = blocks
-                                blocks = []
-                                await mutator.importFullArchive(blocksToSend)
-                                blockCount += blocksToSend.length
-                            }
-                        }
-                        break
-                    }
-                    }
-                }
-            })
-        })
+    private static async importArchiveFromFile(file: File): Promise<void> {
+        const response = await mutator.importFullArchive(file)
+        if (response.status !== 200) {
+            Utils.log('ERROR importing archive: ' + response.text())
+        }
     }
 
     static isValidBlock(block: Block): boolean {
@@ -115,7 +68,7 @@ class Archiver {
         input.onchange = async () => {
             const file = input.files && input.files[0]
             if (file) {
-                await Archiver.importBlocksFromFile(file)
+                await Archiver.importArchiveFromFile(file)
             }
 
             onComplete?.()

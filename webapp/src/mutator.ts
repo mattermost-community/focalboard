@@ -814,8 +814,8 @@ class Mutator {
     }
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
-    async importFullArchive(blocks: readonly Block[]): Promise<Response> {
-        return octoClient.importFullArchive(blocks)
+    async importFullArchive(file: File): Promise<Response> {
+        return octoClient.importFullArchive(file)
     }
 
     get canUndo(): boolean {

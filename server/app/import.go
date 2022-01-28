@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"io"
+	"path"
 
 	"github.com/krolaw/zipstream"
 
@@ -24,17 +25,19 @@ const (
 func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 	zr := zipstream.NewReader(r)
 
+	// boardMap := make(map[string]string) // maps old board ids to new
+
 	for {
 		hdr, err := zr.Next()
 		if err != nil {
 			if errors.Is(err, io.EOF) {
+				a.logger.Debug("import archive - done")
 				return nil
 			}
 		}
 
-		fi := hdr.FileInfo()
-
-		a.logger.Debug("import archive", mlog.Any("fileinfo", fi))
+		dir, filename := path.Split(hdr.Name)
+		dir = path.Clean(dir)
 
 		buf := &bytes.Buffer{}
 
@@ -44,7 +47,8 @@ func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 		}
 
 		a.logger.Debug("import archive",
-			mlog.String("filename", hdr.Name),
+			mlog.String("dir", dir),
+			mlog.String("filename", filename),
 			mlog.Int64("bytes_read", n),
 		)
 	}

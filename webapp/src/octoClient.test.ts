@@ -55,20 +55,6 @@ test('OctoClient: insert blocks', async () => {
         }))
 })
 
-test('OctoClient: importFullArchive', async () => {
-    const blocks = createBoards()
-
-    await octoClient.importFullArchive(blocks)
-
-    expect(FetchMock.fn).toBeCalledTimes(1)
-    expect(FetchMock.fn).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-            method: 'POST',
-            body: JSON.stringify(blocks),
-        }))
-})
-
 function createBoards(): Block[] {
     const blocks = []
 
