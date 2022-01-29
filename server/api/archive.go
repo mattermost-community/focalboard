@@ -107,6 +107,10 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ctx := r.Context()
+	session, _ := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
 	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
@@ -121,6 +125,7 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 
 	opt := model.ImportArchiveOptions{
 		WorkspaceID: container.WorkspaceID,
+		ModifiedBy:  userID,
 	}
 
 	if err := a.app.ImportArchive(file, opt); err != nil {
