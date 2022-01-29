@@ -78,7 +78,7 @@ func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 			}
 		}
 
-		a.logger.Debug("import archive file",
+		a.logger.Trace("import archive file",
 			mlog.String("dir", dir),
 			mlog.String("filename", filename),
 		)
