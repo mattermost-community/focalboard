@@ -135,7 +135,8 @@
 		"typescript": "^4.2.3",
 		"webpack": "^5.28.0",
 		"webpack-cli": "^4.5.0",
-		"webpack-merge": "^5.7.3"
+		"webpack-merge": "^5.7.3",
+    "web-encoding": "^1.1.5"
 	},
 	"optionalDependencies": {
 		"cypress": "^6.8.0"
