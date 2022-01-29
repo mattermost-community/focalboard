@@ -73,7 +73,7 @@ func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r 
 			if errors.Is(errRead, io.EOF) {
 				break
 			}
-			return fmt.Errorf("error reading archive line %d: %w", lineNum, err)
+			return fmt.Errorf("error reading archive line %d: %w", lineNum, errRead)
 		}
 
 		lineNum++
