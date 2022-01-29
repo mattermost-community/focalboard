@@ -25,7 +25,6 @@ import (
 const (
 	HeaderRequestedWith    = "X-Requested-With"
 	HeaderRequestedWithXML = "XMLHttpRequest"
-	SingleUser             = "single-user"
 	UploadFormFileKey      = "file"
 )
 
@@ -340,7 +339,7 @@ func stampModificationMetadata(r *http.Request, blocks []model.Block, auditRec *
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
-	if userID == SingleUser {
+	if userID == model.SingleUser {
 		userID = ""
 	}
 
@@ -541,12 +540,12 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "getMe", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
-	if session.UserID == SingleUser {
+	if session.UserID == model.SingleUser {
 		now := utils.GetMillis()
 		user = &model.User{
-			ID:       SingleUser,
-			Username: SingleUser,
-			Email:    SingleUser,
+			ID:       model.SingleUser,
+			Username: model.SingleUser,
+			Email:    model.SingleUser,
 			CreateAt: now,
 			UpdateAt: now,
 		}
@@ -1178,7 +1177,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
-	if userID == SingleUser {
+	if userID == model.SingleUser {
 		userID = ""
 	}
 	sharing.ModifiedBy = userID

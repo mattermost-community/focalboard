@@ -12,7 +12,8 @@ import (
 func (a *API) handleArchiveExport(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation GET /api/v1/workspaces/{workspaceID}/archive/export archiveExport
 	//
-	// Exports an archive of all blocks for one or more boards.
+	// Exports an archive of all blocks for one or more boards. If root_id is provided then
+	// only that baord will be exported, otherwise all boards in the workspace.
 	//
 	// ---
 	// produces:
@@ -22,6 +23,11 @@ func (a *API) handleArchiveExport(w http.ResponseWriter, r *http.Request) {
 	//   in: path
 	//   description: Workspace ID
 	//   required: true
+	//   type: string
+	// - name: root_id
+	//   in: path
+	//   description: Root id (board) to export
+	//   required: false
 	//   type: string
 	// security:
 	// - BearerAuth: []
@@ -88,7 +94,7 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 	//   type: string
 	// - name: file
 	//   in: formData
-	//   description: archive to import
+	//   description: archive file to import
 	//   required: true
 	//   type: file
 	// security:
@@ -133,11 +139,6 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*
-		stampModificationMetadata(r, blocks, auditRec)
-	*/
-
 	jsonStringResponse(w, http.StatusOK, "{}")
-
 	auditRec.Success()
 }

@@ -14,6 +14,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -93,6 +94,12 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 	blocks := make([]model.Block, 0, 10)
 	lineReader := bufio.NewReader(r)
 
+	userID := opt.ModifiedBy
+	if userID == model.SingleUser {
+		userID = ""
+	}
+	now := utils.GetMillis()
+
 	lineNum := 1
 	for {
 		line, errRead := readLine(lineReader)
@@ -108,6 +115,8 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 				if err2 := json.Unmarshal(archiveLine.Data, &block); err2 != nil {
 					return "", fmt.Errorf("invalid block in archive line %d: %w", lineNum, err2)
 				}
+				block.ModifiedBy = userID
+				block.UpdateAt = now
 				blocks = append(blocks, block)
 			default:
 				return "", model.NewErrUnsupportedArchiveLineType(lineNum, archiveLine.Type)
