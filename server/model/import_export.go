@@ -11,20 +11,20 @@ var (
 )
 
 // Archive is an import / export archive.
-// TODO: remove.
+// TODO: remove once default templates are converted to new archive format.
 type Archive struct {
 	Version int64   `json:"version"`
 	Date    int64   `json:"date"`
 	Blocks  []Block `json:"blocks"`
 }
 
-// ArchiveHeader is the first line of any archive file.
+// ArchiveHeader is the content of the first file (`version.json`) within an archive.
 type ArchiveHeader struct {
 	Version int   `json:"version"`
 	Date    int64 `json:"date"`
 }
 
-// ArchiveLine is any non-header line in an archive.
+// ArchiveLine is any line in an archive.
 type ArchiveLine struct {
 	Type string          `json:"type"`
 	Data json.RawMessage `json:"data"`
