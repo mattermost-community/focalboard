@@ -10,5 +10,3 @@ services:
     environment:
       - VIRTUAL_HOST=focalboard.local
       - VIRTUAL_PORT=8000
-    volumes:
-      - "D:\\Documents\\focalboard_config":"/config":
