@@ -2,17 +2,19 @@
 // See LICENSE.txt for license information.
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
-import {Board, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyType, createBoard, createPatchesFromBoards} from './blocks/board'
+import {Board, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyType, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {FilterGroup} from './blocks/filterGroup'
-import octoClient, {OctoClient} from './octoClient'
+import octoClient from './octoClient'
 import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
 import {Utils, IDType} from './utils'
 import {UserSettings} from './userSettings'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/telemetryClient'
 import {Category} from './store/sidebar'
+
+/* eslint-disable max-lines */
 
 //
 // The Mutator is used to make all changes to server state
@@ -164,8 +166,8 @@ class Mutator {
             async (newBab: BoardsAndBlocks) => {
                 await beforeUndo?.(newBab)
 
-                const boardIds = newBab.boards.map(b => b.id)
-                const blockIds = newBab.blocks.map(b => b.id)
+                const boardIds = newBab.boards.map((b) => b.id)
+                const blockIds = newBab.blocks.map((b) => b.id)
                 await octoClient.deleteBoardsAndBlocks(boardIds, blockIds)
             },
             description,
@@ -330,37 +332,45 @@ class Mutator {
             return ''
         }
 
-        // const newTemplate = template || {
-        //     id: Utils.createGuid(IDType.BlockID),
-        //     name: 'New Property',
-        //     type: 'text',
-        //     options: [],
-        // }
-        //
-        // const oldBlocks: Block[] = [board]
-        //
-        // const newBoard = createBoard(board)
-        // const startIndex = (index >= 0) ? index : board.cardProperties.length
-        // newBoard.cardProperties.splice(startIndex, 0, newTemplate)
-        // const changedBlocks: Block[] = [newBoard]
-        //
-        // let description = 'add property'
-        //
-        // if (activeView.fields.viewType === 'table') {
-        //     oldBlocks.push(activeView)
-        //
-        //     const newActiveView = createBoardView(activeView)
-        //     newActiveView.fields.visiblePropertyIds.push(newTemplate.id)
-        //     changedBlocks.push(newActiveView)
-        //
-        //     description = 'add column'
-        // }
-        //
-        // await this.updateBlocks(changedBlocks, oldBlocks, description)
-        // return newTemplate.id
+        const newTemplate = template || {
+            id: Utils.createGuid(IDType.BlockID),
+            name: 'New Property',
+            type: 'text',
+            options: [],
+        }
 
-        // ToDo: needs to update board and view
-        return ''
+        const oldBlocks: Block[] = []
+        const oldBoard: Board = board
+        const newBoard = createBoard(board)
+        const startIndex = (index >= 0) ? index : board.cardProperties.length
+        newBoard.cardProperties.splice(startIndex, 0, newTemplate)
+        const changedBlocks: Block[] = []
+        const changedBlockIDs: string[] = []
+
+        if (activeView.fields.viewType === 'table') {
+            oldBlocks.push(activeView)
+
+            const newActiveView = createBoardView(activeView)
+            newActiveView.fields.visiblePropertyIds.push(newTemplate.id)
+            changedBlocks.push(newActiveView)
+            changedBlockIDs.push(activeView.id)
+
+            const [updatePatch, undoPatch] = createPatchesFromBoardsAndBlocks(newBoard, oldBoard, changedBlockIDs, changedBlocks, oldBlocks)
+            await undoManager.perform(
+                async () => {
+                    await octoClient.patchBoardsAndBlocks(updatePatch)
+                },
+                async () => {
+                    await octoClient.patchBoardsAndBlocks(undoPatch)
+                },
+                'add column',
+                this.undoGroupId,
+            )
+        } else {
+            this.updateBoard(newBoard, oldBoard, 'add property')
+        }
+
+        return newTemplate.id
     }
 
     async duplicatePropertyTemplate(board: Board, activeView: BoardView, propertyId: string) {
@@ -368,38 +378,50 @@ class Mutator {
             Utils.assertFailure('duplicatePropertyTemplate: no activeView')
         }
 
-        // const oldBlocks: Block[] = [board]
-        //
-        // const newBoard = createBoard(board)
-        // const changedBlocks: Block[] = [newBoard]
-        // const index = newBoard.cardProperties.findIndex((o: IPropertyTemplate) => o.id === propertyId)
-        // if (index === -1) {
-        //     Utils.assertFailure(`Cannot find template with id: ${propertyId}`)
-        //     return
-        // }
-        // const srcTemplate = newBoard.cardProperties[index]
-        // const newTemplate: IPropertyTemplate = {
-        //     id: Utils.createGuid(IDType.BlockID),
-        //     name: `${srcTemplate.name} copy`,
-        //     type: srcTemplate.type,
-        //     options: srcTemplate.options.slice(),
-        // }
-        // newBoard.cardProperties.splice(index + 1, 0, newTemplate)
-        //
-        // let description = 'duplicate property'
-        // if (activeView.fields.viewType === 'table') {
-        //     oldBlocks.push(activeView)
-        //
-        //     const newActiveView = createBoardView(activeView)
-        //     newActiveView.fields.visiblePropertyIds.push(newTemplate.id)
-        //     changedBlocks.push(newActiveView)
-        //
-        //     description = 'duplicate column'
-        // }
-        //
-        // await this.updateBlocks(changedBlocks, oldBlocks, description)
+        const oldBlocks: Block[] = []
+        const oldBoard: Board = board
 
-        // ToDo: needs to update both board and view
+        const newBoard = createBoard(board)
+        const changedBlocks: Block[] = []
+        const changedBlockIDs: string[] = []
+        const index = newBoard.cardProperties.findIndex((o: IPropertyTemplate) => o.id === propertyId)
+        if (index === -1) {
+            Utils.assertFailure(`Cannot find template with id: ${propertyId}`)
+            return
+        }
+        const srcTemplate = newBoard.cardProperties[index]
+        const newTemplate: IPropertyTemplate = {
+            id: Utils.createGuid(IDType.BlockID),
+            name: `${srcTemplate.name} copy`,
+            type: srcTemplate.type,
+            options: srcTemplate.options.slice(),
+        }
+        newBoard.cardProperties.splice(index + 1, 0, newTemplate)
+
+        let description = 'duplicate property'
+        if (activeView.fields.viewType === 'table') {
+            oldBlocks.push(activeView)
+
+            const newActiveView = createBoardView(activeView)
+            newActiveView.fields.visiblePropertyIds.push(newTemplate.id)
+            changedBlocks.push(newActiveView)
+            changedBlockIDs.push(newActiveView.id)
+
+            description = 'duplicate column'
+            const [updatePatch, undoPatch] = createPatchesFromBoardsAndBlocks(newBoard, oldBoard, changedBlockIDs, changedBlocks, oldBlocks)
+            await undoManager.perform(
+                async () => {
+                    await octoClient.patchBoardsAndBlocks(updatePatch)
+                },
+                async () => {
+                    await octoClient.patchBoardsAndBlocks(undoPatch)
+                },
+                description,
+                this.undoGroupId,
+            )
+        } else {
+            this.updateBoard(newBoard, oldBoard, description)
+        }
     }
 
     async changePropertyTemplateOrder(board: Board, template: IPropertyTemplate, destIndex: number) {
@@ -422,6 +444,7 @@ class Mutator {
 
         const oldBlocks: Block[] = []
         const changedBlocks: Block[] = []
+        const changedBlockIDs: string[] = []
 
         views.forEach((view) => {
             if (view.fields.visiblePropertyIds.includes(propertyId)) {
@@ -430,6 +453,7 @@ class Mutator {
                 const newView = createBoardView(view)
                 newView.fields.visiblePropertyIds = view.fields.visiblePropertyIds.filter((o: string) => o !== propertyId)
                 changedBlocks.push(newView)
+                changedBlockIDs.push(newView.id)
             }
         })
         cards.forEach((card) => {
@@ -439,12 +463,21 @@ class Mutator {
                 const newCard = createCard(card)
                 delete newCard.fields.properties[propertyId]
                 changedBlocks.push(newCard)
+                changedBlockIDs.push(newCard.id)
             }
         })
 
-        // ToDo: both operations should go in the same endpoint, as one tx
-        await this.updateBoard(newBoard, board, 'delete property')
-        await this.updateBlocks(board.id, changedBlocks, oldBlocks, 'delete property')
+        const [updatePatch, undoPatch] = createPatchesFromBoardsAndBlocks(newBoard, board, changedBlockIDs, changedBlocks, oldBlocks)
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBoardsAndBlocks(updatePatch)
+            },
+            async () => {
+                await octoClient.patchBoardsAndBlocks(undoPatch)
+            },
+            'delete property',
+            this.undoGroupId,
+        )
     }
 
     // Properties
@@ -516,76 +549,92 @@ class Mutator {
     }
 
     async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyType, newName: string) {
-        // ToDo: implement
+        if (propertyTemplate.type === newType && propertyTemplate.name === newName) {
+            return
+        }
 
-        // if (propertyTemplate.type === newType && propertyTemplate.name === newName) {
-        //     return
-        // }
-        //
-        // const newBoard = createBoard(board)
-        // const newTemplate = newBoard.cardProperties.find((o: IPropertyTemplate) => o.id === propertyTemplate.id)!
-        //
-        // if (propertyTemplate.type !== newType) {
-        //     newTemplate.options = []
-        // }
-        //
-        // newTemplate.type = newType
-        // newTemplate.name = newName
-        //
-        // const oldBlocks: Block[] = [board]
-        // const newBlocks: Block[] = [newBoard]
-        //
-        // if (propertyTemplate.type !== newType) {
-        //     if (propertyTemplate.type === 'select' || propertyTemplate.type === 'multiSelect') { // If the old type was either select or multiselect
-        //         const isNewTypeSelectOrMulti = newType === 'select' || newType === 'multiSelect'
-        //
-        //         for (const card of cards) {
-        //             const oldValue = Array.isArray(card.fields.properties[propertyTemplate.id]) ? (card.fields.properties[propertyTemplate.id].length > 0 && card.fields.properties[propertyTemplate.id][0]) : card.fields.properties[propertyTemplate.id]
-        //             if (oldValue) {
-        //                 const newValue = isNewTypeSelectOrMulti ? propertyTemplate.options.find((o) => o.id === oldValue)?.id : propertyTemplate.options.find((o) => o.id === oldValue)?.value
-        //                 const newCard = createCard(card)
-        //
-        //                 if (newValue) {
-        //                     newCard.fields.properties[propertyTemplate.id] = newType === 'multiSelect' ? [newValue] : newValue
-        //                 } else {
-        //                     // This was an invalid select option, so delete it
-        //                     delete newCard.fields.properties[propertyTemplate.id]
-        //                 }
-        //
-        //                 newBlocks.push(newCard)
-        //                 oldBlocks.push(card)
-        //             }
-        //
-        //             if (isNewTypeSelectOrMulti) {
-        //                 newTemplate.options = propertyTemplate.options
-        //             }
-        //         }
-        //     } else if (newType === 'select' || newType === 'multiSelect') { // if the new type is either select or multiselect
-        //         // Map values to new template option IDs
-        //         for (const card of cards) {
-        //             const oldValue = card.fields.properties[propertyTemplate.id] as string
-        //             if (oldValue) {
-        //                 let option = newTemplate.options.find((o: IPropertyOption) => o.value === oldValue)
-        //                 if (!option) {
-        //                     option = {
-        //                         id: Utils.createGuid(IDType.None),
-    //                         value: oldValue,
-    //                         color: 'propColorDefault',
-    //                     }
-        //                     newTemplate.options.push(option)
-        //                 }
-        //
-        //                 const newCard = createCard(card)
-        //                 newCard.fields.properties[propertyTemplate.id] = newType === 'multiSelect' ? [option.id] : option.id
-        //
-        //                 newBlocks.push(newCard)
-        //                 oldBlocks.push(card)
-        //             }
-        //         }
-        //     }
-        // }
-        //
-        // await this.updateBlocks(newBlocks, oldBlocks, 'change property type and name')
+        const oldBoard: Board = board
+        const newBoard = createBoard(board)
+        const newTemplate = newBoard.cardProperties.find((o: IPropertyTemplate) => o.id === propertyTemplate.id)!
+
+        if (propertyTemplate.type !== newType) {
+            newTemplate.options = []
+        }
+
+        newTemplate.type = newType
+        newTemplate.name = newName
+
+        const oldBlocks: Block[] = []
+        const newBlocks: Block[] = []
+        const newBlockIDs: string[] = []
+
+        if (propertyTemplate.type !== newType) {
+            if (propertyTemplate.type === 'select' || propertyTemplate.type === 'multiSelect') { // If the old type was either select or multiselect
+                const isNewTypeSelectOrMulti = newType === 'select' || newType === 'multiSelect'
+
+                for (const card of cards) {
+                    const oldValue = Array.isArray(card.fields.properties[propertyTemplate.id]) ? (card.fields.properties[propertyTemplate.id].length > 0 && card.fields.properties[propertyTemplate.id][0]) : card.fields.properties[propertyTemplate.id]
+                    if (oldValue) {
+                        const newValue = isNewTypeSelectOrMulti ? propertyTemplate.options.find((o) => o.id === oldValue)?.id : propertyTemplate.options.find((o) => o.id === oldValue)?.value
+                        const newCard = createCard(card)
+
+                        if (newValue) {
+                            newCard.fields.properties[propertyTemplate.id] = newType === 'multiSelect' ? [newValue] : newValue
+                        } else {
+                            // This was an invalid select option, so delete it
+                            delete newCard.fields.properties[propertyTemplate.id]
+                        }
+
+                        newBlocks.push(newCard)
+                        newBlockIDs.push(newCard.id)
+                        oldBlocks.push(card)
+                    }
+
+                    if (isNewTypeSelectOrMulti) {
+                        newTemplate.options = propertyTemplate.options
+                    }
+                }
+            } else if (newType === 'select' || newType === 'multiSelect') { // if the new type is either select or multiselect
+                // Map values to new template option IDs
+                for (const card of cards) {
+                    const oldValue = card.fields.properties[propertyTemplate.id] as string
+                    if (oldValue) {
+                        let option = newTemplate.options.find((o: IPropertyOption) => o.value === oldValue)
+                        if (!option) {
+                            option = {
+                                id: Utils.createGuid(IDType.None),
+                                value: oldValue,
+                                color: 'propColorDefault',
+                            }
+                            newTemplate.options.push(option)
+                        }
+
+                        const newCard = createCard(card)
+                        newCard.fields.properties[propertyTemplate.id] = newType === 'multiSelect' ? [option.id] : option.id
+
+                        newBlocks.push(newCard)
+                        newBlockIDs.push(newCard.id)
+                        oldBlocks.push(card)
+                    }
+                }
+            }
+        }
+
+        if (newBlockIDs.length > 0) {
+            const [updatePatch, undoPatch] = createPatchesFromBoardsAndBlocks(newBoard, board, newBlockIDs, newBlocks, oldBlocks)
+            await undoManager.perform(
+                async () => {
+                    await octoClient.patchBoardsAndBlocks(updatePatch)
+                },
+                async () => {
+                    await octoClient.patchBoardsAndBlocks(undoPatch)
+                },
+                'change property type and name',
+                this.undoGroupId,
+            )
+        } else {
+            this.updateBoard(newBoard, oldBoard, 'change property name')
+        }
     }
 
     // Views

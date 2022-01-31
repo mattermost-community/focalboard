@@ -1,5 +1,115 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`board tests correctly generate patches for boards and blocks should add fields on update and remove it in the undo 1`] = `
+Array [
+  Object {
+    "blockIDs": Array [
+      "7ppxdyor67u3weof591f9ot736a",
+    ],
+    "blockPatches": Array [
+      Object {
+        "deletedFields": Array [],
+        "updatedFields": Object {
+          "newField": "new field",
+        },
+      },
+    ],
+    "boardIDs": Array [
+      "brqajobpz4uhu774rbuq4i5enmy",
+    ],
+    "boardPatches": Array [
+      Object {
+        "deletedCardProperties": Array [],
+        "deletedColumnCalculations": Array [],
+        "deletedProperties": Array [],
+        "updatedCardProperties": Array [],
+        "updatedColumnCalculations": Object {},
+        "updatedProperties": Object {},
+      },
+    ],
+  },
+  Object {
+    "blockIDs": Array [
+      "7ppxdyor67u3weof591f9ot736a",
+    ],
+    "blockPatches": Array [
+      Object {
+        "deletedFields": Array [
+          "newField",
+        ],
+        "updatedFields": Object {},
+      },
+    ],
+    "boardIDs": Array [
+      "brqajobpz4uhu774rbuq4i5enmy",
+    ],
+    "boardPatches": Array [
+      Object {
+        "deletedCardProperties": Array [],
+        "deletedColumnCalculations": Array [],
+        "deletedProperties": Array [],
+        "updatedCardProperties": Array [],
+        "updatedColumnCalculations": Object {},
+        "updatedProperties": Object {},
+      },
+    ],
+  },
+]
+`;
+
+exports[`board tests correctly generate patches for boards and blocks should generate two empty patches for the same board and block 1`] = `
+Array [
+  Object {
+    "blockIDs": Array [
+      "7b43sk681o86ckkqdt9h3yrod5c",
+    ],
+    "blockPatches": Array [
+      Object {
+        "deletedFields": Array [],
+        "updatedFields": Object {},
+      },
+    ],
+    "boardIDs": Array [
+      "brqajobpz4uhu774rbuq4i5enmy",
+    ],
+    "boardPatches": Array [
+      Object {
+        "deletedCardProperties": Array [],
+        "deletedColumnCalculations": Array [],
+        "deletedProperties": Array [],
+        "updatedCardProperties": Array [],
+        "updatedColumnCalculations": Object {},
+        "updatedProperties": Object {},
+      },
+    ],
+  },
+  Object {
+    "blockIDs": Array [
+      "7b43sk681o86ckkqdt9h3yrod5c",
+    ],
+    "blockPatches": Array [
+      Object {
+        "deletedFields": Array [],
+        "updatedFields": Object {},
+      },
+    ],
+    "boardIDs": Array [
+      "brqajobpz4uhu774rbuq4i5enmy",
+    ],
+    "boardPatches": Array [
+      Object {
+        "deletedCardProperties": Array [],
+        "deletedColumnCalculations": Array [],
+        "deletedProperties": Array [],
+        "updatedCardProperties": Array [],
+        "updatedColumnCalculations": Object {},
+        "updatedProperties": Object {},
+      },
+    ],
+  },
+]
+`;
+
 exports[`board tests correctly generate patches from two boards should add card properties on the redo and remove them on the undo 1`] = `
 Array [
   Object {
