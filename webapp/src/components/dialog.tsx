@@ -33,7 +33,7 @@ const Dialog = React.memo((props: Props) => {
     useHotkeys('esc', () => props.onClose())
 
     return (
-        <div className={`Dialog dialog-back ${props.className}`}>
+        <div className={`${props.className} Dialog dialog-back`}>
             <div
                 className='wrapper'
                 onClick={(e) => {
