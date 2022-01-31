@@ -48,7 +48,7 @@ const ShareBoardDialog = (props: Props): JSX.Element => {
     return (
         <RootPortal>
             <Dialog
-                className='shareBoardDialog'
+                className='ShareBoardDialog'
                 title='Share Board'
                 onClose={props.onClose}
             >

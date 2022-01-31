@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React from 'react'
-import {injectIntl, IntlShape, FormattedMessage} from 'react-intl'
+import {injectIntl, IntlShape} from 'react-intl'
 import {connect} from 'react-redux'
 import Hotkeys from 'react-hot-keys'
 
@@ -19,10 +19,9 @@ import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
 import {addCard, addTemplate} from '../store/cards'
 import {updateView} from '../store/views'
-import Button from '../widgets/buttons/button'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
-import ShareBoardDialog from './shareBoard/shareBoard'
+import ShareBoardButton from './shareBoard/shareBoardButton'
 
 import './centerPanel.scss'
 
@@ -36,8 +35,6 @@ import Kanban from './kanban/kanban'
 import Table from './table/table'
 
 import CalendarFullView from './calendar/fullCalendar'
-
-import DeleteIcon from '../widgets/icons/delete'
 
 import Gallery from './gallery/gallery'
 
@@ -158,20 +155,7 @@ class CenterPanel extends React.Component<Props, State> {
                             board={board}
                             readonly={this.props.readonly}
                         />
-                        <div className='button-head'>
-                            <Button
-                                title='Share board'
-                                size='medium'
-                                emphasis='tertiary'
-                                icon={<DeleteIcon/>}
-                                onClick={() => this.setState({showShareDialog: !this.state.showShareDialog})}
-                            >
-                                <FormattedMessage
-                                    id='CenterPanel.Share'
-                                    defaultMessage='Share'
-                                />
-                            </Button>
-                        </div>
+                        <ShareBoardButton/>
                     </div>
                     <ViewHeader
                         board={this.props.board}
@@ -241,7 +225,6 @@ class CenterPanel extends React.Component<Props, State> {
                         selectedCardIds={this.state.selectedCardIds}
                         addCard={(show) => this.addCard('', show)}
                     />}
-                {this.state.showShareDialog && <ShareBoardDialog onClose={() => this.setState({showShareDialog: false})}/>}
             </div>
         )
     }

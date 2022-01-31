@@ -1,8 +1,29 @@
-.shareBoardDialog {
+.ShareBoardDialog {
     .dialog {
         max-width: 600px;
         height: auto;
         min-height: 180px;
+
+        @media not screen and (max-width: 975px) {
+            max-width: 600px;
+            height: auto;
+            min-height: 180px;
+                // margin: 72px auto;
+            // max-width: 975px;
+            // height: calc(100% - 144px);
+
+            // .hideOnWidescreen {
+            //     /* Hide elements on larger screens */
+            //     display: none !important;
+            // }
+        }
+        @media screen and (max-width: 975px) {
+            // position: fixed;
+            // top: 0;
+            // left: 0;
+            // right: 0;
+            // bottom: 0;
+        }
     }
 
     .share-input__container {
