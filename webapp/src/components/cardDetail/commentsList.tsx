@@ -12,13 +12,13 @@ import Button from '../../widgets/buttons/button'
 import {MarkdownEditor} from '../markdownEditor'
 
 import {IUser} from '../../user'
-import {getMe, getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
+import {getMe} from '../../store/users'
+
+import AddCommentTourStep from '../onboardingTour/addComments/add_comments'
 
 import Comment from './comment'
 
 import './commentsList.scss'
-import {CardTourSteps, TOUR_CARD} from '../onboardingTour'
-import AddCommentTourStep from '../onboardingTour/addComments/add_comments'
 
 type Props = {
     comments: readonly CommentBlock[]

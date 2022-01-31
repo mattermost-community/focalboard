@@ -2,8 +2,6 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {right} from '@popperjs/core'
-
 import {FormattedMessage} from 'react-intl'
 
 import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'

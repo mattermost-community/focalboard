@@ -30,6 +30,9 @@ import {useAppSelector} from '../../store/hooks'
 import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
 import {CardTourSteps, TOUR_CARD} from '../onboardingTour'
 
+const OnboardingBoardTitle = 'Welcome to Boards!'
+const OnboardingCardTitle = 'Create a new card'
+
 type Props = {
     board: Board
     activeView: BoardView
@@ -82,8 +85,8 @@ const CardDetail = (props: Props): JSX.Element|null => {
         mutator.changeIcon(card.id, card.fields.icon, newIcon)
     }, [card.id, card.fields.icon])
 
-    const isOnboardingBoard = props.board.title === 'Welcome to Boards!'
-    const isOnboardingCard = card.title === 'Create a new card'
+    const isOnboardingBoard = props.board.title === OnboardingBoardTitle
+    const isOnboardingCard = card.title === OnboardingCardTitle
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)

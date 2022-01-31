@@ -13,7 +13,7 @@ import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
 import {useAppSelector} from '../../../store/hooks'
 import {getOnboardingTourStep} from '../../../store/users'
 
-import {TOUR_ONBOARDING} from '../index'
+import {TOUR_BASE} from '../index'
 
 import './open_card.scss'
 
@@ -41,7 +41,7 @@ const OpenCardTourStep = (): JSX.Element => {
             title={title}
             punchOut={punchout}
             step={currentStep}
-            tutorialCategory={TOUR_ONBOARDING}
+            tutorialCategory={TOUR_BASE}
             autoTour={true}
             placement={bottom}
             className='OpenCardTourStep'

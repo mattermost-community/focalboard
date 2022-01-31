@@ -5,7 +5,7 @@ import React, {useCallback, useEffect, useState} from 'react'
 
 import {useDispatch} from 'react-redux'
 
-import {FINISHED, TourSteps, TTCategoriesMapToSteps} from '../onboardingTour'
+import {FINISHED, BaseTourSteps, TourCategoriesMapToSteps} from '../onboardingTour'
 import {useAppSelector} from '../../store/hooks'
 import {getMe, getOnboardingTourStep, patchProps} from '../../store/users'
 import {UserConfigPatch} from '../../user'
@@ -47,7 +47,7 @@ const useTutorialTourTipManager = ({
     preventDefault,
 }: Props): TutorialTourTipManager => {
     const [show, setShow] = useState(false)
-    const tourSteps = TTCategoriesMapToSteps[tutorialCategory]
+    const tourSteps = TourCategoriesMapToSteps[tutorialCategory]
 
     // Function to save the tutorial step in redux store start here which needs to be modified
     const dispatch = useDispatch()
@@ -178,7 +178,7 @@ const useTutorialTourTipManager = ({
             trackEvent('tutorial', tag)
         }
         if (getLastStep() === currentStep) {
-            handleSavePreferences(TTCategoriesMapToSteps[tutorialCategory].FINISHED)
+            handleSavePreferences(TourCategoriesMapToSteps[tutorialCategory].FINISHED)
         } else {
             handleSavePreferences(true)
         }

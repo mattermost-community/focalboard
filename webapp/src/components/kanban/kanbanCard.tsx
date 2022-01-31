@@ -35,7 +35,7 @@ import {
 } from '../../store/users'
 import OpenCardTourStep from '../onboardingTour/openCard/open_card'
 import {UserConfigPatch} from '../../user'
-import {TOUR_CARD, TOUR_ONBOARDING} from '../onboardingTour'
+import {TOUR_CARD, TOUR_BASE} from '../onboardingTour'
 import octoClient from '../../octoClient'
 
 type Props = {
@@ -97,7 +97,7 @@ const KanbanCard = React.memo((props: Props) => {
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
-    const showTour = isOnboardingBoard && isOnboardingCard && onboardingTourStarted && onboardingTourCategory === TOUR_ONBOARDING && onboardingTourStep === '0'
+    const showTour = isOnboardingBoard && isOnboardingCard && onboardingTourStarted && onboardingTourCategory === TOUR_BASE && onboardingTourStep === '0'
 
     const dispatch = useAppDispatch()
     const me = useAppSelector(getMe)
