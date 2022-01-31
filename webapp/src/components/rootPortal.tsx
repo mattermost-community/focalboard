@@ -8,7 +8,7 @@ type Props = {
     children: React.ReactNode
 }
 
-const RootPortal = React.memo((props: Props): JSX.Element => {
+const RootPortal = (props: Props): JSX.Element => {
     const [el] = useState(document.createElement('div'))
     const rootPortal = document.getElementById('focalboard-root-portal')
 
@@ -24,6 +24,6 @@ const RootPortal = React.memo((props: Props): JSX.Element => {
     }, [])
 
     return ReactDOM.createPortal(props.children, el)  // eslint-disable-line
-})
+}
 
-export default RootPortal
+export default React.memo(RootPortal)

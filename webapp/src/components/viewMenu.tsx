@@ -28,7 +28,7 @@ type Props = {
     readonly: boolean
 }
 
-const ViewMenu = React.memo((props: Props) => {
+const ViewMenu = (props: Props) => {
     const history = useHistory()
     const match = useRouteMatch()
 
@@ -298,6 +298,6 @@ const ViewMenu = React.memo((props: Props) => {
             }
         </Menu>
     )
-})
+}
 
-export default injectIntl(ViewMenu)
+export default injectIntl(React.memo(ViewMenu))

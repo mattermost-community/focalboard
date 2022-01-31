@@ -12,7 +12,7 @@ type Props = {
     children: React.ReactNode
 }
 
-const Modal = React.memo((props: Props): JSX.Element => {
+const Modal = (props: Props): JSX.Element => {
     const node = useRef<HTMLDivElement>(null)
 
     const {position, onClose, children} = props
@@ -47,6 +47,6 @@ const Modal = React.memo((props: Props): JSX.Element => {
             {children}
         </div>
     )
-})
+}
 
-export default Modal
+export default React.memo(Modal)
