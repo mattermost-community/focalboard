@@ -61,30 +61,32 @@ const ViewHeader = React.memo((props: Props) => {
 
     return (
         <div className='ViewHeader'>
-            <Editable
-                value={viewTitle}
-                placeholderText='Untitled View'
-                onSave={(): void => {
-                    mutator.changeTitle(activeView.id, activeView.title, viewTitle)
-                }}
-                onCancel={(): void => {
-                    setViewTitle(activeView.title)
-                }}
-                onChange={setViewTitle}
-                saveOnEsc={true}
-                readonly={props.readonly}
-                spellCheck={true}
-                autoExpand={false}
-            />
-            <MenuWrapper>
-                <IconButton icon={<DropdownIcon/>}/>
-                <ViewMenu
-                    board={board}
-                    activeView={activeView}
-                    views={views}
+            <div className='viewSelector'>
+                <Editable
+                    value={viewTitle}
+                    placeholderText='Untitled View'
+                    onSave={(): void => {
+                        mutator.changeTitle(activeView.id, activeView.title, viewTitle)
+                    }}
+                    onCancel={(): void => {
+                        setViewTitle(activeView.title)
+                    }}
+                    onChange={setViewTitle}
+                    saveOnEsc={true}
                     readonly={props.readonly}
+                    spellCheck={true}
+                    autoExpand={false}
                 />
-            </MenuWrapper>
+                <MenuWrapper>
+                    <IconButton icon={<DropdownIcon/>}/>
+                    <ViewMenu
+                        board={board}
+                        activeView={activeView}
+                        views={views}
+                        readonly={props.readonly}
+                    />
+                </MenuWrapper>
+            </div>
 
             <div className='octo-spacer'/>
 

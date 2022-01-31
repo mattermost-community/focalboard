@@ -44,7 +44,7 @@ type Props = {
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
     visibleBadges: boolean
-    onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+    onClick?: (e: React.MouseEvent) => void
     readonly: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
     showCard: (cardId?: string) => void
@@ -102,7 +102,7 @@ const KanbanCard = React.memo((props: Props) => {
     const dispatch = useAppDispatch()
     const me = useAppSelector(getMe)
 
-    const handleOnClick = async (e: React.MouseEvent<HTMLDivElement>) => {
+    const handleOnClick = async (e: React.MouseEvent) => {
         if (showTour && me) {
             // send the user to next tour
             const patch: UserConfigPatch = {
@@ -210,7 +210,7 @@ const KanbanCard = React.memo((props: Props) => {
                     </Tooltip>
                 ))}
                 {props.visibleBadges && <CardBadges card={card}/>}
-                {showTour && <OpenCardTourStep/>}
+                {showTour && <OpenCardTourStep onPunchholeClick={handleOnClick}/>}
             </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}

@@ -7,8 +7,6 @@ import {bottom} from '@popperjs/core'
 import {FormattedMessage} from 'react-intl'
 
 import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
-import {Utils} from '../../../utils'
-import BoardWelcomePNG from '../../../../static/boards-welcome.png'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
 import {useAppSelector} from '../../../store/hooks'
 import {getOnboardingTourStep} from '../../../store/users'
@@ -17,7 +15,11 @@ import {TOUR_BASE} from '../index'
 
 import './open_card.scss'
 
-const OpenCardTourStep = (): JSX.Element => {
+type Props = {
+    onPunchholeClick: (e: React.MouseEvent) => void
+}
+
+const OpenCardTourStep = (props: Props): JSX.Element => {
     const title = (
         <FormattedMessage
             id='OnboardingTour.OpenACard.Title'
@@ -48,6 +50,8 @@ const OpenCardTourStep = (): JSX.Element => {
             hideBackdrop={false}
             clickThroughPunchhole={true}
             hideNavButtons={true}
+            singleTip={true}
+            onPunchholeClick={props.onPunchholeClick}
 
             // stopPropagation={false}
         />

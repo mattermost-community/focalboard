@@ -262,5 +262,13 @@
   "OnboardingTour.AddComments.Title": "Add comments",
   "OnboardingTour.AddComments.Body": "You can comment on issues, and even @mention your fellow Mattermost users to get their attention.",
   "OnboardingTour.AddDescription.Title": "Add description",
-  "OnboardingTour.AddDescription.Body": "Add a description to your card so people know what the card is about."
+  "OnboardingTour.AddDescription.Body": "Add a description to your card so people know what the card is about.",
+  "OnboardingTour.AddView.Title": "Add a new view",
+  "OnboardingTour.AddView.Body": "Go here to create a new view to organise your board using different layouts.",
+  "tutorial_tip.finish_tour": "Done",
+  "tutorial_tip.got_it": "Got it",
+  "tutorial_tip.ok": "Next",
+  "generic.previous": "Previous",
+  "tutorial_tip.seen": "Seen this before?",
+  "tutorial_tip.out": "Opt out of these tips"
 }

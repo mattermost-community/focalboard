@@ -5,7 +5,7 @@ import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
 import {getCurrentBoard} from '../store/boards'
-import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
+import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
@@ -44,6 +44,7 @@ function CenterContent(props: Props) {
             newPath += `?r=${Utils.getReadToken()}`
         }
         history.push(newPath)
+        dispatch(setCurrentCard(cardId || ''))
     }, [match, history])
 
     useEffect(() => {

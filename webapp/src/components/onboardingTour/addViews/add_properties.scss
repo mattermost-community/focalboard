@@ -1,7 +1,8 @@
-.AddCommentTourStep {
+.AddPropertiesTourStep {
+
     &.tutorial-tour-tip__pulsating-dot-ctr {
-        left: 170px;
-        top: 18px;
+        left: 100%;
+        top: calc(50% - 6px);
     }
 
     .tippy-arrow {

@@ -178,7 +178,7 @@ const useTutorialTourTipManager = ({
             trackEvent('tutorial', tag)
         }
         if (getLastStep() === currentStep) {
-            handleSavePreferences(TourCategoriesMapToSteps[tutorialCategory].FINISHED)
+            handleSavePreferences(FINISHED)
         } else {
             handleSavePreferences(true)
         }

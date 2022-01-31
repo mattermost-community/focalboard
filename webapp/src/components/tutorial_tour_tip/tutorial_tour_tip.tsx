@@ -57,6 +57,7 @@ type Props = {
     hideNavButtons?: boolean
     hideBackdrop?: boolean
     clickThroughPunchhole?: boolean
+    onPunchholeClick?: (e: React.MouseEvent) => void
 }
 
 const TutorialTourTip: React.FC<Props> = ({
@@ -81,6 +82,7 @@ const TutorialTourTip: React.FC<Props> = ({
     hideNavButtons = false,
     hideBackdrop = false,
     clickThroughPunchhole = true,
+    onPunchholeClick,
 }: Props) => {
     const triggerRef = useRef(null)
     const {
@@ -131,7 +133,7 @@ const TutorialTourTip: React.FC<Props> = ({
             buttonText = (
                 <FormattedMessage
                     id={'tutorial_tip.finish_tour'}
-                    defaultMessage={'Finish tour'}
+                    defaultMessage={'Done'}
                 />
             )
         }
@@ -142,7 +144,7 @@ const TutorialTourTip: React.FC<Props> = ({
     const dots = []
 
     if (!singleTip && tourSteps) {
-        for (let i = 0; i < (Object.values(tourSteps).length - 1); i++) {
+        for (let i = 0; i < (Object.values(tourSteps).length); i++) {
             let className = 'tutorial-tour-tip__circle'
             let circularRing = 'tutorial-tour-tip__circular-ring'
 
@@ -245,15 +247,18 @@ const TutorialTourTip: React.FC<Props> = ({
                 ref={triggerRef}
                 onClick={handleOpen}
                 className={`tutorial-tour-tip__pulsating-dot-ctr ${className || ''}`}
+                onMouseEnter={() => console.log('entered')}
+                onMouseLeave={() => console.log('left')}
             >
                 <PulsatingDot coords={pulsatingDotPosition}/>
             </div>
             <TourTipOverlay
                 show={!hideBackdrop && show}
                 onClick={(e) => {
-                    if (!clickThroughPunchhole) {
-                        handleEventPropagationAndDefault(e)
-                        handleHide(e)
+                    handleEventPropagationAndDefault(e)
+                    handleHide(e)
+                    if (onPunchholeClick) {
+                        onPunchholeClick(e)
                     }
                 }}
             >
@@ -278,7 +283,7 @@ const TutorialTourTip: React.FC<Props> = ({
                     reference={triggerRef}
                     interactive={true}
                     appendTo={document.body}
-                    className={'tutorial-tour-tip__box'}
+                    className={`tutorial-tour-tip__box ${className || ''}`}
                     placement={placement}
                 />
             )}
