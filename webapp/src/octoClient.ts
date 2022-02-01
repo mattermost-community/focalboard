@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {Block, BlockPatch} from './blocks/block'
-import {Board, BoardsAndBlocks, BoardPatch, BoardMember} from './blocks/board'
+import {Board, BoardsAndBlocks, BoardsAndBlocksPatch, BoardPatch, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
 import {IUser, UserWorkspace} from './user'
@@ -334,7 +334,7 @@ class OctoClient {
     async deleteBoardsAndBlocks(boardIds: string[], blockIds: string[]): Promise<Response> {
         Utils.log(`deleteBoardsAndBlocks: ${boardIds.length} board(s) ${blockIds.length} block(s)`)
         Utils.log(`\t Boards ${boardIds.join(', ')}`)
-        Utils.log(`\t Blocks ${boardIds.join(', ')}`)
+        Utils.log(`\t Blocks ${blockIds.join(', ')}`)
 
         const body = JSON.stringify({boards: boardIds, blocks: blockIds})
         return fetch(this.getBaseURL() + '/api/v1/boards-and-blocks', {
@@ -373,6 +373,19 @@ class OctoClient {
         return fetch(this.getBaseURL() + `/api/v1/boards/${member.boardId}/members/${member.userId}`, {
             method: 'DELETE',
             headers: this.headers(),
+        })
+    }
+
+    async patchBoardsAndBlocks(babp: BoardsAndBlocksPatch): Promise<Response> {
+        Utils.log(`patchBoardsAndBlocks: ${babp.boardIDs.length} board(s) ${babp.blockIDs.length} block(s)`)
+        Utils.log(`\t Board ${babp.boardIDs.join(', ')}`)
+        Utils.log(`\t Blocks ${babp.blockIDs.join(', ')}`)
+
+        const body = JSON.stringify(babp)
+        return fetch(this.getBaseURL() + '/api/v1/boards-and-blocks', {
+            method: 'PATCH',
+            headers: this.headers(),
+            body,
         })
     }
 
