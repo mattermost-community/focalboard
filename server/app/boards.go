@@ -143,20 +143,11 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 	// if we're updating an admin, we need to check that there is at
 	// least still another admin on the board
 	if oldMember.SchemeAdmin && !member.SchemeAdmin {
-		members, err := a.store.GetMembersForBoard(member.BoardID)
+		isLastAdmin, err := a.isLastAdmin(member.UserID, member.BoardID)
 		if err != nil {
 			return nil, err
 		}
-
-		isOnlyAdmin := true
-		for _, m := range members {
-			if (m.SchemeAdmin && m.UserID != member.UserID) {
-				isOnlyAdmin = false
-				break
-			}
-		}
-
-		if isOnlyAdmin {
+		if isLastAdmin {
 			return nil, BoardMemberIsLastAdminErr
 		}
 	}
@@ -171,6 +162,20 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 	}()
 
 	return newMember, nil
+}
+
+func (a *App) isLastAdmin(userID, boardID string) (bool, error) {
+	members, err := a.store.GetMembersForBoard(boardID)
+	if err != nil {
+		return false, err
+	}
+
+	for _, m := range members {
+		if m.SchemeAdmin && m.UserID != userID {
+			return false, nil
+		}
+	}
+	return true, nil
 }
 
 func (a *App) DeleteBoardMember(boardID, userID string) error {
@@ -193,20 +198,11 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	// if we're removing an admin, we need to check that there is at
 	// least still another admin on the board
 	if oldMember.SchemeAdmin {
-		members, err := a.store.GetMembersForBoard(boardID)
+		isLastAdmin, err := a.isLastAdmin(userID, boardID)
 		if err != nil {
 			return err
 		}
-
-		isOnlyAdmin := true
-		for _, m := range members {
-			if (m.SchemeAdmin && m.UserID != userID) {
-				isOnlyAdmin = false
-				break
-			}
-		}
-
-		if isOnlyAdmin {
+		if isLastAdmin {
 			return BoardMemberIsLastAdminErr
 		}
 	}
