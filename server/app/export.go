@@ -51,7 +51,7 @@ func (a *App) ExportArchive(w io.Writer, opt model.ExportArchiveOptions) (errs e
 	return nil
 }
 
-// writeArchiveHeader writes a version file to the zip.
+// writeArchiveVersion writes a version file to the zip.
 func (a *App) writeArchiveVersion(zw *zip.Writer) error {
 	archiveHeader := model.ArchiveHeader{
 		Version: archiveVersion,
@@ -88,14 +88,14 @@ func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Block, opt model.Exp
 		WorkspaceID: opt.WorkspaceID,
 	}
 
-	// write the content blocks
+	// write the board's blocks
 	// TODO: paginate this
-	contentBlocks, err := a.GetBlocksWithRootID(container, board.ID)
+	blocks, err := a.GetBlocksWithRootID(container, board.ID)
 	if err != nil {
 		return err
 	}
 
-	for _, block := range contentBlocks {
+	for _, block := range blocks {
 		if err = a.writeArchiveBlockLine(w, block); err != nil {
 			return err
 		}

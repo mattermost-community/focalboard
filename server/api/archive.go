@@ -12,8 +12,8 @@ import (
 func (a *API) handleArchiveExport(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation GET /api/v1/workspaces/{workspaceID}/archive/export archiveExport
 	//
-	// Exports an archive of all blocks for one or more boards. If root_id is provided then
-	// only that baord will be exported, otherwise all boards in the workspace.
+	// Exports an archive of all blocks for one or more boards. If board_id is provided then
+	// only that board will be exported, otherwise all boards in the workspace are exported.
 	//
 	// ---
 	// produces:
@@ -24,9 +24,9 @@ func (a *API) handleArchiveExport(w http.ResponseWriter, r *http.Request) {
 	//   description: Workspace ID
 	//   required: true
 	//   type: string
-	// - name: root_id
+	// - name: board_id
 	//   in: path
-	//   description: Root id (board) to export
+	//   description: Id of board to to export
 	//   required: false
 	//   type: string
 	// security:
@@ -34,17 +34,17 @@ func (a *API) handleArchiveExport(w http.ResponseWriter, r *http.Request) {
 	// responses:
 	//   '200':
 	//     description: success
-	//     schema:
-	//       type: array
-	//       items:
-	//         "$ref": "#/definitions/Block"
+	//     content:
+	//       application-octet-stream:
+	//         type: string
+	//         format: binary
 	//   default:
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	query := r.URL.Query()
-	rootID := query.Get("root_id")
+	boardID := query.Get("board_id")
 	container, err := a.getContainer(r)
 	if err != nil {
 		a.noContainerErrorResponse(w, r.URL.Path, err)
@@ -53,11 +53,11 @@ func (a *API) handleArchiveExport(w http.ResponseWriter, r *http.Request) {
 
 	auditRec := a.makeAuditRecord(r, "archiveExport", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	auditRec.AddMeta("rootID", rootID)
+	auditRec.AddMeta("BoardID", boardID)
 
 	var boardIDs []string
-	if rootID != "" {
-		boardIDs = []string{rootID}
+	if boardID != "" {
+		boardIDs = []string{boardID}
 	}
 	opts := model.ExportArchiveOptions{
 		WorkspaceID: container.WorkspaceID,
