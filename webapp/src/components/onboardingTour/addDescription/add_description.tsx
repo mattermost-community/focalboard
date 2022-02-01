@@ -2,8 +2,6 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {top} from '@popperjs/core'
-
 import {FormattedMessage} from 'react-intl'
 
 import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
@@ -13,7 +11,7 @@ import {getOnboardingTourStep} from '../../../store/users'
 
 import './add_description.scss'
 import {Utils} from '../../../utils'
-import addProperty from '../../../../static/dummy.png'
+import addDescription from '../../../../static/addDescription.png'
 
 import {TOUR_CARD} from '../index'
 
@@ -46,7 +44,8 @@ const AddDescriptionTourStep = (): JSX.Element => {
             placement={'top-start'}
             className='AddDescriptionTourStep'
             hideBackdrop={true}
-            imageURL={Utils.buildURL(addProperty, true)}
+            imageURL={Utils.buildURL(addDescription, true)}
+            skipCategoryFromBackdrop={true}
         />
     )
 }

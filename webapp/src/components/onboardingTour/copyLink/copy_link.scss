@@ -1,15 +1,15 @@
-.AddPropertiesTourStep {
+.CopyLinkTourStep {
 
     &.tutorial-tour-tip__pulsating-dot-ctr {
-        left: 100%;
-        top: calc(50% - 6px);
+        left: calc(100% - 6px);
+        top: 18px;
     }
 
     .tippy-arrow {
-        top: -21px !important;
+        top: 21px !important;
     }
 
     &.tippy-box.tutorial-tour-tip__box {
-        top: 24px;
+        top: -24px;
     }
 }

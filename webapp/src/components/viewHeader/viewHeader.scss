@@ -41,4 +41,10 @@
             background: rgba(var(--center-channel-color-rgb), 0.1);
         }
     }
+
+    .viewSelector {
+        display: flex;
+        flex-direction: row;
+        position: relative;
+    }
 }

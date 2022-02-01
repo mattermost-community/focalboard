@@ -87,7 +87,7 @@ const usersSlice = createSlice({
     },
 })
 
-export const {setMe, setWorkspaceUsers} = usersSlice.actions
+export const {setMe, setWorkspaceUsers, followBlock, unfollowBlock, patchProps} = usersSlice.actions
 export const {reducer} = usersSlice
 
 export const getMe = (state: RootState): IUser|null => state.users.me
@@ -132,5 +132,3 @@ export const getOnboardingTourCategory = createSelector(
     getMe,
     (me): string => (me ? me.props.focalboard_tourCategory : ''),
 )
-
-export const {followBlock, unfollowBlock, patchProps} = usersSlice.actions

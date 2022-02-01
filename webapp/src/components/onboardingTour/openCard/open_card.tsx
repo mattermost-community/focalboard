@@ -14,6 +14,7 @@ import {getOnboardingTourStep} from '../../../store/users'
 import {TOUR_BASE} from '../index'
 
 import './open_card.scss'
+import {OnboardingCardClassName} from '../../kanban/kanbanCard'
 
 type Props = {
     onPunchholeClick: (e: React.MouseEvent) => void
@@ -33,7 +34,7 @@ const OpenCardTourStep = (props: Props): JSX.Element => {
         />
     )
 
-    const punchout = useMeasurePunchouts(['.KanbanCard'], [])
+    const punchout = useMeasurePunchouts([`.${OnboardingCardClassName}`], [])
 
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
@@ -52,8 +53,7 @@ const OpenCardTourStep = (props: Props): JSX.Element => {
             hideNavButtons={true}
             singleTip={true}
             onPunchholeClick={props.onPunchholeClick}
-
-            // stopPropagation={false}
+            skipCategoryFromBackdrop={true}
         />
     )
 }

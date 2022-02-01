@@ -9,27 +9,27 @@ import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
 import {useAppSelector} from '../../../store/hooks'
 import {getOnboardingTourStep} from '../../../store/users'
 
-import './add_comments.scss'
+import './add_view.scss'
 import {Utils} from '../../../utils'
-import addComment from '../../../../static/comment.gif'
+import changeViews from '../../../../static/changeViews.gif'
 
-import {TOUR_CARD} from '../index'
+import {TOUR_BOARD} from '../index'
 
-const AddCommentTourStep = (): JSX.Element => {
+const AddViewTourStep = (): JSX.Element => {
     const title = (
         <FormattedMessage
-            id='OnboardingTour.AddComments.Title'
-            defaultMessage='Add comments'
+            id='OnboardingTour.AddView.Title'
+            defaultMessage='Add a new view'
         />
     )
     const screen = (
         <FormattedMessage
-            id='OnboardingTour.AddComments.Body'
-            defaultMessage='You can comment on issues, and even @mention your fellow Mattermost users to get their attention.'
+            id='OnboardingTour.AddView.Body'
+            defaultMessage='Go here to create a new view to organise your board using different layouts.'
         />
     )
 
-    const punchout = useMeasurePunchouts(['.CommentsList__new'], [])
+    const punchout = useMeasurePunchouts(['.viewSelector'], [])
 
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
@@ -39,15 +39,15 @@ const AddCommentTourStep = (): JSX.Element => {
             title={title}
             punchOut={punchout}
             step={currentStep}
-            tutorialCategory={TOUR_CARD}
+            tutorialCategory={TOUR_BOARD}
             autoTour={true}
-            placement={'right-end'}
-            className='AddCommentTourStep'
-            hideBackdrop={true}
-            imageURL={Utils.buildURL(addComment, true)}
+            placement={'bottom-start'}
+            className='AddViewTourStep'
+            imageURL={Utils.buildURL(changeViews, true)}
+            stopPropagation={true}
             skipCategoryFromBackdrop={true}
         />
     )
 }
 
-export default AddCommentTourStep
+export default AddViewTourStep

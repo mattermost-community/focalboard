@@ -35,8 +35,11 @@ import {
 } from '../../store/users'
 import OpenCardTourStep from '../onboardingTour/openCard/open_card'
 import {UserConfigPatch} from '../../user'
-import {TOUR_CARD, TOUR_BASE} from '../onboardingTour'
+import {TOUR_CARD, TOUR_BASE, BoardTourSteps, BaseTourSteps, TOUR_BOARD} from '../onboardingTour'
 import octoClient from '../../octoClient'
+import CopyLinkTourStep from '../onboardingTour/copyLink/copy_link'
+
+export const OnboardingCardClassName = 'onboardingCard'
 
 type Props = {
     card: Card
@@ -97,7 +100,9 @@ const KanbanCard = React.memo((props: Props) => {
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
-    const showTour = isOnboardingBoard && isOnboardingCard && onboardingTourStarted && onboardingTourCategory === TOUR_BASE && onboardingTourStep === '0'
+    const showTour = isOnboardingBoard && isOnboardingCard && onboardingTourStarted
+    const showOpenCardTourStep = showTour && onboardingTourCategory === TOUR_BASE && onboardingTourStep === BaseTourSteps.OPEN_A_CARD.toString()
+    const showCopyLinkTourStep = showTour && onboardingTourCategory === TOUR_BOARD && onboardingTourStep === BoardTourSteps.COPY_LINK.toString()
 
     const dispatch = useAppDispatch()
     const me = useAppSelector(getMe)
@@ -127,14 +132,14 @@ const KanbanCard = React.memo((props: Props) => {
         <>
             <div
                 ref={props.readonly ? () => null : cardRef}
-                className={className}
+                className={`${className} ${isOnboardingCard && OnboardingCardClassName}`}
                 draggable={!props.readonly}
                 style={{opacity: isDragging ? 0.5 : 1}}
                 onClick={handleOnClick}
             >
                 {!props.readonly &&
                 <MenuWrapper
-                    className='optionsMenu'
+                    className={`optionsMenu ${showCopyLinkTourStep ? 'show' : ''}`}
                     stopPropagationOnToggle={true}
                 >
                     <IconButton icon={<OptionsIcon/>}/>
@@ -210,7 +215,8 @@ const KanbanCard = React.memo((props: Props) => {
                     </Tooltip>
                 ))}
                 {props.visibleBadges && <CardBadges card={card}/>}
-                {showTour && <OpenCardTourStep onPunchholeClick={handleOnClick}/>}
+                {showOpenCardTourStep && <OpenCardTourStep onPunchholeClick={handleOnClick}/>}
+                {showCopyLinkTourStep && <CopyLinkTourStep/>}
             </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}

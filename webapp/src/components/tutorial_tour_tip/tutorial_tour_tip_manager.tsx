@@ -5,7 +5,7 @@ import React, {useCallback, useEffect, useState} from 'react'
 
 import {useDispatch} from 'react-redux'
 
-import {FINISHED, BaseTourSteps, TourCategoriesMapToSteps} from '../onboardingTour'
+import {FINISHED, BaseTourSteps, TourCategoriesMapToSteps, TOUR_ORDER} from '../onboardingTour'
 import {useAppSelector} from '../../store/hooks'
 import {getMe, getOnboardingTourStep, patchProps} from '../../store/users'
 import {UserConfigPatch} from '../../user'
@@ -24,6 +24,7 @@ export interface TutorialTourTipManager {
     handlePrevious: (e: React.MouseEvent) => void;
     handleNext: (e?: React.MouseEvent) => void;
     handleEventPropagationAndDefault: (e: React.MouseEvent | KeyboardEvent) => void
+    handleSendToNextTour: (currentTourCategory: string) => Promise<void>
 }
 
 type Props = {
@@ -55,7 +56,7 @@ const useTutorialTourTipManager = ({
     const currentUserId = me?.id
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
     const savePreferences = useCallback(
-        async (useID: string, stepValue: string) => {
+        async (useID: string, stepValue: string, tourCategory?: string) => {
             // const preferences = [
             //     {
             //         user_id: useID,
@@ -75,6 +76,11 @@ const useTutorialTourTipManager = ({
                     focalboard_onboardingTourStep: stepValue,
                 },
             }
+
+            if (tourCategory) {
+                patch.updatedFields!.focalboard_tourCategory = tourCategory
+            }
+
             const patchedProps = await octoClient.patchUserConfig(currentUserId, patch)
             if (patchedProps) {
                 await dispatch(patchProps(patchedProps))
@@ -207,6 +213,28 @@ const useTutorialTourTipManager = ({
         }, Number.MIN_SAFE_INTEGER)
     }
 
+    const handleSendToNextTour = (currentTourCategory: string): Promise<void> => {
+        if (!currentUserId) {
+            return Promise.resolve()
+        }
+
+        const i = TOUR_ORDER.indexOf(currentTourCategory)
+        if (i === -1) {
+            Utils.logError(`Unknown tour category encountered: ${currentTourCategory}`)
+        }
+
+        let stepValue; let tourCategory: string
+        if (i === TOUR_ORDER.length - 1) {
+            stepValue = FINISHED
+            tourCategory = currentTourCategory
+        } else {
+            stepValue = 0
+            tourCategory = TOUR_ORDER[i + 1]
+        }
+
+        return savePreferences(currentUserId, stepValue.toString(), tourCategory)
+    }
+
     return {
         show,
         tourSteps,
@@ -219,6 +247,7 @@ const useTutorialTourTipManager = ({
         handleSavePreferences,
         getLastStep,
         handleEventPropagationAndDefault,
+        handleSendToNextTour,
     }
 }
 

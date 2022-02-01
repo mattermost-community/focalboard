@@ -58,6 +58,7 @@ type Props = {
     hideBackdrop?: boolean
     clickThroughPunchhole?: boolean
     onPunchholeClick?: (e: React.MouseEvent) => void
+    skipCategoryFromBackdrop?: boolean
 }
 
 const TutorialTourTip: React.FC<Props> = ({
@@ -83,6 +84,7 @@ const TutorialTourTip: React.FC<Props> = ({
     hideBackdrop = false,
     clickThroughPunchhole = true,
     onPunchholeClick,
+    skipCategoryFromBackdrop,
 }: Props) => {
     const triggerRef = useRef(null)
     const {
@@ -97,6 +99,7 @@ const TutorialTourTip: React.FC<Props> = ({
         handleSavePreferences,
         getLastStep,
         handleEventPropagationAndDefault,
+        handleSendToNextTour,
     } = useTutorialTourTipManager({
         step,
         autoTour,
@@ -168,14 +171,25 @@ const TutorialTourTip: React.FC<Props> = ({
     }
 
     const content = (
-        <>
+        <div
+            className={'Harshil'}
+            onClick={(e) => {
+                e.stopPropagation()
+            }}
+        >
             <div className='tutorial-tour-tip__header'>
                 <h4 className='tutorial-tour-tip__header__title'>
                     {title}
                 </h4>
                 <button
                     className='tutorial-tour-tip__header__close'
-                    onClick={handleDismiss}
+                    onClick={(e) => {
+                        if (skipCategoryFromBackdrop) {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            handleSendToNextTour(tutorialCategory)
+                        }
+                    }}
                 >
                     <i className='icon icon-close'/>
                 </button>
@@ -238,7 +252,7 @@ const TutorialTourTip: React.FC<Props> = ({
                     </a>
                 </div>}
             </div>
-        </>
+        </div>
     )
 
     return (
@@ -258,6 +272,7 @@ const TutorialTourTip: React.FC<Props> = ({
                     handleEventPropagationAndDefault(e)
                     handleHide(e)
                     if (onPunchholeClick) {
+                        console.log('dadasdas')
                         onPunchholeClick(e)
                     }
                 }}
@@ -267,6 +282,13 @@ const TutorialTourTip: React.FC<Props> = ({
                     y={punchOut?.y}
                     width={punchOut?.width}
                     height={punchOut?.height}
+                    handleClick={(e) => {
+                        if (skipCategoryFromBackdrop) {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            handleSendToNextTour(tutorialCategory)
+                        }
+                    }}
                 />
             </TourTipOverlay>
             {show && (

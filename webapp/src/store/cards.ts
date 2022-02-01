@@ -316,3 +316,8 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
         return result
     },
 )
+
+export const getCurrentCard = createSelector(
+    (state: RootState) => state.cards.current,
+    (current) => current,
+)

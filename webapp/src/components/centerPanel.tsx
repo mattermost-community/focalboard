@@ -73,8 +73,8 @@ type Props = {
     onboardingTourStarted: boolean
     onboardingTourCategory: string
     onboardingTourStep: string
-    me?: IUser
-    patchProps: (props: Record<string, string>) => Promise<void>
+    me: IUser|null
+    patchProps: (props: Record<string, string>) => void
     currentCard?: string
 }
 

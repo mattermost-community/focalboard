@@ -30,8 +30,8 @@ import {useAppSelector} from '../../store/hooks'
 import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
 import {CardTourSteps, TOUR_CARD} from '../onboardingTour'
 
-const OnboardingBoardTitle = 'Welcome to Boards!'
-const OnboardingCardTitle = 'Create a new card'
+export const OnboardingBoardTitle = 'Welcome to Boards!'
+export const OnboardingCardTitle = 'Create a new card'
 
 type Props = {
     board: Board

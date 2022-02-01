@@ -22,6 +22,12 @@ export const TOUR_BASE = 'onboarding'
 export const TOUR_CARD = 'card'
 export const TOUR_BOARD = 'board'
 
+export const TOUR_ORDER = [
+    TOUR_BASE,
+    TOUR_CARD,
+    TOUR_BOARD,
+]
+
 export const TourCategoriesMapToSteps: Record<string, Record<string, number>> = {
     [TOUR_BASE]: BaseTourSteps,
     [TOUR_CARD]: CardTourSteps,

@@ -26,6 +26,12 @@ import ViewHeaderSearch from './viewHeaderSearch'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
+import {useAppSelector} from '../../store/hooks'
+import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
+import {BoardTourSteps, CardTourSteps, TOUR_BOARD, TOUR_CARD} from '../onboardingTour'
+import {OnboardingBoardTitle, OnboardingCardTitle} from '../cardDetail/cardDetail'
+import AddViewTourStep from '../onboardingTour/addView/add_view'
+import {getCurrentCard} from '../../store/cards'
 
 type Props = {
     board: Board
@@ -59,6 +65,28 @@ const ViewHeader = React.memo((props: Props) => {
 
     const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
 
+    const isOnboardingBoard = props.board.title === OnboardingBoardTitle
+    const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
+    const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
+    const onboardingTourStep = useAppSelector(getOnboardingTourStep)
+
+    const currentCard = useAppSelector(getCurrentCard)
+    const noCardOpen = !currentCard
+
+    const [delayComplete, setDelayComplete] = useState(false)
+
+    const showTourBaseCondition = isOnboardingBoard && onboardingTourStarted && noCardOpen && onboardingTourCategory === TOUR_BOARD && onboardingTourStep === BoardTourSteps.ADD_VIEW.toString()
+
+    useEffect(() => {
+        if (showTourBaseCondition) {
+            setTimeout(() => {
+                setDelayComplete(true)
+            }, 800)
+        }
+    }, [showTourBaseCondition])
+
+    const showAddViewTourStep = showTourBaseCondition && delayComplete
+
     return (
         <div className='ViewHeader'>
             <div className='viewSelector'>
@@ -86,6 +114,7 @@ const ViewHeader = React.memo((props: Props) => {
                         readonly={props.readonly}
                     />
                 </MenuWrapper>
+                {showAddViewTourStep && <AddViewTourStep/>}
             </div>
 
             <div className='octo-spacer'/>

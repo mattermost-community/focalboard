@@ -9,27 +9,27 @@ import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
 import {useAppSelector} from '../../../store/hooks'
 import {getOnboardingTourStep} from '../../../store/users'
 
-import './add_view.scss'
+import './add_properties.scss'
 import {Utils} from '../../../utils'
-import addProperty from '../../../../static/dummy.png'
+import addProperty from '../../../../static/addProperty.gif'
 
-import {TOUR_BOARD} from '../index'
+import {TOUR_CARD} from '../index'
 
-const AddViewTourStep = (): JSX.Element => {
+const AddPropertiesTourStep = (): JSX.Element => {
     const title = (
         <FormattedMessage
-            id='OnboardingTour.AddView.Title'
-            defaultMessage='Add a new view'
+            id='OnboardingTour.AddProperties.Title'
+            defaultMessage='Add properties'
         />
     )
     const screen = (
         <FormattedMessage
-            id='OnboardingTour.AddView.Body'
-            defaultMessage='Go here to create a new view to organise your board using different layouts.'
+            id='OnboardingTour.AddProperties.Body'
+            defaultMessage='Add various properties to cards to make them more powerful!'
         />
     )
 
-    const punchout = useMeasurePunchouts(['.viewSelector'], [])
+    const punchout = useMeasurePunchouts(['.octo-propertyname.add-property'], [])
 
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
@@ -39,14 +39,16 @@ const AddViewTourStep = (): JSX.Element => {
             title={title}
             punchOut={punchout}
             step={currentStep}
-            tutorialCategory={TOUR_BOARD}
+            tutorialCategory={TOUR_CARD}
             autoTour={true}
-            placement={'bottom-end'}
-            className='AddViewTourStep'
+            placement={'right-end'}
+            className='AddPropertiesTourStep'
+            hideBackdrop={true}
             imageURL={Utils.buildURL(addProperty, true)}
             stopPropagation={true}
+            skipCategoryFromBackdrop={true}
         />
     )
 }
 
-export default AddViewTourStep
+export default AddPropertiesTourStep

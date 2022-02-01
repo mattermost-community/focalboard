@@ -20,9 +20,6 @@ import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmation
 import {sendFlashMessage} from '../flashMessages'
 import Menu from '../../widgets/menu'
 import {IDType, Utils} from '../../utils'
-import {useAppSelector} from '../../store/hooks'
-import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
-import {CardTourSteps, TOUR_CARD} from '../onboardingTour'
 import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
 
 type Props = {
