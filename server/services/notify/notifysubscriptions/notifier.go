@@ -129,7 +129,11 @@ func (n *notifier) notify() {
 
 	hint, err = n.store.GetNextNotificationHint(true)
 	if err != nil {
-		// try again later
+		if store.IsErrNotFound(err) {
+			// Expected when multiple nodes in a cluster try to process the same hint at the same time.
+			// This simply means the other node won. Returning here will simply try fetching another hint.
+			return
+		}
 		n.logger.Error("notify - error fetching next notification", mlog.Err(err))
 		return
 	}

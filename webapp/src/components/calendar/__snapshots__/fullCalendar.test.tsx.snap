@@ -720,12 +720,13 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                     >
                                       <a
                                         class="fc-daygrid-event fc-daygrid-block-event fc-h-event fc-event fc-event-start fc-event-end fc-event-past"
-                                        tabindex="0"
                                       >
                                         <div
                                           class="fc-event-main"
                                         >
-                                          <div>
+                                          <div
+                                            class="EventContent"
+                                          >
                                             <div
                                               class="octo-icontitle"
                                             >
@@ -2979,12 +2980,13 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                     >
                                       <a
                                         class="fc-daygrid-event fc-daygrid-block-event fc-h-event fc-event fc-event-start fc-event-end fc-event-past"
-                                        tabindex="0"
                                       >
                                         <div
                                           class="fc-event-main"
                                         >
-                                          <div>
+                                          <div
+                                            class="EventContent"
+                                          >
                                             <div
                                               class="octo-icontitle"
                                             >
@@ -5936,12 +5938,13 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                     >
                                       <a
                                         class="fc-daygrid-event fc-daygrid-block-event fc-h-event fc-event fc-event-draggable fc-event-resizable fc-event-start fc-event-end fc-event-past"
-                                        tabindex="0"
                                       >
                                         <div
                                           class="fc-event-main"
                                         >
-                                          <div>
+                                          <div
+                                            class="EventContent"
+                                          >
                                             <div
                                               class="octo-icontitle"
                                             >

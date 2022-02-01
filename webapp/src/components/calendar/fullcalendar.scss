@@ -3,13 +3,20 @@
     margin-bottom: 10px;
     overflow: auto;
 
-    a {
+    .fc-daygrid-event,
+    .fc-daygrid-day-number {
         text-decoration: none;
         color: var(--link-color-rgb);
 
         &:hover {
-            background-color: unset !important;;
+            background-color: unset;
         }
+    }
+
+    .EventContent {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .octo-tooltip {
