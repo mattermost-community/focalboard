@@ -9,7 +9,7 @@ import {useHotkeys} from 'react-hotkeys-hook'
 import {Block} from '../blocks/block'
 import {ContentBlock} from '../blocks/contentBlock'
 import {CommentBlock} from '../blocks/commentBlock'
-import {Board} from '../blocks/board'
+import {Board, BoardMember} from '../blocks/board'
 import {Card} from '../blocks/card'
 import {BoardView} from '../blocks/boardView'
 import {sendFlashMessage} from '../components/flashMessages'
@@ -19,7 +19,7 @@ import octoClient from '../octoClient'
 import {Utils} from '../utils'
 import wsClient, {WSClient} from '../wsclient'
 import './boardPage.scss'
-import {updateBoards, getCurrentBoard, setCurrent as setCurrentBoard} from '../store/boards'
+import {updateBoards, getCurrentBoard, setCurrent as setCurrentBoard, fetchBoardMembers, updateMembersEnsuringBoardsAndUsers} from '../store/boards'
 import {updateViews, getCurrentView, setCurrent as setCurrentView, getCurrentBoardViews} from '../store/views'
 import {updateCards} from '../store/cards'
 import {updateContents} from '../store/contents'
@@ -76,6 +76,7 @@ const BoardPage = (props: Props): JSX.Element => {
         teamId = match.params.teamId || teamId
         UserSettings.lastTeamId = teamId
         octoClient.teamId = teamId
+        wsClient.teamId = teamId
     }, [match.params.teamId])
 
     useEffect(() => {
@@ -85,6 +86,10 @@ const BoardPage = (props: Props): JSX.Element => {
 
             // and fetch its data
             dispatch(loadBoardData(match.params.boardId))
+            dispatch(fetchBoardMembers({
+                teamId: teamId,
+                boardId: match.params.boardId,
+            }))
 
             // and set it as most recently viewed board
             UserSettings.setLastBoardID(teamId, match.params.boardId)
@@ -280,6 +285,10 @@ const BoardPage = (props: Props): JSX.Element => {
             dispatch(updateBoards(teamBoards))
         }
 
+        const incrementalBoardMemberUpdate = (_: WSClient, members: BoardMember[]) => {
+            dispatch(updateMembersEnsuringBoardsAndUsers(members))
+        }
+
         let timeout: ReturnType<typeof setTimeout>
         const updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
             if (newState === 'open') {
@@ -305,6 +314,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
         wsClient.addOnChange(incrementalBlockUpdate, 'block')
         wsClient.addOnChange(incrementalBoardUpdate, 'board')
+        wsClient.addOnChange(incrementalBoardMemberUpdate, 'boardMembers')
         wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
         return () => {
@@ -316,6 +326,7 @@ const BoardPage = (props: Props): JSX.Element => {
             }
             wsClient.removeOnChange(incrementalBlockUpdate, 'block')
             wsClient.removeOnChange(incrementalBoardUpdate, 'board')
+            wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
             wsClient.removeOnStateChange(updateWebsocketState)
         }

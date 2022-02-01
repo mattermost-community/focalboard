@@ -32,7 +32,7 @@ const userImageUrl = 'data:image/svg+xml'
 describe('components/cardDetail/comment', () => {
     const state = {
         users: {
-            workspaceUsers: [
+            boardUsers: [
                 {username: 'username_1'},
             ],
         },

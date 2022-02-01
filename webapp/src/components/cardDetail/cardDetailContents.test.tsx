@@ -52,7 +52,7 @@ describe('components/cardDetail/cardDetailContents', () => {
 
     const state = {
         users: {
-            workspaceUsers: {
+            boardUsers: {
                 1: {username: 'abc'},
                 2: {username: 'd'},
                 3: {username: 'e'},

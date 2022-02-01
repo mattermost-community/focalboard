@@ -1,23 +1,109 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction, createAsyncThunk, createSelector} from '@reduxjs/toolkit'
 
-import {Board} from '../blocks/board'
+import {default as client} from '../octoClient'
+import {Board, BoardMember} from '../blocks/board'
+import {IUser} from '../user'
 
 import {initialLoad, initialReadOnlyLoad} from './initialLoad'
 
 import {RootState} from './index'
+import {addBoardUsers} from './users'
 
 type BoardsState = {
     current: string
     boards: {[key: string]: Board}
     templates: {[key: string]: Board}
+    membersInBoards: {[key: string]: {[key: string]: BoardMember}}
+}
+
+export const fetchBoardMembers = createAsyncThunk(
+    'boardMembers/fetch',
+    async ({teamId, boardId}: {teamId: string, boardId: string}, thunkAPI: any) => {
+        const members = await client.getBoardMembers(teamId, boardId)
+        const boardUsers = thunkAPI.getState().users.boardUsers as {[key: string]: IUser}
+        const newUsers = [] as IUser[]
+        for (const member of members) {
+            const memberFromStore = boardUsers[member.userId]
+            if (!!!memberFromStore) {
+                const user = await client.getUser(member.userId)
+                if (user) {
+                    newUsers.push(user)
+                }
+            }
+        }
+
+        thunkAPI.dispatch(addBoardUsers(newUsers))
+        return members
+    },
+)
+
+export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
+    'updateMembersEnsuringBoardsAndUsers',
+    async (members: BoardMember[], thunkAPI: any) => {
+        const me = thunkAPI.getState().users.me
+        if (me) {
+            // ensure the boards for the new memberships get loaded or removed
+            const boards = thunkAPI.getState().boards.boards
+            const myMemberships = members.filter((m) => m.userId === me.id)
+            const boardsToUpdate: Board[] = []
+            for (const member of myMemberships) {
+                if (!member.schemeAdmin && !member.schemeEditor) {
+                    boardsToUpdate.push({id: member.boardId, deleteAt: 1} as Board)
+                    continue
+                }
+
+                if (boards[member.boardId]) {
+                    continue
+                }
+
+                const board = await client.getBoard(member.boardId)
+                if (board) {
+                    boardsToUpdate.push(board)
+                }
+            }
+
+            thunkAPI.dispatch(updateBoards(boardsToUpdate))
+        }
+
+        // ensure the users for the new memberships get loaded
+        const boardUsers = thunkAPI.getState().users.boardUsers
+        members.forEach(async (m) => {
+            if (boardUsers[m.userId]) {
+                return
+            }
+            const user = await client.getUser(m.userId)
+            if (user) {
+                thunkAPI.dispatch(addBoardUsers([user]))
+            }
+        })
+
+        return members
+    },
+)
+
+export const updateMembers = (state: BoardsState, action: PayloadAction<BoardMember[]>) => {
+    if (action.payload.length === 0) {
+        return
+    }
+
+    const boardId = action.payload[0].boardId
+    const boardMembers = state.membersInBoards[boardId] || {}
+
+    for (const member of action.payload) {
+        if (!member.schemeAdmin && !member.schemeEditor) {
+            delete boardMembers[member.userId]
+        } else {
+            boardMembers[member.userId] = member
+        }
+    }
 }
 
 const boardsSlice = createSlice({
     name: 'boards',
-    initialState: {boards: {}, templates: {}} as BoardsState,
+    initialState: {boards: {}, templates: {}, membersInBoards: {}} as BoardsState,
     reducers: {
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
@@ -34,39 +120,31 @@ const boardsSlice = createSlice({
                 }
             }
         },
+        updateMembers,
     },
 
-    // ToDo: update extra reducers
     extraReducers: (builder) => {
-        builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
-            // ToDo: complete with the new initial load
-
-            // state.boards = {}
-            // state.templates = {}
-            // for (const block of action.payload) {
-            //     if (block.type === 'board' && block.fields.isTemplate) {
-            //         state.templates[block.id] = block as Board
-            //     } else if (block.type === 'board' && !block.fields.isTemplate) {
-            //         state.boards[block.id] = block as Board
-            //     }
-            // }
-        })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             state.boards = {}
             action.payload.boards.forEach((board) => {
                 state.boards[board.id] = board
             })
-
-            // state.boards = {}
-            // state.templates = {}
-            // for (const block of action.payload.blocks) {
-            //     if (block.type === 'board' && block.fields.isTemplate) {
-            //         state.templates[block.id] = block as Board
-            //     } else if (block.type === 'board' && !block.fields.isTemplate) {
-            //         state.boards[block.id] = block as Board
-            //     }
-            // }
         })
+        builder.addCase(fetchBoardMembers.fulfilled, (state, action) => {
+            if (action.payload.length === 0) {
+                return
+            }
+
+            // all members should belong to the same boardId, so we
+            // get it from the first one
+            const boardId = action.payload[0].boardId
+            const boardMembersMap = action.payload.reduce((acc: {[key: string]: BoardMember}, val: BoardMember) => {
+                acc[val.userId] = val
+                return acc
+            }, {})
+            state.membersInBoards[boardId] = boardMembersMap
+        })
+        builder.addCase(updateMembersEnsuringBoardsAndUsers.fulfilled, updateMembers)
     },
 })
 
@@ -103,5 +181,13 @@ export const getCurrentBoard = createSelector(
     getTemplates,
     (boardId, boards, templates) => {
         return boards[boardId] || templates[boardId]
+    },
+)
+
+export const getCurrentBoardMembers = createSelector(
+    (state: RootState): string => state.boards.current,
+    (state: RootState): {[key: string]: {[key: string]: BoardMember}} => state.boards.membersInBoards,
+    (boardId: string, membersInBoards: {[key: string]: {[key: string]: BoardMember}}): {[key: string]: BoardMember} => {
+        return membersInBoards[boardId] || {}
     },
 )

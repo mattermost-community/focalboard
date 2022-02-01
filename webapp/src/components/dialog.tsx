@@ -15,11 +15,12 @@ type Props = {
     toolsMenu?: React.ReactNode // some dialogs may not  require a toolmenu
     hideCloseButton?: boolean
     className?: string
+    title?: string
     onClose: () => void,
 }
 
 const Dialog = React.memo((props: Props) => {
-    const {toolsMenu} = props
+    const {toolsMenu, title} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
@@ -41,6 +42,7 @@ const Dialog = React.memo((props: Props) => {
             >
                 <div className='dialog' >
                     <div className='toolbar'>
+                        {title && <h1 className='text-heading5 mt-2'>{title}</h1> }
                         {
                             !props.hideCloseButton &&
                             <IconButton

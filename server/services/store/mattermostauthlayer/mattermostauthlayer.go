@@ -265,12 +265,12 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 
 func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data",
-			"props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at").
-		From("Users").
-		Join("TeamMembers ON TeamMembers.UserID = Users.ID").
-		Where(sq.Eq{"deleteAt": 0}).
-		Where(sq.Eq{"TeamMembers.TeamId": teamID})
+		Select("u.id", "u.username", "u.email", "u.password", "u.MFASecret as mfa_secret", "u.AuthService as auth_service", "COALESCE(u.AuthData, '') as auth_data",
+			"u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at", "u.DeleteAt as delete_at").
+		From("Users as u").
+		Join("TeamMembers as tm ON tm.UserID = u.ID").
+		Where(sq.Eq{"u.deleteAt": 0}).
+		Where(sq.Eq{"tm.TeamId": teamID})
 
 	rows, err := query.Query()
 	if err != nil {

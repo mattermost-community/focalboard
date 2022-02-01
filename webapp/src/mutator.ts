@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
-import {Board, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyType, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks} from './blocks/board'
+import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyType, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {FilterGroup} from './blocks/filterGroup'
@@ -318,6 +318,49 @@ class Mutator {
             },
             async () => {
                 await octoClient.patchBlock(boardId, cardId, {updatedFields: {contentOrder: oldContentOrder}})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    // Board Members
+
+    async createBoardMember(boardId: string, userId: string, description = 'create board member'): Promise<void> {
+        const member = { boardId, userId, schemeEditor: true } as BoardMember
+
+        await undoManager.perform(
+            async () => {
+                await octoClient.createBoardMember(member)
+            },
+            async () => {
+                await octoClient.deleteBoardMember(member)
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    async updateBoardMember(newMember: BoardMember, oldMember: BoardMember, description = 'update board member'): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.updateBoardMember(newMember)
+            },
+            async () => {
+                await octoClient.updateBoardMember(oldMember)
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    async deleteBoardMember(member: BoardMember, description = 'delete board member'): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.deleteBoardMember(member)
+            },
+            async () => {
+                await octoClient.createBoardMember(member)
             },
             description,
             this.undoGroupId,

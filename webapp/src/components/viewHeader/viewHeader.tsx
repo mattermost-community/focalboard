@@ -26,6 +26,7 @@ import ViewHeaderSearch from './viewHeaderSearch'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
+import ShareBoardDialog from '../shareBoard/shareBoard'
 
 type Props = {
     board: Board
@@ -59,6 +60,8 @@ const ViewHeader = React.memo((props: Props) => {
 
     const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
 
+    const [showShareDialog, setShowShareDialog] = useState(false)
+
     return (
         <div className='ViewHeader'>
             <Editable
@@ -86,65 +89,71 @@ const ViewHeader = React.memo((props: Props) => {
                 />
             </MenuWrapper>
 
+            <button
+                onClick={() => setShowShareDialog(!showShareDialog)}
+            >
+                {'Show Share Modal'}
+            </button>
+
             <div className='octo-spacer'/>
 
             {!props.readonly &&
-            <>
-                {/* Card properties */}
+             <>
+                 {/* Card properties */}
 
-                <ViewHeaderPropertiesMenu
-                    properties={board.cardProperties}
-                    activeView={activeView}
-                />
+                 <ViewHeaderPropertiesMenu
+                     properties={board.cardProperties}
+                     activeView={activeView}
+                 />
 
-                {/* Group by */}
+                 {/* Group by */}
 
-                {withGroupBy &&
-                    <ViewHeaderGroupByMenu
-                        properties={board.cardProperties}
-                        activeView={activeView}
-                        groupByPropertyName={groupByProperty?.name}
-                    />}
+                 {withGroupBy &&
+                  <ViewHeaderGroupByMenu
+                      properties={board.cardProperties}
+                      activeView={activeView}
+                      groupByPropertyName={groupByProperty?.name}
+                  />}
 
-                {/* Display by */}
+                 {/* Display by */}
 
-                {withDisplayBy &&
-                    <ViewHeaderDisplayByMenu
-                        properties={board.cardProperties}
-                        activeView={activeView}
-                        dateDisplayPropertyName={dateDisplayProperty?.name}
-                    />}
+                 {withDisplayBy &&
+                  <ViewHeaderDisplayByMenu
+                      properties={board.cardProperties}
+                      activeView={activeView}
+                      dateDisplayPropertyName={dateDisplayProperty?.name}
+                  />}
 
-                {/* Filter */}
+                 {/* Filter */}
 
-                <ModalWrapper>
-                    <Button
-                        active={hasFilter}
-                        onClick={() => setShowFilter(true)}
-                    >
-                        <FormattedMessage
-                            id='ViewHeader.filter'
-                            defaultMessage='Filter'
-                        />
-                    </Button>
-                    {showFilter &&
-                    <FilterComponent
-                        board={board}
-                        activeView={activeView}
-                        onClose={() => setShowFilter(false)}
-                    />}
-                </ModalWrapper>
+                 <ModalWrapper>
+                     <Button
+                         active={hasFilter}
+                         onClick={() => setShowFilter(true)}
+                     >
+                         <FormattedMessage
+                             id='ViewHeader.filter'
+                             defaultMessage='Filter'
+                         />
+                     </Button>
+                     {showFilter &&
+                      <FilterComponent
+                          board={board}
+                          activeView={activeView}
+                          onClose={() => setShowFilter(false)}
+                      />}
+                 </ModalWrapper>
 
-                {/* Sort */}
+                 {/* Sort */}
 
-                {withSortBy &&
-                    <ViewHeaderSortMenu
-                        properties={board.cardProperties}
-                        activeView={activeView}
-                        orderedCards={cards}
-                    />
-                }
-            </>
+                 {withSortBy &&
+                  <ViewHeaderSortMenu
+                      properties={board.cardProperties}
+                      activeView={activeView}
+                      orderedCards={cards}
+                  />
+                 }
+             </>
             }
 
             {/* Search */}
@@ -154,24 +163,26 @@ const ViewHeader = React.memo((props: Props) => {
             {/* Options menu */}
 
             {!props.readonly &&
-            <>
-                <ViewHeaderActionsMenu
-                    board={board}
-                    activeView={activeView}
-                    cards={cards}
-                    showShared={showShared}
-                />
+             <>
+                 <ViewHeaderActionsMenu
+                     board={board}
+                     activeView={activeView}
+                     cards={cards}
+                     showShared={showShared}
+                 />
 
-                {/* New card button */}
+                 {/* New card button */}
 
-                <NewCardButton
-                    addCard={props.addCard}
-                    addCardFromTemplate={props.addCardFromTemplate}
-                    addCardTemplate={props.addCardTemplate}
-                    editCardTemplate={props.editCardTemplate}
-                />
-            </>
+                 <NewCardButton
+                     addCard={props.addCard}
+                     addCardFromTemplate={props.addCardFromTemplate}
+                     addCardTemplate={props.addCardTemplate}
+                     editCardTemplate={props.editCardTemplate}
+                 />
+             </>
             }
+
+            {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>}
         </div>
     )
 })

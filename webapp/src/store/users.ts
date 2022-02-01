@@ -15,23 +15,28 @@ export const fetchMe = createAsyncThunk(
 
 type UsersStatus = {
     me: IUser|null
-    workspaceUsers: {[key: string]: IUser}
+    boardUsers: {[key: string]: IUser}
     loggedIn: boolean|null
 }
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: {me: null, workspaceUsers: {}, loggedIn: null, userWorkspaces: []} as UsersStatus,
+    initialState: {me: null, boardUsers: {}, loggedIn: null, userWorkspaces: []} as UsersStatus,
     reducers: {
         setMe: (state, action: PayloadAction<IUser>) => {
             state.me = action.payload
         },
-        setWorkspaceUsers: (state, action: PayloadAction<IUser[]>) => {
-            state.workspaceUsers = action.payload.reduce((acc: {[key: string]: IUser}, user: IUser) => {
+        setBoardUsers: (state, action: PayloadAction<IUser[]>) => {
+            state.boardUsers = action.payload.reduce((acc: {[key: string]: IUser}, user: IUser) => {
                 acc[user.id] = user
                 return acc
             }, {})
         },
+        addBoardUsers: (state, action: PayloadAction<IUser[]>) => {
+            action.payload.forEach((user: IUser) => {
+                state.boardUsers[user.id] = user
+            })
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
@@ -42,32 +47,24 @@ const usersSlice = createSlice({
             state.me = null
             state.loggedIn = false
         })
-
-        // ToDo: readd with members
-        // builder.addCase(initialLoad.fulfilled, (state, action) => {
-        //     state.workspaceUsers = action.payload.workspaceUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
-        //         acc[user.id] = user
-        //         return acc
-        //     }, {})
-        // })
     },
 })
 
-export const {setMe, setWorkspaceUsers} = usersSlice.actions
+export const {setMe, setBoardUsers, addBoardUsers} = usersSlice.actions
 export const {reducer} = usersSlice
 
 export const getMe = (state: RootState): IUser|null => state.users.me
 export const getLoggedIn = (state: RootState): boolean|null => state.users.loggedIn
-export const getWorkspaceUsers = (state: RootState): {[key: string]: IUser} => state.users.workspaceUsers
+export const getBoardUsers = (state: RootState): {[key: string]: IUser} => state.users.boardUsers
 
-export const getWorkspaceUsersList = createSelector(
-    getWorkspaceUsers,
-    (workspaceUsers) => Object.values(workspaceUsers).sort((a, b) => a.username.localeCompare(b.username)),
+export const getBoardUsersList = createSelector(
+    getBoardUsers,
+    (boardUsers) => Object.values(boardUsers).sort((a, b) => a.username.localeCompare(b.username)),
 )
 
 export const getUser = (userId: string): (state: RootState) => IUser|undefined => {
     return (state: RootState): IUser|undefined => {
-        const users = getWorkspaceUsers(state)
+        const users = getBoardUsers(state)
         return users[userId]
     }
 }

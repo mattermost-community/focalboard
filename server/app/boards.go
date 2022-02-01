@@ -9,6 +9,8 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 )
 
+var BoardMemberIsLastAdminErr = errors.New("cannot leave a board with no admins")
+
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
 	if errors.Is(err, sql.ErrNoRows) {
@@ -130,12 +132,24 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 		return nil, bErr
 	}
 
-	_, err := a.store.GetMemberForBoard(member.BoardID, member.UserID)
+	oldMember, err := a.store.GetMemberForBoard(member.BoardID, member.UserID)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}
 	if err != nil {
 		return nil, err
+	}
+
+	// if we're updating an admin, we need to check that there is at
+	// least still another admin on the board
+	if oldMember.SchemeAdmin && !member.SchemeAdmin {
+		isLastAdmin, err := a.isLastAdmin(member.UserID, member.BoardID)
+		if err != nil {
+			return nil, err
+		}
+		if isLastAdmin {
+			return nil, BoardMemberIsLastAdminErr
+		}
 	}
 
 	newMember, err := a.store.SaveMember(member)
@@ -150,6 +164,20 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 	return newMember, nil
 }
 
+func (a *App) isLastAdmin(userID, boardID string) (bool, error) {
+	members, err := a.store.GetMembersForBoard(boardID)
+	if err != nil {
+		return false, err
+	}
+
+	for _, m := range members {
+		if m.SchemeAdmin && m.UserID != userID {
+			return false, nil
+		}
+	}
+	return true, nil
+}
+
 func (a *App) DeleteBoardMember(boardID, userID string) error {
 	board, bErr := a.store.GetBoard(boardID)
 	if errors.Is(bErr, sql.ErrNoRows) {
@@ -159,12 +187,24 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 		return bErr
 	}
 
-	_, err := a.store.GetMemberForBoard(boardID, userID)
+	oldMember, err := a.store.GetMemberForBoard(boardID, userID)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil
 	}
 	if err != nil {
 		return err
+	}
+
+	// if we're removing an admin, we need to check that there is at
+	// least still another admin on the board
+	if oldMember.SchemeAdmin {
+		isLastAdmin, err := a.isLastAdmin(userID, boardID)
+		if err != nil {
+			return err
+		}
+		if isLastAdmin {
+			return BoardMemberIsLastAdminErr
+		}
 	}
 
 	if err := a.store.DeleteMember(boardID, userID); err != nil {

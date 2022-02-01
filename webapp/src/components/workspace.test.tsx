@@ -110,7 +110,7 @@ describe('src/components/workspace', () => {
         },
         users: {
             me,
-            workspaceUsers: [me],
+            boardUsers: [me],
         },
         boards: {
             current: board.id,
@@ -227,7 +227,7 @@ describe('src/components/workspace', () => {
         const emptyStore = mockStateStore([], {
             users: {
                 me,
-                workspaceUsers: [me],
+                boardUsers: [me],
             },
             workspace: {
                 current: workspace1,

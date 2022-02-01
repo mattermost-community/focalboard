@@ -20,7 +20,7 @@ import './markdownEditorInput.scss'
 import createEmojiPlugin from '@draft-js-plugins/emoji'
 import '@draft-js-plugins/emoji/lib/plugin.css'
 
-import {getWorkspaceUsersList} from '../../store/users'
+import {getBoardUsersList} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
 
@@ -37,8 +37,8 @@ type Props = {
 
 const MarkdownEditorInput = (props: Props): ReactElement => {
     const {onChange, onFocus, onBlur, initialText, id, isEditing} = props
-    const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
-    const mentions: MentionData[] = useMemo(() => workspaceUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`})), [workspaceUsers])
+    const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
+    const mentions: MentionData[] = useMemo(() => boardUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`})), [boardUsers])
     const ref = useRef<Editor>(null)
     const [editorState, setEditorState] = useState(() => {
         const state = EditorState.createWithContent(ContentState.createFromText(initialText || ''))
