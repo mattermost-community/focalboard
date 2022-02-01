@@ -35,6 +35,7 @@
 		"color": "^4.0.0",
 		"draft-js": "^0.11.7",
 		"emoji-mart": "^3.0.1",
+		"fstream": "^1.0.12",
 		"fullcalendar": "^5.10.0",
 		"imagemin-gifsicle": "^7.0.0",
 		"imagemin-mozjpeg": "^9.0.0",
