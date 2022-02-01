@@ -5,7 +5,7 @@ import React from 'react'
 
 import CompassIcon from './compassIcon'
 
-export default function DeleteIcon(): JSX.Element {
+export default function EditIcon(): JSX.Element {
     return (
         <CompassIcon
             icon='pencil-outline'
