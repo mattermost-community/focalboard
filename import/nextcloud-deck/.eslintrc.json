@@ -1,0 +1,103 @@
+{
+  "extends": [
+  ],
+  "plugins": [
+  ],
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "jest": true
+  },
+  "settings": {
+    "import/resolver": "webpack",
+    "react": {
+        "pragma": "React",
+        "version": "detect"
+    }
+  },
+  "rules": {
+    "no-unused-expressions": 0,
+    "eol-last": ["error", "always"],
+    "import/no-unresolved": 2,
+    "no-undefined": 0,
+    "react/jsx-filename-extension": 0,
+    "max-nested-callbacks": ["error", {"max": 5}]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.tsx", "**/*.ts"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended"
+      ],
+      "rules": {
+        "import/no-unresolved": 0, // ts handles this better
+		"camelcase": 0,
+		"semi": "off",
+        "@typescript-eslint/naming-convention": [
+          2,
+          {
+            "selector": "function",
+            "format": ["camelCase", "PascalCase"]
+          },
+          {
+            "selector": "variable",
+            "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+          },
+          {
+            "selector": "parameter",
+            "format": ["camelCase", "PascalCase"],
+            "leadingUnderscore": "allow"
+          },
+          {
+            "selector": "typeLike",
+            "format": ["PascalCase"]
+          }
+        ],
+        "@typescript-eslint/no-non-null-assertion": 0,
+        "@typescript-eslint/no-unused-vars": [
+          2,
+          {
+            "vars": "all",
+            "args": "after-used"
+          }
+        ],
+        "@typescript-eslint/no-var-requires": 0,
+        "@typescript-eslint/no-empty-function": 0,
+        "@typescript-eslint/prefer-interface": 0,
+        "@typescript-eslint/explicit-function-return-type": 0,
+        "@typescript-eslint/semi": [2, "never"],
+		"@typescript-eslint/indent": [
+          2,
+          4,
+          {
+            "SwitchCase": 0
+          }
+        ],
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": [
+          2,
+          {
+            "classes": false,
+            "functions": false,
+            "variables": false
+          }
+        ],
+        "no-useless-constructor": 0,
+        "@typescript-eslint/no-useless-constructor": 2,
+        "react/jsx-filename-extension": 0
+      }
+    },
+    {
+      "files": ["tests/**", "**/*.test.*"],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "func-names": 0,
+        "global-require": 0,
+        "new-cap": 0,
+        "prefer-arrow-callback": 0,
+        "no-import-assign": 0
+      }
+    }
+  ]
+}
