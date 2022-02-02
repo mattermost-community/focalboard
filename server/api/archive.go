@@ -9,6 +9,10 @@ import (
 	"github.com/mattermost/focalboard/server/services/audit"
 )
 
+const (
+	archiveExtension = ".boardarchive"
+)
+
 func (a *API) handleArchiveExport(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation GET /api/v1/workspaces/{workspaceID}/archive/export archiveExport
 	//
@@ -64,7 +68,7 @@ func (a *API) handleArchiveExport(w http.ResponseWriter, r *http.Request) {
 		BoardIDs:    boardIDs,
 	}
 
-	filename := fmt.Sprintf("archive-%s.focalboard", time.Now().Format("2006-01-02"))
+	filename := fmt.Sprintf("archive-%s%s", time.Now().Format("2006-01-02"), archiveExtension)
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
 	w.Header().Set("Content-Transfer-Encoding", "binary")
