@@ -15,13 +15,14 @@ import (
 )
 
 type Services struct {
-	Auth          *auth.Auth
-	Store         store.Store
-	FilesBackend  filestore.FileBackend
-	Webhook       *webhook.Client
-	Metrics       *metrics.Metrics
-	Notifications *notify.Service
-	Logger        *mlog.Logger
+	Auth             *auth.Auth
+	Store            store.Store
+	FilesBackend     filestore.FileBackend
+	Webhook          *webhook.Client
+	Metrics          *metrics.Metrics
+	Notifications    *notify.Service
+	Logger           *mlog.Logger
+	SkipTemplateInit bool
 }
 
 type App struct {
@@ -52,6 +53,6 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 		notifications: services.Notifications,
 		logger:        services.Logger,
 	}
-	app.initialize()
+	app.initialize(services.SkipTemplateInit)
 	return app
 }

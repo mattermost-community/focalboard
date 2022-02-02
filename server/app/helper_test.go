@@ -14,7 +14,6 @@ import (
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/ws"
 
-	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore/mocks"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -31,14 +30,6 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
 
-	filesMock := &mocks.FileBackend{}
-
-	// called during default template setup for every test
-	store.EXPECT().GetDefaultTemplateBlocks().AnyTimes()
-	store.EXPECT().RemoveDefaultTemplates(gomock.Any()).AnyTimes()
-	store.EXPECT().InsertBlock(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
-	filesMock.On("WriteFile", mock.Anything, mock.Anything).Return(mock.Anything, nil)
-
 	auth := auth.New(&cfg, store)
 	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
 	sessionToken := "TESTTOKEN"
@@ -47,12 +38,13 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	metricsService := metrics.NewMetrics(metrics.InstanceInfo{})
 
 	appServices := Services{
-		Auth:         auth,
-		Store:        store,
-		FilesBackend: filesMock,
-		Webhook:      webhook,
-		Metrics:      metricsService,
-		Logger:       logger,
+		Auth:             auth,
+		Store:            store,
+		FilesBackend:     &mocks.FileBackend{},
+		Webhook:          webhook,
+		Metrics:          metricsService,
+		Logger:           logger,
+		SkipTemplateInit: true,
 	}
 	app2 := New(&cfg, wsserver, appServices)
 
