@@ -4,7 +4,19 @@ Focalboard is an open source, self-hosted alternative to Trello, Notion, Asana a
 
 This changelog summarizes updates to our open source project. You can also find the [latest releases and release notes on GitHub here](https://github.com/mattermost/focalboard/releases).
 
-## [Work In Progress] - vNext Release - [Date TBD]
+## v0.14 Release - February, 2022
+* Template selector dialog. Thanks @jespino!
+* New standard templates. Thanks @wiggin77!
+* Archive file format has changed and now supports images. Thanks @wiggin77!
+* Card badges. Thanks @kamre!
+* URL property improvement. Thanks @kamre!
+* Channel intro Boards link. Thanks @sbishel!
+* GIF support in card descriptions. Thanks @asaadmahmood!
+* Add links to linode. Thanks @ChaseKnowlden!
+* Add `chown` for nobody in the docker run example. Thanks @K3UL!
+* Fixed Mac M1 chip build. Thanks @jpaldeano!
+* Removed link to deleted css file. Thanks @kamre!
+* Fixed typo in config.toml. Thanks @krmh04!
 
 ## v0.12 Release - January, 2022
 * Change notifications. Thanks @wiggin77!
