@@ -57,7 +57,7 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
             ),
         )
         const buttonElement = screen.getByRole('button', {
-            name: 'View menu',
+            name: 'View header menu',
         })
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
@@ -77,7 +77,7 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
             ),
         )
         const buttonElement = screen.getByRole('button', {
-            name: 'View menu',
+            name: 'View header menu',
         })
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
@@ -95,7 +95,7 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
                 </ReduxProvider>,
             ),
         )
-        const buttonElement = screen.getByRole('button', {name: 'View menu'})
+        const buttonElement = screen.getByRole('button', {name: 'View header menu'})
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
         const buttonExportCSV = screen.getByRole('button', {name: 'Export to CSV'})
@@ -116,7 +116,7 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
                 </ReduxProvider>,
             ),
         )
-        const buttonElement = screen.getByRole('button', {name: 'View menu'})
+        const buttonElement = screen.getByRole('button', {name: 'View header menu'})
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
         const buttonExportBoardArchive = screen.getByRole('button', {name: 'Export board archive'})

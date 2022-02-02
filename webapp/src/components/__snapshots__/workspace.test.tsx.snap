@@ -384,7 +384,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               value="view title"
             />
             <div
-              aria-label="menuwrapper"
+              aria-label="View menu"
               class="MenuWrapper"
               role="button"
             >
@@ -466,7 +466,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="ModalWrapper"
             >
               <div
-                aria-label="View menu"
+                aria-label="View header menu"
                 class="MenuWrapper"
                 role="button"
               >
@@ -935,7 +935,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               value="view title"
             />
             <div
-              aria-label="menuwrapper"
+              aria-label="View menu"
               class="MenuWrapper"
               role="button"
             >
@@ -1544,7 +1544,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
               value="view title"
             />
             <div
-              aria-label="menuwrapper"
+              aria-label="View menu"
               class="MenuWrapper"
               role="button"
             >
@@ -1626,7 +1626,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="ModalWrapper"
             >
               <div
-                aria-label="View menu"
+                aria-label="View header menu"
                 class="MenuWrapper"
                 role="button"
               >
@@ -2095,7 +2095,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               value="view title"
             />
             <div
-              aria-label="menuwrapper"
+              aria-label="View menu"
               class="MenuWrapper"
               role="button"
             >
