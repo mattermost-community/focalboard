@@ -14,7 +14,7 @@ This changelog summarizes updates to our open source project. You can also find 
 * GIF support in card descriptions. Thanks @asaadmahmood!
 * Add links to linode. Thanks @ChaseKnowlden!
 * Add `chown` for nobody in the docker run example. Thanks @K3UL!
-* Fixed mac m1 chip build. Thanks @jpaldeano!
+* Fixed Mac M1 chip build. Thanks @jpaldeano!
 * Removed link to deleted css file. Thanks @kamre!
 * Fixed typo in config.toml. Thanks @krmh04!
 
