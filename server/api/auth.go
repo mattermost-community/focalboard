@@ -433,9 +433,9 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 
 			now := utils.GetMillis()
 			session := &model.Session{
-				ID:          SingleUser,
+				ID:          model.SingleUser,
 				Token:       token,
-				UserID:      SingleUser,
+				UserID:      model.SingleUser,
 				AuthService: a.authService,
 				Props:       map[string]interface{}{},
 				CreateAt:    now,

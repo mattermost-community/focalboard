@@ -6,7 +6,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
     class="ModalWrapper"
   >
     <div
-      aria-label="View menu"
+      aria-label="View header menu"
       class="MenuWrapper"
       role="button"
     >
@@ -116,7 +116,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
     class="ModalWrapper"
   >
     <div
-      aria-label="View menu"
+      aria-label="View header menu"
       class="MenuWrapper"
       role="button"
     >
@@ -226,7 +226,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu with Share Boar
     class="ModalWrapper"
   >
     <div
-      aria-label="View menu"
+      aria-label="View header menu"
       class="MenuWrapper"
       role="button"
     >
@@ -336,7 +336,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu without Share B
     class="ModalWrapper"
   >
     <div
-      aria-label="View menu"
+      aria-label="View header menu"
       class="MenuWrapper"
       role="button"
     >

@@ -145,6 +145,10 @@ func (a *App) GetAllBlocks(c store.Container) ([]model.Block, error) {
 	return a.store.GetAllBlocks(c)
 }
 
+func (a *App) GetBlockByID(c store.Container, blockID string) (*model.Block, error) {
+	return a.store.GetBlock(c, blockID)
+}
+
 func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
 	block, err := a.store.GetBlock(c, blockID)
 	if err != nil {

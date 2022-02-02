@@ -108,7 +108,7 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
 
     return (
         <ModalWrapper>
-            <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
+            <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-header-menu', defaultMessage: 'View header menu'})}>
                 <IconButton icon={<OptionsIcon/>}/>
                 <Menu>
                     <Menu.Text

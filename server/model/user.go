@@ -5,6 +5,10 @@ import (
 	"io"
 )
 
+const (
+	SingleUser = "single-user"
+)
+
 // User is a user
 // swagger:model
 type User struct {

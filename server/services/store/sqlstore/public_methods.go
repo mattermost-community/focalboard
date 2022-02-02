@@ -14,6 +14,7 @@ package sqlstore
 
 import (
 	"context"
+	"io"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -245,6 +246,11 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 
 func (s *SQLStore) HasWorkspaceAccess(userID string, workspaceID string) (bool, error) {
 	return s.hasWorkspaceAccess(s.db, userID, workspaceID)
+
+}
+
+func (s *SQLStore) ImportArchive(container store.Container, r io.Reader, userID string, mod model.BlockModifier) error {
+	return s.importArchive(s.db, container, r, userID, mod)
 
 }
 
