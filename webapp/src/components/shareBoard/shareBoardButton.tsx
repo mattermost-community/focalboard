@@ -6,29 +6,41 @@ import {FormattedMessage} from 'react-intl'
 
 import Button from '../../widgets/buttons/button'
 import DeleteIcon from '../../widgets/icons/delete'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import './shareBoardButton.scss'
 
 import ShareBoardDialog from './shareBoard'
 
-const ShareBoardButton = React.memo(() => {
+type Props = {
+    boardId: string
+}
+const ShareBoardButton = React.memo((props: Props) => {
     const [showShareDialog, setShowShareDialog] = useState(false)
 
     return (
-        <div className='button-head'>
+        <div className='ShareBoardButton'>
             <Button
                 title='Share board'
                 size='medium'
                 emphasis='tertiary'
                 icon={<DeleteIcon/>}
-                onClick={() => setShowShareDialog(!showShareDialog)}
+                onClick={() => {
+                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardOpenModal, {board: props.boardId, shareBoardEnabled: isOn})
+                    setShowShareDialog(!showShareDialog)
+                }}
             >
                 <FormattedMessage
                     id='CenterPanel.Share'
                     defaultMessage='Share'
                 />
             </Button>
-            {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>}
+            {showShareDialog &&
+                <ShareBoardDialog
+                    onClose={() => setShowShareDialog(false)}
+                    boardId={props.boardId}
+                />
+            }
         </div>
     )
 })

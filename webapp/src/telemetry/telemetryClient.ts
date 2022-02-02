@@ -29,6 +29,8 @@ export const TelemetryActions = {
     DeleteCard: 'deleteCard',
     AddTemplateFromCard: 'addTemplateFromCard',
     ViewSharedBoard: 'viewSharedBoard',
+    ShareBoardOpenModal: 'shareBoard_openModal',
+    ShareLinkPublicCopy: 'shareLinkPublic_copy',
 }
 
 interface IEventProps {

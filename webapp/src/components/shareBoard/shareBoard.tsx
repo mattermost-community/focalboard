@@ -1,33 +1,81 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState} from 'react'
-import {FormattedMessage} from 'react-intl'
+import React, {useState, useEffect} from 'react'
+import {useIntl, FormattedMessage} from 'react-intl'
+import {generatePath, useRouteMatch} from 'react-router'
 
-import {Utils} from '../../utils'
+import {Utils, IDType} from '../../utils'
+import {sendFlashMessage} from '../../components/flashMessages'
 
-// import {useAppSelector} from '../../store/hooks'
-// import {IUser} from '../../user'
-// import {getWorkspaceUsersList} from '../../store/users'
-// import {getClientConfig} from '../../store/clientConfig'
+import {ISharing} from '../../blocks/sharing'
 
-import './shareBoard.scss'
+import client from '../../octoClient'
+
 import RootPortal from '../rootPortal'
 import Dialog from '../dialog'
 import Switch from '../../widgets/switch'
 import Button from '../../widgets/buttons/button'
 
 // import SearchIcon from '../../widgets/icons/search'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
+import './shareBoard.scss'
 
 type Props = {
+    boardId: string
     onClose: () => void
 }
 
-const ShareBoardDialog = (props: Props): JSX.Element => {
+export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopied, setWasCopied] = useState(false)
-    const [publicBoard, setPublicBoard] = useState(false)
+    const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
+
+    const intl = useIntl()
+    const match = useRouteMatch<{workspaceId?: string, boardId: string, viewId: string}>()
+
+    const loadData = async () => {
+        const newSharing = await client.getSharing(props.boardId)
+        setSharing(newSharing)
+        setWasCopied(false)
+    }
+
+    const createSharingInfo = () => {
+        const newSharing: ISharing = {
+            id: props.boardId,
+            enabled: true,
+            token: Utils.createGuid(IDType.Token),
+        }
+        return newSharing
+    }
+
+    const onShareChanged = async (isOn: boolean) => {
+        const newSharing: ISharing = sharing || createSharingInfo()
+        newSharing.id = props.boardId
+        newSharing.enabled = isOn
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: props.boardId, shareBoardEnabled: isOn})
+        await client.setSharing(newSharing)
+        await loadData()
+    }
+
+    // const onRegenerateToken = async () => {
+    //     // eslint-disable-next-line no-alert
+    //     const accept = window.confirm(intl.formatMessage({id: 'ShareBoard.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
+    //     if (accept) {
+    //         const newSharing: ISharing = sharing || createSharingInfo()
+    //         newSharing.token = Utils.createGuid(IDType.Token)
+    //         await client.setSharing(newSharing)
+    //         await loadData()
+
+    //         const description = intl.formatMessage({id: 'ShareBoard.tokenRegenrated', defaultMessage: 'Token regenerated'})
+    //         sendFlashMessage({content: description, severity: 'low'})
+    //     }
+    // }
+
+    useEffect(() => {
+        loadData()
+    }, [])
 
     // // list of all users
     // const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
@@ -40,93 +88,33 @@ const ShareBoardDialog = (props: Props): JSX.Element => {
     // // show external, "Publish" link only if this variable is true"
     // const externalSharingEnabled = clientConfig.enablePublicSharedBoards
 
-    // TODO update this later to use actual token
-    const readToken = 'hardcoded-token'
+    const isSharing = Boolean(sharing && sharing.id === props.boardId && sharing.enabled)
+    const readToken = (sharing && isSharing) ? sharing.token : ''
     const shareUrl = new URL(window.location.toString())
     shareUrl.searchParams.set('r', readToken)
+
+    if (match.params.workspaceId) {
+        const newPath = generatePath('/workspace/:workspaceId/shared/:boardId/:viewId', {
+            boardId: match.params.boardId,
+            viewId: match.params.viewId,
+            workspaceId: match.params.workspaceId,
+        })
+        shareUrl.pathname = Utils.buildURL(newPath)
+    } else {
+        const newPath = generatePath('/shared/:boardId/:viewId', {
+            boardId: match.params.boardId,
+            viewId: match.params.viewId,
+        })
+        shareUrl.pathname = Utils.buildURL(newPath)
+    }
 
     return (
         <RootPortal>
             <Dialog
-                className='ShareBoardDialog'
-                title='Share Board'
                 onClose={props.onClose}
+                className='ShareBoardDialog'
+                title={intl.formatMessage({id: 'ShareBoard.Title', defaultMessage: 'Share Board'})}
             >
-                {/* Todo: Make an autocomplete
-                <div className='share-input__container'>
-                    <div className='share-input'>
-                        <SearchIcon/>
-                        <input
-                            type='text'
-                            placeholder='Add people or groups'
-                        />
-                    </div>
-                </div>
-
-                <div className='user-items'>
-                    <div className='user-item'>
-                        <div className='user-item__content'>
-                            <CompassIcon
-                                icon='mattermost'
-                                className='user-item__img'
-                            />
-                            <div className='ml-3'><strong>{'Everyone at Contributors Team'}</strong></div>
-                        </div>
-                        <div>
-                            <button className='user-item__button'>
-                                {'Editor'}
-                                <CompassIcon
-                                    icon='chevron-down'
-                                    className='CompassIcon'
-                                />
-                            </button>
-                        </div>
-                    </div>
-                    <div className='user-item'>
-                        <div className='user-item__content'>
-                            <img
-                                src='https://randomuser.me/api/portraits/men/75.jpg'
-                                className='user-item__img'
-                            />
-                            <div className='ml-3'>
-                                <strong>{'Leonard Riley'}</strong>
-                                <strong className='ml-2 text-light'>{'@leonard.riley'}</strong>
-                                <strong className='ml-2 text-light'>{'(You)'}</strong>
-                            </div>
-                        </div>
-                        <div>
-                            <button className='user-item__button'>
-                                {'Admin'}
-                                <CompassIcon
-                                    icon='chevron-down'
-                                    className='CompassIcon'
-                                />
-                            </button>
-                        </div>
-                    </div>
-                    <div className='user-item'>
-                        <div className='user-item__content'>
-                            <img
-                                src='https://randomuser.me/api/portraits/men/61.jpg'
-                                className='user-item__img'
-                            />
-                            <div className='ml-3'>
-                                <strong>{'Ritthy Hoffman'}</strong>
-                                <strong className='ml-2 text-light'>{'@ritthy.hoffman'}</strong>
-                            </div>
-                        </div>
-                        <div>
-                            <button className='user-item__button'>
-                                {'Editor'}
-                                <CompassIcon
-                                    icon='chevron-down'
-                                    className='CompassIcon'
-                                />
-                            </button>
-                        </div>
-                    </div>
-                </div> */}
-
                 <div className='tabs-modal'>
                     <div>
                         <div className='d-flex justify-content-between'>
@@ -136,26 +124,25 @@ const ShareBoardDialog = (props: Props): JSX.Element => {
                             </div>
                             <div>
                                 <Switch
-                                    isOn={publicBoard}
+                                    isOn={isSharing}
                                     size='medium'
-                                    onChanged={() => {
-                                        setPublicBoard(!publicBoard)
-                                    }}
+                                    onChanged={onShareChanged}
                                 />
                             </div>
                         </div>
                     </div>
-                    {publicBoard &&
+                    {isSharing &&
                         (<div className='d-flex tabs-inputs'>
                             <input
                                 type='text'
                                 className='mr-3'
-                                value='https://focalboard-community.octo.mattermost'
+                                value={shareUrl.toString()}
                             />
                             <Button
                                 emphasis='secondary'
                                 size='medium'
                                 onClick={() => {
+                                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: props.boardId})
                                     Utils.copyTextToClipboard(shareUrl.toString())
                                     setWasCopied(true)
                                 }}
@@ -182,5 +169,3 @@ const ShareBoardDialog = (props: Props): JSX.Element => {
         </RootPortal>
     )
 }
-
-export default ShareBoardDialog
