@@ -29,6 +29,8 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	defer ctrl.Finish()
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
+	store.EXPECT().GetDefaultTemplateBlocks().AnyTimes()
+	store.EXPECT().RemoveDefaultTemplates(gomock.Any()).AnyTimes()
 	auth := auth.New(&cfg, store)
 	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
 	sessionToken := "TESTTOKEN"
