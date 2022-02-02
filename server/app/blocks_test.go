@@ -126,7 +126,11 @@ func TestUndeleteBlock(t *testing.T) {
 		block := model.Block{
 			ID: "block-id",
 		}
-		th.Store.EXPECT().GetBlockHistory(gomock.Eq(container), gomock.Eq("block-id"), gomock.Eq(model.QueryBlockHistoryOptions{Limit: 1, Descending: true})).Return([]model.Block{block}, nil)
+		th.Store.EXPECT().GetBlockHistory(
+			gomock.Eq(container),
+			gomock.Eq("block-id"),
+			gomock.Eq(model.QueryBlockHistoryOptions{Limit: 1, Descending: true}),
+		).Return([]model.Block{block}, nil)
 		th.Store.EXPECT().UndeleteBlock(gomock.Eq(container), gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(nil)
 		th.Store.EXPECT().GetBlock(gomock.Eq(container), gomock.Eq("block-id")).Return(&block, nil)
 		err := th.App.UndeleteBlock(container, "block-id", "user-id-1")
@@ -137,7 +141,11 @@ func TestUndeleteBlock(t *testing.T) {
 		block := model.Block{
 			ID: "block-id",
 		}
-		th.Store.EXPECT().GetBlockHistory(gomock.Eq(container), gomock.Eq("block-id"), gomock.Eq(model.QueryBlockHistoryOptions{Limit: 1, Descending: true})).Return([]model.Block{block}, nil)
+		th.Store.EXPECT().GetBlockHistory(
+			gomock.Eq(container),
+			gomock.Eq("block-id"),
+			gomock.Eq(model.QueryBlockHistoryOptions{Limit: 1, Descending: true}),
+		).Return([]model.Block{block}, nil)
 		th.Store.EXPECT().UndeleteBlock(gomock.Eq(container), gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(blockError{"error"})
 		th.Store.EXPECT().GetBlock(gomock.Eq(container), gomock.Eq("block-id")).Return(&block, nil)
 		err := th.App.UndeleteBlock(container, "block-id", "user-id-1")
