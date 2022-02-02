@@ -31,7 +31,7 @@
             &:not(.subitem) {
                 &::before {
                     content: '';
-                    background: var(--sidebar-text-active-border);
+                    background: rgb(var(--sidebar-text-active-border-rgb));
                     width: 2px;
                     height: 100%;
                     position: absolute;
@@ -133,44 +133,18 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        display: flex;
+        align-items: baseline;
 
-        &.category-title {
-            text-transform: uppercase;
-            font-size: 12px;
-        }
-    }
-
-    .octo-sidebar-icon {
-        font-size: 18px;
-        width: 24px;
-        height: 24px;
-        max-width: 24px;
-        min-width: 24px;
-    }
-
-    .SubMenu.Menu.noselect.bottom {
-        left: 0;
-        top: 40px;
-        width: 98%;
-        max-height: 500px;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-
-    .Menu {
-        border: solid 1px rgba(var(--center-channel-color-rgb), 0.16);
-
-        .menu-contents {
-            min-width: 230px;
-            max-width: 230px;
+        .octo-icon {
+            margin-right: 6px;
         }
 
-        .MenuOption {
-            .menu-name {
-                text-overflow: ellipsis;
-                overflow: hidden;
-                display: inline-block;
-            }
+        .octo-sidebar-name {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     }
 }

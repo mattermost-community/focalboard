@@ -9,7 +9,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -219,7 +219,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             <div
               class="CreatedAt octo-propertyvalue readonly"
             >
-              June 15, 4:22 PM
+              June 15, 2021, 4:22 PM
             </div>
           </div>
         </div>
@@ -307,7 +307,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             <div
               class="CreatedAt octo-propertyvalue readonly"
             >
-              June 15, 4:22 PM
+              June 15, 2021, 4:22 PM
             </div>
           </div>
         </div>
@@ -397,7 +397,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -785,7 +785,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -995,7 +995,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             <div
               class="LastModifiedAt octo-propertyvalue readonly"
             >
-              June 20, 12:22 PM
+              June 20, 2021, 12:22 PM
             </div>
           </div>
         </div>
@@ -1083,7 +1083,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             <div
               class="LastModifiedAt octo-propertyvalue readonly"
             >
-              June 22, 11:23 AM
+              June 22, 2021, 11:23 AM
             </div>
           </div>
         </div>
@@ -1173,7 +1173,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -1561,7 +1561,7 @@ exports[`components/table/Table should match snapshot 1`] = `
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -1813,7 +1813,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div
@@ -1928,7 +1928,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
               style="width: 100px;"
             >
               <button
-                class="Button IconButton"
+                class="IconButton"
                 type="button"
               >
                 <svg
@@ -1963,7 +1963,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
               role="button"
             >
               <button
-                class="Button IconButton"
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1972,7 +1972,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
               </button>
             </div>
             <button
-              class="Button IconButton"
+              class="IconButton"
               type="button"
             >
               <i
@@ -2047,7 +2047,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
       class="octo-table-body"
     >
       <div
-        class="octo-table-header"
+        class="octo-table-header TableHeaders"
         id="mainBoardHeader"
       >
         <div

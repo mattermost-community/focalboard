@@ -41,6 +41,25 @@ export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
 export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
 export const ACTION_UPDATE_CATEGORY = 'UPDATE_CATEGORY'
 export const ACTION_UPDATE_BLOCK_CATEGORY = 'UPDATE_BLOCK_CATEGORY'
+export const ACTION_UPDATE_SUBSCRIPTION = 'UPDATE_SUBSCRIPTION'
+
+type WSSubscriptionMsg = {
+    action?: string
+    subscription?: Subscription
+    error?: string
+}
+
+export interface Subscription {
+    blockId: string
+    teamId: string
+    subscriberId: string
+    blockType: string
+    subscriberType: string
+    notifiedAt?: number
+    createAt?: number
+    deleteAt?: number
+}
+
 
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
@@ -57,6 +76,7 @@ type OnReconnectHandler = (client: WSClient) => void
 type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close') => void
 type OnErrorHandler = (client: WSClient, e: Event) => void
 type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => void
+type FollowChangeHandler = (client: WSClient, subscription: Subscription) => void
 
 export type ChangeHandlerType = 'block' | 'category' | 'blockCategories' | 'board' | 'boardMembers'
 
@@ -92,6 +112,8 @@ class WSClient {
     onChange: ChangeHandlers = {Block: [], Category: [], BlockCategory: [], Board: [], BoardMember: []}
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
+    onFollowBlock: FollowChangeHandler = () => {}
+    onUnfollowBlock: FollowChangeHandler = () => {}
     private notificationDelay = 100
     private reopenDelay = 3000
     private updatedData: UpdatedData = {Blocks: [], Categories: [], BlockCategories: [], Boards: [], BoardMembers: []}
@@ -305,10 +327,10 @@ class WSClient {
 
         ws.onopen = () => {
             Utils.log('WSClient webSocket opened.')
+            this.state = 'open'
             for (const handler of this.onStateChange) {
                 handler(this, 'open')
             }
-            this.state = 'open'
         }
 
         ws.onerror = (e) => {
@@ -394,10 +416,29 @@ class WSClient {
         }
     }
 
+    setOnFollowBlock(handler: FollowChangeHandler): void {
+        this.onFollowBlock = handler
+    }
+
+    setOnUnfollowBlock(handler: FollowChangeHandler): void {
+        this.onUnfollowBlock = handler
+    }
+
     updateClientConfigHandler(config: ClientConfig): void {
         for (const handler of this.onConfigChange) {
             handler(this, config)
         }
+    }
+
+    updateSubscriptionHandler(message: WSSubscriptionMsg): void {
+        Utils.log('updateSubscriptionHandler: ' + message.action + '; blockId=' + message.subscription?.blockId)
+
+        if (!message.subscription) {
+            return
+        }
+
+        const handler = message.subscription.deleteAt ? this.onUnfollowBlock : this.onFollowBlock
+        handler(this, message.subscription)
     }
 
     setOnAppVersionChangeHandler(fn: (versionHasChanged: boolean) => void): void {
@@ -435,7 +476,7 @@ class WSClient {
         }
     }
 
-    authenticate(workspaceId: string, token: string): void {
+    authenticate(teamId: string, token: string): void {
         if (!this.hasConn()) {
             Utils.assertFailure('WSClient.addBlocks: ws is not open')
             return
@@ -447,7 +488,7 @@ class WSClient {
         const command = {
             action: ACTION_AUTH,
             token,
-            workspaceId,
+            teamId,
         }
 
         this.sendCommand(command)

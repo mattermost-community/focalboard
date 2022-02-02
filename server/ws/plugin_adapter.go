@@ -26,6 +26,10 @@ type PluginAdapterInterface interface {
 	OnWebSocketConnect(webConnID, userID string)
 	OnWebSocketDisconnect(webConnID, userID string)
 	WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest)
+	BroadcastConfigChange(clientConfig model.ClientConfig)
+	BroadcastBlockChange(teamID string, block model.Block)
+	BroadcastBlockDelete(teamID, blockID, parentID string)
+	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
 	HandleClusterEvent(ev mmModel.PluginClusterEvent)
 }
 
@@ -312,7 +316,7 @@ func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error
 func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
 	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
-		pa.api.LogError("received a message for an unregistered webconn",
+		pa.api.LogDebug("received a message for an unregistered webconn",
 			"webConnID", webConnID,
 			"userID", userID,
 			"action", req.Action,
@@ -571,4 +575,19 @@ func (pa *PluginAdapter) BroadcastMemberDelete(teamID, boardID, userID string) {
 	// member deletion message, the deleted member will not be one of
 	// them, so we need to ensure they receive the message
 	pa.sendBoardMessage(teamID, boardID, utils.StructToMap(message), userID)
+}
+
+func (pa *PluginAdapter) BroadcastSubscriptionChange(teamID string, subscription *model.Subscription) {
+	pa.api.LogInfo("BroadcastingSubscriptionChange",
+		"TeamID", teamID,
+		"blockID", subscription.BlockID,
+		"subscriberID", subscription.SubscriberID,
+	)
+
+	message := UpdateSubscription{
+		Action:       websocketActionUpdateSubscription,
+		Subscription: subscription,
+	}
+
+	pa.sendTeamMessage(websocketActionUpdateSubscription, teamID, utils.StructToMap(message))
 }

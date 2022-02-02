@@ -7,6 +7,7 @@ import (
 	"io"
 
 	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 var NoBoardsInBoardsAndBlocksErr = errors.New("at least one board is required")
@@ -124,7 +125,7 @@ func (dbab *PatchBoardsAndBlocks) IsValid() error {
 	return nil
 }
 
-func GenerateBoardsAndBlocksIDs(bab *BoardsAndBlocks) (*BoardsAndBlocks, error) {
+func GenerateBoardsAndBlocksIDs(bab *BoardsAndBlocks, logger *mlog.Logger) (*BoardsAndBlocks, error) {
 	if err := bab.IsValid(); err != nil {
 		return nil, err
 	}
@@ -149,7 +150,7 @@ func GenerateBoardsAndBlocksIDs(bab *BoardsAndBlocks) (*BoardsAndBlocks, error) 
 
 	newBab := &BoardsAndBlocks{
 		Boards: boards,
-		Blocks: GenerateBlockIDs(blocks),
+		Blocks: GenerateBlockIDs(blocks, logger),
 	}
 
 	return newBab, nil

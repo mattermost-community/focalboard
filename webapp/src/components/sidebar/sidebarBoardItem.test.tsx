@@ -50,6 +50,11 @@ describe('components/sidebarBoardItem', () => {
                 id: 'user_id_1',
             },
         },
+        teams: {
+            current: {
+                id: 'team-id',
+            },
+        },
     }
 
     test('sidebar call hideSidebar', () => {

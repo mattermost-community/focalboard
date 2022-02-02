@@ -46,25 +46,49 @@ func TestSharing(t *testing.T) {
 		require.Nil(t, sharing)
 	})
 
-	t.Run("POST sharing", func(t *testing.T) {
-		sharing := &model.Sharing{
+	t.Run("POST sharing, config = false", func(t *testing.T) {
+		sharing := model.Sharing{
 			ID:       boardID,
 			Token:    token,
 			Enabled:  true,
 			UpdateAt: 1,
 		}
 
-		success, resp := th.Client.PostSharing(sharing)
-		require.True(t, success)
-		require.NoError(t, resp.Error)
+		// it will fail with default config
+		success, resp := th.Client.PostSharing(&sharing)
+		require.False(t, success)
+		require.Error(t, resp.Error)
+
+		t.Run("GET sharing", func(t *testing.T) {
+			sharing, resp := th.Client.GetSharing(boardID)
+			// Expect no error, but no Id returned
+			require.NoError(t, resp.Error)
+			require.NotNil(t, sharing)
+			require.Equal(t, "", sharing.ID)
+		})
 	})
 
-	t.Run("GET sharing", func(t *testing.T) {
-		sharing, resp := th.Client.GetSharing(boardID)
+	t.Run("POST sharing, config = true", func(t *testing.T) {
+		th.Server.Config().EnablePublicSharedBoards = true
+		sharing := model.Sharing{
+			ID:       boardID,
+			Token:    token,
+			Enabled:  true,
+			UpdateAt: 1,
+		}
+
+		// it will succeed with updated config
+		success, resp := th.Client.PostSharing(&sharing)
+		require.True(t, success)
 		require.NoError(t, resp.Error)
-		require.NotNil(t, sharing)
-		require.Equal(t, sharing.ID, boardID)
-		require.True(t, sharing.Enabled)
-		require.Equal(t, sharing.Token, token)
+
+		t.Run("GET sharing", func(t *testing.T) {
+			sharing, resp := th.Client.GetSharing(boardID)
+			require.NoError(t, resp.Error)
+			require.NotNil(t, sharing)
+			require.Equal(t, sharing.ID, boardID)
+			require.True(t, sharing.Enabled)
+			require.Equal(t, sharing.Token, token)
+		})
 	})
 }

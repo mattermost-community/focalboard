@@ -18,6 +18,7 @@ const (
 	websocketActionUpdateConfig        = "UPDATE_CLIENT_CONFIG"
 	websocketActionUpdateCategory      = "UPDATE_CATEGORY"
 	websocketActionUpdateCategoryBlock = "UPDATE_BLOCK_CATEGORY"
+	websocketActionUpdateSubscription  = "UPDATE_SUBSCRIPTION"
 )
 
 type Store interface {
@@ -35,4 +36,5 @@ type Adapter interface {
 	BroadcastConfigChange(clientConfig model.ClientConfig)
 	BroadcastCategoryChange(category model.Category)
 	BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData)
+	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
 }

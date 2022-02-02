@@ -1,11 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createAsyncThunk} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
-import {UserWorkspace} from '../user'
-import {Utils} from '../utils'
+import {Subscription} from '../wsclient'
+
+import {RootState} from './index'
 
 export const initialLoad = createAsyncThunk(
     'initialLoad',
@@ -53,4 +54,11 @@ export const loadBoardData = createAsyncThunk(
             blocks,
         }
     },
+)
+
+export const getUserBlockSubscriptions = (state: RootState): Array<Subscription> => state.users.blockSubscriptions
+
+export const getUserBlockSubscriptionList = createSelector(
+    getUserBlockSubscriptions,
+    (subscriptions) => subscriptions,
 )

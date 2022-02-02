@@ -56,7 +56,7 @@ contentRegistry.registerContentType({
                     block.fields.fileId = fileId || ''
                     resolve(block)
                 },
-                '.jpg,.jpeg,.png')
+                '.jpg,.jpeg,.png,.gif')
             },
         )
 

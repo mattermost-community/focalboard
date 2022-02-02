@@ -752,3 +752,7 @@ func (ws *Server) BroadcastMemberDelete(teamID, boardID, userID string) {
 		}
 	}
 }
+
+func (ws *Server) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
+	// not implemented for standalone server.
+}

@@ -2,9 +2,11 @@ package app
 
 import (
 	"errors"
+	"path/filepath"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -35,7 +37,7 @@ func (a *App) GetBlocksWithRootID(boardID, rootID string) ([]model.Block, error)
 	return a.store.GetBlocksWithRootID(boardID, rootID)
 }
 
-func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, userID string) error {
+func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
 	oldBlock, err := a.store.GetBlock(blockID)
 	if err != nil {
 		return nil
@@ -46,7 +48,7 @@ func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, userID st
 		return err
 	}
 
-	err = a.store.PatchBlock(blockID, blockPatch, userID)
+	err = a.store.PatchBlock(blockID, blockPatch, modifiedByID)
 	if err != nil {
 		return err
 	}
@@ -64,30 +66,61 @@ func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, userID st
 		a.webhook.NotifyUpdate(*block)
 
 		// send notifications
-		a.notifyBlockChanged(notify.Update, block, oldBlock, userID)
+		a.notifyBlockChanged(notify.Update, block, oldBlock, modifiedByID)
 	}()
 	return nil
 }
 
-func (a *App) InsertBlock(block model.Block, userID string) error {
+func (a *App) PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, modifiedByID string) error {
+	oldBlocks := make([]model.Block, 0, len(blockPatches.BlockIDs))
+	for _, blockID := range blockPatches.BlockIDs {
+		oldBlock, err := a.store.GetBlock(blockID)
+		if err != nil {
+			return nil
+		}
+		oldBlocks = append(oldBlocks, *oldBlock)
+	}
+
+	err := a.store.PatchBlocks(teamID, blockPatches, modifiedByID)
+	if err != nil {
+		return err
+	}
+
+	a.metrics.IncrementBlocksPatched(len(oldBlocks))
+	for i, blockID := range blockPatches.BlockIDs {
+		newBlock, err := a.store.GetBlock(blockID)
+		if err != nil {
+			return nil
+		}
+		a.wsAdapter.BroadcastBlockChange(teamID, *newBlock)
+		go func(currentIndex int) {
+			a.webhook.NotifyUpdate(*newBlock)
+			a.notifyBlockChanged(notify.Update, newBlock, &oldBlocks[currentIndex], modifiedByID)
+		}(i)
+	}
+
+	return nil
+}
+
+func (a *App) InsertBlock(block model.Block, modifiedByID string) error {
 	board, bErr := a.store.GetBoard(block.BoardID)
 	if bErr != nil {
 		return bErr
 	}
 
-	err := a.store.InsertBlock(&block, userID)
+	err := a.store.InsertBlock(&block, modifiedByID)
 	if err == nil {
 		go func() {
 			a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
 			a.metrics.IncrementBlocksInserted(1)
 			a.webhook.NotifyUpdate(block)
-			a.notifyBlockChanged(notify.Add, &block, nil, userID)
+			a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
 		}()
 	}
 	return err
 }
 
-func (a *App) InsertBlocks(blocks []model.Block, userID string, allowNotifications bool) ([]model.Block, error) {
+func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotifications bool) ([]model.Block, error) {
 	if len(blocks) == 0 {
 		return []model.Block{}, nil
 	}
@@ -107,7 +140,8 @@ func (a *App) InsertBlocks(blocks []model.Block, userID string, allowNotificatio
 
 	needsNotify := make([]model.Block, 0, len(blocks))
 	for i := range blocks {
-		if err := a.store.InsertBlock(&blocks[i], userID); err != nil {
+		err := a.store.InsertBlock(&blocks[i], modifiedByID)
+		if err != nil {
 			return nil, err
 		}
 		needsNotify = append(needsNotify, blocks[i])
@@ -121,7 +155,7 @@ func (a *App) InsertBlocks(blocks []model.Block, userID string, allowNotificatio
 			block := b
 			a.webhook.NotifyUpdate(block)
 			if allowNotifications {
-				a.notifyBlockChanged(notify.Add, &block, nil, userID)
+				a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
 			}
 		}
 	}()
@@ -129,16 +163,20 @@ func (a *App) InsertBlocks(blocks []model.Block, userID string, allowNotificatio
 	return blocks, nil
 }
 
-func (a *App) GetSubTree(boardID, blockID string, levels int) ([]model.Block, error) {
+func (a *App) GetSubTree(boardID, blockID string, levels int, opts model.QuerySubtreeOptions) ([]model.Block, error) {
 	// Only 2 or 3 levels are supported for now
 	if levels >= 3 {
-		return a.store.GetSubTree3(boardID, blockID)
+		return a.store.GetSubTree3(boardID, blockID, opts)
 	}
 
-	return a.store.GetSubTree2(boardID, blockID)
+	return a.store.GetSubTree2(boardID, blockID, opts)
 }
 
-func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
+func (a *App) GetBlockByID(blockID string) (*model.Block, error) {
+	return a.store.GetBlock(blockID)
+}
+
+func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
 	block, err := a.store.GetBlock(blockID)
 	if err != nil {
 		return err
@@ -149,15 +187,34 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 		return err
 	}
 
+	if block == nil {
+		// deleting non-existing block not considered an error
+		return nil
+	}
+
 	err = a.store.DeleteBlock(blockID, modifiedBy)
 	if err != nil {
 		return err
 	}
 
+	if block.Type == model.TypeImage {
+		fileName, fileIDExists := block.Fields["fileId"]
+		if fileName, fileIDIsString := fileName.(string); fileIDExists && fileIDIsString {
+			filePath := filepath.Join(block.WorkspaceID, block.RootID, fileName)
+			err = a.filesBackend.RemoveFile(filePath)
+
+			if err != nil {
+				a.logger.Error("Error deleting image file",
+					mlog.String("FilePath", filePath),
+					mlog.Err(err))
+			}
+		}
+	}
+
 	go func() {
-		a.wsAdapter.BroadcastBlockDelete(board.TeamID, blockID, block.BoardID)
+		a.wsAdapter.BroadcastBlockDelete(board.TeamID, blockID, block.ParentID)
 		a.metrics.IncrementBlocksDeleted(1)
-		a.notifyBlockChanged(notify.Update, block, block, modifiedBy)
+		a.notifyBlockChanged(notify.Delete, block, block, modifiedBy)
 	}()
 	return nil
 }
@@ -170,7 +227,7 @@ func (a *App) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 	return a.store.GetBlocksForBoard(boardID)
 }
 
-func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBlock *model.Block, userID string) {
+func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBlock *model.Block, modifiedByID string) {
 	if a.notifications == nil {
 		return
 	}
@@ -189,7 +246,7 @@ func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBl
 		Card:         card,
 		BlockChanged: block,
 		BlockOld:     oldBlock,
-		UserID:       userID,
+		ModifiedByID: modifiedByID,
 	}
 	a.notifications.BlockChanged(evt)
 }

@@ -6,6 +6,13 @@ import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@red
 import {default as client} from '../octoClient'
 import {IUser} from '../user'
 
+import {Utils} from '../utils'
+
+import {Subscription} from '../wsclient'
+
+// TODO: change this whene the initial load is complete
+// import {initialLoad} from './initialLoad'
+
 import {RootState} from './index'
 
 export const fetchMe = createAsyncThunk(
@@ -17,11 +24,25 @@ type UsersStatus = {
     me: IUser|null
     boardUsers: {[key: string]: IUser}
     loggedIn: boolean|null
+    blockSubscriptions: Array<Subscription>
 }
+
+export const fetchUserBlockSubscriptions = createAsyncThunk(
+    'user/blockSubscriptions',
+    async (userId: string) => (Utils.isFocalboardPlugin() ? client.getUserBlockSubscriptions(userId) : []),
+)
+
+const initialState = {
+    me: null,
+    boardUsers: {},
+    loggedIn: null,
+    userWorkspaces: [],
+    blockSubscriptions: [],
+} as UsersStatus
 
 const usersSlice = createSlice({
     name: 'users',
-    initialState: {me: null, boardUsers: {}, loggedIn: null, userWorkspaces: []} as UsersStatus,
+    initialState,
     reducers: {
         setMe: (state, action: PayloadAction<IUser>) => {
             state.me = action.payload
@@ -36,7 +57,14 @@ const usersSlice = createSlice({
             action.payload.forEach((user: IUser) => {
                 state.boardUsers[user.id] = user
             })
-        }
+        },
+        followBlock: (state, action: PayloadAction<Subscription>) => {
+            state.blockSubscriptions.push(action.payload)
+        },
+        unfollowBlock: (state, action: PayloadAction<Subscription>) => {
+            const oldSubscriptions = state.blockSubscriptions
+            state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload.blockId)
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
@@ -47,10 +75,22 @@ const usersSlice = createSlice({
             state.me = null
             state.loggedIn = false
         })
+
+        // TODO: change this when the initial load is complete
+        // builder.addCase(initialLoad.fulfilled, (state, action) => {
+        //     state.boardUsers = action.payload.boardUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
+        //         acc[user.id] = user
+        //         return acc
+        //     }, {})
+        // })
+
+        builder.addCase(fetchUserBlockSubscriptions.fulfilled, (state, action) => {
+            state.blockSubscriptions = action.payload
+        })
     },
 })
 
-export const {setMe, setBoardUsers, addBoardUsers} = usersSlice.actions
+export const {setMe, setBoardUsers, addBoardUsers, followBlock, unfollowBlock} = usersSlice.actions
 export const {reducer} = usersSlice
 
 export const getMe = (state: RootState): IUser|null => state.users.me

@@ -16,13 +16,31 @@ import {wrapIntl} from '../../testUtils'
 
 import WelcomePage from './welcomePage'
 
+const w = (window as any)
+const oldBaseURL = w.baseURL
+
 beforeEach(() => {
     UserSettings.welcomePageViewed = null
+})
+
+afterEach(() => {
+    w.baseURL = oldBaseURL
 })
 
 describe('pages/welcome', () => {
     const history = createMemoryHistory()
     test('Welcome Page shows Explore Page', () => {
+        const {container} = render(wrapIntl(
+            <Router history={history}>
+                <WelcomePage/>
+            </Router>,
+        ))
+        expect(screen.getByText('Explore')).toBeDefined()
+        expect(container).toMatchSnapshot()
+    })
+
+    test('Welcome Page shows Explore Page with subpath', () => {
+        w.baseURL = '/subpath'
         const {container} = render(wrapIntl(
             <Router history={history}>
                 <WelcomePage/>

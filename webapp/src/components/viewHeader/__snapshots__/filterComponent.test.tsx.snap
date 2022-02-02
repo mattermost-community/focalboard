@@ -10,7 +10,7 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
+        class="IconButton"
         title="Close"
         type="button"
       >
@@ -193,7 +193,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
+        class="IconButton"
         title="Close"
         type="button"
       >
@@ -376,7 +376,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
+        class="IconButton"
         title="Close"
         type="button"
       >
@@ -559,7 +559,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
+        class="IconButton"
         title="Close"
         type="button"
       >

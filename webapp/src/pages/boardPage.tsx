@@ -17,7 +17,7 @@ import Workspace from '../components/workspace'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {Utils} from '../utils'
-import wsClient, {WSClient} from '../wsclient'
+import wsClient, {Subscription, WSClient} from '../wsclient'
 import './boardPage.scss'
 import {updateBoards, getCurrentBoard, setCurrent as setCurrentBoard, fetchBoardMembers, updateMembersEnsuringBoardsAndUsers} from '../store/boards'
 import {updateViews, getCurrentView, setCurrent as setCurrentView, getCurrentBoardViews} from '../store/views'
@@ -34,6 +34,8 @@ import CloseIcon from '../widgets/icons/close'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {getSidebarCategories} from '../store/sidebar'
 import {setTeam} from '../store/teams'
+import {fetchUserBlockSubscriptions, followBlock, getMe, unfollowBlock} from '../store/users'
+import {IUser} from '../user'
 type Props = {
     readonly?: boolean
 }
@@ -53,6 +55,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
     let teamId = match.params.teamId || UserSettings.lastTeamId || '0'
     const categories = useAppSelector(getSidebarCategories)
+    const me = useAppSelector<IUser|null>(getMe)
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -60,6 +63,21 @@ const BoardPage = (props: Props): JSX.Element => {
         window.location.href = window.location.href.replace('/plugins/focalboard', '/boards')
     }
 
+    // Load user's block subscriptions when workspace changes
+    // block subscriptions are relevant only in plugin mode.
+    if (Utils.isFocalboardPlugin()) {
+        useEffect(() => {
+            if (!me) {
+                return
+            }
+
+            dispatch(fetchUserBlockSubscriptions(me!.id))
+        }, [teamId])
+    }
+
+    // Backward compatibility: This can be removed in the future, this is for
+    // transform the old query params into routes
+    //
     useEffect(() => {
         // This function is called when the user selected a team from the team sidebar.
         (window as any).setTeamInFocalboard = (newTeamID: string) => {
@@ -317,6 +335,16 @@ const BoardPage = (props: Props): JSX.Element => {
         wsClient.addOnChange(incrementalBoardMemberUpdate, 'boardMembers')
         wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
+        wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
+            if (subscription.subscriberId === me?.id && subscription.teamId === match.params.teamId) {
+                dispatch(followBlock(subscription))
+            }
+        })
+        wsClient.setOnUnfollowBlock((_: WSClient, subscription: Subscription): void => {
+            if (subscription.subscriberId === me?.id && subscription.teamId === match.params.teamId) {
+                dispatch(unfollowBlock(subscription))
+            }
+        })
         return () => {
             if (timeout) {
                 clearTimeout(timeout)

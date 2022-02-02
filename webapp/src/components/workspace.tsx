@@ -1,12 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
+import {getCurrentTeam} from '../store/teams'
 import {getCurrentBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
-import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentViewDisplayBy} from '../store/views'
+import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentViewDisplayBy, getCurrentView} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 import {getClientConfig, setClientConfig} from '../store/clientConfig'
@@ -16,7 +17,7 @@ import {ClientConfig} from '../config/clientConfig'
 import {Utils} from '../utils'
 
 import CenterPanel from './centerPanel'
-import EmptyCenterPanel from './emptyCenterPanel'
+import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 
 import Sidebar from './sidebar/sidebar'
 import './workspace.scss'
@@ -26,6 +27,7 @@ type Props = {
 }
 
 function CenterContent(props: Props) {
+    const team = useAppSelector(getCurrentTeam)
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const board = useAppSelector(getCurrentBoard)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
@@ -62,7 +64,11 @@ function CenterContent(props: Props) {
             property = board?.cardProperties.find((o) => o.type === 'select')
         }
 
-        const displayProperty = dateDisplayProperty
+        let displayProperty = dateDisplayProperty
+        if (!displayProperty && activeView.fields.viewType === 'calendar') {
+            displayProperty = board.cardProperties.find((o) => o.type === 'date')
+        }
+
         return (
             <CenterPanel
                 clientConfig={clientConfig}
@@ -81,21 +87,55 @@ function CenterContent(props: Props) {
     }
 
     return (
-        <EmptyCenterPanel/>
+        <BoardTemplateSelector
+            title={
+                <FormattedMessage
+                    id='BoardTemplateSelector.plugin.no-content-title'
+                    defaultMessage='Create a Board in {teamName}'
+                    values={{teamName: team?.title}}
+                />
+            }
+            description={
+                <FormattedMessage
+                    id='BoardTemplateSelector.plugin.no-content-description'
+                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of "{teamName}" will have access to boards created here.'
+                    values={{
+                        teamName: <b>{team?.title}</b>,
+                        lineBreak: <br/>,
+                    }}
+                />
+            }
+        />
     )
 }
 
 const Workspace = React.memo((props: Props) => {
     const board = useAppSelector(getCurrentBoard)
 
+    const view = useAppSelector(getCurrentView)
+    const [boardTemplateSelectorOpen, setBoardTemplateSelectorOpen] = useState(false)
+
+    const closeBoardTemplateSelector = useCallback(() => {
+        setBoardTemplateSelectorOpen(false)
+    }, [])
+    const openBoardTemplateSelector = useCallback(() => {
+        setBoardTemplateSelectorOpen(true)
+    }, [])
+    useEffect(() => {
+        setBoardTemplateSelectorOpen(false)
+    }, [board, view])
+
     return (
         <div className='Workspace'>
             {!props.readonly &&
                 <Sidebar
+                    onBoardTemplateSelectorOpen={openBoardTemplateSelector}
                     activeBoardId={board?.id}
                 />
             }
             <div className='mainFrame'>
+                {boardTemplateSelectorOpen &&
+                    <BoardTemplateSelector onClose={closeBoardTemplateSelector}/>}
                 {(board?.isTemplate) &&
                 <div className='banner'>
                     <FormattedMessage

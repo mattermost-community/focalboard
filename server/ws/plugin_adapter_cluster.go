@@ -53,5 +53,20 @@ func (pa *PluginAdapter) HandleClusterEvent(ev mmModel.PluginClusterEvent) {
 		return
 	}
 
+	var action string
+	if actionRaw, ok := clusterMessage.Payload["action"]; ok {
+		if s, ok := actionRaw.(string); ok {
+			action = s
+		}
+	}
+	if action == "" {
+		// no action was specified in the event; assume block change and warn.
+		action = websocketActionUpdateBlock
+		pa.api.LogWarn("cannot determine action from cluster message data",
+			"id", ev.Id,
+			"payload", clusterMessage.Payload,
+		)
+	}
+
 	pa.sendTeamMessageSkipCluster(websocketActionUpdateBlock, clusterMessage.TeamID, clusterMessage.Payload)
 }

@@ -27,7 +27,11 @@ type BlockChangeEvent struct {
 	Card         *model.Block
 	BlockChanged *model.Block
 	BlockOld     *model.Block
-	UserID       string
+	ModifiedByID string
+}
+
+type SubscriptionChangeNotifier interface {
+	BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription)
 }
 
 // Backend provides an interface for sending notifications.
@@ -103,6 +107,26 @@ func (s *Service) BlockChanged(evt BlockChangeEvent) {
 				mlog.String("block_id", evt.BlockChanged.ID),
 				mlog.Err(err),
 			)
+		}
+	}
+}
+
+// BroadcastSubscriptionChange sends a websocket message with details of the changed subscription to all
+// connected users in the workspace.
+func (s *Service) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
+	s.mux.RLock()
+	backends := make([]Backend, len(s.backends))
+	copy(backends, s.backends)
+	s.mux.RUnlock()
+
+	for _, backend := range backends {
+		if scn, ok := backend.(SubscriptionChangeNotifier); ok {
+			s.logger.Debug("Delivering subscription change notification",
+				mlog.String("workspace_id", workspaceID),
+				mlog.String("block_id", subscription.BlockID),
+				mlog.String("subscriber_id", subscription.SubscriberID),
+			)
+			scn.BroadcastSubscriptionChange(workspaceID, subscription)
 		}
 	}
 }

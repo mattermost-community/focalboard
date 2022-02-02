@@ -15,11 +15,11 @@ import CheckIcon from '../../widgets/icons/check'
 type Props = {
     properties: readonly IPropertyTemplate[]
     activeView: BoardView
-    groupByPropertyName?: string
+    groupByProperty?: IPropertyTemplate
 }
 
 const ViewHeaderGroupByMenu = React.memo((props: Props) => {
-    const {properties, activeView, groupByPropertyName} = props
+    const {properties, activeView, groupByProperty} = props
     const intl = useIntl()
     return (
         <MenuWrapper>
@@ -33,7 +33,7 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                                 style={{color: 'rgb(var(--center-channel-color-rgb))'}}
                                 id='groupByLabel'
                             >
-                                {groupByPropertyName}
+                                {groupByProperty?.name}
                             </span>
                         ),
                     }}
@@ -61,7 +61,7 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
                         key={option.id}
                         id={option.id}
                         name={option.name}
-                        rightIcon={activeView.fields.groupById === option.id ? <CheckIcon/> : undefined}
+                        rightIcon={groupByProperty?.id === option.id ? <CheckIcon/> : undefined}
                         onClick={(id) => {
                             if (activeView.fields.groupById === id) {
                                 return

@@ -66,6 +66,21 @@ export const getSortedViews = createSelector(
     },
 )
 
+export const getViewsByBoard = createSelector(
+    getViews,
+    (views) => {
+        const result: {[key: string]: BoardView[]} = {}
+        Object.values(views).forEach((view) => {
+            if (result[view.parentId]) {
+                result[view.parentId].push(view)
+            } else {
+                result[view.parentId] = [view]
+            }
+        })
+        return result
+    },
+)
+
 export function getView(viewId: string): (state: RootState) => BoardView|null {
     return (state: RootState): BoardView|null => {
         return state.views.views[viewId] || null

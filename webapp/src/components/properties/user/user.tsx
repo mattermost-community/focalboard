@@ -12,6 +12,8 @@ import {useAppSelector} from '../../../store/hooks'
 import './user.scss'
 import {getSelectBaseStyle} from '../../../theme'
 
+const imageURLForUser = (window as any).Components?.imageURLForUser
+
 type Props = {
     value: string,
     readonly: boolean,
@@ -24,6 +26,25 @@ const selectStyles = {
         ...provided,
         color: 'rgba(var(--center-channel-color-rgb), 0.4)',
     }),
+}
+
+const formatOptionLabel = (user: any) => {
+    let profileImg
+    if (imageURLForUser) {
+        profileImg = imageURLForUser(user.id)
+    }
+
+    return (
+        <div className='UserProperty-item'>
+            {profileImg && (
+                <img
+                    alt='UserProperty-avatar'
+                    src={profileImg}
+                />
+            )}
+            {user.username}
+        </div>
+    )
 }
 
 const UserProperty = (props: Props): JSX.Element => {
@@ -42,6 +63,7 @@ const UserProperty = (props: Props): JSX.Element => {
             backspaceRemovesValue={true}
             className={'UserProperty octo-propertyvalue'}
             classNamePrefix={'react-select'}
+            formatOptionLabel={formatOptionLabel}
             styles={selectStyles}
             placeholder={'Empty'}
             getOptionLabel={(o: IUser) => o.username}

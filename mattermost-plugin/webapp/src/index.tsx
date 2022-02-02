@@ -24,6 +24,7 @@ import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
+import {UserSettings} from '../../../webapp/src/userSettings'
 
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
@@ -37,6 +38,7 @@ import wsClient, {
     MMWebSocketClient,
     ACTION_UPDATE_BLOCK,
     ACTION_UPDATE_CLIENT_CONFIG,
+    ACTION_UPDATE_SUBSCRIPTION,
     ACTION_UPDATE_CATEGORY, ACTION_UPDATE_BLOCK_CATEGORY, ACTION_UPDATE_BOARD,
 } from './../../../webapp/src/wsclient'
 
@@ -171,9 +173,17 @@ export default class Plugin {
                 true,
             )
 
-            if (mmStore.getState().entities.general.config?.['FeatureFlagBoardsUnfurl' as keyof Partial<ClientConfig>] === 'true') {
-                this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
+            const goToFocalboardTemplate = () => {
+                const currentChannel = mmStore.getState().entities.channels.currentChannelId
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelIntro, {workspaceID: currentChannel})
+                UserSettings.lastBoardId = null
+                UserSettings.lastViewId = null
+                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
+            this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
+
+            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
+            this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
@@ -214,6 +224,7 @@ export default class Plugin {
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
         this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
         this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
             let preferences

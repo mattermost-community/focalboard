@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
+import {FormattedMessage} from 'react-intl'
 
 import {getActiveThemeName, loadTheme} from '../../theme'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -28,7 +29,6 @@ import wsClient, {WSClient} from '../../wsclient'
 
 import {getCurrentTeam} from '../../store/teams'
 
-import SidebarAddBoardMenu from './sidebarAddBoardMenu'
 import SidebarBoardItem from './sidebarBoardItem'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
@@ -37,6 +37,7 @@ import {addMissingItems} from './utils'
 type Props = {
     activeBoardId?: string
     isDashboard?: boolean
+    onBoardTemplateSelectorOpen?: () => void
 }
 
 function getWindowDimensions() {
@@ -171,32 +172,36 @@ const Sidebar = React.memo((props: Props) => {
                 </div>
             }
 
-            <BoardsSwitcher/>
+            <BoardsSwitcher onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}/>
 
-            {
-                <div className='octo-sidebar-list'>
-                    {
-                        sidebarCategories.map((category) => (
-                            <SidebarBoardItem
-                                hideSidebar={hideSidebar}
-                                key={category.id}
-                                activeBoardID={props.activeBoardId}
-                                categoryBlocks={category}
-                                boards={boards}
-                                allCategories={sidebarCategories}
-                            />
-                        ))
-                    }
-                </div>
-            }
+            <div className='octo-sidebar-list'>
+                {
+                    sidebarCategories.map((category) => (
+                        <SidebarBoardItem
+                            hideSidebar={hideSidebar}
+                            key={category.id}
+                            activeBoardID={props.activeBoardId}
+                            categoryBlocks={category}
+                            boards={boards}
+                            allCategories={sidebarCategories}
+                        />
+                    ))
+                }
+            </div>
 
             <div className='octo-spacer'/>
 
             {
                 (!props.isDashboard && !Utils.isFocalboardPlugin()) &&
-                <SidebarAddBoardMenu
-                    activeBoardId={props.activeBoardId}
-                />
+                <div
+                    className='add-board'
+                    onClick={props.onBoardTemplateSelectorOpen}
+                >
+                    <FormattedMessage
+                        id='Sidebar.add-board'
+                        defaultMessage='+ Add board'
+                    />
+                </div>
             }
 
             {!Utils.isFocalboardPlugin() &&

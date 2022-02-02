@@ -13,6 +13,7 @@ import './dialog.scss'
 type Props = {
     children: React.ReactNode
     toolsMenu?: React.ReactNode // some dialogs may not  require a toolmenu
+    toolbar?: React.ReactNode
     hideCloseButton?: boolean
     className?: string
     title?: string
@@ -20,7 +21,7 @@ type Props = {
 }
 
 const Dialog = React.memo((props: Props) => {
-    const {toolsMenu, title} = props
+    const {toolsMenu, title, toolbar} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
@@ -35,12 +36,16 @@ const Dialog = React.memo((props: Props) => {
             <div
                 className='wrapper'
                 onClick={(e) => {
+                    e.stopPropagation()
                     if (e.target === e.currentTarget) {
                         props.onClose()
                     }
                 }}
             >
-                <div className='dialog' >
+                <div
+                    role='dialog'
+                    className='dialog'
+                >
                     <div className='toolbar'>
                         {title && <h1 className='text-heading5 mt-2'>{title}</h1> }
                         {
@@ -49,12 +54,13 @@ const Dialog = React.memo((props: Props) => {
                                 onClick={props.onClose}
                                 icon={<CloseIcon/>}
                                 title={closeDialogText}
-                                className='IconButton--large'
+                                size='medium'
                             />
                         }
+                        {toolbar && <div className='cardToolbar'>{toolbar}</div>}
                         {toolsMenu && <MenuWrapper>
                             <IconButton
-                                className='IconButton--large'
+                                size='medium'
                                 icon={<OptionsIcon/>}
                             />
                             {toolsMenu}

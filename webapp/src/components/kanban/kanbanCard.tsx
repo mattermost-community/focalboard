@@ -25,12 +25,14 @@ import PropertyValueElement from '../propertyValueElement'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import './kanbanCard.scss'
+import CardBadges from '../cardBadges'
 
 type Props = {
     card: Card
     board: Board
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
+    visibleBadges: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     readonly: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
@@ -142,7 +144,12 @@ const KanbanCard = React.memo((props: Props) => {
 
                 <div className='octo-icontitle'>
                     { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
-                    <div key='__title'>{card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+                    <div
+                        key='__title'
+                        className='octo-titletext'
+                    >
+                        {card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}
+                    </div>
                 </div>
                 {visiblePropertyTemplates.map((template) => (
                     <Tooltip
@@ -160,6 +167,7 @@ const KanbanCard = React.memo((props: Props) => {
                         />
                     </Tooltip>
                 ))}
+                {props.visibleBadges && <CardBadges card={card}/>}
             </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}

@@ -9,7 +9,7 @@ exports[`components/sidebarBoardItem sidebar call hideSidebar 1`] = `
       class="octo-sidebar-item category ' expanded "
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -28,7 +28,7 @@ exports[`components/sidebarBoardItem sidebar call hideSidebar 1`] = `
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i
@@ -53,11 +53,11 @@ exports[`components/sidebarBoardItem sidebar call hideSidebar 1`] = `
       </div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper x"
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i
@@ -82,11 +82,11 @@ exports[`components/sidebarBoardItem sidebar call hideSidebar 1`] = `
       </div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper x"
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i
@@ -108,7 +108,7 @@ exports[`components/sidebarBoardItem sidebar call hideSidebar 2`] = `
       class="octo-sidebar-item category ' collapsed "
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -127,7 +127,7 @@ exports[`components/sidebarBoardItem sidebar call hideSidebar 2`] = `
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i

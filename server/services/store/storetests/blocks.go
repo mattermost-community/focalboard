@@ -22,10 +22,20 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testInsertBlock(t, store)
 	})
+	t.Run("InsertBlocks", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testInsertBlocks(t, store, container)
+	})
 	t.Run("PatchBlock", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
 		testPatchBlock(t, store)
+	})
+	t.Run("PatchBlocks", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testPatchBlocks(t, store, container)
 	})
 	t.Run("DeleteBlock", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -187,6 +197,38 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	})
 }
 
+func testInsertBlocks(t *testing.T, store store.Store) {
+	userID := testUserID
+
+	blocks, errBlocks := store.GetAllBlocks(container)
+	require.NoError(t, errBlocks)
+	initialCount := len(blocks)
+
+	t.Run("invalid block", func(t *testing.T) {
+		validBlock := model.Block{
+			ID:         "id-test",
+			RootID:     "id-test",
+			ModifiedBy: userID,
+		}
+
+		invalidBlock := model.Block{
+			ID:         "id-test",
+			RootID:     "",
+			ModifiedBy: userID,
+		}
+
+		newBlocks := []model.Block{validBlock, invalidBlock}
+
+		err := store.InsertBlocks(newBlocks, "user-id-1")
+		require.Error(t, err)
+
+		blocks, err := store.GetAllBlocks()
+		require.NoError(t, err)
+		// no blocks should have been inserted
+		require.Len(t, blocks, initialCount)
+	})
+}
+
 func testPatchBlock(t *testing.T, store store.Store) {
 	userID := testUserID
 	boardID := "board-id-1"
@@ -309,6 +351,70 @@ func testPatchBlock(t *testing.T, store store.Store) {
 	})
 }
 
+func testPatchBlocks(t *testing.T, store store.Store, container store.Container) {
+	block := model.Block{
+		ID:     "id-test",
+		RootID: "id-test",
+		Title:  "oldTitle",
+	}
+
+	block2 := model.Block{
+		ID:     "id-test2",
+		RootID: "id-test2",
+		Title:  "oldTitle2",
+	}
+
+	insertBlocks := []model.Block{block, block2}
+	err := store.InsertBlocks(container, insertBlocks, "user-id-1")
+	require.NoError(t, err)
+
+	t.Run("successful updated existing blocks", func(t *testing.T) {
+		title := "updatedTitle"
+		blockPatch := model.BlockPatch{
+			Title: &title,
+		}
+
+		blockPatch2 := model.BlockPatch{
+			Title: &title,
+		}
+
+		blockIds := []string{"id-test", "id-test2"}
+		blockPatches := []model.BlockPatch{blockPatch, blockPatch2}
+
+		err := store.PatchBlocks(container, &model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
+		require.NoError(t, err)
+
+		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
+		require.Equal(t, title, retrievedBlock.Title)
+
+		retrievedBlock2, err := store.GetBlock(container, "id-test2")
+		require.NoError(t, err)
+		require.Equal(t, title, retrievedBlock2.Title)
+	})
+
+	t.Run("invalid block id, nothing updated existing blocks", func(t *testing.T) {
+		title := "Another Title"
+		blockPatch := model.BlockPatch{
+			Title: &title,
+		}
+
+		blockPatch2 := model.BlockPatch{
+			Title: &title,
+		}
+
+		blockIds := []string{"id-test", "invalid id"}
+		blockPatches := []model.BlockPatch{blockPatch, blockPatch2}
+
+		err := store.PatchBlocks(container, &model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
+		require.Error(t, err)
+
+		retrievedBlock, err := store.GetBlock(container, "id-test")
+		require.NoError(t, err)
+		require.NotEqual(t, title, retrievedBlock.Title)
+	})
+}
+
 var (
 	subtreeSampleBlocks = []model.Block{
 		{
@@ -370,7 +476,7 @@ func testGetSubTree2(t *testing.T, store store.Store) {
 	require.Len(t, blocks, initialCount+6)
 
 	t.Run("from root id", func(t *testing.T) {
-		blocks, err = store.GetSubTree2(boardID, "parent")
+		blocks, err = store.GetSubTree2(boardID, "parent", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 3)
 		require.True(t, ContainsBlockWithID(blocks, "parent"))
@@ -379,7 +485,7 @@ func testGetSubTree2(t *testing.T, store store.Store) {
 	})
 
 	t.Run("from child id", func(t *testing.T) {
-		blocks, err = store.GetSubTree2(boardID, "child1")
+		blocks, err = store.GetSubTree2(boardID, "child1", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 2)
 		require.True(t, ContainsBlockWithID(blocks, "child1"))
@@ -387,7 +493,7 @@ func testGetSubTree2(t *testing.T, store store.Store) {
 	})
 
 	t.Run("from not existing id", func(t *testing.T) {
-		blocks, err = store.GetSubTree2(boardID, "not-exists")
+		blocks, err = store.GetSubTree2(boardID, "not-exists", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
@@ -408,7 +514,7 @@ func testGetSubTree3(t *testing.T, store store.Store) {
 	require.Len(t, blocks, initialCount+6)
 
 	t.Run("from root id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(boardID, "parent")
+		blocks, err = store.GetSubTree3(boardID, "parent", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 5)
 		require.True(t, ContainsBlockWithID(blocks, "parent"))
@@ -419,7 +525,7 @@ func testGetSubTree3(t *testing.T, store store.Store) {
 	})
 
 	t.Run("from child id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(boardID, "child1")
+		blocks, err = store.GetSubTree3(boardID, "child1", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 3)
 		require.True(t, ContainsBlockWithID(blocks, "child1"))
@@ -428,7 +534,7 @@ func testGetSubTree3(t *testing.T, store store.Store) {
 	})
 
 	t.Run("from not existing id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(boardID, "not-exists")
+		blocks, err = store.GetSubTree3(boardID, "not-exists", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})

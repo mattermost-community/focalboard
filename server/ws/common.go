@@ -33,6 +33,12 @@ type UpdateMemberMsg struct {
 	Member *model.BoardMember `json:"member"`
 }
 
+// UpdateSubscription is sent on subscription updates.
+type UpdateSubscription struct {
+	Action       string              `json:"action"`
+	Subscription *model.Subscription `json:"subscription"`
+}
+
 // WebsocketCommand is an incoming command from the client.
 type WebsocketCommand struct {
 	Action    string   `json:"action"`

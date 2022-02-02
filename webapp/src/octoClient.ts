@@ -10,6 +10,7 @@ import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
 import {Category, CategoryBlocks} from './store/sidebar'
 import {Team} from './store/teams'
+import {Subscription} from './wsclient'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -77,8 +78,18 @@ class OctoClient {
         return false
     }
 
-    logout(): void {
+    async logout(): Promise<boolean> {
+        const path = '/api/v1/logout'
+        const response = await fetch(this.getBaseURL() + path, {
+            method: 'POST',
+            headers: this.headers(),
+        })
         localStorage.removeItem('focalboardSessionId')
+
+        if (response.status !== 200) {
+            return false
+        }
+        return true
     }
 
     async getClientConfig(): Promise<ClientConfig | null> {
@@ -188,27 +199,24 @@ class OctoClient {
     }
 
     // If no boardID is provided, it will export the entire archive
-    async exportArchive(boardID = ''): Promise<Block[]> {
-        const path = `${this.teamPath()}/blocks/export?root_id=${boardID}`
-        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return []
-        }
-        const blocks = (await this.getJson(response, [])) as Block[]
-        return this.fixBlocks(blocks)
+    async exportArchive(boardID = ''): Promise<Response> {
+        const path = `${this.teamPath()}/archive/export?board_id=${boardID}`
+        return fetch(this.getBaseURL() + path, {headers: this.headers()})
     }
 
-    async importFullArchive(blocks: readonly Block[]): Promise<Response> {
-        Utils.log(`importFullArchive: ${blocks.length} blocks(s)`)
+    async importFullArchive(file: File): Promise<Response> {
+        const formData = new FormData()
+        formData.append('file', file)
 
-        // blocks.forEach((block) => {
-        //     Utils.log(`\t ${block.type}, ${block.id}`)
-        // })
-        const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.teamPath() + '/blocks/import', {
+        const headers = this.headers() as Record<string, string>
+
+        // TIPTIP: Leave out Content-Type here, it will be automatically set by the browser
+        delete headers['Content-Type']
+
+        return fetch(this.getBaseURL() + this.teamPath() + '/archive/import', {
             method: 'POST',
-            headers: this.headers(),
-            body,
+            headers,
+            body: formData,
         })
     }
 
@@ -289,9 +297,46 @@ class OctoClient {
         })
     }
 
+    async patchBlocks(blocks: Block[], blockPatches: BlockPatch[]): Promise<Response> {
+        Utils.log(`patchBlocks: ${blocks.length} blocks`)
+        const blockIds = blocks.map((block) => block.id)
+        const body = JSON.stringify({block_ids: blockIds, block_patches: blockPatches})
+
+        const path = this.getBaseURL() + this.teamPath() + '/blocks'
+        const response = fetch(path, {
+            method: 'PATCH',
+            headers: this.headers(),
+            body,
+        })
+        return response
+    }
+
     async deleteBlock(boardId: string, blockId: string): Promise<Response> {
         Utils.log(`deleteBlock: ${blockId} on board ${boardId}`)
         return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}/blocks/${encodeURIComponent(blockId)}`, {
+            method: 'DELETE',
+            headers: this.headers(),
+        })
+    }
+
+    async followBlock(teamId: string, blockId: string, blockType: string, userId: string): Promise<Response> {
+        const body: Subscription = {
+            teamId,
+            blockType,
+            blockId,
+            subscriberType: 'user',
+            subscriberId: userId,
+        }
+
+        return fetch(this.getBaseURL() + this.teamPath() + '/subscriptions', {
+            method: 'POST',
+            headers: this.headers(),
+            body: JSON.stringify(body),
+        })
+    }
+
+    async unfollowBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
+        return fetch(this.getBaseURL() + this.teamPath() + `/subscriptions/${blockId}/${userId}`, {
             method: 'DELETE',
             headers: this.headers(),
         })
@@ -676,6 +721,16 @@ class OctoClient {
         }
 
         return (await this.getJson(response, [])) as Array<Board>
+    }
+
+    async getUserBlockSubscriptions(userId: string): Promise<Array<Subscription>> {
+        const path = this.teamPath() + `/subscriptions/${userId}`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as Subscription[]
     }
 }
 

@@ -10,13 +10,14 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
     >
       <div
         class="dialog"
+        role="dialog"
       >
         <div
           class="toolbar"
         >
           <button
             aria-label="Close dialog"
-            class="Button IconButton IconButton--large"
+            class="IconButton size--medium"
             title="Close dialog"
             type="button"
           >
@@ -78,13 +79,14 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
     >
       <div
         class="dialog"
+        role="dialog"
       >
         <div
           class="toolbar"
         >
           <button
             aria-label="Close dialog"
-            class="Button IconButton IconButton--large"
+            class="IconButton size--medium"
             title="Close dialog"
             type="button"
           >
