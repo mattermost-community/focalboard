@@ -133,7 +133,7 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID
 	return blocks, nil
 }
 
-func (a *App) UpdateFileIDs(sourceBoardID string, blocks []model.Block) error {
+func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
 	// Images attached in cards have a path comprising the card's board ID.
 	// When we create a template from this board, we need to copy the files
 	// with the new boar ID in path.
@@ -149,7 +149,7 @@ func (a *App) UpdateFileIDs(sourceBoardID string, blocks []model.Block) error {
 			destinationFilePath := filepath.Join(block.WorkspaceID, block.RootID, fileName.(string))
 			if err := a.filesBackend.CopyFile(sourceFilePath, destinationFilePath); err != nil {
 				a.logger.Error(
-					"UpdateFileIDs failed to copy file",
+					"CopyCardFiles failed to copy file",
 					mlog.String("sourceFilePath", sourceFilePath),
 					mlog.String("destinationFilePath", destinationFilePath),
 					mlog.Err(err),
