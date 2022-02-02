@@ -136,7 +136,7 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID
 func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
 	// Images attached in cards have a path comprising the card's board ID.
 	// When we create a template from this board, we need to copy the files
-	// with the new boar ID in path.
+	// with the new board ID in path.
 	// Not doing so causing images in templates (and boards created from this
 	// template) to fail to load.
 
