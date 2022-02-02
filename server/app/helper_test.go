@@ -29,6 +29,7 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	defer ctrl.Finish()
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
+
 	auth := auth.New(&cfg, store)
 	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
 	sessionToken := "TESTTOKEN"
@@ -37,12 +38,13 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	metricsService := metrics.NewMetrics(metrics.InstanceInfo{})
 
 	appServices := Services{
-		Auth:         auth,
-		Store:        store,
-		FilesBackend: &mocks.FileBackend{},
-		Webhook:      webhook,
-		Metrics:      metricsService,
-		Logger:       logger,
+		Auth:             auth,
+		Store:            store,
+		FilesBackend:     &mocks.FileBackend{},
+		Webhook:          webhook,
+		Metrics:          metricsService,
+		Logger:           logger,
+		SkipTemplateInit: true,
 	}
 	app2 := New(&cfg, wsserver, appServices)
 

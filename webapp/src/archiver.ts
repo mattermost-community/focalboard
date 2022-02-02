@@ -64,7 +64,7 @@ class Archiver {
     static importFullArchive(onComplete?: () => void): void {
         const input = document.createElement('input')
         input.type = 'file'
-        input.accept = '.focalboard'
+        input.accept = '.boardarchive'
         input.onchange = async () => {
             const file = input.files && input.files[0]
             if (file) {

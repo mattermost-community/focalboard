@@ -42,8 +42,9 @@ type ExportArchiveOptions struct {
 
 // ImportArchiveOptions provides options when importing an archive.
 type ImportArchiveOptions struct {
-	WorkspaceID string
-	ModifiedBy  string
+	WorkspaceID   string
+	ModifiedBy    string
+	BlockModifier BlockModifier
 }
 
 // ErrUnsupportedArchiveVersion is an error returned when trying to import an
