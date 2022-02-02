@@ -140,7 +140,6 @@ func New(params Params) (*Server, error) {
 		Logger:        params.Logger,
 	}
 	app := app.New(params.Cfg, wsAdapter, appServices)
-	app.Initialize()
 
 	focalboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.Logger, auditService)
 
