@@ -30,10 +30,13 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
 
+	filesMock := &mocks.FileBackend{}
+
 	// called during default template setup for every test
 	store.EXPECT().GetDefaultTemplateBlocks().AnyTimes()
 	store.EXPECT().RemoveDefaultTemplates(gomock.Any()).AnyTimes()
 	store.EXPECT().InsertBlock(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
+	filesMock.On("WriteFile").Return(gomock.Any(), nil)
 
 	auth := auth.New(&cfg, store)
 	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
@@ -45,7 +48,7 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	appServices := Services{
 		Auth:         auth,
 		Store:        store,
-		FilesBackend: &mocks.FileBackend{},
+		FilesBackend: filesMock,
 		Webhook:      webhook,
 		Metrics:      metricsService,
 		Logger:       logger,
