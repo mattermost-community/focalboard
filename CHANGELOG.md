@@ -7,6 +7,7 @@ This changelog summarizes updates to our open source project. You can also find 
 ## v0.14 Release - February, 2022
 * Template selector dialog. Thanks @jespino!
 * New standard templates. Thanks @wiggin77!
+* Archive file format has changed and now supports images. Thanks @wiggin77!
 * Card badges. Thanks @kamre!
 * URL property improvement. Thanks @kamre!
 * Channel intro Boards link. Thanks @sbishel!
