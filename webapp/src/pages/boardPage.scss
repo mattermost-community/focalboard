@@ -37,7 +37,7 @@
         }
     }
 
-    @media screen and (max-width: 768px) { 
+    @media screen and (max-width: 768px) {
         .mobileWarning {display: flex;}
     }
 }
@@ -45,4 +45,8 @@
 .Dialog.dialog-back.workspaceSwitcherModal > div > .dialog {
     width: 600px;
     height: 468px;
+}
+
+.mainContentRow {
+    height: calc(100% - 40px);
 }
