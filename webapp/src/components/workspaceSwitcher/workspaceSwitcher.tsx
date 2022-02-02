@@ -8,9 +8,7 @@ import {useHistory} from 'react-router-dom'
 import {IWorkspace} from '../../blocks/workspace'
 import ChevronDown from '../../widgets/icons/chevronDown'
 import AddIcon from '../../widgets/icons/add'
-import {setCurrent as setCurrentBoard} from '../../store/boards'
-import {setCurrent as setCurrentView} from '../../store/views'
-import {useAppDispatch} from '../../store/hooks'
+import IconButton from '../../widgets/buttons/iconButton'
 
 import {UserSettings} from '../../userSettings'
 
@@ -18,21 +16,13 @@ import WorkspaceOptions, {DashboardOption} from './workspaceOptions'
 
 type Props = {
     activeWorkspace?: IWorkspace
+    onBoardTemplateSelectorOpen?: () => void
 }
 
 const WorkspaceSwitcher = (props: Props): JSX.Element => {
     const history = useHistory()
     const {activeWorkspace} = props
-    const dispatch = useAppDispatch()
     const [showMenu, setShowMenu] = useState<boolean>(false)
-
-    const goToEmptyCenterPanel = () => {
-        UserSettings.lastBoardId = null
-        UserSettings.lastViewId = null
-        dispatch(setCurrentBoard(''))
-        dispatch(setCurrentView(''))
-        history.replace(`/workspace/${activeWorkspace?.id}`)
-    }
 
     return (
         <div className={'WorkspaceSwitcherWrapper'}>
@@ -69,12 +59,12 @@ const WorkspaceSwitcher = (props: Props): JSX.Element => {
                 />
             }
             {activeWorkspace &&
-                <span
-                    className='add-workspace-icon'
-                    onClick={goToEmptyCenterPanel}
-                >
-                    <AddIcon/>
-                </span>
+                <IconButton
+                    onClick={props.onBoardTemplateSelectorOpen}
+                    icon={<AddIcon/>}
+                    inverted={true}
+                    size='small'
+                />
             }
         </div>
     )

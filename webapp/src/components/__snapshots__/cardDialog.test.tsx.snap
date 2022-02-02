@@ -17,7 +17,6 @@ exports[`components/cardDialog already following card 1`] = `
         >
           <button
             aria-label="Close dialog"
-            class="Button IconButton IconButton--large"
             title="Close dialog"
             type="button"
           >
@@ -42,7 +41,6 @@ exports[`components/cardDialog already following card 1`] = `
             role="button"
           >
             <button
-              class="Button IconButton IconButton--large"
               type="button"
             >
               <i
@@ -297,7 +295,6 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
         >
           <button
             aria-label="Close dialog"
-            class="Button IconButton IconButton--large"
             title="Close dialog"
             type="button"
           >
@@ -405,7 +402,6 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
         >
           <button
             aria-label="Close dialog"
-            class="Button IconButton IconButton--large"
             title="Close dialog"
             type="button"
           >
@@ -430,7 +426,6 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
             role="button"
           >
             <button
-              class="Button IconButton IconButton--large"
               type="button"
             >
               <i
@@ -452,7 +447,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                     role="button"
                   >
                     <i
-                      class="CompassIcon icon-trash-can-outline trash-can-outline"
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
                     />
                     <div
                       class="menu-name"
@@ -772,7 +767,6 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
         >
           <button
             aria-label="Close dialog"
-            class="Button IconButton IconButton--large"
             title="Close dialog"
             type="button"
           >
@@ -797,7 +791,6 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
             role="button"
           >
             <button
-              class="Button IconButton IconButton--large"
               type="button"
             >
               <i
@@ -1052,7 +1045,6 @@ exports[`components/cardDialog should match snapshot 1`] = `
         >
           <button
             aria-label="Close dialog"
-            class="Button IconButton IconButton--large"
             title="Close dialog"
             type="button"
           >
@@ -1077,7 +1069,6 @@ exports[`components/cardDialog should match snapshot 1`] = `
             role="button"
           >
             <button
-              class="Button IconButton IconButton--large"
               type="button"
             >
               <i

@@ -13,6 +13,7 @@ export const TelemetryActions = {
     CreateBoard: 'createBoard',
     DuplicateBoard: 'duplicateBoard',
     DeleteBoard: 'deleteBoard',
+    DeleteBoardTemplate: 'deleteBoardTemplate',
     ShareBoard: 'shareBoard',
     CreateBoardTemplate: 'createBoardTemplate',
     CreateBoardViaTemplate: 'createBoardViaTemplate',

@@ -315,13 +315,14 @@ class OctoClient {
         return this.insertBlocks([block])
     }
 
-    async insertBlocks(blocks: Block[]): Promise<Response> {
+    async insertBlocks(blocks: Block[], sourceBoardID?: string): Promise<Response> {
         Utils.log(`insertBlocks: ${blocks.length} blocks(s)`)
         blocks.forEach((block) => {
             Utils.log(`\t ${block.type}, ${block.id}, ${block.title?.substr(0, 50) || ''}`)
         })
         const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.workspacePath() + '/blocks', {
+        const url = this.getBaseURL() + this.workspacePath() + '/blocks' + (sourceBoardID ? `?sourceBoardID=${encodeURIComponent(sourceBoardID)}` : '')
+        return fetch(url, {
             method: 'POST',
             headers: this.headers(),
             body,

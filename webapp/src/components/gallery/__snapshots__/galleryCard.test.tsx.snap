@@ -39,7 +39,6 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
       role="button"
     >
       <button
-        class="Button IconButton"
         type="button"
       >
         <i
@@ -61,7 +60,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
               role="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline trash-can-outline"
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
               />
               <div
                 class="menu-name"
@@ -166,7 +165,6 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
       role="button"
     >
       <button
-        class="Button IconButton"
         type="button"
       >
         <i
@@ -188,7 +186,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
               role="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline trash-can-outline"
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
               />
               <div
                 class="menu-name"
@@ -329,7 +327,6 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
       role="button"
     >
       <button
-        class="Button IconButton"
         type="button"
       >
         <i
@@ -351,7 +348,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
               role="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline trash-can-outline"
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
               />
               <div
                 class="menu-name"
@@ -460,7 +457,6 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
       role="button"
     >
       <button
-        class="Button IconButton"
         type="button"
       >
         <i
@@ -482,7 +478,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
               role="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline trash-can-outline"
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
               />
               <div
                 class="menu-name"
@@ -593,7 +589,6 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
       role="button"
     >
       <button
-        class="Button IconButton"
         type="button"
       >
         <i
@@ -633,7 +628,6 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
       role="button"
     >
       <button
-        class="Button IconButton"
         type="button"
       >
         <i
@@ -673,7 +667,6 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
       role="button"
     >
       <button
-        class="Button IconButton"
         type="button"
       >
         <i
@@ -713,7 +706,6 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
       role="button"
     >
       <button
-        class="Button IconButton"
         type="button"
       >
         <i
@@ -753,7 +745,6 @@ exports[`src/components/gallery/GalleryCard without block content should match s
       role="button"
     >
       <button
-        class="Button IconButton"
         type="button"
       >
         <i
@@ -775,7 +766,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
               role="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline trash-can-outline"
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
               />
               <div
                 class="menu-name"

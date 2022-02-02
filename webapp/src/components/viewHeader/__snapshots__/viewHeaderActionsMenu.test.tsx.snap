@@ -11,7 +11,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -121,7 +121,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -231,7 +231,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu with Share Boar
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -341,7 +341,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu without Share B
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
