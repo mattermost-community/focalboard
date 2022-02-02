@@ -17,6 +17,7 @@ var ErrInvalidPropSchema = errors.New("invalid property schema")
 var ErrInvalidProperty = errors.New("invalid property")
 var ErrInvalidPropertyValue = errors.New("invalid property value")
 var ErrInvalidPropertyValueType = errors.New("invalid property value type")
+var ErrPersonNotFound = errors.New("person property not a valid user")
 var ErrInvalidDate = errors.New("invalid date property")
 
 // PropValueResolver allows PropDef.GetValue to further decode property values, such as
@@ -90,6 +91,9 @@ func (pd PropDef) GetValue(v interface{}, resolver PropValueResolver) (string, e
 			user, err := resolver.GetUserByID(userID)
 			if err != nil {
 				return "", err
+			}
+			if user == nil {
+				return "", ErrPersonNotFound
 			}
 			return user.Username, nil
 		}
