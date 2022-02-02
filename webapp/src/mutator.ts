@@ -809,13 +809,13 @@ class Mutator {
     // Other methods
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
-    async exportArchive(boardID?: string): Promise<Block[]> {
+    async exportArchive(boardID?: string): Promise<Response> {
         return octoClient.exportArchive(boardID)
     }
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
-    async importFullArchive(blocks: readonly Block[]): Promise<Response> {
-        return octoClient.importFullArchive(blocks)
+    async importFullArchive(file: File): Promise<Response> {
+        return octoClient.importFullArchive(file)
     }
 
     get canUndo(): boolean {

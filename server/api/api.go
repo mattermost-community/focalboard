@@ -25,7 +25,6 @@ import (
 const (
 	HeaderRequestedWith    = "X-Requested-With"
 	HeaderRequestedWithXML = "XMLHttpRequest"
-	SingleUser             = "single-user"
 	UploadFormFileKey      = "file"
 )
 
@@ -76,9 +75,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 
-	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/import", a.sessionRequired(a.handleImport)).Methods("POST")
-
 	apiv1.HandleFunc("/workspaces/{workspaceID}/sharing/{rootID}", a.sessionRequired(a.handlePostSharing)).Methods("POST")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/sharing/{rootID}", a.sessionRequired(a.handleGetSharing)).Methods("GET")
 
@@ -109,6 +105,10 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
+
+	// archives
+	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/export", a.sessionRequired(a.handleArchiveExport)).Methods("GET")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -336,7 +336,7 @@ func stampModificationMetadata(r *http.Request, blocks []model.Block, auditRec *
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
-	if userID == SingleUser {
+	if userID == model.SingleUser {
 		userID = ""
 	}
 
@@ -537,12 +537,12 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "getMe", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
-	if session.UserID == SingleUser {
+	if session.UserID == model.SingleUser {
 		now := utils.GetMillis()
 		user = &model.User{
-			ID:       SingleUser,
-			Username: SingleUser,
-			Email:    SingleUser,
+			ID:       model.SingleUser,
+			Username: model.SingleUser,
+			Email:    model.SingleUser,
 			CreateAt: now,
 			UpdateAt: now,
 		}
@@ -860,183 +860,6 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func (a *API) handleExport(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/workspaces/{workspaceID}/blocks/export exportBlocks
-	//
-	// Returns all blocks
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       type: array
-	//       items:
-	//         "$ref": "#/definitions/Block"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	query := r.URL.Query()
-	rootID := query.Get("root_id")
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "export", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	auditRec.AddMeta("rootID", rootID)
-
-	var blocks []model.Block
-	if rootID == "" {
-		blocks, err = a.app.GetAllBlocks(*container)
-	} else {
-		blocks, err = a.app.GetBlocksWithRootID(*container, rootID)
-	}
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("raw blocks", mlog.Int("block_count", len(blocks)))
-	auditRec.AddMeta("rawCount", len(blocks))
-
-	blocks = filterOrphanBlocks(blocks)
-
-	a.logger.Debug("EXPORT filtered blocks", mlog.Int("block_count", len(blocks)))
-	auditRec.AddMeta("filteredCount", len(blocks))
-
-	json, err := json.Marshal(blocks)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, json)
-
-	auditRec.Success()
-}
-
-func filterOrphanBlocks(blocks []model.Block) (ret []model.Block) {
-	queue := make([]model.Block, 0)
-	childrenOfBlockWithID := make(map[string]*[]model.Block)
-
-	// Build the trees from nodes
-	for _, block := range blocks {
-		if len(block.ParentID) == 0 {
-			// Queue root blocks to process first
-			queue = append(queue, block)
-		} else {
-			siblings := childrenOfBlockWithID[block.ParentID]
-			if siblings != nil {
-				*siblings = append(*siblings, block)
-			} else {
-				siblings := []model.Block{block}
-				childrenOfBlockWithID[block.ParentID] = &siblings
-			}
-		}
-	}
-
-	// Map the trees to an array, which skips orphaned nodes
-	blocks = make([]model.Block, 0)
-	for len(queue) > 0 {
-		block := queue[0]
-		queue = queue[1:] // dequeue
-		blocks = append(blocks, block)
-		children := childrenOfBlockWithID[block.ID]
-		if children != nil {
-			queue = append(queue, (*children)...)
-		}
-	}
-
-	return blocks
-}
-
-func (a *API) handleImport(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks/import importBlocks
-	//
-	// Import blocks
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: Body
-	//   in: body
-	//   description: array of blocks to import
-	//   required: true
-	//   schema:
-	//     type: array
-	//     items:
-	//       "$ref": "#/definitions/Block"
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	requestBody, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	var blocks []model.Block
-
-	err = json.Unmarshal(requestBody, &blocks)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "import", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-
-	stampModificationMetadata(r, blocks, auditRec)
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	_, err = a.app.InsertBlocks(*container, model.GenerateBlockIDs(blocks, a.logger), session.UserID, false)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonStringResponse(w, http.StatusOK, "{}")
-
-	a.logger.Debug("IMPORT Blocks", mlog.Int("block_count", len(blocks)))
-	auditRec.AddMeta("blockCount", len(blocks))
-	auditRec.Success()
-}
-
 // Sharing
 
 func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
@@ -1173,7 +996,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
-	if userID == SingleUser {
+	if userID == model.SingleUser {
 		userID = ""
 	}
 
