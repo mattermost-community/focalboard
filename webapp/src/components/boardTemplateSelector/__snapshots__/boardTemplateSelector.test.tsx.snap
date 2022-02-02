@@ -1,0 +1,537 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plugin should match snapshot 1`] = `
+<div>
+  <div
+    class="BoardTemplateSelector"
+  >
+    <div
+      class="toolbar"
+    >
+      <button
+        aria-label="Close"
+        title="Close"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-close CloseIcon"
+        />
+      </button>
+    </div>
+    <div
+      class="header"
+    >
+      <h1
+        class="title"
+      >
+        Create a Board
+      </h1>
+      <p
+        class="description"
+      >
+        Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.
+      </p>
+    </div>
+    <div
+      class="templates"
+    >
+      <div
+        class="templates-list"
+      >
+        <div
+          class="BoardTemplateSelectorItem active"
+        >
+          <span
+            class="template-icon"
+          >
+            🚴🏻‍♂️
+          </span>
+          <span
+            class="template-name"
+          >
+            Template Global
+          </span>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            🚴🏻‍♂️
+          </span>
+          <span
+            class="template-name"
+          >
+            Template 1
+          </span>
+          <div
+            class="actions"
+          >
+            <button
+              aria-label="Delete"
+              title="Delete"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+              />
+            </button>
+            <button
+              aria-label="Edit"
+              title="Edit"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-pencil-outline EditIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="new-template"
+        >
+          <span
+            class="template-icon"
+          >
+            <i
+              class="CompassIcon icon-plus AddIcon"
+            />
+          </span>
+          <span
+            class="template-name"
+          >
+            New template
+          </span>
+        </div>
+      </div>
+      <div
+        class="template-preview-box"
+      >
+        <div
+          class="BoardTemplateSelectorPreview"
+        >
+          <div
+            class="prevent-click"
+          />
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              Use this template
+            </span>
+          </button>
+          <button
+            type="button"
+          >
+            <span>
+              Create empty board
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plugin should match snapshot with custom title and description 1`] = `
+<div>
+  <div
+    class="BoardTemplateSelector"
+  >
+    <div
+      class="toolbar"
+    />
+    <div
+      class="header"
+    >
+      <h1
+        class="title"
+      >
+        test-title
+      </h1>
+      <p
+        class="description"
+      >
+        test-description
+      </p>
+    </div>
+    <div
+      class="templates"
+    >
+      <div
+        class="templates-list"
+      >
+        <div
+          class="BoardTemplateSelectorItem active"
+        >
+          <span
+            class="template-icon"
+          >
+            🚴🏻‍♂️
+          </span>
+          <span
+            class="template-name"
+          >
+            Template Global
+          </span>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            🚴🏻‍♂️
+          </span>
+          <span
+            class="template-name"
+          >
+            Template 1
+          </span>
+          <div
+            class="actions"
+          >
+            <button
+              aria-label="Delete"
+              title="Delete"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+              />
+            </button>
+            <button
+              aria-label="Edit"
+              title="Edit"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-pencil-outline EditIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="new-template"
+        >
+          <span
+            class="template-icon"
+          >
+            <i
+              class="CompassIcon icon-plus AddIcon"
+            />
+          </span>
+          <span
+            class="template-name"
+          >
+            New template
+          </span>
+        </div>
+      </div>
+      <div
+        class="template-preview-box"
+      >
+        <div
+          class="BoardTemplateSelectorPreview"
+        >
+          <div
+            class="prevent-click"
+          />
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              Use this template
+            </span>
+          </button>
+          <button
+            type="button"
+          >
+            <span>
+              Create empty board
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plugin should match snapshot without close 1`] = `
+<div>
+  <div
+    class="BoardTemplateSelector"
+  >
+    <div
+      class="toolbar"
+    />
+    <div
+      class="header"
+    >
+      <h1
+        class="title"
+      >
+        Create a Board
+      </h1>
+      <p
+        class="description"
+      >
+        Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.
+      </p>
+    </div>
+    <div
+      class="templates"
+    >
+      <div
+        class="templates-list"
+      >
+        <div
+          class="BoardTemplateSelectorItem active"
+        >
+          <span
+            class="template-icon"
+          >
+            🚴🏻‍♂️
+          </span>
+          <span
+            class="template-name"
+          >
+            Template Global
+          </span>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            🚴🏻‍♂️
+          </span>
+          <span
+            class="template-name"
+          >
+            Template 1
+          </span>
+          <div
+            class="actions"
+          >
+            <button
+              aria-label="Delete"
+              title="Delete"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+              />
+            </button>
+            <button
+              aria-label="Edit"
+              title="Edit"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-pencil-outline EditIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="new-template"
+        >
+          <span
+            class="template-icon"
+          >
+            <i
+              class="CompassIcon icon-plus AddIcon"
+            />
+          </span>
+          <span
+            class="template-name"
+          >
+            New template
+          </span>
+        </div>
+      </div>
+      <div
+        class="template-preview-box"
+      >
+        <div
+          class="BoardTemplateSelectorPreview"
+        >
+          <div
+            class="prevent-click"
+          />
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              Use this template
+            </span>
+          </button>
+          <button
+            type="button"
+          >
+            <span>
+              Create empty board
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard Plugin should match snapshot 1`] = `
+<div>
+  <div
+    class="BoardTemplateSelector"
+  >
+    <div
+      class="toolbar"
+    >
+      <button
+        aria-label="Close"
+        title="Close"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-close CloseIcon"
+        />
+      </button>
+    </div>
+    <div
+      class="header"
+    >
+      <h1
+        class="title"
+      >
+        Create a Board
+      </h1>
+      <p
+        class="description"
+      >
+        Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.
+      </p>
+    </div>
+    <div
+      class="templates"
+    >
+      <div
+        class="templates-list"
+      >
+        <div
+          class="BoardTemplateSelectorItem active"
+        >
+          <span
+            class="template-icon"
+          >
+            🚴🏻‍♂️
+          </span>
+          <span
+            class="template-name"
+          >
+            Template Global
+          </span>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            🚴🏻‍♂️
+          </span>
+          <span
+            class="template-name"
+          >
+            Template 1
+          </span>
+          <div
+            class="actions"
+          >
+            <button
+              aria-label="Delete"
+              title="Delete"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+              />
+            </button>
+            <button
+              aria-label="Edit"
+              title="Edit"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-pencil-outline EditIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="new-template"
+        >
+          <span
+            class="template-icon"
+          >
+            <i
+              class="CompassIcon icon-plus AddIcon"
+            />
+          </span>
+          <span
+            class="template-name"
+          >
+            New template
+          </span>
+        </div>
+      </div>
+      <div
+        class="template-preview-box"
+      >
+        <div
+          class="BoardTemplateSelectorPreview"
+        >
+          <div
+            class="prevent-click"
+          />
+        </div>
+        <div
+          class="buttons"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              Use this template
+            </span>
+          </button>
+          <button
+            type="button"
+          >
+            <span>
+              Create empty board
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

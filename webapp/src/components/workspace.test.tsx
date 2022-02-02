@@ -210,7 +210,7 @@ describe('src/components/workspace', () => {
         expect(container).toMatchSnapshot()
         expect(mockedUtils.getReadToken).toBeCalledTimes(1)
     })
-    test('return workspace with EmptyCenterPanel component', async () => {
+    test('return workspace with BoardTemplateSelector component', async () => {
         const emptyStore = mockStateStore([], {
             users: {
                 me,

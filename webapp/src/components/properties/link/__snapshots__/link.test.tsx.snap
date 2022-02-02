@@ -30,7 +30,7 @@ exports[`components/properties/link should match snapshot for link with non-empt
     </a>
     <button
       aria-label="Edit"
-      class="Button IconButton Button_Edit"
+      class="IconButton Button_Edit"
       title="Edit"
       type="button"
     >
@@ -40,7 +40,7 @@ exports[`components/properties/link should match snapshot for link with non-empt
     </button>
     <button
       aria-label="Copy"
-      class="Button IconButton Button_Copy"
+      class="IconButton Button_Copy"
       title="Copy"
       type="button"
     >
@@ -67,7 +67,7 @@ exports[`components/properties/link should match snapshot for readonly link with
     </a>
     <button
       aria-label="Copy"
-      class="Button IconButton Button_Copy"
+      class="IconButton Button_Copy"
       title="Copy"
       type="button"
     >
