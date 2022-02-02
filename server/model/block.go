@@ -3,7 +3,9 @@ package model
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/mattermost/focalboard/server/services/audit"
 	"io"
+	"strconv"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
@@ -288,4 +290,20 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 	}
 
 	return newBlocks
+}
+
+func StampModificationMetadata(userID string, blocks []Block, auditRec *audit.Record) {
+	if userID == SingleUser {
+		userID = ""
+	}
+
+	now := GetMillis()
+	for i := range blocks {
+		blocks[i].ModifiedBy = userID
+		blocks[i].UpdateAt = now
+
+		if auditRec != nil {
+			auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), blocks[i])
+		}
+	}
 }
