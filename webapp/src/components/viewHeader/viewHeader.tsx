@@ -99,7 +99,7 @@ const ViewHeader = React.memo((props: Props) => {
                     }}
                     onCancel={(): void => {
                         setViewTitle(activeView.title)
-                    }}@tippy@
+                    }}
                     onChange={setViewTitle}
                     saveOnEsc={true}
                     readonly={props.readonly}

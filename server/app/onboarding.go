@@ -42,5 +42,5 @@ func (a *App) PrepareOnboardingTour(userID string) (string, string, error) {
 	}
 
 	// TODO return actual cloned board's ID
-	return workspaceID, "bz9njazgpmbg4br1stxjb8b1u8h", nil
+	return workspaceID, "bkh7zhsbrejbfdnb8betan9oy9y", nil
 }
