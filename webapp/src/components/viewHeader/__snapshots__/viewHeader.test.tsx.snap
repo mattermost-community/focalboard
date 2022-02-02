@@ -13,7 +13,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       value="view title"
     />
     <div
-      aria-label="menuwrapper"
+      aria-label="View menu"
       class="MenuWrapper"
       role="button"
     >
@@ -100,7 +100,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="ModalWrapper"
     >
       <div
-        aria-label="View menu"
+        aria-label="View header menu"
         class="MenuWrapper"
         role="button"
       >
@@ -154,7 +154,7 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
       value="view title"
     />
     <div
-      aria-label="menuwrapper"
+      aria-label="View menu"
       class="MenuWrapper"
       role="button"
     >

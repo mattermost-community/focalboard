@@ -8,6 +8,7 @@ export const TelemetryCategory = 'boards'
 
 export const TelemetryActions = {
     ClickChannelHeader: 'clickChannelHeader',
+    ClickChannelIntro: 'channelIntro_boardLink',
     ViewBoard: 'viewBoard',
     CreateBoard: 'createBoard',
     DuplicateBoard: 'duplicateBoard',

@@ -8,8 +8,8 @@ import CompassIcon from './compassIcon'
 export default function EditIcon(): JSX.Element {
     return (
         <CompassIcon
-            icon='pencil-outline'
             className='EditIcon'
+            icon='pencil-outline'
         />
     )
 }

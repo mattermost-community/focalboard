@@ -3,8 +3,10 @@
 ## Docker
 
 The Dockerfile gives a quick and easy way to pull the latest Focalboard server and deploy it locally.
+Please note that if you wish to have persistence and mount a volume for the `/data` directory, the host directory must be owned by user `nobody`.
 
 ```
+sudo chown -R nobody /home/user/focalboard-data
 docker build -t focalboard .
 docker run -it -v "/home/user/focalboard-data:/data" -p 80:8000 focalboard
 ```

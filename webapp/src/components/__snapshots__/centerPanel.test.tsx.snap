@@ -151,7 +151,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -232,7 +232,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -700,7 +700,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -781,7 +781,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -1293,7 +1293,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -1747,7 +1747,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -1828,7 +1828,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -2355,7 +2355,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -2436,7 +2436,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -2963,7 +2963,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -3044,7 +3044,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -3571,7 +3571,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -3652,7 +3652,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -4179,7 +4179,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -4260,7 +4260,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -4787,7 +4787,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -4868,7 +4868,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -5395,7 +5395,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -5476,7 +5476,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -6003,7 +6003,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -6084,7 +6084,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -6611,7 +6611,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -6692,7 +6692,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -7219,7 +7219,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -7282,7 +7282,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -7505,7 +7505,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -7586,7 +7586,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
@@ -8021,7 +8021,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           value="view title"
         />
         <div
-          aria-label="menuwrapper"
+          aria-label="View menu"
           class="MenuWrapper"
           role="button"
         >
@@ -8102,7 +8102,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
