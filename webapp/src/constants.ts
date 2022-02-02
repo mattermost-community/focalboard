@@ -20,7 +20,7 @@ class Constants {
     static readonly titleColumnId = '__title'
     static readonly badgesColumnId = '__badges'
 
-    static readonly versionString = '0.14.0'
+    static readonly versionString = '0.15.0'
     static readonly versionDisplayString = 'Feb 2022'
 
     static readonly languages = [
