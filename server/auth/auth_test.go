@@ -35,6 +35,9 @@ func setupTestHelper(t *testing.T) *TestHelper {
 	mockStore := mockstore.NewMockStore(ctrl)
 	newAuth := New(&cfg, mockStore)
 
+	mockStore.EXPECT().GetDefaultTemplateBlocks().AnyTimes()
+	mockStore.EXPECT().RemoveDefaultTemplates(gomock.Any()).AnyTimes()
+
 	return &TestHelper{
 		Auth:    newAuth,
 		Session: *mockSession,
