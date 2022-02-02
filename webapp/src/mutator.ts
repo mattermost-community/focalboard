@@ -110,10 +110,10 @@ class Mutator {
     }
 
     //eslint-disable-next-line no-shadow
-    async insertBlocks(blocks: Block[], description = 'add', afterRedo?: (blocks: Block[]) => Promise<void>, beforeUndo?: () => Promise<void>) {
+    async insertBlocks(blocks: Block[], description = 'add', afterRedo?: (blocks: Block[]) => Promise<void>, beforeUndo?: () => Promise<void>, sourceBoardID?: string) {
         return undoManager.perform(
             async () => {
-                const res = await octoClient.insertBlocks(blocks)
+                const res = await octoClient.insertBlocks(blocks, sourceBoardID)
                 const newBlocks = (await res.json()) as Block[]
                 await afterRedo?.(newBlocks)
                 return newBlocks
@@ -769,6 +769,7 @@ class Mutator {
                 await afterRedo?.(respBlocks[0].id)
             },
             beforeUndo,
+            boardId,
         )
         return [createdBlocks, createdBlocks[0].id]
     }
