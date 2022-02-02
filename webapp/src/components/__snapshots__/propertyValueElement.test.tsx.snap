@@ -28,7 +28,7 @@ exports[`components/propertyValueElement URL fields should allow cancel 1`] = `
     </a>
     <button
       aria-label="Edit"
-      class="Button IconButton Button_Edit"
+      class="IconButton Button_Edit"
       title="Edit"
       type="button"
     >
@@ -38,7 +38,7 @@ exports[`components/propertyValueElement URL fields should allow cancel 1`] = `
     </button>
     <button
       aria-label="Copy"
-      class="Button IconButton Button_Copy"
+      class="IconButton Button_Copy"
       title="Copy"
       type="button"
     >
@@ -156,7 +156,7 @@ exports[`components/propertyValueElement should match snapshot, url, array value
     </a>
     <button
       aria-label="Edit"
-      class="Button IconButton Button_Edit"
+      class="IconButton Button_Edit"
       title="Edit"
       type="button"
     >
@@ -166,7 +166,7 @@ exports[`components/propertyValueElement should match snapshot, url, array value
     </button>
     <button
       aria-label="Copy"
-      class="Button IconButton Button_Copy"
+      class="IconButton Button_Copy"
       title="Copy"
       type="button"
     >
@@ -193,7 +193,7 @@ exports[`components/propertyValueElement should match snapshot, url, array value
     </a>
     <button
       aria-label="Edit"
-      class="Button IconButton Button_Edit"
+      class="IconButton Button_Edit"
       title="Edit"
       type="button"
     >
@@ -203,7 +203,7 @@ exports[`components/propertyValueElement should match snapshot, url, array value
     </button>
     <button
       aria-label="Copy"
-      class="Button IconButton Button_Copy"
+      class="IconButton Button_Copy"
       title="Copy"
       type="button"
     >
