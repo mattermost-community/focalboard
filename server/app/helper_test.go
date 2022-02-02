@@ -14,6 +14,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/ws"
 
+	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore/mocks"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -36,7 +37,7 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	store.EXPECT().GetDefaultTemplateBlocks().AnyTimes()
 	store.EXPECT().RemoveDefaultTemplates(gomock.Any()).AnyTimes()
 	store.EXPECT().InsertBlock(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
-	filesMock.On("WriteFile", gomock.Any(), gomock.Any()).Return(gomock.Any(), nil)
+	filesMock.On("WriteFile", mock.Anything, mock.Anything).Return(gomock.Any(), nil)
 
 	auth := auth.New(&cfg, store)
 	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
