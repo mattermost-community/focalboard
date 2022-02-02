@@ -13,7 +13,7 @@ import './copy_link.scss'
 import {Utils} from '../../../utils'
 import copyLink from '../../../../static/copyLink.gif'
 
-import {TOUR_CARD} from '../index'
+import {TOUR_BOARD} from '../index'
 import {OnboardingCardClassName} from '../../kanban/kanbanCard'
 
 const CopyLinkTourStep = (): JSX.Element => {
@@ -40,7 +40,7 @@ const CopyLinkTourStep = (): JSX.Element => {
             title={title}
             punchOut={punchout}
             step={currentStep}
-            tutorialCategory={TOUR_CARD}
+            tutorialCategory={TOUR_BOARD}
             autoTour={true}
             placement={'right-end'}
             className='CopyLinkTourStep'
