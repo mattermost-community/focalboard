@@ -21,7 +21,7 @@ describe('Create and delete board / card', () => {
         cy.contains('Use this template').should('exist')
 
         // Some options are present
-        cy.contains('Meeting Notes').should('exist')
+        cy.contains('Meeting Agenda').should('exist')
         cy.contains('Personal Goals').should('exist')
         cy.contains('Project Tasks').should('exist')
 
