@@ -444,8 +444,8 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	// template from board
 	sourceBoardID := r.URL.Query().Get("sourceBoardID")
 	if sourceBoardID != "" {
-		if err := a.app.UpdateFileIDs(sourceBoardID, blocks); err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		if updateFileIDsErr := a.app.UpdateFileIDs(sourceBoardID, blocks); updateFileIDsErr != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", updateFileIDsErr)
 			return
 		}
 	}
