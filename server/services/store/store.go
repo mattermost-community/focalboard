@@ -5,6 +5,7 @@ package store
 import (
 	"errors"
 	"fmt"
+	"io"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -89,6 +90,8 @@ type Store interface {
 	DeleteNotificationHint(c Container, blockID string) error
 	GetNotificationHint(c Container, blockID string) (*model.NotificationHint, error)
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
+
+	ImportArchive(container Container, r io.Reader, userID string, mod model.BlockModifier) error
 
 	IsErrNotFound(err error) bool
 }

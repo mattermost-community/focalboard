@@ -17,7 +17,7 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
         >
           <button
             aria-label="Close dialog"
-            class="Button IconButton IconButton--large"
+            class="IconButton size--medium"
             title="Close dialog"
             type="button"
           >
@@ -86,7 +86,7 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
         >
           <button
             aria-label="Close dialog"
-            class="Button IconButton IconButton--large"
+            class="IconButton size--medium"
             title="Close dialog"
             type="button"
           >

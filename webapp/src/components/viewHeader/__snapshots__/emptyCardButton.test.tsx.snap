@@ -32,7 +32,7 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton 1`] = `
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -76,7 +76,7 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -179,7 +179,7 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and addCar
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i

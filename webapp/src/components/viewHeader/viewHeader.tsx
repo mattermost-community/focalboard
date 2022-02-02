@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import ViewMenu from '../../components/viewMenu'
 import mutator from '../../mutator'
@@ -44,6 +44,7 @@ type Props = {
 
 const ViewHeader = React.memo((props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
+    const intl = useIntl()
 
     const {board, activeView, views, groupByProperty, cards, showShared, dateDisplayProperty} = props
 
@@ -76,7 +77,7 @@ const ViewHeader = React.memo((props: Props) => {
                 spellCheck={true}
                 autoExpand={false}
             />
-            <MenuWrapper>
+            <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
                 <IconButton icon={<DropdownIcon/>}/>
                 <ViewMenu
                     board={board}

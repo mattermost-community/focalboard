@@ -47,7 +47,7 @@ export const defaultTheme = {
     buttonFg: '255, 255, 255',
     sidebarBg: '30, 50, 92',
     sidebarFg: '255, 255, 255',
-    sidebarTextActiveBorder: '#5d89ea',
+    sidebarTextActiveBorder: '93, 137, 243',
     sidebarWhiteLogo: 'true',
 
     link: '#0000ee',
@@ -76,7 +76,7 @@ export const darkTheme = {
     buttonFg: '255, 255, 255',
     sidebarBg: '75, 73, 67',
     sidebarFg: '255, 255, 255',
-    sidebarTextActiveBorder: '#66b9a7',
+    sidebarTextActiveBorder: '102, 185, 167',
     sidebarWhiteLogo: 'true',
 
     link: '#0090ff',
@@ -105,7 +105,7 @@ export const lightTheme = {
     buttonFg: '255, 255, 255',
     sidebarBg: '247, 246, 243',
     sidebarFg: '55, 53, 47',
-    sidebarTextActiveBorder: '#579eff',
+    sidebarTextActiveBorder: '87, 158, 255',
     sidebarWhiteLogo: 'false',
 }
 
@@ -132,7 +132,7 @@ export function setTheme(theme: Theme | null): Theme {
         document.documentElement.style.setProperty('--sidebar-bg-rgb', consolidatedTheme.sidebarBg)
         document.documentElement.style.setProperty('--sidebar-text-rgb', consolidatedTheme.sidebarFg)
         document.documentElement.style.setProperty('--link-color-rgb', consolidatedTheme.link)
-        document.documentElement.style.setProperty('--sidebar-text-active-border', consolidatedTheme.sidebarTextActiveBorder)
+        document.documentElement.style.setProperty('--sidebar-text-active-border-rgb', consolidatedTheme.sidebarTextActiveBorder)
     }
 
     document.documentElement.style.setProperty('--sidebar-white-logo', consolidatedTheme.sidebarWhiteLogo)
@@ -183,7 +183,7 @@ export function setMattermostTheme(theme: any): Theme {
     document.documentElement.style.setProperty('--sidebar-bg-rgb', color(theme.sidebarBg).rgb().array().join(', '))
     document.documentElement.style.setProperty('--sidebar-text-rgb', color(theme.sidebarText).rgb().array().join(', '))
     document.documentElement.style.setProperty('--link-color-rgb', theme.linkColor)
-    document.documentElement.style.setProperty('--sidebar-text-active-border', color(theme.sidebarTextActiveBorder).rgb().array().join(', '))
+    document.documentElement.style.setProperty('--sidebar-text-active-border-rgb', color(theme.sidebarTextActiveBorder).rgb().array().join(', '))
 
     return setTheme({
         ...defaultTheme,

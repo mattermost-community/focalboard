@@ -10,6 +10,7 @@
     padding: 0 16px;
     margin-bottom: 16px;
     font-weight: 600;
+    align-items: center;
 
     > div:nth-child(2) {
         position: absolute;
@@ -20,19 +21,6 @@
         background: rgb(var(--center-channel-bg-rgb));
         border-radius: 4px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    }
-
-    .add-workspace-icon {
-        display: flex;
-
-        i {
-            color: rgb(var(--sidebar-text-rgb));
-            align-self: center;
-        }
-
-        &:hover {
-            cursor: pointer;
-        }
     }
 }
 

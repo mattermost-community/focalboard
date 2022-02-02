@@ -16,7 +16,7 @@ exports[`src/components/gallery/Gallery return Gallery and click new 1`] = `
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i
@@ -46,7 +46,7 @@ exports[`src/components/gallery/Gallery return Gallery and click new 1`] = `
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i
@@ -117,7 +117,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i
@@ -139,7 +139,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                 role="button"
               >
                 <i
-                  class="CompassIcon icon-trash-can-outline trash-can-outline"
+                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
                 />
                 <div
                   class="menu-name"
@@ -234,7 +234,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i

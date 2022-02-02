@@ -106,7 +106,7 @@ Object {
               role="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline trash-can-outline"
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
               />
               <div
                 class="menu-name"
@@ -270,7 +270,7 @@ Object {
             role="button"
           >
             <i
-              class="CompassIcon icon-trash-can-outline trash-can-outline"
+              class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
             />
             <div
               class="menu-name"

@@ -18,8 +18,9 @@ exports[`src/components/topBar should match snapshot for focalboardPlugin 1`] = 
     >
       <div
         class="version"
+        title="v1.0.0"
       >
-        v1.0.0
+        Feb 2022
       </div>
     </div>
   </div>

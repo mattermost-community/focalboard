@@ -260,7 +260,7 @@ func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error
 func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
 	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
-		pa.api.LogError("received a message for an unregistered webconn",
+		pa.api.LogDebug("received a message for an unregistered webconn",
 			"webConnID", webConnID,
 			"userID", userID,
 			"action", req.Action,
