@@ -153,12 +153,27 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 		lineNum++
 	}
 
+	modInfoCache := make(map[string]interface{})
+	modBlocks := make([]model.Block, 0, len(blocks))
+	for _, block := range blocks {
+		b := block
+		if opt.BlockModifier != nil && !opt.BlockModifier(&b, modInfoCache) {
+			a.logger.Debug("skipping insert block per block modifier",
+				mlog.String("blockID", block.ID),
+				mlog.String("block_type", block.Type.String()),
+			)
+			continue
+		}
+		modBlocks = append(modBlocks, b)
+	}
+
+	blocks = model.GenerateBlockIDs(modBlocks, a.logger)
+
 	container := store.Container{
 		WorkspaceID: opt.WorkspaceID,
 	}
 
 	var err error
-	blocks = model.GenerateBlockIDs(blocks, a.logger)
 	blocks, err = a.InsertBlocks(container, blocks, opt.ModifiedBy, false)
 	if err != nil {
 		return "", fmt.Errorf("error inserting archive blocks: %w", err)
@@ -166,7 +181,7 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 
 	// find new board id
 	for _, block := range blocks {
-		if block.Type == "board" {
+		if block.Type == model.TypeBoard {
 			return block.ID, nil
 		}
 	}
