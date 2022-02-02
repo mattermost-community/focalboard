@@ -41,7 +41,7 @@ func (a *App) SetConfig(config *config.Configuration) {
 }
 
 func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) *App {
-	app := &App{
+	return &App{
 		config:        config,
 		store:         services.Store,
 		auth:          services.Auth,
@@ -52,6 +52,4 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 		notifications: services.Notifications,
 		logger:        services.Logger,
 	}
-	app.initialize()
-	return app
 }
