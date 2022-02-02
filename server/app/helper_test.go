@@ -37,7 +37,7 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	store.EXPECT().GetDefaultTemplateBlocks().AnyTimes()
 	store.EXPECT().RemoveDefaultTemplates(gomock.Any()).AnyTimes()
 	store.EXPECT().InsertBlock(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
-	filesMock.On("WriteFile", mock.Anything, mock.Anything).Return(gomock.Any(), nil)
+	filesMock.On("WriteFile", mock.Anything, mock.Anything).Return(mock.Anything, nil)
 
 	auth := auth.New(&cfg, store)
 	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
