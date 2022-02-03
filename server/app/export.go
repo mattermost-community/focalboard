@@ -180,7 +180,7 @@ func (a *App) getBoardsForArchive(container store.Container, boardIDs []string) 
 	boards := make([]model.Block, 0, len(boardIDs))
 
 	for _, id := range boardIDs {
-		b, err := a.GetBlockByID(container, id)
+		b, err := a.GetBlockByID(id)
 		if err != nil {
 			return nil, fmt.Errorf("could not fetch board %s: %w", id, err)
 		}

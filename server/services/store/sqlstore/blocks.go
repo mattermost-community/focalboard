@@ -336,7 +336,7 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, c store.Container, block *model
 		return err
 	}
 
-	existingBlock, err := s.getBlock(db, c, block.ID)
+	existingBlock, err := s.getBlock(db, block.ID)
 	if err != nil {
 		return err
 	}
@@ -421,7 +421,7 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, c store.Container, block *model
 }
 
 func (s *SQLStore) patchBlock(db sq.BaseRunner, c store.Container, blockID string, blockPatch *model.BlockPatch, userID string) error {
-	existingBlock, err := s.getBlock(db, c, blockID)
+	existingBlock, err := s.getBlock(db, blockID)
 	if err != nil {
 		return err
 	}
@@ -454,7 +454,7 @@ func (s *SQLStore) insertBlocks(db sq.BaseRunner, c store.Container, blocks []mo
 }
 
 func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID string, modifiedBy string) error {
-	block, err := s.getBlock(db, c, blockID)
+	block, err := s.getBlock(db, blockID)
 	if err != nil {
 		return err
 	}
@@ -549,12 +549,11 @@ func (s *SQLStore) getBlockCountsByType(db sq.BaseRunner) (map[string]int64, err
 	return m, nil
 }
 
-func (s *SQLStore) getBlock(db sq.BaseRunner, c store.Container, blockID string) (*model.Block, error) {
+func (s *SQLStore) getBlock(db sq.BaseRunner, blockID string) (*model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"id": blockID}).
-		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+		Where(sq.Eq{"id": blockID})
 
 	rows, err := query.Query()
 	if err != nil {

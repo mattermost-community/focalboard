@@ -1,11 +1,13 @@
 package app
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -22,10 +24,6 @@ func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([
 	return a.store.GetBlocksWithParent(c, parentID)
 }
 
-func (a *App) GetBlockWithID(c store.Container, blockID string) (*model.Block, error) {
-	return a.store.GetBlock(c, blockID)
-}
-
 func (a *App) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {
 	return a.store.GetBlocksWithRootID(c, rootID)
 }
@@ -39,7 +37,7 @@ func (a *App) GetParentID(c store.Container, blockID string) (string, error) {
 }
 
 func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
-	oldBlock, err := a.store.GetBlock(c, blockID)
+	oldBlock, err := a.store.GetBlock(blockID)
 	if err != nil {
 		return nil
 	}
@@ -50,7 +48,7 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 	}
 
 	a.metrics.IncrementBlocksPatched(1)
-	block, err := a.store.GetBlock(c, blockID)
+	block, err := a.store.GetBlock(blockID)
 	if err != nil {
 		return nil
 	}
@@ -65,7 +63,7 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 func (a *App) PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch, modifiedByID string) error {
 	oldBlocks := make([]model.Block, 0, len(blockPatches.BlockIDs))
 	for _, blockID := range blockPatches.BlockIDs {
-		oldBlock, err := a.store.GetBlock(c, blockID)
+		oldBlock, err := a.store.GetBlock(blockID)
 		if err != nil {
 			return nil
 		}
@@ -79,7 +77,7 @@ func (a *App) PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch
 
 	a.metrics.IncrementBlocksPatched(len(oldBlocks))
 	for i, blockID := range blockPatches.BlockIDs {
-		newBlock, err := a.store.GetBlock(c, blockID)
+		newBlock, err := a.store.GetBlock(blockID)
 		if err != nil {
 			return nil
 		}
@@ -133,20 +131,37 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID
 	return blocks, nil
 }
 
-func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
+func (a *App) CopyCardFiles(sourceBoardID string, destWorkspaceID string, blocks []model.Block) error {
 	// Images attached in cards have a path comprising the card's board ID.
 	// When we create a template from this board, we need to copy the files
 	// with the new board ID in path.
 	// Not doing so causing images in templates (and boards created from this
 	// template) to fail to load.
 
+	// look up ID of source board, which may be different than the blocks.
+	board, err := a.GetBlockByID(sourceBoardID)
+	if err != nil || board == nil {
+		return fmt.Errorf("cannot fetch board %s for CopyCardFiles: %w", sourceBoardID, err)
+	}
+
 	for i := range blocks {
 		block := blocks[i]
 
 		fileName, ok := block.Fields["fileId"]
 		if block.Type == model.TypeImage && ok {
-			sourceFilePath := filepath.Join(block.WorkspaceID, sourceBoardID, fileName.(string))
-			destinationFilePath := filepath.Join(block.WorkspaceID, block.RootID, fileName.(string))
+			// create unique filename in case we are copying cards within the same board.
+			ext := filepath.Ext(fileName.(string))
+			destFilename := utils.NewID(utils.IDTypeNone) + ext
+
+			sourceFilePath := filepath.Join(board.WorkspaceID, sourceBoardID, fileName.(string))
+			destinationFilePath := filepath.Join(destWorkspaceID, block.RootID, destFilename)
+
+			a.logger.Debug(
+				"Copying card file",
+				mlog.String("sourceFilePath", sourceFilePath),
+				mlog.String("destinationFilePath", destinationFilePath),
+			)
+
 			if err := a.filesBackend.CopyFile(sourceFilePath, destinationFilePath); err != nil {
 				a.logger.Error(
 					"CopyCardFiles failed to copy file",
@@ -157,6 +172,7 @@ func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
 
 				return err
 			}
+			block.Fields["fileId"] = destFilename
 		}
 	}
 
@@ -175,12 +191,12 @@ func (a *App) GetAllBlocks(c store.Container) ([]model.Block, error) {
 	return a.store.GetAllBlocks(c)
 }
 
-func (a *App) GetBlockByID(c store.Container, blockID string) (*model.Block, error) {
-	return a.store.GetBlock(c, blockID)
+func (a *App) GetBlockByID(blockID string) (*model.Block, error) {
+	return a.store.GetBlock(blockID)
 }
 
 func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
-	block, err := a.store.GetBlock(c, blockID)
+	block, err := a.store.GetBlock(blockID)
 	if err != nil {
 		return err
 	}

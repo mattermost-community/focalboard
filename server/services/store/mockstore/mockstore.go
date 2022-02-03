@@ -180,18 +180,18 @@ func (mr *MockStoreMockRecorder) GetAllBlocks(arg0 interface{}) *gomock.Call {
 }
 
 // GetBlock mocks base method.
-func (m *MockStore) GetBlock(arg0 store.Container, arg1 string) (*model.Block, error) {
+func (m *MockStore) GetBlock(arg0 string) (*model.Block, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBlock", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetBlock", arg0)
 	ret0, _ := ret[0].(*model.Block)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetBlock indicates an expected call of GetBlock.
-func (mr *MockStoreMockRecorder) GetBlock(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetBlock(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlock", reflect.TypeOf((*MockStore)(nil).GetBlock), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlock", reflect.TypeOf((*MockStore)(nil).GetBlock), arg0)
 }
 
 // GetBlockCountsByType mocks base method.

@@ -88,8 +88,8 @@ func (s *SQLStore) GetAllBlocks(c store.Container) ([]model.Block, error) {
 
 }
 
-func (s *SQLStore) GetBlock(c store.Container, blockID string) (*model.Block, error) {
-	return s.getBlock(s.db, c, blockID)
+func (s *SQLStore) GetBlock(blockID string) (*model.Block, error) {
+	return s.getBlock(s.db, blockID)
 
 }
 
