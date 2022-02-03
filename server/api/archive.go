@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 )
@@ -45,11 +46,8 @@ func (a *API) handleArchiveExport(w http.ResponseWriter, r *http.Request) {
 
 	query := r.URL.Query()
 	boardID := query.Get("board_id")
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
 
 	auditRec := a.makeAuditRecord(r, "archiveExport", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
@@ -60,8 +58,8 @@ func (a *API) handleArchiveExport(w http.ResponseWriter, r *http.Request) {
 		boardIDs = []string{boardID}
 	}
 	opts := model.ExportArchiveOptions{
-		WorkspaceID: container.WorkspaceID,
-		BoardIDs:    boardIDs,
+		TeamID:   teamID,
+		BoardIDs: boardIDs,
 	}
 
 	filename := fmt.Sprintf("archive-%s.focalboard", time.Now().Format("2006-01-02"))
@@ -107,15 +105,12 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
 	ctx := r.Context()
 	session, _ := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
 
 	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
@@ -130,8 +125,8 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("size", handle.Size)
 
 	opt := model.ImportArchiveOptions{
-		WorkspaceID: container.WorkspaceID,
-		ModifiedBy:  userID,
+		TeamID:     teamID,
+		ModifiedBy: userID,
 	}
 
 	if err := a.app.ImportArchive(file, opt); err != nil {

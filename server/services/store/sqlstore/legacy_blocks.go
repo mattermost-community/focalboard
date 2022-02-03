@@ -8,7 +8,6 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -68,7 +67,7 @@ func (s *SQLStore) legacyBlocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 // getLegacyBlock is the old getBlock version that still uses the old
 // block model. This method is kept to enable the unique IDs data
 // migration
-func (s *SQLStore) getLegacyBlock(db sq.BaseRunner, c store.Container, blockID string) (*model.Block, error) {
+func (s *SQLStore) getLegacyBlock(db sq.BaseRunner, workspaceID string, blockID string) (*model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(
 			"id",
@@ -88,7 +87,7 @@ func (s *SQLStore) getLegacyBlock(db sq.BaseRunner, c store.Container, blockID s
 		).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"id": blockID}).
-		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+		Where(sq.Eq{"coalesce(workspace_id, '0')": workspaceID})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -111,7 +110,7 @@ func (s *SQLStore) getLegacyBlock(db sq.BaseRunner, c store.Container, blockID s
 // insertLegacyBlock is the old insertBlock version that still uses
 // the old block model. This method is kept to enable the unique IDs
 // data migration
-func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, c store.Container, block *model.Block, userID string) error {
+func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block *model.Block, userID string) error {
 	if block.RootID == "" {
 		return RootIDNilError{}
 	}
@@ -121,7 +120,7 @@ func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, c store.Container, block 
 		return err
 	}
 
-	existingBlock, err := s.getLegacyBlock(db, c, block.ID)
+	existingBlock, err := s.getLegacyBlock(db, workspaceID, block.ID)
 	if err != nil {
 		return err
 	}
@@ -147,7 +146,7 @@ func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, c store.Container, block 
 		)
 
 	insertQueryValues := map[string]interface{}{
-		"workspace_id":          c.WorkspaceID,
+		"workspace_id":          workspaceID,
 		"id":                    block.ID,
 		"parent_id":             block.ParentID,
 		"root_id":               block.RootID,
@@ -166,7 +165,7 @@ func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, c store.Container, block 
 		// block with ID exists, so this is an update operation
 		query := s.getQueryBuilder(db).Update(s.tablePrefix+"blocks").
 			Where(sq.Eq{"id": block.ID}).
-			Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID}).
+			Where(sq.Eq{"COALESCE(workspace_id, '0')": workspaceID}).
 			Set("parent_id", block.ParentID).
 			Set("root_id", block.RootID).
 			Set("modified_by", block.ModifiedBy).

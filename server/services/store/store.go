@@ -11,12 +11,6 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 )
 
-// Conainer represents a container in a store
-// Using a struct to make extending this easier in the future.
-type Container struct {
-	WorkspaceID string
-}
-
 // Store represents the abstraction of the data storage.
 type Store interface {
 	GetBlocksWithParentAndType(boardID, parentID string, blockType string) ([]model.Block, error)
@@ -36,11 +30,11 @@ type Store interface {
 	GetBlock(blockID string) (*model.Block, error)
 	// @withTransaction
 	PatchBlock(blockID string, blockPatch *model.BlockPatch, userID string) error
-	GetBlockHistory(c Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
-	GetBoardAndCardByID(c Container, blockID string) (board *model.Block, card *model.Block, err error)
-	GetBoardAndCard(c Container, block *model.Block) (board *model.Block, card *model.Block, err error)
+	GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
+	GetBoardAndCardByID(blockID string) (board *model.Board, card *model.Block, err error)
+	GetBoardAndCard(block *model.Block) (board *model.Board, card *model.Block, err error)
 	// @withTransaction
-	PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, userID string) error
+	PatchBlocks(blockPatches *model.BlockPatchBatch, userID string) error
 
 	Shutdown() error
 
@@ -109,20 +103,20 @@ type Store interface {
 	GetUserCategoryBlocks(userID, teamID string) ([]model.CategoryBlocks, error)
 	AddUpdateCategoryBlock(userID, categoryID, blockID string) error
 
-	CreateSubscription(c Container, sub *model.Subscription) (*model.Subscription, error)
-	DeleteSubscription(c Container, blockID string, subscriberID string) error
-	GetSubscription(c Container, blockID string, subscriberID string) (*model.Subscription, error)
-	GetSubscriptions(c Container, subscriberID string) ([]*model.Subscription, error)
-	GetSubscribersForBlock(c Container, blockID string) ([]*model.Subscriber, error)
-	GetSubscribersCountForBlock(c Container, blockID string) (int, error)
-	UpdateSubscribersNotifiedAt(c Container, blockID string, notifiedAt int64) error
+	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
+	DeleteSubscription(blockID string, subscriberID string) error
+	GetSubscription(blockID string, subscriberID string) (*model.Subscription, error)
+	GetSubscriptions(subscriberID string) ([]*model.Subscription, error)
+	GetSubscribersForBlock(blockID string) ([]*model.Subscriber, error)
+	GetSubscribersCountForBlock(blockID string) (int, error)
+	UpdateSubscribersNotifiedAt(blockID string, notifiedAt int64) error
 
 	UpsertNotificationHint(hint *model.NotificationHint, notificationFreq time.Duration) (*model.NotificationHint, error)
-	DeleteNotificationHint(c Container, blockID string) error
-	GetNotificationHint(c Container, blockID string) (*model.NotificationHint, error)
+	DeleteNotificationHint(blockID string) error
+	GetNotificationHint(blockID string) (*model.NotificationHint, error)
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
 
-	ImportArchive(container Container, r io.Reader, userID string, mod model.BlockModifier) error
+	ImportArchive(teamID string, r io.Reader, userID string, mod model.BlockModifier) error
 
 	IsErrNotFound(err error) bool
 }

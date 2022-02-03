@@ -10,7 +10,6 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -25,7 +24,7 @@ var (
 )
 
 // InitializeTemplates imports default templates if the blocks table is empty.
-func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r io.Reader, userID string, mod model.BlockModifier) error {
+func (s *SQLStore) importArchive(db sq.BaseRunner, teamID string, r io.Reader, userID string, mod model.BlockModifier) error {
 	s.logger.Debug("importArchive")
 
 	// archives are stored in JSONL format so we must read them
@@ -49,10 +48,10 @@ func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r 
 	}
 
 	args := importArchiveLineArgs{
-		db:        db,
-		container: container,
-		userID:    userID,
-		modInfo:   modInfo,
+		db:      db,
+		teamID:  teamID,
+		userID:  userID,
+		modInfo: modInfo,
 	}
 
 	lineNum := 1
@@ -82,10 +81,10 @@ func (s *SQLStore) importArchive(db sq.BaseRunner, container store.Container, r 
 }
 
 type importArchiveLineArgs struct {
-	db        sq.BaseRunner
-	container store.Container
-	userID    string
-	modInfo   blockModifierInfo
+	db      sq.BaseRunner
+	teamID  string
+	userID  string
+	modInfo blockModifierInfo
 }
 
 // importArchiveLine parses a single line from an archive and imports it to the database.
@@ -113,7 +112,7 @@ func (s *SQLStore) importArchiveLine(line *model.ArchiveLine, args importArchive
 			mlog.String("block_type", block.Type.String()),
 			mlog.String("block_title", block.Title),
 		)
-		if err := s.insertBlock(args.db, args.container, &block, args.userID); err != nil {
+		if err := s.insertBlock(args.db, &block, args.userID); err != nil {
 			return err
 		}
 

@@ -12,7 +12,6 @@ import (
 	// "github.com/mattermost/focalboard/server/services/store/sqlstore/initializations"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/initializations"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -45,11 +44,8 @@ func (s *SQLStore) InitializeTemplates() error {
 	}
 
 	blocksJSONL := initializations.MustAsset("templates.json")
-	globalContainer := store.Container{
-		WorkspaceID: "0",
-	}
 
-	return s.ImportArchive(globalContainer, bytes.NewReader(blocksJSONL), "system", fixTemplateBlock)
+	return s.ImportArchive("0", bytes.NewReader(blocksJSONL), "system", fixTemplateBlock)
 }
 
 // removeDefaultTemplates deletes all the default templates and their children.

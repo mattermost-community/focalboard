@@ -84,8 +84,8 @@ func (s *SQLStore) CreateSession(session *model.Session) error {
 
 }
 
-func (s *SQLStore) CreateSubscription(c store.Container, sub *model.Subscription) (*model.Subscription, error) {
-	return s.createSubscription(s.db, c, sub)
+func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscription, error) {
+	return s.createSubscription(s.db, sub)
 
 }
 
@@ -167,8 +167,8 @@ func (s *SQLStore) DeleteMember(boardID string, userID string) error {
 
 }
 
-func (s *SQLStore) DeleteNotificationHint(c store.Container, blockID string) error {
-	return s.deleteNotificationHint(s.db, c, blockID)
+func (s *SQLStore) DeleteNotificationHint(blockID string) error {
+	return s.deleteNotificationHint(s.db, blockID)
 
 }
 
@@ -177,8 +177,8 @@ func (s *SQLStore) DeleteSession(sessionID string) error {
 
 }
 
-func (s *SQLStore) DeleteSubscription(c store.Container, blockID string, subscriberID string) error {
-	return s.deleteSubscription(s.db, c, blockID, subscriberID)
+func (s *SQLStore) DeleteSubscription(blockID string, subscriberID string) error {
+	return s.deleteSubscription(s.db, blockID, subscriberID)
 
 }
 
@@ -218,8 +218,8 @@ func (s *SQLStore) GetBlockCountsByType() (map[string]int64, error) {
 
 }
 
-func (s *SQLStore) GetBlockHistory(c store.Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
-	return s.getBlockHistory(s.db, c, blockID, opts)
+func (s *SQLStore) GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	return s.getBlockHistory(s.db, blockID, opts)
 
 }
 
@@ -253,13 +253,13 @@ func (s *SQLStore) GetBoard(id string) (*model.Board, error) {
 
 }
 
-func (s *SQLStore) GetBoardAndCard(c store.Container, block *model.Block) (*model.Block, *model.Block, error) {
-	return s.getBoardAndCard(s.db, c, block)
+func (s *SQLStore) GetBoardAndCard(block *model.Block) (*model.Board, *model.Block, error) {
+	return s.getBoardAndCard(s.db, block)
 
 }
 
-func (s *SQLStore) GetBoardAndCardByID(c store.Container, blockID string) (*model.Block, *model.Block, error) {
-	return s.getBoardAndCardByID(s.db, c, blockID)
+func (s *SQLStore) GetBoardAndCardByID(blockID string) (*model.Board, *model.Block, error) {
+	return s.getBoardAndCardByID(s.db, blockID)
 
 }
 
@@ -288,8 +288,8 @@ func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint
 
 }
 
-func (s *SQLStore) GetNotificationHint(c store.Container, blockID string) (*model.NotificationHint, error) {
-	return s.getNotificationHint(s.db, c, blockID)
+func (s *SQLStore) GetNotificationHint(blockID string) (*model.NotificationHint, error) {
+	return s.getNotificationHint(s.db, blockID)
 
 }
 
@@ -318,23 +318,23 @@ func (s *SQLStore) GetSubTree3(boardID string, blockID string, opts model.QueryS
 
 }
 
-func (s *SQLStore) GetSubscribersCountForBlock(c store.Container, blockID string) (int, error) {
-	return s.getSubscribersCountForBlock(s.db, c, blockID)
+func (s *SQLStore) GetSubscribersCountForBlock(blockID string) (int, error) {
+	return s.getSubscribersCountForBlock(s.db, blockID)
 
 }
 
-func (s *SQLStore) GetSubscribersForBlock(c store.Container, blockID string) ([]*model.Subscriber, error) {
-	return s.getSubscribersForBlock(s.db, c, blockID)
+func (s *SQLStore) GetSubscribersForBlock(blockID string) ([]*model.Subscriber, error) {
+	return s.getSubscribersForBlock(s.db, blockID)
 
 }
 
-func (s *SQLStore) GetSubscription(c store.Container, blockID string, subscriberID string) (*model.Subscription, error) {
-	return s.getSubscription(s.db, c, blockID, subscriberID)
+func (s *SQLStore) GetSubscription(blockID string, subscriberID string) (*model.Subscription, error) {
+	return s.getSubscription(s.db, blockID, subscriberID)
 
 }
 
-func (s *SQLStore) GetSubscriptions(c store.Container, subscriberID string) ([]*model.Subscription, error) {
-	return s.getSubscriptions(s.db, c, subscriberID)
+func (s *SQLStore) GetSubscriptions(subscriberID string) ([]*model.Subscription, error) {
+	return s.getSubscriptions(s.db, subscriberID)
 
 }
 
@@ -388,8 +388,8 @@ func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 
 }
 
-func (s *SQLStore) ImportArchive(container store.Container, r io.Reader, userID string, mod model.BlockModifier) error {
-	return s.importArchive(s.db, container, r, userID, mod)
+func (s *SQLStore) ImportArchive(teamID string, r io.Reader, userID string, mod model.BlockModifier) error {
+	return s.importArchive(s.db, teamID, r, userID, mod)
 
 }
 
@@ -466,12 +466,12 @@ func (s *SQLStore) PatchBlock(blockID string, blockPatch *model.BlockPatch, user
 
 }
 
-func (s *SQLStore) PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, userID string) error {
+func (s *SQLStore) PatchBlocks(blockPatches *model.BlockPatchBatch, userID string) error {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
 	}
-	err := s.patchBlocks(tx, teamID, blockPatches, userID)
+	err := s.patchBlocks(tx, blockPatches, userID)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "PatchBlocks"))
@@ -559,8 +559,8 @@ func (s *SQLStore) UpdateSession(session *model.Session) error {
 
 }
 
-func (s *SQLStore) UpdateSubscribersNotifiedAt(c store.Container, blockID string, notifiedAt int64) error {
-	return s.updateSubscribersNotifiedAt(s.db, c, blockID, notifiedAt)
+func (s *SQLStore) UpdateSubscribersNotifiedAt(blockID string, notifiedAt int64) error {
+	return s.updateSubscribersNotifiedAt(s.db, blockID, notifiedAt)
 
 }
 

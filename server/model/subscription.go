@@ -31,9 +31,9 @@ type Subscription struct {
 	// required: true
 	BlockID string `json:"blockId"`
 
-	// WorkspaceID is id of the workspace the block belongs to
+	// TeamID is id of the workspace the block belongs to
 	// required: true
-	WorkspaceID string `json:"workspaceId"`
+	TeamID string `json:"teamId"`
 
 	// SubscriberType is the type of the entity (e.g. user, channel) that is subscribing
 	// required: true
@@ -63,8 +63,8 @@ func (s *Subscription) IsValid() error {
 	if s.BlockID == "" {
 		return ErrInvalidSubscription{"missing block id"}
 	}
-	if s.WorkspaceID == "" {
-		return ErrInvalidSubscription{"missing workspace id"}
+	if s.TeamID == "" {
+		return ErrInvalidSubscription{"missing team id"}
 	}
 	if s.BlockType == "" {
 		return ErrInvalidSubscription{"missing block type"}

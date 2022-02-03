@@ -6,7 +6,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
-	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -81,7 +80,7 @@ func (a *App) PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, mo
 		oldBlocks = append(oldBlocks, *oldBlock)
 	}
 
-	err := a.store.PatchBlocks(teamID, blockPatches, modifiedByID)
+	err := a.store.PatchBlocks(blockPatches, modifiedByID)
 	if err != nil {
 		return err
 	}
@@ -176,7 +175,7 @@ func (a *App) GetBlockByID(blockID string) (*model.Block, error) {
 	return a.store.GetBlock(blockID)
 }
 
-func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
+func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 	block, err := a.store.GetBlock(blockID)
 	if err != nil {
 		return err

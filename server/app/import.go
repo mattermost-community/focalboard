@@ -71,7 +71,7 @@ func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 				continue
 			}
 			// save file with original filename so it matches name in image block.
-			filePath := filepath.Join(opt.WorkspaceID, boardID, filename)
+			filePath := filepath.Join(opt.TeamID, boardID, filename)
 			_, err := a.filesBackend.WriteFile(zr, filePath)
 			if err != nil {
 				return fmt.Errorf("cannot import file %s for board %s: %w", filename, dir, err)

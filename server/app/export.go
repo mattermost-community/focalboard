@@ -168,12 +168,12 @@ func (a *App) writeArchiveFile(zw *zip.Writer, filename string, boardID string, 
 		return err
 	}
 
-	src, err := a.GetFileReader(opt.WorkspaceID, boardID, filename)
+	src, err := a.GetFileReader(opt.TeamID, boardID, filename)
 	if err != nil {
 		// just log this; image file is missing but we'll still export an equivalent board
 		a.logger.Error("image file missing for export",
 			mlog.String("filename", filename),
-			mlog.String("workspace_id", opt.WorkspaceID),
+			mlog.String("team_id", opt.TeamID),
 			mlog.String("board_id", boardID),
 		)
 		return nil
