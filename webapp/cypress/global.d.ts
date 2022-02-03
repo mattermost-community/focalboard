@@ -27,5 +27,6 @@ declare namespace Cypress {
          * @param {string} item - one of the template menu options, ex. 'Empty board'
          */
         uiCreateBoard: (item: string) => Chainable
+        uiCreateEmptyBoard: () => Chainable
     }
 }

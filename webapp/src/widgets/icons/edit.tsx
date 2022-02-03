@@ -3,7 +3,6 @@
 
 import React from 'react'
 
-import './edit.scss'
 import CompassIcon from './compassIcon'
 
 export default function EditIcon(): JSX.Element {

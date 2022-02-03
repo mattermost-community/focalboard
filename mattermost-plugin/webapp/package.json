@@ -14,8 +14,8 @@
     "check-types": "tsc"
   },
   "devDependencies": {
-    "@babel/cli": "7.14.3",
-    "@babel/core": "7.14.3",
+    "@babel/cli": "7.16.8",
+    "@babel/core": "7.16.12",
     "@babel/plugin-proposal-class-properties": "7.13.0",
     "@babel/plugin-proposal-object-rest-spread": "7.14.2",
     "@babel/plugin-proposal-optional-chaining": "7.14.2",
@@ -69,10 +69,12 @@
   },
   "dependencies": {
     "core-js": "3.12.1",
+    "glob-parent": "6.0.2",
     "marked": ">=4.0.12",
     "mattermost-redux": "5.33.1",
     "react-intl": "^5.13.5",
-    "react-router-dom": "5.2.0"
+    "react-router-dom": "5.2.0",
+    "trim-newlines": "4.0.2"
   },
   "jest": {
     "snapshotSerializers": [

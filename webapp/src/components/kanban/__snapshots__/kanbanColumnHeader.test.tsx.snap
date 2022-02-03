@@ -40,7 +40,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -85,7 +85,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
               role="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline trash-can-outline"
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
               />
               <div
                 class="menu-name"
@@ -298,7 +298,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
       </div>
     </div>
     <button
-      class="Button IconButton"
+      class="IconButton"
       type="button"
     >
       <i
@@ -349,7 +349,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -358,7 +358,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
       </button>
     </div>
     <button
-      class="Button IconButton"
+      class="IconButton"
       type="button"
     >
       <i
@@ -409,7 +409,7 @@ exports[`src/components/kanban/kanbanColumnHeader should match snapshot 1`] = `
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -418,7 +418,7 @@ exports[`src/components/kanban/kanbanColumnHeader should match snapshot 1`] = `
       </button>
     </div>
     <button
-      class="Button IconButton"
+      class="IconButton"
       type="button"
     >
       <i

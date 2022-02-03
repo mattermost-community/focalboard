@@ -32,7 +32,7 @@ class Constants {
         {
             code: 'es',
             name: 'spanish',
-            displayName: 'Español (Alpha)',
+            displayName: 'Español',
         },
         {
             code: 'de',
@@ -47,7 +47,7 @@ class Constants {
         {
             code: 'fr',
             name: 'french',
-            displayName: 'Français (Beta)',
+            displayName: 'Français',
         },
         {
             code: 'nl',
@@ -57,7 +57,7 @@ class Constants {
         {
             code: 'ru',
             name: 'russian',
-            displayName: 'Pусский (Beta)',
+            displayName: 'Pусский',
         },
         {
             code: 'zh-cn',
@@ -82,32 +82,32 @@ class Constants {
         {
             code: 'pt_BR',
             name: 'portuguese',
-            displayName: 'Português (Brasil) (Beta)',
+            displayName: 'Português (Brasil)',
         },
         {
             code: 'ca',
             name: 'catalan',
-            displayName: 'Català (Beta)',
+            displayName: 'Català',
         },
         {
             code: 'el',
             name: 'greek',
-            displayName: 'Ελληνικά (Alpha)',
+            displayName: 'Ελληνικά',
         },
         {
             code: 'id',
             name: 'indonesian',
-            displayName: 'bahasa Indonesia (Alpha)',
+            displayName: 'bahasa Indonesia',
         },
         {
             code: 'it',
             name: 'italian',
-            displayName: 'Italiano (Beta)',
+            displayName: 'Italiano',
         },
         {
             code: 'sv',
             name: 'swedish',
-            displayName: 'Svenska (Beta)',
+            displayName: 'Svenska',
         },
     ]
 }

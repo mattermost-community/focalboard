@@ -426,6 +426,16 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	model.StampModificationMetadata(userID, blocks, auditRec)
 
+	// this query param exists only when creating
+	// template from board
+	sourceBoardID := r.URL.Query().Get("sourceBoardID")
+	if sourceBoardID != "" {
+		if updateFileIDsErr := a.app.CopyCardFiles(sourceBoardID, blocks); updateFileIDsErr != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", updateFileIDsErr)
+			return
+		}
+	}
+
 	newBlocks, err := a.app.InsertBlocks(*container, blocks, session.UserID, true)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)

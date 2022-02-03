@@ -114,7 +114,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       </svg>
                     </div>
                     <div
-                      aria-label="Español (Alpha)"
+                      aria-label="Español"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -124,7 +124,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       <div
                         class="menu-name"
                       >
-                        Español (Alpha)
+                        Español
                       </div>
                       <div
                         class="noicon"
@@ -165,7 +165,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
-                      aria-label="Français (Beta)"
+                      aria-label="Français"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -175,7 +175,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       <div
                         class="menu-name"
                       >
-                        Français (Beta)
+                        Français
                       </div>
                       <div
                         class="noicon"
@@ -199,7 +199,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
-                      aria-label="Pусский (Beta)"
+                      aria-label="Pусский"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -209,7 +209,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       <div
                         class="menu-name"
                       >
-                        Pусский (Beta)
+                        Pусский
                       </div>
                       <div
                         class="noicon"
@@ -284,7 +284,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       />
                     </div>
                     <div
-                      aria-label="Português (Brasil) (Beta)"
+                      aria-label="Português (Brasil)"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -294,14 +294,14 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       <div
                         class="menu-name"
                       >
-                        Português (Brasil) (Beta)
+                        Português (Brasil)
                       </div>
                       <div
                         class="noicon"
                       />
                     </div>
                     <div
-                      aria-label="Català (Beta)"
+                      aria-label="Català"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -311,14 +311,14 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       <div
                         class="menu-name"
                       >
-                        Català (Beta)
+                        Català
                       </div>
                       <div
                         class="noicon"
                       />
                     </div>
                     <div
-                      aria-label="Ελληνικά (Alpha)"
+                      aria-label="Ελληνικά"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -328,14 +328,14 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       <div
                         class="menu-name"
                       >
-                        Ελληνικά (Alpha)
+                        Ελληνικά
                       </div>
                       <div
                         class="noicon"
                       />
                     </div>
                     <div
-                      aria-label="bahasa Indonesia (Alpha)"
+                      aria-label="bahasa Indonesia"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -345,14 +345,14 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       <div
                         class="menu-name"
                       >
-                        bahasa Indonesia (Alpha)
+                        bahasa Indonesia
                       </div>
                       <div
                         class="noicon"
                       />
                     </div>
                     <div
-                      aria-label="Italiano (Beta)"
+                      aria-label="Italiano"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -362,14 +362,14 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       <div
                         class="menu-name"
                       >
-                        Italiano (Beta)
+                        Italiano
                       </div>
                       <div
                         class="noicon"
                       />
                     </div>
                     <div
-                      aria-label="Svenska (Beta)"
+                      aria-label="Svenska"
                       class="MenuOption TextOption menu-option"
                       role="button"
                     >
@@ -379,7 +379,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                       <div
                         class="menu-name"
                       >
-                        Svenska (Beta)
+                        Svenska
                       </div>
                       <div
                         class="noicon"

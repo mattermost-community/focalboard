@@ -1928,7 +1928,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
               style="width: 100px;"
             >
               <button
-                class="Button IconButton"
+                class="IconButton"
                 type="button"
               >
                 <svg
@@ -1963,7 +1963,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
               role="button"
             >
               <button
-                class="Button IconButton"
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1972,7 +1972,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
               </button>
             </div>
             <button
-              class="Button IconButton"
+              class="IconButton"
               type="button"
             >
               <i
