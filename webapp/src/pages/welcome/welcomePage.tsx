@@ -20,6 +20,7 @@ import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
 import {fetchMe, getMe, patchProps} from '../../store/users'
 import octoClient from '../../octoClient'
 import {FINISHED, TOUR_CARD, TOUR_ORDER} from '../../components/onboardingTour'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 const WelcomePage = React.memo(() => {
     const history = useHistory()
@@ -50,6 +51,8 @@ const WelcomePage = React.memo(() => {
     }
 
     const skipTour = async () => {
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.SkipTour)
+
         if (me) {
             await setWelcomePageViewed(me.id)
             const patch: UserConfigPatch = {
@@ -69,6 +72,8 @@ const WelcomePage = React.memo(() => {
     }
 
     const startTour = async () => {
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.StartTour)
+
         if (!me) {
             return
         }

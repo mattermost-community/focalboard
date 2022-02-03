@@ -261,8 +261,6 @@ const TutorialTourTip: React.FC<Props> = ({
                 ref={triggerRef}
                 onClick={handleOpen}
                 className={`tutorial-tour-tip__pulsating-dot-ctr ${className || ''}`}
-                onMouseEnter={() => console.log('entered')}
-                onMouseLeave={() => console.log('left')}
             >
                 <PulsatingDot coords={pulsatingDotPosition}/>
             </div>
@@ -272,7 +270,6 @@ const TutorialTourTip: React.FC<Props> = ({
                     handleEventPropagationAndDefault(e)
                     handleHide(e)
                     if (onPunchholeClick) {
-                        console.log('dadasdas')
                         onPunchholeClick(e)
                     }
                 }}

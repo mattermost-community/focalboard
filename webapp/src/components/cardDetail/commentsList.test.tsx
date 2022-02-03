@@ -62,6 +62,7 @@ describe('components/cardDetail/CommentsList', () => {
                         rootId={'root_id'}
                         cardId={'card_id'}
                         readonly={false}
+                        showTour={false}
                     />,
                 )}
             </ReduxProvider>)
@@ -102,6 +103,7 @@ describe('components/cardDetail/CommentsList', () => {
                         rootId={'root_id'}
                         cardId={'card_id'}
                         readonly={true}
+                        showTour={false}
                     />,
                 )}
             </ReduxProvider>)

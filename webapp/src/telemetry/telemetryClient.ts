@@ -30,6 +30,8 @@ export const TelemetryActions = {
     DeleteCard: 'deleteCard',
     AddTemplateFromCard: 'addTemplateFromCard',
     ViewSharedBoard: 'viewSharedBoard',
+    StartTour: 'welcomeScreen_startTour',
+    SkipTour: 'welcomeScreen_skipTour',
 }
 
 interface IEventProps {
