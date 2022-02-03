@@ -128,7 +128,7 @@ const App = React.memo((): JSX.Element => {
     }
 
     const continueToWelcomeScreen = () => {
-        return Utils.isFocalboardPlugin() && loggedIn === true && !me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]
+        return loggedIn === true && !me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]
     }
 
     return (

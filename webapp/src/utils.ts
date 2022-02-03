@@ -517,6 +517,10 @@ class Utils {
     }
 
     static buildURL(path: string, absolute?: boolean): string {
+        if (!Utils.isFocalboardPlugin()) {
+            return path
+        }
+
         const baseURL = Utils.getBaseURL()
         let finalPath = baseURL + path
         if (path.indexOf('/') !== 0) {
