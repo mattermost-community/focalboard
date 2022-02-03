@@ -12,6 +12,7 @@ import Button from '../../widgets/buttons/button'
 import octoClient from '../../octoClient'
 import mutator from '../../mutator'
 import {getTemplates, getCurrentBoard} from '../../store/boards'
+import {getCurrentTeam, Team} from '../../store/teams'
 import {fetchGlobalTemplates, getGlobalTemplates} from '../../store/globalTemplates'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -30,6 +31,7 @@ type Props = {
 const BoardTemplateSelector = React.memo((props: Props) => {
     const globalTemplates = useAppSelector<Board[]>(getGlobalTemplates) || []
     const currentBoard = useAppSelector<Board>(getCurrentBoard) || null
+    const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const {title, description, onClose} = props
     const dispatch = useAppDispatch()
     const intl = useIntl()
@@ -124,7 +126,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                     ))}
                     <div
                         className='new-template'
-                        onClick={() => mutator.addEmptyBoardTemplate(intl, showBoard, () => showBoard(currentBoard.id))}
+                        onClick={() => mutator.addEmptyBoardTemplate(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoard.id))}
                     >
                         <span className='template-icon'><AddIcon/></span>
                         <span className='template-name'>
@@ -141,7 +143,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                         <Button
                             filled={true}
                             size={'medium'}
-                            onClick={() => mutator.addBoardFromTemplate(intl, showBoard, () => showBoard(currentBoard.id), activeTemplate.id, activeTemplate.teamId === '0')}
+                            onClick={() => mutator.addBoardFromTemplate(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoard.id), activeTemplate.id, activeTemplate.teamId === '0')}
                         >
                             <FormattedMessage
                                 id='BoardTemplateSelector.use-this-template'
@@ -153,7 +155,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                             filled={false}
                             emphasis={'secondary'}
                             size={'medium'}
-                            onClick={() => mutator.addEmptyBoard(intl, showBoard, () => showBoard(currentBoard.id))}
+                            onClick={() => mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoard.id))}
                         >
                             <FormattedMessage
                                 id='BoardTemplateSelector.create-empty-board'

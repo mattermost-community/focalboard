@@ -3015,7 +3015,7 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 	// create boards and blocks
 	bab, err := a.app.CreateBoardsAndBlocks(newBab, userID, true)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
 	}
 
@@ -3028,7 +3028,7 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 
 	data, err := json.Marshal(bab)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
 	}
 

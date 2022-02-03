@@ -959,6 +959,7 @@ class Mutator {
     }
 
     async duplicateBoard(
+        teamId: string,
         boardId: string,
         description = 'duplicate board',
         asTemplate = false,
@@ -992,6 +993,7 @@ class Mutator {
     }
 
     async duplicateFromRootBoard(
+        teamId: string,
         boardId: string,
         description = 'duplicate board',
         asTemplate = false,
@@ -1024,6 +1026,7 @@ class Mutator {
     }
 
     async addBoardFromTemplate(
+        teamId: string,
         intl: IntlShape,
         afterRedo: (id: string) => Promise<void>,
         beforeUndo: () => Promise<void>,
@@ -1035,22 +1038,25 @@ class Mutator {
 
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId})
         if (global) {
-            return mutator.duplicateFromRootBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
+            return mutator.duplicateFromRootBoard(teamId, boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
         }
-        return mutator.duplicateBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
+        return mutator.duplicateBoard(teamId, boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
     }
 
     async addEmptyBoard(
+        teamId: string,
         intl: IntlShape,
         afterRedo: (id: string) => Promise<void>,
         beforeUndo: () => Promise<void>,
     ): Promise<BoardsAndBlocks> {
         const board = createBoard()
+        board.teamId = teamId
 
         const view = createBoardView()
         view.fields.viewType = 'board'
         view.parentId = board.id
         view.boardId = board.id
+        view.rootId = board.id
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
         return mutator.createBoardsAndBlocks(
@@ -1066,18 +1072,21 @@ class Mutator {
     }
 
     async addEmptyBoardTemplate(
+        teamId: string,
         intl: IntlShape,
         afterRedo: (id: string) => Promise<void>,
         beforeUndo: () => Promise<void>,
     ): Promise<BoardsAndBlocks> {
         const boardTemplate = createBoard()
         boardTemplate.isTemplate = true
+        boardTemplate.teamId = teamId
         boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled Template'})
 
         const view = createBoardView()
         view.fields.viewType = 'board'
         view.parentId = boardTemplate.id
         view.boardId = boardTemplate.id
+        view.rootId = boardTemplate.id
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
         return mutator.createBoardsAndBlocks(
