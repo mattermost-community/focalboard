@@ -767,28 +767,6 @@ func (s *SQLStore) getBoardAndCard(db sq.BaseRunner, block *model.Block) (board 
 	return board, card, nil
 }
 
-func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]model.Block, error) {
-	subquery, _, _ := s.getQueryBuilder(db).
-		Select("id").
-		From(s.tablePrefix + "blocks").
-		Having("count(id) > 1").
-		GroupBy("id").
-		ToSql()
-
-	rows, err := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(fmt.Sprintf("id IN (%s)", subquery)).
-		Query()
-	if err != nil {
-		s.logger.Error(`getBlocksWithSameID ERROR`, mlog.Err(err))
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-
-	return s.blocksFromRows(rows)
-}
-
 func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceID string) error {
 	runUpdateForBlocksAndHistory := func(query sq.UpdateBuilder) error {
 		if _, err := query.Table(s.tablePrefix + "blocks").Exec(); err != nil {

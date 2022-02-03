@@ -18,8 +18,47 @@ const (
 	UniqueIDsMigrationKey        = "UniqueIDsMigrationComplete"
 	CategoryUUIDIDMigrationKey   = "CategoryUuidIdMigrationComplete"
 
-	categoriesUUIDIDMigrationRequiredVersion = 17
+	categoriesUUIDIDMigrationRequiredVersion = 19
 )
+
+func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]model.Block, error) {
+	subquery, _, _ := s.getQueryBuilder(db).
+		Select("id").
+		From(s.tablePrefix + "blocks").
+		Having("count(id) > 1").
+		GroupBy("id").
+		ToSql()
+
+	blocksFields := []string{
+		"id",
+		"parent_id",
+		"root_id",
+		"created_by",
+		"modified_by",
+		s.escapeField("schema"),
+		"type",
+		"title",
+		"COALESCE(fields, '{}')",
+		s.timestampToCharField("insert_at", "insertAt"),
+		"create_at",
+		"update_at",
+		"delete_at",
+		"COALESCE(workspace_id, '0')",
+	}
+
+	rows, err := s.getQueryBuilder(db).
+		Select(blocksFields...).
+		From(s.tablePrefix + "blocks").
+		Where(fmt.Sprintf("id IN (%s)", subquery)).
+		Query()
+	if err != nil {
+		s.logger.Error(`getBlocksWithSameID ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.blocksFromRows(rows)
+}
 
 func (s *SQLStore) runUniqueIDsMigration() error {
 	setting, err := s.GetSystemSetting(UniqueIDsMigrationKey)
