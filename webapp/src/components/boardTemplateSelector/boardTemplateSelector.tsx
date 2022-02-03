@@ -57,8 +57,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
         mutator.deleteBoard(
             template,
             intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete template'}),
-            async () => {
-            },
+            async () => {},
             async () => {
                 showBoard(template.id)
             },

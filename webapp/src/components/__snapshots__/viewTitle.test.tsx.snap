@@ -85,7 +85,7 @@ exports[`components/viewTitle hide description 1`] = `
       class="title"
     >
       <div
-        class="BlockIconSelector"
+        class="IconSelector"
       >
         <div
           aria-label="menuwrapper"
@@ -142,7 +142,7 @@ exports[`components/viewTitle should match snapshot 1`] = `
       class="title"
     >
       <div
-        class="BlockIconSelector"
+        class="IconSelector"
       >
         <div
           aria-label="menuwrapper"
@@ -241,7 +241,7 @@ exports[`components/viewTitle should match snapshot readonly 1`] = `
       class="title"
     >
       <div
-        class="BlockIconSelector"
+        class="IconSelector"
       >
         <div
           aria-label="menuwrapper"
@@ -358,7 +358,7 @@ exports[`components/viewTitle show description 1`] = `
       class="title"
     >
       <div
-        class="BlockIconSelector"
+        class="IconSelector"
       >
         <div
           aria-label="menuwrapper"

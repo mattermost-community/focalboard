@@ -447,7 +447,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                 Random icons
               </div>
               <div
-                class="Switch on"
+                class="Switch size--small on"
               >
                 <div
                   class="octo-switch-inner"
@@ -622,7 +622,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
                 Random icons
               </div>
               <div
-                class="Switch on"
+                class="Switch size--small on"
               >
                 <div
                   class="octo-switch-inner"
@@ -887,7 +887,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                 Random icons
               </div>
               <div
-                class="Switch on"
+                class="Switch size--small on"
               >
                 <div
                   class="octo-switch-inner"

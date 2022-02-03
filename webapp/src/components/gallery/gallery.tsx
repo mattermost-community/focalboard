@@ -55,7 +55,7 @@ const Gallery = (props: Props): JSX.Element => {
 
     return (
         <div className='Gallery'>
-            {cards.filter((c) => c.parentId === board.id).map((card) => {
+            {cards.filter((c) => c.boardId === board.id).map((card) => {
                 return (
                     <GalleryCard
                         key={card.id + card.updateAt}

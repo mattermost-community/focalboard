@@ -53,7 +53,7 @@ exports[`components/cardDialog already following card 1`] = `
           class="CardDetail content"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -318,7 +318,7 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
           class="CardDetail content"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               class="octo-icon size-l readonly"
@@ -525,7 +525,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
           class="CardDetail content"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -803,7 +803,7 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
           class="CardDetail content"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -1081,7 +1081,7 @@ exports[`components/cardDialog should match snapshot 1`] = `
           class="CardDetail content"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"

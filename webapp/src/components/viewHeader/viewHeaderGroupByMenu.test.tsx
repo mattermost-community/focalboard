@@ -21,7 +21,7 @@ const mockedMutator = mocked(mutator, true)
 
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
-const property = board.fields.cardProperties.find((p) => p.name === 'Status')
+const property = board.cardProperties.find((p) => p.name === 'Status')
 
 describe('components/viewHeader/viewHeaderGroupByMenu', () => {
     const state = {

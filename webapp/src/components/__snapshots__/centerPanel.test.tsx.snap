@@ -56,7 +56,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -163,6 +163,9 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -1196,7 +1199,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -1305,6 +1308,9 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -1652,7 +1658,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -1759,6 +1765,9 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -2260,7 +2269,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -2367,6 +2376,9 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -2868,7 +2880,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -2975,6 +2987,9 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -3476,7 +3491,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -3583,6 +3598,9 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -4084,7 +4102,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -4191,6 +4209,9 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -4692,7 +4713,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -4799,6 +4820,9 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -5300,7 +5324,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -5407,6 +5431,9 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -5908,7 +5935,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -6015,6 +6042,9 @@ exports[`components/centerPanel return centerPanel and select one card and click
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -6516,7 +6546,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -6623,6 +6653,9 @@ exports[`components/centerPanel return centerPanel and select one card and click
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -7124,7 +7157,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -7231,6 +7264,9 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -7410,7 +7446,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -7517,6 +7553,9 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />
@@ -7926,7 +7965,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -8033,6 +8072,9 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />

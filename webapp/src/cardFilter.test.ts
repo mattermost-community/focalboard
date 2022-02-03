@@ -15,7 +15,7 @@ const mockedUtils = mocked(Utils, true)
 describe('src/cardFilter', () => {
     const board = TestBlockFactory.createBoard()
     board.id = '1'
-    board.rootId = '1'
+
     const card1 = TestBlockFactory.createCard(board)
     card1.id = '1'
     card1.title = 'card1'

@@ -58,17 +58,16 @@ test('OctoClient: insert blocks', async () => {
 })
 
 test.skip('OctoClient: importFullArchive', async () => {
-    const blocks = createBlocks()
+    const archive = new File([''], 'test')
 
-    await octoClient.importFullArchive(blocks)
+    await octoClient.importFullArchive(archive)
 
     expect(FetchMock.fn).toBeCalledTimes(1)
     expect(FetchMock.fn).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
             method: 'POST',
-            body: JSON.stringify(blocks),
-    }))
+        }))
 })
 
 function createBlocks(): Block[] {

@@ -90,15 +90,6 @@ interface IPropertyTemplate {
     options: IPropertyOption[]
 }
 
-type BoardFields = {
-    icon: string
-    description: string
-    showDescription?: boolean
-    isTemplate?: boolean
-    cardProperties: IPropertyTemplate[]
-    columnCalculations: Record<string, string>
-}
-
 function createBoard(board?: Board): Board {
     const now = Date.now()
     let cardProperties: IPropertyTemplate[] = []

@@ -14,7 +14,7 @@ import {MemoryRouter, Router} from 'react-router-dom'
 
 import Mutator from '../../mutator'
 import {Utils} from '../../utils'
-import {UserWorkspace} from '../../user'
+import {Team} from '../../store/teams'
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
 
 import BoardTemplateSelector from './boardTemplateSelector'
@@ -40,10 +40,12 @@ jest.mock('../../mutator')
 describe('components/boardTemplateSelector/boardTemplateSelector', () => {
     const mockedUtils = mocked(Utils, true)
     const mockedMutator = mocked(Mutator, true)
-    const workspace1: UserWorkspace = {
-        id: 'workspace_1',
-        title: 'Workspace 1',
-        boardCount: 1,
+    const team1: Team = {
+        id: 'team-1',
+        title: 'Team 1',
+        signupToken: '',
+        updateAt: 0,
+        modifiedBy: 'user-1',
     }
     const template1Title = 'Template 1'
     const globalTemplateTitle = 'Template Global'
@@ -53,37 +55,32 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
     beforeEach(() => {
         jest.clearAllMocks()
         const state = {
-            workspace: {
-                userWorkspaces: new Array<UserWorkspace>(workspace1),
-                current: workspace1,
+            teams: {
+                current: team1,
             },
             boards: {
                 boards: [
                     {
                         id: '2',
                         title: boardTitle,
-                        workspaceId: workspace1.id,
-                        fields: {
-                            icon: '🚴🏻‍♂️',
-                            cardProperties: [
-                                {id: 'id-6'},
-                            ],
-                            dateDisplayPropertyId: 'id-6',
-                        },
+                        teamId: team1.id,
+                        icon: '🚴🏻‍♂️',
+                        cardProperties: [
+                            {id: 'id-6'},
+                        ],
+                        dateDisplayPropertyId: 'id-6',
                     },
                 ],
                 templates: [
                     {
                         id: '1',
-                        workspaceId: workspace1.id,
+                        teamId: team1.id,
                         title: template1Title,
-                        fields: {
-                            icon: '🚴🏻‍♂️',
-                            cardProperties: [
-                                {id: 'id-5'},
-                            ],
-                            dateDisplayPropertyId: 'id-5',
-                        },
+                        icon: '🚴🏻‍♂️',
+                        cardProperties: [
+                            {id: 'id-5'},
+                        ],
+                        dateDisplayPropertyId: 'id-5',
                     },
                 ],
                 cards: [],
@@ -93,14 +90,12 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                 value: [{
                     id: 'global-1',
                     title: globalTemplateTitle,
-                    workspaceId: '0',
-                    fields: {
-                        icon: '🚴🏻‍♂️',
-                        cardProperties: [
-                            {id: 'global-id-5'},
-                        ],
-                        dateDisplayPropertyId: 'global-id-5',
-                    },
+                    teamId: '0',
+                    icon: '🚴🏻‍♂️',
+                    cardProperties: [
+                        {id: 'global-id-5'},
+                    ],
+                    dateDisplayPropertyId: 'global-id-5',
                 }],
             },
         }
@@ -214,7 +209,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                 await userEvent.click(deleteConfirm!)
             })
 
-            expect(mockedMutator.deleteBlock).toBeCalledTimes(1)
+            expect(mockedMutator.deleteBoard).toBeCalledTimes(1)
         })
         test('return BoardTemplateSelector and click edit template icon', async () => {
             const history = createMemoryHistory()

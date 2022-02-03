@@ -97,7 +97,7 @@ describe('components/blockIconSelector', () => {
         const allButtonThumbUp = await screen.findAllByRole('button', {name: /thumbsup/i})
         userEvent.click(allButtonThumbUp[0])
         expect(mockedMutator.changeBlockIcon).toBeCalledTimes(1)
-        expect(mockedMutator.changeBlockIcon).toBeCalledWith(card.id, card.fields.icon, '👍')
+        expect(mockedMutator.changeBlockIcon).toBeCalledWith(card.boardId, card.id, card.fields.icon, '👍')
     })
 
     test('return no icon after click on remove menu', () => {
@@ -112,7 +112,7 @@ describe('components/blockIconSelector', () => {
         expect(buttonRemove).not.toBeNull()
         userEvent.click(buttonRemove!)
         expect(mockedMutator.changeBlockIcon).toBeCalledTimes(1)
-        expect(mockedMutator.changeBlockIcon).toBeCalledWith(card.id, card.fields.icon, '', 'remove icon')
+        expect(mockedMutator.changeBlockIcon).toBeCalledWith(card.boardId, card.id, card.fields.icon, '', 'remove icon')
 
         //simulate reset icon
         card.fields.icon = ''
