@@ -35,7 +35,14 @@ import {
 } from '../../store/users'
 import OpenCardTourStep from '../onboardingTour/openCard/open_card'
 import {UserConfigPatch} from '../../user'
-import {TOUR_CARD, TOUR_BASE, BoardTourSteps, BaseTourSteps, TOUR_BOARD} from '../onboardingTour'
+import {
+    TOUR_CARD,
+    TOUR_BASE,
+    BoardTourSteps,
+    BaseTourSteps,
+    TOUR_BOARD,
+    TourCategoriesMapToSteps, CardTourSteps,
+} from '../onboardingTour'
 import octoClient from '../../octoClient'
 import CopyLinkTourStep from '../onboardingTour/copyLink/copy_link'
 
@@ -104,6 +111,17 @@ const KanbanCard = React.memo((props: Props) => {
     const showOpenCardTourStep = showTour && onboardingTourCategory === TOUR_BASE && onboardingTourStep === BaseTourSteps.OPEN_A_CARD.toString()
     const showCopyLinkTourStep = showTour && onboardingTourCategory === TOUR_BOARD && onboardingTourStep === BoardTourSteps.COPY_LINK.toString()
 
+    if (isOnboardingCard) {
+        console.log('isOnboardingBoard: ' + isOnboardingBoard)
+        console.log('isOnboardingCard: ' + isOnboardingCard)
+        console.log('onboardingTourStarted: ' + onboardingTourStarted)
+        console.log('onboardingTourCategory: ' + onboardingTourCategory)
+        console.log('onboardingTourStep: ' + onboardingTourStep)
+        console.log('showTour: ' + showTour)
+        console.log('showOpenCardTourStep: ' + showOpenCardTourStep)
+        console.log('showCopyLinkTourStep: ' + showCopyLinkTourStep)
+    }
+
     const dispatch = useAppDispatch()
     const me = useAppSelector(getMe)
 
@@ -113,7 +131,7 @@ const KanbanCard = React.memo((props: Props) => {
             const patch: UserConfigPatch = {
                 updatedFields: {
                     focalboard_tourCategory: TOUR_CARD,
-                    focalboard_onboardingTourStep: 0,
+                    focalboard_onboardingTourStep: CardTourSteps.ADD_PROPERTIES.toString(),
                 },
             }
 

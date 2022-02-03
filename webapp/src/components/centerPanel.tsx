@@ -52,7 +52,7 @@ import Table from './table/table'
 import CalendarFullView from './calendar/fullCalendar'
 
 import Gallery from './gallery/gallery'
-import {FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
+import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD, TourCategoriesMapToSteps} from './onboardingTour'
 
 type Props = {
     clientConfig?: ClientConfig
@@ -148,7 +148,7 @@ class CenterPanel extends React.Component<Props, State> {
         const patch: UserConfigPatch = {
             updatedFields: {
                 focalboard_tourCategory: TOUR_BOARD,
-                focalboard_onboardingTourStep: 0,
+                focalboard_onboardingTourStep: BoardTourSteps.ADD_VIEW.toString(),
             },
         }
 

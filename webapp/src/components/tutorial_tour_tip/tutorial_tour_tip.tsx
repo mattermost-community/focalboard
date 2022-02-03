@@ -6,6 +6,7 @@ import Tippy from '@tippyjs/react'
 import ReactDOM from 'react-dom'
 import {FormattedMessage} from 'react-intl'
 
+import './tutorial_tour_tip.scss'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/light-border.css'
 import 'tippy.js/animations/scale-subtle.css'
@@ -17,7 +18,6 @@ import PulsatingDot from '../pulsating_dot'
 
 import TutorialTourTipBackdrop, {Coords, TutorialTourTipPunchout} from './tutorial_tour_tip_backdrop'
 
-import './tutorial_tour_tip.scss'
 import useTutorialTourTipManager from './tutorial_tour_tip_manager'
 
 const TourTipOverlay = ({

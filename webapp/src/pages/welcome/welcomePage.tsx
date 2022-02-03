@@ -55,7 +55,7 @@ const WelcomePage = React.memo(() => {
             const patch: UserConfigPatch = {
                 updatedFields: {
                     focalboard_tourCategory: TOUR_ORDER[TOUR_ORDER.length - 1],
-                    focalboard_onboardingTourStep: FINISHED,
+                    focalboard_onboardingTourStep: FINISHED.toString(),
                 },
             }
 

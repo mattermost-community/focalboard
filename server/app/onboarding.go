@@ -13,7 +13,7 @@ const (
 	KeyOnboardingTourStep     = KeyPrefix + "onboardingTourStep"
 	KeyOnboardingTourSkipped  = KeyPrefix + "onboardingTourSkipped"
 
-	ValueOnboardingFirstStep    = 0
+	ValueOnboardingFirstStep    = "0"
 	ValueTourCategoryOnboarding = "onboarding"
 
 	// OnboardingBoardID is the board ID from template.json.

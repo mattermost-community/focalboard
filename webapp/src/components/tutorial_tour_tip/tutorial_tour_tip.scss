@@ -7,6 +7,7 @@
             padding: 18px 24px 24px;
             border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
             background: var(--center-channel-bg);
+            background: rgb(var(--center-channel-bg-rgb));
             border-radius: 4px;
             color: var(--center-channel-color-rgb);
             filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.12));
@@ -19,14 +20,14 @@
                 width: 12px;
                 height: 12px;
                 border-color: rgba(var(--center-channel-color-rgb), 0.16);
-                color: var(--center-channel-bg);
+                color: rgb(var(--center-channel-bg-rgb));
             }
 
             .tippy-arrow::before {
                 width: 12px;
                 height: 12px;
                 border-color: rgba(var(--center-channel-color-rgb), 0.16);
-                background: var(--center-channel-bg);
+                background: rgb(var(--center-channel-bg-rgb));
                 color: var(--center-channel-bg);
                 transform-origin: center;
             }
@@ -131,7 +132,6 @@
             order: 0;
             margin: 0;
             font-family: inherit;
-            font-size: 1.4rem;
             font-style: normal;
             font-weight: 600;
             line-height: 2rem;
@@ -140,8 +140,9 @@
         &__close {
             display: flex;
             overflow: hidden;
-            width: 3.2rem;
-            height: 3.2rem;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
             align-items: center;
             justify-content: center;
             border: unset;
@@ -160,8 +161,8 @@
             }
 
             i {
-                font-size: 1.8rem;
-                line-height: 1.8rem;
+                font-size: 18px;
+                line-height: 18px;
 
                 ::before {
                     margin-right: 0;
@@ -190,7 +191,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-top: 2.4rem;
+        margin-top: 24px;
 
         img {
             width: 100%;
@@ -207,7 +208,7 @@
 
     &__btn {
         display: flex;
-        height: 3.2rem;
+        height: 32px;
         align-items: center;
         padding: 10px 16px;
         border: none;
@@ -218,8 +219,8 @@
     }
 
     &__confirm-btn {
-        background: var(--button-bg);
-        color: var(--button-color);
+        background: rgb(var(--sidebar-bg-rgb));
+        color: rgb(var(--center-channel-bg-rgb));
 
         &:hover:not(.disabled) {
             background:
@@ -228,7 +229,7 @@
                         rgba(var(--center-channel-color-rgb), 0.16),
                         rgba(var(--center-channel-color-rgb), 0.16)
                 ),
-                var(--button-bg);
+                rgb(var(--sidebar-bg-rgb));
         }
 
         &:active {
@@ -338,21 +339,35 @@
 }
 
 .tippy-box[data-placement^=right] > .tippy-arrow::before {
-    border-width: 1px 0 0 1px;
+    border-width: 1px 0 0 1px !important;
     transform: rotate(-45deg);
 }
 
 .tippy-box[data-placement^=left] > .tippy-arrow::before {
-    border-width: 1px 1px 0 0;
+    border-width: 1px 1px 0 0 !important;
     transform: rotate(45deg);
 }
 
 .tippy-box[data-placement^=bottom] > .tippy-arrow::before {
-    border-width: 1px 0 0 1px;
+    border-width: 1px 0 0 1px !important;
     transform: rotate(45deg);
 }
 
 .tippy-box[data-placement^=top] > .tippy-arrow::before {
-    border-width: 0 0 1px 1px;
+    border-width: 0 0 1px 1px !important;
     transform: rotate(-45deg);
+}
+
+.tip-backdrop {
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.tutorial-tour-tip__btn {
+    cursor: pointer;
 }
