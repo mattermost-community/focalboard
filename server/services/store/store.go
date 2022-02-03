@@ -117,6 +117,8 @@ type Store interface {
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
 
 	ImportArchive(teamID string, r io.Reader, userID string, mod model.BlockModifier) error
+	RemoveDefaultTemplates(blocks []model.Block) error
+	GetDefaultTemplateBlocks() ([]model.Block, error)
 
 	IsErrNotFound(err error) bool
 }

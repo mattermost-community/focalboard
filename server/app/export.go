@@ -91,7 +91,7 @@ func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Board, opt model.Exp
 		if err = a.writeArchiveBlockLine(w, block); err != nil {
 			return err
 		}
-		if block.Type == "image" {
+		if block.Type == model.TypeImage {
 			filename, err := extractImageFilename(block)
 			if err != nil {
 				return err
@@ -203,10 +203,6 @@ func (a *App) getBoardsForArchive(boardIDs []string) ([]model.Board, error) {
 		b, err := a.GetBoard(id)
 		if err != nil {
 			return nil, fmt.Errorf("could not fetch board %s: %w", id, err)
-		}
-
-		if b.Type != "board" {
-			return nil, fmt.Errorf("block %s is not a board: %w", b.ID, model.ErrInvalidBoardBlock)
 		}
 
 		boards = append(boards, *b)

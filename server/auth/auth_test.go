@@ -41,6 +41,11 @@ func setupTestHelper(t *testing.T) *TestHelper {
 	require.NoError(t, err)
 	newAuth := New(&cfg, mockStore, localpermissions.New(mockPermissions, logger))
 
+	// called during default template setup for every test
+	mockStore.EXPECT().GetDefaultTemplateBlocks().AnyTimes()
+	mockStore.EXPECT().RemoveDefaultTemplates(gomock.Any()).AnyTimes()
+	mockStore.EXPECT().InsertBlock(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes()
+
 	return &TestHelper{
 		Auth:    newAuth,
 		Session: *mockSession,

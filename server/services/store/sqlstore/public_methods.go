@@ -14,7 +14,6 @@ package sqlstore
 
 import (
 	"context"
-	"io"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -270,6 +269,11 @@ func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*mod
 
 func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
 	return s.getCategory(s.db, id)
+
+}
+
+func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
+	return s.getDefaultTemplateBlocks(s.db)
 
 }
 
@@ -531,6 +535,11 @@ func (s *SQLStore) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID
 
 func (s *SQLStore) RefreshSession(session *model.Session) error {
 	return s.refreshSession(s.db, session)
+
+}
+
+func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
+	return s.removeDefaultTemplates(s.db, blocks)
 
 }
 

@@ -35,13 +35,14 @@
 		"color": "^4.0.0",
 		"draft-js": "^0.11.7",
 		"emoji-mart": "^3.0.1",
+		"fstream": "^1.0.12",
 		"fullcalendar": "^5.10.0",
 		"imagemin-gifsicle": "^7.0.0",
 		"imagemin-mozjpeg": "^9.0.0",
 		"imagemin-optipng": "^8.0.0",
 		"imagemin-pngquant": "^9.0.2",
 		"imagemin-svgo": "^8.0.0",
-		"imagemin-webp": "^6.0.0",
+		"imagemin-webp": "^7.0.0",
 		"lodash": "^4.17.21",
 		"marked": "^4.0.12",
 		"moment": "^2.29.1",
@@ -58,7 +59,8 @@
 		"react-intl": "^5.13.5",
 		"react-redux": "^7.2.4",
 		"react-router-dom": "^5.2.0",
-		"react-select": "^4.3.0"
+		"react-select": "^4.3.0",
+		"trim-newlines": "^4.0.2"
 	},
 	"jest": {
 		"moduleNameMapper": {
@@ -119,7 +121,7 @@
 		"fetch-mock-jest": "^1.5.1",
 		"file-loader": "^6.2.0",
 		"html-webpack-plugin": "^5.3.1",
-		"image-webpack-loader": "^7.0.1",
+		"image-webpack-loader": "^8.1.0",
 		"isomorphic-fetch": "^3.0.0",
 		"jest": "^26.6.3",
 		"prettier": "^2.2.1",

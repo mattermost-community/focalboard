@@ -491,6 +491,21 @@ func (mr *MockStoreMockRecorder) GetCategory(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategory", reflect.TypeOf((*MockStore)(nil).GetCategory), arg0)
 }
 
+// GetDefaultTemplateBlocks mocks base method.
+func (m *MockStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDefaultTemplateBlocks")
+	ret0, _ := ret[0].([]model.Block)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDefaultTemplateBlocks indicates an expected call of GetDefaultTemplateBlocks.
+func (mr *MockStoreMockRecorder) GetDefaultTemplateBlocks() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultTemplateBlocks", reflect.TypeOf((*MockStore)(nil).GetDefaultTemplateBlocks))
+}
+
 // GetMemberForBoard mocks base method.
 func (m *MockStore) GetMemberForBoard(arg0, arg1 string) (*model.BoardMember, error) {
 	m.ctrl.T.Helper()
@@ -993,6 +1008,20 @@ func (m *MockStore) RefreshSession(arg0 *model.Session) error {
 func (mr *MockStoreMockRecorder) RefreshSession(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RefreshSession", reflect.TypeOf((*MockStore)(nil).RefreshSession), arg0)
+}
+
+// RemoveDefaultTemplates mocks base method.
+func (m *MockStore) RemoveDefaultTemplates(arg0 []model.Block) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveDefaultTemplates", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RemoveDefaultTemplates indicates an expected call of RemoveDefaultTemplates.
+func (mr *MockStoreMockRecorder) RemoveDefaultTemplates(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveDefaultTemplates", reflect.TypeOf((*MockStore)(nil).RemoveDefaultTemplates), arg0)
 }
 
 // SaveMember mocks base method.
