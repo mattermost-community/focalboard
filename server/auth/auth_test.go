@@ -1,15 +1,16 @@
 package auth
 
 import (
-	"database/sql"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
+	mockpermissions "github.com/mattermost/focalboard/server/services/permissions/mocks"
 	"github.com/mattermost/focalboard/server/services/store/mockstore"
 	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 )
@@ -31,9 +32,14 @@ var mockSession = &model.Session{
 func setupTestHelper(t *testing.T) *TestHelper {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
+	ctrlPermissions := gomock.NewController(t)
+	defer ctrlPermissions.Finish()
 	cfg := config.Configuration{}
 	mockStore := mockstore.NewMockStore(ctrl)
-	newAuth := New(&cfg, mockStore)
+	mockPermissions := mockpermissions.NewMockStore(ctrlPermissions)
+	logger, err := mlog.NewLogger()
+	require.NoError(t, err)
+	newAuth := New(&cfg, mockStore, localpermissions.New(mockPermissions, logger))
 
 	return &TestHelper{
 		Auth:    newAuth,

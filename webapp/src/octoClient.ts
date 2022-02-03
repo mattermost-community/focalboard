@@ -319,9 +319,9 @@ class OctoClient {
         })
     }
 
-    async followBlock(teamId: string, blockId: string, blockType: string, userId: string): Promise<Response> {
+    async followBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
         const body: Subscription = {
-            teamId,
+            teamId: this.teamId,
             blockType,
             blockId,
             subscriberType: 'user',

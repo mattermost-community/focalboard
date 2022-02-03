@@ -3,6 +3,7 @@ package model
 import (
 	"testing"
 
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/stretchr/testify/require"
 )
 
@@ -63,6 +64,9 @@ func TestIsValidBoardsAndBlocks(t *testing.T) {
 }
 
 func TestGenerateBoardsAndBlocksIDs(t *testing.T) {
+	logger, err := mlog.NewLogger()
+	require.NoError(t, err)
+
 	getBlockByType := func(blocks []Block, blockType BlockType) Block {
 		for _, b := range blocks {
 			if b.Type == blockType {
@@ -89,7 +93,7 @@ func TestGenerateBoardsAndBlocksIDs(t *testing.T) {
 			},
 		}
 
-		rBab, err := GenerateBoardsAndBlocksIDs(bab)
+		rBab, err := GenerateBoardsAndBlocksIDs(bab, logger)
 		require.Error(t, err)
 		require.Nil(t, rBab)
 	})
@@ -108,7 +112,7 @@ func TestGenerateBoardsAndBlocksIDs(t *testing.T) {
 			},
 		}
 
-		rBab, err := GenerateBoardsAndBlocksIDs(bab)
+		rBab, err := GenerateBoardsAndBlocksIDs(bab, logger)
 		require.NoError(t, err)
 		require.NotNil(t, rBab)
 

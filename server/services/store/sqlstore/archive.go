@@ -115,6 +115,31 @@ func (s *SQLStore) importArchiveLine(line *model.ArchiveLine, args importArchive
 		if err := s.insertBlock(args.db, &block, args.userID); err != nil {
 			return err
 		}
+	case "board":
+		var board model.Board
+		err := json.Unmarshal(line.Data, &board)
+		if err != nil {
+			return err
+		}
+
+		// TODO Decide if we need the board modifier
+		// if args.modInfo.modifier != nil {
+		// 	if !args.modInfo.modifier(&board, args.modInfo.cache) {
+		// 		s.logger.Trace("skipping insert block per block modifier",
+		// 			mlog.String("boardID", board.ID),
+		// 			mlog.String("board_title", board.Title),
+		// 		)
+		// 		return nil
+		// 	}
+		// }
+
+		s.logger.Trace("insert board",
+			mlog.String("boardID", board.ID),
+			mlog.String("board_title", board.Title),
+		)
+		if _, err := s.insertBoard(args.db, &board, args.userID); err != nil {
+			return err
+		}
 
 	default:
 		return fmt.Errorf("%w (%s)", ErrUnsupportedLineType, line.Type)

@@ -178,7 +178,7 @@ class Mutator {
         )
     }
 
-    async createBoardsAndBlocks(bab: BoardsAndBlocks, description = 'add', afterRedo?: (bab: BoardsAndBlocks) => Promise<void>, beforeUndo?: (bab: BoardsAndBlocks) => Promise<void>): Promise<BoardsAndBlocks> {
+    async createBoardsAndBlocks(bab: BoardsAndBlocks, description = 'add', afterRedo?: (b: BoardsAndBlocks) => Promise<void>, beforeUndo?: (b: BoardsAndBlocks) => Promise<void>): Promise<BoardsAndBlocks> {
         return undoManager.perform(
             async () => {
                 const res = await octoClient.createBoardsAndBlocks(bab)
@@ -212,7 +212,7 @@ class Mutator {
         )
     }
 
-    async deleteBoard(board: Board, description?: string, beforeRedo?: () => Promise<void>, afterUndo?: () => Promise<void>) {
+    async deleteBoard(board: Board, description?: string) {
         await undoManager.perform(
             async () => {
                 await octoClient.deleteBoard(board.id)
@@ -350,7 +350,7 @@ class Mutator {
     // Board Members
 
     async createBoardMember(boardId: string, userId: string, description = 'create board member'): Promise<void> {
-        const member = { boardId, userId, schemeEditor: true } as BoardMember
+        const member = {boardId, userId, schemeEditor: true} as BoardMember
 
         await undoManager.perform(
             async () => {
@@ -413,8 +413,6 @@ class Mutator {
         newBoard.cardProperties.splice(startIndex, 0, newTemplate)
         const changedBlocks: Block[] = []
         const changedBlockIDs: string[] = []
-        let description = 'add property'
-
 
         if (activeView.fields.viewType === 'table') {
             oldBlocks.push(activeView)
@@ -1076,7 +1074,7 @@ class Mutator {
         const view = createBoardView()
         view.fields.viewType = 'board'
         view.parentId = boardTemplate.id
-        view.rootId = boardTemplate.id
+        view.boardId = boardTemplate.id
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
         return mutator.createBoardsAndBlocks(

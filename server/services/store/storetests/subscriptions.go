@@ -106,7 +106,7 @@ func testCreateSubscription(t *testing.T, store store.Store) {
 		require.NoError(t, err, "create duplicate subscription should not error")
 
 		assert.Equal(t, subNew.BlockID, subDup.BlockID)
-		assert.Equal(t, subNew.TeamID, subDup.TeamID)
+		assert.Equal(t, subNew.BoardID, subDup.BoardID)
 		assert.Equal(t, subNew.SubscriberID, subDup.SubscriberID)
 	})
 

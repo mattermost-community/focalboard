@@ -101,7 +101,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		sub := &model.Subscription{
 			BlockType:      model.TypeCard,
 			BlockID:        evt.BlockChanged.ID,
-			TeamID:         evt.Team,
+			BoardID:        evt.Board.ID,
 			SubscriberType: model.SubTypeUser,
 			SubscriberID:   evt.ModifiedByID,
 		}
@@ -112,7 +112,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 				mlog.Err(err),
 			)
 		}
-		b.wsAdapter.BroadcastSubscriptionChange(sub.TeamID, sub)
+		b.wsAdapter.BroadcastSubscriptionChange(sub.BoardID, sub)
 	}
 
 	// notify board subscribers

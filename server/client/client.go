@@ -549,7 +549,7 @@ func (c *Client) CreateSubscription(workspaceID string, sub *model.Subscription)
 func (c *Client) DeleteSubscription(workspaceID string, blockID string, subscriberID string) *Response {
 	url := fmt.Sprintf("%s/%s/%s", c.GetSubscriptionsRoute(workspaceID), blockID, subscriberID)
 
-	r, err := c.DoAPIDelete(url)
+	r, err := c.DoAPIDelete(url, "")
 	if err != nil {
 		return BuildErrorResponse(r, err)
 	}

@@ -26,12 +26,12 @@ var (
 
 // InitializeTemplates imports default templates if the blocks table is empty.
 func (s *SQLStore) InitializeTemplates() error {
-	blocks, err := s.getDefaultTemplateBlocks()
+	boards, err := s.getDefaultTemplateBoards()
 	if err != nil {
 		return fmt.Errorf("cannot initialize templates: %w", err)
 	}
 
-	isNeeded, reason := s.isInitializationNeeded(blocks)
+	isNeeded, reason := s.isInitializationNeeded(boards)
 	if !isNeeded {
 		s.logger.Debug("Template import not needed, skipping")
 		return nil
@@ -39,7 +39,7 @@ func (s *SQLStore) InitializeTemplates() error {
 
 	s.logger.Debug("Importing new default templates", mlog.String("reason", reason))
 
-	if err := s.removeDefaultTemplates(blocks); err != nil {
+	if err := s.removeDefaultTemplates(boards); err != nil {
 		return fmt.Errorf("cannot remove old templates: %w", err)
 	}
 
@@ -49,25 +49,28 @@ func (s *SQLStore) InitializeTemplates() error {
 }
 
 // removeDefaultTemplates deletes all the default templates and their children.
-func (s *SQLStore) removeDefaultTemplates(blocks []model.Block) error {
+func (s *SQLStore) removeDefaultTemplates(boards []*model.Board) error {
 	count := 0
-	for _, block := range blocks {
+	for _, board := range boards {
 		// default template deletion does not need to go to blocks_history
 		deleteQuery := s.getQueryBuilder(s.db).
 			Delete(s.tablePrefix + "blocks").
-			Where(sq.Or{
-				sq.Eq{"id": block.ID},
-				sq.Eq{"parent_id": block.ID},
-				sq.Eq{"root_id": block.ID},
-			})
+			Where(sq.Eq{"board_id": board.ID})
 
 		if _, err := deleteQuery.Exec(); err != nil {
-			return fmt.Errorf("cannot delete default template %s: %w", block.ID, err)
+			return fmt.Errorf("cannot delete default template %s: %w", board.ID, err)
+		}
+
+		deleteQuery = s.getQueryBuilder(s.db).
+			Delete(s.tablePrefix + "boards").
+			Where(sq.Eq{"id": board.ID})
+
+		if _, err := deleteQuery.Exec(); err != nil {
+			return fmt.Errorf("cannot delete default template %s: %w", board.ID, err)
 		}
 
 		s.logger.Trace("removed default template block",
-			mlog.String("block_id", block.ID),
-			mlog.String("block_type", string(block.Type)),
+			mlog.String("board_id", board.ID),
 		)
 		count++
 	}
@@ -77,24 +80,14 @@ func (s *SQLStore) removeDefaultTemplates(blocks []model.Block) error {
 	return nil
 }
 
-// getDefaultTemplateBlocks fetches all template blocks .
-func (s *SQLStore) getDefaultTemplateBlocks() ([]model.Block, error) {
+// getDefaultTemplateBoards fetches all template blocks .
+func (s *SQLStore) getDefaultTemplateBoards() ([]*model.Board, error) {
 	query := s.getQueryBuilder(s.db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"coalesce(workspace_id, '0')": "0"}).
-		Where(sq.Eq{"created_by": "system"})
-
-	switch s.dbType {
-	case sqliteDBType:
-		query = query.Where(s.tablePrefix + "blocks.fields LIKE '%\"isTemplate\":true%'")
-	case mysqlDBType:
-		query = query.Where(s.tablePrefix + "blocks.fields LIKE '%\"isTemplate\":true%'")
-	case postgresDBType:
-		query = query.Where(s.tablePrefix + "blocks.fields ->> 'isTemplate' = 'true'")
-	default:
-		return nil, fmt.Errorf("cannot get default template blocks for database type %s: %w", s.dbType, ErrUnsupportedDatabaseType)
-	}
+		Select(boardFields("")...).
+		From(s.tablePrefix + "boards").
+		Where(sq.Eq{"coalesce(team_id, '0')": "0"}).
+		Where(sq.Eq{"created_by": "system"}).
+		Where(sq.Eq{"is_template": true})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -103,27 +96,19 @@ func (s *SQLStore) getDefaultTemplateBlocks() ([]model.Block, error) {
 	}
 	defer s.CloseRows(rows)
 
-	return s.blocksFromRows(rows)
+	return s.boardsFromRows(rows)
 }
 
 // isInitializationNeeded returns true if the blocks table contains no default templates,
 // or contains at least one default template with an old version number.
-func (s *SQLStore) isInitializationNeeded(blocks []model.Block) (bool, string) {
-	if len(blocks) == 0 {
+func (s *SQLStore) isInitializationNeeded(boards []*model.Board) (bool, string) {
+	if len(boards) == 0 {
 		return true, "no default templates found"
 	}
 
 	// look for any template blocks with the wrong version number (or no version #).
-	for _, block := range blocks {
-		v, ok := block.Fields["templateVer"]
-		if !ok {
-			return true, "block missing templateVer"
-		}
-		version, ok := v.(float64)
-		if !ok {
-			return true, "templateVer NaN"
-		}
-		if version < defaultTemplateVersion {
+	for _, board := range boards {
+		if board.TemplateVersion < defaultTemplateVersion {
 			return true, "templateVer too old"
 		}
 	}
