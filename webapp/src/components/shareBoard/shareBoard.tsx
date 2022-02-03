@@ -6,7 +6,7 @@ import {useIntl, FormattedMessage} from 'react-intl'
 import {generatePath, useRouteMatch} from 'react-router'
 
 import {Utils, IDType} from '../../utils'
-import {sendFlashMessage} from '../../components/flashMessages'
+import Tooltip from '../../widgets/tooltip'
 
 import {ISharing} from '../../blocks/sharing'
 
@@ -16,12 +16,14 @@ import RootPortal from '../rootPortal'
 import Dialog from '../dialog'
 import Switch from '../../widgets/switch'
 import Button from '../../widgets/buttons/button'
+import {sendFlashMessage} from '../flashMessages'
 
 // import SearchIcon from '../../widgets/icons/search'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
 import './shareBoard.scss'
+import IconButton from '../../widgets/buttons/iconButton'
 
 type Props = {
     boardId: string
@@ -59,34 +61,23 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         await loadData()
     }
 
-    // const onRegenerateToken = async () => {
-    //     // eslint-disable-next-line no-alert
-    //     const accept = window.confirm(intl.formatMessage({id: 'ShareBoard.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
-    //     if (accept) {
-    //         const newSharing: ISharing = sharing || createSharingInfo()
-    //         newSharing.token = Utils.createGuid(IDType.Token)
-    //         await client.setSharing(newSharing)
-    //         await loadData()
+    const onRegenerateToken = async () => {
+        // eslint-disable-next-line no-alert
+        const accept = window.confirm(intl.formatMessage({id: 'ShareBoard.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
+        if (accept) {
+            const newSharing: ISharing = sharing || createSharingInfo()
+            newSharing.token = Utils.createGuid(IDType.Token)
+            await client.setSharing(newSharing)
+            await loadData()
 
-    //         const description = intl.formatMessage({id: 'ShareBoard.tokenRegenrated', defaultMessage: 'Token regenerated'})
-    //         sendFlashMessage({content: description, severity: 'low'})
-    //     }
-    // }
+            const description = intl.formatMessage({id: 'ShareBoard.tokenRegenrated', defaultMessage: 'Token regenerated'})
+            sendFlashMessage({content: description, severity: 'low'})
+        }
+    }
 
     useEffect(() => {
         loadData()
     }, [])
-
-    // // list of all users
-    // const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
-
-    // // the "Share internally" link.
-    // const internalShareLink = window.location.href
-
-    // const clientConfig = useAppSelector(getClientConfig)
-
-    // // show external, "Publish" link only if this variable is true"
-    // const externalSharingEnabled = clientConfig.enablePublicSharedBoards
 
     const isSharing = Boolean(sharing && sharing.id === props.boardId && sharing.enabled)
     const readToken = (sharing && isSharing) ? sharing.token : ''
@@ -132,12 +123,42 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                         </div>
                     </div>
                     {isSharing &&
-                        (<div className='d-flex tabs-inputs'>
-                            <input
-                                type='text'
-                                className='mr-3'
-                                value={shareUrl.toString()}
-                            />
+                        (<div className='d-flex justify-content-between tabs-inputs'>
+                            <div className='d-flex input-container'>
+                                <a
+                                    className='shareUrl'
+                                    href={shareUrl.toString()}
+                                    target='_blank'
+                                    rel='noreferrer'
+                                >
+                                    {shareUrl.toString()}
+                                </a>
+                                <Tooltip
+                                    key={'regenerateToken'}
+                                    title={'Regenerate token'}
+                                >
+                                    <IconButton
+                                        onClick={onRegenerateToken}
+                                        icon={
+                                            <CompassIcon
+                                                icon='refresh'
+                                                className='Icon Icon--right'
+                                            />}
+                                        title={'Regenerate token'}
+                                        className='IconButton--large'
+                                    />
+                                </Tooltip>
+                                {/* <IconButton
+                                    onClick={props.onClose}
+                                    icon={
+                                        <CompassIcon
+                                            icon='at'
+                                            className='Icon Icon--right'
+                                        />}
+                                    title={'Regenerate token'}
+                                    className='IconButton--large'
+                                /> */}
+                            </div>
                             <Button
                                 emphasis='secondary'
                                 size='medium'

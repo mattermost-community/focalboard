@@ -5,8 +5,9 @@ import React, {useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import Button from '../../widgets/buttons/button'
-import DeleteIcon from '../../widgets/icons/delete'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+
+import CompassIcon from '../../widgets/icons/compassIcon'
 
 import './shareBoardButton.scss'
 
@@ -23,13 +24,16 @@ const ShareBoardButton = React.memo((props: Props) => {
             <Button
                 title='Share board'
                 size='medium'
-                emphasis='tertiary'
-                icon={<DeleteIcon/>}
+                emphasis='secondary'
                 onClick={() => {
-                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardOpenModal, {board: props.boardId, shareBoardEnabled: isOn})
+                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardOpenModal, {board: props.boardId})
                     setShowShareDialog(!showShareDialog)
                 }}
             >
+                <CompassIcon
+                    icon='globe'
+                    className='CompassIcon'
+                />
                 <FormattedMessage
                     id='CenterPanel.Share'
                     defaultMessage='Share'
