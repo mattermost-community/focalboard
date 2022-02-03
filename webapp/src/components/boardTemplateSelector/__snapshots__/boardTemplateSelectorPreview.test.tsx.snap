@@ -23,7 +23,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -72,6 +72,9 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             />
           </button>
         </div>
+        <button>
+          Show Share Modal
+        </button>
         <div
           class="octo-spacer"
         />

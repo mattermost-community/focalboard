@@ -94,6 +94,7 @@ describe('components/content/checkboxElement', () => {
         expect(container).toMatchSnapshot()
         expect(mockedMutator.updateBlock).toHaveBeenCalledTimes(1)
         expect(mockedMutator.updateBlock).toHaveBeenCalledWith(
+            checkboxBlock.boardId,
             expect.objectContaining({title: newTitle}),
             checkboxBlock,
             expect.anything())
@@ -111,6 +112,7 @@ describe('components/content/checkboxElement', () => {
         expect(container).toMatchSnapshot()
         expect(mockedMutator.updateBlock).toHaveBeenCalledTimes(1)
         expect(mockedMutator.updateBlock).toHaveBeenCalledWith(
+            checkboxBlock.boardId,
             expect.objectContaining({fields: {value: true}}),
             checkboxBlock,
             expect.anything())

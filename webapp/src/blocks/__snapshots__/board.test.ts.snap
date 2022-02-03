@@ -4,7 +4,7 @@ exports[`board tests correctly generate patches for boards and blocks should add
 Array [
   Object {
     "blockIDs": Array [
-      "7ppxdyor67u3weof591f9ot736a",
+      "test-old-block-id",
     ],
     "blockPatches": Array [
       Object {
@@ -15,7 +15,7 @@ Array [
       },
     ],
     "boardIDs": Array [
-      "brqajobpz4uhu774rbuq4i5enmy",
+      "test-board-id",
     ],
     "boardPatches": Array [
       Object {
@@ -30,7 +30,7 @@ Array [
   },
   Object {
     "blockIDs": Array [
-      "7ppxdyor67u3weof591f9ot736a",
+      "test-old-block-id",
     ],
     "blockPatches": Array [
       Object {
@@ -41,7 +41,7 @@ Array [
       },
     ],
     "boardIDs": Array [
-      "brqajobpz4uhu774rbuq4i5enmy",
+      "test-board-id",
     ],
     "boardPatches": Array [
       Object {
@@ -61,7 +61,7 @@ exports[`board tests correctly generate patches for boards and blocks should gen
 Array [
   Object {
     "blockIDs": Array [
-      "7b43sk681o86ckkqdt9h3yrod5c",
+      "test-card-id",
     ],
     "blockPatches": Array [
       Object {
@@ -70,7 +70,7 @@ Array [
       },
     ],
     "boardIDs": Array [
-      "brqajobpz4uhu774rbuq4i5enmy",
+      "test-board-id",
     ],
     "boardPatches": Array [
       Object {
@@ -85,7 +85,7 @@ Array [
   },
   Object {
     "blockIDs": Array [
-      "7b43sk681o86ckkqdt9h3yrod5c",
+      "test-card-id",
     ],
     "blockPatches": Array [
       Object {
@@ -94,7 +94,7 @@ Array [
       },
     ],
     "boardIDs": Array [
-      "brqajobpz4uhu774rbuq4i5enmy",
+      "test-board-id",
     ],
     "boardPatches": Array [
       Object {

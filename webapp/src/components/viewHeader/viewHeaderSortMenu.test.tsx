@@ -89,7 +89,7 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
         userEvent.click(buttonRevert)
         expect(container).toMatchSnapshot()
         expect(mockedMutator.changeViewSortOptions).toBeCalledTimes(1)
-        expect(mockedMutator.changeViewSortOptions).toBeCalledWith(activeView.id, activeView.fields.sortOptions, [])
+        expect(mockedMutator.changeViewSortOptions).toBeCalledWith(activeView.boardId, activeView.id, activeView.fields.sortOptions, [])
     })
     test('return sort menu and do Name sort', () => {
         const {container} = render(
@@ -109,6 +109,6 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
         userEvent.click(buttonName)
         expect(container).toMatchSnapshot()
         expect(mockedMutator.changeViewSortOptions).toBeCalledTimes(1)
-        expect(mockedMutator.changeViewSortOptions).toBeCalledWith(activeView.id, activeView.fields.sortOptions, [{propertyId: '__title', reversed: false}])
+        expect(mockedMutator.changeViewSortOptions).toBeCalledWith(activeView.boardId, activeView.id, activeView.fields.sortOptions, [{propertyId: '__title', reversed: false}])
     })
 })

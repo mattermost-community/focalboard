@@ -28,7 +28,7 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -40,11 +40,11 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
       >
         <a
           class="shareUrl"
-          href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+          href="http://localhost/shared/1/1?r=oneToken"
           rel="noreferrer"
           target="_blank"
         >
-          http://localhost/workspace/1/shared/1/1?r=oneToken
+          http://localhost/shared/1/1?r=oneToken
         </a>
         <button
           type="button"
@@ -98,7 +98,7 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -110,11 +110,11 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
       >
         <a
           class="shareUrl"
-          href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+          href="http://localhost/shared/1/1?r=oneToken"
           rel="noreferrer"
           target="_blank"
         >
-          http://localhost/workspace/1/shared/1/1?r=oneToken
+          http://localhost/shared/1/1?r=oneToken
         </a>
         <button
           type="button"
@@ -168,7 +168,7 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -180,11 +180,11 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
       >
         <a
           class="shareUrl"
-          href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+          href="http://localhost/shared/1/1?r=oneToken"
           rel="noreferrer"
           target="_blank"
         >
-          http://localhost/workspace/1/shared/1/1?r=oneToken
+          http://localhost/shared/1/1?r=oneToken
         </a>
         <button
           type="button"
@@ -238,7 +238,7 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -250,11 +250,11 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
       >
         <a
           class="shareUrl"
-          href="http://localhost/workspace/1/shared/1/1?r=aToken"
+          href="http://localhost/shared/1/1?r=aToken"
           rel="noreferrer"
           target="_blank"
         >
-          http://localhost/workspace/1/shared/1/1?r=aToken
+          http://localhost/shared/1/1?r=aToken
         </a>
         <button
           type="button"
@@ -308,7 +308,7 @@ exports[`src/components/shareBoardComponent should match snapshot 1`] = `
           Publish and share this board with anyone who has the link
         </div>
         <div
-          class="Switch"
+          class="Switch size--small"
         >
           <div
             class="octo-switch-inner"
@@ -348,7 +348,7 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing 1
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -360,11 +360,11 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing 1
       >
         <a
           class="shareUrl"
-          href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+          href="http://localhost/shared/1/1?r=oneToken"
           rel="noreferrer"
           target="_blank"
         >
-          http://localhost/workspace/1/shared/1/1?r=oneToken
+          http://localhost/shared/1/1?r=oneToken
         </a>
         <button
           type="button"
@@ -418,7 +418,7 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing a
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -430,11 +430,11 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing a
       >
         <a
           class="shareUrl"
-          href="http://localhost/test-subpath/plugins/boards/workspace/1/shared/1/1?r=oneToken"
+          href="http://localhost/test-subpath/plugins/boards/shared/1/1?r=oneToken"
           rel="noreferrer"
           target="_blank"
         >
-          http://localhost/test-subpath/plugins/boards/workspace/1/shared/1/1?r=oneToken
+          http://localhost/test-subpath/plugins/boards/shared/1/1?r=oneToken
         </a>
         <button
           type="button"
@@ -488,7 +488,7 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing a
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -558,7 +558,7 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing a
           Anyone with the link can view this board and all cards in it.
         </div>
         <div
-          class="Switch on"
+          class="Switch size--small on"
         >
           <div
             class="octo-switch-inner"

@@ -112,7 +112,9 @@ describe('board tests', () => {
 
     describe('correctly generate patches for boards and blocks', () => {
         const board = TestBlockFactory.createBoard()
+        board.id = 'test-board-id'
         const card = TestBlockFactory.createCard()
+        card.id = 'test-card-id'
 
         it('should generate two empty patches for the same board and block', () => {
             const result = createPatchesFromBoardsAndBlocks(board, board, [card.id], [card], [card])
@@ -121,6 +123,7 @@ describe('board tests', () => {
 
         it('should add fields on update and remove it in the undo', () => {
             const oldBlock = TestBlockFactory.createText(card)
+            oldBlock.id = 'test-old-block-id'
             const newBlock = createBlock(oldBlock)
             newBlock.fields.newField = 'new field'
 
