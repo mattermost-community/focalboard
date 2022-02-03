@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
-	st "github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/stretchr/testify/require"
 )
@@ -18,9 +17,9 @@ func tTestGetBlocksWithSameID(t *testing.T) {
 	sqlStore := store.(*SQLStore)
 	defer tearDown()
 
-	container1 := st.Container{WorkspaceID: "1"}
-	container2 := st.Container{WorkspaceID: "2"}
-	container3 := st.Container{WorkspaceID: "3"}
+	container1 := "1"
+	container2 := "2"
+	container3 := "3"
 
 	block1 := model.Block{ID: "block-id-1", RootID: "root-id-1"}
 	block2 := model.Block{ID: "block-id-2", RootID: "root-id-2"}
@@ -74,8 +73,8 @@ func TestReplaceBlockID(t *testing.T) {
 	sqlStore := store.(*SQLStore)
 	defer tearDown()
 
-	container1 := st.Container{WorkspaceID: "1"}
-	container2 := st.Container{WorkspaceID: "2"}
+	container1 := "1"
+	container2 := "2"
 
 	// blocks from team1
 	block1 := model.Block{ID: "block-id-1", RootID: "root-id-1"}
@@ -126,9 +125,9 @@ func TestReplaceBlockID(t *testing.T) {
 	require.NoError(t, err)
 	newBlock7, err := sqlStore.getLegacyBlock(sqlStore.db, container2, block7.ID)
 	require.NoError(t, err)
-	newBlock8, err := sqlStore.GetBlock(container1, block8.ID)
+	newBlock8, err := sqlStore.GetBlock(block8.ID)
 	require.NoError(t, err)
-	newBlock9, err := sqlStore.GetBlock(container2, block9.ID)
+	newBlock9, err := sqlStore.GetBlock(block9.ID)
 	require.NoError(t, err)
 
 	require.Equal(t, newID, newBlock1.ID)
@@ -158,9 +157,9 @@ func TestRunUniqueIDsMigration(t *testing.T) {
 	keyErr := sqlStore.SetSystemSetting(UniqueIDsMigrationKey, "false")
 	require.NoError(t, keyErr)
 
-	container1 := st.Container{WorkspaceID: "1"}
-	container2 := st.Container{WorkspaceID: "2"}
-	container3 := st.Container{WorkspaceID: "3"}
+	container1 := "1"
+	container2 := "2"
+	container3 := "3"
 
 	// blocks from workspace1. They shouldn't change, as the first
 	// duplicated ID is preserved

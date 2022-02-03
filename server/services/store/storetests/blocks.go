@@ -25,7 +25,7 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 	t.Run("InsertBlocks", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testInsertBlocks(t, store, container)
+		testInsertBlocks(t, store)
 	})
 	t.Run("PatchBlock", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -35,7 +35,7 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 	t.Run("PatchBlocks", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testPatchBlocks(t, store, container)
+		testPatchBlocks(t, store)
 	})
 	t.Run("DeleteBlock", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -200,7 +200,7 @@ func testInsertBlock(t *testing.T, store store.Store) {
 func testInsertBlocks(t *testing.T, store store.Store) {
 	userID := testUserID
 
-	blocks, errBlocks := store.GetAllBlocks(container)
+	blocks, errBlocks := store.GetBlocksForBoard("id-test")
 	require.NoError(t, errBlocks)
 	initialCount := len(blocks)
 
@@ -208,12 +208,14 @@ func testInsertBlocks(t *testing.T, store store.Store) {
 		validBlock := model.Block{
 			ID:         "id-test",
 			RootID:     "id-test",
+			BoardID:    "id-test",
 			ModifiedBy: userID,
 		}
 
 		invalidBlock := model.Block{
 			ID:         "id-test",
 			RootID:     "",
+			BoardID:    "id-test",
 			ModifiedBy: userID,
 		}
 
@@ -222,7 +224,7 @@ func testInsertBlocks(t *testing.T, store store.Store) {
 		err := store.InsertBlocks(newBlocks, "user-id-1")
 		require.Error(t, err)
 
-		blocks, err := store.GetAllBlocks()
+		blocks, err := store.GetBlocksForBoard("id-test")
 		require.NoError(t, err)
 		// no blocks should have been inserted
 		require.Len(t, blocks, initialCount)
@@ -351,7 +353,7 @@ func testPatchBlock(t *testing.T, store store.Store) {
 	})
 }
 
-func testPatchBlocks(t *testing.T, store store.Store, container store.Container) {
+func testPatchBlocks(t *testing.T, store store.Store) {
 	block := model.Block{
 		ID:     "id-test",
 		RootID: "id-test",
@@ -365,7 +367,7 @@ func testPatchBlocks(t *testing.T, store store.Store, container store.Container)
 	}
 
 	insertBlocks := []model.Block{block, block2}
-	err := store.InsertBlocks(container, insertBlocks, "user-id-1")
+	err := store.InsertBlocks(insertBlocks, "user-id-1")
 	require.NoError(t, err)
 
 	t.Run("successful updated existing blocks", func(t *testing.T) {
@@ -381,14 +383,14 @@ func testPatchBlocks(t *testing.T, store store.Store, container store.Container)
 		blockIds := []string{"id-test", "id-test2"}
 		blockPatches := []model.BlockPatch{blockPatch, blockPatch2}
 
-		err := store.PatchBlocks(container, &model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
+		err := store.PatchBlocks(&model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
 		require.NoError(t, err)
 
-		retrievedBlock, err := store.GetBlock(container, "id-test")
+		retrievedBlock, err := store.GetBlock("id-test")
 		require.NoError(t, err)
 		require.Equal(t, title, retrievedBlock.Title)
 
-		retrievedBlock2, err := store.GetBlock(container, "id-test2")
+		retrievedBlock2, err := store.GetBlock("id-test2")
 		require.NoError(t, err)
 		require.Equal(t, title, retrievedBlock2.Title)
 	})
@@ -406,10 +408,10 @@ func testPatchBlocks(t *testing.T, store store.Store, container store.Container)
 		blockIds := []string{"id-test", "invalid id"}
 		blockPatches := []model.BlockPatch{blockPatch, blockPatch2}
 
-		err := store.PatchBlocks(container, &model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
+		err := store.PatchBlocks(&model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
 		require.Error(t, err)
 
-		retrievedBlock, err := store.GetBlock(container, "id-test")
+		retrievedBlock, err := store.GetBlock("id-test")
 		require.NoError(t, err)
 		require.NotEqual(t, title, retrievedBlock.Title)
 	})
