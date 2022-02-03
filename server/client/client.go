@@ -528,12 +528,12 @@ func (c *Client) TeamUploadFile(boardID, rootID string, data io.Reader) (*api.Fi
 	return fileUploadResponse, BuildResponse(r)
 }
 
-func (c *Client) GetSubscriptionsRoute(workspaceID string) string {
-	return fmt.Sprintf("/workspaces/%s/subscriptions", workspaceID)
+func (c *Client) GetSubscriptionsRoute() string {
+	return "/subscriptions"
 }
 
-func (c *Client) CreateSubscription(workspaceID string, sub *model.Subscription) (*model.Subscription, *Response) {
-	r, err := c.DoAPIPost(c.GetSubscriptionsRoute(workspaceID), toJSON(&sub))
+func (c *Client) CreateSubscription(sub *model.Subscription) (*model.Subscription, *Response) {
+	r, err := c.DoAPIPost(c.GetSubscriptionsRoute(), toJSON(&sub))
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -546,8 +546,8 @@ func (c *Client) CreateSubscription(workspaceID string, sub *model.Subscription)
 	return subNew, BuildResponse(r)
 }
 
-func (c *Client) DeleteSubscription(workspaceID string, blockID string, subscriberID string) *Response {
-	url := fmt.Sprintf("%s/%s/%s", c.GetSubscriptionsRoute(workspaceID), blockID, subscriberID)
+func (c *Client) DeleteSubscription(blockID string, subscriberID string) *Response {
+	url := fmt.Sprintf("%s/%s/%s", c.GetSubscriptionsRoute(), blockID, subscriberID)
 
 	r, err := c.DoAPIDelete(url, "")
 	if err != nil {
@@ -558,8 +558,8 @@ func (c *Client) DeleteSubscription(workspaceID string, blockID string, subscrib
 	return BuildResponse(r)
 }
 
-func (c *Client) GetSubscriptions(workspaceID string, subscriberID string) ([]*model.Subscription, *Response) {
-	url := fmt.Sprintf("%s/%s", c.GetSubscriptionsRoute(workspaceID), subscriberID)
+func (c *Client) GetSubscriptions(subscriberID string) ([]*model.Subscription, *Response) {
+	url := fmt.Sprintf("%s/%s", c.GetSubscriptionsRoute(), subscriberID)
 
 	r, err := c.DoAPIGet(url, "")
 	if err != nil {

@@ -200,7 +200,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	opts := DiffConvOpts{
 		Language: "en", // TODO: use correct language with i18n available on server.
 		MakeCardLink: func(block *model.Block, board *model.Board, card *model.Block) string {
-			return fmt.Sprintf("[%s](%s)", block.Title, utils.MakeCardLink(n.serverRoot, board.TeamID, board.ID, card.ID))
+			return fmt.Sprintf("[%s](%s)", block.Title, utils.MakeCardLink(n.serverRoot, board.ID, card.ID))
 		},
 		Logger: n.logger,
 	}

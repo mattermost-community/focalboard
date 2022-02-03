@@ -35,7 +35,7 @@ type TestHelper struct {
 }
 
 func getTestConfig() (*config.Configuration, error) {
-	dbType, connectionString, err := sqlstore.PrepareNewTestDatabase()
+	dbType, _, err := sqlstore.PrepareNewTestDatabase()
 	if err != nil {
 		return nil, err
 	}

@@ -101,7 +101,6 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		sub := &model.Subscription{
 			BlockType:      model.TypeCard,
 			BlockID:        evt.BlockChanged.ID,
-			BoardID:        evt.Board.ID,
 			SubscriberType: model.SubTypeUser,
 			SubscriberID:   evt.ModifiedByID,
 		}
@@ -112,7 +111,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 				mlog.Err(err),
 			)
 		}
-		b.wsAdapter.BroadcastSubscriptionChange(sub.BoardID, sub)
+		b.wsAdapter.BroadcastSubscriptionChange(evt.Team, sub)
 	}
 
 	// notify board subscribers
@@ -207,7 +206,6 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 	sub := &model.Subscription{
 		BlockType:      model.TypeCard,
 		BlockID:        evt.Card.ID,
-		TeamID:         evt.Team,
 		SubscriberType: model.SubTypeUser,
 		SubscriberID:   userID,
 	}
@@ -222,7 +220,7 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 		)
 		return
 	}
-	b.wsAdapter.BroadcastSubscriptionChange(sub.TeamID, sub)
+	b.wsAdapter.BroadcastSubscriptionChange(evt.Team, sub)
 
 	b.logger.Debug("Subscribed mentioned user to card",
 		mlog.String("user_id", userID),

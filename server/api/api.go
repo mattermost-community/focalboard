@@ -136,9 +136,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	files.HandleFunc("/boards/{boardID}/{rootID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
 
 	// Subscriptions
-	apiv1.HandleFunc("/boards/{boardID}/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
-	apiv1.HandleFunc("/boards/{boardID}/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
+	apiv1.HandleFunc("/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
+	apiv1.HandleFunc("/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
+	apiv1.HandleFunc("/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
 
 	// archives
 	apiv1.HandleFunc("/boards/{boardID}/archive/export", a.sessionRequired(a.handleArchiveExport)).Methods("GET")
@@ -936,7 +936,7 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation PATCH /api/v1/workspaces/{workspaceID}/blocks/ patchBlocks
+	// swagger:operation PATCH /api/v1/boards/{boardID}/blocks/ patchBlocks
 	//
 	// Partially updates batch of blocks
 	//
@@ -944,7 +944,7 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
-	// - name: workspaceID
+	// - name: boardID
 	//   in: path
 	//   description: Workspace ID
 	//   required: true
@@ -1931,7 +1931,7 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 // subscriptions
 
 func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspaces/{workspaceID}/subscriptions createSubscription
+	// swagger:operation POST /api/v1/subscriptions createSubscription
 	//
 	// Creates a subscription to a block for a user. The user will receive change notifications for the block.
 	//
@@ -1939,11 +1939,6 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
 	// - name: Body
 	//   in: body
 	//   description: subscription definition
@@ -2023,7 +2018,7 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleDeleteSubscription(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation DELETE /api/v1/workspaces/{workspaceID}/subscriptions/{blockID}/{subscriberID} deleteSubscription
+	// swagger:operation DELETE /api/v1/subscriptions/{blockID}/{subscriberID} deleteSubscription
 	//
 	// Deletes a subscription a user has for a a block. The user will no longer receive change notifications for the block.
 	//
@@ -2031,11 +2026,6 @@ func (a *API) handleDeleteSubscription(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
 	// - name: blockID
 	//   in: path
 	//   description: Block ID
@@ -2090,7 +2080,7 @@ func (a *API) handleDeleteSubscription(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/workspaces/{workspaceID}/subscriptions/{subscriberID} getSubscriptions
+	// swagger:operation GET /api/v1/subscriptions/{subscriberID} getSubscriptions
 	//
 	// Gets subscriptions for a user.
 	//
@@ -2098,11 +2088,6 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
 	// - name: subscriberID
 	//   in: path
 	//   description: Subscriber ID

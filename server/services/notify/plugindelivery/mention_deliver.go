@@ -14,7 +14,6 @@ import (
 
 // MentionDeliver notifies a user they have been mentioned in a block.
 func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string, evt notify.BlockChangeEvent) (string, error) {
-	// determine which team the workspace is associated with
 	teamID, err := pd.getTeamID(evt)
 	if err != nil {
 		return "", fmt.Errorf("cannot determine teamID for block change notification: %w", err)
@@ -30,16 +29,6 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 		}
 	}
 
-	// check that user is a member of the channel
-	_, err = pd.api.GetChannelMember(evt.Workspace, member.UserId)
-	if err != nil {
-		if pd.api.IsErrNotFound(err) {
-			// mentioned user is not a member of the channel; fail silently.
-			return "", nil
-		}
-		return "", fmt.Errorf("cannot fetch channel member for user %s: %w", member.UserId, err)
-	}
-
 	author, err := pd.api.GetUserByID(evt.ModifiedByID)
 	if err != nil {
 		return "", fmt.Errorf("cannot find user: %w", err)
@@ -49,7 +38,7 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 	if err != nil {
 		return "", fmt.Errorf("cannot get direct channel: %w", err)
 	}
-	link := utils.MakeCardLink(pd.serverRoot, evt.Workspace, evt.Board.ID, evt.Card.ID)
+	link := utils.MakeCardLink(pd.serverRoot, evt.Board.ID, evt.Card.ID)
 
 	post := &model.Post{
 		UserId:    pd.botID,

@@ -28,7 +28,6 @@ func valuesForSubscription(sub *model.Subscription) []interface{} {
 	return []interface{}{
 		sub.BlockType,
 		sub.BlockID,
-		sub.BoardID,
 		sub.SubscriberType,
 		sub.SubscriberID,
 		sub.NotifiedAt,
@@ -45,7 +44,6 @@ func (s *SQLStore) subscriptionsFromRows(rows *sql.Rows) ([]*model.Subscription,
 		err := rows.Scan(
 			&sub.BlockType,
 			&sub.BlockID,
-			&sub.BoardID,
 			&sub.SubscriberType,
 			&sub.SubscriberID,
 			&sub.NotifiedAt,
@@ -88,7 +86,6 @@ func (s *SQLStore) createSubscription(db sq.BaseRunner, sub *model.Subscription)
 	if _, err := query.Exec(); err != nil {
 		s.logger.Error("Cannot create subscription",
 			mlog.String("block_id", sub.BlockID),
-			mlog.String("board_id", sub.BoardID),
 			mlog.String("subscriber_id", sub.SubscriberID),
 			mlog.Err(err),
 		)
