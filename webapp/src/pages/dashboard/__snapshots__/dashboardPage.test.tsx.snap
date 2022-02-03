@@ -72,7 +72,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
           class="sidebarSwitcher"
         >
           <button
-            class="Button IconButton"
+            class="IconButton"
             type="button"
           >
             <svg

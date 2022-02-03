@@ -10,7 +10,6 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
         title="Close"
         type="button"
       >
@@ -81,7 +80,6 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
         title="Close"
         type="button"
       >
@@ -152,7 +150,6 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
         title="Close"
         type="button"
       >
@@ -223,7 +220,6 @@ exports[`src/components/shareBoardComponent return shareBoardComponent and click
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
         title="Close"
         type="button"
       >
@@ -294,7 +290,6 @@ exports[`src/components/shareBoardComponent should match snapshot 1`] = `
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
         title="Close"
         type="button"
       >
@@ -335,7 +330,6 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing 1
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
         title="Close"
         type="button"
       >
@@ -406,7 +400,6 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing a
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
         title="Close"
         type="button"
       >
@@ -477,7 +470,6 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing a
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
         title="Close"
         type="button"
       >
@@ -548,7 +540,6 @@ exports[`src/components/shareBoardComponent should match snapshot with sharing a
     >
       <button
         aria-label="Close"
-        class="Button IconButton"
         title="Close"
         type="button"
       >

@@ -133,6 +133,36 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID
 	return blocks, nil
 }
 
+func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
+	// Images attached in cards have a path comprising the card's board ID.
+	// When we create a template from this board, we need to copy the files
+	// with the new board ID in path.
+	// Not doing so causing images in templates (and boards created from this
+	// template) to fail to load.
+
+	for i := range blocks {
+		block := blocks[i]
+
+		fileName, ok := block.Fields["fileId"]
+		if block.Type == model.TypeImage && ok {
+			sourceFilePath := filepath.Join(block.WorkspaceID, sourceBoardID, fileName.(string))
+			destinationFilePath := filepath.Join(block.WorkspaceID, block.RootID, fileName.(string))
+			if err := a.filesBackend.CopyFile(sourceFilePath, destinationFilePath); err != nil {
+				a.logger.Error(
+					"CopyCardFiles failed to copy file",
+					mlog.String("sourceFilePath", sourceFilePath),
+					mlog.String("destinationFilePath", destinationFilePath),
+					mlog.Err(err),
+				)
+
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
 func (a *App) GetSubTree(c store.Container, blockID string, levels int) ([]model.Block, error) {
 	// Only 2 or 3 levels are supported for now
 	if levels >= 3 {

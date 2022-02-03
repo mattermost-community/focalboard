@@ -99,7 +99,7 @@ func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Block, opt model.Exp
 		if err = a.writeArchiveBlockLine(w, block); err != nil {
 			return err
 		}
-		if block.Type == "image" {
+		if block.Type == model.TypeImage {
 			filename, err := extractImageFilename(block)
 			if err != nil {
 				return err
@@ -170,7 +170,7 @@ func (a *App) writeArchiveFile(zw *zip.Writer, filename string, boardID string, 
 // if `boardIDs` is empty.
 func (a *App) getBoardsForArchive(container store.Container, boardIDs []string) ([]model.Block, error) {
 	if len(boardIDs) == 0 {
-		boards, err := a.GetBlocks(container, "", "board")
+		boards, err := a.GetBlocks(container, "", model.TypeBoard)
 		if err != nil {
 			return nil, fmt.Errorf("could not fetch all boards: %w", err)
 		}
@@ -185,7 +185,7 @@ func (a *App) getBoardsForArchive(container store.Container, boardIDs []string) 
 			return nil, fmt.Errorf("could not fetch board %s: %w", id, err)
 		}
 
-		if b.Type != "board" {
+		if b.Type != model.TypeBoard {
 			return nil, fmt.Errorf("block %s is not a board: %w", b.ID, model.ErrInvalidBoardBlock)
 		}
 
