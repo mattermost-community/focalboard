@@ -5,7 +5,6 @@
 package mockstore
 
 import (
-	io "io"
 	reflect "reflect"
 	time "time"
 
@@ -849,20 +848,6 @@ func (m *MockStore) GetUsersByTeam(arg0 string) ([]*model.User, error) {
 func (mr *MockStoreMockRecorder) GetUsersByTeam(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersByTeam", reflect.TypeOf((*MockStore)(nil).GetUsersByTeam), arg0)
-}
-
-// ImportArchive mocks base method.
-func (m *MockStore) ImportArchive(arg0 string, arg1 io.Reader, arg2 string, arg3 model.BlockModifier) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ImportArchive", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ImportArchive indicates an expected call of ImportArchive.
-func (mr *MockStoreMockRecorder) ImportArchive(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImportArchive", reflect.TypeOf((*MockStore)(nil).ImportArchive), arg0, arg1, arg2, arg3)
 }
 
 // InsertBlock mocks base method.

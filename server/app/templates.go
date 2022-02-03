@@ -43,7 +43,7 @@ func (a *App) initializeTemplates() error {
 	r := bytes.NewReader(defTemplates)
 
 	opt := model.ImportArchiveOptions{
-		WorkspaceID:   "0",
+		TeamID:        "0",
 		ModifiedBy:    "system",
 		BlockModifier: fixTemplateBlock,
 	}
@@ -91,12 +91,20 @@ func fixTemplateBlock(block *model.Block, cache map[string]interface{}) bool {
 			return false
 		}
 	}
+	return true
+}
+
+// fixTemplateBoard fixes a block to be inserted as part of a template.
+func fixTemplateBoard(board *model.Board, cache map[string]interface{}) bool {
+	// filter out template blocks; we only want the non-template
+	// blocks which we will turn into default template blocks.
+	if board.IsTemplate {
+		cache[board.ID] = struct{}{}
+	}
 
 	// remove '(NEW)' from title & force template flag
-	if block.Type == model.TypeBoard {
-		block.Title = strings.ReplaceAll(block.Title, "(NEW)", "")
-		block.Fields["isTemplate"] = true
-		block.Fields["templateVer"] = defaultTemplateVersion
-	}
+	board.Title = strings.ReplaceAll(board.Title, "(NEW)", "")
+	board.IsTemplate = true
+	board.TemplateVersion = defaultTemplateVersion
 	return true
 }

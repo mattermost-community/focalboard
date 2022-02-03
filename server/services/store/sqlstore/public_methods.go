@@ -392,11 +392,6 @@ func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 
 }
 
-func (s *SQLStore) ImportArchive(teamID string, r io.Reader, userID string, mod model.BlockModifier) error {
-	return s.importArchive(s.db, teamID, r, userID, mod)
-
-}
-
 func (s *SQLStore) InsertBlock(block *model.Block, userID string) error {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
