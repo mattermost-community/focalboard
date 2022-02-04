@@ -168,7 +168,7 @@ const CardDialog = (props: Props): JSX.Element => {
             <Dialog
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && menu}
-                toolbar={!isTemplate && toolbar}
+                toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar}
             >
                 {isTemplate &&
                     <div className='banner'>
