@@ -23,6 +23,7 @@ type Store interface {
 	InsertBlock(block *model.Block, userID string) error
 	// @withTransaction
 	DeleteBlock(blockID string, modifiedBy string) error
+	// @withTransaction
 	InsertBlocks(blocks []model.Block, userID string) error
 	// @withTransaction
 	GetBlockCountsByType() (map[string]int64, error)

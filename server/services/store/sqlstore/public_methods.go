@@ -435,7 +435,23 @@ func (s *SQLStore) InsertBlock(block *model.Block, userID string) error {
 }
 
 func (s *SQLStore) InsertBlocks(blocks []model.Block, userID string) error {
-	return s.insertBlocks(s.db, blocks, userID)
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.insertBlocks(tx, blocks, userID)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "InsertBlocks"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 
 }
 

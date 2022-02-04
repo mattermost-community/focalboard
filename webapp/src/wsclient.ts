@@ -389,7 +389,7 @@ class WSClient {
                 case ACTION_UPDATE_BLOCK_CATEGORY:
                     this.updateHandler(message)
                     break
-                case ACTION_UPDATE_SUBSCRIPTION: {
+                case ACTION_UPDATE_SUBSCRIPTION:
                     this.updateSubscriptionHandler(message)
                     break
                 default:

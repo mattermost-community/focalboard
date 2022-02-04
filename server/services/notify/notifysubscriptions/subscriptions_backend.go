@@ -177,7 +177,6 @@ func (b *Backend) notifySubscribers(subs []*model.Subscriber, board *model.Board
 		hint := &model.NotificationHint{
 			BlockType:    "board",
 			BlockID:      board.ID,
-			TeamID:       board.TeamID,
 			ModifiedByID: modifiedByID,
 		}
 

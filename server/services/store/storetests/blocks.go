@@ -208,7 +208,7 @@ func testInsertBlocks(t *testing.T, store store.Store) {
 
 		invalidBlock := model.Block{
 			ID:         "id-test",
-			BoardID:    "id-test",
+			BoardID:    "",
 			ModifiedBy: userID,
 		}
 
@@ -375,6 +375,7 @@ func testPatchBlocks(t *testing.T, store store.Store) {
 		blockIds := []string{"id-test", "id-test2"}
 		blockPatches := []model.BlockPatch{blockPatch, blockPatch2}
 
+		time.Sleep(1 * time.Millisecond)
 		err := store.PatchBlocks(&model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
 		require.NoError(t, err)
 
@@ -400,6 +401,7 @@ func testPatchBlocks(t *testing.T, store store.Store) {
 		blockIds := []string{"id-test", "invalid id"}
 		blockPatches := []model.BlockPatch{blockPatch, blockPatch2}
 
+		time.Sleep(1 * time.Millisecond)
 		err := store.PatchBlocks(&model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
 		require.Error(t, err)
 
@@ -680,18 +682,18 @@ func testGetBlocks(t *testing.T, store store.Store) {
 		require.Len(t, blocks, 4)
 	})
 
-	t.Run("not existing parent", func(t *testing.T) {
+	t.Run("not existing board", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksWithBoardID("not-exists")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
-	t.Run("valid parent", func(t *testing.T) {
+	t.Run("all blocks of the a board", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksWithBoardID(boardID)
 		require.NoError(t, err)
-		require.Len(t, blocks, 4)
+		require.Len(t, blocks, 5)
 	})
 }
 
