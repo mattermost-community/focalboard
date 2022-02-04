@@ -20,6 +20,8 @@
     }
 
     .octo-editor-preview {
+        min-height: 2em;
+
         a {
             &:hover {
                 text-decoration: underline;
@@ -31,10 +33,6 @@
             word-break: break-word;
         }
     }
-
-    /* .dialog .octo-editor-preview {
-        min-height: 100px;
-    } */
 
     .octo-editor-activeEditor {
         overflow: hidden;
