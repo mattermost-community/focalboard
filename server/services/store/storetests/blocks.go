@@ -189,7 +189,7 @@ func testInsertBlock(t *testing.T, store store.Store, container store.Container)
 		err := store.InsertBlock(container, &block, "user-id-1")
 		require.NoError(t, err)
 
-		retrievedBlock, err := store.GetBlock("id-10")
+		retrievedBlock, err := store.GetBlock(container, "id-10")
 		assert.NoError(t, err)
 		assert.NotNil(t, retrievedBlock)
 		assert.Equal(t, "user-id-1", retrievedBlock.CreatedBy)
@@ -298,7 +298,7 @@ func testPatchBlock(t *testing.T, store store.Store, container store.Container) 
 		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-2")
 		require.NoError(t, err)
 
-		retrievedBlock, err := store.GetBlock("id-test")
+		retrievedBlock, err := store.GetBlock(container, "id-test")
 		require.NoError(t, err)
 
 		// created by populated from user id for new blocks
@@ -318,7 +318,7 @@ func testPatchBlock(t *testing.T, store store.Store, container store.Container) 
 		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-2")
 		require.NoError(t, err)
 
-		retrievedBlock, err := store.GetBlock("id-test")
+		retrievedBlock, err := store.GetBlock(container, "id-test")
 		require.NoError(t, err)
 
 		// created by populated from user id for new blocks
@@ -340,7 +340,7 @@ func testPatchBlock(t *testing.T, store store.Store, container store.Container) 
 		err := store.PatchBlock(container, "id-test", &blockPatch, "user-id-2")
 		require.NoError(t, err)
 
-		retrievedBlock, err := store.GetBlock("id-test")
+		retrievedBlock, err := store.GetBlock(container, "id-test")
 		require.NoError(t, err)
 
 		// created by populated from user id for new blocks
@@ -384,11 +384,11 @@ func testPatchBlocks(t *testing.T, store store.Store, container store.Container)
 		err := store.PatchBlocks(container, &model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
 		require.NoError(t, err)
 
-		retrievedBlock, err := store.GetBlock("id-test")
+		retrievedBlock, err := store.GetBlock(container, "id-test")
 		require.NoError(t, err)
 		require.Equal(t, title, retrievedBlock.Title)
 
-		retrievedBlock2, err := store.GetBlock("id-test2")
+		retrievedBlock2, err := store.GetBlock(container, "id-test2")
 		require.NoError(t, err)
 		require.Equal(t, title, retrievedBlock2.Title)
 	})
@@ -409,7 +409,7 @@ func testPatchBlocks(t *testing.T, store store.Store, container store.Container)
 		err := store.PatchBlocks(container, &model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
 		require.Error(t, err)
 
-		retrievedBlock, err := store.GetBlock("id-test")
+		retrievedBlock, err := store.GetBlock(container, "id-test")
 		require.NoError(t, err)
 		require.NotEqual(t, title, retrievedBlock.Title)
 	})
@@ -753,7 +753,7 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 		err := store.InsertBlock(container, &block, "user-id-1")
 		require.NoError(t, err)
 
-		fetchedBlock, err := store.GetBlock("block-id-10")
+		fetchedBlock, err := store.GetBlock(container, "block-id-10")
 		require.NoError(t, err)
 		require.NotNil(t, fetchedBlock)
 		require.Equal(t, "block-id-10", fetchedBlock.ID)
@@ -765,7 +765,7 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 	})
 
 	t.Run("get a non-existing block", func(t *testing.T) {
-		fetchedBlock, err := store.GetBlock("non-existing-id")
+		fetchedBlock, err := store.GetBlock(container, "non-existing-id")
 		require.NoError(t, err)
 		require.Nil(t, fetchedBlock)
 	})

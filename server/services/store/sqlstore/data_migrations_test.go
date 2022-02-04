@@ -110,21 +110,21 @@ func TestReplaceBlockID(t *testing.T) {
 	err := sqlStore.replaceBlockID(sqlStore.db, currentID, newID, "1")
 	require.NoError(t, err)
 
-	newBlock1, err := sqlStore.GetBlock(newID)
+	newBlock1, err := sqlStore.GetBlock(container1, newID)
 	require.NoError(t, err)
-	newBlock2, err := sqlStore.GetBlock(block2.ID)
+	newBlock2, err := sqlStore.GetBlock(container1, block2.ID)
 	require.NoError(t, err)
-	newBlock3, err := sqlStore.GetBlock(block3.ID)
+	newBlock3, err := sqlStore.GetBlock(container1, block3.ID)
 	require.NoError(t, err)
-	newBlock5, err := sqlStore.GetBlock(block5.ID)
+	newBlock5, err := sqlStore.GetBlock(container1, block5.ID)
 	require.NoError(t, err)
-	newBlock6, err := sqlStore.GetBlock(block6.ID)
+	newBlock6, err := sqlStore.GetBlock(container2, block6.ID)
 	require.NoError(t, err)
-	newBlock7, err := sqlStore.GetBlock(block7.ID)
+	newBlock7, err := sqlStore.GetBlock(container2, block7.ID)
 	require.NoError(t, err)
-	newBlock8, err := sqlStore.GetBlock(block8.ID)
+	newBlock8, err := sqlStore.GetBlock(container1, block8.ID)
 	require.NoError(t, err)
-	newBlock9, err := sqlStore.GetBlock(block9.ID)
+	newBlock9, err := sqlStore.GetBlock(container2, block9.ID)
 	require.NoError(t, err)
 
 	require.Equal(t, newID, newBlock1.ID)
@@ -193,31 +193,31 @@ func TestRunUniqueIDsMigration(t *testing.T) {
 	require.NoError(t, err)
 
 	// blocks from workspace 1 haven't changed, so we can simply fetch them
-	newBlock1, err := sqlStore.GetBlock(block1.ID)
+	newBlock1, err := sqlStore.GetBlock(container1, block1.ID)
 	require.NoError(t, err)
 	require.NotNil(t, newBlock1)
-	newBlock2, err := sqlStore.GetBlock(block2.ID)
+	newBlock2, err := sqlStore.GetBlock(container1, block2.ID)
 	require.NoError(t, err)
 	require.NotNil(t, newBlock2)
-	newBlock3, err := sqlStore.GetBlock(block3.ID)
+	newBlock3, err := sqlStore.GetBlock(container1, block3.ID)
 	require.NoError(t, err)
 	require.NotNil(t, newBlock3)
 
 	// first two blocks from workspace 2 have changed, so we fetch
 	// them through the third one, which points to the new IDs
-	newBlock6, err := sqlStore.GetBlock(block6.ID)
+	newBlock6, err := sqlStore.GetBlock(container2, block6.ID)
 	require.NoError(t, err)
 	require.NotNil(t, newBlock6)
-	newBlock4, err := sqlStore.GetBlock(newBlock6.RootID)
+	newBlock4, err := sqlStore.GetBlock(container2, newBlock6.RootID)
 	require.NoError(t, err)
 	require.NotNil(t, newBlock4)
-	newBlock5, err := sqlStore.GetBlock(newBlock6.ParentID)
+	newBlock5, err := sqlStore.GetBlock(container2, newBlock6.ParentID)
 	require.NoError(t, err)
 	require.NotNil(t, newBlock5)
 
 	// block from workspace 3 changed as well, so we shouldn't be able
 	// to fetch it
-	newBlock7, err := sqlStore.GetBlock(block7.ID)
+	newBlock7, err := sqlStore.GetBlock(container3, block7.ID)
 	require.NoError(t, err)
 	require.Nil(t, newBlock7)
 

@@ -11,7 +11,7 @@ import (
 )
 
 type Store interface {
-	GetBlock(blockID string) (*model.Block, error)
+	GetBlock(c store.Container, blockID string) (*model.Block, error)
 	GetBlockHistory(c store.Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
 	GetSubTree2(c store.Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
 	GetBoardAndCardByID(c store.Container, blockID string) (board *model.Block, card *model.Block, err error)

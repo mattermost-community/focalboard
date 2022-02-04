@@ -34,7 +34,7 @@ type Store interface {
 	// @withTransaction
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
-	GetBlock(blockID string) (*model.Block, error)
+	GetBlock(c Container, blockID string) (*model.Block, error)
 	// @withTransaction
 	PatchBlock(c Container, blockID string, blockPatch *model.BlockPatch, userID string) error
 	GetBlockHistory(c Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
