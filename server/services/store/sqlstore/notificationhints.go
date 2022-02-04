@@ -19,7 +19,6 @@ import (
 var notificationHintFields = []string{
 	"block_type",
 	"block_id",
-	"workspace_id",
 	"modified_by_id",
 	"create_at",
 	"notify_at",
@@ -29,7 +28,6 @@ func valuesForNotificationHint(hint *model.NotificationHint) []interface{} {
 	return []interface{}{
 		hint.BlockType,
 		hint.BlockID,
-		hint.TeamID,
 		hint.ModifiedByID,
 		hint.CreateAt,
 		hint.NotifyAt,
@@ -44,7 +42,6 @@ func (s *SQLStore) notificationHintFromRows(rows *sql.Rows) ([]*model.Notificati
 		err := rows.Scan(
 			&hint.BlockType,
 			&hint.BlockID,
-			&hint.TeamID,
 			&hint.ModifiedByID,
 			&hint.CreateAt,
 			&hint.NotifyAt,
@@ -82,7 +79,6 @@ func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.Notifica
 	if _, err := query.Exec(); err != nil {
 		s.logger.Error("Cannot upsert notification hint",
 			mlog.String("block_id", hint.BlockID),
-			mlog.String("team_id", hint.TeamID),
 			mlog.Err(err),
 		)
 		return nil, err
