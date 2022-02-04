@@ -46,6 +46,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 margin: auto 4px;
+                padding: 0 16px;
 
                 :hover {
                     background-color: rgb(var(--center-channel-color-rgb), 0.1);
