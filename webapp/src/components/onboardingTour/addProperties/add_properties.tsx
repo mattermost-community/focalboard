@@ -47,7 +47,7 @@ const AddPropertiesTourStep = (): JSX.Element => {
             imageURL={Utils.buildURL(addProperty, true)}
             stopPropagation={true}
             skipCategoryFromBackdrop={true}
-            telemetryTag='tourPoint2'
+            telemetryTag='tourPoint2a'
         />
     )
 }

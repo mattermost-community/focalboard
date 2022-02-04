@@ -5,12 +5,13 @@ import React, {useCallback, useEffect, useState} from 'react'
 
 import {useDispatch} from 'react-redux'
 
-import {FINISHED, BaseTourSteps, TourCategoriesMapToSteps, TOUR_ORDER} from '../onboardingTour'
+import {FINISHED, TourCategoriesMapToSteps, TOUR_ORDER} from '../onboardingTour'
 import {useAppSelector} from '../../store/hooks'
 import {getMe, getOnboardingTourStep, patchProps} from '../../store/users'
 import {UserConfigPatch} from '../../user'
 import octoClient from '../../octoClient'
 import {Utils, KeyCodes} from '../../utils'
+import TelemetryClient, {TelemetryCategory} from '../../telemetry/telemetryClient'
 
 export interface TutorialTourTipManager {
     show: boolean;
@@ -90,13 +91,8 @@ const useTutorialTourTipManager = ({
     )
 
     const trackEvent = useCallback((category, event, props?) => {
-        // TODO implement and this
-        console.log(`Track: ${category}, ${event}, ${props}`)
-
-        // trackEventAction(category, event, props)
+        TelemetryClient.trackEvent(category, event, props)
     }, [])
-
-    // Function to save the tutorial step in redux store end here
 
     const handleEventPropagationAndDefault = (e: React.MouseEvent | KeyboardEvent) => {
         if (stopPropagation) {
@@ -140,11 +136,8 @@ const useTutorialTourTipManager = ({
     const handleDismiss = (e: React.MouseEvent): void => {
         handleEventPropagationAndDefault(e)
         handleHide()
-
-        // open for discussion should we move forward if user dismiss like next time show them next tip instead of the same one.
-        handleNext(e)
-        const tag = telemetryTag + '_dismiss'
-        trackEvent('tutorial', tag)
+        const tag = telemetryTag + '_skip'
+        trackEvent(TelemetryCategory, tag)
     }
 
     const handleSavePreferences = async (nextStep: boolean | number): Promise<void> => {
@@ -171,17 +164,22 @@ const useTutorialTourTipManager = ({
 
     const handlePrevious = (e: React.MouseEvent): void => {
         handleEventPropagationAndDefault(e)
+
+        if (telemetryTag) {
+            const tag = telemetryTag + '_previous'
+            trackEvent(TelemetryCategory, tag)
+        }
+
         handleSavePreferences(false)
     }
 
     const handleNext = (e?: React.MouseEvent): void => {
-        console.log('handling next')
         if (e) {
             handleEventPropagationAndDefault(e)
         }
         if (telemetryTag) {
             const tag = telemetryTag + '_next'
-            trackEvent('tutorial', tag)
+            trackEvent(TelemetryCategory, tag)
         }
         if (getLastStep() === currentStep) {
             handleSavePreferences(FINISHED)
@@ -195,7 +193,7 @@ const useTutorialTourTipManager = ({
 
         if (telemetryTag) {
             const tag = telemetryTag + '_skip'
-            trackEvent('tutorial', tag)
+            trackEvent(TelemetryCategory, tag)
         }
 
         if (currentUserId) {

@@ -185,8 +185,7 @@ const TutorialTourTip: React.FC<Props> = ({
                     className='tutorial-tour-tip__header__close'
                     onClick={(e) => {
                         if (skipCategoryFromBackdrop) {
-                            e.preventDefault()
-                            e.stopPropagation()
+                            handleDismiss(e)
                             handleSendToNextTour(tutorialCategory)
                         }
                     }}

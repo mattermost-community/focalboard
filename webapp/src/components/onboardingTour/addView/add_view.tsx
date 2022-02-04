@@ -46,6 +46,7 @@ const AddViewTourStep = (): JSX.Element => {
             imageURL={Utils.buildURL(changeViews, true)}
             stopPropagation={true}
             skipCategoryFromBackdrop={true}
+            telemetryTag='tourPoint3a'
         />
     )
 }

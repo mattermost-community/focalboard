@@ -111,17 +111,6 @@ const KanbanCard = React.memo((props: Props) => {
     const showOpenCardTourStep = showTour && onboardingTourCategory === TOUR_BASE && onboardingTourStep === BaseTourSteps.OPEN_A_CARD.toString()
     const showCopyLinkTourStep = showTour && onboardingTourCategory === TOUR_BOARD && onboardingTourStep === BoardTourSteps.COPY_LINK.toString()
 
-    if (isOnboardingCard) {
-        console.log('isOnboardingBoard: ' + isOnboardingBoard)
-        console.log('isOnboardingCard: ' + isOnboardingCard)
-        console.log('onboardingTourStarted: ' + onboardingTourStarted)
-        console.log('onboardingTourCategory: ' + onboardingTourCategory)
-        console.log('onboardingTourStep: ' + onboardingTourStep)
-        console.log('showTour: ' + showTour)
-        console.log('showOpenCardTourStep: ' + showOpenCardTourStep)
-        console.log('showCopyLinkTourStep: ' + showCopyLinkTourStep)
-    }
-
     const dispatch = useAppDispatch()
     const me = useAppSelector(getMe)
 

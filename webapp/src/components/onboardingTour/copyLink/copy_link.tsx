@@ -48,6 +48,7 @@ const CopyLinkTourStep = (): JSX.Element => {
             imageURL={Utils.buildURL(copyLink, true)}
             stopPropagation={true}
             skipCategoryFromBackdrop={true}
+            telemetryTag='tourPoint3b'
         />
     )
 }

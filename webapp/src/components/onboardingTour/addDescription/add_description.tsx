@@ -46,6 +46,7 @@ const AddDescriptionTourStep = (): JSX.Element => {
             hideBackdrop={true}
             imageURL={Utils.buildURL(addDescription, true)}
             skipCategoryFromBackdrop={true}
+            telemetryTag='tourPoint2c'
         />
     )
 }

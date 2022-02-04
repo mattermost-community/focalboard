@@ -60,7 +60,6 @@ const usersSlice = createSlice({
             state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload.blockId)
         },
         patchProps: (state, action: PayloadAction<Record<string, string>>) => {
-            console.log('akjsdgjkasgdjkasg')
             if (state.me) {
                 state.me.props = action.payload
             }

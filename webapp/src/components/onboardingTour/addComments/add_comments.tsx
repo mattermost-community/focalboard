@@ -46,6 +46,7 @@ const AddCommentTourStep = (): JSX.Element => {
             hideBackdrop={true}
             imageURL={Utils.buildURL(addComment, true)}
             skipCategoryFromBackdrop={true}
+            telemetryTag='tourPoint2b'
         />
     )
 }
