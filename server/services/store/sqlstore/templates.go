@@ -21,7 +21,8 @@ func (s *SQLStore) removeDefaultTemplates(db sq.BaseRunner, boards []*model.Boar
 		// default template deletion does not need to go to blocks_history
 		deleteQuery := s.getQueryBuilder(db).
 			Delete(s.tablePrefix + "boards").
-			Where(sq.Eq{"id": board.ID})
+			Where(sq.Eq{"id": board.ID}).
+			Where(sq.Eq{"is_template": true})
 
 		if _, err := deleteQuery.Exec(); err != nil {
 			return fmt.Errorf("cannot delete default template %s: %w", board.ID, err)

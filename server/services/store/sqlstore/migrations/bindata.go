@@ -38,6 +38,8 @@
 // migrations_files/000018_populate_categories.up.sql (1.67kB)
 // migrations_files/000019_populate_category_blocks.down.sql (40B)
 // migrations_files/000019_populate_category_blocks.up.sql (1.432kB)
+// migrations_files/000020_builtin_templates_extra_columns.down.sql (126B)
+// migrations_files/000020_builtin_templates_extra_columns.up.sql (161B)
 
 package migrations
 
@@ -866,6 +868,46 @@ func _000019_populate_category_blocksUpSql() (*asset, error) {
 	return a, nil
 }
 
+var __000020_builtin_templates_extra_columnsDownSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\xf4\x09\x71\x0d\x52\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x4d\xca\x4f\x2c\x4a\x29\x56\x70\x09\xf2\x0f\x50\x70\xf6\xf7\x09\xf5\xf5\x53\x28\x49\xcd\x2d\xc8\x49\x2c\x49\x8d\x2f\x4b\x2d\x2a\xce\xcc\xcf\xb3\xe6\x22\x43\x6f\x49\x51\x62\x72\x76\x66\x5e\x7a\x7c\x72\x7e\x4a\xaa\x35\x17\x20\x00\x00\xff\xff\x37\x66\x79\x1f\x7e\x00\x00\x00")
+
+func _000020_builtin_templates_extra_columnsDownSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000020_builtin_templates_extra_columnsDownSql,
+		"000020_builtin_templates_extra_columns.down.sql",
+	)
+}
+
+func _000020_builtin_templates_extra_columnsDownSql() (*asset, error) {
+	bytes, err := _000020_builtin_templates_extra_columnsDownSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000020_builtin_templates_extra_columns.down.sql", size: 126, mode: os.FileMode(0644), modTime: time.Unix(1643973153, 0)}
+	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x72, 0x8a, 0x64, 0x2b, 0x74, 0x40, 0x80, 0x14, 0x2d, 0x8, 0xee, 0xb6, 0x1b, 0xbf, 0x3c, 0xff, 0x15, 0xb7, 0xed, 0x39, 0x8, 0xd1, 0xad, 0xc6, 0x73, 0x60, 0x42, 0x33, 0x9b, 0xfe, 0x26, 0xb7}}
+	return a, nil
+}
+
+var __000020_builtin_templates_extra_columnsUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\xf4\x09\x71\x0d\x52\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x4d\xca\x4f\x2c\x4a\x29\x56\x70\x74\x71\x51\x70\xf6\xf7\x09\xf5\xf5\x53\x28\x49\xcd\x2d\xc8\x49\x2c\x49\x8d\x2f\x4b\x2d\x2a\xce\xcc\xcf\x53\xf0\xf4\x0b\x51\x70\x71\x75\x73\x0c\xf5\x09\x51\x30\xb0\xe6\x22\xdd\xa0\x92\xa2\xc4\xe4\xec\xcc\xbc\xf4\xf8\xe4\xfc\x94\x54\x85\x30\xc7\x20\x67\x0f\xc7\x20\x0d\x63\x33\x4d\xb8\xb1\x4a\x4a\xd6\x5c\x80\x00\x00\x00\xff\xff\x3f\xb7\x0a\x80\xa1\x00\x00\x00")
+
+func _000020_builtin_templates_extra_columnsUpSqlBytes() ([]byte, error) {
+	return bindataRead(
+		__000020_builtin_templates_extra_columnsUpSql,
+		"000020_builtin_templates_extra_columns.up.sql",
+	)
+}
+
+func _000020_builtin_templates_extra_columnsUpSql() (*asset, error) {
+	bytes, err := _000020_builtin_templates_extra_columnsUpSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "000020_builtin_templates_extra_columns.up.sql", size: 161, mode: os.FileMode(0644), modTime: time.Unix(1643974078, 0)}
+	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x84, 0xbd, 0xd7, 0x49, 0x3f, 0xcf, 0x8e, 0x35, 0x12, 0x1b, 0x94, 0x37, 0x4a, 0xf0, 0xb9, 0x9e, 0x7, 0x60, 0x4e, 0x67, 0x3f, 0x34, 0x80, 0xa9, 0xd9, 0x74, 0x2a, 0x4f, 0xa8, 0x14, 0x51, 0x42}}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -957,44 +999,46 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"000001_init.down.sql":                     _000001_initDownSql,
-	"000001_init.up.sql":                       _000001_initUpSql,
-	"000002_system_settings_table.down.sql":    _000002_system_settings_tableDownSql,
-	"000002_system_settings_table.up.sql":      _000002_system_settings_tableUpSql,
-	"000003_blocks_rootid.down.sql":            _000003_blocks_rootidDownSql,
-	"000003_blocks_rootid.up.sql":              _000003_blocks_rootidUpSql,
-	"000004_auth_table.down.sql":               _000004_auth_tableDownSql,
-	"000004_auth_table.up.sql":                 _000004_auth_tableUpSql,
-	"000005_blocks_modifiedby.down.sql":        _000005_blocks_modifiedbyDownSql,
-	"000005_blocks_modifiedby.up.sql":          _000005_blocks_modifiedbyUpSql,
-	"000006_sharing_table.down.sql":            _000006_sharing_tableDownSql,
-	"000006_sharing_table.up.sql":              _000006_sharing_tableUpSql,
-	"000007_workspaces_table.down.sql":         _000007_workspaces_tableDownSql,
-	"000007_workspaces_table.up.sql":           _000007_workspaces_tableUpSql,
-	"000008_teams.down.sql":                    _000008_teamsDownSql,
-	"000008_teams.up.sql":                      _000008_teamsUpSql,
-	"000009_blocks_history.down.sql":           _000009_blocks_historyDownSql,
-	"000009_blocks_history.up.sql":             _000009_blocks_historyUpSql,
-	"000010_blocks_created_by.down.sql":        _000010_blocks_created_byDownSql,
-	"000010_blocks_created_by.up.sql":          _000010_blocks_created_byUpSql,
-	"000011_match_collation.down.sql":          _000011_match_collationDownSql,
-	"000011_match_collation.up.sql":            _000011_match_collationUpSql,
-	"000012_match_column_collation.down.sql":   _000012_match_column_collationDownSql,
-	"000012_match_column_collation.up.sql":     _000012_match_column_collationUpSql,
-	"000013_millisecond_timestamps.down.sql":   _000013_millisecond_timestampsDownSql,
-	"000013_millisecond_timestamps.up.sql":     _000013_millisecond_timestampsUpSql,
-	"000014_add_not_null_constraint.down.sql":  _000014_add_not_null_constraintDownSql,
-	"000014_add_not_null_constraint.up.sql":    _000014_add_not_null_constraintUpSql,
-	"000015_blocks_history_no_nulls.down.sql":  _000015_blocks_history_no_nullsDownSql,
-	"000015_blocks_history_no_nulls.up.sql":    _000015_blocks_history_no_nullsUpSql,
-	"000016_subscriptions_table.down.sql":      _000016_subscriptions_tableDownSql,
-	"000016_subscriptions_table.up.sql":        _000016_subscriptions_tableUpSql,
-	"000017_add_teams_and_boards.down.sql":     _000017_add_teams_and_boardsDownSql,
-	"000017_add_teams_and_boards.up.sql":       _000017_add_teams_and_boardsUpSql,
-	"000018_populate_categories.down.sql":      _000018_populate_categoriesDownSql,
-	"000018_populate_categories.up.sql":        _000018_populate_categoriesUpSql,
-	"000019_populate_category_blocks.down.sql": _000019_populate_category_blocksDownSql,
-	"000019_populate_category_blocks.up.sql":   _000019_populate_category_blocksUpSql,
+	"000001_init.down.sql":                            _000001_initDownSql,
+	"000001_init.up.sql":                              _000001_initUpSql,
+	"000002_system_settings_table.down.sql":           _000002_system_settings_tableDownSql,
+	"000002_system_settings_table.up.sql":             _000002_system_settings_tableUpSql,
+	"000003_blocks_rootid.down.sql":                   _000003_blocks_rootidDownSql,
+	"000003_blocks_rootid.up.sql":                     _000003_blocks_rootidUpSql,
+	"000004_auth_table.down.sql":                      _000004_auth_tableDownSql,
+	"000004_auth_table.up.sql":                        _000004_auth_tableUpSql,
+	"000005_blocks_modifiedby.down.sql":               _000005_blocks_modifiedbyDownSql,
+	"000005_blocks_modifiedby.up.sql":                 _000005_blocks_modifiedbyUpSql,
+	"000006_sharing_table.down.sql":                   _000006_sharing_tableDownSql,
+	"000006_sharing_table.up.sql":                     _000006_sharing_tableUpSql,
+	"000007_workspaces_table.down.sql":                _000007_workspaces_tableDownSql,
+	"000007_workspaces_table.up.sql":                  _000007_workspaces_tableUpSql,
+	"000008_teams.down.sql":                           _000008_teamsDownSql,
+	"000008_teams.up.sql":                             _000008_teamsUpSql,
+	"000009_blocks_history.down.sql":                  _000009_blocks_historyDownSql,
+	"000009_blocks_history.up.sql":                    _000009_blocks_historyUpSql,
+	"000010_blocks_created_by.down.sql":               _000010_blocks_created_byDownSql,
+	"000010_blocks_created_by.up.sql":                 _000010_blocks_created_byUpSql,
+	"000011_match_collation.down.sql":                 _000011_match_collationDownSql,
+	"000011_match_collation.up.sql":                   _000011_match_collationUpSql,
+	"000012_match_column_collation.down.sql":          _000012_match_column_collationDownSql,
+	"000012_match_column_collation.up.sql":            _000012_match_column_collationUpSql,
+	"000013_millisecond_timestamps.down.sql":          _000013_millisecond_timestampsDownSql,
+	"000013_millisecond_timestamps.up.sql":            _000013_millisecond_timestampsUpSql,
+	"000014_add_not_null_constraint.down.sql":         _000014_add_not_null_constraintDownSql,
+	"000014_add_not_null_constraint.up.sql":           _000014_add_not_null_constraintUpSql,
+	"000015_blocks_history_no_nulls.down.sql":         _000015_blocks_history_no_nullsDownSql,
+	"000015_blocks_history_no_nulls.up.sql":           _000015_blocks_history_no_nullsUpSql,
+	"000016_subscriptions_table.down.sql":             _000016_subscriptions_tableDownSql,
+	"000016_subscriptions_table.up.sql":               _000016_subscriptions_tableUpSql,
+	"000017_add_teams_and_boards.down.sql":            _000017_add_teams_and_boardsDownSql,
+	"000017_add_teams_and_boards.up.sql":              _000017_add_teams_and_boardsUpSql,
+	"000018_populate_categories.down.sql":             _000018_populate_categoriesDownSql,
+	"000018_populate_categories.up.sql":               _000018_populate_categoriesUpSql,
+	"000019_populate_category_blocks.down.sql":        _000019_populate_category_blocksDownSql,
+	"000019_populate_category_blocks.up.sql":          _000019_populate_category_blocksUpSql,
+	"000020_builtin_templates_extra_columns.down.sql": _000020_builtin_templates_extra_columnsDownSql,
+	"000020_builtin_templates_extra_columns.up.sql":   _000020_builtin_templates_extra_columnsUpSql,
 }
 
 // AssetDebug is true if the assets were built with the debug flag enabled.
@@ -1079,6 +1123,8 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"000018_populate_categories.up.sql": {_000018_populate_categoriesUpSql, map[string]*bintree{}},
 	"000019_populate_category_blocks.down.sql": {_000019_populate_category_blocksDownSql, map[string]*bintree{}},
 	"000019_populate_category_blocks.up.sql": {_000019_populate_category_blocksUpSql, map[string]*bintree{}},
+	"000020_builtin_templates_extra_columns.down.sql": {_000020_builtin_templates_extra_columnsDownSql, map[string]*bintree{}},
+	"000020_builtin_templates_extra_columns.up.sql": {_000020_builtin_templates_extra_columnsUpSql, map[string]*bintree{}},
 }}
 
 // RestoreAsset restores an asset under the given directory.
