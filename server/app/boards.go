@@ -22,6 +22,27 @@ func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	return board, nil
 }
 
+func (a *App) DuplicateBoard(boardID string, userID string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+	bab, members, err := a.store.DuplicateBoard(boardID, userID, asTemplate)
+	if err != nil {
+		return nil, nil, err
+	}
+	go func() {
+		teamID := ""
+		for _, board := range bab.Boards {
+			teamID = board.TeamID
+			a.wsAdapter.BroadcastBoardChange(teamID, board)
+		}
+		for _, block := range bab.Blocks {
+			a.wsAdapter.BroadcastBlockChange(teamID, block)
+		}
+		for _, member := range members {
+			a.wsAdapter.BroadcastMemberChange(teamID, member.BoardID, member)
+		}
+	}()
+	return bab, members, err
+}
+
 func (a *App) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error) {
 	return a.store.GetBoardsForUserAndTeam(userID, teamID)
 }

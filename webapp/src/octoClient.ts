@@ -4,7 +4,7 @@ import {Block, BlockPatch} from './blocks/block'
 import {Board, BoardsAndBlocks, BoardsAndBlocksPatch, BoardPatch, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
-import {IUser, UserWorkspace} from './user'
+import {IUser} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
@@ -601,6 +601,24 @@ class OctoClient {
         }
 
         return this.getJson<Board>(response, {} as Board)
+    }
+
+    async duplicateBoard(boardID: string, asTemplate: boolean): Promise<BoardsAndBlocks | undefined> {
+        let query = '?asTemplate=false'
+        if (asTemplate) {
+            query = '?asTemplate=true'
+        }
+        const path = `/api/v1/boards/${boardID}/duplicate${query}`
+        const response = await fetch(this.getBaseURL() + path, {
+            method: 'POST',
+            headers: this.headers(),
+        })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return this.getJson<BoardsAndBlocks>(response, {} as BoardsAndBlocks)
     }
 
     async getBlocksForBoard(teamId: string, boardId: string): Promise<Board[]> {

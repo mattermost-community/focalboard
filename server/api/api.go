@@ -79,6 +79,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}", a.attachSession(a.handleGetBoard, false)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handlePatchBoard)).Methods("PATCH")
 	apiv1.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handleDeleteBoard)).Methods("DELETE")
+	apiv1.HandleFunc("/boards/{boardID}/duplicate", a.sessionRequired(a.handleDuplicateBoard)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePatchBlocks)).Methods("PATCH")
@@ -2537,6 +2538,99 @@ func (a *API) handleDeleteBoard(w http.ResponseWriter, r *http.Request) {
 
 	a.logger.Debug("DELETE Board", mlog.String("boardID", boardID))
 	jsonStringResponse(w, http.StatusOK, "{}")
+
+	auditRec.Success()
+}
+
+func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/boards/{boardID}/duplicate duplicateBoard
+	//
+	// Returns a board and returns the new created board and all the blocks
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: boardID
+	//   in: path
+	//   description: Board ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       $ref: '#/definitions/BoardsAndBlocks'
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	boardID := mux.Vars(r)["boardID"]
+	userID := getUserID(r)
+	query := r.URL.Query()
+	asTemplate := query.Get("asTemplate")
+
+	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
+	if userID == "" && !hasValidReadToken {
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		return
+	}
+
+	fmt.Println("FAILING HERE 1")
+
+	board, err := a.app.GetBoard(boardID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	fmt.Println("FAILING HERE 2?")
+	if board == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	fmt.Println("FAILING HERE 3?")
+	if !hasValidReadToken {
+		if board.Type == model.BoardTypePrivate {
+			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+				return
+			}
+		} else {
+			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+				return
+			}
+		}
+	}
+
+	fmt.Println("FAILING HERE 4?")
+	auditRec := a.makeAuditRecord(r, "duplicateBoard", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+
+	a.logger.Debug("DuplicateBoard",
+		mlog.String("boardID", boardID),
+	)
+
+	fmt.Println("FAILING HERE 5?")
+	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, asTemplate == "true")
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
+		return
+	}
+
+	data, err := json.Marshal(boardsAndBlocks)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
 
 	auditRec.Success()
 }

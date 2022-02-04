@@ -126,6 +126,23 @@ func (s *SQLStore) getBlocksWithRootID(db sq.BaseRunner, boardID, rootID string)
 	return s.blocksFromRows(rows)
 }
 
+func (s *SQLStore) getBlocksWithBoardID(db sq.BaseRunner, boardID string) ([]model.Block, error) {
+	query := s.getQueryBuilder(db).
+		Select(s.blockFields()...).
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"board_id": boardID})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`GetBlocksWithRootID ERROR`, mlog.Err(err))
+
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.blocksFromRows(rows)
+}
+
 func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, boardID, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).

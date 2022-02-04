@@ -26,6 +26,8 @@ type Board = {
     icon?: string
     showDescription: boolean
     isTemplate: boolean
+    templateVersion: number
+    templateTrackingCode: string
     properties: Record<string, string | string[]>
     cardProperties: IPropertyTemplate[]
     columnCalculations: Record<string, string>

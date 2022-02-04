@@ -33,6 +33,8 @@ type Store interface {
 	GetBoardAndCardByID(blockID string) (board *model.Board, card *model.Block, err error)
 	GetBoardAndCard(block *model.Block) (board *model.Board, card *model.Block, err error)
 	// @withTransaction
+	DuplicateBoard(boardID string, userID string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error)
+	// @withTransaction
 	PatchBlocks(blockPatches *model.BlockPatchBatch, userID string) error
 
 	Shutdown() error

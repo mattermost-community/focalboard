@@ -181,6 +181,27 @@ func (s *SQLStore) DeleteSubscription(blockID string, subscriberID string) error
 
 }
 
+func (s *SQLStore) DuplicateBoard(boardID string, userID string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return nil, nil, txErr
+	}
+	result, resultVar1, err := s.duplicateBoard(tx, boardID, userID, asTemplate)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DuplicateBoard"))
+		}
+		return nil, nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, nil, err
+	}
+
+	return result, resultVar1, nil
+
+}
+
 func (s *SQLStore) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 	return s.getActiveUserCount(s.db, updatedSecondsAgo)
 

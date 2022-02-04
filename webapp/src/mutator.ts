@@ -959,88 +959,48 @@ class Mutator {
     }
 
     async duplicateBoard(
-        teamId: string,
         boardId: string,
         description = 'duplicate board',
         asTemplate = false,
         afterRedo?: (newBoardId: string) => Promise<void>,
         beforeUndo?: () => Promise<void>,
     ): Promise<[Block[], string]> {
-        // ToDo: reimplement
-
-        // if (asTemplate === newBoard.fields.isTemplate) {
-        //     newBoard.title = `${newBoard.title} copy`
-        // } else if (asTemplate) {
-        //     // Template from board
-        //     newBoard.title = 'New board template'
-        // } else {
-        //     // Board from template
-        // }
-        // newBoard.fields.isTemplate = asTemplate
-        // const createdBlocks = await this.insertBlocks(
-        //     newBlocks,
-        //     description,
-        //     async (respBlocks: Block[]) => {
-        //         const board = respBlocks.find((b) => b.type === 'board')
-        //         await afterRedo?.(board?.id || '')
-        //     },
-        //     beforeUndo,
-        //     boardId,
-        // )
-        // const board = createdBlocks.find((b: Block) => b.type === 'board')
-        // return [createdBlocks, board.id]
-        return [[], '']
-    }
-
-    async duplicateFromRootBoard(
-        teamId: string,
-        boardId: string,
-        description = 'duplicate board',
-        asTemplate = false,
-        afterRedo?: (newBoardId: string) => Promise<void>,
-        beforeUndo?: () => Promise<void>,
-    ): Promise<[Block[], string]> {
-        // ToDo: reimplement, needs to duplicate board and blocks
-
-        // if (asTemplate === newBoard.fields.isTemplate) {
-        //     newBoard.title = `${newBoard.title} copy`
-        // } else if (asTemplate) {
-        //     // Template from board
-        //     newBoard.title = 'New board template'
-        // } else {
-        //     // Board from template
-        // }
-        // newBoard.fields.isTemplate = asTemplate
-        // const createdBlocks = await this.insertBlocks(
-        //     newBlocks,
-        //     description,
-        //     async (respBlocks: Block[]) => {
-        //         const board = respBlocks.find((b) => b.type === 'board')
-        //         await afterRedo?.(board?.id || '')
-        //     },
-        //     beforeUndo,
-        // )
-        // const board = createdBlocks.find((b: Block) => b.type === 'board')
-        // return [createdBlocks, board.id]
-        return [[], '']
+        return undoManager.perform(
+            async () => {
+                const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate)
+                if (boardsAndBlocks) {
+                    updateAllBoardsAndBlocks(boardsAndBlocks.boards, boardsAndBlocks.blocks)
+                    await afterRedo?.(boardsAndBlocks.boards[0]?.id)
+                }
+                return boardsAndBlocks
+            },
+            async (boardsAndBlocks: BoardsAndBlocks) => {
+                await beforeUndo?.()
+                const awaits = []
+                for (const block of boardsAndBlocks.blocks) {
+                    awaits.push(octoClient.deleteBlock(block.boardId, block.id))
+                }
+                for (const board of boardsAndBlocks.boards) {
+                    awaits.push(octoClient.deleteBoard(board.id))
+                }
+                await Promise.all(awaits)
+            },
+            description,
+            this.undoGroupId,
+        )
     }
 
     async addBoardFromTemplate(
-        teamId: string,
         intl: IntlShape,
         afterRedo: (id: string) => Promise<void>,
         beforeUndo: () => Promise<void>,
         boardTemplateId: string,
-        global = false,
     ): Promise<[Block[], string]> {
         const asTemplate = false
         const actionDescription = intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'})
 
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId})
-        if (global) {
-            return mutator.duplicateFromRootBoard(teamId, boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
-        }
-        return mutator.duplicateBoard(teamId, boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
+        return mutator.duplicateBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
     }
 
     async addEmptyBoard(

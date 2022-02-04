@@ -263,6 +263,22 @@ func (mr *MockStoreMockRecorder) DeleteSubscription(arg0, arg1 interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSubscription", reflect.TypeOf((*MockStore)(nil).DeleteSubscription), arg0, arg1)
 }
 
+// DuplicateBoard mocks base method.
+func (m *MockStore) DuplicateBoard(arg0, arg1 string, arg2 bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DuplicateBoard", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*model.BoardsAndBlocks)
+	ret1, _ := ret[1].([]*model.BoardMember)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// DuplicateBoard indicates an expected call of DuplicateBoard.
+func (mr *MockStoreMockRecorder) DuplicateBoard(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DuplicateBoard", reflect.TypeOf((*MockStore)(nil).DuplicateBoard), arg0, arg1, arg2)
+}
+
 // GetActiveUserCount mocks base method.
 func (m *MockStore) GetActiveUserCount(arg0 int64) (int, error) {
 	m.ctrl.T.Helper()
