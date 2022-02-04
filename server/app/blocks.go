@@ -37,7 +37,7 @@ func (a *App) GetParentID(c store.Container, blockID string) (string, error) {
 }
 
 func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
-	oldBlock, err := a.store.GetBlock(blockID)
+	oldBlock, err := a.store.GetBlock(c, blockID)
 	if err != nil {
 		return nil
 	}
@@ -48,7 +48,7 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 	}
 
 	a.metrics.IncrementBlocksPatched(1)
-	block, err := a.store.GetBlock(blockID)
+	block, err := a.store.GetBlock(c, blockID)
 	if err != nil {
 		return nil
 	}
@@ -63,7 +63,7 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 func (a *App) PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch, modifiedByID string) error {
 	oldBlocks := make([]model.Block, 0, len(blockPatches.BlockIDs))
 	for _, blockID := range blockPatches.BlockIDs {
-		oldBlock, err := a.store.GetBlock(blockID)
+		oldBlock, err := a.store.GetBlock(c, blockID)
 		if err != nil {
 			return nil
 		}
@@ -77,7 +77,7 @@ func (a *App) PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch
 
 	a.metrics.IncrementBlocksPatched(len(oldBlocks))
 	for i, blockID := range blockPatches.BlockIDs {
-		newBlock, err := a.store.GetBlock(blockID)
+		newBlock, err := a.store.GetBlock(c, blockID)
 		if err != nil {
 			return nil
 		}
@@ -139,7 +139,7 @@ func (a *App) CopyCardFiles(sourceBoardID string, destWorkspaceID string, blocks
 	// template) to fail to load.
 
 	// look up ID of source board, which may be different than the blocks.
-	board, err := a.GetBlockByID(sourceBoardID)
+	board, err := a.GetBlockByID(store.Container{}, sourceBoardID)
 	if err != nil || board == nil {
 		return fmt.Errorf("cannot fetch board %s for CopyCardFiles: %w", sourceBoardID, err)
 	}
@@ -191,12 +191,12 @@ func (a *App) GetAllBlocks(c store.Container) ([]model.Block, error) {
 	return a.store.GetAllBlocks(c)
 }
 
-func (a *App) GetBlockByID(blockID string) (*model.Block, error) {
-	return a.store.GetBlock(blockID)
+func (a *App) GetBlockByID(c store.Container, blockID string) (*model.Block, error) {
+	return a.store.GetBlock(c, blockID)
 }
 
 func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
-	block, err := a.store.GetBlock(blockID)
+	block, err := a.store.GetBlock(c, blockID)
 	if err != nil {
 		return err
 	}

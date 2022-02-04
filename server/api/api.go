@@ -297,7 +297,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case blockID != "":
-		block, err = a.app.GetBlockByID(blockID)
+		block, err = a.app.GetBlockByID(*container, blockID)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
@@ -1459,7 +1459,7 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check for valid block
-	block, err := a.app.GetBlockByID(sub.BlockID)
+	block, err := a.app.GetBlockByID(*container, sub.BlockID)
 	if err != nil || block == nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid blockID", err)
 		return
