@@ -367,6 +367,11 @@ func (s *SQLStore) GetTeamsForUser(userID string) ([]*model.Team, error) {
 
 }
 
+func (s *SQLStore) GetTemplatesForUserAndTeam(userID string, teamID string) ([]*model.Board, error) {
+	return s.getTemplatesForUserAndTeam(s.db, userID, teamID)
+
+}
+
 func (s *SQLStore) GetUserByEmail(email string) (*model.User, error) {
 	return s.getUserByEmail(s.db, email)
 

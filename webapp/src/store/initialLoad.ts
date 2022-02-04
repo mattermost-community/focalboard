@@ -11,7 +11,7 @@ import {RootState} from './index'
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
-        const [team, boards] = await Promise.all([
+        const [team, boards, boardTemplates] = await Promise.all([
 
             // ToDo: get board members maybe?
             // ToDo: get user boards
@@ -19,6 +19,7 @@ export const initialLoad = createAsyncThunk(
 
             client.getTeam(),
             client.getBoards(),
+            client.getTeamTemplates(),
         ])
 
         // ToDo: do we really need to get the team info?? wouldn't it be the board info?
@@ -29,6 +30,7 @@ export const initialLoad = createAsyncThunk(
         return {
             team,
             boards,
+            boardTemplates,
 
             // ToDo: return extra Promise.all things
         }

@@ -571,25 +571,8 @@ class OctoClient {
         return (await this.getJson(response, [])) as IUser[]
     }
 
-    // ToDo: delete??
-    // async getUserWorkspaces(): Promise<UserWorkspace[]> {
-    //     const path = '/api/v1/workspaces'
-    //     const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-    //     if (response.status !== 200) {
-    //         return []
-    //     }
-    //
-    //     return (await this.getJson(response, [])) as UserWorkspace[]
-    // }
-
-    // ToDo: modify to get local templates
-    // async getGlobalTemplates(): Promise<Block[]> {
-    //     const path = this.workspacePath('0') + '/blocks?type=board'
-    //     return this.getBlocksWithPath(path)
-    // }
-
-    async getTeamTemplates(teamId: string): Promise<Board[]> {
-        const path = this.teamPath(teamId) + '/templates'
+    async getTeamTemplates(): Promise<Board[]> {
+        const path = this.teamPath() + '/templates'
         return this.getBoardsWithPath(path)
     }
 

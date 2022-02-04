@@ -76,6 +76,7 @@ type Store interface {
 	PatchBoard(boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error)
 	GetBoard(id string) (*model.Board, error)
 	GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error)
+	GetTemplatesForUserAndTeam(userID, teamID string) ([]*model.Board, error)
 	// @withTransaction
 	DeleteBoard(boardID, userID string) error
 

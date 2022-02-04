@@ -775,6 +775,21 @@ func (mr *MockStoreMockRecorder) GetTeamsForUser(arg0 interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamsForUser", reflect.TypeOf((*MockStore)(nil).GetTeamsForUser), arg0)
 }
 
+// GetTemplatesForUserAndTeam mocks base method.
+func (m *MockStore) GetTemplatesForUserAndTeam(arg0, arg1 string) ([]*model.Board, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTemplatesForUserAndTeam", arg0, arg1)
+	ret0, _ := ret[0].([]*model.Board)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTemplatesForUserAndTeam indicates an expected call of GetTemplatesForUserAndTeam.
+func (mr *MockStoreMockRecorder) GetTemplatesForUserAndTeam(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTemplatesForUserAndTeam", reflect.TypeOf((*MockStore)(nil).GetTemplatesForUserAndTeam), arg0, arg1)
+}
+
 // GetUserByEmail mocks base method.
 func (m *MockStore) GetUserByEmail(arg0 string) (*model.User, error) {
 	m.ctrl.T.Helper()

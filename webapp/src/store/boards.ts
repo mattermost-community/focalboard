@@ -129,6 +129,9 @@ const boardsSlice = createSlice({
             action.payload.boards.forEach((board) => {
                 state.boards[board.id] = board
             })
+            action.payload.boardTemplates.forEach((board) => {
+                state.templates[board.id] = board
+            })
         })
         builder.addCase(fetchBoardMembers.fulfilled, (state, action) => {
             if (action.payload.length === 0) {

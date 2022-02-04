@@ -73,6 +73,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	// Board APIs
 	apiv1.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
+	apiv1.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
 	apiv1.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
 	apiv1.HandleFunc("/boards", a.sessionRequired(a.handleCreateBoard)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}", a.attachSession(a.handleGetBoard, false)).Methods("GET")
@@ -1938,6 +1939,71 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, data)
 
 	auditRec.AddMeta("boardsCount", len(boards))
+	auditRec.Success()
+}
+
+func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v1/teams/{teamID}/templates getTemplates
+	//
+	// Returns team templates
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Board"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	teamID := mux.Vars(r)["teamID"]
+	userID := getUserID(r)
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getTemplates", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("teamID", teamID)
+
+	// retrieve boards list
+	boards, err := a.app.GetTemplatesForUserAndTeam(userID, teamID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("GetTemplates",
+		mlog.String("teamID", teamID),
+		mlog.Int("boardsCount", len(boards)),
+	)
+
+	data, err := json.Marshal(boards)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.AddMeta("templatesCount", len(boards))
 	auditRec.Success()
 }
 
