@@ -107,7 +107,7 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Board, schema model.
 	// }
 
 	// // find all child blocks of the board that updated since last notify.
-	// blocks, err := dg.store.GetSubTree2(board.ID, opts)
+	// blocks, err := dg.store.GetSubTree2(board.ID, board.ID, opts)
 	// if err != nil {
 	// 	return nil, fmt.Errorf("could not get subtree for board %s: %w", board.ID, err)
 	// }
@@ -149,7 +149,7 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 	opts := model.QuerySubtreeOptions{
 		AfterUpdateAt: dg.lastNotifyAt,
 	}
-	blocks, err := dg.store.GetSubTree2(card.ID, opts)
+	blocks, err := dg.store.GetSubTree2(card.BoardID, card.ID, opts)
 	if err != nil {
 		return nil, fmt.Errorf("could not get subtree for card %s: %w", card.ID, err)
 	}

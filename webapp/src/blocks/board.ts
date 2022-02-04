@@ -130,6 +130,8 @@ function createBoard(board?: Board): Board {
         icon: board?.icon || '',
         showDescription: board?.showDescription || false,
         isTemplate: board?.isTemplate || false,
+        templateVersion: board?.templateVersion || 0,
+        templateTrackingCode: board?.templateTrackingCode || '',
         properties: board?.properties || {},
         cardProperties,
         columnCalculations: board?.columnCalculations || {},

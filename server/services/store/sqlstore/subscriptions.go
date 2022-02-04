@@ -16,7 +16,6 @@ import (
 var subscriptionFields = []string{
 	"block_type",
 	"block_id",
-	"team_id",
 	"subscriber_type",
 	"subscriber_id",
 	"notified_at",

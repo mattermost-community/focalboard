@@ -105,7 +105,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 			SubscriberID:   evt.ModifiedByID,
 		}
 
-		if sub, err = b.store.CreateSubscription(sub); err != nil {
+		if _, err = b.store.CreateSubscription(sub); err != nil {
 			b.logger.Warn("Cannot subscribe card author to card",
 				mlog.String("card_id", evt.BlockChanged.ID),
 				mlog.Err(err),

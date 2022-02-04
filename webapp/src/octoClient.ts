@@ -328,7 +328,7 @@ class OctoClient {
             subscriberId: userId,
         }
 
-        return fetch(this.getBaseURL() + this.teamPath() + '/subscriptions', {
+        return fetch(this.getBaseURL() + '/api/v1/subscriptions', {
             method: 'POST',
             headers: this.headers(),
             body: JSON.stringify(body),
@@ -336,7 +336,7 @@ class OctoClient {
     }
 
     async unfollowBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
-        return fetch(this.getBaseURL() + this.teamPath() + `/subscriptions/${blockId}/${userId}`, {
+        return fetch(this.getBaseURL() + `/api/v1/subscriptions/${blockId}/${userId}`, {
             method: 'DELETE',
             headers: this.headers(),
         })
@@ -725,7 +725,7 @@ class OctoClient {
     }
 
     async getUserBlockSubscriptions(userId: string): Promise<Array<Subscription>> {
-        const path = this.teamPath() + `/subscriptions/${userId}`
+        const path = `/api/v1/subscriptions/${userId}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []

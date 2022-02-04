@@ -175,14 +175,13 @@ export default class Plugin {
 
             const goToFocalboardTemplate = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelIntro, {workspaceID: currentChannel})
-                UserSettings.lastBoardId = null
-                UserSettings.lastViewId = null
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelIntro, {channelID: currentChannel})
+                // UserSettings.lastBoardId = null
+                // UserSettings.lastViewId = null
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
             this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
 
-            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'

@@ -96,6 +96,8 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         showDescription: false,
         type: 'board',
         isTemplate: true,
+        templateVersion: 0,
+        templateTrackingCode: '',
         icon: '🚴🏻‍♂️',
         cardProperties: [groupProperty],
         columnCalculations: {},
@@ -118,6 +120,8 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         cardProperties: [groupProperty],
         columnCalculations: {},
         isTemplate: true,
+        templateVersion: 0,
+        templateTrackingCode: '',
         properties: {},
     }
 

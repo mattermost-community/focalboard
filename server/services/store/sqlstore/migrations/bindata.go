@@ -39,7 +39,7 @@
 // migrations_files/000019_populate_category_blocks.down.sql (40B)
 // migrations_files/000019_populate_category_blocks.up.sql (1.432kB)
 // migrations_files/000020_builtin_templates_extra_columns.down.sql (126B)
-// migrations_files/000020_builtin_templates_extra_columns.up.sql (161B)
+// migrations_files/000020_builtin_templates_extra_columns.up.sql (179B)
 
 package migrations
 
@@ -888,7 +888,7 @@ func _000020_builtin_templates_extra_columnsDownSql() (*asset, error) {
 	return a, nil
 }
 
-var __000020_builtin_templates_extra_columnsUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\xf4\x09\x71\x0d\x52\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x4d\xca\x4f\x2c\x4a\x29\x56\x70\x74\x71\x51\x70\xf6\xf7\x09\xf5\xf5\x53\x28\x49\xcd\x2d\xc8\x49\x2c\x49\x8d\x2f\x4b\x2d\x2a\xce\xcc\xcf\x53\xf0\xf4\x0b\x51\x70\x71\x75\x73\x0c\xf5\x09\x51\x30\xb0\xe6\x22\xdd\xa0\x92\xa2\xc4\xe4\xec\xcc\xbc\xf4\xf8\xe4\xfc\x94\x54\x85\x30\xc7\x20\x67\x0f\xc7\x20\x0d\x63\x33\x4d\xb8\xb1\x4a\x4a\xd6\x5c\x80\x00\x00\x00\xff\xff\x3f\xb7\x0a\x80\xa1\x00\x00\x00")
+var __000020_builtin_templates_extra_columnsUpSql = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x72\xf4\x09\x71\x0d\x52\x08\x71\x74\xf2\x71\x55\xa8\xae\xd6\x2b\x28\x4a\x4d\xcb\xac\xa8\xad\x4d\xca\x4f\x2c\x4a\x29\x56\x70\x74\x71\x51\x70\xf6\xf7\x09\xf5\xf5\x53\x28\x49\xcd\x2d\xc8\x49\x2c\x49\x8d\x2f\x4b\x2d\x2a\xce\xcc\xcf\x53\xf0\xf4\x0b\x51\xf0\xf3\x0f\x51\xf0\x0b\xf5\xf1\x51\x70\x71\x75\x73\x0c\xf5\x09\x51\x30\xb0\xe6\x22\xdd\xc4\x92\xa2\xc4\xe4\xec\xcc\xbc\xf4\xf8\xe4\xfc\x94\x54\x85\x30\xc7\x20\x67\x0f\xc7\x20\x0d\x63\x33\x4d\x4c\xf3\xd5\xd5\xad\xb9\x00\x01\x00\x00\xff\xff\x26\xf1\x9e\x73\xb3\x00\x00\x00")
 
 func _000020_builtin_templates_extra_columnsUpSqlBytes() ([]byte, error) {
 	return bindataRead(
@@ -903,8 +903,8 @@ func _000020_builtin_templates_extra_columnsUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000020_builtin_templates_extra_columns.up.sql", size: 161, mode: os.FileMode(0644), modTime: time.Unix(1643974078, 0)}
-	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x84, 0xbd, 0xd7, 0x49, 0x3f, 0xcf, 0x8e, 0x35, 0x12, 0x1b, 0x94, 0x37, 0x4a, 0xf0, 0xb9, 0x9e, 0x7, 0x60, 0x4e, 0x67, 0x3f, 0x34, 0x80, 0xa9, 0xd9, 0x74, 0x2a, 0x4f, 0xa8, 0x14, 0x51, 0x42}}
+	info := bindataFileInfo{name: "000020_builtin_templates_extra_columns.up.sql", size: 179, mode: os.FileMode(0644), modTime: time.Unix(1643993077, 0)}
+	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x7c, 0x9b, 0xed, 0x34, 0x20, 0x59, 0x55, 0x58, 0x54, 0x74, 0xc3, 0x4, 0xa0, 0xa8, 0x7b, 0xb0, 0xdc, 0x3a, 0x75, 0xd6, 0xf4, 0x5d, 0x89, 0x27, 0x3d, 0x80, 0x2e, 0x4, 0x2b, 0x4e, 0x81, 0x39}}
 	return a, nil
 }
 

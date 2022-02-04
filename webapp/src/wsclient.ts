@@ -60,7 +60,6 @@ export interface Subscription {
     deleteAt?: number
 }
 
-
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
     conn: WebSocket | null;
@@ -389,6 +388,9 @@ class WSClient {
                     break
                 case ACTION_UPDATE_BLOCK_CATEGORY:
                     this.updateHandler(message)
+                    break
+                case ACTION_UPDATE_SUBSCRIPTION: {
+                    this.updateSubscriptionHandler(message)
                     break
                 default:
                     Utils.logError(`Unexpected action: ${message.action}`)
