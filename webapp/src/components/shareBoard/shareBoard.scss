@@ -93,6 +93,16 @@
         border-radius: 8px;
         background: rgba(var(--center-channel-bg-rgb), 1);
         border-top: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+
+        .d-flex {
+            display: flex;
+        }
+        .justify-content-between{
+            justify-content: space-between
+        }
+        .flex-column {
+            flex-direction: column;
+        }
     }
 
     .tabs-inputs {
