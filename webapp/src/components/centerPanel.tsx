@@ -63,7 +63,6 @@ type State = {
 }
 
 class CenterPanel extends React.Component<Props, State> {
-    // const [showShareDialog, setShowShareDialog] = useState(false)
     private backgroundRef = React.createRef<HTMLDivElement>()
 
     private keydownHandler = (keyName: string, e: KeyboardEvent) => {
