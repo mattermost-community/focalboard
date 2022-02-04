@@ -22,8 +22,8 @@ func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	return board, nil
 }
 
-func (a *App) DuplicateBoard(boardID string, userID string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
-	bab, members, err := a.store.DuplicateBoard(boardID, userID, asTemplate)
+func (a *App) DuplicateBoard(boardID string, userID string, asTemplate bool, teamID string) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+	bab, members, err := a.store.DuplicateBoard(boardID, userID, asTemplate, teamID)
 	if err != nil {
 		return nil, nil, err
 	}

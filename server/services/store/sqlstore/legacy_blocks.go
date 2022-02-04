@@ -27,7 +27,7 @@ func (s *SQLStore) legacyBlocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 		err := rows.Scan(
 			&block.ID,
 			&block.ParentID,
-			&block.RootID,
+			&block.BoardID,
 			&block.CreatedBy,
 			&modifiedBy,
 			&block.Schema,
@@ -111,8 +111,8 @@ func (s *SQLStore) getLegacyBlock(db sq.BaseRunner, workspaceID string, blockID 
 // the old block model. This method is kept to enable the unique IDs
 // data migration
 func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block *model.Block, userID string) error {
-	if block.RootID == "" {
-		return RootIDNilError{}
+	if block.BoardID == "" {
+		return BoardIDNilError{}
 	}
 
 	fieldsJSON, err := json.Marshal(block.Fields)
@@ -149,7 +149,7 @@ func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block
 		"workspace_id":          workspaceID,
 		"id":                    block.ID,
 		"parent_id":             block.ParentID,
-		"root_id":               block.RootID,
+		"root_id":               block.BoardID,
 		s.escapeField("schema"): block.Schema,
 		"type":                  block.Type,
 		"title":                 block.Title,
@@ -167,7 +167,7 @@ func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block
 			Where(sq.Eq{"id": block.ID}).
 			Where(sq.Eq{"COALESCE(workspace_id, '0')": workspaceID}).
 			Set("parent_id", block.ParentID).
-			Set("root_id", block.RootID).
+			Set("root_id", block.BoardID).
 			Set("modified_by", block.ModifiedBy).
 			Set(s.escapeField("schema"), block.Schema).
 			Set("type", block.Type).

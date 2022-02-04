@@ -33,7 +33,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 			newBab := &model.BoardsAndBlocks{
 				Boards: []*model.Board{},
 				Blocks: []model.Block{
-					{ID: "block-id", BoardID: "board-id", RootID: "block-id", Type: model.TypeCard},
+					{ID: "block-id", BoardID: "board-id", Type: model.TypeCard},
 				},
 			}
 
@@ -61,7 +61,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 					{ID: "board-id", TeamID: teamID, Type: model.BoardTypePrivate},
 				},
 				Blocks: []model.Block{
-					{ID: "block-id", BoardID: "nonexistent-board-id", RootID: "block-id", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
+					{ID: "block-id", BoardID: "nonexistent-board-id", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 				},
 			}
 
@@ -77,7 +77,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 					{TeamID: teamID, Type: model.BoardTypePrivate},
 				},
 				Blocks: []model.Block{
-					{ID: "block-id", BoardID: "board-id", RootID: "block-id", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
+					{ID: "block-id", BoardID: "board-id", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 				},
 			}
 
@@ -93,7 +93,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 					{ID: "board-id-2", TeamID: "team-id-2", Type: model.BoardTypePrivate},
 				},
 				Blocks: []model.Block{
-					{ID: "block-id", BoardID: "board-id-1", RootID: "block-id", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
+					{ID: "block-id", BoardID: "board-id-1", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 				},
 			}
 
@@ -109,8 +109,8 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 					{ID: "board-id-2", Title: "private board", TeamID: teamID, Type: model.BoardTypePrivate},
 				},
 				Blocks: []model.Block{
-					{ID: "block-id-1", Title: "block 1", BoardID: "board-id-1", RootID: "block-id-1", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
-					{ID: "block-id-2", Title: "block 2", BoardID: "board-id-2", RootID: "block-id-2", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
+					{ID: "block-id-1", Title: "block 1", BoardID: "board-id-1", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
+					{ID: "block-id-2", Title: "block 2", BoardID: "board-id-2", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 				},
 			}
 
@@ -206,7 +206,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock1 := model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
-			RootID:  "block-id-1",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
@@ -217,7 +216,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock2 := model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
-			RootID:  "block-id-2",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
@@ -347,7 +345,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock1 := model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
-			RootID:  "block-id-1",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
@@ -358,7 +355,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock2 := model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
-			RootID:  "block-id-2",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
@@ -413,7 +409,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock1 := model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
-			RootID:  "block-id-1",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
@@ -424,7 +419,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock2 := model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
-			RootID:  "block-id-2",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
@@ -479,7 +473,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock1 := model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
-			RootID:  "block-id-1",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
@@ -490,7 +483,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock2 := model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
-			RootID:  "block-id-2",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
@@ -548,7 +540,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock1 := model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
-			RootID:  "block-id-1",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
@@ -559,7 +550,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock2 := model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
-			RootID:  "block-id-2",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
@@ -613,7 +603,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock1 := model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
-			RootID:  "block-id-1",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
@@ -624,7 +613,6 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		newBlock2 := model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
-			RootID:  "block-id-2",
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
@@ -775,8 +763,8 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 				{ID: "board-id-2", Title: "private board", TeamID: teamID, Type: model.BoardTypePrivate},
 			},
 			Blocks: []model.Block{
-				{ID: "block-id-1", Title: "block 1", BoardID: "board-id-1", RootID: "block-id-1", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
-				{ID: "block-id-2", Title: "block 2", BoardID: "board-id-2", RootID: "block-id-2", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
+				{ID: "block-id-1", Title: "block 1", BoardID: "board-id-1", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
+				{ID: "block-id-2", Title: "block 2", BoardID: "board-id-2", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 			},
 		}
 

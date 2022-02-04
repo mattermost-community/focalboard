@@ -123,7 +123,7 @@ class TestBlockFactory {
 
     private static addToCard<BlockType extends Block>(block: BlockType, card: Card, isContent = true): BlockType {
         block.parentId = card.id
-        block.rootId = card.rootId
+        block.boardId = card.boardId
         if (isContent) {
             card.fields.contentOrder.push(block.id)
         }

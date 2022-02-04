@@ -32,8 +32,8 @@ func (a *App) GetBlockWithID(blockID string) (*model.Block, error) {
 	return a.store.GetBlock(blockID)
 }
 
-func (a *App) GetBlocksWithRootID(boardID, rootID string) ([]model.Block, error) {
-	return a.store.GetBlocksWithRootID(boardID, rootID)
+func (a *App) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
+	return a.store.GetBlocksWithBoardID(boardID)
 }
 
 func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
@@ -174,8 +174,8 @@ func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
 
 		fileName, ok := block.Fields["fileId"]
 		if block.Type == model.TypeImage && ok {
-			sourceFilePath := filepath.Join(block.WorkspaceID, sourceBoardID, fileName.(string))
-			destinationFilePath := filepath.Join(block.WorkspaceID, block.RootID, fileName.(string))
+			sourceFilePath := filepath.Join(sourceBoardID, fileName.(string))
+			destinationFilePath := filepath.Join(block.BoardID, fileName.(string))
 			if err := a.filesBackend.CopyFile(sourceFilePath, destinationFilePath); err != nil {
 				a.logger.Error(
 					"CopyCardFiles failed to copy file",
@@ -229,7 +229,7 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 	if block.Type == model.TypeImage {
 		fileName, fileIDExists := block.Fields["fileId"]
 		if fileName, fileIDIsString := fileName.(string); fileIDExists && fileIDIsString {
-			filePath := filepath.Join(block.WorkspaceID, block.RootID, fileName)
+			filePath := filepath.Join(block.BoardID, fileName)
 			err = a.filesBackend.RemoveFile(filePath)
 
 			if err != nil {

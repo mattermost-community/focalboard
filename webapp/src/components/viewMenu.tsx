@@ -178,7 +178,6 @@ const ViewMenu = React.memo((props: Props) => {
         view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar view'})
         view.fields.viewType = 'calendar'
         view.parentId = board.id
-        view.rootId = board.id
         view.boardId = board.id
         view.fields.visiblePropertyIds = [Constants.titleColumnId]
 

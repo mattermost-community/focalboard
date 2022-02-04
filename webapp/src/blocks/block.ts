@@ -14,7 +14,6 @@ type BlockTypes = typeof blockTypes[number]
 interface BlockPatch {
     boardId?: string
     parentId?: string
-    rootId?: string
     schema?: number
     type?: BlockTypes
     title?: string
@@ -28,7 +27,6 @@ interface Block {
     id: string
     boardId: string
     parentId: string
-    rootId: string
     createdBy: string
     modifiedBy: string
 
@@ -50,7 +48,6 @@ function createBlock(block?: Block): Block {
         schema: 1,
         boardId: block?.boardId || '',
         parentId: block?.parentId || '',
-        rootId: block?.rootId || '',
         createdBy: block?.createdBy || '',
         modifiedBy: block?.modifiedBy || '',
         type: block?.type || 'unknown',

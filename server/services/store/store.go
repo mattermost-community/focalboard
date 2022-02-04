@@ -14,7 +14,7 @@ import (
 type Store interface {
 	GetBlocksWithParentAndType(boardID, parentID string, blockType string) ([]model.Block, error)
 	GetBlocksWithParent(boardID, parentID string) ([]model.Block, error)
-	GetBlocksWithRootID(boardID, rootID string) ([]model.Block, error)
+	GetBlocksWithBoardID(boardID string) ([]model.Block, error)
 	GetBlocksWithType(boardID, blockType string) ([]model.Block, error)
 	GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
 	GetSubTree3(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
@@ -33,7 +33,7 @@ type Store interface {
 	GetBoardAndCardByID(blockID string) (board *model.Board, card *model.Block, err error)
 	GetBoardAndCard(block *model.Block) (board *model.Board, card *model.Block, err error)
 	// @withTransaction
-	DuplicateBoard(boardID string, userID string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error)
+	DuplicateBoard(boardID string, userID string, asTemplate bool, teamID string) (*model.BoardsAndBlocks, []*model.BoardMember, error)
 	// @withTransaction
 	PatchBlocks(blockPatches *model.BlockPatchBatch, userID string) error
 

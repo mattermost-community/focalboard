@@ -54,7 +54,7 @@ class Archiver {
     }
 
     static isValidBlock(block: Block): boolean {
-        if (!block.id || !block.rootId) {
+        if (!block.id || !block.boardId) {
             return false
         }
 

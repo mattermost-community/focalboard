@@ -260,7 +260,6 @@ class CenterPanel extends React.Component<Props, State> {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCard, {board: board.id, view: activeView.id, card: card.id})
 
         card.parentId = board.id
-        card.rootId = board.id
         card.boardId = board.id
         const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.cardProperties)
         if ((activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table') && groupByProperty) {
@@ -304,7 +303,6 @@ class CenterPanel extends React.Component<Props, State> {
         const cardTemplate = createCard()
         cardTemplate.fields.isTemplate = true
         cardTemplate.parentId = board.id
-        cardTemplate.rootId = board.id
         cardTemplate.boardId = board.id
 
         await mutator.insertBlock(

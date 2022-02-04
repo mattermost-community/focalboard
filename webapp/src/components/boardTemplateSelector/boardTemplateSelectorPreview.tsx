@@ -31,7 +31,7 @@ const BoardTemplateSelectorPreview = React.memo((props: Props) => {
             setActiveTemplateCards([])
             setActiveView(null)
             setActiveTemplateCards([])
-            octoClient.getSubtree(activeTemplate.id, activeView?.fields.viewType === 'gallery' ? 3 : 2, activeTemplate.teamId).then((blocks) => {
+            octoClient.getAllBlocks(activeTemplate.id).then((blocks) => {
                 const cards = blocks.filter((b) => b.type === 'card')
                 const views = blocks.filter((b) => b.type === 'view')
                 if (views.length > 0) {

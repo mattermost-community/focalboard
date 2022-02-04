@@ -264,9 +264,9 @@ func (mr *MockStoreMockRecorder) DeleteSubscription(arg0, arg1 interface{}) *gom
 }
 
 // DuplicateBoard mocks base method.
-func (m *MockStore) DuplicateBoard(arg0, arg1 string, arg2 bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+func (m *MockStore) DuplicateBoard(arg0, arg1 string, arg2 bool, arg3 string) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DuplicateBoard", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "DuplicateBoard", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(*model.BoardsAndBlocks)
 	ret1, _ := ret[1].([]*model.BoardMember)
 	ret2, _ := ret[2].(error)
@@ -274,9 +274,9 @@ func (m *MockStore) DuplicateBoard(arg0, arg1 string, arg2 bool) (*model.BoardsA
 }
 
 // DuplicateBoard indicates an expected call of DuplicateBoard.
-func (mr *MockStoreMockRecorder) DuplicateBoard(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) DuplicateBoard(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DuplicateBoard", reflect.TypeOf((*MockStore)(nil).DuplicateBoard), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DuplicateBoard", reflect.TypeOf((*MockStore)(nil).DuplicateBoard), arg0, arg1, arg2, arg3)
 }
 
 // GetActiveUserCount mocks base method.
@@ -369,6 +369,21 @@ func (mr *MockStoreMockRecorder) GetBlocksForBoard(arg0 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksForBoard", reflect.TypeOf((*MockStore)(nil).GetBlocksForBoard), arg0)
 }
 
+// GetBlocksWithBoardID mocks base method.
+func (m *MockStore) GetBlocksWithBoardID(arg0 string) ([]model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBlocksWithBoardID", arg0)
+	ret0, _ := ret[0].([]model.Block)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBlocksWithBoardID indicates an expected call of GetBlocksWithBoardID.
+func (mr *MockStoreMockRecorder) GetBlocksWithBoardID(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksWithBoardID", reflect.TypeOf((*MockStore)(nil).GetBlocksWithBoardID), arg0)
+}
+
 // GetBlocksWithParent mocks base method.
 func (m *MockStore) GetBlocksWithParent(arg0, arg1 string) ([]model.Block, error) {
 	m.ctrl.T.Helper()
@@ -397,21 +412,6 @@ func (m *MockStore) GetBlocksWithParentAndType(arg0, arg1, arg2 string) ([]model
 func (mr *MockStoreMockRecorder) GetBlocksWithParentAndType(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksWithParentAndType", reflect.TypeOf((*MockStore)(nil).GetBlocksWithParentAndType), arg0, arg1, arg2)
-}
-
-// GetBlocksWithRootID mocks base method.
-func (m *MockStore) GetBlocksWithRootID(arg0, arg1 string) ([]model.Block, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBlocksWithRootID", arg0, arg1)
-	ret0, _ := ret[0].([]model.Block)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetBlocksWithRootID indicates an expected call of GetBlocksWithRootID.
-func (mr *MockStoreMockRecorder) GetBlocksWithRootID(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksWithRootID", reflect.TypeOf((*MockStore)(nil).GetBlocksWithRootID), arg0, arg1)
 }
 
 // GetBlocksWithType mocks base method.

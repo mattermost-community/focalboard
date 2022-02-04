@@ -34,7 +34,7 @@ func createTestBlocks(t *testing.T, store store.Store, userID string, num int) [
 	for i := 0; i < num; i++ {
 		block := &model.Block{
 			ID:        utils.NewID(utils.IDTypeBlock),
-			RootID:    utils.NewID(utils.IDTypeBlock),
+			BoardID:   utils.NewID(utils.IDTypeBoard),
 			Type:      "card",
 			CreatedBy: userID,
 		}

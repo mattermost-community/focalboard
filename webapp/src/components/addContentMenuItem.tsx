@@ -37,9 +37,8 @@ const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
             name={handler.getDisplayText(intl)}
             icon={handler.getIcon()}
             onClick={async () => {
-                const newBlock = await handler.createBlock(card.rootId)
+                const newBlock = await handler.createBlock(card.boardId)
                 newBlock.parentId = card.id
-                newBlock.rootId = card.rootId
                 newBlock.boardId = card.boardId
 
                 const typeName = handler.getDisplayText(intl)

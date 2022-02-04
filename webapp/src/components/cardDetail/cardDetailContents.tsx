@@ -26,7 +26,6 @@ type Props = {
 function addTextBlock(card: Card, intl: IntlShape, text: string): void {
     const block = createTextBlock()
     block.parentId = card.id
-    block.rootId = card.rootId
     block.boardId = card.boardId
     block.title = text
 

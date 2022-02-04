@@ -181,12 +181,12 @@ func (s *SQLStore) DeleteSubscription(blockID string, subscriberID string) error
 
 }
 
-func (s *SQLStore) DuplicateBoard(boardID string, userID string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+func (s *SQLStore) DuplicateBoard(boardID string, userID string, asTemplate bool, teamID string) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return nil, nil, txErr
 	}
-	result, resultVar1, err := s.duplicateBoard(tx, boardID, userID, asTemplate)
+	result, resultVar1, err := s.duplicateBoard(tx, boardID, userID, asTemplate, teamID)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DuplicateBoard"))
@@ -248,6 +248,11 @@ func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 
 }
 
+func (s *SQLStore) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
+	return s.getBlocksWithBoardID(s.db, boardID)
+
+}
+
 func (s *SQLStore) GetBlocksWithParent(boardID string, parentID string) ([]model.Block, error) {
 	return s.getBlocksWithParent(s.db, boardID, parentID)
 
@@ -255,11 +260,6 @@ func (s *SQLStore) GetBlocksWithParent(boardID string, parentID string) ([]model
 
 func (s *SQLStore) GetBlocksWithParentAndType(boardID string, parentID string, blockType string) ([]model.Block, error) {
 	return s.getBlocksWithParentAndType(s.db, boardID, parentID, blockType)
-
-}
-
-func (s *SQLStore) GetBlocksWithRootID(boardID string, rootID string) ([]model.Block, error) {
-	return s.getBlocksWithRootID(s.db, boardID, rootID)
 
 }
 

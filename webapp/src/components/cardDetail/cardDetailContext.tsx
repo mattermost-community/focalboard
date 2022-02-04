@@ -47,9 +47,8 @@ export const CardDetailProvider = (props: CardDetailProps): ReactElement => {
         card,
         lastAddedBlock,
         addBlock: async (handler: ContentHandler, index: number, auto: boolean) => {
-            const block = await handler.createBlock(card.rootId)
+            const block = await handler.createBlock(card.boardId)
             block.parentId = card.id
-            block.rootId = card.rootId
             block.boardId = card.boardId
             const typeName = handler.getDisplayText(intl)
             const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})

@@ -51,6 +51,6 @@ describe('Mutator', () => {
         expect(duplicatedCard.fields.icon).toBe(card.fields.icon)
         expect(duplicatedCard.fields.contentOrder).toHaveLength(card.fields.contentOrder.length)
         expect(duplicatedCard.parentId).toBe(board.id)
-        expect(duplicatedCard.rootId).toBe(board.id)
+        expect(duplicatedCard.boardId).toBe(board.id)
     })
 })

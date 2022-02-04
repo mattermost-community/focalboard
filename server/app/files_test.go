@@ -13,7 +13,7 @@ import (
 
 const (
 	testFileName = "temp-file-name"
-	testRootID   = "test-root-id"
+	testBoardID  = "test-root-id"
 	testFilePath = "1/test-root-id/temp-file-name"
 )
 
@@ -45,7 +45,7 @@ func TestGetFileReader(t *testing.T) {
 
 		mockedFileBackend.On("Reader", testFilePath).Return(readerFunc, readerErrorFunc)
 		mockedFileBackend.On("FileExists", testFilePath).Return(fileExistsFunc, fileExistsErrorFunc)
-		actual, _ := th.App.GetFileReader("1", testRootID, testFileName)
+		actual, _ := th.App.GetFileReader("1", testBoardID, testFileName)
 		assert.Equal(t, mockedReadCloseSeek, actual)
 	})
 
@@ -71,7 +71,7 @@ func TestGetFileReader(t *testing.T) {
 
 		mockedFileBackend.On("Reader", testFilePath).Return(readerFunc, readerErrorFunc)
 		mockedFileBackend.On("FileExists", testFilePath).Return(fileExistsFunc, fileExistsErrorFunc)
-		actual, err := th.App.GetFileReader("1", testRootID, testFileName)
+		actual, err := th.App.GetFileReader("1", testBoardID, testFileName)
 		assert.Error(t, err, mockedError)
 		assert.Nil(t, actual)
 	})
@@ -98,7 +98,7 @@ func TestGetFileReader(t *testing.T) {
 
 		mockedFileBackend.On("Reader", testFilePath).Return(readerFunc, readerErrorFunc)
 		mockedFileBackend.On("FileExists", testFilePath).Return(fileExistsFunc, fileExistsErrorFunc)
-		actual, err := th.App.GetFileReader("1", testRootID, testFileName)
+		actual, err := th.App.GetFileReader("1", testBoardID, testFileName)
 		assert.Error(t, err, mockedError)
 		assert.Nil(t, actual)
 	})
@@ -134,7 +134,7 @@ func TestGetFileReader(t *testing.T) {
 		mockedFileBackend.On("MoveFile", testFileName, filePath).Return(moveFileFunc)
 		mockedFileBackend.On("Reader", filePath).Return(readerFunc, readerErrorFunc)
 
-		actual, _ := th.App.GetFileReader(workspaceid, testRootID, testFileName)
+		actual, _ := th.App.GetFileReader(workspaceid, testBoardID, testFileName)
 		assert.Equal(t, mockedReadCloseSeek, actual)
 	})
 
@@ -170,7 +170,7 @@ func TestGetFileReader(t *testing.T) {
 		mockedFileBackend.On("MoveFile", fileName, filePath).Return(moveFileFunc)
 		mockedFileBackend.On("Reader", filePath).Return(readerFunc, readerErrorFunc)
 
-		actual, _ := th.App.GetFileReader(workspaceid, testRootID, testFileName)
+		actual, _ := th.App.GetFileReader(workspaceid, testBoardID, testFileName)
 		assert.Equal(t, mockedReadCloseSeek, actual)
 	})
 }
@@ -186,7 +186,7 @@ func TestSaveFile(t *testing.T) {
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, "/")
 			assert.Equal(t, "1", paths[0])
-			assert.Equal(t, testRootID, paths[1])
+			assert.Equal(t, testBoardID, paths[1])
 			fileName = paths[2]
 			return int64(10)
 		}
@@ -196,7 +196,7 @@ func TestSaveFile(t *testing.T) {
 		}
 
 		mockedFileBackend.On("WriteFile", mockedReadCloseSeek, mock.Anything).Return(writeFileFunc, writeFileErrorFunc)
-		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", testRootID, fileName)
+		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", testBoardID, fileName)
 		assert.Equal(t, fileName, actual)
 		assert.Nil(t, err)
 	})

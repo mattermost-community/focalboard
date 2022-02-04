@@ -20,7 +20,6 @@ import './commentsList.scss'
 type Props = {
     comments: readonly CommentBlock[]
     boardId: string
-    rootId: string
     cardId: string
     readonly: boolean
 }
@@ -32,13 +31,12 @@ const CommentsList = React.memo((props: Props) => {
     const onSendClicked = () => {
         const commentText = newComment
         if (commentText) {
-            const {rootId, cardId, boardId} = props
+            const {cardId, boardId} = props
             Utils.log(`Send comment: ${commentText}`)
             Utils.assertValue(cardId)
 
             const comment = createCommentBlock()
             comment.parentId = cardId
-            comment.rootId = rootId
             comment.boardId = boardId
             comment.title = commentText
             mutator.insertBlock(boardId, comment, 'add comment')

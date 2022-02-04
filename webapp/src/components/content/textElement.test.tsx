@@ -26,7 +26,6 @@ const defaultBlock: TextBlock = {
     id: 'test-id',
     boardId: 'test-id',
     parentId: 'test-id',
-    rootId: 'test-id',
     modifiedBy: 'test-user-id',
     schema: 0,
     type: 'text',

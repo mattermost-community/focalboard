@@ -184,8 +184,8 @@ class OctoClient {
         return user
     }
 
-    async getSubtree(rootId?: string, levels = 2, teamID?: string): Promise<Block[]> {
-        let path = this.teamPath(teamID) + `/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
+    async getSubtree(boardId?: string, levels = 2, teamID?: string): Promise<Block[]> {
+        let path = this.teamPath(teamID) + `/blocks/${encodeURIComponent(boardId || '')}/subtree?l=${levels}`
         const readToken = Utils.getReadToken()
         if (readToken) {
             path += `&read_token=${readToken}`
@@ -435,8 +435,8 @@ class OctoClient {
     }
 
     // Sharing
-    async getSharing(rootId: string): Promise<ISharing | undefined> {
-        const path = this.teamPath() + `/sharing/${rootId}`
+    async getSharing(boardId: string): Promise<ISharing | undefined> {
+        const path = this.teamPath() + `/sharing/${boardId}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return undefined
@@ -528,8 +528,8 @@ class OctoClient {
         return undefined
     }
 
-    async getFileAsDataUrl(rootId: string, fileId: string): Promise<string> {
-        let path = '/files/teams/' + this.teamId + '/' + rootId + '/' + fileId
+    async getFileAsDataUrl(boardId: string, fileId: string): Promise<string> {
+        let path = '/files/teams/' + this.teamId + '/' + boardId + '/' + fileId
         const readToken = Utils.getReadToken()
         if (readToken) {
             path += `?read_token=${readToken}`
@@ -603,10 +603,10 @@ class OctoClient {
         return this.getJson<Board>(response, {} as Board)
     }
 
-    async duplicateBoard(boardID: string, asTemplate: boolean): Promise<BoardsAndBlocks | undefined> {
-        let query = '?asTemplate=false'
+    async duplicateBoard(boardID: string, asTemplate: boolean, teamId: string): Promise<BoardsAndBlocks | undefined> {
+        let query = `?asTemplate=false&teamID=${teamId || '0'}`
         if (asTemplate) {
-            query = '?asTemplate=true'
+            query = `?asTemplate=true&teamID=${teamId || '0'}`
         }
         const path = `/api/v1/boards/${boardID}/duplicate${query}`
         const response = await fetch(this.getBaseURL() + path, {

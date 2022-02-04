@@ -11,8 +11,8 @@ func TestIsValidBoardsAndBlocks(t *testing.T) {
 	t.Run("no boards", func(t *testing.T) {
 		bab := &BoardsAndBlocks{
 			Blocks: []Block{
-				{ID: "block-id-1", BoardID: "board-id-1", RootID: "root-id-1", Type: TypeCard},
-				{ID: "block-id-2", BoardID: "board-id-2", RootID: "root-id-2", Type: TypeCard},
+				{ID: "block-id-1", BoardID: "board-id-1", Type: TypeCard},
+				{ID: "block-id-2", BoardID: "board-id-2", Type: TypeCard},
 			},
 		}
 
@@ -37,9 +37,9 @@ func TestIsValidBoardsAndBlocks(t *testing.T) {
 				{ID: "board-id-2", Type: BoardTypePrivate},
 			},
 			Blocks: []Block{
-				{ID: "block-id-1", BoardID: "board-id-1", RootID: "root-id-1", Type: TypeCard},
-				{ID: "block-id-3", BoardID: "board-id-3", RootID: "root-id-3", Type: TypeCard},
-				{ID: "block-id-2", BoardID: "board-id-2", RootID: "root-id-2", Type: TypeCard},
+				{ID: "block-id-1", BoardID: "board-id-1", Type: TypeCard},
+				{ID: "block-id-3", BoardID: "board-id-3", Type: TypeCard},
+				{ID: "block-id-2", BoardID: "board-id-2", Type: TypeCard},
 			},
 		}
 
@@ -53,9 +53,9 @@ func TestIsValidBoardsAndBlocks(t *testing.T) {
 				{ID: "board-id-2", Type: BoardTypePrivate},
 			},
 			Blocks: []Block{
-				{ID: "block-id-1", BoardID: "board-id-1", RootID: "root-id-1", Type: TypeCard},
-				{ID: "block-id-3", BoardID: "board-id-2", RootID: "root-id-3", Type: TypeCard},
-				{ID: "block-id-2", BoardID: "board-id-2", RootID: "root-id-2", Type: TypeCard},
+				{ID: "block-id-1", BoardID: "board-id-1", Type: TypeCard},
+				{ID: "block-id-3", BoardID: "board-id-2", Type: TypeCard},
+				{ID: "block-id-2", BoardID: "board-id-2", Type: TypeCard},
 			},
 		}
 
@@ -88,8 +88,8 @@ func TestGenerateBoardsAndBlocksIDs(t *testing.T) {
 	t.Run("invalid boards and blocks", func(t *testing.T) {
 		bab := &BoardsAndBlocks{
 			Blocks: []Block{
-				{ID: "block-id-1", BoardID: "board-id-1", RootID: "root-id-1", Type: TypeCard},
-				{ID: "block-id-2", BoardID: "board-id-2", RootID: "root-id-2", Type: TypeCard},
+				{ID: "block-id-1", BoardID: "board-id-1", Type: TypeCard},
+				{ID: "block-id-2", BoardID: "board-id-2", Type: TypeCard},
 			},
 		}
 
@@ -106,9 +106,9 @@ func TestGenerateBoardsAndBlocksIDs(t *testing.T) {
 				{ID: "board-id-3", Type: BoardTypeOpen, Title: "board3"},
 			},
 			Blocks: []Block{
-				{ID: "block-id-1", BoardID: "board-id-1", RootID: "root-id-1", Type: TypeCard},
-				{ID: "block-id-2", BoardID: "board-id-2", RootID: "root-id-2", Type: TypeView},
-				{ID: "block-id-3", BoardID: "board-id-2", RootID: "root-id-3", Type: TypeText},
+				{ID: "block-id-1", BoardID: "board-id-1", Type: TypeCard},
+				{ID: "block-id-2", BoardID: "board-id-2", Type: TypeView},
+				{ID: "block-id-3", BoardID: "board-id-2", Type: TypeText},
 			},
 		}
 

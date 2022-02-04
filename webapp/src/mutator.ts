@@ -617,7 +617,7 @@ class Mutator {
             delete newCard.fields.properties[propertyId]
         }
         await this.updateBlock(boardId, newCard, card, description)
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {board: card.rootId, card: card.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {board: card.boardId, card: card.id})
     }
 
     async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyType, newName: string) {
@@ -939,7 +939,7 @@ class Mutator {
             }
         }
         newCard.fields.isTemplate = asTemplate
-        newCard.rootId = board.id
+        newCard.boardId = board.id
         newCard.parentId = board.id
         await this.insertBlocks(
             board.id,
@@ -959,6 +959,7 @@ class Mutator {
     }
 
     async duplicateBoard(
+        teamId: string,
         boardId: string,
         description = 'duplicate board',
         asTemplate = false,
@@ -967,7 +968,7 @@ class Mutator {
     ): Promise<[Block[], string]> {
         return undoManager.perform(
             async () => {
-                const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate)
+                const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate, teamId)
                 if (boardsAndBlocks) {
                     updateAllBoardsAndBlocks(boardsAndBlocks.boards, boardsAndBlocks.blocks)
                     await afterRedo?.(boardsAndBlocks.boards[0]?.id)
@@ -991,6 +992,7 @@ class Mutator {
     }
 
     async addBoardFromTemplate(
+        teamId: string,
         intl: IntlShape,
         afterRedo: (id: string) => Promise<void>,
         beforeUndo: () => Promise<void>,
@@ -1000,7 +1002,7 @@ class Mutator {
         const actionDescription = intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'})
 
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId})
-        return mutator.duplicateBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
+        return mutator.duplicateBoard(teamId, boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
     }
 
     async addEmptyBoard(
@@ -1016,7 +1018,6 @@ class Mutator {
         view.fields.viewType = 'board'
         view.parentId = board.id
         view.boardId = board.id
-        view.rootId = board.id
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
         return mutator.createBoardsAndBlocks(
@@ -1046,7 +1047,6 @@ class Mutator {
         view.fields.viewType = 'board'
         view.parentId = boardTemplate.id
         view.boardId = boardTemplate.id
-        view.rootId = boardTemplate.id
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
 
         return mutator.createBoardsAndBlocks(

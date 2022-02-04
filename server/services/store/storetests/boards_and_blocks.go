@@ -47,8 +47,8 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-3", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
 			Blocks: []model.Block{
-				{ID: "block-id-1", BoardID: "board-id-1", RootID: "block-id-1", Type: model.TypeCard},
-				{ID: "block-id-2", BoardID: "board-id-2", RootID: "block-id-2", Type: model.TypeCard},
+				{ID: "block-id-1", BoardID: "board-id-1", Type: model.TypeCard},
+				{ID: "block-id-2", BoardID: "board-id-2", Type: model.TypeCard},
 			},
 		}
 
@@ -80,8 +80,8 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-6", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
 			Blocks: []model.Block{
-				{ID: "block-id-3", BoardID: "board-id-4", RootID: "block-id-3", Type: model.TypeCard},
-				{ID: "block-id-4", BoardID: "board-id-5", RootID: "block-id-4", Type: model.TypeCard},
+				{ID: "block-id-3", BoardID: "board-id-4", Type: model.TypeCard},
+				{ID: "block-id-4", BoardID: "board-id-5", Type: model.TypeCard},
 			},
 		}
 
@@ -114,7 +114,7 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 	})
 
 	t.Run("on failure, nothing should be saved", func(t *testing.T) {
-		// one of the blocks is invalid as it doesn't have RootID
+		// one of the blocks is invalid as it doesn't have BoardID
 		newBab := &model.BoardsAndBlocks{
 			Boards: []*model.Board{
 				{ID: "board-id-7", TeamID: teamID, Type: model.BoardTypeOpen},
@@ -122,8 +122,8 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-9", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
 			Blocks: []model.Block{
-				{ID: "block-id-5", BoardID: "board-id-7", RootID: "block-id-5", Type: model.TypeCard},
-				{ID: "block-id-6", BoardID: "board-id-8", Type: model.TypeCard},
+				{ID: "block-id-5", BoardID: "board-id-7", Type: model.TypeCard},
+				{ID: "block-id-6", BoardID: "", Type: model.TypeCard},
 			},
 		}
 
@@ -157,7 +157,6 @@ func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		block := model.Block{
 			ID:      "block-id-1",
-			RootID:  "block-id-1",
 			BoardID: "board-id-1",
 			Title:   initialTitle,
 		}
@@ -200,8 +199,8 @@ func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-3", Title: "initial title", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
 			Blocks: []model.Block{
-				{ID: "block-id-1", Title: "initial title", BoardID: "board-id-1", RootID: "block-id-1", Type: model.TypeCard},
-				{ID: "block-id-2", Schema: 1, BoardID: "board-id-2", RootID: "block-id-2", Type: model.TypeCard},
+				{ID: "block-id-1", Title: "initial title", BoardID: "board-id-1", Type: model.TypeCard},
+				{ID: "block-id-2", Schema: 1, BoardID: "board-id-2", Type: model.TypeCard},
 			},
 		}
 
@@ -272,14 +271,12 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		block1 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-1",
 			BoardID: board1.ID,
 		}
 		require.NoError(t, store.InsertBlock(block1, userID))
 
 		block2 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-2",
 			BoardID: board1.ID,
 		}
 		require.NoError(t, store.InsertBlock(block2, userID))
@@ -294,14 +291,12 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		block3 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-3",
 			BoardID: board2.ID,
 		}
 		require.NoError(t, store.InsertBlock(block3, userID))
 
 		block4 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-4",
 			BoardID: "different-board-id",
 		}
 		require.NoError(t, store.InsertBlock(block4, userID))
@@ -349,14 +344,12 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		block1 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-1",
 			BoardID: board1.ID,
 		}
 		require.NoError(t, store.InsertBlock(block1, userID))
 
 		block2 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-2",
 			BoardID: board1.ID,
 		}
 		require.NoError(t, store.InsertBlock(block2, userID))
@@ -371,14 +364,12 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		block3 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-3",
 			BoardID: board2.ID,
 		}
 		require.NoError(t, store.InsertBlock(block3, userID))
 
 		block4 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-4",
 			BoardID: board2.ID,
 		}
 		require.NoError(t, store.InsertBlock(block4, userID))
@@ -425,14 +416,12 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		block1 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-1",
 			BoardID: board1.ID,
 		}
 		require.NoError(t, store.InsertBlock(block1, userID))
 
 		block2 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-2",
 			BoardID: board1.ID,
 		}
 		require.NoError(t, store.InsertBlock(block2, userID))
@@ -447,14 +436,12 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		block3 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-3",
 			BoardID: board2.ID,
 		}
 		require.NoError(t, store.InsertBlock(block3, userID))
 
 		block4 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-4",
 			BoardID: board2.ID,
 		}
 		require.NoError(t, store.InsertBlock(block4, userID))
@@ -501,14 +488,12 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		block1 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-1",
 			BoardID: board1.ID,
 		}
 		require.NoError(t, store.InsertBlock(block1, userID))
 
 		block2 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-2",
 			BoardID: board1.ID,
 		}
 		require.NoError(t, store.InsertBlock(block2, userID))
@@ -523,14 +508,12 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		block3 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-3",
 			BoardID: board2.ID,
 		}
 		require.NoError(t, store.InsertBlock(block3, userID))
 
 		block4 := &model.Block{
 			ID:      utils.NewID(utils.IDTypeBlock),
-			RootID:  "block-id-4",
 			BoardID: board2.ID,
 		}
 		require.NoError(t, store.InsertBlock(block4, userID))

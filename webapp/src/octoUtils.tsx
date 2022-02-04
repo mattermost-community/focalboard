@@ -122,13 +122,13 @@ class OctoUtils {
 
         const newSourceBlockId = idMap[sourceBlockId]
 
-        // Determine the new rootId if needed
-        let newRootId: string
+        // Determine the new boardId if needed
+        let newBoardId: string
         const sourceBlock = blocks.find((block) => block.id === sourceBlockId)!
-        if (sourceBlock.rootId === sourceBlock.id) {
-            // Special case: when duplicating a tree from root, remap all the descendant rootIds
+        if (sourceBlock.boardId === sourceBlock.id) {
+            // Special case: when duplicating a tree from root, remap all the descendant boardIds
             const newSourceRootBlock = newBlocks.find((block) => block.id === newSourceBlockId)!
-            newRootId = newSourceRootBlock.id
+            newBoardId = newSourceRootBlock.id
         }
 
         newBlocks.forEach((newBlock) => {
@@ -138,9 +138,9 @@ class OctoUtils {
                 Utils.assert(newBlock.parentId, `Block ${newBlock.id} (${newBlock.type} ${newBlock.title}) has no parent`)
             }
 
-            // Remap the rootIds if we are duplicating a tree from root
-            if (newRootId) {
-                newBlock.rootId = newRootId
+            // Remap the boardIds if we are duplicating a tree from root
+            if (newBoardId) {
+                newBlock.boardId = newBoardId
             }
 
             // Remap manual card order

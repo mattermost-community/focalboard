@@ -143,7 +143,7 @@ const BoardTemplateSelector = React.memo((props: Props) => {
                         <Button
                             filled={true}
                             size={'medium'}
-                            onClick={() => mutator.addBoardFromTemplate(intl, showBoard, () => showBoard(currentBoard.id), activeTemplate.id)}
+                            onClick={() => mutator.addBoardFromTemplate(currentTeam?.id || '0', intl, showBoard, () => showBoard(currentBoard.id), activeTemplate.id)}
                         >
                             <FormattedMessage
                                 id='BoardTemplateSelector.use-this-template'

@@ -37,10 +37,10 @@ definitions:
         description: The id for this block's parent block. Empty for root blocks
         type: string
         x-go-name: ParentID
-      rootId:
-        description: The id for this block's root block
+      boardId:
+        description: The id for this board that this block belongs to
         type: string
-        x-go-name: RootID
+        x-go-name: BoardID
       schema:
         description: The schema version of this block
         format: int64
@@ -86,10 +86,10 @@ definitions:
         description: The id for this block's parent block. Empty for root blocks
         type: string
         x-go-name: ParentID
-      rootId:
-        description: The id for this block's root block
+      boardId:
+        description: The id for this board that this block belongs to
         type: string
-        x-go-name: RootID
+        x-go-name: BoardID
       schema:
         description: The schema version of this block
         format: int64

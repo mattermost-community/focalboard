@@ -21,12 +21,6 @@ const (
 	maxSearchDepth  = 50
 )
 
-type RootIDNilError struct{}
-
-func (re RootIDNilError) Error() string {
-	return "rootId is nil"
-}
-
 type BoardIDNilError struct{}
 
 func (re BoardIDNilError) Error() string {
@@ -56,7 +50,6 @@ func (s *SQLStore) blockFields() []string {
 	return []string{
 		"id",
 		"parent_id",
-		"root_id",
 		"created_by",
 		"modified_by",
 		s.escapeField("schema"),
@@ -108,24 +101,6 @@ func (s *SQLStore) getBlocksWithParent(db sq.BaseRunner, boardID, parentID strin
 	return s.blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlocksWithRootID(db sq.BaseRunner, boardID, rootID string) ([]model.Block, error) {
-	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"root_id": rootID}).
-		Where(sq.Eq{"board_id": boardID})
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`GetBlocksWithRootID ERROR`, mlog.Err(err))
-
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-
-	return s.blocksFromRows(rows)
-}
-
 func (s *SQLStore) getBlocksWithBoardID(db sq.BaseRunner, boardID string) ([]model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
@@ -134,7 +109,7 @@ func (s *SQLStore) getBlocksWithBoardID(db sq.BaseRunner, boardID string) ([]mod
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`GetBlocksWithRootID ERROR`, mlog.Err(err))
+		s.logger.Error(`GetBlocksWithBoardID ERROR`, mlog.Err(err))
 
 		return nil, err
 	}
@@ -198,7 +173,6 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, boardID string, blockID string,
 	query := s.getQueryBuilder(db).Select(
 		"l3.id",
 		"l3.parent_id",
-		"l3.root_id",
 		"l3.created_by",
 		"l3.modified_by",
 		"l3."+s.escapeField("schema"),
@@ -365,7 +339,6 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 		err := rows.Scan(
 			&block.ID,
 			&block.ParentID,
-			&block.RootID,
 			&block.CreatedBy,
 			&modifiedBy,
 			&block.Schema,
@@ -402,21 +375,21 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	return results, nil
 }
 
-func (s *SQLStore) getRootID(db sq.BaseRunner, blockID string) (string, error) {
-	query := s.getQueryBuilder(db).Select("root_id").
+func (s *SQLStore) getBoardID(db sq.BaseRunner, blockID string) (string, error) {
+	query := s.getQueryBuilder(db).Select("board_id").
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"id": blockID})
 
 	row := query.QueryRow()
 
-	var rootID string
+	var boardID string
 
-	err := row.Scan(&rootID)
+	err := row.Scan(&boardID)
 	if err != nil {
 		return "", err
 	}
 
-	return rootID, nil
+	return boardID, nil
 }
 
 func (s *SQLStore) getParentID(db sq.BaseRunner, blockID string) (string, error) {
@@ -437,10 +410,6 @@ func (s *SQLStore) getParentID(db sq.BaseRunner, blockID string) (string, error)
 }
 
 func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID string) error {
-	if block.RootID == "" {
-		return RootIDNilError{}
-	}
-
 	if block.BoardID == "" {
 		return BoardIDNilError{}
 	}
@@ -460,7 +429,6 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 			"channel_id",
 			"id",
 			"parent_id",
-			"root_id",
 			"created_by",
 			"modified_by",
 			s.escapeField("schema"),
@@ -477,7 +445,6 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 		"channel_id":            "",
 		"id":                    block.ID,
 		"parent_id":             block.ParentID,
-		"root_id":               block.RootID,
 		s.escapeField("schema"): block.Schema,
 		"type":                  block.Type,
 		"title":                 block.Title,
@@ -499,7 +466,6 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 			Where(sq.Eq{"id": block.ID}).
 			Where(sq.Eq{"board_id": block.BoardID}).
 			Set("parent_id", block.ParentID).
-			Set("root_id", block.RootID).
 			Set("modified_by", block.ModifiedBy).
 			Set(s.escapeField("schema"), block.Schema).
 			Set("type", block.Type).
@@ -597,7 +563,6 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy stri
 			"type",
 			"title",
 			"fields",
-			"root_id",
 			"modified_by",
 			"create_at",
 			"update_at",
@@ -612,7 +577,6 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy stri
 			block.Type,
 			block.Title,
 			fieldsJSON,
-			block.RootID,
 			modifiedBy,
 			block.CreateAt,
 			now,
@@ -810,14 +774,14 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 		return errID
 	}
 
-	// update RootID
-	updateRootIDQ := baseQuery.Update("").
-		Set("root_id", newID).
-		Where(sq.Eq{"root_id": currentID})
+	// update BoardID
+	updateBoardIDQ := baseQuery.Update("").
+		Set("board_id", newID).
+		Where(sq.Eq{"board_id": currentID})
 
-	if errRootID := runUpdateForBlocksAndHistory(updateRootIDQ); errRootID != nil {
-		s.logger.Error(`replaceBlockID ERROR`, mlog.Err(errRootID))
-		return errRootID
+	if errBoardID := runUpdateForBlocksAndHistory(updateBoardIDQ); errBoardID != nil {
+		s.logger.Error(`replaceBlockID ERROR`, mlog.Err(errBoardID))
+		return errBoardID
 	}
 
 	// update ParentID

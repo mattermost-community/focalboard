@@ -75,7 +75,6 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	t.Run("valid block", func(t *testing.T) {
 		block := model.Block{
 			ID:         "id-test",
-			RootID:     "id-test",
 			BoardID:    boardID,
 			ModifiedBy: userID,
 		}
@@ -91,7 +90,7 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	t.Run("invalid rootid", func(t *testing.T) {
 		block := model.Block{
 			ID:         "id-test",
-			RootID:     "",
+			BoardID:    "",
 			ModifiedBy: userID,
 		}
 
@@ -106,7 +105,7 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	t.Run("invalid fields data", func(t *testing.T) {
 		block := model.Block{
 			ID:         "id-test",
-			RootID:     "id-test",
+			BoardID:    "id-test",
 			ModifiedBy: userID,
 			Fields:     map[string]interface{}{"no-serialiable-value": t.Run},
 		}
@@ -122,7 +121,6 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	t.Run("insert new block", func(t *testing.T) {
 		block := model.Block{
 			BoardID: "board-id",
-			RootID:  "root-id",
 		}
 
 		err := store.InsertBlock(&block, "user-id-2")
@@ -133,7 +131,6 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	t.Run("update existing block", func(t *testing.T) {
 		block := model.Block{
 			ID:      "id-2",
-			RootID:  "root-id",
 			BoardID: "board-id-1",
 			Title:   "Old Title",
 		}
@@ -152,7 +149,6 @@ func testInsertBlock(t *testing.T, store store.Store) {
 		// updating
 		newBlock := model.Block{
 			ID:        "id-2",
-			RootID:    "root-id",
 			BoardID:   "board-id-1",
 			CreatedBy: "user-id-3",
 			Title:     "New Title",
@@ -173,7 +169,6 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	t.Run("data tamper attempt", func(t *testing.T) {
 		block := model.Block{
 			ID:         "id-10",
-			RootID:     "root-id",
 			BoardID:    "board-id-1",
 			Title:      "Old Title",
 			CreateAt:   utils.GetMillisForTime(createdAt),
@@ -207,14 +202,12 @@ func testInsertBlocks(t *testing.T, store store.Store) {
 	t.Run("invalid block", func(t *testing.T) {
 		validBlock := model.Block{
 			ID:         "id-test",
-			RootID:     "id-test",
 			BoardID:    "id-test",
 			ModifiedBy: userID,
 		}
 
 		invalidBlock := model.Block{
 			ID:         "id-test",
-			RootID:     "",
 			BoardID:    "id-test",
 			ModifiedBy: userID,
 		}
@@ -237,7 +230,6 @@ func testPatchBlock(t *testing.T, store store.Store) {
 
 	block := model.Block{
 		ID:         "id-test",
-		RootID:     "id-test",
 		BoardID:    boardID,
 		Title:      "oldTitle",
 		ModifiedBy: userID,
@@ -261,9 +253,9 @@ func testPatchBlock(t *testing.T, store store.Store) {
 	})
 
 	t.Run("invalid rootid", func(t *testing.T) {
-		wrongRootID := ""
+		wrongBoardID := ""
 		blockPatch := model.BlockPatch{
-			RootID: &wrongRootID,
+			BoardID: &wrongBoardID,
 		}
 
 		err := store.PatchBlock("id-test", &blockPatch, "user-id-1")
@@ -355,15 +347,15 @@ func testPatchBlock(t *testing.T, store store.Store) {
 
 func testPatchBlocks(t *testing.T, store store.Store) {
 	block := model.Block{
-		ID:     "id-test",
-		RootID: "id-test",
-		Title:  "oldTitle",
+		ID:      "id-test",
+		BoardID: "id-test",
+		Title:   "oldTitle",
 	}
 
 	block2 := model.Block{
-		ID:     "id-test2",
-		RootID: "id-test2",
-		Title:  "oldTitle2",
+		ID:      "id-test2",
+		BoardID: "id-test2",
+		Title:   "oldTitle2",
 	}
 
 	insertBlocks := []model.Block{block, block2}
@@ -422,41 +414,35 @@ var (
 		{
 			ID:         "parent",
 			BoardID:    "board-id",
-			RootID:     "parent",
 			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "child1",
 			BoardID:    "board-id",
-			RootID:     "parent",
 			ParentID:   "parent",
 			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "child2",
 			BoardID:    "board-id",
-			RootID:     "parent",
 			ParentID:   "parent",
 			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "grandchild1",
 			BoardID:    "board-id",
-			RootID:     "parent",
 			ParentID:   "child1",
 			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "grandchild2",
 			BoardID:    "board-id",
-			RootID:     "parent",
 			ParentID:   "child2",
 			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "greatgrandchild1",
 			BoardID:    "board-id",
-			RootID:     "parent",
 			ParentID:   "grandchild1",
 			ModifiedBy: testUserID,
 		},
@@ -515,7 +501,7 @@ func testGetSubTree3(t *testing.T, store store.Store) {
 	require.NoError(t, err)
 	require.Len(t, blocks, initialCount+6)
 
-	t.Run("from root id", func(t *testing.T) {
+	t.Run("from board id", func(t *testing.T) {
 		blocks, err = store.GetSubTree3(boardID, "parent", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
 		require.Len(t, blocks, 5)
@@ -554,19 +540,16 @@ func testDeleteBlock(t *testing.T, store store.Store) {
 		{
 			ID:         "block1",
 			BoardID:    boardID,
-			RootID:     "block1",
 			ModifiedBy: userID,
 		},
 		{
 			ID:         "block2",
 			BoardID:    boardID,
-			RootID:     "block2",
 			ModifiedBy: userID,
 		},
 		{
 			ID:         "block3",
 			BoardID:    boardID,
-			RootID:     "block3",
 			ModifiedBy: userID,
 		},
 	}
@@ -613,7 +596,6 @@ func testGetBlocks(t *testing.T, store store.Store) {
 			ID:         "block1",
 			BoardID:    boardID,
 			ParentID:   "",
-			RootID:     "block1",
 			ModifiedBy: testUserID,
 			Type:       "test",
 		},
@@ -621,7 +603,6 @@ func testGetBlocks(t *testing.T, store store.Store) {
 			ID:         "block2",
 			BoardID:    boardID,
 			ParentID:   "block1",
-			RootID:     "block1",
 			ModifiedBy: testUserID,
 			Type:       "test",
 		},
@@ -629,7 +610,6 @@ func testGetBlocks(t *testing.T, store store.Store) {
 			ID:         "block3",
 			BoardID:    boardID,
 			ParentID:   "block1",
-			RootID:     "block1",
 			ModifiedBy: testUserID,
 			Type:       "test",
 		},
@@ -637,7 +617,6 @@ func testGetBlocks(t *testing.T, store store.Store) {
 			ID:         "block4",
 			BoardID:    boardID,
 			ParentID:   "block1",
-			RootID:     "block1",
 			ModifiedBy: testUserID,
 			Type:       "test2",
 		},
@@ -645,7 +624,6 @@ func testGetBlocks(t *testing.T, store store.Store) {
 			ID:         "block5",
 			BoardID:    boardID,
 			ParentID:   "block2",
-			RootID:     "block2",
 			ModifiedBy: testUserID,
 			Type:       "test",
 		},
@@ -704,14 +682,14 @@ func testGetBlocks(t *testing.T, store store.Store) {
 
 	t.Run("not existing parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithRootID(boardID, "not-exists")
+		blocks, err = store.GetBlocksWithBoardID("not-exists")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("valid parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithRootID(boardID, "block1")
+		blocks, err = store.GetBlocksWithBoardID(boardID)
 		require.NoError(t, err)
 		require.Len(t, blocks, 4)
 	})
@@ -722,7 +700,6 @@ func testGetBlock(t *testing.T, store store.Store) {
 		block := model.Block{
 			ID:         "block-id-10",
 			BoardID:    "board-id-1",
-			RootID:     "root-id-1",
 			ModifiedBy: "user-id-1",
 		}
 
@@ -734,7 +711,6 @@ func testGetBlock(t *testing.T, store store.Store) {
 		require.NotNil(t, fetchedBlock)
 		require.Equal(t, "block-id-10", fetchedBlock.ID)
 		require.Equal(t, "board-id-1", fetchedBlock.BoardID)
-		require.Equal(t, "root-id-1", fetchedBlock.RootID)
 		require.Equal(t, "user-id-1", fetchedBlock.CreatedBy)
 		require.Equal(t, "user-id-1", fetchedBlock.ModifiedBy)
 		assert.WithinDurationf(t, time.Now(), utils.GetTimeForMillis(fetchedBlock.CreateAt), 1*time.Second, "create time should be current time")

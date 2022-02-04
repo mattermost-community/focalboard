@@ -32,7 +32,7 @@ func createTestSubscriptions(client *client.Client, num int) ([]*model.Subscript
 	for n := 0; n < num; n++ {
 		newBlock := model.Block{
 			ID:       utils.NewID(utils.IDTypeCard),
-			RootID:   board.ID,
+			BoardID:  board.ID,
 			CreateAt: 1,
 			UpdateAt: 1,
 			Type:     model.TypeCard,

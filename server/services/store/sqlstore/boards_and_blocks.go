@@ -130,7 +130,7 @@ func (s *SQLStore) deleteBoardsAndBlocks(db sq.BaseRunner, dbab *model.DeleteBoa
 	return nil
 }
 
-func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID string, asTemplate bool, teamID string) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	bab := &model.BoardsAndBlocks{
 		Boards: []*model.Board{},
 		Blocks: []model.Block{},
@@ -141,6 +141,8 @@ func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID strin
 		return nil, nil, err
 	}
 	board.IsTemplate = asTemplate
+	board.TeamID = teamID
+	board.CreatedBy = userID
 	bab.Boards = []*model.Board{board}
 	blocks, err := s.getBlocksWithBoardID(db, boardID)
 	if err != nil {

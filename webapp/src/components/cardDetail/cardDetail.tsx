@@ -52,7 +52,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
 
-    useImagePaste(props.board.id, card.id, card.fields.contentOrder, card.rootId)
+    useImagePaste(props.board.id, card.id, card.fields.contentOrder)
 
     useEffect(() => {
         if (!title) {
@@ -135,7 +135,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 <hr/>
                 <CommentsList
                     comments={comments}
-                    rootId={card.rootId}
                     boardId={card.boardId}
                     cardId={card.id}
                     readonly={props.readonly}

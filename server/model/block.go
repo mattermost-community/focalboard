@@ -21,10 +21,6 @@ type Block struct {
 	// required: false
 	ParentID string `json:"parentId"`
 
-	// The id for this block's root block
-	// required: true
-	RootID string `json:"rootId"`
-
 	// The id for user who created this block
 	// required: true
 	CreatedBy string `json:"createdBy"`
@@ -77,10 +73,6 @@ type BlockPatch struct {
 	// required: false
 	ParentID *string `json:"parentId"`
 
-	// The id for this block's root block
-	// required: false
-	RootID *string `json:"rootId"`
-
 	// The schema version of this block
 	// required: false
 	Schema *int64 `json:"schema"`
@@ -100,6 +92,10 @@ type BlockPatch struct {
 	// The block removed fields
 	// required: false
 	DeletedFields []string `json:"deletedFields"`
+
+	// The board id that the block belongs to
+	// required: false
+	BoardID *string `json:"boardId"`
 }
 
 // BlockPatchBatch is a batch of IDs and patches for modify blocks
@@ -129,12 +125,12 @@ func (b Block) LogClone() interface{} {
 	return struct {
 		ID       string
 		ParentID string
-		RootID   string
+		BoardID  string
 		Type     BlockType
 	}{
 		ID:       b.ID,
 		ParentID: b.ParentID,
-		RootID:   b.RootID,
+		BoardID:  b.BoardID,
 		Type:     b.Type,
 	}
 }
@@ -145,8 +141,8 @@ func (p *BlockPatch) Patch(block *Block) *Block {
 		block.ParentID = *p.ParentID
 	}
 
-	if p.RootID != nil {
-		block.RootID = *p.RootID
+	if p.BoardID != nil {
+		block.BoardID = *p.BoardID
 	}
 
 	if p.Schema != nil {
@@ -199,8 +195,8 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 			blockIDs[block.ID] = block.Type
 		}
 
-		if _, ok := referenceIDs[block.RootID]; !ok {
-			referenceIDs[block.RootID] = true
+		if _, ok := referenceIDs[block.BoardID]; !ok {
+			referenceIDs[block.BoardID] = true
 		}
 		if _, ok := referenceIDs[block.ParentID]; !ok {
 			referenceIDs[block.ParentID] = true
@@ -260,7 +256,7 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 	newBlocks := make([]Block, len(blocks))
 	for i, block := range blocks {
 		block.ID = getExistingOrNewID(block.ID)
-		block.RootID = getExistingOrOldID(block.RootID)
+		block.BoardID = getExistingOrOldID(block.BoardID)
 		block.ParentID = getExistingOrOldID(block.ParentID)
 
 		if _, ok := block.Fields["contentOrder"]; ok {

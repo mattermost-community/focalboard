@@ -112,7 +112,7 @@ export const getCurrentBoardCards = createSelector(
     (state) => state.boards.current,
     getCards,
     (boardId, cards) => {
-        return Object.values(cards).filter((c) => c.parentId === boardId) as Card[]
+        return Object.values(cards).filter((c) => c.boardId === boardId) as Card[]
     },
 )
 
@@ -120,7 +120,7 @@ export const getCurrentBoardTemplates = createSelector(
     (state) => state.boards.current,
     getTemplates,
     (boardId, templates) => {
-        return Object.values(templates).filter((c) => c.parentId === boardId) as Card[]
+        return Object.values(templates).filter((c) => c.boardId === boardId) as Card[]
     },
 )
 

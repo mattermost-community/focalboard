@@ -24,7 +24,6 @@ const checkboxBlock: ContentBlock = {
     id: 'test-id',
     boardId: board.id,
     parentId: card.id,
-    rootId: card.rootId,
     modifiedBy: 'test-user-id',
     schema: 1,
     type: 'checkbox',
