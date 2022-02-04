@@ -76,7 +76,6 @@ type Store interface {
 	PatchBoard(boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error)
 	GetBoard(id string) (*model.Board, error)
 	GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error)
-	GetTemplatesForUserAndTeam(userID, teamID string) ([]*model.Board, error)
 	// @withTransaction
 	DeleteBoard(boardID, userID string) error
 
@@ -116,8 +115,8 @@ type Store interface {
 	GetNotificationHint(blockID string) (*model.NotificationHint, error)
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
 
-	RemoveDefaultTemplates(blocks []model.Block) error
-	GetDefaultTemplateBlocks() ([]model.Block, error)
+	RemoveDefaultTemplates(boards []*model.Board) error
+	GetTemplateBoards(teamID string) ([]*model.Board, error)
 
 	IsErrNotFound(err error) bool
 }

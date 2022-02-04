@@ -147,6 +147,7 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					}
 					board.ModifiedBy = userID
 					board.UpdateAt = now
+					board.TeamID = opt.TeamID
 					boardsAndBlocks.Boards = append(boardsAndBlocks.Boards, &board)
 				default:
 					return "", model.NewErrUnsupportedArchiveLineType(lineNum, archiveLine.Type)
@@ -164,19 +165,18 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 	}
 
 	modInfoCache := make(map[string]interface{})
-	modBlocks := make([]model.Block, 0, len(boardsAndBlocks.Blocks))
-	for _, block := range boardsAndBlocks.Blocks {
-		b := block
-		if opt.BlockModifier != nil && !opt.BlockModifier(&b, modInfoCache) {
+	modBoards := make([]*model.Board, 0, len(boardsAndBlocks.Boards))
+	for _, board := range boardsAndBlocks.Boards {
+		b := *board
+		if opt.BoardModifier != nil && !opt.BoardModifier(&b, modInfoCache) {
 			a.logger.Debug("skipping insert block per block modifier",
-				mlog.String("blockID", block.ID),
-				mlog.String("block_type", block.Type.String()),
+				mlog.String("blockID", board.ID),
 			)
 			continue
 		}
-		modBlocks = append(modBlocks, b)
+		modBoards = append(modBoards, &b)
 	}
-	boardsAndBlocks.Blocks = modBlocks
+	boardsAndBlocks.Boards = modBoards
 
 	var err error
 	boardsAndBlocks, err = model.GenerateBoardsAndBlocksIDs(boardsAndBlocks, a.logger)

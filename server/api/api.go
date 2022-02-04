@@ -1983,7 +1983,7 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("teamID", teamID)
 
 	// retrieve boards list
-	boards, err := a.app.GetTemplatesForUserAndTeam(userID, teamID)
+	boards, err := a.app.GetTemplateBoards(teamID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

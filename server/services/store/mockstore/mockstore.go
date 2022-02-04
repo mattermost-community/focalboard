@@ -490,21 +490,6 @@ func (mr *MockStoreMockRecorder) GetCategory(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategory", reflect.TypeOf((*MockStore)(nil).GetCategory), arg0)
 }
 
-// GetDefaultTemplateBlocks mocks base method.
-func (m *MockStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDefaultTemplateBlocks")
-	ret0, _ := ret[0].([]model.Block)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetDefaultTemplateBlocks indicates an expected call of GetDefaultTemplateBlocks.
-func (mr *MockStoreMockRecorder) GetDefaultTemplateBlocks() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultTemplateBlocks", reflect.TypeOf((*MockStore)(nil).GetDefaultTemplateBlocks))
-}
-
 // GetMemberForBoard mocks base method.
 func (m *MockStore) GetMemberForBoard(arg0, arg1 string) (*model.BoardMember, error) {
 	m.ctrl.T.Helper()
@@ -775,19 +760,19 @@ func (mr *MockStoreMockRecorder) GetTeamsForUser(arg0 interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamsForUser", reflect.TypeOf((*MockStore)(nil).GetTeamsForUser), arg0)
 }
 
-// GetTemplatesForUserAndTeam mocks base method.
-func (m *MockStore) GetTemplatesForUserAndTeam(arg0, arg1 string) ([]*model.Board, error) {
+// GetTemplateBoards mocks base method.
+func (m *MockStore) GetTemplateBoards(arg0 string) ([]*model.Board, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTemplatesForUserAndTeam", arg0, arg1)
+	ret := m.ctrl.Call(m, "GetTemplateBoards", arg0)
 	ret0, _ := ret[0].([]*model.Board)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetTemplatesForUserAndTeam indicates an expected call of GetTemplatesForUserAndTeam.
-func (mr *MockStoreMockRecorder) GetTemplatesForUserAndTeam(arg0, arg1 interface{}) *gomock.Call {
+// GetTemplateBoards indicates an expected call of GetTemplateBoards.
+func (mr *MockStoreMockRecorder) GetTemplateBoards(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTemplatesForUserAndTeam", reflect.TypeOf((*MockStore)(nil).GetTemplatesForUserAndTeam), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTemplateBoards", reflect.TypeOf((*MockStore)(nil).GetTemplateBoards), arg0)
 }
 
 // GetUserByEmail mocks base method.
@@ -1011,7 +996,7 @@ func (mr *MockStoreMockRecorder) RefreshSession(arg0 interface{}) *gomock.Call {
 }
 
 // RemoveDefaultTemplates mocks base method.
-func (m *MockStore) RemoveDefaultTemplates(arg0 []model.Block) error {
+func (m *MockStore) RemoveDefaultTemplates(arg0 []*model.Board) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RemoveDefaultTemplates", arg0)
 	ret0, _ := ret[0].(error)

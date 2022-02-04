@@ -26,8 +26,8 @@ func (a *App) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, er
 	return a.store.GetBoardsForUserAndTeam(userID, teamID)
 }
 
-func (a *App) GetTemplatesForUserAndTeam(userID, teamID string) ([]*model.Board, error) {
-	return a.store.GetTemplatesForUserAndTeam(userID, teamID)
+func (a *App) GetTemplateBoards(teamID string) ([]*model.Board, error) {
+	return a.store.GetTemplateBoards(teamID)
 }
 
 func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*model.Board, error) {
