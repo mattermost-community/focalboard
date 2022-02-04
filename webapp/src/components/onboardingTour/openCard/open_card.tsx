@@ -54,6 +54,7 @@ const OpenCardTourStep = (props: Props): JSX.Element => {
             singleTip={true}
             onPunchholeClick={props.onPunchholeClick}
             skipCategoryFromBackdrop={true}
+            telemetryTag='tourPoint1'
         />
     )
 }
