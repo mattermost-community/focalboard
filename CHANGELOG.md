@@ -10,7 +10,6 @@ This changelog summarizes updates to our open source project. You can also find 
 * Archive file format has changed and now supports images. Thanks @wiggin77!
 * Card badges. Thanks @kamre!
 * URL property improvement. Thanks @kamre!
-* Channel intro Boards link. Thanks @sbishel!
 * GIF support in card descriptions. Thanks @asaadmahmood!
 * Add links to linode. Thanks @ChaseKnowlden!
 * Add `chown` for nobody in the docker run example. Thanks @K3UL!
