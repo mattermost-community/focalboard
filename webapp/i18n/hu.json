@@ -112,8 +112,6 @@
   "DeleteBoardDialog.confirm-tite-template": "Tábla sablon törlésének jóváhagyása",
   "Dialog.closeDialog": "Ablak bezárása",
   "EditableDayPicker.today": "Ma",
-  "EmptyCenterPanel.plugin.end-message": "Válthat a beszélgetések között a váltóval az oldalsávon.",
-  "EmptyCenterPanel.plugin.no-content-title": "Hozzon létre táblát a {workspaceName} munkaterületen",
   "Error.mobileweb": "Mobil web támogatás jelenleg előzetes béta állapotban van. Nem minden funkcionalitás érhető el.",
   "Error.websocket-closed": "Websocket kapcsolat bezárult, kapcsolat megszakadt, Ha ez továbbra is fennáll, akkor ellenőrizze le a kiszolgáló vagy web proxy beállítását.",
   "Filter.includes": "tartalmazza",

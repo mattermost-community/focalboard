@@ -112,8 +112,6 @@
   "DeleteBoardDialog.confirm-tite-template": "Bevestig verwijderen Board-sjabloon",
   "Dialog.closeDialog": "Dialoogvenster sluiten",
   "EditableDayPicker.today": "Vandaag",
-  "EmptyCenterPanel.plugin.end-message": "Je kan het kanaal veranderen met de wisselaar in de zijbalk.",
-  "EmptyCenterPanel.plugin.no-content-title": "Maak een bord in {workspaceName}",
   "Error.mobileweb": "Mobiele webondersteuning is momenteel in vroege beta. Het is mogelijk dat niet alle functionaliteit aanwezig is.",
   "Error.websocket-closed": "Websocketverbinding gesloten, verbinding onderbroken. Als dit aanhoudt, controleer dan jouw server of web proxy configuratie.",
   "Filter.includes": "bevat",
