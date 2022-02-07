@@ -10,7 +10,7 @@ export const CardTourSteps = {
     ADD_DESCRIPTION: 2,
 }
 
-export const BoardTourSteps = {
+export const BoardTourSteps: {[key: string]: number} = {
     ADD_VIEW: 0,
     COPY_LINK: 1,
     SHARE_BOARD: 2,

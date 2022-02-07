@@ -34,7 +34,15 @@ import {
     getOnboardingTourStep,
     patchProps,
 } from '../../store/users'
-import {BoardTourSteps, CardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD, TOUR_ORDER} from '../onboardingTour'
+import {
+    BoardTourSteps,
+    CardTourSteps,
+    FINISHED,
+    TOUR_BOARD,
+    TOUR_CARD,
+    TOUR_ORDER,
+    TourCategoriesMapToSteps,
+} from '../onboardingTour'
 import {OnboardingBoardTitle, OnboardingCardTitle} from '../cardDetail/cardDetail'
 import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
@@ -93,6 +101,16 @@ const ViewHeader = React.memo((props: Props) => {
             }, 800)
         }
     }, [showTourBaseCondition])
+
+    useEffect(() => {
+        if (showShared && !BoardTourSteps.SHARE_BOARD) {
+            BoardTourSteps.SHARE_BOARD = 2
+        } else if (!showShared) {
+            delete BoardTourSteps.SHARE_BOARD
+        }
+
+        TourCategoriesMapToSteps[TOUR_BOARD] = BoardTourSteps
+    }, [showShared])
 
     const showAddViewTourStep = showTourBaseCondition && delayComplete
 
