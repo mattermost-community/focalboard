@@ -26,6 +26,16 @@ export const fetchTeams = createAsyncThunk(
     async () => octoClient.getTeams(),
 )
 
+export const regenerateSignupToken = createAsyncThunk(
+    'team/regenerateSignupToken',
+    async () => octoClient.regenerateTeamSignupToken(),
+)
+
+export const refreshCurrentTeam = createAsyncThunk(
+    'team/refreshCurrentTeam',
+    async () => octoClient.getTeam(),
+)
+
 type TeamState = {
     current: Team | null
     allTeams: Array<Team>
@@ -65,6 +75,9 @@ const teamSlice = createSlice({
         })
         builder.addCase(fetchTeams.fulfilled, (state, action) => {
             state.allTeams = action.payload
+        })
+        builder.addCase(refreshCurrentTeam.fulfilled, (state, action) => {
+            state.current = action.payload
         })
     },
 })

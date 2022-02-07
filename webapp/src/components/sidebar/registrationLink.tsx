@@ -6,7 +6,8 @@ import {useIntl} from 'react-intl'
 import {sendFlashMessage} from '../flashMessages'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
-import {useAppDispatch} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
+import {getCurrentTeam, Team, refreshCurrentTeam, regenerateSignupToken} from '../../store/teams'
 
 import Modal from '../modal'
 
@@ -20,10 +21,8 @@ const RegistrationLink = React.memo((props: Props) => {
     const {onClose} = props
     const intl = useIntl()
 
-    // ToDo: this is only used for personal server, and there will only be a team 0
-    /* const workspace = useAppSelector<IWorkspace|null>(getCurrentWorkspace) */
-    // ToDo: fix this
-    const signupToken = '??'
+    const team = useAppSelector<Team|null>(getCurrentTeam)
+    const signupToken = team?.signupToken
     const dispatch = useAppDispatch()
 
     const [wasCopied, setWasCopied] = useState(false)
@@ -36,9 +35,8 @@ const RegistrationLink = React.memo((props: Props) => {
         // eslint-disable-next-line no-alert
         const accept = window.confirm(intl.formatMessage({id: 'RegistrationLink.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
         if (accept) {
-            // ToDo: update with team ops
-            /* await client.regenerateWorkspaceSignupToken()
-             * await dispatch(fetchWorkspace()) */
+            await dispatch(regenerateSignupToken())
+            await dispatch(refreshCurrentTeam())
             setWasCopied(false)
 
             const description = intl.formatMessage({id: 'RegistrationLink.tokenRegenerated', defaultMessage: 'Registration link regenerated'})
@@ -48,8 +46,6 @@ const RegistrationLink = React.memo((props: Props) => {
 
     const registrationUrl = Utils.buildURL('/register?t=' + signupToken, true)
 
-    // ToDo: {signupToken && <>
-    // ToDo: when should this appear?? ^^
     return (
         <Modal
             position='bottom-right'

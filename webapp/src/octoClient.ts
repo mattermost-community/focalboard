@@ -475,18 +475,12 @@ class OctoClient {
     // }
     //
 
-    async regenerateWorkspaceSignupToken(): Promise<boolean> {
-        // ToDo: update for team
-        // const path = this.workspacePath() + '/regenerate_signup_token'
-        // const response = await fetch(this.getBaseURL() + path, {
-        //     method: 'POST',
-        //     headers: this.headers(),
-        // })
-        // if (response.status !== 200) {
-        //     return false
-        // }
-
-        return true
+    async regenerateTeamSignupToken(): Promise<void> {
+        const path = this.teamPath() + '/regenerate_signup_token'
+        await fetch(this.getBaseURL() + path, {
+            method: 'POST',
+            headers: this.headers(),
+        })
     }
 
     // Files
