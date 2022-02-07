@@ -765,6 +765,7 @@ class Mutator {
                 }
             },
             beforeUndo,
+            board.id,
         )
         return [newBlocks, newCard.id]
     }
@@ -834,6 +835,7 @@ class Mutator {
                 await afterRedo?.(board?.id || '')
             },
             beforeUndo,
+            boardId,
         )
         const board = createdBlocks.find((b: Block) => b.type === 'board')
         return [createdBlocks, board.id]
