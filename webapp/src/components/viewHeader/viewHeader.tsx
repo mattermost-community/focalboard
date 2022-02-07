@@ -27,11 +27,19 @@ import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
 import {useAppSelector} from '../../store/hooks'
-import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
-import {BoardTourSteps, CardTourSteps, TOUR_BOARD, TOUR_CARD} from '../onboardingTour'
+import {
+    getMe,
+    getOnboardingTourCategory,
+    getOnboardingTourStarted,
+    getOnboardingTourStep,
+    patchProps,
+} from '../../store/users'
+import {BoardTourSteps, CardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD, TOUR_ORDER} from '../onboardingTour'
 import {OnboardingBoardTitle, OnboardingCardTitle} from '../cardDetail/cardDetail'
 import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
+import {IUser, UserConfigPatch} from '../../user'
+import octoClient from '../../octoClient'
 
 type Props = {
     board: Board
@@ -88,6 +96,25 @@ const ViewHeader = React.memo((props: Props) => {
 
     const showAddViewTourStep = showTourBaseCondition && delayComplete
 
+    const me = useAppSelector<IUser|null>(getMe)
+
+    const resetTour = () => {
+        if (!me) {
+            return
+        }
+
+        const patch: UserConfigPatch = {
+            deletedFields: [
+                'focalboard_onboardingTourStarted',
+                'focalboard_tourCategory',
+                'focalboard_onboardingTourStep',
+                'focalboard_welcomePageViewed',
+            ],
+        }
+
+        octoClient.patchUserConfig(me.id, patch)
+    }
+
     return (
         <div className='ViewHeader'>
             <div className='viewSelector'>
@@ -117,6 +144,8 @@ const ViewHeader = React.memo((props: Props) => {
                 </MenuWrapper>
                 {showAddViewTourStep && <AddViewTourStep/>}
             </div>
+
+            <button onClick={resetTour}>{'Reset Tour'}</button>
 
             <div className='octo-spacer'/>
 
