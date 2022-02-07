@@ -363,6 +363,7 @@ func TestGetBoard(t *testing.T) {
 	t.Run("valid read token should be enough to get the board", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
+		th.Server.Config().EnablePublicSharedBoards = true
 
 		teamID := "team-id"
 		sharingToken := utils.NewID(utils.IDTypeToken)
@@ -1005,9 +1006,9 @@ func TestUpdateMember(t *testing.T) {
 		require.True(t, user2Member.SchemeEditor)
 
 		memberUpdate := &model.BoardMember{
-			UserID:      th.GetUser2().ID,
-			BoardID:     board.ID,
-			SchemeAdmin: true,
+			UserID:       th.GetUser2().ID,
+			BoardID:      board.ID,
+			SchemeAdmin:  true,
 			SchemeEditor: true,
 		}
 

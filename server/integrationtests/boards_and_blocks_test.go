@@ -209,7 +209,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
-		block1, err := th.Server.App().GetBlockWithID("block-id-1")
+		block1, err := th.Server.App().GetBlockByID("block-id-1")
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
@@ -219,7 +219,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
-		block2, err := th.Server.App().GetBlockWithID("block-id-2")
+		block2, err := th.Server.App().GetBlockByID("block-id-2")
 		require.NoError(t, err)
 		require.NotNil(t, block2)
 
@@ -348,7 +348,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
-		block1, err := th.Server.App().GetBlockWithID("block-id-1")
+		block1, err := th.Server.App().GetBlockByID("block-id-1")
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
@@ -358,7 +358,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
-		block2, err := th.Server.App().GetBlockWithID("block-id-2")
+		block2, err := th.Server.App().GetBlockByID("block-id-2")
 		require.NoError(t, err)
 		require.NotNil(t, block2)
 
@@ -412,7 +412,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
-		block1, err := th.Server.App().GetBlockWithID("block-id-1")
+		block1, err := th.Server.App().GetBlockByID("block-id-1")
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
@@ -422,7 +422,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
-		block2, err := th.Server.App().GetBlockWithID("block-id-2")
+		block2, err := th.Server.App().GetBlockByID("block-id-2")
 		require.NoError(t, err)
 		require.NotNil(t, block2)
 
@@ -476,7 +476,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
-		block1, err := th.Server.App().GetBlockWithID("block-id-1")
+		block1, err := th.Server.App().GetBlockByID("block-id-1")
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
@@ -486,7 +486,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
-		block2, err := th.Server.App().GetBlockWithID("block-id-2")
+		block2, err := th.Server.App().GetBlockByID("block-id-2")
 		require.NoError(t, err)
 		require.NotNil(t, block2)
 
@@ -543,7 +543,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
-		block1, err := th.Server.App().GetBlockWithID("block-id-1")
+		block1, err := th.Server.App().GetBlockByID("block-id-1")
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
@@ -553,7 +553,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
-		block2, err := th.Server.App().GetBlockWithID("block-id-2")
+		block2, err := th.Server.App().GetBlockByID("block-id-2")
 		require.NoError(t, err)
 		require.NotNil(t, block2)
 
@@ -606,7 +606,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock1, userID))
-		block1, err := th.Server.App().GetBlockWithID("block-id-1")
+		block1, err := th.Server.App().GetBlockByID("block-id-1")
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
@@ -616,7 +616,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 			Title:   initialTitle,
 		}
 		require.NoError(t, th.Server.App().InsertBlock(newBlock2, userID))
-		block2, err := th.Server.App().GetBlockWithID("block-id-2")
+		block2, err := th.Server.App().GetBlockByID("block-id-2")
 		require.NoError(t, err)
 		require.NotNil(t, block2)
 
@@ -643,14 +643,14 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		rBoard1, err := th.Server.App().GetBoard(board1.ID)
 		require.NoError(t, err)
 		require.Equal(t, newTitle, rBoard1.Title)
-		rBlock1, err := th.Server.App().GetBlockWithID(block1.ID)
+		rBlock1, err := th.Server.App().GetBlockByID(block1.ID)
 		require.NoError(t, err)
 		require.Equal(t, newTitle, rBlock1.Title)
 
 		rBoard2, err := th.Server.App().GetBoard(board2.ID)
 		require.NoError(t, err)
 		require.Equal(t, newTitle, rBoard2.Title)
-		rBlock2, err := th.Server.App().GetBlockWithID(block2.ID)
+		rBlock2, err := th.Server.App().GetBlockByID(block2.ID)
 		require.NoError(t, err)
 		require.Equal(t, newTitle, rBlock2.Title)
 	})
@@ -777,14 +777,14 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 		board1, err := th.Server.App().GetBoard("board-id-1")
 		require.NoError(t, err)
 		require.NotNil(t, board1)
-		block1, err := th.Server.App().GetBlockWithID("block-id-1")
+		block1, err := th.Server.App().GetBlockByID("block-id-1")
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
 		board2, err := th.Server.App().GetBoard("board-id-2")
 		require.NoError(t, err)
 		require.NotNil(t, board2)
-		block2, err := th.Server.App().GetBlockWithID("block-id-2")
+		block2, err := th.Server.App().GetBlockByID("block-id-2")
 		require.NoError(t, err)
 		require.NotNil(t, block2)
 
@@ -802,14 +802,14 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 		board1, err = th.Server.App().GetBoard("board-id-1")
 		require.NoError(t, err)
 		require.Nil(t, board1)
-		block1, err = th.Server.App().GetBlockWithID("block-id-1")
+		block1, err = th.Server.App().GetBlockByID("block-id-1")
 		require.NoError(t, err)
 		require.Nil(t, block1)
 
 		board2, err = th.Server.App().GetBoard("board-id-2")
 		require.NoError(t, err)
 		require.Nil(t, board2)
-		block2, err = th.Server.App().GetBlockWithID("block-id-2")
+		block2, err = th.Server.App().GetBlockByID("block-id-2")
 		require.NoError(t, err)
 		require.Nil(t, block2)
 	})

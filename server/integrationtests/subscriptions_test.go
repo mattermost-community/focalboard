@@ -20,7 +20,8 @@ func createTestSubscriptions(client *client.Client, num int) ([]*model.Subscript
 	}
 
 	board := &model.Board{
-		ID:       utils.NewID(utils.IDTypeBoard),
+		TeamID:   "0",
+		Type:     model.BoardTypeOpen,
 		CreateAt: 1,
 		UpdateAt: 1,
 	}
