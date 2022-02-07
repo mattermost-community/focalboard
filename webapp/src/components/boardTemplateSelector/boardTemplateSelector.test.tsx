@@ -31,7 +31,7 @@ jest.mock('react-router-dom', () => {
 })
 jest.mock('../../octoClient', () => {
     return {
-        getSubtree: jest.fn(() => Promise.resolve([])),
+        getAllBlocks: jest.fn(() => Promise.resolve([])),
     }
 })
 jest.mock('../../utils')
@@ -247,7 +247,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             })
 
             await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledTimes(1))
-            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(expect.anything(), expect.anything(), expect.anything(), expect.anything(), false))
+            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), '1'))
         })
         test('return BoardTemplateSelector and click to add board from global template', async () => {
             render(wrapDNDIntl(
@@ -269,7 +269,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                 userEvent.click(useTemplateButton!)
             })
             await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledTimes(1))
-            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(expect.anything(), expect.anything(), expect.anything(), expect.anything(), true))
+            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), 'global-1'))
         })
     })
 })

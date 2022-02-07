@@ -2,6 +2,7 @@ package app
 
 import (
 	"bytes"
+	"database/sql"
 	"fmt"
 	"strings"
 
@@ -22,7 +23,7 @@ var defTemplates []byte
 // initializeTemplates imports default templates if the blocks table is empty.
 func (a *App) initializeTemplates() error {
 	teams, err := a.store.GetAllTeams()
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		return fmt.Errorf("cannot initialize templates: %w", err)
 	}
 	for _, team := range teams {
