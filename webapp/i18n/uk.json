@@ -1,0 +1,10 @@
+{
+  "BoardComponent.add-a-group": "+ Додати групу",
+  "BoardComponent.delete": "Видалити",
+  "BoardComponent.hidden-columns": "Приховані стовпці",
+  "BoardComponent.hide": "Приховати",
+  "BoardComponent.new": "+ Створити",
+  "BoardComponent.show": "Показати",
+  "BoardPage.newVersion": "Доступна оновлена версія Панелі, тицьни тут щоб оновити.",
+  "BoardPage.syncFailed": "Можливо Панель видалено або права анульовано."
+}
