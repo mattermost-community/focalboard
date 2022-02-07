@@ -75,6 +75,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
 	apiv1.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
 	apiv1.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
+	apiv1.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
 	apiv1.HandleFunc("/boards", a.sessionRequired(a.handleCreateBoard)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}", a.attachSession(a.handleGetBoard, false)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handlePatchBoard)).Methods("PATCH")
@@ -267,14 +268,27 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	blockID := query.Get("block_id")
 	boardID := mux.Vars(r)["boardID"]
 
-	// TODO: IMPORTANT!! Add permissions check here again
-	// userID := getUserID(r)
+	userID := getUserID(r)
 
-	// if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-	// 	fmt.Println("FAILING HERE", userID, boardID, model.PermissionViewBoard)
-	// 	a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
-	// 	return
-	// }
+	board, err := a.app.GetBoard(boardID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	if board.IsTemplate {
+		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+			fmt.Println("FAILING HERE", userID, boardID, model.PermissionViewBoard)
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			return
+		}
+	} else {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+			fmt.Println("FAILING HERE", userID, boardID, model.PermissionViewBoard)
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			return
+		}
+	}
 
 	auditRec := a.makeAuditRecord(r, "getBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
@@ -286,7 +300,6 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	var blocks []model.Block
 	var block *model.Block
-	var err error
 	switch {
 	case all != "":
 		blocks, err = a.app.GetBlocksForBoard(boardID)

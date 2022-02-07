@@ -145,6 +145,8 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					if err2 := json.Unmarshal(archiveLine.Data, &board); err2 != nil {
 						return "", fmt.Errorf("invalid block in archive line %d: %w", lineNum, err2)
 					}
+					fmt.Println("TEMPLATE VERSION", board.TemplateVersion)
+					fmt.Println("JSON DATA", string(archiveLine.Data))
 					board.ModifiedBy = userID
 					board.UpdateAt = now
 					board.TeamID = opt.TeamID
