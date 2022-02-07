@@ -183,7 +183,7 @@ func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
 			destFilename := utils.NewID(utils.IDTypeNone) + ext
 
 			sourceFilePath := filepath.Join(sourceBoardID, fileName.(string))
-			destinationFilePath := filepath.Join(block.RootID, destFilename)
+			destinationFilePath := filepath.Join(block.BoardID, destFilename)
 
 			a.logger.Debug(
 				"Copying card file",

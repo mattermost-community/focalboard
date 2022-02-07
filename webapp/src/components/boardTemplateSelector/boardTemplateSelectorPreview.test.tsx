@@ -6,7 +6,6 @@ import {MockStoreEnhanced} from 'redux-mock-store'
 
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {UserWorkspace} from '../../user'
 import {IPropertyTemplate} from '../../blocks/board'
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
 
@@ -43,7 +42,7 @@ const groupProperty: IPropertyTemplate = {
 
 jest.mock('../../octoClient', () => {
     return {
-        getSubtree: jest.fn(() => Promise.resolve([
+        getAllBlocks: jest.fn(() => Promise.resolve([
             {
                 id: '1',
                 teamId: 'team',

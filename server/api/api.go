@@ -295,7 +295,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case blockID != "":
-		block, err = a.app.GetBlockByID(lockID)
+		block, err = a.app.GetBlockByID(blockID)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
@@ -669,7 +669,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	// this query param exists when creating template from board, or board from template
 	sourceBoardID := r.URL.Query().Get("sourceBoardID")
 	if sourceBoardID != "" {
-		if updateFileIDsErr := a.app.CopyCardFiles(sourceBoardID, container.WorkspaceID, blocks); updateFileIDsErr != nil {
+		if updateFileIDsErr := a.app.CopyCardFiles(sourceBoardID, blocks); updateFileIDsErr != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", updateFileIDsErr)
 			return
 		}
@@ -840,7 +840,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	block, err := a.app.GetBlockWithID(blockID)
+	block, err := a.app.GetBlockByID(blockID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -912,7 +912,7 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	block, err := a.app.GetBlockWithID(blockID)
+	block, err := a.app.GetBlockByID(blockID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -3285,7 +3285,7 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 	}
 
 	for _, blockID := range pbab.BlockIDs {
-		block, err := a.app.GetBlockWithID(blockID)
+		block, err := a.app.GetBlockByID(blockID)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
