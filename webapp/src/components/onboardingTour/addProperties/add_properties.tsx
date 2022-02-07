@@ -30,7 +30,6 @@ const AddPropertiesTourStep = (): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts(['.octo-propertyname.add-property'], [])
-
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (

@@ -108,7 +108,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
 
 	// onboarding tour endpoints
-	apiv1.HandleFunc("/onboard", a.sessionRequired(a.handlePrepareOnboarding)).Methods(http.MethodPost)
+	apiv1.HandleFunc("/onboard", a.sessionRequired(a.handleOnboard)).Methods(http.MethodPost)
 
 	// archives
 	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/export", a.sessionRequired(a.handleArchiveExport)).Methods("GET")
@@ -1696,7 +1696,25 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func (a *API) handlePrepareOnboarding(w http.ResponseWriter, r *http.Request) {
+func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/onboard onboard
+	//
+	// Onboards a user on Boards.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//         "$ref": "#/definitions/OnboardingResponse"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 

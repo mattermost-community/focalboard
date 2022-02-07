@@ -35,8 +35,6 @@ import {
     patchProps,
 } from '../store/users'
 
-import {useAppSelector} from '../store/hooks'
-
 import {IUser, UserConfigPatch} from '../user'
 
 import octoClient from '../octoClient'
@@ -53,7 +51,7 @@ import Table from './table/table'
 import CalendarFullView from './calendar/fullCalendar'
 
 import Gallery from './gallery/gallery'
-import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD, TourCategoriesMapToSteps} from './onboardingTour'
+import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
 
 type Props = {
     clientConfig?: ClientConfig

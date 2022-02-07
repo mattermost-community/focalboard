@@ -19,7 +19,7 @@ import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
 import {fetchMe, getMe, patchProps} from '../../store/users'
 import octoClient from '../../octoClient'
-import {FINISHED, TOUR_CARD, TOUR_ORDER} from '../../components/onboardingTour'
+import {FINISHED, TOUR_ORDER} from '../../components/onboardingTour'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 const WelcomePage = React.memo(() => {

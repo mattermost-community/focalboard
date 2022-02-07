@@ -31,7 +31,6 @@ const CopyLinkTourStep = (): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts([`.${OnboardingCardClassName} .optionsMenu`], [])
-
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (

@@ -30,7 +30,6 @@ const AddCommentTourStep = (): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts(['.CommentsList__new'], [])
-
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (

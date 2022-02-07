@@ -179,7 +179,7 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 
 	// Only update props
 	patch := model.UserPropPatch{
-		UpdatedFields: map[string]string{
+		UpdatedFields: map[string]interface{}{
 			"new_key_1": "new_value_1",
 			"new_key_2": "new_value_2",
 			"new_key_3": "new_value_3",
@@ -212,7 +212,7 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 
 	// update and delete together
 	patch = model.UserPropPatch{
-		UpdatedFields: map[string]string{
+		UpdatedFields: map[string]interface{}{
 			"new_key_3": "new_value_3_new_again",
 		},
 		DeletedFields: []string{

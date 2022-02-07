@@ -182,7 +182,12 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 			var err error
 			valueJSON, err = json.Marshal(value)
 			if err != nil {
-				s.logger.Error("PatchUserProps failed to marshal updateField value", mlog.String("value", fmt.Sprintf("%v", value)), mlog.String("userID", userID), mlog.Err(err))
+				s.logger.Error(
+					"PatchUserProps failed to marshal updateField value",
+					mlog.String("value", fmt.Sprintf("%v", value)),
+					mlog.String("userID", userID),
+					mlog.Err(err),
+				)
 				return err
 			}
 		}

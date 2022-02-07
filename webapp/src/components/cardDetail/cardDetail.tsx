@@ -18,6 +18,10 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 
 import BlockIconSelector from '../blockIconSelector'
 
+import {useAppSelector} from '../../store/hooks'
+import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
+import {CardTourSteps, TOUR_CARD} from '../onboardingTour'
+
 import CommentsList from './commentsList'
 import {CardDetailProvider} from './cardDetailContext'
 import CardDetailContents from './cardDetailContents'
@@ -26,9 +30,6 @@ import CardDetailProperties from './cardDetailProperties'
 import useImagePaste from './imagePaste'
 
 import './cardDetail.scss'
-import {useAppSelector} from '../../store/hooks'
-import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../store/users'
-import {CardTourSteps, TOUR_CARD} from '../onboardingTour'
 
 export const OnboardingBoardTitle = 'Welcome to Boards!'
 export const OnboardingCardTitle = 'Create a new card'

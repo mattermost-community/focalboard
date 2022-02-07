@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 )
@@ -11,16 +12,18 @@ const (
 	KeyOnboardingTourStarted  = KeyPrefix + "onboardingTourStarted"
 	KeyOnboardingTourCategory = KeyPrefix + "tourCategory"
 	KeyOnboardingTourStep     = KeyPrefix + "onboardingTourStep"
-	KeyOnboardingTourSkipped  = KeyPrefix + "onboardingTourSkipped"
 
 	ValueOnboardingFirstStep    = "0"
 	ValueTourCategoryOnboarding = "onboarding"
 
-	// OnboardingBoardID is the board ID from template.json.
-	// TODO make this more durable
+	// OnboardingBoardID is the board ID from templates.boardarchive.
 	OnboardingBoardID = "buixxjic3xjfkieees4iafdrznc"
 
 	WelcomeBoardTitle = "Welcome to Boards!"
+)
+
+var (
+	errUnableToFindWelcomeBoard = errors.New("unable to find welcome board in newly created blocks")
 )
 
 func (a *App) PrepareOnboardingTour(userID string) (string, string, error) {
@@ -60,16 +63,16 @@ func (a *App) createWelcomeBoard(userID, workspaceID string) (string, error) {
 	blocks = model.GenerateBlockIDs(blocks, a.logger)
 
 	// we're copying from a global template, so we need to set the
-	// isTemplate flag to false on the board
+	// `isTemplate` flag to false on the board
 	var welcomeBoardID string
 	for i := range blocks {
 		if blocks[i].Type == model.TypeBoard {
 			blocks[i].Fields["isTemplate"] = false
-		}
 
-		if blocks[i].Title == WelcomeBoardTitle {
-			welcomeBoardID = blocks[i].ID
-			break
+			if blocks[i].Title == WelcomeBoardTitle {
+				welcomeBoardID = blocks[i].ID
+				break
+			}
 		}
 	}
 
@@ -80,7 +83,7 @@ func (a *App) createWelcomeBoard(userID, workspaceID string) (string, error) {
 	}
 
 	if welcomeBoardID == "" {
-		return "", errors.New("unable to find welcome board in newly created blocks")
+		return "", errUnableToFindWelcomeBoard
 	}
 
 	return welcomeBoardID, nil

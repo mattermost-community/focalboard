@@ -30,7 +30,6 @@ const AddViewTourStep = (): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts(['.viewSelector'], [])
-
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (

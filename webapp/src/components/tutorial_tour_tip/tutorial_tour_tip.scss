@@ -6,7 +6,6 @@
         &.tippy-box {
             padding: 18px 24px 24px;
             border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
-            background: var(--center-channel-bg);
             background: rgb(var(--center-channel-bg-rgb));
             border-radius: 4px;
             color: var(--center-channel-color-rgb);
@@ -211,7 +210,7 @@
         height: 32px;
         align-items: center;
         padding: 10px 16px;
-        border: none;
+        border: unset;
         border-radius: 4px;
         font-size: 12px;
         font-weight: 600;
@@ -224,21 +223,17 @@
 
         &:hover:not(.disabled) {
             background:
-                linear-gradient(
-                        0deg,
-                        rgba(var(--center-channel-color-rgb), 0.16),
-                        rgba(var(--center-channel-color-rgb), 0.16)
-                ),
+                linear-gradient(0deg,
+                rgba(var(--center-channel-color-rgb), 0.16),
+                rgba(var(--center-channel-color-rgb), 0.16)),
                 rgb(var(--sidebar-bg-rgb));
         }
 
         &:active {
             background:
-                linear-gradient(
-                        0deg,
-                        rgba(var(--center-channel-color-rgb), 0.32),
-                        rgba(var(--center-channel-color-rgb), 0.32)
-                ),
+                linear-gradient(0deg,
+                rgba(var(--center-channel-color-rgb), 0.32),
+                rgba(var(--center-channel-color-rgb), 0.32)),
                 var(--button-bg);
         }
 

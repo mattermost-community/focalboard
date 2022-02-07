@@ -41,7 +41,7 @@ import {
     BoardTourSteps,
     BaseTourSteps,
     TOUR_BOARD,
-    TourCategoriesMapToSteps, CardTourSteps,
+    CardTourSteps,
 } from '../onboardingTour'
 import octoClient from '../../octoClient'
 import CopyLinkTourStep from '../onboardingTour/copyLink/copy_link'

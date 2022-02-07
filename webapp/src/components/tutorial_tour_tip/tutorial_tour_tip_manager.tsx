@@ -28,7 +28,7 @@ export interface TutorialTourTipManager {
     handleSendToNextTour: (currentTourCategory: string) => Promise<void>
 }
 
-type Props = {
+export type TutorialTourTipManagerProps = {
     autoTour?: boolean;
     telemetryTag?: string;
     tutorialCategory: string;
@@ -47,7 +47,7 @@ const useTutorialTourTipManager = ({
     onPrevNavigateTo,
     stopPropagation,
     preventDefault,
-}: Props): TutorialTourTipManager => {
+}: TutorialTourTipManagerProps): TutorialTourTipManager => {
     const [show, setShow] = useState(false)
     const tourSteps = TourCategoriesMapToSteps[tutorialCategory]
 
@@ -58,16 +58,6 @@ const useTutorialTourTipManager = ({
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
     const savePreferences = useCallback(
         async (useID: string, stepValue: string, tourCategory?: string) => {
-            // const preferences = [
-            //     {
-            //         user_id: useID,
-            //         category: tutorialCategory,
-            //         name: useID,
-            //         value: stepValue,
-            //     },
-            // ]
-            // dispatch(storeSavePreferences(useID, preferences))
-
             if (!currentUserId) {
                 return
             }
@@ -121,10 +111,7 @@ const useTutorialTourTipManager = ({
             window.removeEventListener('keydown', handleKeyDown)
     }, [])
 
-    const handleHide = (e?: React.MouseEvent): void => {
-        // if (e) {
-        //     handleEventPropagationAndDefault(e)
-        // }
+    const handleHide = (): void => {
         setShow(false)
     }
 
@@ -221,7 +208,8 @@ const useTutorialTourTipManager = ({
             Utils.logError(`Unknown tour category encountered: ${currentTourCategory}`)
         }
 
-        let stepValue; let tourCategory: string
+        let stepValue
+        let tourCategory: string
         if (i === TOUR_ORDER.length - 1) {
             stepValue = FINISHED
             tourCategory = currentTourCategory

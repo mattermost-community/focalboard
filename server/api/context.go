@@ -6,10 +6,10 @@ import (
 	"net/http"
 )
 
-type ContextKey int
+type contextKey int
 
 const (
-	httpConnContextKey ContextKey = iota
+	httpConnContextKey contextKey = iota
 	sessionContextKey
 )
 

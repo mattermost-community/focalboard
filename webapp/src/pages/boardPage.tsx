@@ -100,7 +100,6 @@ const BoardPage = (props: Props): JSX.Element => {
         const workspaceIDToUse = Utils.isFocalboardPlugin() ? workspaceId || board.workspaceId : '0'
 
         const newPath = Utils.buildOriginalPath(workspaceIDToUse, match.params.boardId, match.params.viewId, match.params.cardId)
-        console.log(`AAA: /workspace/${newPath}`)
         history.replace(`/workspace/${newPath}`)
     }, [workspaceId, match.params.boardId, match.params.viewId, match.params.cardId])
 
@@ -126,7 +125,6 @@ const BoardPage = (props: Props): JSX.Element => {
         }
         if (needsRedirect) {
             const newPath = generatePath(match.path, params)
-            console.log('BBB')
             history.replace(newPath)
             return
         }
@@ -144,7 +142,6 @@ const BoardPage = (props: Props): JSX.Element => {
                 if (lastViewId) {
                     newPath = generatePath(match.path, {...match.params, boardId: lastBoardId, viewId: lastViewId})
                 }
-                console.log('CCC: ' + newPath)
                 history.replace(newPath)
                 return
             }
@@ -157,7 +154,6 @@ const BoardPage = (props: Props): JSX.Element => {
         const isCorrectBoardView = boardViews.length > 0 && boardViews[0].parentId === boardId
         if (!viewId && isCorrectBoardView) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
-            console.log('DDD')
             history.replace(newPath)
             return
         }

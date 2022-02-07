@@ -3,9 +3,10 @@ package model
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mattermost/focalboard/server/services/audit"
 	"io"
 	"strconv"
+
+	"github.com/mattermost/focalboard/server/services/audit"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 

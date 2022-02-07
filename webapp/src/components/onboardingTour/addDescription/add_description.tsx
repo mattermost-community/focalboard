@@ -30,7 +30,6 @@ const AddDescriptionTourStep = (): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts(['.octo-content div:nth-child(1)'], [])
-
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (

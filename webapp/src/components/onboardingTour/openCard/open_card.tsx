@@ -35,7 +35,6 @@ const OpenCardTourStep = (props: Props): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts([`.${OnboardingCardClassName}`], [])
-
     const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (

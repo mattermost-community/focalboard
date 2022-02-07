@@ -16,6 +16,24 @@ import Editable from '../../widgets/editable'
 
 import ModalWrapper from '../modalWrapper'
 
+import {useAppSelector} from '../../store/hooks'
+import {
+    getMe,
+    getOnboardingTourCategory,
+    getOnboardingTourStarted,
+    getOnboardingTourStep,
+} from '../../store/users'
+import {
+    BoardTourSteps,
+    TOUR_BOARD,
+    TourCategoriesMapToSteps,
+} from '../onboardingTour'
+import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
+import AddViewTourStep from '../onboardingTour/addView/add_view'
+import {getCurrentCard} from '../../store/cards'
+import {IUser, UserConfigPatch} from '../../user'
+import octoClient from '../../octoClient'
+
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
@@ -26,28 +44,6 @@ import ViewHeaderSearch from './viewHeaderSearch'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
-import {useAppSelector} from '../../store/hooks'
-import {
-    getMe,
-    getOnboardingTourCategory,
-    getOnboardingTourStarted,
-    getOnboardingTourStep,
-    patchProps,
-} from '../../store/users'
-import {
-    BoardTourSteps,
-    CardTourSteps,
-    FINISHED,
-    TOUR_BOARD,
-    TOUR_CARD,
-    TOUR_ORDER,
-    TourCategoriesMapToSteps,
-} from '../onboardingTour'
-import {OnboardingBoardTitle, OnboardingCardTitle} from '../cardDetail/cardDetail'
-import AddViewTourStep from '../onboardingTour/addView/add_view'
-import {getCurrentCard} from '../../store/cards'
-import {IUser, UserConfigPatch} from '../../user'
-import octoClient from '../../octoClient'
 
 type Props = {
     board: Board
@@ -90,9 +86,13 @@ const ViewHeader = React.memo((props: Props) => {
     const currentCard = useAppSelector(getCurrentCard)
     const noCardOpen = !currentCard
 
-    const [delayComplete, setDelayComplete] = useState(false)
+    const showTourBaseCondition = isOnboardingBoard &&
+        onboardingTourStarted &&
+        noCardOpen &&
+        onboardingTourCategory === TOUR_BOARD &&
+        onboardingTourStep === BoardTourSteps.ADD_VIEW.toString()
 
-    const showTourBaseCondition = isOnboardingBoard && onboardingTourStarted && noCardOpen && onboardingTourCategory === TOUR_BOARD && onboardingTourStep === BoardTourSteps.ADD_VIEW.toString()
+    const [delayComplete, setDelayComplete] = useState(false)
 
     useEffect(() => {
         if (showTourBaseCondition) {
