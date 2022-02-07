@@ -5,8 +5,6 @@ import React from 'react'
 
 import CompassIcon from './compassIcon'
 
-import './close.scss'
-
 export default function CloseIcon(): JSX.Element {
     return (
         <CompassIcon

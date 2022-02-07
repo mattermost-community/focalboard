@@ -37,6 +37,7 @@ const Dialog = React.memo((props: Props) => {
             <div
                 className='wrapper'
                 onClick={(e) => {
+                    e.stopPropagation()
                     if (e.target === e.currentTarget) {
                         props.onClose()
                     }
@@ -54,13 +55,13 @@ const Dialog = React.memo((props: Props) => {
                                 onClick={props.onClose}
                                 icon={<CloseIcon/>}
                                 title={closeDialogText}
-                                className='IconButton--large'
+                                size='medium'
                             />
                         }
                         {toolbar && <div className='cardToolbar'>{toolbar}</div>}
                         {toolsMenu && <MenuWrapper>
                             <IconButton
-                                className='IconButton--large'
+                                size='medium'
                                 icon={<OptionsIcon/>}
                             />
                             {toolsMenu}
