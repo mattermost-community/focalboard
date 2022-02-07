@@ -4,7 +4,7 @@
 import Foundation
 
 class Globals {
-	static let ProductVersion = 01400
+	static let ProductVersion = 01500
 	static let WhatsNewVersion = 01100
 
 	static var currentWhatsNewVersion: Int {

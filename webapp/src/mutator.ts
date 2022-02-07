@@ -954,6 +954,7 @@ class Mutator {
                 }
             },
             beforeUndo,
+            board.id,
         )
         return [newBlocks, newCard.id]
     }

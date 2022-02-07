@@ -2,10 +2,12 @@ package app
 
 import (
 	"errors"
+	"fmt"
 	"path/filepath"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -26,10 +28,6 @@ func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Blo
 	}
 
 	return a.store.GetBlocksWithParent(boardID, parentID)
-}
-
-func (a *App) GetBlockWithID(blockID string) (*model.Block, error) {
-	return a.store.GetBlock(blockID)
 }
 
 func (a *App) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
@@ -169,13 +167,30 @@ func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
 	// Not doing so causing images in templates (and boards created from this
 	// template) to fail to load.
 
+	// look up ID of source board, which may be different than the blocks.
+	board, err := a.GetBlockByID(sourceBoardID)
+	if err != nil || board == nil {
+		return fmt.Errorf("cannot fetch board %s for CopyCardFiles: %w", sourceBoardID, err)
+	}
+
 	for i := range blocks {
 		block := blocks[i]
 
 		fileName, ok := block.Fields["fileId"]
 		if block.Type == model.TypeImage && ok {
+			// create unique filename in case we are copying cards within the same board.
+			ext := filepath.Ext(fileName.(string))
+			destFilename := utils.NewID(utils.IDTypeNone) + ext
+
 			sourceFilePath := filepath.Join(sourceBoardID, fileName.(string))
-			destinationFilePath := filepath.Join(block.BoardID, fileName.(string))
+			destinationFilePath := filepath.Join(block.RootID, destFilename)
+
+			a.logger.Debug(
+				"Copying card file",
+				mlog.String("sourceFilePath", sourceFilePath),
+				mlog.String("destinationFilePath", destinationFilePath),
+			)
+
 			if err := a.filesBackend.CopyFile(sourceFilePath, destinationFilePath); err != nil {
 				a.logger.Error(
 					"CopyCardFiles failed to copy file",
@@ -186,6 +201,7 @@ func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
 
 				return err
 			}
+			block.Fields["fileId"] = destFilename
 		}
 	}
 

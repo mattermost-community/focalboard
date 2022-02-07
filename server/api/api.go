@@ -295,7 +295,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case blockID != "":
-		block, err = a.app.GetBlockWithID(blockID)
+		block, err = a.app.GetBlockByID(lockID)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
@@ -666,11 +666,10 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 
-	// this query param exists only when creating
-	// template from board
+	// this query param exists when creating template from board, or board from template
 	sourceBoardID := r.URL.Query().Get("sourceBoardID")
 	if sourceBoardID != "" {
-		if updateFileIDsErr := a.app.CopyCardFiles(sourceBoardID, blocks); updateFileIDsErr != nil {
+		if updateFileIDsErr := a.app.CopyCardFiles(sourceBoardID, container.WorkspaceID, blocks); updateFileIDsErr != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", updateFileIDsErr)
 			return
 		}
@@ -2073,7 +2072,7 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check for valid block
-	block, err := a.app.GetBlockWithID(sub.BlockID)
+	block, err := a.app.GetBlockByID(sub.BlockID)
 	if err != nil || block == nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid blockID", err)
 		return
