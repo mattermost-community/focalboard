@@ -9,6 +9,7 @@ import (
 	"io"
 	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/krolaw/zipstream"
 
@@ -20,7 +21,8 @@ import (
 )
 
 const (
-	archiveVersion = 2
+	archiveVersion  = 2
+	legacyFileBegin = "{\"version\":1"
 )
 
 // ImportArchive imports an archive containing zero or more boards, plus all
@@ -29,7 +31,17 @@ const (
 // Archives are ZIP files containing a `version.json` file and zero or more
 // directories, each containing a `board.jsonl` and zero or more image files.
 func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
-	zr := zipstream.NewReader(r)
+	// peek at the first bytes to see if this is a legacy archive format
+	br := bufio.NewReader(r)
+	peek, err := br.Peek(len(legacyFileBegin))
+	if err == nil && string(peek) == legacyFileBegin {
+		a.logger.Debug("importing legacy archive")
+		_, errImport := a.ImportBoardJSONL(br, opt)
+		return errImport
+	}
+
+	a.logger.Debug("importing archive")
+	zr := zipstream.NewReader(br)
 
 	boardMap := make(map[string]string) // maps old board ids to new
 
@@ -104,22 +116,31 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 	for {
 		line, errRead := readLine(lineReader)
 		if len(line) != 0 {
-			var archiveLine model.ArchiveLine
-			err := json.Unmarshal(line, &archiveLine)
-			if err != nil {
-				return "", fmt.Errorf("error parsing archive line %d: %w", lineNum, err)
-			}
-			switch archiveLine.Type {
-			case "block":
-				var block model.Block
-				if err2 := json.Unmarshal(archiveLine.Data, &block); err2 != nil {
-					return "", fmt.Errorf("invalid block in archive line %d: %w", lineNum, err2)
+			var skip bool
+			if lineNum == 1 {
+				// first line might be a header tag (old archive format)
+				if strings.HasPrefix(string(line), legacyFileBegin) {
+					skip = true
 				}
-				block.ModifiedBy = userID
-				block.UpdateAt = now
-				blocks = append(blocks, block)
-			default:
-				return "", model.NewErrUnsupportedArchiveLineType(lineNum, archiveLine.Type)
+			}
+
+			if !skip {
+				var archiveLine model.ArchiveLine
+				if err := json.Unmarshal(line, &archiveLine); err != nil {
+					return "", fmt.Errorf("error parsing archive line %d: %w", lineNum, err)
+				}
+				switch archiveLine.Type {
+				case "block":
+					var block model.Block
+					if err2 := json.Unmarshal(archiveLine.Data, &block); err2 != nil {
+						return "", fmt.Errorf("invalid block in archive line %d: %w", lineNum, err2)
+					}
+					block.ModifiedBy = userID
+					block.UpdateAt = now
+					blocks = append(blocks, block)
+				default:
+					return "", model.NewErrUnsupportedArchiveLineType(lineNum, archiveLine.Type)
+				}
 			}
 		}
 
@@ -132,12 +153,27 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 		lineNum++
 	}
 
+	modInfoCache := make(map[string]interface{})
+	modBlocks := make([]model.Block, 0, len(blocks))
+	for _, block := range blocks {
+		b := block
+		if opt.BlockModifier != nil && !opt.BlockModifier(&b, modInfoCache) {
+			a.logger.Debug("skipping insert block per block modifier",
+				mlog.String("blockID", block.ID),
+				mlog.String("block_type", block.Type.String()),
+			)
+			continue
+		}
+		modBlocks = append(modBlocks, b)
+	}
+
+	blocks = model.GenerateBlockIDs(modBlocks, a.logger)
+
 	container := store.Container{
 		WorkspaceID: opt.WorkspaceID,
 	}
 
 	var err error
-	blocks = model.GenerateBlockIDs(blocks, a.logger)
 	blocks, err = a.InsertBlocks(container, blocks, opt.ModifiedBy, false)
 	if err != nil {
 		return "", fmt.Errorf("error inserting archive blocks: %w", err)
@@ -145,7 +181,7 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 
 	// find new board id
 	for _, block := range blocks {
-		if block.Type == "board" {
+		if block.Type == model.TypeBoard {
 			return block.ID, nil
 		}
 	}

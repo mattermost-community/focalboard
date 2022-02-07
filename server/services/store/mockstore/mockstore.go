@@ -5,7 +5,6 @@
 package mockstore
 
 import (
-	io "io"
 	reflect "reflect"
 	time "time"
 
@@ -315,6 +314,21 @@ func (m *MockStore) GetBoardAndCardByID(arg0 store.Container, arg1 string) (*mod
 func (mr *MockStoreMockRecorder) GetBoardAndCardByID(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoardAndCardByID", reflect.TypeOf((*MockStore)(nil).GetBoardAndCardByID), arg0, arg1)
+}
+
+// GetDefaultTemplateBlocks mocks base method.
+func (m *MockStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDefaultTemplateBlocks")
+	ret0, _ := ret[0].([]model.Block)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDefaultTemplateBlocks indicates an expected call of GetDefaultTemplateBlocks.
+func (mr *MockStoreMockRecorder) GetDefaultTemplateBlocks() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultTemplateBlocks", reflect.TypeOf((*MockStore)(nil).GetDefaultTemplateBlocks))
 }
 
 // GetNextNotificationHint mocks base method.
@@ -662,20 +676,6 @@ func (mr *MockStoreMockRecorder) HasWorkspaceAccess(arg0, arg1 interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasWorkspaceAccess", reflect.TypeOf((*MockStore)(nil).HasWorkspaceAccess), arg0, arg1)
 }
 
-// ImportArchive mocks base method.
-func (m *MockStore) ImportArchive(arg0 store.Container, arg1 io.Reader, arg2 string, arg3 model.BlockModifier) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ImportArchive", arg0, arg1, arg2, arg3)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ImportArchive indicates an expected call of ImportArchive.
-func (mr *MockStoreMockRecorder) ImportArchive(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ImportArchive", reflect.TypeOf((*MockStore)(nil).ImportArchive), arg0, arg1, arg2, arg3)
-}
-
 // InsertBlock mocks base method.
 func (m *MockStore) InsertBlock(arg0 store.Container, arg1 *model.Block, arg2 string) error {
 	m.ctrl.T.Helper()
@@ -758,6 +758,20 @@ func (m *MockStore) RefreshSession(arg0 *model.Session) error {
 func (mr *MockStoreMockRecorder) RefreshSession(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RefreshSession", reflect.TypeOf((*MockStore)(nil).RefreshSession), arg0)
+}
+
+// RemoveDefaultTemplates mocks base method.
+func (m *MockStore) RemoveDefaultTemplates(arg0 []model.Block) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveDefaultTemplates", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RemoveDefaultTemplates indicates an expected call of RemoveDefaultTemplates.
+func (mr *MockStoreMockRecorder) RemoveDefaultTemplates(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveDefaultTemplates", reflect.TypeOf((*MockStore)(nil).RemoveDefaultTemplates), arg0)
 }
 
 // SetSystemSetting mocks base method.
