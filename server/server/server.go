@@ -204,6 +204,11 @@ func New(params Params) (*Server, error) {
 
 	server.initHandlers()
 
+	if err := app.InitTemplates(); err != nil {
+		params.Logger.Error("Unable initialize team templates", mlog.Err(err))
+		return nil, err
+	}
+
 	return &server, nil
 }
 

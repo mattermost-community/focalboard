@@ -23,6 +23,7 @@ func (a *App) GetRootTeam() (*model.Team, error) {
 			a.logger.Error("Unable to initialize team", mlog.Err(err))
 			return nil, err
 		}
+
 		team, err = a.store.GetTeam(teamID)
 		if err != nil {
 			a.logger.Error("Unable to get initialized team", mlog.Err(err))

@@ -20,6 +20,10 @@ const (
 //go:embed templates.boardarchive
 var defTemplates []byte
 
+func (a *App) InitTemplates() error {
+	return a.initializeTemplates()
+}
+
 // initializeTemplates imports default templates if the blocks table is empty.
 func (a *App) initializeTemplates() error {
 	teams, err := a.store.GetAllTeams()
