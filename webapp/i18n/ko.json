@@ -112,8 +112,6 @@
   "DeleteBoardDialog.confirm-tite-template": "보드 템플릿 삭제 확인",
   "Dialog.closeDialog": "대화창 닫기",
   "EditableDayPicker.today": "오늘",
-  "EmptyCenterPanel.plugin.end-message": "사이드바에 있는 전환기를 통해 채널을 변경할 수 있습니다.",
-  "EmptyCenterPanel.plugin.no-content-title": "{workspaceName}에 보드 만들기",
   "Error.mobileweb": "모바일 웹 지원은 현재 초기 베타 버전입니다. 모든 기능이 있는 것은 아닙니다.",
   "Error.websocket-closed": "웹소켓 연결이 닫혀서 연결이 중단되었습니다. 이 문제가 지속되면, 서버 또는 웹 프록시 구성을 확인하세요.",
   "Filter.includes": "포함",

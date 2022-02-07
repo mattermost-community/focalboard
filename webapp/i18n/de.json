@@ -112,8 +112,6 @@
   "DeleteBoardDialog.confirm-tite-template": "Board Vorlage wirklich löschen",
   "Dialog.closeDialog": "Dialog schließen",
   "EditableDayPicker.today": "Heute",
-  "EmptyCenterPanel.plugin.end-message": "Sie können den Kanal mit dem Umschalter in der Seitenleiste wechseln.",
-  "EmptyCenterPanel.plugin.no-content-title": "Ein Board in {workspaceName} erstellen",
   "Error.mobileweb": "Die Unterstützung für das mobile Web befindet sich derzeit in einer frühen Betaphase. Möglicherweise sind nicht alle Funktionen vorhanden.",
   "Error.websocket-closed": "Websocket-Verbindung geschlossen, Verbindung unterbrochen. Wenn dieses Problem weiterhin besteht, überprüfen Sie bitte die Konfiguration Ihres Servers oder Web-Proxys.",
   "Filter.includes": "beinhaltet",
