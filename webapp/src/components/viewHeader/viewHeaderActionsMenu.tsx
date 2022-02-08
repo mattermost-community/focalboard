@@ -17,7 +17,6 @@ import {getMe} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 
 import ModalWrapper from '../modalWrapper'
-import ShareBoardComponent from '../shareBoardComponent'
 import {sendFlashMessage} from '../flashMessages'
 
 type Props = {
@@ -155,12 +154,6 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                     */}
                 </Menu>
             </MenuWrapper>
-            {showShareDialog &&
-                <ShareBoardComponent
-                    boardId={board.id || ''}
-                    onClose={() => setShowShareDialog(false)}
-                />
-            }
         </ModalWrapper>
     )
 })
