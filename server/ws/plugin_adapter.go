@@ -15,6 +15,7 @@ import (
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const websocketMessagePrefix = "custom_focalboard_"
@@ -38,6 +39,7 @@ type PluginAdapter struct {
 	auth           auth.AuthInterface
 	staleThreshold time.Duration
 	store          Store
+	logger         *mlog.Logger
 
 	listenersMU       sync.RWMutex
 	listeners         map[string]*PluginAdapterClient
@@ -48,12 +50,13 @@ type PluginAdapter struct {
 	listenersByBlock map[string][]*PluginAdapterClient
 }
 
-func NewPluginAdapter(api plugin.API, auth auth.AuthInterface, store Store) *PluginAdapter {
+func NewPluginAdapter(api plugin.API, auth auth.AuthInterface, store Store, logger *mlog.Logger) *PluginAdapter {
 	return &PluginAdapter{
 		api:               api,
 		auth:              auth,
 		store:             store,
 		staleThreshold:    5 * time.Minute,
+		logger:            logger,
 		listeners:         make(map[string]*PluginAdapterClient),
 		listenersByUserID: make(map[string][]*PluginAdapterClient),
 		listenersByTeam:   make(map[string][]*PluginAdapterClient),
@@ -207,10 +210,10 @@ func (pa *PluginAdapter) getUserIDsForTeamAndBoard(teamID, boardID string, ensur
 
 	members, err := pa.store.GetMembersForBoard(boardID)
 	if err != nil {
-		pa.api.LogError("error getting members for board",
-			"method", "getUserIDsForTeamAndBoard",
-			"teamID", teamID,
-			"boardID", boardID,
+		pa.logger.Error("error getting members for board",
+			mlog.String("method", "getUserIDsForTeamAndBoard"),
+			mlog.String("teamID", teamID),
+			mlog.String("boardID", boardID),
 		)
 		return nil
 	}
@@ -260,9 +263,9 @@ func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient,
 
 func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
 	if existingPAC, ok := pa.GetListenerByWebConnID(webConnID); ok {
-		pa.api.LogDebug("inactive connection found for webconn, reusing",
-			"webConnID", webConnID,
-			"userID", userID,
+		pa.logger.Debug("inactive connection found for webconn, reusing",
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
 		)
 		atomic.StoreInt64(&existingPAC.inactiveAt, 0)
 		return
@@ -283,9 +286,9 @@ func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
 func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
 	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
-		pa.api.LogDebug("received a disconnect for an unregistered webconn",
-			"webConnID", webConnID,
-			"userID", userID,
+		pa.logger.Debug("received a disconnect for an unregistered webconn",
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
 		)
 		return
 	}
@@ -316,10 +319,10 @@ func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error
 func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
 	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
-		pa.api.LogDebug("received a message for an unregistered webconn",
-			"webConnID", webConnID,
-			"userID", userID,
-			"action", req.Action,
+		pa.logger.Debug("received a message for an unregistered webconn",
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("action", req.Action),
 		)
 		return
 	}
@@ -331,11 +334,11 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 
 	command, err := commandFromRequest(req)
 	if err != nil {
-		pa.api.LogError("error getting command from request",
-			"err", err,
-			"action", req.Action,
-			"webConnID", webConnID,
-			"userID", userID,
+		pa.logger.Error("error getting command from request",
+			mlog.String("action", req.Action),
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.Err(err),
 		)
 		return
 	}
@@ -345,18 +348,19 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 	// as there is no such thing as unauthenticated websocket
 	// connections in plugin mode. Only a debug line is logged
 	case websocketActionSubscribeBlocks, websocketActionUnsubscribeBlocks:
-		pa.api.LogDebug(`Command not implemented in plugin mode`,
-			"command", command.Action,
-			"webConnID", webConnID,
-			"userID", userID,
-			"teamID", command.TeamID,
+		pa.logger.Debug(`Command not implemented in plugin mode`,
+			mlog.String("command", command.Action),
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("teamID", command.TeamID),
 		)
 
 	case websocketActionSubscribeTeam:
-		pa.api.LogDebug(`Command: SUBSCRIBE_TEAM`,
-			"webConnID", webConnID,
-			"userID", userID,
-			"teamID", command.TeamID,
+		pa.logger.Debug(`Command not implemented in plugin mode`,
+			mlog.String("command", command.Action),
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("teamID", command.TeamID),
 		)
 
 		if !pa.auth.DoesUserHaveTeamAccess(userID, command.TeamID) {
@@ -365,10 +369,10 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 
 		pa.subscribeListenerToTeam(pac, command.TeamID)
 	case websocketActionUnsubscribeTeam:
-		pa.api.LogDebug(`Command: UNSUBSCRIBE_TEAM`,
-			"webConnID", webConnID,
-			"userID", userID,
-			"teamID", command.TeamID,
+		pa.logger.Debug(`Command: UNSUBSCRIBE_WORKSPACE`,
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("teamID", command.TeamID),
 		)
 
 		pa.unsubscribeListenerFromTeam(pac, command.TeamID)
@@ -455,10 +459,10 @@ func (pa *PluginAdapter) sendBoardMessage(teamID, boardID string, payload map[st
 }
 
 func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block model.Block) {
-	pa.api.LogDebug("BroadcastingBlockChange",
-		"teamID", teamID,
-		"boardID", block.BoardID,
-		"blockID", block.ID,
+	pa.logger.Debug("BroadcastingBlockChange",
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", block.BoardID),
+		mlog.String("blockID", block.ID),
 	)
 
 	message := UpdateBlockMsg{
@@ -471,11 +475,10 @@ func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block model.Block) 
 }
 
 func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
-	pa.api.LogDebug(
-		"BroadcastCategoryChange",
-		"userID", category.TeamID,
-		"teamID", category.TeamID,
-		"categoryID", category.ID,
+	pa.logger.Debug("BroadcastCategoryChange",
+		mlog.String("userID", category.TeamID),
+		mlog.String("teamID", category.TeamID),
+		mlog.String("categoryID", category.ID),
 	)
 
 	message := UpdateCategoryMessage{
@@ -488,12 +491,12 @@ func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
 }
 
 func (pa *PluginAdapter) BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData) {
-	pa.api.LogDebug(
+	pa.logger.Debug(
 		"BroadcastCategoryBlockChange",
-		"userID", userID,
-		"teamID", teamID,
-		"categoryID", blockCategory.CategoryID,
-		"blockID", blockCategory.BlockID,
+		mlog.String("userID", userID),
+		mlog.String("teamID", teamID),
+		mlog.String("categoryID", blockCategory.CategoryID),
+		mlog.String("blockID", blockCategory.BlockID),
 	)
 
 	message := UpdateCategoryMessage{
@@ -517,9 +520,9 @@ func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {
 }
 
 func (pa *PluginAdapter) BroadcastBoardChange(teamID string, board *model.Board) {
-	pa.api.LogInfo("BroadcastingBoardChange",
-		"teamID", teamID,
-		"boardID", board.ID,
+	pa.logger.Info("BroadcastingBoardChange",
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", board.ID),
 	)
 
 	message := UpdateBoardMsg{
@@ -543,10 +546,10 @@ func (pa *PluginAdapter) BroadcastBoardDelete(teamID, boardID string) {
 }
 
 func (pa *PluginAdapter) BroadcastMemberChange(teamID, boardID string, member *model.BoardMember) {
-	pa.api.LogInfo("BroadcastingMemberChange",
-		"teamID", teamID,
-		"boardID", boardID,
-		"userID", member.UserID,
+	pa.logger.Info("BroadcastingMemberChange",
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", boardID),
+		mlog.String("userID", member.UserID),
 	)
 
 	message := UpdateMemberMsg{
@@ -559,10 +562,10 @@ func (pa *PluginAdapter) BroadcastMemberChange(teamID, boardID string, member *m
 }
 
 func (pa *PluginAdapter) BroadcastMemberDelete(teamID, boardID, userID string) {
-	pa.api.LogInfo("BroadcastingMemberDelete",
-		"teamID", teamID,
-		"boardID", boardID,
-		"userID", userID,
+	pa.logger.Info("BroadcastingMemberDelete",
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", boardID),
+		mlog.String("userID", userID),
 	)
 
 	message := UpdateMemberMsg{
@@ -578,10 +581,10 @@ func (pa *PluginAdapter) BroadcastMemberDelete(teamID, boardID, userID string) {
 }
 
 func (pa *PluginAdapter) BroadcastSubscriptionChange(teamID string, subscription *model.Subscription) {
-	pa.api.LogInfo("BroadcastingSubscriptionChange",
-		"TeamID", teamID,
-		"blockID", subscription.BlockID,
-		"subscriberID", subscription.SubscriberID,
+	pa.logger.Debug("BroadcastingSubscriptionChange",
+		mlog.String("TeamID", teamID),
+		mlog.String("blockID", subscription.BlockID),
+		mlog.String("subscriberID", subscription.SubscriberID),
 	)
 
 	message := UpdateSubscription{

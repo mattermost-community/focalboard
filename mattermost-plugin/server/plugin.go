@@ -119,7 +119,7 @@ func (p *Plugin) OnActivate() error {
 
 	permissionsService := mmpermissions.New(db, p.API)
 
-	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db, permissionsService), db)
+	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db, permissionsService), db, logger)
 
 	backendParams := notifyBackendParams{
 		cfg:        cfg,

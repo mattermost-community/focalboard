@@ -23,6 +23,7 @@ jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(mutator, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
+mockedUtils.isFocalboardPlugin.mockReturnValue(true)
 
 beforeAll(() => {
     mockDOM()

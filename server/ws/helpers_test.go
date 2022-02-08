@@ -7,6 +7,7 @@ import (
 	wsMocks "github.com/mattermost/focalboard/server/ws/mocks"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/golang/mock/gomock"
 )
@@ -35,7 +36,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 		auth:  mockAuth,
 		store: mockStore,
 		ctrl:  ctrl,
-		pa:    NewPluginAdapter(mockAPI, mockAuth, mockStore),
+		pa:    NewPluginAdapter(mockAPI, mockAuth, mockStore, mlog.CreateConsoleTestLogger(true, mlog.LvlDebug)),
 	}
 }
 

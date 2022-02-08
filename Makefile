@@ -139,6 +139,9 @@ server-test-postgres: ## Run server tests using postgres
 webapp: ## Build webapp.
 	cd webapp; npm run pack
 
+webapp-test: ## jest tests for webapp
+	cd webapp; npm run test
+
 watch-plugin: modd-precheck ## Run and upload the plugin to a development server
 	env FOCALBOARD_BUILD_TAGS='$(BUILD_TAGS)' modd -f modd-watchplugin.conf
 

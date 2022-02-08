@@ -66,7 +66,7 @@ export function getCardContents(cardId: string): (state: RootState) => Array<Con
                 for (const contentId of card.fields.contentOrder) {
                     if (typeof contentId === 'string' && contents[contentId]) {
                         result.push(contents[contentId])
-                    } else if (typeof contentId === 'object') {
+                    } else if (typeof contentId === 'object' && contentId) {
                         const subResult: ContentBlock[] = []
                         for (const subContentId of contentId) {
                             if (typeof subContentId === 'string' && contents[subContentId]) {
