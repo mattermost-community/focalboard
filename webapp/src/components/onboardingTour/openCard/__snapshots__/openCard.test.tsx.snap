@@ -38,7 +38,7 @@ exports[`components/onboardingTour/addComments/OpenCardTourStep after hover 1`] 
         <div
           class="tutorial-tour-tip__body"
         >
-          The explore the powers of boards, open a card to view the various features we have!
+          Open a card to explore the powerful ways that Boards can help you organize your work.
         </div>
         <div
           class="tutorial-tour-tip__footer"

@@ -24,6 +24,8 @@ import mutator from '../../mutator'
 
 import octoClient from '../../octoClient'
 
+import {IUser} from '../../user'
+
 import WelcomePage from './welcomePage'
 
 const w = (window as any)
@@ -34,16 +36,16 @@ const mockedMutator = mocked(mutator, true)
 
 jest.mock('../../octoClient')
 const mockedOctoClient = mocked(octoClient, true)
-mockedOctoClient.prepareOnboarding.mockResolvedValue({
-    workspaceID: 'workspace_id_1',
-    boardID: 'board_id_1',
-})
 
 beforeEach(() => {
     jest.resetAllMocks()
     mockedMutator.patchUserConfig.mockImplementation(() => Promise.resolve({
         welcomePageViewed: 'true',
     }))
+    mockedOctoClient.prepareOnboarding.mockResolvedValue({
+        workspaceID: 'workspace_id_1',
+        boardID: 'board_id_1',
+    })
 })
 
 afterEach(() => {
@@ -51,7 +53,7 @@ afterEach(() => {
 })
 
 describe('pages/welcome', () => {
-    const history = createMemoryHistory()
+    let history = createMemoryHistory()
     const mockStore = configureStore([thunk])
     const store = mockStore({
         users: {
@@ -59,6 +61,10 @@ describe('pages/welcome', () => {
                 props: {},
             },
         },
+    })
+
+    beforeEach(() => {
+        history = createMemoryHistory()
     })
 
     test('Welcome Page shows Explore Page', () => {
@@ -216,5 +222,64 @@ describe('pages/welcome', () => {
             expect(history.replace).toBeCalledWith('123')
             expect(mockedMutator.patchUserConfig).toBeCalledTimes(1)
         })
+    })
+
+    test('Welcome page starts tour on clicking Take a tour button', async () => {
+        history.replace = jest.fn()
+        const user = {
+            props: {
+                focalboard_welcomePageViewed: true,
+                focalboard_onboardingTourStep: '0',
+                focalboard_tourCategory: 'onboarding',
+            },
+        } as unknown as IUser
+        mockedOctoClient.getMe.mockResolvedValue(user)
+
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+        render(component)
+        const exploreButton = screen.getByText('Take a tour')
+        expect(exploreButton).toBeDefined()
+        userEvent.click(exploreButton)
+        await waitFor(() => expect(mockedOctoClient.prepareOnboarding).toBeCalledTimes(1))
+        await waitFor(() => expect(history.replace).toBeCalledWith('/workspace/workspace_id_1/board_id_1'))
+    })
+
+    test('Welcome page skips tour on clicking no thanks option', async () => {
+        history.replace = jest.fn()
+        const user = {
+            props: {
+                focalboard_welcomePageViewed: true,
+                focalboard_onboardingTourStep: '0',
+                focalboard_tourCategory: 'onboarding',
+            },
+        } as unknown as IUser
+        mockedOctoClient.getMe.mockResolvedValue(user)
+
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+        render(component)
+        const exploreButton = screen.getByText('No thanks, I\'ll figure it out myself')
+        expect(exploreButton).toBeDefined()
+        userEvent.click(exploreButton)
+        await waitFor(() => expect(history.replace).toBeCalledWith('/dashboard'))
     })
 })
