@@ -815,3 +815,34 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 
 	return nil
 }
+
+func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
+	blocks, err := s.getSubTree3(db, boardID, blockID, model.QuerySubtreeOptions{})
+	if err != nil {
+		return nil, err
+	}
+	if len(blocks) == 0 {
+		return nil, BlockNotFoundErr{blockID}
+	}
+
+	var rootBlock model.Block
+	allBlocks := []model.Block{}
+	for _, block := range blocks {
+		if block.ID == blockID {
+			if block.Fields == nil {
+				block.Fields = make(map[string]interface{})
+			}
+			block.Fields["isTemplate"] = asTemplate
+			rootBlock = block
+		} else {
+			allBlocks = append(allBlocks, block)
+		}
+	}
+	allBlocks = append([]model.Block{rootBlock}, allBlocks...)
+
+	allBlocks = model.GenerateBlockIDs(allBlocks, nil)
+	if err := s.insertBlocks(db, allBlocks, userID); err != nil {
+		return nil, err
+	}
+	return allBlocks, nil
+}

@@ -29,6 +29,12 @@ func StoreTestBoardsAndBlocksStore(t *testing.T, setup func(t *testing.T) (store
 		defer tearDown()
 		testDeleteBoardsAndBlocks(t, store)
 	})
+
+	t.Run("duplicateBoard", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testDuplicateBoard(t, store)
+	})
 }
 
 func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
@@ -546,5 +552,53 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 		rBlock4, err := store.GetBlock(block4.ID)
 		require.NoError(t, err)
 		require.Nil(t, rBlock4)
+	})
+}
+
+func testDuplicateBoard(t *testing.T, store store.Store) {
+	teamID := "team-id"
+	userID := "user-id"
+
+	newBab := &model.BoardsAndBlocks{
+		Boards: []*model.Board{
+			{ID: "board-id-1", TeamID: teamID, Type: model.BoardTypeOpen},
+			{ID: "board-id-2", TeamID: teamID, Type: model.BoardTypePrivate},
+			{ID: "board-id-3", TeamID: teamID, Type: model.BoardTypeOpen},
+		},
+		Blocks: []model.Block{
+			{ID: "block-id-1", BoardID: "board-id-1", Type: model.TypeCard},
+			{ID: "block-id-2", BoardID: "board-id-2", Type: model.TypeCard},
+		},
+	}
+
+	bab, err := store.CreateBoardsAndBlocks(newBab, userID)
+	require.Nil(t, err)
+	require.NotNil(t, bab)
+	require.Len(t, bab.Boards, 3)
+	require.Len(t, bab.Blocks, 2)
+
+	t.Run("duplicate existing board as no template", func(t *testing.T) {
+		bab, members, err := store.DuplicateBoard("board-id-1", userID, false)
+		require.NoError(t, err)
+		require.Len(t, members, 1)
+		require.Len(t, bab.Boards, 1)
+		require.Len(t, bab.Blocks, 1)
+		require.Equal(t, bab.Boards[0].IsTemplate, false)
+	})
+
+	t.Run("duplicate existing board as template", func(t *testing.T) {
+		bab, members, err := store.DuplicateBoard("board-id-1", userID, true)
+		require.NoError(t, err)
+		require.Len(t, members, 1)
+		require.Len(t, bab.Boards, 1)
+		require.Len(t, bab.Blocks, 1)
+		require.Equal(t, bab.Boards[0].IsTemplate, true)
+	})
+
+	t.Run("duplicate not existing board", func(t *testing.T) {
+		bab, members, err := store.DuplicateBoard("not-existing-id", userID, false)
+		require.Error(t, err)
+		require.Nil(t, members)
+		require.Nil(t, bab)
 	})
 }

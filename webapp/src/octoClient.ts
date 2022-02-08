@@ -597,10 +597,10 @@ class OctoClient {
         return this.getJson<Board>(response, {} as Board)
     }
 
-    async duplicateBoard(boardID: string, asTemplate: boolean, teamId: string): Promise<BoardsAndBlocks | undefined> {
-        let query = `?asTemplate=false&teamID=${teamId || '0'}`
+    async duplicateBoard(boardID: string, asTemplate: boolean): Promise<BoardsAndBlocks | undefined> {
+        let query = '?asTemplate=false'
         if (asTemplate) {
-            query = `?asTemplate=true&teamID=${teamId || '0'}`
+            query = '?asTemplate=true'
         }
         const path = `/api/v1/boards/${boardID}/duplicate${query}`
         const response = await fetch(this.getBaseURL() + path, {
@@ -613,6 +613,24 @@ class OctoClient {
         }
 
         return this.getJson<BoardsAndBlocks>(response, {} as BoardsAndBlocks)
+    }
+
+    async duplicateBlock(boardID: string, blockID: string, asTemplate: boolean): Promise<Block[] | undefined> {
+        let query = '?asTemplate=false'
+        if (asTemplate) {
+            query = '?asTemplate=true'
+        }
+        const path = `/api/v1/boards/${boardID}/blocks/${blockID}/duplicate${query}`
+        const response = await fetch(this.getBaseURL() + path, {
+            method: 'POST',
+            headers: this.headers(),
+        })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return this.getJson<Block[]>(response, [] as Block[])
     }
 
     async getBlocksForBoard(teamId: string, boardId: string): Promise<Board[]> {

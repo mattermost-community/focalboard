@@ -30,6 +30,28 @@ func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Blo
 	return a.store.GetBlocksWithParent(boardID, parentID)
 }
 
+func (a *App) DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
+	board, err := a.GetBoard(boardID)
+	if err != nil {
+		return nil, err
+	}
+	if board == nil {
+		return nil, fmt.Errorf("cannot fetch board %s for DuplicateBlock: %w", boardID, err)
+	}
+
+	blocks, err := a.store.DuplicateBlock(boardID, blockID, userID, asTemplate)
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		for _, block := range blocks {
+			a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
+		}
+	}()
+	return blocks, err
+}
+
 func (a *App) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
 	return a.store.GetBlocksWithBoardID(boardID)
 }
@@ -257,7 +279,7 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 	}
 
 	go func() {
-		a.wsAdapter.BroadcastBlockDelete(board.TeamID, blockID, block.ParentID)
+		a.wsAdapter.BroadcastBlockDelete(board.TeamID, blockID, block.BoardID)
 		a.metrics.IncrementBlocksDeleted(1)
 		a.notifyBlockChanged(notify.Delete, block, block, modifiedBy)
 	}()

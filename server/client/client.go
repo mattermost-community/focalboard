@@ -214,6 +214,34 @@ func (c *Client) PatchBlock(boardID, blockID string, blockPatch *model.BlockPatc
 	return true, BuildResponse(r)
 }
 
+func (c *Client) DuplicateBoard(boardID string, asTemplate bool, teamID string) (bool, *Response) {
+	queryParams := "?asTemplate=false&"
+	if asTemplate {
+		queryParams = "?asTemplate=true"
+	}
+	r, err := c.DoAPIPost(c.GetBoardRoute(boardID)+"/duplicate"+queryParams, "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
+func (c *Client) DuplicateBlock(boardID, blockID string, asTemplate bool) (bool, *Response) {
+	queryParams := "?asTemplate=false"
+	if asTemplate {
+		queryParams = "?asTemplate=true"
+	}
+	r, err := c.DoAPIPost(c.GetBlockRoute(boardID, blockID)+"/duplicate"+queryParams, "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
 func (c *Client) InsertBlocks(boardID string, blocks []model.Block) ([]model.Block, *Response) {
 	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID), toJSON(blocks))
 	if err != nil {

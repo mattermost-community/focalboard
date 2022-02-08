@@ -62,6 +62,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetBlock(t, store)
 	})
+	t.Run("DuplicateBlock", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testDuplicateBlock(t, store)
+	})
 }
 
 func testInsertBlock(t *testing.T, store store.Store) {
@@ -723,5 +728,43 @@ func testGetBlock(t *testing.T, store store.Store) {
 		fetchedBlock, err := store.GetBlock("non-existing-id")
 		require.NoError(t, err)
 		require.Nil(t, fetchedBlock)
+	})
+}
+
+func testDuplicateBlock(t *testing.T, store store.Store) {
+	InsertBlocks(t, store, subtreeSampleBlocks, "user-id-1")
+	time.Sleep(1 * time.Millisecond)
+	defer DeleteBlocks(t, store, subtreeSampleBlocks, "test")
+
+	t.Run("duplicate existing block as no template", func(t *testing.T) {
+		blocks, err := store.DuplicateBlock("board-id", "child1", testUserID, false)
+		require.NoError(t, err)
+		require.Len(t, blocks, 3)
+		require.Equal(t, false, blocks[0].Fields["isTemplate"])
+	})
+
+	t.Run("duplicate existing block as template", func(t *testing.T) {
+		blocks, err := store.DuplicateBlock("board-id", "child1", testUserID, true)
+		require.NoError(t, err)
+		require.Len(t, blocks, 3)
+		require.Equal(t, true, blocks[0].Fields["isTemplate"])
+	})
+
+	t.Run("duplicate not existing block", func(t *testing.T) {
+		blocks, err := store.DuplicateBlock("board-id", "not-existing-id", testUserID, false)
+		require.Error(t, err)
+		require.Nil(t, blocks)
+	})
+
+	t.Run("duplicate not existing board", func(t *testing.T) {
+		blocks, err := store.DuplicateBlock("not-existing-board", "not-existing-id", testUserID, false)
+		require.Error(t, err)
+		require.Nil(t, blocks)
+	})
+
+	t.Run("not matching board/block", func(t *testing.T) {
+		blocks, err := store.DuplicateBlock("other-id", "child1", testUserID, false)
+		require.Error(t, err)
+		require.Nil(t, blocks)
 	})
 }

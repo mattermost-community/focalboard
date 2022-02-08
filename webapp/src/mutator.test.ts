@@ -36,12 +36,11 @@ describe('Mutator', () => {
     })
 
     test('duplicateCard', async () => {
-        const card = TestBlockFactory.createCard()
         const board = TestBlockFactory.createBoard()
+        const card = TestBlockFactory.createCard(board)
 
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([card])))
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([])))
-        const [newBlocks, newCardID] = await mutator.duplicateCard(card.id, board)
+        const [newBlocks, newCardID] = await mutator.duplicateCard(card.id, board.id)
 
         expect(newBlocks).toHaveLength(1)
 
@@ -50,7 +49,6 @@ describe('Mutator', () => {
         expect(duplicatedCard.id).toBe(newCardID)
         expect(duplicatedCard.fields.icon).toBe(card.fields.icon)
         expect(duplicatedCard.fields.contentOrder).toHaveLength(card.fields.contentOrder.length)
-        expect(duplicatedCard.parentId).toBe(board.id)
         expect(duplicatedCard.boardId).toBe(board.id)
     })
 })

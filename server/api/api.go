@@ -87,6 +87,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
+	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.attachSession(a.handleDuplicateBlock, false)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/{rootID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 
 	// Import&Export APIs
@@ -2560,7 +2561,7 @@ func (a *API) handleDeleteBoard(w http.ResponseWriter, r *http.Request) {
 func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation POST /api/v1/boards/{boardID}/duplicate duplicateBoard
 	//
-	// Returns a board and returns the new created board and all the blocks
+	// Returns the new created board and all the blocks
 	//
 	// ---
 	// produces:
@@ -2587,8 +2588,6 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 	query := r.URL.Query()
 	asTemplate := query.Get("asTemplate")
-	teamID := query.Get("teamID")
-	// TODO: Also receive the new teamID
 
 	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
 	if userID == "" && !hasValidReadToken {
@@ -2628,13 +2627,96 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		mlog.String("boardID", boardID),
 	)
 
-	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, asTemplate == "true", teamID)
+	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, asTemplate == "true")
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
 	}
 
 	data, err := json.Marshal(boardsAndBlocks)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.Success()
+}
+
+func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/boards/{boardID}/blocks/{blockID}/duplicate duplicateBlock
+	//
+	// Returns the new created blocks
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: boardID
+	//   in: path
+	//   description: Board ID
+	//   required: true
+	//   type: string
+	// - name: blockID
+	//   in: path
+	//   description: Block ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Block"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	boardID := mux.Vars(r)["boardID"]
+	blockID := mux.Vars(r)["blockID"]
+	userID := getUserID(r)
+	query := r.URL.Query()
+	asTemplate := query.Get("asTemplate")
+
+	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
+	if userID == "" && !hasValidReadToken {
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		return
+	}
+
+	board, err := a.app.GetBlockByID(blockID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if board == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "duplicateBlock", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+	auditRec.AddMeta("blockID", blockID)
+
+	a.logger.Debug("DuplicateBlock",
+		mlog.String("boardID", boardID),
+		mlog.String("blockID", blockID),
+	)
+
+	blocks, err := a.app.DuplicateBlock(boardID, blockID, userID, asTemplate == "true")
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
+		return
+	}
+
+	data, err := json.Marshal(blocks)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

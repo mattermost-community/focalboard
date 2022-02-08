@@ -181,12 +181,33 @@ func (s *SQLStore) DeleteSubscription(blockID string, subscriberID string) error
 
 }
 
-func (s *SQLStore) DuplicateBoard(boardID string, userID string, asTemplate bool, teamID string) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+func (s *SQLStore) DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return nil, txErr
+	}
+	result, err := s.duplicateBlock(tx, boardID, blockID, userID, asTemplate)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DuplicateBlock"))
+		}
+		return nil, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+
+}
+
+func (s *SQLStore) DuplicateBoard(boardID string, userID string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return nil, nil, txErr
 	}
-	result, resultVar1, err := s.duplicateBoard(tx, boardID, userID, asTemplate, teamID)
+	result, resultVar1, err := s.duplicateBoard(tx, boardID, userID, asTemplate)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DuplicateBoard"))

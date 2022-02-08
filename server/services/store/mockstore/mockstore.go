@@ -263,10 +263,25 @@ func (mr *MockStoreMockRecorder) DeleteSubscription(arg0, arg1 interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSubscription", reflect.TypeOf((*MockStore)(nil).DeleteSubscription), arg0, arg1)
 }
 
-// DuplicateBoard mocks base method.
-func (m *MockStore) DuplicateBoard(arg0, arg1 string, arg2 bool, arg3 string) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+// DuplicateBlock mocks base method.
+func (m *MockStore) DuplicateBlock(arg0, arg1, arg2 string, arg3 bool) ([]model.Block, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DuplicateBoard", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "DuplicateBlock", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].([]model.Block)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DuplicateBlock indicates an expected call of DuplicateBlock.
+func (mr *MockStoreMockRecorder) DuplicateBlock(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DuplicateBlock", reflect.TypeOf((*MockStore)(nil).DuplicateBlock), arg0, arg1, arg2, arg3)
+}
+
+// DuplicateBoard mocks base method.
+func (m *MockStore) DuplicateBoard(arg0, arg1 string, arg2 bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DuplicateBoard", arg0, arg1, arg2)
 	ret0, _ := ret[0].(*model.BoardsAndBlocks)
 	ret1, _ := ret[1].([]*model.BoardMember)
 	ret2, _ := ret[2].(error)
@@ -274,9 +289,9 @@ func (m *MockStore) DuplicateBoard(arg0, arg1 string, arg2 bool, arg3 string) (*
 }
 
 // DuplicateBoard indicates an expected call of DuplicateBoard.
-func (mr *MockStoreMockRecorder) DuplicateBoard(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) DuplicateBoard(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DuplicateBoard", reflect.TypeOf((*MockStore)(nil).DuplicateBoard), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DuplicateBoard", reflect.TypeOf((*MockStore)(nil).DuplicateBoard), arg0, arg1, arg2)
 }
 
 // GetActiveUserCount mocks base method.

@@ -500,9 +500,6 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 		query = query.Where(conditions)
 	}
 
-	q, _, _ := query.ToSql()
-	fmt.Println(q)
-
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error(`searchBoardsForUserAndTeam ERROR`, mlog.Err(err))

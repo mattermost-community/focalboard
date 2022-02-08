@@ -13,7 +13,6 @@ import {ContentBlock} from './blocks/contentBlock'
 import {CommentBlock} from './blocks/commentBlock'
 import {FilterGroup} from './blocks/filterGroup'
 import octoClient from './octoClient'
-import {OctoUtils} from './octoUtils'
 import undoManager from './undomanager'
 import {Utils, IDType} from './utils'
 import {UserSettings} from './userSettings'
@@ -913,54 +912,62 @@ class Mutator {
 
     async duplicateCard(
         cardId: string,
-        board: Board,
+        boardId: string,
+        fromTemplate = false,
         description = 'duplicate card',
         asTemplate = false,
         afterRedo?: (newCardId: string) => Promise<void>,
         beforeUndo?: () => Promise<void>,
     ): Promise<[Block[], string]> {
-        const blocks = await octoClient.getSubtree(cardId, 2)
-        const [newBlocks1, newCard] = OctoUtils.duplicateBlockTree(blocks, cardId) as [Block[], Card, Record<string, string>]
-        const newBlocks = newBlocks1.filter((o) => o.type !== 'comment')
-        Utils.log(`duplicateCard: duplicating ${newBlocks.length} blocks`)
-        if (asTemplate === newCard.fields.isTemplate) {
-            // Copy template
-            newCard.title = `${newCard.title} copy`
-        } else if (asTemplate) {
-            // Template from card
-            newCard.title = 'New card template'
-        } else {
-            // Card from template
-            newCard.title = ''
-
-            // If the template doesn't specify an icon, initialize it to a random one
-            if (!newCard.fields.icon && UserSettings.prefillRandomIcons) {
-                newCard.fields.icon = BlockIcons.shared.randomIcon()
-            }
-        }
-        newCard.fields.isTemplate = asTemplate
-        newCard.boardId = board.id
-        newCard.parentId = board.id
-        await this.insertBlocks(
-            board.id,
-            newBlocks,
-            description,
-            async (respBlocks: Block[]) => {
-                const card = respBlocks.find((block) => block.type === 'card')
-                if (card) {
-                    await afterRedo?.(card.id)
+        return undoManager.perform(
+            async () => {
+                const blocks = await octoClient.duplicateBlock(boardId, cardId, asTemplate)
+                const newRootBlock = blocks && blocks[0]
+                if (!newRootBlock) {
+                    Utils.log('Unable to duplicate card')
+                    return [[], '']
+                }
+                if (asTemplate === fromTemplate) {
+                    // Copy template
+                    newRootBlock.title = `${newRootBlock.title} copy`
+                } else if (asTemplate) {
+                    // Template from card
+                    newRootBlock.title = 'New card template'
                 } else {
-                    Utils.logError('card not found for opening.')
+                    // Card from template
+                    newRootBlock.title = ''
+
+                    // If the template doesn't specify an icon, initialize it to a random one
+                    if (!newRootBlock.fields.icon && UserSettings.prefillRandomIcons) {
+                        newRootBlock.fields.icon = BlockIcons.shared.randomIcon()
+                    }
+                }
+                const patch = {
+                    updatedFields: {
+                        icon: newRootBlock.fields.icon,
+                    },
+                    title: newRootBlock.title,
+                }
+                await octoClient.patchBlock(newRootBlock.boardId, newRootBlock.id, patch)
+                if (blocks) {
+                    updateAllBoardsAndBlocks([], blocks)
+                    await afterRedo?.(newRootBlock.id)
+                }
+                return [blocks, newRootBlock.id]
+            },
+            async (newBlocks: Block[]) => {
+                await beforeUndo?.()
+                const newRootBlock = newBlocks && newBlocks[0]
+                if (newRootBlock) {
+                    await octoClient.deleteBlock(newRootBlock.boardId, newRootBlock.id)
                 }
             },
-            beforeUndo,
-            board.id,
+            description,
+            this.undoGroupId,
         )
-        return [newBlocks, newCard.id]
     }
 
     async duplicateBoard(
-        teamId: string,
         boardId: string,
         description = 'duplicate board',
         asTemplate = false,
@@ -969,7 +976,7 @@ class Mutator {
     ): Promise<[Block[], string]> {
         return undoManager.perform(
             async () => {
-                const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate, teamId)
+                const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate)
                 if (boardsAndBlocks) {
                     updateAllBoardsAndBlocks(boardsAndBlocks.boards, boardsAndBlocks.blocks)
                     await afterRedo?.(boardsAndBlocks.boards[0]?.id)
@@ -1003,7 +1010,7 @@ class Mutator {
         const actionDescription = intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'})
 
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId})
-        return mutator.duplicateBoard(teamId, boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
+        return mutator.duplicateBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
     }
 
     async addEmptyBoard(

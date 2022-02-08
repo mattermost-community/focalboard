@@ -236,7 +236,8 @@ class CenterPanel extends React.Component<Props, State> {
         mutator.performAsUndoGroup(async () => {
             const [, newCardId] = await mutator.duplicateCard(
                 cardTemplateId,
-                board,
+                board.id,
+                true,
                 this.props.intl.formatMessage({id: 'Mutator.new-card-from-template', defaultMessage: 'new card from template'}),
                 false,
                 async (cardId) => {
@@ -394,7 +395,7 @@ class CenterPanel extends React.Component<Props, State> {
             for (const cardId of selectedCardIds) {
                 const card = this.props.cards.find((o) => o.id === cardId)
                 if (card) {
-                    mutator.duplicateCard(cardId, board)
+                    mutator.duplicateCard(cardId, board.id)
                 } else {
                     Utils.assertFailure(`Selected card not found: ${cardId}`)
                 }

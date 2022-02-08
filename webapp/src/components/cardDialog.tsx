@@ -61,7 +61,8 @@ const CardDialog = (props: Props): JSX.Element => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromCard, {board: props.board.id, view: activeView.id, card: props.cardId})
         await mutator.duplicateCard(
             props.cardId,
-            board,
+            board.id,
+            card.fields.isTemplate,
             intl.formatMessage({id: 'Mutator.new-template-from-card', defaultMessage: 'new template from card'}),
             true,
             async (newCardId) => {
