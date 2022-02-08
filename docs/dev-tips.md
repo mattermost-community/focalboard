@@ -86,7 +86,7 @@ By default, data is stored in a sqlite database `focalboard.db`. You can view an
 Before checking-in commits, run: `make ci`, which is simlar to the ci.yml workflow and includes:
 * Server unit tests: `make server-test`
 * Webapp eslint: `cd webapp; npm run check`
-* Webapp unit tests: `cd webapp; npm run test`
+* Webapp unit tests: `make webapp-test`
 * Webapp UI tests: `cd webapp; npm run cypress:ci`
 
 ## Running into problems or have questions?
