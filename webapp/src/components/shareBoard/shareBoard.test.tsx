@@ -50,11 +50,6 @@ describe('src/components/shareBoard/shareBoard', () => {
     const w = (window as any)
     const oldBaseURL = w.baseURL
 
-    // let rootPortalDiv: HTMLDivElement
-
-    const rootPortalDiv = document.createElement('div')
-    rootPortalDiv.id = 'focalboard-root-portal'
-
     beforeEach(() => {
         jest.clearAllMocks()
         mockedUtils.buildURL.mockImplementation((path) => (w.baseURL || '') + path)
@@ -72,44 +67,22 @@ describe('src/components/shareBoard/shareBoard', () => {
 
     test('should match snapshot', async () => {
         mockedOctoClient.getSharing.mockResolvedValue(undefined)
-        const result = render(
-            wrapDNDIntl(
-                <ShareBoard
-                    boardId={board.id}
-                    onClose={jest.fn()}
-                />),
-            {wrapper: MemoryRouter},
-        )
-        const renderer = result.container
+        let container
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ShareBoard
+                        boardId={board.id}
+                        onClose={jest.fn()}
+                    />),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
 
-        expect(renderer).toMatchSnapshot()
+        expect(container).toMatchSnapshot()
         const closeButton = screen.getByRole('button', {name: 'Close dialog'})
         expect(closeButton).toBeDefined()
-    })
-
-    test('should match snapshot, and click switch', async () => {
-        mockedOctoClient.getSharing.mockResolvedValue(undefined)
-        const result = render(
-            wrapDNDIntl(
-                <ShareBoard
-                    boardId={board.id}
-                    onClose={jest.fn()}
-                />),
-            {wrapper: MemoryRouter},
-        )
-        const renderer = result.container
-        expect(renderer).toMatchSnapshot()
-
-        const switchElement = renderer.querySelector('.Switch')
-        expect(switchElement).toBeDefined()
-
-        // await act(async () => {
-        userEvent.click(switchElement!)
-
-        // })
-
-        expect(mockedOctoClient.setSharing).toBeCalledTimes(1)
-        expect(mockedOctoClient.getSharing).toBeCalledTimes(1)
     })
 
     test('should match snapshot with sharing', async () => {
@@ -120,7 +93,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
 
-        let renderer
+        let container
         await act(async () => {
             const result = render(
                 wrapDNDIntl(
@@ -130,12 +103,12 @@ describe('src/components/shareBoard/shareBoard', () => {
                     />),
                 {wrapper: MemoryRouter},
             )
-            renderer = result.container
+            container = result.container
         })
         const copyLinkElement = screen.getByRole('button', {name: 'Copy link'})
         expect(copyLinkElement).toBeDefined()
 
-        expect(renderer).toMatchSnapshot()
+        expect(container).toMatchSnapshot()
     })
 
     test('return shareBoard and click Copy link', async () => {
@@ -146,7 +119,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
 
-        let renderer
+        let container
         await act(async () => {
             const result = render(
                 wrapDNDIntl(
@@ -156,10 +129,10 @@ describe('src/components/shareBoard/shareBoard', () => {
                     />),
                 {wrapper: MemoryRouter},
             )
-            renderer = result.container
+            container = result.container
         })
 
-        expect(renderer).toMatchSnapshot()
+        expect(container).toMatchSnapshot()
 
         const copyLinkElement = screen.getByRole('button', {name: 'Copy link'})
         expect(copyLinkElement).toBeDefined()
@@ -169,7 +142,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         })
 
         expect(mockedUtils.copyTextToClipboard).toBeCalledTimes(1)
-        expect(renderer).toMatchSnapshot()
+        expect(container).toMatchSnapshot()
 
         const copiedLinkElement = screen.getByRole('button', {name: 'Copy link'})
         expect(copiedLinkElement).toBeDefined()
@@ -187,7 +160,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
 
-        let renderer
+        let container
         await act(async () => {
             const result = render(
                 wrapDNDIntl(
@@ -197,7 +170,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     />),
                 {wrapper: MemoryRouter},
             )
-            renderer = result.container
+            container = result.container
         })
 
         sharing.token = 'anotherToken'
@@ -211,7 +184,7 @@ describe('src/components/shareBoard/shareBoard', () => {
             jest.runOnlyPendingTimers()
         })
         expect(mockedOctoClient.setSharing).toBeCalledTimes(1)
-        expect(renderer).toMatchSnapshot()
+        expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot with sharing and without workspaceId and subpath', async () => {
@@ -226,16 +199,16 @@ describe('src/components/shareBoard/shareBoard', () => {
             viewId,
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        let renderer
+        let container
         await act(async () => {
             const result = render(wrapDNDIntl(
                 <ShareBoard
                     boardId={board.id}
                     onClose={jest.fn()}
                 />), {wrapper: MemoryRouter})
-            renderer = result.container
+            container = result.container
         })
-        expect(renderer).toMatchSnapshot()
+        expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot with sharing and subpath', async () => {
@@ -246,15 +219,35 @@ describe('src/components/shareBoard/shareBoard', () => {
             token: 'oneToken',
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        let renderer
+        let container
         await act(async () => {
             const result = render(wrapDNDIntl(
                 <ShareBoard
                     boardId={board.id}
                     onClose={jest.fn()}
                 />), {wrapper: MemoryRouter})
-            renderer = result.container
+            container = result.container
         })
-        expect(renderer).toMatchSnapshot()
+        expect(container).toMatchSnapshot()
+    })
+
+    test('should match snapshot, and click switch', async () => {
+        mockedOctoClient.getSharing.mockResolvedValue(undefined)
+        const {container} = render(wrapDNDIntl(
+            <ShareBoard
+                boardId={board.id}
+                onClose={jest.fn()}
+            />), {wrapper: MemoryRouter})
+
+        expect(container).toMatchSnapshot()
+
+        const switchElement = container.querySelector('.Switch')
+        expect(switchElement).toBeDefined()
+        await act(async () => {
+            userEvent.click(switchElement!)
+        })
+
+        expect(mockedOctoClient.setSharing).toBeCalledTimes(1)
+        expect(mockedOctoClient.getSharing).toBeCalledTimes(2)
     })
 })

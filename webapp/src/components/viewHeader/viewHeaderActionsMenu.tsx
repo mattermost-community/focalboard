@@ -20,7 +20,6 @@ type Props = {
     board: Board
     activeView: BoardView
     cards: Card[]
-    showShared: boolean
 }
 
 // import {mutator} from '../../mutator'
