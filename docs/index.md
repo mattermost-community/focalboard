@@ -1,6 +1,6 @@
-# Focalboard/Mattermost Boards Contributors Guide
+# Focalboard / Mattermost Boards Contributors Guide
 
-Welcome to the Focalboard/Mattermost Boards project!
+Welcome to the [Focalboard](https://www.focalboard.com) / [Mattermost Boards](https://mattermost.com/boards/?utm_source=focalboard) project!
 
 We're very glad you want to check it out and perhaps contribute code our repository in GitHub.
 

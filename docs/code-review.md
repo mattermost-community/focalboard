@@ -2,7 +2,7 @@
 
 Currently, all changes to the product must be reviewed by a [core committer](/contribute/getting-started/core-committers/#core-committers).
 
-### If you are a community member seeking a review
+## If you are a community member seeking a review
 
 1. Submit your pull request (PR).
     * Follow the [contribution checklist](../contribution-checklist/).
@@ -22,7 +22,7 @@ Currently, all changes to the product must be reviewed by a [core committer](/co
     * Larger pull requests may require more time to review.
     * Once all reviewers have approved your changes, they will handle merging your code.
 
-### If you are awaiting a review
+## If you are awaiting a review
 
 1. Wait patiently for reviews to complete.
     * Expect some interaction with each of your reviewers within 5 business days.
@@ -31,7 +31,7 @@ Currently, all changes to the product must be reviewed by a [core committer](/co
     * If a reviewer requests changes, your pull request will disappear from their queue of reviews.
     * Once you've addressed the concerns, assign them as a reviewer again to put your pull request back in their queue.
 
-### If you are a core committer asked to give a review
+## If you are a core committer asked to give a review
 
 1. Respond promptly to requested reviews.
     * Assume the requested review is urgent and blocking unless explicitly stated otherwise.
