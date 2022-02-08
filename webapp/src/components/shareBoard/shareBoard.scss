@@ -15,9 +15,11 @@
         .d-flex {
             display: flex;
         }
-        .justify-content-between{
-            justify-content: space-between
+
+        .justify-content-between {
+            justify-content: space-between;
         }
+
         .flex-column {
             flex-direction: column;
         }
@@ -31,14 +33,17 @@
                 width: 400px;
                 height: 40px;
             }
+
             .IconButton {
                 height: 100%;
                 width: 40px;
             }
+
             .icon-refresh {
                 margin: 4px;
                 font-size: 18px;
             }
+            
             .icon-content-copy {
                 margin-right: 4px;
                 font-size: 18px;

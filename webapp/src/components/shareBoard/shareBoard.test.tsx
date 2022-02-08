@@ -2,10 +2,8 @@
 // See LICENSE.txt for license information.
 import {act, render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import {IntlProvider} from 'react-intl'
-import ReactDOM, {unmountComponentAtNode} from 'react-dom'
 
-import React, {useState} from 'react'
+import React from 'react'
 import {MemoryRouter} from 'react-router'
 import {mocked} from 'ts-jest/utils'
 
@@ -56,7 +54,6 @@ describe('src/components/shareBoard/shareBoard', () => {
 
     const rootPortalDiv = document.createElement('div')
     rootPortalDiv.id = 'focalboard-root-portal'
-    const container = document.body.appendChild(rootPortalDiv)
 
     beforeEach(() => {
         jest.clearAllMocks()
