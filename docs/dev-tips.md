@@ -18,6 +18,7 @@ On Mac, to build the Mac app:
 On Linux, to build the Linux app:
 * `sudo apt-get install libgtk-3-dev`
 * `sudo apt-get install libwebkit2gtk-4.0-dev`
+* `sudo apt-get install autoconf dh-autoreconf`
 
 ## Clone the project source code
 
