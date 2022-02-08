@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -250,5 +251,18 @@ func TestGenerateBlockIDs(t *testing.T) {
 		require.Equal(t, blocks[0].ID, block4ContentOrder[0].(string))
 		require.Equal(t, blocks[1].ID, block4ContentOrder[1].([]interface{})[0])
 		require.Equal(t, blocks[2].ID, block4ContentOrder[1].([]interface{})[1])
+	})
+}
+
+func TestStampModificationMetadata(t *testing.T) {
+	t.Run("base case", func(t *testing.T) {
+		block := Block{}
+		blocks := []Block{block}
+		assert.Empty(t, block.ModifiedBy)
+		assert.Empty(t, block.UpdateAt)
+
+		StampModificationMetadata("user_id_1", blocks, nil)
+		assert.Equal(t, "user_id_1", blocks[0].ModifiedBy)
+		assert.NotEmpty(t, blocks[0].UpdateAt)
 	})
 }
