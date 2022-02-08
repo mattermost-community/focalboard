@@ -100,29 +100,28 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     }
 
     return (
-        <RootPortal>
-            <Dialog
-                onClose={props.onClose}
-                className='ShareBoardDialog'
-                title={intl.formatMessage({id: 'ShareBoard.Title', defaultMessage: 'Share Board'})}
-            >
-                <div className='tabs-modal'>
-                    <div>
-                        <div className='d-flex justify-content-between'>
-                            <div className='d-flex flex-column'>
-                                <div className='text-heading2'>{'Publish to the web'}</div>
-                                <div className='text-light'>{'Publish and share a “read only” link with everyone on the web'}</div>
-                            </div>
-                            <div>
-                                <Switch
-                                    isOn={isSharing}
-                                    size='medium'
-                                    onChanged={onShareChanged}
-                                />
-                            </div>
+        <Dialog
+            onClose={props.onClose}
+            className='ShareBoardDialog'
+            title={intl.formatMessage({id: 'ShareBoard.Title', defaultMessage: 'Share Board'})}
+        >
+            <div className='tabs-modal'>
+                <div>
+                    <div className='d-flex justify-content-between'>
+                        <div className='d-flex flex-column'>
+                            <div className='text-heading2'>{'Publish to the web'}</div>
+                            <div className='text-light'>{'Publish and share a “read only” link with everyone on the web'}</div>
+                        </div>
+                        <div>
+                            <Switch
+                                isOn={isSharing}
+                                size='medium'
+                                onChanged={onShareChanged}
+                            />
                         </div>
                     </div>
-                    {isSharing &&
+                </div>
+                {isSharing &&
                         (<div className='d-flex justify-content-between tabs-inputs'>
                             <div className='d-flex input-container'>
                                 <a
@@ -162,6 +161,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             <Button
                                 emphasis='secondary'
                                 size='medium'
+                                title='Copy link'
                                 onClick={() => {
                                     TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: props.boardId})
                                     Utils.copyTextToClipboard(shareUrl.toString())
@@ -184,9 +184,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                     />}
                             </Button>
                         </div>)
-                    }
-                </div>
-            </Dialog>
-        </RootPortal>
+                }
+            </div>
+        </Dialog>
     )
 }

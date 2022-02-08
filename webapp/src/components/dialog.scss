@@ -63,7 +63,10 @@
         > .toolbar {
             display: flex;
             flex-direction: row;
-            padding: 24px;
+
+            //todo: test this 
+            padding: 16px;
+            // padding: 24px;
             justify-content: space-between;
         }
 
