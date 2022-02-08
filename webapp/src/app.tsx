@@ -6,6 +6,9 @@ import {
     Redirect,
     Route,
     Switch,
+    useRouteMatch,
+    useHistory,
+    generatePath,
 } from 'react-router-dom'
 import {IntlProvider} from 'react-intl'
 import {DndProvider} from 'react-dnd'
@@ -27,6 +30,7 @@ import ErrorPage from './pages/errorPage'
 import LoginPage from './pages/loginPage'
 import RegisterPage from './pages/registerPage'
 import {Utils} from './utils'
+import octoClient from './octoClient'
 import wsClient from './wsclient'
 import {fetchMe, getLoggedIn, getMe} from './store/users'
 import {getLanguage, fetchLanguage} from './store/language'
@@ -40,6 +44,24 @@ import {UserSettings} from './userSettings'
 declare let window: IAppWindow
 
 const UUID_REGEX = new RegExp(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/)
+
+function WorkspaceToTeamRedirect() {
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
+    const history = useHistory()
+    useEffect(() => {
+        octoClient.getBoard(match.params.boardId).then((board) => {
+            if (board) {
+                history.replace(generatePath('/team/:teamId/:boardId?/:viewId?/:cardId?', {
+                    teamId: board?.teamId,
+                    boardId: board?.id,
+                    viewId: match.params.viewId,
+                    cardId: match.params.cardId,
+                }))
+            }
+        })
+    }, [])
+    return null
+}
 
 const App = React.memo((): JSX.Element => {
     const language = useAppSelector<string>(getLanguage)
@@ -210,12 +232,11 @@ const App = React.memo((): JSX.Element => {
                                     }}
                                 />
                                 <Route path='/workspace/:workspaceId/shared/:boardId?/:viewId?/:cardId?'>
-                                    {/* ToDo: redirect component here */}
-                                    <BoardPage readonly={true}/>
+                                    <WorkspaceToTeamRedirect/>
                                 </Route>
 
                                 <Route path='/workspace/:workspaceId/:boardId?/:viewId?/:cardId?'>
-                                    {/* ToDo: redirect component here */}
+                                    <WorkspaceToTeamRedirect/>
                                 </Route>
                                 <Route
                                     path='/team/:teamId/:boardId?/:viewId?/:cardId?'
