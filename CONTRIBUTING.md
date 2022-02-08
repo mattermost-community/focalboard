@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing! Please see the [Focalboard Contribution Guide](https://mattermost.github.io/focalboard/) which describes the process for making code contributions, and [join our Focalboard community channel](https://community.mattermost.com/core/channels/focalboard) to ask questions from community members and the core team.
 
-When you submit a pull request, it goes through a [code review process outlined here](https://mattermost.github.io/focalboard/code-review/).
+When you submit a pull request, it goes through a [code review process outlined here](https://mattermost.github.io/focalboard/code-review).
 
 # Updating Changelog
 
