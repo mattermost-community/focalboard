@@ -3,7 +3,6 @@
 export interface PluginRegistry {
     registerPostTypeComponent(typeName: string, component: React.ElementType)
     registerChannelHeaderButtonAction(icon: React.Element, action: () => void, dropdownText: string, tooltipText: string)
-    registerChannelIntroButtonAction(icon: React.Element, action: () => void, tooltipText: string)
     registerCustomRoute(route: string, component: React.ElementType)
     registerProductRoute(route: string, component: React.ElementType)
     unregisterComponent(componentId: string)
