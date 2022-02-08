@@ -11,19 +11,16 @@ import Tooltip from '../../widgets/tooltip'
 import {ISharing} from '../../blocks/sharing'
 
 import client from '../../octoClient'
-
-import RootPortal from '../rootPortal'
 import Dialog from '../dialog'
 import Switch from '../../widgets/switch'
 import Button from '../../widgets/buttons/button'
 import {sendFlashMessage} from '../flashMessages'
 
-// import SearchIcon from '../../widgets/icons/search'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
-import './shareBoard.scss'
 import IconButton from '../../widgets/buttons/iconButton'
+import './shareBoard.scss'
 
 type Props = {
     boardId: string
@@ -109,8 +106,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                 <div>
                     <div className='d-flex justify-content-between'>
                         <div className='d-flex flex-column'>
-                            <div className='text-heading2'>{'Publish to the web'}</div>
-                            <div className='text-light'>{'Publish and share a “read only” link with everyone on the web'}</div>
+                            <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.PublishTitle', defaultMessage: 'Publish to the web'})}</div>
+                            <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.PublishDescription', defaultMessage: 'Publish and share a “read only” link with everyone on the web'})}</div>
                         </div>
                         <div>
                             <Switch
@@ -134,7 +131,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                 </a>
                                 <Tooltip
                                     key={'regenerateToken'}
-                                    title={'Regenerate token'}
+                                    title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
                                 >
                                     <IconButton
                                         onClick={onRegenerateToken}
@@ -143,20 +140,10 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                                 icon='refresh'
                                                 className='Icon Icon--right'
                                             />}
-                                        title={'Regenerate token'}
+                                        title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
                                         className='IconButton--large'
                                     />
                                 </Tooltip>
-                                {/* <IconButton
-                                    onClick={props.onClose}
-                                    icon={
-                                        <CompassIcon
-                                            icon='at'
-                                            className='Icon Icon--right'
-                                        />}
-                                    title={'Regenerate token'}
-                                    className='IconButton--large'
-                                /> */}
                             </div>
                             <Button
                                 emphasis='secondary'

@@ -91,10 +91,15 @@ const ViewHeader = React.memo((props: Props) => {
 
             {!props.readonly &&
             <>
+                {/* Card properties */}
+
                 <ViewHeaderPropertiesMenu
                     properties={board.fields.cardProperties}
                     activeView={activeView}
                 />
+
+                {/* Group by */}
+
                 {withGroupBy &&
                     <ViewHeaderGroupByMenu
                         properties={board.fields.cardProperties}
