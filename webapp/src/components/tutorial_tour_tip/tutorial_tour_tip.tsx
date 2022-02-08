@@ -61,53 +61,39 @@ type Props = {
     skipCategoryFromBackdrop?: boolean
 }
 
-// {
-//     title,
-//         screen,
-//         imageURL,
-//         punchOut,
-//         autoTour,
-//         tutorialCategory,
-//         singleTip,
-//         step,
-//         onNextNavigateTo,
-//         onPrevNavigateTo,
-//         telemetryTag,
-//         placement,
-//         showOptOut,
-//         pulsatingDotPosition,
-//         stopPropagation = true,
-//         preventDefault = true,
-//         width = 320,
-//         className,
-//         hideNavButtons = false,
-//         hideBackdrop = false,
-//         clickThroughPunchhole = true,
-//         onPunchholeClick,
-//         skipCategoryFromBackdrop,
-// }
-
-const TutorialTourTip = (props: Props): JSX.Element => {
-    const setDefault = (propsToUpdate: Props) => {
-        propsToUpdate.width = propsToUpdate.width || 320
-        propsToUpdate.stopPropagation = propsToUpdate.stopPropagation || true
-        propsToUpdate.preventDefault = propsToUpdate.preventDefault || true
-        propsToUpdate.hideNavButtons = propsToUpdate.hideNavButtons || false
-        propsToUpdate.hideBackdrop = propsToUpdate.hideBackdrop || false
-        propsToUpdate.clickThroughPunchhole = propsToUpdate.clickThroughPunchhole || true
-    }
-
-    setDefault(props)
-
+const TutorialTourTip = ({
+    title,
+    screen,
+    imageURL,
+    punchOut,
+    autoTour,
+    tutorialCategory,
+    singleTip,
+    step,
+    onNextNavigateTo,
+    onPrevNavigateTo,
+    telemetryTag,
+    placement,
+    showOptOut,
+    pulsatingDotPosition,
+    stopPropagation = true,
+    preventDefault = true,
+    width = 320,
+    className,
+    hideNavButtons = false,
+    hideBackdrop = false,
+    onPunchholeClick,
+    skipCategoryFromBackdrop,
+}: Props): JSX.Element => {
     const managerProps: TutorialTourTipManagerProps = {
-        step: props.step,
-        autoTour: props.autoTour,
-        telemetryTag: props.telemetryTag,
-        tutorialCategory: props.tutorialCategory,
-        onNextNavigateTo: props.onNextNavigateTo,
-        onPrevNavigateTo: props.onPrevNavigateTo,
-        stopPropagation: props.stopPropagation,
-        preventDefault: props.preventDefault,
+        step,
+        autoTour,
+        telemetryTag,
+        tutorialCategory,
+        onNextNavigateTo,
+        onPrevNavigateTo,
+        stopPropagation,
+        preventDefault,
     }
 
     const triggerRef = useRef(null)
@@ -136,7 +122,7 @@ const TutorialTourTip = (props: Props): JSX.Element => {
                 <i className='icon icon-chevron-right'/>
             </>
         )
-        if (props.singleTip) {
+        if (singleTip) {
             buttonText = (
                 <FormattedMessage
                     id={'tutorial_tip.got_it'}
@@ -147,7 +133,7 @@ const TutorialTourTip = (props: Props): JSX.Element => {
         }
 
         const lastStep = getLastStep()
-        if (props.step === lastStep) {
+        if (step === lastStep) {
             buttonText = (
                 <FormattedMessage
                     id={'tutorial_tip.finish_tour'}
@@ -161,12 +147,12 @@ const TutorialTourTip = (props: Props): JSX.Element => {
 
     const dots = []
 
-    if (!props.singleTip && tourSteps) {
+    if (!singleTip && tourSteps) {
         for (let i = 0; i < (Object.values(tourSteps).length); i++) {
             let className = 'tutorial-tour-tip__circle'
             let circularRing = 'tutorial-tour-tip__circular-ring'
 
-            if (i === props.step) {
+            if (i === step) {
                 className += ' active'
                 circularRing += ' tutorial-tour-tip__circular-ring-active'
             }
@@ -187,21 +173,20 @@ const TutorialTourTip = (props: Props): JSX.Element => {
 
     const content = (
         <div
-            className={'Harshil'}
             onClick={(e) => {
                 e.stopPropagation()
             }}
         >
             <div className='tutorial-tour-tip__header'>
                 <h4 className='tutorial-tour-tip__header__title'>
-                    {props.title}
+                    {title}
                 </h4>
                 <button
                     className='tutorial-tour-tip__header__close'
                     onClick={(e) => {
-                        if (props.skipCategoryFromBackdrop) {
+                        if (skipCategoryFromBackdrop) {
                             handleDismiss(e)
-                            handleSendToNextTour(props.tutorialCategory)
+                            handleSendToNextTour(tutorialCategory)
                         }
                     }}
                 >
@@ -211,10 +196,10 @@ const TutorialTourTip = (props: Props): JSX.Element => {
             <div className='tutorial-tour-tip__body'>
                 {screen}
             </div>
-            {props.imageURL && (
+            {imageURL && (
                 <div className='tutorial-tour-tip__image'>
                     <img
-                        src={props.imageURL}
+                        src={imageURL}
                         alt={'tutorial tour tip product image'}
                     />
                 </div>
@@ -223,7 +208,7 @@ const TutorialTourTip = (props: Props): JSX.Element => {
                 <div className='tutorial-tour-tip__footer-buttons'>
                     <div className='tutorial-tour-tip__circles-ctr'>{dots}</div>
                     <div className={'tutorial-tour-tip__btn-ctr'}>
-                        {!props.hideNavButtons && props.step !== 0 && (
+                        {!hideNavButtons && step !== 0 && (
                             <button
                                 id='tipPreviousButton'
                                 className='tutorial-tour-tip__btn tutorial-tour-tip__cancel-btn'
@@ -238,7 +223,7 @@ const TutorialTourTip = (props: Props): JSX.Element => {
                         )}
 
                         {
-                            !props.hideNavButtons && (
+                            !hideNavButtons && (
                                 <button
                                     id='tipNextButton'
                                     className='tutorial-tour-tip__btn tutorial-tour-tip__confirm-btn'
@@ -250,7 +235,7 @@ const TutorialTourTip = (props: Props): JSX.Element => {
                         }
                     </div>
                 </div>
-                {props.showOptOut && <div className='tutorial-tour-tip__opt'>
+                {showOptOut && <div className='tutorial-tour-tip__opt'>
                     <FormattedMessage
                         id='tutorial_tip.seen'
                         defaultMessage='Seen this before? '
@@ -274,30 +259,30 @@ const TutorialTourTip = (props: Props): JSX.Element => {
             <div
                 ref={triggerRef}
                 onClick={handleOpen}
-                className={`tutorial-tour-tip__pulsating-dot-ctr ${props.className || ''}`}
+                className={`tutorial-tour-tip__pulsating-dot-ctr ${className || ''}`}
             >
-                <PulsatingDot coords={props.pulsatingDotPosition}/>
+                <PulsatingDot coords={pulsatingDotPosition}/>
             </div>
             <TourTipOverlay
-                show={!props.hideBackdrop && show}
+                show={!hideBackdrop && show}
                 onClick={(e) => {
                     handleEventPropagationAndDefault(e)
                     handleHide(e)
-                    if (props.onPunchholeClick) {
-                        props.onPunchholeClick(e)
+                    if (onPunchholeClick) {
+                        onPunchholeClick(e)
                     }
                 }}
             >
                 <TutorialTourTipBackdrop
-                    x={props.punchOut?.x}
-                    y={props.punchOut?.y}
-                    width={props.punchOut?.width}
-                    height={props.punchOut?.height}
+                    x={punchOut?.x}
+                    y={punchOut?.y}
+                    width={punchOut?.width}
+                    height={punchOut?.height}
                     handleClick={(e) => {
-                        if (props.skipCategoryFromBackdrop) {
+                        if (skipCategoryFromBackdrop) {
                             e.preventDefault()
                             e.stopPropagation()
-                            handleSendToNextTour(props.tutorialCategory)
+                            handleSendToNextTour(tutorialCategory)
                         }
                     }}
                 />
@@ -309,15 +294,15 @@ const TutorialTourTip = (props: Props): JSX.Element => {
                     animation='scale-subtle'
                     trigger='click'
                     duration={[250, 150]}
-                    maxWidth={props.width}
+                    maxWidth={width}
                     aria={{content: 'labelledby'}}
                     allowHTML={true}
                     zIndex={9999}
                     reference={triggerRef}
                     interactive={true}
                     appendTo={document.body}
-                    className={`tutorial-tour-tip__box ${props.className || ''}`}
-                    placement={props.placement}
+                    className={`tutorial-tour-tip__box ${className || ''}`}
+                    placement={placement}
                 />
             )}
         </>

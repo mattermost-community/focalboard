@@ -16,9 +16,13 @@ import configureStore from 'redux-mock-store'
 
 import {mocked} from 'ts-jest/utils'
 
+import thunk from 'redux-thunk'
+
 import {wrapIntl} from '../../testUtils'
 
 import mutator from '../../mutator'
+
+import octoClient from '../../octoClient'
 
 import WelcomePage from './welcomePage'
 
@@ -27,6 +31,13 @@ const oldBaseURL = w.baseURL
 
 jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)
+
+jest.mock('../../octoClient')
+const mockedOctoClient = mocked(octoClient, true)
+mockedOctoClient.prepareOnboarding.mockResolvedValue({
+    workspaceID: 'workspace_id_1',
+    boardID: 'board_id_1',
+})
 
 beforeEach(() => {
     jest.resetAllMocks()
@@ -41,7 +52,7 @@ afterEach(() => {
 
 describe('pages/welcome', () => {
     const history = createMemoryHistory()
-    const mockStore = configureStore([])
+    const mockStore = configureStore([thunk])
     const store = mockStore({
         users: {
             me: {
@@ -103,7 +114,7 @@ describe('pages/welcome', () => {
         )
 
         render(component)
-        const exploreButton = screen.getByText('Take a tour')
+        const exploreButton = screen.getByText('No thanks, I\'ll figure it out myself')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
         await waitFor(() => {
@@ -119,7 +130,7 @@ describe('pages/welcome', () => {
             users: {
                 me: {
                     props: {
-                        welcomePageViewed: 'true',
+                        focalboard_welcomePageViewed: 'true',
                     },
                 },
             },
@@ -151,7 +162,7 @@ describe('pages/welcome', () => {
             users: {
                 me: {
                     props: {
-                        welcomePageViewed: 'true',
+                        focalboard_welcomePageViewed: 'true',
                     },
                 },
             },
@@ -177,6 +188,15 @@ describe('pages/welcome', () => {
     test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to null', async () => {
         history.replace = jest.fn()
         history.location.search = 'r=123'
+
+        const store = mockStore({
+            users: {
+                me: {
+                    props: {},
+                },
+            },
+        })
+
         const component = (
             <ReduxProvider store={store}>
                 {
@@ -189,7 +209,7 @@ describe('pages/welcome', () => {
             </ReduxProvider>
         )
         render(component)
-        const exploreButton = screen.getByText('Take a tour')
+        const exploreButton = screen.getByText('No thanks, I\'ll figure it out myself')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
         await waitFor(() => {

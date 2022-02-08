@@ -66,6 +66,12 @@ describe('src/component/kanban/kanban', () => {
     }
 
     const state = {
+        users: {
+            me: {
+                id: 'user_id_1',
+                props: {},
+            },
+        },
         cards: {
             cards: [card1, card2, card3],
         },

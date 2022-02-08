@@ -14,7 +14,7 @@ import {MarkdownEditor} from '../markdownEditor'
 import {IUser} from '../../user'
 import {getMe} from '../../store/users'
 
-import AddCommentTourStep from '../onboardingTour/addComments/add_comments'
+import AddCommentTourStep from '../onboardingTour/addComments/addComments'
 
 import Comment from './comment'
 

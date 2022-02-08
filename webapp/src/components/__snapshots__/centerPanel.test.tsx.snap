@@ -143,26 +143,33 @@ exports[`components/centerPanel return centerPanel and click on card to show car
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -459,13 +466,13 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="octo-board-column"
         >
           <div
-            class="KanbanCard"
+            class="KanbanCard false"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu"
+              class="MenuWrapper optionsMenu "
               role="button"
             >
               <button
@@ -492,13 +499,13 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </div>
           </div>
           <div
-            class="KanbanCard"
+            class="KanbanCard false"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu"
+              class="MenuWrapper optionsMenu "
               role="button"
             >
               <button
@@ -692,26 +699,33 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -1284,27 +1298,34 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable readonly undefined"
-          placeholder="Untitled View"
-          readonly=""
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable readonly undefined"
+            placeholder="Untitled View"
+            readonly=""
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -1739,26 +1760,33 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -2347,26 +2375,33 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -2955,26 +2990,33 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -3563,26 +3605,33 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -4171,26 +4220,33 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -4779,26 +4835,33 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -5387,26 +5450,33 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -5995,26 +6065,33 @@ exports[`components/centerPanel return centerPanel and select one card and click
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -6603,26 +6680,33 @@ exports[`components/centerPanel return centerPanel and select one card and click
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -7211,26 +7295,33 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -7497,26 +7588,33 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />
@@ -7813,13 +7911,13 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="octo-board-column"
         >
           <div
-            class="KanbanCard"
+            class="KanbanCard false"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu"
+              class="MenuWrapper optionsMenu "
               role="button"
             >
               <button
@@ -8013,26 +8111,33 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
+        <button>
+          Reset Tour
+        </button>
         <div
           class="octo-spacer"
         />

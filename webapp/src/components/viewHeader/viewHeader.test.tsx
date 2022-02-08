@@ -34,6 +34,7 @@ describe('components/viewHeader/viewHeader', () => {
             me: {
                 id: 'user-id-1',
                 username: 'username_1',
+                props: {},
             },
         },
         searchText: {

@@ -77,7 +77,12 @@ describe('components/centerPanel', () => {
         },
         searchText: '',
         users: {
-            me: {},
+            me: {
+                id: 'user_id_1',
+                props: {
+                    focalboard_onboardingTourStarted: false,
+                },
+            },
             workspaceUsers: [
                 {username: 'username_1'},
             ],

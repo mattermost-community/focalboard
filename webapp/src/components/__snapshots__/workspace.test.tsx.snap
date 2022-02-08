@@ -363,26 +363,33 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
           <div
             class="ViewHeader"
           >
-            <input
-              class="Editable undefined"
-              placeholder="Untitled View"
-              spellcheck="true"
-              title="view title"
-              value="view title"
-            />
             <div
-              aria-label="View menu"
-              class="MenuWrapper"
-              role="button"
+              class="viewSelector"
             >
-              <button
-                type="button"
+              <input
+                class="Editable undefined"
+                placeholder="Untitled View"
+                spellcheck="true"
+                title="view title"
+                value="view title"
+              />
+              <div
+                aria-label="View menu"
+                class="MenuWrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
+            <button>
+              Reset Tour
+            </button>
             <div
               class="octo-spacer"
             />
@@ -616,13 +623,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
+                  class="MenuWrapper optionsMenu "
                   role="button"
                 >
                   <button
@@ -659,13 +666,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
+                  class="MenuWrapper optionsMenu "
                   role="button"
                 >
                   <button
@@ -702,13 +709,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
+                  class="MenuWrapper optionsMenu "
                   role="button"
                 >
                   <button
@@ -904,27 +911,34 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
           <div
             class="ViewHeader"
           >
-            <input
-              class="Editable readonly undefined"
-              placeholder="Untitled View"
-              readonly=""
-              spellcheck="true"
-              title="view title"
-              value="view title"
-            />
             <div
-              aria-label="View menu"
-              class="MenuWrapper"
-              role="button"
+              class="viewSelector"
             >
-              <button
-                type="button"
+              <input
+                class="Editable readonly undefined"
+                placeholder="Untitled View"
+                readonly=""
+                spellcheck="true"
+                title="view title"
+                value="view title"
+              />
+              <div
+                aria-label="View menu"
+                class="MenuWrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
+            <button>
+              Reset Tour
+            </button>
             <div
               class="octo-spacer"
             />
@@ -1014,7 +1028,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -1044,7 +1058,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -1074,7 +1088,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -1564,26 +1578,33 @@ exports[`src/components/workspace should match snapshot 1`] = `
           <div
             class="ViewHeader"
           >
-            <input
-              class="Editable undefined"
-              placeholder="Untitled View"
-              spellcheck="true"
-              title="view title"
-              value="view title"
-            />
             <div
-              aria-label="View menu"
-              class="MenuWrapper"
-              role="button"
+              class="viewSelector"
             >
-              <button
-                type="button"
+              <input
+                class="Editable undefined"
+                placeholder="Untitled View"
+                spellcheck="true"
+                title="view title"
+                value="view title"
+              />
+              <div
+                aria-label="View menu"
+                class="MenuWrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
+            <button>
+              Reset Tour
+            </button>
             <div
               class="octo-spacer"
             />
@@ -1817,13 +1838,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
+                  class="MenuWrapper optionsMenu "
                   role="button"
                 >
                   <button
@@ -1860,13 +1881,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
+                  class="MenuWrapper optionsMenu "
                   role="button"
                 >
                   <button
@@ -1903,13 +1924,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="true"
                 style="opacity: 1;"
               >
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
+                  class="MenuWrapper optionsMenu "
                   role="button"
                 >
                   <button
@@ -2105,27 +2126,34 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
           <div
             class="ViewHeader"
           >
-            <input
-              class="Editable readonly undefined"
-              placeholder="Untitled View"
-              readonly=""
-              spellcheck="true"
-              title="view title"
-              value="view title"
-            />
             <div
-              aria-label="View menu"
-              class="MenuWrapper"
-              role="button"
+              class="viewSelector"
             >
-              <button
-                type="button"
+              <input
+                class="Editable readonly undefined"
+                placeholder="Untitled View"
+                readonly=""
+                spellcheck="true"
+                title="view title"
+                value="view title"
+              />
+              <div
+                aria-label="View menu"
+                class="MenuWrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
+            <button>
+              Reset Tour
+            </button>
             <div
               class="octo-spacer"
             />
@@ -2215,7 +2243,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               class="octo-board-column"
             >
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -2245,7 +2273,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="false"
                 style="opacity: 1;"
               >
@@ -2275,7 +2303,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 </div>
               </div>
               <div
-                class="KanbanCard"
+                class="KanbanCard false"
                 draggable="false"
                 style="opacity: 1;"
               >
