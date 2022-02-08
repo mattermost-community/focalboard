@@ -97,13 +97,8 @@ function onExportCsvTrigger(board: Board, activeView: BoardView, cards: Card[], 
 }
 
 const ViewHeaderActionsMenu = React.memo((props: Props) => {
-    const [showShareDialog, setShowShareDialog] = useState(false)
-
     const {board, activeView, cards} = props
-    const user = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
-
-    const showShareBoard = user && user.id !== 'single-user' && props.showShared
 
     return (
         <ModalWrapper>
@@ -120,14 +115,6 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
                         onClick={() => Archiver.exportBoardArchive(board)}
                     />
-                    {showShareBoard &&
-                        <Menu.Text
-                            id='shareBoard'
-                            name={intl.formatMessage({id: 'ViewHeader.share-board', defaultMessage: 'Share board'})}
-                            onClick={() => setShowShareDialog(true)}
-                        />
-                    }
-
                     {/*
                     <Menu.Separator/>
 
