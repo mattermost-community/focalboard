@@ -105,7 +105,7 @@ const BoardPage = (props: Props): JSX.Element => {
             // and fetch its data
             dispatch(loadBoardData(match.params.boardId))
             dispatch(fetchBoardMembers({
-                teamId: teamId,
+                teamId,
                 boardId: match.params.boardId,
             }))
 

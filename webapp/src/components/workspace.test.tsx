@@ -57,8 +57,7 @@ activeView.id = 'view1'
 activeView.fields.hiddenOptionIds = []
 activeView.fields.visiblePropertyIds = ['property1']
 activeView.fields.visibleOptionIds = ['value1']
-// ToDo: use a board.id here and in the rest of the instances
-const fakeBoard = {id: 'board-id'}
+const fakeBoard = {id: board.id}
 activeView.boardId = fakeBoard.id
 const card1 = TestBlockFactory.createCard(board)
 card1.id = 'card1'
@@ -183,43 +182,43 @@ describe('src/components/workspace', () => {
         expect(container).toMatchSnapshot()
     })
 
-    // TODO: Fix this later
-    // test('return workspace and showcard', async () => {
-    //     let container:Element | undefined
-    //     await act(async () => {
-    //         const result = render(wrapDNDIntl(
-    //             <ReduxProvider store={store}>
-    //                 <Workspace readonly={false}/>
-    //             </ReduxProvider>,
-    //         ), {wrapper: MemoryRouter})
-    //         container = result.container
-    //         jest.runOnlyPendingTimers()
-    //         const cardElements = container!.querySelectorAll('.KanbanCard')
-    //         expect(cardElements).toBeDefined()
-    //         const cardElement = cardElements[0]
-    //         userEvent.click(cardElement)
-    //     })
-    //     expect(container).toMatchSnapshot()
-    // })
-    // TODO: Fix this later
-    // test('return workspace readonly and showcard', async () => {
-    //     let container:Element | undefined
-    //     await act(async () => {
-    //         const result = render(wrapDNDIntl(
-    //             <ReduxProvider store={store}>
-    //                 <Workspace readonly={true}/>
-    //             </ReduxProvider>,
-    //         ), {wrapper: MemoryRouter})
-    //         container = result.container
-    //         jest.runOnlyPendingTimers()
-    //         const cardElements = container!.querySelectorAll('.KanbanCard')
-    //         expect(cardElements).toBeDefined()
-    //         const cardElement = cardElements[0]
-    //         userEvent.click(cardElement)
-    //     })
-    //     expect(container).toMatchSnapshot()
-    //     expect(mockedUtils.getReadToken).toBeCalledTimes(1)
-    // })
+    test('return workspace and showcard', async () => {
+        let container:Element | undefined
+        await act(async () => {
+            const result = render(wrapDNDIntl(
+                <ReduxProvider store={store}>
+                    <Workspace readonly={false}/>
+                </ReduxProvider>,
+            ), {wrapper: MemoryRouter})
+            container = result.container
+            jest.runOnlyPendingTimers()
+            const cardElements = container!.querySelectorAll('.KanbanCard')
+            expect(cardElements).toBeDefined()
+            const cardElement = cardElements[0]
+            userEvent.click(cardElement)
+        })
+        expect(container).toMatchSnapshot()
+    })
+
+    test('return workspace readonly and showcard', async () => {
+        let container:Element | undefined
+        await act(async () => {
+            const result = render(wrapDNDIntl(
+                <ReduxProvider store={store}>
+                    <Workspace readonly={true}/>
+                </ReduxProvider>,
+            ), {wrapper: MemoryRouter})
+            container = result.container
+            jest.runOnlyPendingTimers()
+            const cardElements = container!.querySelectorAll('.KanbanCard')
+            expect(cardElements).toBeDefined()
+            const cardElement = cardElements[0]
+            userEvent.click(cardElement)
+        })
+        expect(container).toMatchSnapshot()
+        expect(mockedUtils.getReadToken).toBeCalledTimes(1)
+    })
+
     test('return workspace with BoardTemplateSelector component', async () => {
         const emptyStore = mockStateStore([], {
             users: {

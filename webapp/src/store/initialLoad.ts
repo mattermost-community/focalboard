@@ -12,27 +12,15 @@ export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
         const [team, boards, boardTemplates] = await Promise.all([
-
-            // ToDo: get board members maybe?
-            // ToDo: get user boards
-            // ToDo: probably add memberships here
-
             client.getTeam(),
             client.getBoards(),
             client.getTeamTemplates(),
         ])
 
-        // ToDo: do we really need to get the team info?? wouldn't it be the board info?
-        // if no workspace, either bad id, or user doesn't have access
-        // if (team === undefined) {
-        //     throw new Error('Workspace undefined')
-        // }
         return {
             team,
             boards,
             boardTemplates,
-
-            // ToDo: return extra Promise.all things
         }
     },
 )
