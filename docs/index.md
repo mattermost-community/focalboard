@@ -1,6 +1,6 @@
-# Focalboard / Mattermost Boards Contributors Guide
+# Focalboard/Mattermost Boards Contributors Guide
 
-Welcome to the Focalboard / Mattermost Boards project!
+Welcome to the Focalboard/Mattermost Boards project!
 
 We're very glad you want to check it out and perhaps contribute code our repository in GitHub.
 
@@ -10,7 +10,7 @@ Our goal is to make your experience as great as possible. Follow these simple st
 
 2. Find [help wanted tickets in GitHub](https://github.com/mattermost/focalboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22). Comment to let everyone know you’re working on it, and to allow a core contributor to assign the issue to you. If there’s no ticket for what you want to work on see [contributions without a ticket.](contributions-without-ticket).
 
-3. When your changes are ready, run through our [checklist for pull requests](contribution-checklist). Note that if it’s your first contribution, there is a standard [CLA](https://www.mattermost.org/mattermost-contributor-agreement/) to sign."
+3. When your changes are ready, run through our [checklist for pull requests](contribution-checklist). Note that if it’s your first contribution, there is a standard [CLA](https://www.mattermost.org/mattermost-contributor-agreement/) to sign.
 
 ## Just ask if you need help!
 
