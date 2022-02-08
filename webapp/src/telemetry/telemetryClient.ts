@@ -32,6 +32,13 @@ export const TelemetryActions = {
     ViewSharedBoard: 'viewSharedBoard',
     ShareBoardOpenModal: 'shareBoard_openModal',
     ShareLinkPublicCopy: 'shareLinkPublic_copy',
+    ImportArchive: 'settings_importArchive',
+    ImportTrello: 'settings_importTrello',
+    ImportAsana: 'settings_importAsana',
+    ImportNotion: 'settings_importNotion',
+    ImportJira: 'settings_importJira',
+    ImportTodoist: 'settings_importTodoist',
+    ExportArchive: 'settings_exportArchive',
 }
 
 interface IEventProps {
