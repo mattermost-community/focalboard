@@ -186,7 +186,71 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(mockedOctoClient.setSharing).toBeCalledTimes(1)
         expect(container).toMatchSnapshot()
     })
+    test('return shareBoard, and click switch', async () => {
+        const sharing:ISharing = {
+            id: boardId,
+            enabled: true,
+            token: 'oneToken',
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
+        let container: Element | undefined
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ShareBoard
+                        boardId={board.id}
+                        onClose={jest.fn()}
+                    />),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
+        const switchElement = container?.querySelector('.Switch')
+        expect(switchElement).toBeDefined()
+        await act(async () => {
+            userEvent.click(switchElement!)
+        })
 
+        expect(mockedOctoClient.setSharing).toBeCalledTimes(1)
+        expect(mockedOctoClient.getSharing).toBeCalledTimes(2)
+        expect(container).toMatchSnapshot()
+    })
+    test('return shareBoardComponent and click Switch without sharing', async () => {
+        mockedOctoClient.getSharing.mockResolvedValue(undefined)
+        mockedUtils.createGuid.mockReturnValue('aToken')
+        let container: Element | undefined
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ShareBoard
+                        boardId={board.id}
+                        onClose={jest.fn()}
+                    />),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+            mockedOctoClient.getSharing.mockResolvedValue({
+                id: boardId,
+                enabled: true,
+                token: 'aToken',
+            })
+            const switchElement = container?.querySelector('.Switch')
+            expect(switchElement).toBeDefined()
+            userEvent.click(switchElement!)
+            jest.runOnlyPendingTimers()
+            result.rerender(
+                wrapDNDIntl(
+                    <ShareBoard
+                        boardId={board.id}
+                        onClose={jest.fn()}
+                    />))
+        })
+
+        expect(mockedOctoClient.setSharing).toBeCalledTimes(1)
+        expect(mockedOctoClient.getSharing).toBeCalledTimes(2)
+        expect(mockedUtils.createGuid).toBeCalledTimes(1)
+        expect(container).toMatchSnapshot()
+    })
     test('should match snapshot with sharing and without workspaceId and subpath', async () => {
         w.baseURL = '/test-subpath/plugins/boards'
         const sharing:ISharing = {
@@ -229,25 +293,5 @@ describe('src/components/shareBoard/shareBoard', () => {
             container = result.container
         })
         expect(container).toMatchSnapshot()
-    })
-
-    test('should match snapshot, and click switch', async () => {
-        mockedOctoClient.getSharing.mockResolvedValue(undefined)
-        const {container} = render(wrapDNDIntl(
-            <ShareBoard
-                boardId={board.id}
-                onClose={jest.fn()}
-            />), {wrapper: MemoryRouter})
-
-        expect(container).toMatchSnapshot()
-
-        const switchElement = container.querySelector('.Switch')
-        expect(switchElement).toBeDefined()
-        await act(async () => {
-            userEvent.click(switchElement!)
-        })
-
-        expect(mockedOctoClient.setSharing).toBeCalledTimes(1)
-        expect(mockedOctoClient.getSharing).toBeCalledTimes(2)
     })
 })
