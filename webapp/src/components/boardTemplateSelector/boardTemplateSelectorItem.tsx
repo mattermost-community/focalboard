@@ -4,7 +4,6 @@ import React, {useCallback, useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Board} from '../../blocks/board'
-import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import EditIcon from '../../widgets/icons/edit'
@@ -39,7 +38,7 @@ const BoardTemplateSelectorItem = React.memo((props: Props) => {
         >
             <span className='template-icon'>{template.fields.icon}</span>
             <span className='template-name'>{template.title}</span>
-            {(template.workspaceId !== '0' || !Utils.isFocalboardPlugin()) &&
+            {!template.fields.templateVer &&
                 <div className='actions'>
                     <IconButton
                         icon={<DeleteIcon/>}
