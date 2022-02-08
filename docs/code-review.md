@@ -2,9 +2,6 @@
 
 Currently, all changes to the product must be reviewed by a [core committer](/contribute/getting-started/core-committers/#core-committers).
 
-<!-- * Documentation changes must be reviewed by a [product manager](/contribute/getting-started/core-committers/#product-managers).
-  * Product managers may ask for reviews from [core committers](/contribute/getting-started/core-committers/#core-committers) and [QA testers](/contribute/getting-started/core-committers/#qa-testers) as required. -->
-
 If you are a community member seeking a review
 ----------------------------------------------
 
