@@ -149,11 +149,11 @@ const TutorialTourTip = ({
 
     if (!singleTip && tourSteps) {
         for (let i = 0; i < (Object.values(tourSteps).length); i++) {
-            let className = 'tutorial-tour-tip__circle'
+            let classname = 'tutorial-tour-tip__circle'
             let circularRing = 'tutorial-tour-tip__circular-ring'
 
             if (i === step) {
-                className += ' active'
+                classname += ' active'
                 circularRing += ' tutorial-tour-tip__circular-ring-active'
             }
 
@@ -162,7 +162,7 @@ const TutorialTourTip = ({
                     <a
                         href='#'
                         key={'dotactive' + i}
-                        className={className}
+                        className={classname}
                         data-screen={i}
                         onClick={() => handleSavePreferences(i)}
                     />

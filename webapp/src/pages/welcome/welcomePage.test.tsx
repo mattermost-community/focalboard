@@ -195,7 +195,7 @@ describe('pages/welcome', () => {
         history.replace = jest.fn()
         history.location.search = 'r=123'
 
-        const store = mockStore({
+        const localStore = mockStore({
             users: {
                 me: {
                     props: {},
@@ -204,7 +204,7 @@ describe('pages/welcome', () => {
         })
 
         const component = (
-            <ReduxProvider store={store}>
+            <ReduxProvider store={localStore}>
                 {
                     wrapIntl(
                         <Router history={history}>
