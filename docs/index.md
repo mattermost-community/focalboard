@@ -14,6 +14,6 @@ Our goal is to make your experience as great as possible. Follow these simple st
 
 ## Just ask if you need help!
 
-You can find us on our [public Focalboard channel](https://community-daily.mattermost.com/core/channels/focalboard) on the Mattermost community server. Also feel free to [file a bug](https://github.com/mattermost/focalboard/issues/new/choose) for any issues you run into, or [start a discussion](https://github.com/mattermost/focalboard/discussions).
+You can find us on our [public Focalboard channel](https://community.mattermost.com/core/channels/focalboard) on the Mattermost community server. Also feel free to [file a bug](https://github.com/mattermost/focalboard/issues/new/choose) for any issues you run into, or [start a discussion](https://github.com/mattermost/focalboard/discussions).
 
 We're glad ❤️ you're here! Good luck and have fun!
