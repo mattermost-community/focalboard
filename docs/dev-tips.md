@@ -1,11 +1,6 @@
----
-title: "Developer Tips & Tricks"
-date: 2021-02-03T00:08:00-00:00
-weight: 1
-subsection: Getting Started
----
+# Developer Tips and Tricks
 
-## Install pre-reqs
+## Installation prerequisites
 
 Check that you have recent versions of the basic dependencies installed:
 * [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
@@ -16,13 +11,14 @@ Check that you have recent versions of the basic dependencies installed:
 On Windows:
 * Install [Mingw64](https://chocolatey.org/packages/mingw) via [Chocolatey](https://chocolatey.org/)
 
-On Mac, to build the Mac app:
+On macOS, to build the Mac app:
 * Install [Xcode](https://apps.apple.com/us/app/xcode/id497799835?mt=12) (v12+)
 * Install the Xcode commandline tools, via the IDE or run `xcode-select --install`
 
 On Linux, to build the Linux app:
 * `sudo apt-get install libgtk-3-dev`
 * `sudo apt-get install libwebkit2gtk-4.0-dev`
+* `sudo apt-get install autoconf dh-autoreconf`
 
 ## Clone the project source code
 
@@ -42,7 +38,7 @@ Then open a browser to `http://localhost:8000` to access it. The port is configu
 
 Once the server is running, you can rebuild just the webapp with `make webapp` (in a separate terminal window), then reload the browser.
 
-## VSCode Setup
+## VSCode setup
 
 Here's a recommended dev-test loop using VSCode:
 * Open a bash terminal window to the project folder
@@ -73,11 +69,9 @@ Debug the Go code in VSCode. This is set up automatically when you launch the se
 
 To start, add a breakpoint to `handleGetBlocks()` in `server/api/api.go`, then refresh the browser to see how data is retrieved.
 
-## Localization / Internationalization / Translation
+## Localization/Internationalization/Translation
 
-We use `i18n` to localize the web app. Localized string generally use `intl.formatMessage`.
-
-When adding or modifying localized strings, run `npm run i18n-extract` in `webapp` to rebuild `webapp/i18n/en.json`.
+We use `i18n` to localize the web app. Localized string generally use `intl.formatMessage`. When adding or modifying localized strings, run `npm run i18n-extract` in `webapp` to rebuild `webapp/i18n/en.json`.
 
 Translated strings are stored in other json files under `webapp/i18n`, e.g. `es.json` for Spanish.
 
@@ -90,7 +84,7 @@ By default, data is stored in a sqlite database `focalboard.db`. You can view an
 Before checking-in commits, run: `make ci`, which is simlar to the ci.yml workflow and includes:
 * Server unit tests: `make server-test`
 * Webapp eslint: `cd webapp; npm run check`
-* Webapp unit tests: `cd webapp; npm run test`
+* Webapp unit tests: `make webapp-test`
 * Webapp UI tests: `cd webapp; npm run cypress:ci`
 
 ## Running into problems or have questions?

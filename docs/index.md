@@ -1,37 +1,19 @@
-## Welcome to GitHub Pages
+# Focalboard/Mattermost Boards Contributors Guide
 
-You can use the [editor on GitHub](https://github.com/mattermost/focalboard/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+Welcome to the Focalboard/Mattermost Boards project!
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+We're very glad you want to check it out and perhaps contribute code our repository in GitHub.
 
-### Markdown
+Our goal is to make your experience as great as possible. Follow these simple steps to contribute:
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+1. [Clone the project from GitHub](https://github.com/mattermost/focalboard) and follow the steps in the README to build. Read the [developer tips & tricks](dev-tips) to get started.
 
-```markdown
-Syntax highlighted code block
+2. Find [help wanted tickets in GitHub](https://github.com/mattermost/focalboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22). Comment to let everyone know you’re working on it, and to allow a core contributor to assign the issue to you. If there’s no ticket for what you want to work on see [contributions without a ticket.](contributions-without-ticket).
 
-# Header 1
-## Header 2
-### Header 3
+3. When your changes are ready, run through our [checklist for pull requests](contribution-checklist). Note that if it’s your first contribution, there is a standard [CLA](https://www.mattermost.org/mattermost-contributor-agreement/) to sign.
 
-- Bulleted
-- List
+## Just ask if you need help!
 
-1. Numbered
-2. List
+You can find us on our [public Focalboard channel](https://community.mattermost.com/core/channels/focalboard) on the Mattermost community server. Also feel free to [file a bug](https://github.com/mattermost/focalboard/issues/new/choose) for any issues you run into, or [start a discussion](https://github.com/mattermost/focalboard/discussions).
 
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/mattermost/focalboard/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+We're glad ❤️ you're here! Good luck and have fun!
