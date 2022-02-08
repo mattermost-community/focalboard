@@ -82,6 +82,10 @@
                 justify-content: center;
             }
 
+            .empty-board {
+                background-color: rgb(var(--center-channel-bg-rgb));
+            }
+
             .Button {
                 &:first-child {
                     margin-right: 16px;
