@@ -83,7 +83,7 @@ Translated strings are stored in other json files under `webapp/i18n`, e.g. `es.
 
 ## Database
 
-By default, data is stored in a sqlite datebase `focalboard.db`. You can view and edit this directly using `sqlite3 focalboard.db` from bash.
+By default, data is stored in a sqlite database `focalboard.db`. You can view and edit this directly using `sqlite3 focalboard.db` from bash.
 
 ## Unit tests
 
