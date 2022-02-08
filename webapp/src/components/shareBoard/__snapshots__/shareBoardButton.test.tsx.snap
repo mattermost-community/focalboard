@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
+<div>
+  <div
+    class="ShareBoardButton"
+  >
+    <button
+      title="Share board"
+      type="button"
+    >
+      <span>
+        <i
+          class="CompassIcon icon-globe CompassIcon"
+        />
+        Share
+      </span>
+    </button>
+  </div>
+</div>
+`;
