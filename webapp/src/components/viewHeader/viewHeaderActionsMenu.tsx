@@ -1,11 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {CsvExporter} from '../../csvExporter'
 import {Archiver} from '../../archiver'
-import {IUser} from '../../user'
 import {Board} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
@@ -13,8 +12,6 @@ import IconButton from '../../widgets/buttons/iconButton'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {getMe} from '../../store/users'
-import {useAppSelector} from '../../store/hooks'
 
 import ModalWrapper from '../modalWrapper'
 import {sendFlashMessage} from '../flashMessages'
