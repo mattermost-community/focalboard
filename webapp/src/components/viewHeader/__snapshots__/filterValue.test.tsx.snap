@@ -38,7 +38,7 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
               Status
             </div>
             <div
-              class="Switch on"
+              class="Switch size--small on"
             >
               <div
                 class="octo-switch-inner"
