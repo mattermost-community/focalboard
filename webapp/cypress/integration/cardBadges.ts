@@ -5,7 +5,7 @@ describe('Card badges', () => {
     beforeEach(() => {
         cy.apiInitServer()
         cy.apiResetBoards()
-        cy.apiSkipTour()
+        cy.apiGetMe().then((userID) => cy.apiSkipTour(userID))
         localStorage.setItem('welcomePageViewed', 'true')
     })
 

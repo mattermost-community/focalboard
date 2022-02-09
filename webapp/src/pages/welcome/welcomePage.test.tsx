@@ -124,7 +124,7 @@ describe('pages/welcome', () => {
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
         await waitFor(() => {
-            expect(history.replace).toBeCalledWith('/dashboard')
+            expect(history.replace).toBeCalledWith('/')
             expect(mockedMutator.patchUserConfig).toBeCalledTimes(1)
         })
     })
@@ -156,7 +156,7 @@ describe('pages/welcome', () => {
 
         render(component)
         await waitFor(() => {
-            expect(history.replace).toBeCalledWith('/dashboard')
+            expect(history.replace).toBeCalledWith('/')
         })
     })
 
@@ -280,6 +280,6 @@ describe('pages/welcome', () => {
         const exploreButton = screen.getByText('No thanks, I\'ll figure it out myself')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
-        await waitFor(() => expect(history.replace).toBeCalledWith('/dashboard'))
+        await waitFor(() => expect(history.replace).toBeCalledWith('/'))
     })
 })
