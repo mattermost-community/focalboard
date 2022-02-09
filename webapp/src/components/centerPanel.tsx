@@ -22,8 +22,6 @@ import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
-import ShareBoardButton from './shareBoard/shareBoardButton'
-
 import './centerPanel.scss'
 
 import {RootState} from '../store'
@@ -40,6 +38,8 @@ import {IUser, UserConfigPatch} from '../user'
 
 import octoClient from '../octoClient'
 
+import ShareBoardButton from './shareBoard/shareBoardButton'
+
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
 import TopBar from './topBar'
@@ -53,7 +53,7 @@ import CalendarFullView from './calendar/fullCalendar'
 
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
-import {OnboardingBoardTitle, OnboardingCardTitle} from './cardDetail/cardDetail'
+import {OnboardingBoardTitle} from './cardDetail/cardDetail'
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
 
 type Props = {
