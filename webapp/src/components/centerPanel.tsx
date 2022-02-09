@@ -53,6 +53,8 @@ import CalendarFullView from './calendar/fullCalendar'
 
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
+import {OnboardingBoardTitle, OnboardingCardTitle} from './cardDetail/cardDetail'
+import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
 
 type Props = {
     clientConfig?: ClientConfig
@@ -178,6 +180,10 @@ class CenterPanel extends React.Component<Props, State> {
         const {groupByProperty, activeView, board, views, cards} = this.props
         const {visible: visibleGroups, hidden: hiddenGroups} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
 
+        const isOnboardingBoard = this.props.board.title === OnboardingBoardTitle
+        const showTour = isOnboardingBoard && this.props.onboardingTourStarted
+        const showShareTourStep = this.props.showShared && showTour && this.props.onboardingTourCategory === TOUR_BOARD && this.props.onboardingTourStep === BoardTourSteps.SHARE_BOARD.toString()
+
         return (
             <div
                 className='BoardComponent'
@@ -213,11 +219,16 @@ class CenterPanel extends React.Component<Props, State> {
                             board={board}
                             readonly={this.props.readonly}
                         />
-                        {!this.props.readonly && this.props.showShared &&
-                            <ShareBoardButton
-                                boardId={this.props.board.id}
-                            />
-                        }
+                        <div className='shareButtonWrapper'>
+                            {!this.props.readonly && this.props.showShared &&
+                                (
+                                    <ShareBoardButton
+                                        boardId={this.props.board.id}
+                                    />
+                                )
+                            }
+                            {showShareTourStep && <ShareBoardTourStep/>}
+                        </div>
                     </div>
                     <ViewHeader
                         board={this.props.board}
@@ -231,6 +242,7 @@ class CenterPanel extends React.Component<Props, State> {
                         addCardTemplate={this.addCardTemplate}
                         editCardTemplate={this.editCardTemplate}
                         readonly={this.props.readonly}
+                        showShared={this.props.showShared}
                     />
                 </div>
 

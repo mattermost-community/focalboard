@@ -273,6 +273,8 @@
   "OnboardingTour.AddView.Body": "Go here to create a new view to organise your board using different layouts.",
   "OnboardingTour.CopyLink.Title": "Copy link",
   "OnboardingTour.CopyLink.Body": "You can share your cards with teammates by copying the link and pasting it in a channel, Direct Message, or Group Message.",
+  "OnboardingTour.ShareBoard.Title": "Share board",
+  "OnboardingTour.ShareBoard.Body": "You can share your board internally, within your team, or publish it publicly for visibility outside of your organization.",
   "tutorial_tip.finish_tour": "Done",
   "tutorial_tip.got_it": "Got it",
   "tutorial_tip.ok": "Next",

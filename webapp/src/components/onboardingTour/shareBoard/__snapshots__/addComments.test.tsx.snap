@@ -1,0 +1,133 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/onboardingTour/addComments/AddCommentTourStep after hover 1`] = `
+<div
+  class="tippy-box tutorial-tour-tip__box AddCommentTourStep"
+  data-animation="scale-subtle"
+  data-escaped=""
+  data-placement="right-end"
+  data-reference-hidden=""
+  data-state="hidden"
+  role="tooltip"
+  style="max-width: 320px; transition-duration: 0ms;"
+  tabindex="-1"
+>
+  <div
+    class="tippy-content"
+    data-state="hidden"
+    style="transition-duration: 0ms;"
+  >
+    <div>
+      <div>
+        <div
+          class="tutorial-tour-tip__header"
+        >
+          <h4
+            class="tutorial-tour-tip__header__title"
+          >
+            Add comments
+          </h4>
+          <button
+            class="tutorial-tour-tip__header__close"
+          >
+            <i
+              class="icon icon-close"
+            />
+          </button>
+        </div>
+        <div
+          class="tutorial-tour-tip__body"
+        >
+          You can comment on issues, and even @mention your fellow Mattermost users to get their attention.
+        </div>
+        <div
+          class="tutorial-tour-tip__image"
+        >
+          <img
+            alt="tutorial tour tip product image"
+            src="test-file-stub"
+          />
+        </div>
+        <div
+          class="tutorial-tour-tip__footer"
+        >
+          <div
+            class="tutorial-tour-tip__footer-buttons"
+          >
+            <div
+              class="tutorial-tour-tip__circles-ctr"
+            >
+              <div
+                class="tutorial-tour-tip__circular-ring"
+              >
+                <a
+                  class="tutorial-tour-tip__circle"
+                  data-screen="0"
+                  href="#"
+                />
+              </div>
+              <div
+                class="tutorial-tour-tip__circular-ring"
+              >
+                <a
+                  class="tutorial-tour-tip__circle"
+                  data-screen="1"
+                  href="#"
+                />
+              </div>
+              <div
+                class="tutorial-tour-tip__circular-ring"
+              >
+                <a
+                  class="tutorial-tour-tip__circle"
+                  data-screen="2"
+                  href="#"
+                />
+              </div>
+            </div>
+            <div
+              class="tutorial-tour-tip__btn-ctr"
+            >
+              <button
+                class="tutorial-tour-tip__btn tutorial-tour-tip__cancel-btn"
+                id="tipPreviousButton"
+              >
+                <i
+                  class="icon icon-chevron-left"
+                />
+                Previous
+              </button>
+              <button
+                class="tutorial-tour-tip__btn tutorial-tour-tip__confirm-btn"
+                id="tipNextButton"
+              >
+                Next
+                <i
+                  class="icon icon-chevron-right"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="tippy-arrow"
+    style="position: absolute; top: 0px; transform: translate(0px, 3px);"
+  />
+</div>
+`;
+
+exports[`components/onboardingTour/addComments/AddCommentTourStep before hover 1`] = `
+<div>
+  <div
+    aria-expanded="true"
+    class="tutorial-tour-tip__pulsating-dot-ctr AddCommentTourStep"
+  >
+    <span
+      class="pulsating_dot"
+    />
+  </div>
+</div>
+`;

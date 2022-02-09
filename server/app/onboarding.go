@@ -17,7 +17,7 @@ const (
 	ValueTourCategoryOnboarding = "onboarding"
 
 	// OnboardingBoardID is the board ID from templates.boardarchive.
-	OnboardingBoardID = "buixxjic3xjfkieees4iafdrznc"
+	OnboardingBoardID = "btaqmtt8a6pye9bttriw5w1tsyo"
 
 	WelcomeBoardTitle = "Welcome to Boards!"
 )
