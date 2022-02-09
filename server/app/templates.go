@@ -73,6 +73,9 @@ func (a *App) isInitializationNeeded(boards []*model.Board) (bool, string) {
 
 	// look for any template blocks with the wrong version number (or no version #).
 	for _, board := range boards {
+		if board.TemplateTrackingCode == "" {
+			continue
+		}
 		if board.TemplateVersion < defaultTemplateVersion {
 			return true, "template_version too old"
 		}
