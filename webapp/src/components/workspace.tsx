@@ -1,9 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
+import {getCurrentWorkspace} from '../store/workspace'
 import {getCurrentBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
@@ -16,7 +17,7 @@ import {ClientConfig} from '../config/clientConfig'
 import {Utils} from '../utils'
 
 import CenterPanel from './centerPanel'
-import EmptyCenterPanel from './emptyCenterPanel'
+import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 
 import Sidebar from './sidebar/sidebar'
 import './workspace.scss'
@@ -26,6 +27,7 @@ type Props = {
 }
 
 function CenterContent(props: Props) {
+    const workspace = useAppSelector(getCurrentWorkspace)
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const board = useAppSelector(getCurrentBoard)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
@@ -85,23 +87,55 @@ function CenterContent(props: Props) {
     }
 
     return (
-        <EmptyCenterPanel/>
+        <BoardTemplateSelector
+            title={
+                <FormattedMessage
+                    id='BoardTemplateSelector.plugin.no-content-title'
+                    defaultMessage='Create a Board in {workspaceName}'
+                    values={{workspaceName: workspace?.title}}
+                />
+            }
+            description={
+                <FormattedMessage
+                    id='BoardTemplateSelector.plugin.no-content-description'
+                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of "{workspaceName}" will have access to boards created here.'
+                    values={{
+                        workspaceName: <b>{workspace?.title}</b>,
+                        lineBreak: <br/>,
+                    }}
+                />
+            }
+        />
     )
 }
 
 const Workspace = React.memo((props: Props) => {
     const board = useAppSelector(getCurrentBoard)
     const view = useAppSelector(getCurrentView)
+    const [boardTemplateSelectorOpen, setBoardTemplateSelectorOpen] = useState(false)
+
+    const closeBoardTemplateSelector = useCallback(() => {
+        setBoardTemplateSelectorOpen(false)
+    }, [])
+    const openBoardTemplateSelector = useCallback(() => {
+        setBoardTemplateSelectorOpen(true)
+    }, [])
+    useEffect(() => {
+        setBoardTemplateSelectorOpen(false)
+    }, [board, view])
 
     return (
         <div className='Workspace'>
             {!props.readonly &&
                 <Sidebar
+                    onBoardTemplateSelectorOpen={openBoardTemplateSelector}
                     activeBoardId={board?.id}
                     activeViewId={view?.id}
                 />
             }
             <div className='mainFrame'>
+                {boardTemplateSelectorOpen &&
+                    <BoardTemplateSelector onClose={closeBoardTemplateSelector}/>}
                 {(board?.fields.isTemplate) &&
                 <div className='banner'>
                     <FormattedMessage

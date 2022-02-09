@@ -26,7 +26,7 @@
             &:not(.subitem) {
                 &::before {
                     content: '';
-                    background: var(--sidebar-text-active-border);
+                    background: rgb(var(--sidebar-text-active-border-rgb));
                     width: 2px;
                     height: 100%;
                     position: absolute;

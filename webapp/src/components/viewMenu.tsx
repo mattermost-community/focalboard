@@ -174,7 +174,7 @@ const ViewMenu = React.memo((props: Props) => {
 
         Utils.log('addview-calendar')
         const view = createBoardView()
-        view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar View'})
+        view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar view'})
         view.fields.viewType = 'calendar'
         view.parentId = board.id
         view.rootId = board.rootId
