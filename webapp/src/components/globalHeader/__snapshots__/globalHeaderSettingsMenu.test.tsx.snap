@@ -1,5 +1,283 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should match snapshot 1`] = `
+<div>
+  <div
+    class="GlobalHeaderSettingsMenu"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <div
+        class="GlobalHeaderComponent__button menu-entry"
+      >
+        <i
+          class="CompassIcon icon-settings-outline SettingsIcon"
+        />
+      </div>
+      <div
+        class="Menu noselect left"
+      >
+        <div
+          class="menu-contents"
+        >
+          <div
+            class="menu-options"
+          >
+            <div
+              class="MenuOption SubMenuOption menu-option open-left"
+              id="import"
+            >
+              <svg
+                class="SubmenuTriangleIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="50,35 75,50 50,65"
+                />
+              </svg>
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Import
+              </div>
+              <div
+                class="SubMenu Menu noselect left-bottom"
+              >
+                <div
+                  class="menu-contents"
+                >
+                  <div
+                    class="menu-options"
+                  >
+                    <div
+                      aria-label="Import archive"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Import archive
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      aria-label="Trello"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Trello
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      aria-label="Asana"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Asana
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      aria-label="Notion"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Notion
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      aria-label="Jira"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Jira
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      aria-label="Todoist"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Todoist
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="menu-spacer hideOnWidescreen"
+                  />
+                  <div
+                    class="menu-options hideOnWidescreen"
+                  >
+                    <div
+                      aria-label="Cancel"
+                      class="MenuOption TextOption menu-option menu-cancel"
+                      role="button"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Cancel
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              aria-label="Export archive"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Export archive
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              class="MenuOption SubMenuOption menu-option open-left"
+              id="lang"
+            >
+              <svg
+                class="SubmenuTriangleIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="50,35 75,50 50,65"
+                />
+              </svg>
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Set language
+              </div>
+            </div>
+            <div
+              aria-label="Random icons"
+              class="MenuOption SwitchOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Random icons
+              </div>
+              <div
+                class="Switch on"
+              >
+                <div
+                  class="octo-switch-inner"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="menu-spacer hideOnWidescreen"
+          />
+          <div
+            class="menu-options hideOnWidescreen"
+          >
+            <div
+              aria-label="Cancel"
+              class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should match snapshot 1`] = `
 <div>
   <div
@@ -27,21 +305,26 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
             class="menu-options"
           >
             <div
-              aria-label="Import archive"
-              class="MenuOption TextOption menu-option"
-              role="button"
+              class="MenuOption SubMenuOption menu-option open-left"
+              id="import"
             >
+              <svg
+                class="SubmenuTriangleIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="50,35 75,50 50,65"
+                />
+              </svg>
               <div
                 class="noicon"
               />
               <div
                 class="menu-name"
               >
-                Import archive
+                Import
               </div>
-              <div
-                class="noicon"
-              />
             </div>
             <div
               aria-label="Export archive"
@@ -515,21 +798,26 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
             class="menu-options"
           >
             <div
-              aria-label="Import archive"
-              class="MenuOption TextOption menu-option"
-              role="button"
+              class="MenuOption SubMenuOption menu-option open-left"
+              id="import"
             >
+              <svg
+                class="SubmenuTriangleIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="50,35 75,50 50,65"
+                />
+              </svg>
               <div
                 class="noicon"
               />
               <div
                 class="menu-name"
               >
-                Import archive
+                Import
               </div>
-              <div
-                class="noicon"
-              />
             </div>
             <div
               aria-label="Export archive"

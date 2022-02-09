@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {TelemetryActions} from './telemetry/telemetryClient'
+
 class Constants {
     static readonly menuColors: {[key: string]: string} = {
         propColorDefault: 'Default',
@@ -22,6 +24,40 @@ class Constants {
 
     static readonly versionString = '0.15.0'
     static readonly versionDisplayString = 'Mar 2022'
+
+    static readonly archiveHelpPage = 'https://docs.mattermost.com/boards/data-and-archives.html'
+    static readonly imports = [
+        {
+            id: 'trello',
+            displayName: 'Trello',
+            telemetryName: TelemetryActions.ImportTrello,
+            href: Constants.archiveHelpPage + '#import-from-trello',
+        },
+        {
+            id: 'asana',
+            displayName: 'Asana',
+            telemetryName: TelemetryActions.ImportAsana,
+            href: Constants.archiveHelpPage + '#import-from-asana',
+        },
+        {
+            id: 'notion',
+            displayName: 'Notion',
+            telemetryName: TelemetryActions.ImportNotion,
+            href: Constants.archiveHelpPage + '#import-from-notion',
+        },
+        {
+            id: 'jira',
+            displayName: 'Jira',
+            telemetryName: TelemetryActions.ImportJira,
+            href: Constants.archiveHelpPage + '#import-from-jira',
+        },
+        {
+            id: 'todoist',
+            displayName: 'Todoist',
+            telemetryName: TelemetryActions.ImportTodoist,
+            href: Constants.archiveHelpPage + '#import-from-todoist',
+        },
+    ]
 
     static readonly languages = [
         {
