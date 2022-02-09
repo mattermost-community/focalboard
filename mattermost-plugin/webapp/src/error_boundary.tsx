@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {Redirect} from 'react-router-dom'
 
 type Props = {}
 type State = {
@@ -21,7 +22,7 @@ export default class ErrorBoundary<Props, State> extends React.Component {
 
     render() {
         if (this.state.hasError) {
-            return <span>Something went wrong.</span>
+            return <Redirect to='/error?id=unknown'/>
         }
         return this.props.children
     }
