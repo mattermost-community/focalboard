@@ -27,6 +27,7 @@ describe('Login actions', () => {
         cy.get('#login-username').type(username)
         cy.get('#login-password').type(password)
         cy.get('button').contains('Register').click()
+        cy.get('a').contains('no thanks').click()
         workspaceIsAvailable()
 
         // Can log out user

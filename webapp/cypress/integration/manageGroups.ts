@@ -5,6 +5,7 @@ describe('Manage groups', () => {
     beforeEach(() => {
         cy.apiInitServer()
         cy.apiResetBoards()
+        cy.apiSkipTour()
         localStorage.setItem('welcomePageViewed', 'true')
     })
 

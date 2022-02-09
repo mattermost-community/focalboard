@@ -5,6 +5,7 @@ describe('Card URL Property', () => {
     beforeEach(() => {
         cy.apiInitServer()
         cy.apiResetBoards()
+        cy.apiSkipTour()
         localStorage.setItem('welcomePageViewed', 'true')
     })
 

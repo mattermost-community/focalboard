@@ -47,7 +47,8 @@ const WelcomePage = React.memo(() => {
             return
         }
 
-        history.replace('/dashboard')
+        const nextURL = Utils.isFocalboardPlugin() ? '/dashboard' : '/'
+        history.replace(nextURL)
     }
 
     const skipTour = async () => {
