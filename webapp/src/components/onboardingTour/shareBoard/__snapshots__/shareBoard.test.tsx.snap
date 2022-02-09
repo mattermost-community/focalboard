@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/onboardingTour/addComments/AddCommentTourStep after hover 1`] = `
+exports[`components/onboardingTour/addComments/ShareBoardTourStep after hover 1`] = `
 <div
-  class="tippy-box tutorial-tour-tip__box AddCommentTourStep"
+  class="tippy-box tutorial-tour-tip__box ShareBoardTourStep"
   data-animation="scale-subtle"
   data-escaped=""
-  data-placement="right-end"
+  data-placement="bottom-end"
   data-reference-hidden=""
   data-state="hidden"
   role="tooltip"
@@ -25,7 +25,7 @@ exports[`components/onboardingTour/addComments/AddCommentTourStep after hover 1`
           <h4
             class="tutorial-tour-tip__header__title"
           >
-            Add comments
+            Share board
           </h4>
           <button
             class="tutorial-tour-tip__header__close"
@@ -38,7 +38,7 @@ exports[`components/onboardingTour/addComments/AddCommentTourStep after hover 1`
         <div
           class="tutorial-tour-tip__body"
         >
-          You can comment on issues, and even @mention your fellow Mattermost users to get their attention.
+          You can share your board internally, within your team, or publish it publicly for visibility outside of your organization.
         </div>
         <div
           class="tutorial-tour-tip__image"
@@ -114,16 +114,16 @@ exports[`components/onboardingTour/addComments/AddCommentTourStep after hover 1`
   </div>
   <div
     class="tippy-arrow"
-    style="position: absolute; top: 0px; transform: translate(0px, 3px);"
+    style="position: absolute; left: 0px; transform: translate(3px, 0px);"
   />
 </div>
 `;
 
-exports[`components/onboardingTour/addComments/AddCommentTourStep before hover 1`] = `
+exports[`components/onboardingTour/addComments/ShareBoardTourStep before hover 1`] = `
 <div>
   <div
     aria-expanded="true"
-    class="tutorial-tour-tip__pulsating-dot-ctr AddCommentTourStep"
+    class="tutorial-tour-tip__pulsating-dot-ctr ShareBoardTourStep"
   >
     <span
       class="pulsating_dot"
