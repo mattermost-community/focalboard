@@ -151,7 +151,7 @@ const App = React.memo((): JSX.Element => {
                                         exact={true}
                                         render={() => {
                                             if (loggedIn === false) {
-                                                return <Redirect to='/login'/>
+                                                return <Redirect to='/error?id=not-logged-in'/>
                                             }
 
                                             if (continueToWelcomeScreen()) {
@@ -190,7 +190,7 @@ const App = React.memo((): JSX.Element => {
                                     path='/board/:boardId?/:viewId?/:cardId?'
                                     render={({match: {params: {boardId, viewId, cardId}}}) => {
                                         if (loggedIn === false) {
-                                            return <Redirect to='/login'/>
+                                            return <Redirect to='/error?id=not-logged-in'/>
                                         }
 
                                         if (continueToWelcomeScreen()) {
@@ -254,7 +254,7 @@ const App = React.memo((): JSX.Element => {
                                             const boardIdIsValidUUIDV4 = UUID_REGEX.test(boardId || '')
 
                                             if (loggedIn === false) {
-                                                return <Redirect to='/login'/>
+                                                return <Redirect to='/error?id=not-logged-in'/>
                                             }
 
                                             if (continueToWelcomeScreen()) {

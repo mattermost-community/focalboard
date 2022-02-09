@@ -248,11 +248,14 @@
   "calendar.week": "Week",
   "default-properties.badges": "Comments and Description",
   "default-properties.title": "Title",
-  "error.no-workspace": "Your session may have expired or you may not have access to this workspace.",
   "error.relogin": "Log in again",
   "login.log-in-button": "Log in",
   "login.log-in-title": "Log in",
   "login.register-button": "or create an account if you don't have one",
   "register.login-button": "or log in if you already have an account",
-  "register.signup-title": "Sign up for your account"
+  "register.signup-title": "Sign up for your account",
+  "error.workspace-undefined": "Not a valid workspace.",
+  "error.not-logged-in": "Your session may have expired or you are not logged in.",
+  "error.go-dashboard": "Go to the Dashboard.",
+  "error.go-login": "Log in"
 }
