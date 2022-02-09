@@ -264,14 +264,6 @@ const App = React.memo((): JSX.Element => {
                                         return null
                                     }}
                                 />
-
-                                {/* TODO: enable this when new dashboard is implemented*/}
-                                {/*<Route*/}
-                                {/*    exact={true}*/}
-                                {/*    path='/dashboard'*/}
-                                {/*>*/}
-                                {/*    <DashboardPage/>*/}
-                                {/*</Route>*/}
                                 <Route
                                     exact={true}
                                     path='/welcome'

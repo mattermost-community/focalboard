@@ -392,13 +392,6 @@ const BoardPage = (props: Props): JSX.Element => {
         }
     })
 
-    // this is needed to redirect to dashboard
-    // when opening Focalboard for the first time
-    const shouldGoToDashboard = Utils.isFocalboardPlugin() && teamId === '0' && !match.params.boardId && !match.params.viewId
-    if (shouldGoToDashboard) {
-        return (<Redirect to={'/dashboard'}/>)
-    }
-
     return (
         <div className='BoardPage'>
             {websocketClosed &&

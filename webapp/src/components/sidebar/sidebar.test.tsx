@@ -12,8 +12,6 @@ import userEvent from '@testing-library/user-event'
 
 import thunk from 'redux-thunk'
 
-import {UserWorkspace} from '../../user'
-
 import {mockMatchMedia, wrapIntl} from '../../testUtils'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
@@ -33,40 +31,6 @@ describe('components/sidebarSidebar', () => {
     const categoryAttribute1 = TestBlockFactory.createCategoryBlocks()
     categoryAttribute1.name = 'Category 1'
     categoryAttribute1.blockIDs = [board.id]
-
-    test('sidebar in dashboard page', () => {
-        const store = mockStore({
-            teams: {
-                current: {id: 'team-id'},
-            },
-            boards: {
-                boards: [],
-            },
-            views: {
-                views: [],
-            },
-            users: {
-                me: {},
-            },
-            sidebar: {
-                categoryAttributes: [
-                    categoryAttribute1,
-                ],
-            },
-        })
-
-        const history = createMemoryHistory()
-
-        const component = wrapIntl(
-            <ReduxProvider store={store}>
-                <Router history={history}>
-                    <Sidebar isDashboard={true}/>
-                </Router>
-            </ReduxProvider>,
-        )
-        const {container} = render(component)
-        expect(container).toMatchSnapshot()
-    })
 
     test('sidebar hidden', () => {
         const store = mockStore({
@@ -94,7 +58,7 @@ describe('components/sidebarSidebar', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
-                    <Sidebar isDashboard={true}/>
+                    <Sidebar/>
                 </Router>
             </ReduxProvider>,
         )
@@ -141,7 +105,7 @@ describe('components/sidebarSidebar', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
-                    <Sidebar isDashboard={true}/>
+                    <Sidebar/>
                 </Router>
             </ReduxProvider>,
         )

@@ -36,7 +36,6 @@ import {addMissingItems} from './utils'
 
 type Props = {
     activeBoardId?: string
-    isDashboard?: boolean
     onBoardTemplateSelectorOpen?: () => void
 }
 
@@ -192,7 +191,7 @@ const Sidebar = React.memo((props: Props) => {
             <div className='octo-spacer'/>
 
             {
-                (!props.isDashboard && !Utils.isFocalboardPlugin()) &&
+                (!Utils.isFocalboardPlugin()) &&
                 <div
                     className='add-board'
                     onClick={props.onBoardTemplateSelectorOpen}
