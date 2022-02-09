@@ -127,6 +127,8 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
             cardProperties: [groupProperty],
             dateDisplayPropertyId: 'global-id-5',
             columnCalculations: {},
+            isTemplate: true,
+            templateVer: 2,
         },
     }
 
