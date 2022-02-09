@@ -1,0 +1,66 @@
+.ShareBoardDialog {
+    .dialog {
+        @media not screen and (max-width: 975px) {
+            max-width: 600px;
+            height: auto;
+        }
+    }
+
+    .tabs-modal {
+        padding: 24px;
+        border-radius: 8px;
+        background: rgba(var(--center-channel-bg-rgb), 1);
+        border-top: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+
+        .d-flex {
+            display: flex;
+        }
+
+        .justify-content-between {
+            justify-content: space-between;
+        }
+
+        .flex-column {
+            flex-direction: column;
+        }
+
+        .tabs-inputs {
+            margin-top: 16px;
+
+            .input-container {
+                border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+                border-radius: 4px;
+                width: 400px;
+                height: 40px;
+            }
+
+            .IconButton {
+                height: 100%;
+                width: 40px;
+            }
+
+            .icon-refresh {
+                margin: 4px;
+                font-size: 18px;
+            }
+            
+            .icon-content-copy {
+                margin-right: 4px;
+                font-size: 18px;
+            }
+
+            .shareUrl {
+                flex-grow: 1;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin: auto 4px;
+                padding: 0 16px;
+
+                :hover {
+                    background-color: rgb(var(--center-channel-color-rgb), 0.1);
+                }
+            }
+        }
+    }
+}

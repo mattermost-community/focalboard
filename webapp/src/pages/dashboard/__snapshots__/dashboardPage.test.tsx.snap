@@ -333,7 +333,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
         >
           Show empty
           <div
-            class="Switch on"
+            class="Switch size--small on"
           >
             <div
               class="octo-switch-inner"

@@ -33,7 +33,7 @@ const BoardTemplateSelectorPreview = React.memo((props: Props) => {
             setActiveTemplateCards([])
             octoClient.getSubtree(activeTemplate.id, activeView?.fields.viewType === 'gallery' ? 3 : 2, activeTemplate.workspaceId).then((blocks) => {
                 const cards = blocks.filter((b) => b.type === 'card')
-                const views = blocks.filter((b) => b.type === 'view')
+                const views = blocks.filter((b) => b.type === 'view').sort((a, b) => a.title.localeCompare(b.title))
                 if (views.length > 0) {
                     setActiveView(views[0] as BoardView)
                 }
@@ -83,7 +83,6 @@ const BoardTemplateSelectorPreview = React.memo((props: Props) => {
                     addCardTemplate={() => null}
                     editCardTemplate={() => null}
                     readonly={false}
-                    showShared={false}
                 />
             </div>}
 

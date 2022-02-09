@@ -239,7 +239,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                 Random icons
               </div>
               <div
-                class="Switch on"
+                class="Switch size--small on"
               >
                 <div
                   class="octo-switch-inner"
@@ -710,7 +710,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                 Random icons
               </div>
               <div
-                class="Switch on"
+                class="Switch size--small on"
               >
                 <div
                   class="octo-switch-inner"
@@ -872,7 +872,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
                 Random icons
               </div>
               <div
-                class="Switch on"
+                class="Switch size--small on"
               >
                 <div
                   class="octo-switch-inner"
