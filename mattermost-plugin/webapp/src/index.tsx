@@ -148,11 +148,9 @@ export default class Plugin {
                 UserSettings.lastViewId = null
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
-            try {
+
+            if (registry.registerChannelIntroButtonAction) {
                 this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
-            } catch {
-                // do nothing
-                // required for older servers (<v6.5) that don't support Intro button
             }
 
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
