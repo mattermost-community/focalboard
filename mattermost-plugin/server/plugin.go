@@ -112,7 +112,7 @@ func (p *Plugin) OnActivate() error {
 		db = layeredStore
 	}
 
-	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
+	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db), logger)
 
 	backendParams := notifyBackendParams{
 		cfg:        cfg,

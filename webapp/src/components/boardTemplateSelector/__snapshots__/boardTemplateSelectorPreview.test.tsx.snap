@@ -8,9 +8,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
     class="BoardTemplateSelectorPreview"
   >
     <div
-      class="prevent-click"
-    />
-    <div
       class="top-head"
     >
       <div
