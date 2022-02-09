@@ -2,180 +2,241 @@
 // See LICENSE.txt for license information.
 
 import React, {useState, useEffect} from 'react'
-import {FormattedMessage} from 'react-intl'
 
-import {Utils} from '../../utils'
-import {useAppSelector, useAppDispatch} from '../../store/hooks'
-import {BoardMember} from '../../blocks/board'
-import {IUser} from '../../user'
-import {getMe, getBoardUsersList} from '../../store/users'
+import {useIntl, FormattedMessage} from 'react-intl'
+import {generatePath, useRouteMatch} from 'react-router'
+
+import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
-import {getClientConfig} from '../../store/clientConfig'
-import client from '../../octoClient'
+import {getMe, getBoardUsersList} from '../../store/users'
 
-import './shareBoard.scss'
-import RootPortal from '../rootPortal'
+import {Utils, IDType} from '../../utils'
+import Tooltip from '../../widgets/tooltip'
+import mutator from '../../mutator'
+
+import {ISharing} from '../../blocks/sharing'
+import {BoardMember} from '../../blocks/board'
+
+import client from '../../octoClient'
 import Dialog from '../dialog'
-import MenuWrapper from '../../widgets/menuWrapper'
-import Menu from '../../widgets/menu'
+import {IUser} from '../../user'
 import Switch from '../../widgets/switch'
 import Button from '../../widgets/buttons/button'
+import {sendFlashMessage} from '../flashMessages'
+
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+
+import CompassIcon from '../../widgets/icons/compassIcon'
+import IconButton from '../../widgets/buttons/iconButton'
+import SearchIcon from '../../widgets/icons/search'
+
 import TeamPermissionsRow from './teamPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
 
-import CheckIcon from '../../widgets/icons/check'
-import CompassIcon from '../../widgets/icons/compassIcon'
-import SearchIcon from '../../widgets/icons/search'
-
-import mutator from '../../mutator'
-
+import './shareBoard.scss'
 
 type Props = {
     onClose: () => void
 }
 
-const ShareBoardDialog = (props: Props): JSX.Element => {
-    const dispatch = useAppDispatch()
+export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopied, setWasCopied] = useState(false)
-    const [publicBoard, setPublicBoard] = useState(false)
-    const [teamUsers, setTeamUsers] = useState<IUser[]>([])
+    const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
     const [term, setTerm] = useState<string>('')
-
-    // ToDo: we should implement autocompletion here and load the team
-    // users as the user types to avoid fetching all team users and
-    // storing them in memory
-    useEffect(() => {
-        client.getTeamUsers().then(teamUsers => setTeamUsers(teamUsers))
-    }, [])
-
-    const me = useAppSelector<IUser|null>(getMe)
+    const [teamUsers, setTeamUsers] = useState<IUser[]>([])
 
     // members of the current board
     const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
-
     const board = useAppSelector(getCurrentBoard)
-
-    // list of all users
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
+    const me = useAppSelector<IUser|null>(getMe)
 
-    // the "Share internally" link.
-    const internalShareLink = window.location.href
+    const intl = useIntl()
+    const match = useRouteMatch<{workspaceId?: string, boardId: string, viewId: string}>()
 
-    const clientConfig = useAppSelector(getClientConfig)
+    const loadData = async () => {
+        const newSharing = await client.getSharing(board.id)
+        setSharing(newSharing)
+        setWasCopied(false)
+    }
 
-    // show external, "Publish" link only if this variable is true"
-    const externalSharingEnabled = clientConfig.enablePublicSharedBoards
+    const createSharingInfo = () => {
+        const newSharing: ISharing = {
+            id: board.id,
+            enabled: true,
+            token: Utils.createGuid(IDType.Token),
+        }
+        return newSharing
+    }
 
-    // ToDo: update this later to use actual token
-    const readToken = 'hardcoded-token'
+    const onShareChanged = async (isOn: boolean) => {
+        const newSharing: ISharing = sharing || createSharingInfo()
+        newSharing.id = board.id
+        newSharing.enabled = isOn
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: board.id, shareBoardEnabled: isOn})
+        await client.setSharing(newSharing)
+        await loadData()
+    }
+
+    const onRegenerateToken = async () => {
+        // eslint-disable-next-line no-alert
+        const accept = window.confirm(intl.formatMessage({id: 'ShareBoard.confirmRegenerateToken', defaultMessage: 'This will invalidate previously shared links. Continue?'}))
+        if (accept) {
+            const newSharing: ISharing = sharing || createSharingInfo()
+            newSharing.token = Utils.createGuid(IDType.Token)
+            await client.setSharing(newSharing)
+            await loadData()
+
+            const description = intl.formatMessage({id: 'ShareBoard.tokenRegenrated', defaultMessage: 'Token regenerated'})
+            sendFlashMessage({content: description, severity: 'low'})
+        }
+    }
+
+    useEffect(() => {
+        loadData()
+    }, [])
+
+    const isSharing = Boolean(sharing && sharing.id === board.id && sharing.enabled)
+    const readToken = (sharing && isSharing) ? sharing.token : ''
     const shareUrl = new URL(window.location.toString())
     shareUrl.searchParams.set('r', readToken)
 
+    if (match.params.workspaceId) {
+        const newPath = generatePath('/workspace/:workspaceId/shared/:boardId/:viewId', {
+            boardId: match.params.boardId,
+            viewId: match.params.viewId,
+            workspaceId: match.params.workspaceId,
+        })
+        shareUrl.pathname = Utils.buildURL(newPath)
+    } else {
+        const newPath = generatePath('/shared/:boardId/:viewId', {
+            boardId: match.params.boardId,
+            viewId: match.params.viewId,
+        })
+        shareUrl.pathname = Utils.buildURL(newPath)
+    }
+
     return (
-        <RootPortal>
-            <Dialog
-                className='shareBoardDialog'
-                title='Share Board'
-                onClose={props.onClose}
-            >
-                {/* ToDo: Make an autocomplete */}
-                <div className='share-input__container'>
-                    <div className='share-input'>
-                        <SearchIcon/>
-                        <input
-                            type='text'
-                            placeholder='Add people or groups'
-                            value={term}
-                            onChange={(e) => setTerm(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    e.stopPropagation()
-                                    const user = teamUsers.find((u) => u.username === term)
-                                    if (!user) {
-                                        return
-                                    }
-
-                                    mutator.createBoardMember(board.id, user.id)
-                                    setTerm('')
+        <Dialog
+            onClose={props.onClose}
+            className='ShareBoardDialog'
+            title={intl.formatMessage({id: 'ShareBoard.Title', defaultMessage: 'Share Board'})}
+        >
+            {/* ToDo: Make an autocomplete */}
+            <div className='share-input__container'>
+                <div className='share-input'>
+                    <SearchIcon/>
+                    <input
+                        type='text'
+                        placeholder='Add people or groups'
+                        value={term}
+                        onChange={(e) => setTerm(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                e.stopPropagation()
+                                const user = teamUsers.find((u) => u.username === term)
+                                if (!user) {
+                                    return
                                 }
-                            }}
+
+                                mutator.createBoardMember(board.id, user.id)
+                                setTerm('')
+                            }
+                        }}
+                    />
+                </div>
+            </div>
+            <div className='user-items'>
+                <TeamPermissionsRow/>
+
+                {Object.values(members).map((member) => {
+                    const user = boardUsers.find((u) => u.id === member.userId)
+                    if (!user) {
+                        return null
+                    }
+
+                    return (
+                        <UserPermissionsRow
+                            key={user.id}
+                            user={user}
+                            member={member}
+                            isMe={user.id === me?.id}
                         />
-                    </div>
-                </div>
-                <div className='user-items'>
-                    <TeamPermissionsRow />
+                    )
+                })}
+            </div>
 
-                    {Object.values(members).map((member) => {
-                        const user = boardUsers.find((user) => user.id === member.userId)
-                        if (!user) {
-                            return null
-                        }
-
-                        return (
-                            <UserPermissionsRow
-                                key={user.id}
-                                user={user}
-                                member={member}
-                                isMe={user.id === me?.id}
+            <div className='tabs-modal'>
+                <div>
+                    <div className='d-flex justify-content-between'>
+                        <div className='d-flex flex-column'>
+                            <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.PublishTitle', defaultMessage: 'Publish to the web'})}</div>
+                            <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.PublishDescription', defaultMessage: 'Publish and share a “read only” link with everyone on the web'})}</div>
+                        </div>
+                        <div>
+                            <Switch
+                                isOn={isSharing}
+                                size='medium'
+                                onChanged={onShareChanged}
                             />
-                        )
-                    })}
-                </div>
-
-                <div className='tabs-modal'>
-                    <div>
-                        <div className='d-flex justify-content-between'>
-                            <div className='d-flex flex-column'>
-                                <div className='text-heading2'>{'Publish to the web'}</div>
-                                <div className='text-light'>{'Publish and share a “read only” link with everyone on the web'}</div>
-                            </div>
-                            <div>
-                                <Switch
-                                    isOn={publicBoard}
-                                    size='medium'
-                                    onChanged={() => {
-                                        setPublicBoard(!publicBoard)
-                                    }}
-                                />
-                            </div>
                         </div>
                     </div>
-                    {publicBoard &&
-                     (<div className='d-flex tabs-inputs'>
-                         <input
-                             type='text'
-                             className='mr-3'
-                             value='https://focalboard-community.octo.mattermost'
-                         />
-                         <Button
-                             emphasis='secondary'
-                             size='medium'
-                             onClick={() => {
-                                 Utils.copyTextToClipboard(shareUrl.toString())
-                                 setWasCopied(true)
-                             }}
-                         >
-                             <CompassIcon
-                                 icon='content-copy'
-                                 className='CompassIcon'
-                             />
-                             {wasCopied &&
-                              <FormattedMessage
-                                  id='ShareBoard.copiedLink'
-                                  defaultMessage='Copied!'
-                              />}
-                             {!wasCopied &&
-                              <FormattedMessage
-                                  id='ShareBoard.copyLink'
-                                  defaultMessage='Copy link'
-                              />}
-                         </Button>
-                     </div>)
-                    }
                 </div>
-            </Dialog>
-        </RootPortal>
+                {isSharing &&
+                        (<div className='d-flex justify-content-between tabs-inputs'>
+                            <div className='d-flex input-container'>
+                                <a
+                                    className='shareUrl'
+                                    href={shareUrl.toString()}
+                                    target='_blank'
+                                    rel='noreferrer'
+                                >
+                                    {shareUrl.toString()}
+                                </a>
+                                <Tooltip
+                                    key={'regenerateToken'}
+                                    title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
+                                >
+                                    <IconButton
+                                        onClick={onRegenerateToken}
+                                        icon={
+                                            <CompassIcon
+                                                icon='refresh'
+                                                className='Icon Icon--right'
+                                            />}
+                                        title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
+                                        className='IconButton--large'
+                                    />
+                                </Tooltip>
+                            </div>
+                            <Button
+                                emphasis='secondary'
+                                size='medium'
+                                title='Copy link'
+                                onClick={() => {
+                                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: board.id})
+                                    Utils.copyTextToClipboard(shareUrl.toString())
+                                    setWasCopied(true)
+                                }}
+                            >
+                                <CompassIcon
+                                    icon='content-copy'
+                                    className='CompassIcon'
+                                />
+                                {wasCopied &&
+                                    <FormattedMessage
+                                        id='ShareBoard.copiedLink'
+                                        defaultMessage='Copied!'
+                                    />}
+                                {!wasCopied &&
+                                    <FormattedMessage
+                                        id='ShareBoard.copyLink'
+                                        defaultMessage='Copy link'
+                                    />}
+                            </Button>
+                        </div>)
+                }
+            </div>
+        </Dialog>
     )
 }
-
-export default ShareBoardDialog

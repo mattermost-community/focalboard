@@ -83,7 +83,6 @@ const BoardTemplateSelectorPreview = React.memo((props: Props) => {
                     addCardTemplate={() => null}
                     editCardTemplate={() => null}
                     readonly={false}
-                    showShared={false}
                 />
             </div>}
 

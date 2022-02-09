@@ -47,7 +47,7 @@ const Dialog = React.memo((props: Props) => {
                     className='dialog'
                 >
                     <div className='toolbar'>
-                        {title && <h1 className='text-heading5 mt-2'>{title}</h1> }
+                        {title && <h1 className='text-heading5 mt-2'>{title}</h1>}
                         {
                             !props.hideCloseButton &&
                             <IconButton

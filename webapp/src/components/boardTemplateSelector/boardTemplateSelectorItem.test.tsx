@@ -120,7 +120,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         cardProperties: [groupProperty],
         columnCalculations: {},
         isTemplate: true,
-        templateVersion: 0,
+        templateVersion: 2,
         templateTrackingCode: '',
         properties: {},
     }

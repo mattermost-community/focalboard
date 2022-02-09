@@ -38,7 +38,7 @@ const BoardTemplateSelectorItem = React.memo((props: Props) => {
         >
             <span className='template-icon'>{template.icon}</span>
             <span className='template-name'>{template.title}</span>
-            {template.teamId !== '0' &&
+            {!template.templateVersion &&
                 <div className='actions'>
                     <IconButton
                         icon={<DeleteIcon/>}

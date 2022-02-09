@@ -1,18 +1,18 @@
 # Code Contribution Guidelines
 
-Thank you for your interest in contributing! Please see the [Focalboard Contribution Guide](https://www.focalboard.com/contribute/getting-started/) which describes the process for making code contributions, and [join our Focalboard community channel](https://community.mattermost.com/core/channels/focalboard) to ask questions from community members and the core team.
+Thank you for your interest in contributing! Please see the [Focalboard Contribution Guide](https://mattermost.github.io/focalboard/) which describes the process for making code contributions, and [join our Focalboard community channel](https://community.mattermost.com/core/channels/focalboard) to ask questions from community members and the core team.
 
-When you submit a pull request, it goes through a [code review process outlined here](https://www.focalboard.com/contribute/getting-started/code-review/).
+When you submit a pull request, it goes through a [code review process outlined here](https://mattermost.github.io/focalboard/code-review).
 
 # Updating Changelog
 
-After a noteable bug fix or an improvement you've submitted is merged, please consider making a pull request to the [CHANGELOG.md](https://github.com/mattermost/focalboard/blob/main/CHANGELOG.md) under the next release section. 
+After a noteable bug fix or an improvement you've submitted is merged, please consider making a pull request to the [CHANGELOG.md](https://github.com/mattermost/focalboard/blob/main/CHANGELOG.md) under the next release section.
 
 # Bug reports
 
 Please file a [GitHub issue](https://github.com/mattermost/focalboard/issues) if anything isn't working the way you expect.
 
-# Documentation 
+# Documentation
 
 You can contribute to our documentation in the [Mattermost Boards documentation](https://docs.mattermost.com/guides/boards.html). Read more about how the contribution process works in the repo [README](https://github.com/mattermost/docs/blob/master/README.md). Visit the [Documentation Working Group channel](https://community.mattermost.com/core/channels/dwg-documentation-working-group) on our Community server if you have any questions!
 

@@ -239,7 +239,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                 Random icons
               </div>
               <div
-                class="Switch on"
+                class="Switch size--small on"
               >
                 <div
                   class="octo-switch-inner"
