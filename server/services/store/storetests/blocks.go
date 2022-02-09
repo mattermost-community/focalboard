@@ -18,7 +18,7 @@ const (
 
 func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	container := store.Container{
-		WorkspaceID: "0",
+		WorkspaceID: "abcde",
 	}
 
 	t.Run("InsertBlock", func(t *testing.T) {
@@ -70,6 +70,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		store, tearDown := setup(t)
 		defer tearDown()
 		testGetBlock(t, store, container)
+	})
+	t.Run("RunDataRetention", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testRunDataRetention(t, store, container)
 	})
 }
 
@@ -768,5 +773,46 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 		fetchedBlock, err := store.GetBlock(container, "non-existing-id")
 		require.NoError(t, err)
 		require.Nil(t, fetchedBlock)
+	})
+}
+
+func testRunDataRetention(t *testing.T, store store.Store, container store.Container) {
+	validBlock := model.Block{
+		ID:         "id-test",
+		RootID:     "id-test",
+		ModifiedBy: "user-id-1",
+	}
+
+	validBlock2 := model.Block{
+		ID:         "id-test2",
+		RootID:     "id-test",
+		ModifiedBy: "user-id-1",
+	}
+
+	newBlocks := []model.Block{validBlock, validBlock2}
+
+	err := store.InsertBlocks(container, newBlocks, "user-id-1")
+	require.NoError(t, err)
+
+	blocks, err := store.GetAllBlocks(container)
+	require.NoError(t, err)
+	require.Len(t, blocks, len(newBlocks))
+	initialCount := len(blocks)
+
+	t.Run("test no deletions", func(t *testing.T) {
+		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(-time.Hour*1)), 10)
+		require.NoError(t, err)
+		require.Equal(t, int64(0), deletions)
+	})
+
+	t.Run("test all deletions", func(t *testing.T) {
+		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(time.Hour*1)), 10)
+		require.NoError(t, err)
+		require.True(t, deletions > int64(initialCount))
+
+		// expect all blocks to be deleted.
+		blocks, errBlocks := store.GetAllBlocks(container)
+		require.NoError(t, errBlocks)
+		require.Equal(t, 0, len(blocks))
 	})
 }

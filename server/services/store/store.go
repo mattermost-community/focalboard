@@ -92,7 +92,8 @@ type Store interface {
 
 	RemoveDefaultTemplates(blocks []model.Block) error
 	GetDefaultTemplateBlocks() ([]model.Block, error)
-
+	// @withTransaction
+	RunDataRetention(globalRetentionDate int64, batchSize int64) (int64, error)
 	IsErrNotFound(err error) bool
 }
 

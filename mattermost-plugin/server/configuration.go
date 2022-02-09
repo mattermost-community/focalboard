@@ -84,10 +84,17 @@ func (p *Plugin) OnConfigurationChange() error { //nolint
 		EnablePublicSharedBoards: enableShareBoards,
 	}
 	p.setConfiguration(configuration)
+
+	// handle server configuration
 	p.server.Config().EnablePublicSharedBoards = enableShareBoards
 
 	// handle feature flags
 	p.server.Config().FeatureFlags = parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
+
+	// handle Data Retention settings
+	p.server.Config().EnableDataRetention = true // *mmconfig.DataRetentionSettings.EnableBoardsDeletion
+	p.server.Config().DataRetentionDays = 1      // *mmconfig.DataRetentionSettings.BoardsRetentionDays
+
 	p.server.UpdateAppConfig()
 	p.wsPluginAdapter.BroadcastConfigChange(*p.server.App().GetClientConfig())
 	return nil
