@@ -38,7 +38,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
               Status
             </div>
             <div
-              class="Switch"
+              class="Switch size--small"
             >
               <div
                 class="octo-switch-inner"
@@ -59,7 +59,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
               Property 1
             </div>
             <div
-              class="Switch"
+              class="Switch size--small"
             >
               <div
                 class="octo-switch-inner"
@@ -80,7 +80,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
               Property 2
             </div>
             <div
-              class="Switch"
+              class="Switch size--small"
             >
               <div
                 class="octo-switch-inner"
@@ -101,7 +101,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
               Property 3
             </div>
             <div
-              class="Switch"
+              class="Switch size--small"
             >
               <div
                 class="octo-switch-inner"
@@ -122,7 +122,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
               Comments and Description
             </div>
             <div
-              class="Switch"
+              class="Switch size--small"
             >
               <div
                 class="octo-switch-inner"
@@ -198,7 +198,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
               Title
             </div>
             <div
-              class="Switch"
+              class="Switch size--small"
             >
               <div
                 class="octo-switch-inner"
@@ -219,7 +219,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
               Status
             </div>
             <div
-              class="Switch"
+              class="Switch size--small"
             >
               <div
                 class="octo-switch-inner"
@@ -240,7 +240,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
               Property 1
             </div>
             <div
-              class="Switch"
+              class="Switch size--small"
             >
               <div
                 class="octo-switch-inner"
@@ -261,7 +261,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
               Property 2
             </div>
             <div
-              class="Switch"
+              class="Switch size--small"
             >
               <div
                 class="octo-switch-inner"
@@ -282,7 +282,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
               Property 3
             </div>
             <div
-              class="Switch"
+              class="Switch size--small"
             >
               <div
                 class="octo-switch-inner"
@@ -303,7 +303,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
               Comments and Description
             </div>
             <div
-              class="Switch"
+              class="Switch size--small"
             >
               <div
                 class="octo-switch-inner"

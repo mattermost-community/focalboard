@@ -20,10 +20,11 @@ import {UserSettings} from '../userSettings'
 import {addCard, addTemplate} from '../store/cards'
 import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
+
+import ShareBoardButton from './shareBoard/shareBoardButton'
 
 import './centerPanel.scss'
-
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
 import {RootState} from '../store'
 
@@ -80,6 +81,7 @@ type Props = {
 type State = {
     selectedCardIds: string[]
     cardIdToFocusOnRender: string
+    showShareDialog: boolean
 }
 
 class CenterPanel extends React.Component<Props, State> {
@@ -123,6 +125,7 @@ class CenterPanel extends React.Component<Props, State> {
         this.state = {
             selectedCardIds: [],
             cardIdToFocusOnRender: '',
+            showShareDialog: false,
         }
     }
 
@@ -204,11 +207,18 @@ class CenterPanel extends React.Component<Props, State> {
 
                 <div className='top-head'>
                     <TopBar/>
-                    <ViewTitle
-                        key={board.id + board.title}
-                        board={board}
-                        readonly={this.props.readonly}
-                    />
+                    <div className='mid-head'>
+                        <ViewTitle
+                            key={board.id + board.title}
+                            board={board}
+                            readonly={this.props.readonly}
+                        />
+                        {!this.props.readonly && this.props.showShared &&
+                            <ShareBoardButton
+                                boardId={this.props.board.id}
+                            />
+                        }
+                    </div>
                     <ViewHeader
                         board={this.props.board}
                         activeView={this.props.activeView}
@@ -221,7 +231,6 @@ class CenterPanel extends React.Component<Props, State> {
                         addCardTemplate={this.addCardTemplate}
                         editCardTemplate={this.editCardTemplate}
                         readonly={this.props.readonly}
-                        showShared={this.props.showShared}
                     />
                 </div>
 
