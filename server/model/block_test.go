@@ -1,8 +1,9 @@
 package model
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 

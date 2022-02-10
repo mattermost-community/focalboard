@@ -18,7 +18,6 @@ import ModalWrapper from '../modalWrapper'
 
 import {useAppSelector} from '../../store/hooks'
 import {
-    getMe,
     getOnboardingTourCategory,
     getOnboardingTourStarted,
     getOnboardingTourStep,
@@ -31,8 +30,6 @@ import {
 import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
 import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
-import {IUser, UserConfigPatch} from '../../user'
-import octoClient from '../../octoClient'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
@@ -113,8 +110,6 @@ const ViewHeader = React.memo((props: Props) => {
     }, [showShared])
 
     const showAddViewTourStep = showTourBaseCondition && delayComplete
-
-    const me = useAppSelector<IUser|null>(getMe)
 
     return (
         <div className='ViewHeader'>

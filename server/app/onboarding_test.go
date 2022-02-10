@@ -1,12 +1,12 @@
 package app
 
 import (
-	"fmt"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestPrepareOnboardingTour(t *testing.T) {
@@ -26,9 +26,17 @@ func TestPrepareOnboardingTour(t *testing.T) {
 		blocks := []model.Block{welcomeBoard}
 		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
 
-		th.Store.EXPECT().GetSubTree3(store.Container{WorkspaceID: "0"}, "block_id_1", gomock.Any()).Return([]model.Block{welcomeBoard}, nil)
+		th.Store.EXPECT().GetSubTree3(
+			store.Container{WorkspaceID: "0"},
+			"block_id_1",
+			gomock.Any(),
+		).Return([]model.Block{welcomeBoard}, nil)
 
-		th.Store.EXPECT().InsertBlock(store.Container{WorkspaceID: "workspace_id_1"}, gomock.Any(), "user_id_1").Return(nil)
+		th.Store.EXPECT().InsertBlock(
+			store.Container{WorkspaceID: "workspace_id_1"},
+			gomock.Any(),
+			"user_id_1",
+		).Return(nil)
 
 		th.Store.EXPECT().CreatePrivateWorkspace("user_id_1").Return("workspace_id_1", nil)
 
@@ -42,13 +50,10 @@ func TestPrepareOnboardingTour(t *testing.T) {
 
 		th.Store.EXPECT().PatchUserProps("user_id_1", userPropPatch).Return(nil)
 
-		workspaceId, boardID, err := th.App.PrepareOnboardingTour("user_id_1")
+		workspaceID, boardID, err := th.App.PrepareOnboardingTour("user_id_1")
 		assert.NoError(t, err)
-		assert.Equal(t, "workspace_id_1", workspaceId)
+		assert.Equal(t, "workspace_id_1", workspaceID)
 		assert.NotEmpty(t, boardID)
-
-		fmt.Println(fmt.Sprintf("workspaceId: %s", workspaceId))
-		fmt.Println(fmt.Sprintf("boardID: %s", boardID))
 	})
 }
 
@@ -69,9 +74,17 @@ func TestCreateWelcomeBoard(t *testing.T) {
 		blocks := []model.Block{welcomeBoard}
 		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
 
-		th.Store.EXPECT().GetSubTree3(store.Container{WorkspaceID: "0"}, "block_id_1", gomock.Any()).Return([]model.Block{welcomeBoard}, nil)
+		th.Store.EXPECT().GetSubTree3(
+			store.Container{WorkspaceID: "0"},
+			"block_id_1",
+			gomock.Any(),
+		).Return([]model.Block{welcomeBoard}, nil)
 
-		th.Store.EXPECT().InsertBlock(store.Container{WorkspaceID: "workspace_id_1"}, gomock.Any(), "user_id_1").Return(nil)
+		th.Store.EXPECT().InsertBlock(
+			store.Container{WorkspaceID: "workspace_id_1"},
+			gomock.Any(),
+			"user_id_1",
+		).Return(nil)
 
 		boardID, err := th.App.createWelcomeBoard("user_id_1", "workspace_id_1")
 		assert.Nil(t, err)
@@ -87,9 +100,17 @@ func TestCreateWelcomeBoard(t *testing.T) {
 		blocks := []model.Block{welcomeBoard}
 		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
 
-		th.Store.EXPECT().GetSubTree3(store.Container{WorkspaceID: "0"}, "buixxjic3xjfkieees4iafdrznc", gomock.Any()).Return([]model.Block{welcomeBoard}, nil)
+		th.Store.EXPECT().GetSubTree3(
+			store.Container{WorkspaceID: "0"},
+			"buixxjic3xjfkieees4iafdrznc",
+			gomock.Any(),
+		).Return([]model.Block{welcomeBoard}, nil)
 
-		th.Store.EXPECT().InsertBlock(store.Container{WorkspaceID: "workspace_id_1"}, gomock.Any(), "user_id_1").Return(nil)
+		th.Store.EXPECT().InsertBlock(
+			store.Container{WorkspaceID: "workspace_id_1"},
+			gomock.Any(),
+			"user_id_1",
+		).Return(nil)
 
 		boardID, err := th.App.createWelcomeBoard("user_id_1", "workspace_id_1")
 		assert.Error(t, err)
@@ -108,10 +129,18 @@ func TestCreateWelcomeBoard(t *testing.T) {
 
 		blocks := []model.Block{welcomeBoard}
 		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
-		
-		th.Store.EXPECT().GetSubTree3(store.Container{WorkspaceID: "0"}, "buixxjic3xjfkieees4iafdrznc", gomock.Any()).Return([]model.Block{welcomeBoard}, nil)
 
-		th.Store.EXPECT().InsertBlock(store.Container{WorkspaceID: "workspace_id_1"}, gomock.Any(), "user_id_1").Return(nil)
+		th.Store.EXPECT().GetSubTree3(
+			store.Container{WorkspaceID: "0"},
+			"buixxjic3xjfkieees4iafdrznc",
+			gomock.Any(),
+		).Return([]model.Block{welcomeBoard}, nil)
+
+		th.Store.EXPECT().InsertBlock(
+			store.Container{WorkspaceID: "workspace_id_1"},
+			gomock.Any(),
+			"user_id_1",
+		).Return(nil)
 
 		boardID, err := th.App.createWelcomeBoard("user_id_1", "workspace_id_1")
 		assert.Error(t, err)
