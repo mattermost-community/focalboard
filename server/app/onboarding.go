@@ -16,9 +16,6 @@ const (
 	ValueOnboardingFirstStep    = "0"
 	ValueTourCategoryOnboarding = "onboarding"
 
-	// OnboardingBoardID is the board ID from templates.boardarchive.
-	OnboardingBoardID = "btaqmtt8a6pye9bttriw5w1tsyo"
-
 	WelcomeBoardTitle = "Welcome to Boards!"
 )
 
@@ -54,8 +51,34 @@ func (a *App) PrepareOnboardingTour(userID string) (string, string, error) {
 	return workspaceID, boardID, nil
 }
 
+func (a *App) getOnboardingBoardID() (string, error) {
+	blocks, err := a.store.GetDefaultTemplateBlocks()
+	if err != nil {
+		return "", err
+	}
+
+	var onboardingBoardID string
+	for _, block := range blocks {
+		if block.Type == model.TypeBoard && block.Title == WelcomeBoardTitle {
+			onboardingBoardID = block.ID
+			break
+		}
+	}
+
+	if onboardingBoardID == "" {
+		return "", errUnableToFindWelcomeBoard
+	}
+
+	return onboardingBoardID, nil
+}
+
 func (a *App) createWelcomeBoard(userID, workspaceID string) (string, error) {
-	blocks, err := a.GetSubTree(store.Container{WorkspaceID: "0"}, OnboardingBoardID, 3)
+	onboardingBoardID, err := a.getOnboardingBoardID()
+	if err != nil {
+		return "", err
+	}
+
+	blocks, err := a.GetSubTree(store.Container{WorkspaceID: "0"}, onboardingBoardID, 3)
 	if err != nil {
 		return "", err
 	}

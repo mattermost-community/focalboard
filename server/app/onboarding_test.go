@@ -103,3 +103,68 @@ func TestCreateWelcomeBoard(t *testing.T) {
 		assert.Empty(t, boardID)
 	})
 }
+
+func TestGetOnboardingBoardID(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	t.Run("base case", func(t *testing.T) {
+		board := model.Block{
+			ID:    "board_id_1",
+			Type:  model.TypeBoard,
+			Title: "Welcome to Boards!",
+		}
+
+		card := model.Block{
+			ID:       "card_id_1",
+			Type:     model.TypeCard,
+			ParentID: board.ID,
+		}
+
+		blocks := []model.Block{
+			board,
+			card,
+		}
+
+		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
+
+		onboardingBoardID, err := th.App.getOnboardingBoardID()
+		assert.NoError(t, err)
+		assert.Equal(t, "board_id_1", onboardingBoardID)
+	})
+
+	t.Run("no blocks found", func(t *testing.T) {
+		blocks := []model.Block{}
+
+		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
+
+		onboardingBoardID, err := th.App.getOnboardingBoardID()
+		assert.Error(t, err)
+		assert.Empty(t, onboardingBoardID)
+	})
+
+	t.Run("onboarding board doesn't exists", func(t *testing.T) {
+		board := model.Block{
+			ID:    "board_id_1",
+			Type:  model.TypeBoard,
+			Title: "Some board title",
+		}
+
+		card := model.Block{
+			ID:       "card_id_1",
+			Type:     model.TypeCard,
+			ParentID: board.ID,
+		}
+
+		blocks := []model.Block{
+			board,
+			card,
+		}
+
+		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
+
+		onboardingBoardID, err := th.App.getOnboardingBoardID()
+		assert.Error(t, err)
+		assert.Empty(t, onboardingBoardID)
+	})
+}

@@ -364,19 +364,23 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               </div>
             </div>
             <div
-              class="ShareBoardButton"
+              class="shareButtonWrapper"
             >
-              <button
-                title="Share board"
-                type="button"
+              <div
+                class="ShareBoardButton"
               >
-                <span>
-                  <i
-                    class="CompassIcon icon-globe CompassIcon"
-                  />
-                  Share
-                </span>
-              </button>
+                <button
+                  title="Share board"
+                  type="button"
+                >
+                  <span>
+                    <i
+                      class="CompassIcon icon-globe CompassIcon"
+                    />
+                    Share
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
           <div
@@ -406,9 +410,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </button>
               </div>
             </div>
-            <button>
-              Reset Tour
-            </button>
             <div
               class="octo-spacer"
             />
@@ -930,6 +931,9 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="shareButtonWrapper"
+            />
           </div>
           <div
             class="ViewHeader"
@@ -959,9 +963,6 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 </button>
               </div>
             </div>
-            <button>
-              Reset Tour
-            </button>
             <div
               class="octo-spacer"
             />
@@ -1602,19 +1603,23 @@ exports[`src/components/workspace should match snapshot 1`] = `
               </div>
             </div>
             <div
-              class="ShareBoardButton"
+              class="shareButtonWrapper"
             >
-              <button
-                title="Share board"
-                type="button"
+              <div
+                class="ShareBoardButton"
               >
-                <span>
-                  <i
-                    class="CompassIcon icon-globe CompassIcon"
-                  />
-                  Share
-                </span>
-              </button>
+                <button
+                  title="Share board"
+                  type="button"
+                >
+                  <span>
+                    <i
+                      class="CompassIcon icon-globe CompassIcon"
+                    />
+                    Share
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
           <div
@@ -1644,9 +1649,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </button>
               </div>
             </div>
-            <button>
-              Reset Tour
-            </button>
             <div
               class="octo-spacer"
             />
@@ -2168,6 +2170,9 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="shareButtonWrapper"
+            />
           </div>
           <div
             class="ViewHeader"
@@ -2197,9 +2202,6 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 </button>
               </div>
             </div>
-            <button>
-              Reset Tour
-            </button>
             <div
               class="octo-spacer"
             />

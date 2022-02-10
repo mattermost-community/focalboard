@@ -30,9 +30,6 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
         </button>
       </div>
     </div>
-    <button>
-      Reset Tour
-    </button>
     <div
       class="octo-spacer"
     />
@@ -178,9 +175,6 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
         </button>
       </div>
     </div>
-    <button>
-      Reset Tour
-    </button>
     <div
       class="octo-spacer"
     />

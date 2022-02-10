@@ -116,23 +116,6 @@ const ViewHeader = React.memo((props: Props) => {
 
     const me = useAppSelector<IUser|null>(getMe)
 
-    const resetTour = () => {
-        if (!me) {
-            return
-        }
-
-        const patch: UserConfigPatch = {
-            deletedFields: [
-                'focalboard_onboardingTourStarted',
-                'focalboard_tourCategory',
-                'focalboard_onboardingTourStep',
-                'focalboard_welcomePageViewed',
-            ],
-        }
-
-        octoClient.patchUserConfig(me.id, patch)
-    }
-
     return (
         <div className='ViewHeader'>
             <div className='viewSelector'>
@@ -162,8 +145,6 @@ const ViewHeader = React.memo((props: Props) => {
                 </MenuWrapper>
                 {showAddViewTourStep && <AddViewTourStep/>}
             </div>
-
-            <button onClick={resetTour}>{'Reset Tour'}</button>
 
             <div className='octo-spacer'/>
 

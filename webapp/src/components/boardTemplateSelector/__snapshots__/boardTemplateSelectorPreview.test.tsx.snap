@@ -73,9 +73,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             </button>
           </div>
         </div>
-        <button>
-          Reset Tour
-        </button>
         <div
           class="octo-spacer"
         />
