@@ -1,6 +1,6 @@
 # Code Review Checklist
 
-Currently, all changes to the product must be reviewed by a [core committer](core-committers).
+Currently, all changes to the product must be reviewed by a [core committer](core-committers.md).
 
 ## If you are a community member seeking a review
 
