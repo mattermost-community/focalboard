@@ -67,6 +67,7 @@ function createBoard(block?: Block): Board {
             description: block?.fields.description || '',
             icon: block?.fields.icon || '',
             isTemplate: block?.fields.isTemplate || false,
+            templateVer: block?.fields.templateVer || 0,
             columnCalculations: block?.fields.columnCalculations || [],
             cardProperties,
         },
