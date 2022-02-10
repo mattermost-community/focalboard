@@ -172,7 +172,14 @@ export default class Plugin {
             }
 
             if (rudderKey !== '') {
-                rudderAnalytics.load(rudderKey, rudderUrl)
+                const rudderCfg = {} as {setCookieDomain: string}
+                if (siteURL && siteURL !== '') {
+                    try {
+                        rudderCfg.setCookieDomain = new URL(siteURL).hostname
+                        // eslint-disable-next-line no-empty
+                    } catch (_) {}
+                }
+                rudderAnalytics.load(rudderKey, rudderUrl, rudderCfg)
 
                 rudderAnalytics.identify(config?.telemetryid, {}, TELEMETRY_OPTIONS)
 
