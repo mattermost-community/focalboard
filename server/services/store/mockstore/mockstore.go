@@ -1070,6 +1070,21 @@ func (mr *MockStoreMockRecorder) SearchBoardsForUserAndTeam(arg0, arg1, arg2 int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchBoardsForUserAndTeam", reflect.TypeOf((*MockStore)(nil).SearchBoardsForUserAndTeam), arg0, arg1, arg2)
 }
 
+// SearchUsersByTeam mocks base method.
+func (m *MockStore) SearchUsersByTeam(arg0, arg1 string) ([]*model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchUsersByTeam", arg0, arg1)
+	ret0, _ := ret[0].([]*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchUsersByTeam indicates an expected call of SearchUsersByTeam.
+func (mr *MockStoreMockRecorder) SearchUsersByTeam(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUsersByTeam", reflect.TypeOf((*MockStore)(nil).SearchUsersByTeam), arg0, arg1)
+}
+
 // SetSystemSetting mocks base method.
 func (m *MockStore) SetSystemSetting(arg0, arg1 string) error {
 	m.ctrl.T.Helper()

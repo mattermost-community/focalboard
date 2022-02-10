@@ -5,6 +5,8 @@ import React, {useState, useEffect} from 'react'
 
 import {useIntl, FormattedMessage} from 'react-intl'
 import {generatePath, useRouteMatch} from 'react-router'
+import Select from 'react-select/async'
+import {CSSObject} from '@emotion/serialize'
 
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
@@ -26,6 +28,7 @@ import {sendFlashMessage} from '../flashMessages'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
+import {getSelectBaseStyle} from '../../theme'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import IconButton from '../../widgets/buttons/iconButton'
 import SearchIcon from '../../widgets/icons/search'
@@ -39,11 +42,39 @@ type Props = {
     onClose: () => void
 }
 
+const baseStyles = getSelectBaseStyle()
+
+const styles = {
+    ...baseStyles,
+    control: (): CSSObject => ({
+        border: 0,
+        width: '100%',
+        height: '100%',
+        margin: '0',
+        display: 'flex',
+        flexDirection: 'row',
+    }),
+    menu: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        minWidth: '100%',
+        width: 'max-content',
+        background: 'rgb(var(--center-channel-bg-rgb))',
+        left: '0',
+        marginBottom: '0',
+    }),
+    singleValue: (provided: CSSObject): CSSObject => ({
+        ...baseStyles.singleValue(provided),
+        opacity: '0.8',
+        fontSize: '12px',
+        right: '0',
+        textTransform: 'uppercase',
+    }),
+}
+
 export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopied, setWasCopied] = useState(false)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
-    const [term, setTerm] = useState<string>('')
-    const [teamUsers, setTeamUsers] = useState<IUser[]>([])
+    const [selectedUser, setSelectedUser] = useState<IUser|null>(null)
 
     // members of the current board
     const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
@@ -52,7 +83,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const me = useAppSelector<IUser|null>(getMe)
 
     const intl = useIntl()
-    const match = useRouteMatch<{workspaceId?: string, boardId: string, viewId: string}>()
+    const match = useRouteMatch<{teamId?: string, boardId: string, viewId: string}>()
 
     const loadData = async () => {
         const newSharing = await client.getSharing(board.id)
@@ -74,7 +105,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         newSharing.id = board.id
         newSharing.enabled = isOn
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: board.id, shareBoardEnabled: isOn})
-        await client.setSharing(newSharing)
+        await client.setSharing(board.id, newSharing)
         await loadData()
     }
 
@@ -84,7 +115,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         if (accept) {
             const newSharing: ISharing = sharing || createSharingInfo()
             newSharing.token = Utils.createGuid(IDType.Token)
-            await client.setSharing(newSharing)
+            await client.setSharing(board.id, newSharing)
             await loadData()
 
             const description = intl.formatMessage({id: 'ShareBoard.tokenRegenrated', defaultMessage: 'Token regenerated'})
@@ -101,11 +132,11 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const shareUrl = new URL(window.location.toString())
     shareUrl.searchParams.set('r', readToken)
 
-    if (match.params.workspaceId) {
-        const newPath = generatePath('/workspace/:workspaceId/shared/:boardId/:viewId', {
+    if (match.params.teamId) {
+        const newPath = generatePath('/team/:teamId/shared/:boardId/:viewId', {
             boardId: match.params.boardId,
             viewId: match.params.viewId,
-            workspaceId: match.params.workspaceId,
+            teamId: match.params.teamId,
         })
         shareUrl.pathname = Utils.buildURL(newPath)
     } else {
@@ -126,21 +157,21 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             <div className='share-input__container'>
                 <div className='share-input'>
                     <SearchIcon/>
-                    <input
-                        type='text'
-                        placeholder='Add people or groups'
-                        value={term}
-                        onChange={(e) => setTerm(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                e.stopPropagation()
-                                const user = teamUsers.find((u) => u.username === term)
-                                if (!user) {
-                                    return
-                                }
-
-                                mutator.createBoardMember(board.id, user.id)
-                                setTerm('')
+                    <Select
+                        styles={styles}
+                        value={selectedUser}
+                        className={'userSearchInput'}
+                        cacheOptions={true}
+                        loadOptions={(inputValue) => client.searchTeamUsers(inputValue)}
+                        components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
+                        defaultOptions={true}
+                        getOptionValue={(u) => u.id}
+                        getOptionLabel={(u) => u.username}
+                        isMulti={false}
+                        onChange={(newValue) => {
+                            if (newValue) {
+                                mutator.createBoardMember(board.id, newValue.id)
+                                setSelectedUser(null)
                             }
                         }}
                     />

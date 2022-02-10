@@ -435,8 +435,8 @@ class OctoClient {
     }
 
     // Sharing
-    async getSharing(boardId: string): Promise<ISharing | undefined> {
-        const path = this.teamPath() + `/sharing/${boardId}`
+    async getSharing(boardID: string): Promise<ISharing | undefined> {
+        const path = `/api/v1/boards/${boardID}/sharing`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return undefined
@@ -444,8 +444,8 @@ class OctoClient {
         return this.getJson(response, undefined)
     }
 
-    async setSharing(sharing: ISharing): Promise<boolean> {
-        const path = this.teamPath() + `/sharing/${sharing.id}`
+    async setSharing(boardID: string, sharing: ISharing): Promise<boolean> {
+        const path = `/api/v1/boards/${boardID}/sharing`
         const body = JSON.stringify(sharing)
         const response = await fetch(
             this.getBaseURL() + path,
@@ -558,6 +558,15 @@ class OctoClient {
 
     async getTeamUsers(): Promise<IUser[]> {
         const path = this.teamPath() + '/users'
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+        return (await this.getJson(response, [])) as IUser[]
+    }
+
+    async searchTeamUsers(searchQuery: string): Promise<IUser[]> {
+        const path = this.teamPath() + `/users?search=${searchQuery}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []

@@ -763,7 +763,7 @@ func _000017_add_teams_and_boardsDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000017_add_teams_and_boards.down.sql", size: 10, mode: os.FileMode(0644), modTime: time.Unix(1643907123, 0)}
+	info := bindataFileInfo{name: "000017_add_teams_and_boards.down.sql", size: 10, mode: os.FileMode(0644), modTime: time.Unix(1644407407, 0)}
 	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0xb4, 0xe0, 0x49, 0x78, 0x4, 0xe4, 0x6e, 0xa, 0xb, 0xb, 0x8c, 0x31, 0x97, 0x5b, 0x6, 0x21, 0x52, 0xd5, 0x51, 0xba, 0xc4, 0x9c, 0x3c, 0x2e, 0x80, 0x93, 0x25, 0x67, 0xb4, 0x8, 0x5d, 0xcd}}
 	return a, nil
 }
@@ -783,7 +783,7 @@ func _000017_add_teams_and_boardsUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000017_add_teams_and_boards.up.sql", size: 15528, mode: os.FileMode(0644), modTime: time.Unix(1643907123, 0)}
+	info := bindataFileInfo{name: "000017_add_teams_and_boards.up.sql", size: 15528, mode: os.FileMode(0644), modTime: time.Unix(1644407407, 0)}
 	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x79, 0x8b, 0x23, 0x35, 0x20, 0x38, 0xfc, 0xb3, 0x4d, 0xd5, 0x75, 0x1d, 0xd3, 0xb7, 0x3e, 0x15, 0xb8, 0xa3, 0xfe, 0x9, 0x4e, 0xd9, 0xa5, 0x1d, 0x44, 0xdc, 0xe9, 0x36, 0x5b, 0x91, 0xe6, 0xda}}
 	return a, nil
 }
@@ -803,7 +803,7 @@ func _000018_populate_categoriesDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000018_populate_categories.down.sql", size: 35, mode: os.FileMode(0644), modTime: time.Unix(1643907123, 0)}
+	info := bindataFileInfo{name: "000018_populate_categories.down.sql", size: 35, mode: os.FileMode(0644), modTime: time.Unix(1644407407, 0)}
 	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x10, 0x2c, 0xfa, 0xac, 0x47, 0xd2, 0x47, 0x39, 0xe8, 0xfc, 0xcf, 0x79, 0x3, 0x50, 0xed, 0x36, 0x5f, 0xe0, 0x5a, 0x7a, 0xd2, 0xb2, 0x58, 0xdb, 0x4, 0x71, 0xaa, 0x28, 0xf, 0x43, 0x45, 0xe6}}
 	return a, nil
 }
@@ -823,7 +823,7 @@ func _000018_populate_categoriesUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000018_populate_categories.up.sql", size: 1670, mode: os.FileMode(0644), modTime: time.Unix(1643907123, 0)}
+	info := bindataFileInfo{name: "000018_populate_categories.up.sql", size: 1670, mode: os.FileMode(0644), modTime: time.Unix(1644407407, 0)}
 	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x3a, 0x35, 0xb7, 0x37, 0xf9, 0x45, 0x57, 0xac, 0x1c, 0x4c, 0x29, 0x99, 0x41, 0xef, 0xc4, 0x53, 0x66, 0xe4, 0xe4, 0x4, 0x3c, 0xae, 0xa2, 0x29, 0x1a, 0xf3, 0x16, 0x5f, 0x78, 0x5f, 0x6, 0xfd}}
 	return a, nil
 }
@@ -843,7 +843,7 @@ func _000019_populate_category_blocksDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000019_populate_category_blocks.down.sql", size: 40, mode: os.FileMode(0644), modTime: time.Unix(1643907123, 0)}
+	info := bindataFileInfo{name: "000019_populate_category_blocks.down.sql", size: 40, mode: os.FileMode(0644), modTime: time.Unix(1644407407, 0)}
 	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x3c, 0x45, 0x66, 0x2c, 0xde, 0x24, 0xb, 0x86, 0x7a, 0x4, 0x9d, 0xb7, 0x5b, 0xe0, 0xfd, 0x21, 0x4c, 0xc9, 0xec, 0x58, 0xb2, 0xd8, 0xc1, 0x1e, 0xce, 0xad, 0x2a, 0x3e, 0xe9, 0xa6, 0x59, 0x5e}}
 	return a, nil
 }
@@ -863,7 +863,7 @@ func _000019_populate_category_blocksUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000019_populate_category_blocks.up.sql", size: 1432, mode: os.FileMode(0644), modTime: time.Unix(1643907123, 0)}
+	info := bindataFileInfo{name: "000019_populate_category_blocks.up.sql", size: 1432, mode: os.FileMode(0644), modTime: time.Unix(1644407407, 0)}
 	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0xb3, 0x77, 0x46, 0x45, 0xac, 0x5e, 0x99, 0x8c, 0xaa, 0xee, 0x48, 0x97, 0x41, 0x3d, 0x1d, 0x50, 0x66, 0x3e, 0x7f, 0x6b, 0x6d, 0x72, 0xd3, 0xdf, 0xe7, 0xf6, 0x79, 0x4c, 0xd4, 0x3a, 0xc5, 0x1b}}
 	return a, nil
 }
@@ -883,7 +883,7 @@ func _000020_builtin_templates_extra_columnsDownSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000020_builtin_templates_extra_columns.down.sql", size: 268, mode: os.FileMode(0644), modTime: time.Unix(1644247035, 0)}
+	info := bindataFileInfo{name: "000020_builtin_templates_extra_columns.down.sql", size: 268, mode: os.FileMode(0644), modTime: time.Unix(1644407407, 0)}
 	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x55, 0xfd, 0x29, 0x4d, 0x57, 0x2d, 0x2a, 0x7f, 0x40, 0xd6, 0xd1, 0xa1, 0x7f, 0xe3, 0xbd, 0x83, 0x7c, 0x86, 0x55, 0xaf, 0x38, 0xf7, 0xa, 0x19, 0xdc, 0x5, 0x79, 0xff, 0xd7, 0x9e, 0x78, 0x68}}
 	return a, nil
 }
@@ -903,7 +903,7 @@ func _000020_builtin_templates_extra_columnsUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000020_builtin_templates_extra_columns.up.sql", size: 374, mode: os.FileMode(0644), modTime: time.Unix(1644247020, 0)}
+	info := bindataFileInfo{name: "000020_builtin_templates_extra_columns.up.sql", size: 374, mode: os.FileMode(0644), modTime: time.Unix(1644407407, 0)}
 	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0xf5, 0x9e, 0x47, 0xfd, 0xa2, 0xfb, 0xf8, 0x13, 0x34, 0x95, 0x78, 0x90, 0x45, 0x88, 0x75, 0x5c, 0x87, 0x60, 0xd0, 0xe1, 0x61, 0xd5, 0x6c, 0xa, 0x8, 0x9b, 0xf0, 0xc2, 0x3e, 0xd1, 0x8, 0xa9}}
 	return a, nil
 }

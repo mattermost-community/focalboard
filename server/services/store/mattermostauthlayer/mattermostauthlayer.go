@@ -286,6 +286,37 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 	return users, nil
 }
 
+func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
+	query := s.getQueryBuilder().
+		Select("u.id", "u.username", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at", "u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+		From("Users as u").
+		Join("TeamMembers as tm ON tm.UserID = u.ID").
+		LeftJoin("Bots b ON ( b.UserId = Users.ID )").
+		Where(sq.Eq{"u.deleteAt": 0}).
+		Where(sq.Or{
+			sq.Like{"u.username": "%" + searchQuery + "%"},
+			sq.Like{"u.nickname": "%" + searchQuery + "%"},
+			sq.Like{"u.firstname": "%" + searchQuery + "%"},
+			sq.Like{"u.lastname": "%" + searchQuery + "%"},
+		}).
+		Where(sq.Eq{"tm.TeamId": teamID}).
+		OrderBy("u.username").
+		Limit(10)
+
+	rows, err := query.Query()
+	if err != nil {
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	users, err := s.usersFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
 func (s *MattermostAuthLayer) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
 	users := []*model.User{}
 

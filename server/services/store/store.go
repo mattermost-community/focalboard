@@ -55,6 +55,7 @@ type Store interface {
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
 	GetUsersByTeam(teamID string) ([]*model.User, error)
+	SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error)
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)

@@ -1851,6 +1851,11 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	//   description: Team ID
 	//   required: true
 	//   type: string
+	// - name: search
+	//   in: query
+	//   description: string to filter users list
+	//   required: false
+	//   type: string
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -1868,6 +1873,8 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 	userID := getUserID(r)
+	query := r.URL.Query()
+	searchQuery := query.Get("search")
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
@@ -1877,7 +1884,7 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "getUsers", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
-	users, err := a.app.GetTeamUsers(teamID)
+	users, err := a.app.SearchTeamUsers(teamID, searchQuery)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

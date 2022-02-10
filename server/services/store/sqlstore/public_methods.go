@@ -606,6 +606,11 @@ func (s *SQLStore) SearchBoardsForUserAndTeam(term string, userID string, teamID
 
 }
 
+func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
+	return s.searchUsersByTeam(s.db, teamID, searchQuery)
+
+}
+
 func (s *SQLStore) SetSystemSetting(key string, value string) error {
 	return s.setSystemSetting(s.db, key, value)
 
