@@ -15,4 +15,4 @@ Currently, the script imports all cards from a single board, including their pro
 
 The Notion export format does not preserve property types, so the script currently imports all card properties as a Select type. You can change the type after importing into Focalboard.
 
-[Contribute code](https://www.focalboard.com/contribute/getting-started/) to expand this.
+[Contribute code](https://mattermost.github.io/focalboard/) to expand this.

@@ -100,6 +100,8 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                             {id: 'global-id-5'},
                         ],
                         dateDisplayPropertyId: 'global-id-5',
+                        isTemplate: true,
+                        templateVer: 2,
                     },
                 }],
             },

@@ -45,7 +45,7 @@ Download the latest server release from [GitHub releases](https://github.com/mat
 
 ## Building the server
 
-Most development can be done on the Personal Server edition. Please refer to the [Developer's Tips & Tricks](https://www.focalboard.com/contribute/getting-started/dev-tips/) for more detailed steps. Here's a summary:
+Most development can be done on the Personal Server edition. Please refer to the [Developer's Tips & Tricks](https://mattermost.github.io/focalboard/dev-tips) for more detailed steps. Here's a summary:
 
 First, install basic dependencies:
 * Go 1.15+
