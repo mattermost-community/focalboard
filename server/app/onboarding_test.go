@@ -22,7 +22,11 @@ func TestPrepareOnboardingTour(t *testing.T) {
 				"isTemplate": true,
 			},
 		}
-		th.Store.EXPECT().GetSubTree3(store.Container{WorkspaceID: "0"}, "buixxjic3xjfkieees4iafdrznc", gomock.Any()).Return([]model.Block{welcomeBoard}, nil)
+
+		blocks := []model.Block{welcomeBoard}
+		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
+
+		th.Store.EXPECT().GetSubTree3(store.Container{WorkspaceID: "0"}, "block_id_1", gomock.Any()).Return([]model.Block{welcomeBoard}, nil)
 
 		th.Store.EXPECT().InsertBlock(store.Container{WorkspaceID: "workspace_id_1"}, gomock.Any(), "user_id_1").Return(nil)
 
@@ -61,7 +65,11 @@ func TestCreateWelcomeBoard(t *testing.T) {
 				"isTemplate": true,
 			},
 		}
-		th.Store.EXPECT().GetSubTree3(store.Container{WorkspaceID: "0"}, "buixxjic3xjfkieees4iafdrznc", gomock.Any()).Return([]model.Block{welcomeBoard}, nil)
+
+		blocks := []model.Block{welcomeBoard}
+		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
+
+		th.Store.EXPECT().GetSubTree3(store.Container{WorkspaceID: "0"}, "block_id_1", gomock.Any()).Return([]model.Block{welcomeBoard}, nil)
 
 		th.Store.EXPECT().InsertBlock(store.Container{WorkspaceID: "workspace_id_1"}, gomock.Any(), "user_id_1").Return(nil)
 
@@ -76,6 +84,9 @@ func TestCreateWelcomeBoard(t *testing.T) {
 			Type:  model.TypeComment,
 			Title: "Welcome to Boards!",
 		}
+		blocks := []model.Block{welcomeBoard}
+		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
+
 		th.Store.EXPECT().GetSubTree3(store.Container{WorkspaceID: "0"}, "buixxjic3xjfkieees4iafdrznc", gomock.Any()).Return([]model.Block{welcomeBoard}, nil)
 
 		th.Store.EXPECT().InsertBlock(store.Container{WorkspaceID: "workspace_id_1"}, gomock.Any(), "user_id_1").Return(nil)
@@ -94,6 +105,10 @@ func TestCreateWelcomeBoard(t *testing.T) {
 				"isTemplate": true,
 			},
 		}
+
+		blocks := []model.Block{welcomeBoard}
+		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
+		
 		th.Store.EXPECT().GetSubTree3(store.Container{WorkspaceID: "0"}, "buixxjic3xjfkieees4iafdrznc", gomock.Any()).Return([]model.Block{welcomeBoard}, nil)
 
 		th.Store.EXPECT().InsertBlock(store.Container{WorkspaceID: "workspace_id_1"}, gomock.Any(), "user_id_1").Return(nil)

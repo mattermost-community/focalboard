@@ -105,9 +105,5 @@ func (a *App) createWelcomeBoard(userID, workspaceID string) (string, error) {
 		return "", err
 	}
 
-	if welcomeBoardID == "" {
-		return "", errUnableToFindWelcomeBoard
-	}
-
 	return welcomeBoardID, nil
 }
