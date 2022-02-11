@@ -153,10 +153,10 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -729,10 +729,10 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -1814,10 +1814,10 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -2449,10 +2449,10 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -3084,10 +3084,10 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -3719,10 +3719,10 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -4354,10 +4354,10 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -4989,10 +4989,10 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -5624,10 +5624,10 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -6259,10 +6259,10 @@ exports[`components/centerPanel return centerPanel and select one card and click
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -6894,10 +6894,10 @@ exports[`components/centerPanel return centerPanel and select one card and click
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -7529,10 +7529,10 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -7842,10 +7842,10 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>
@@ -8912,10 +8912,10 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
               title="Share board"
               type="button"
             >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-globe CompassIcon"
-                />
                 Share
               </span>
             </button>

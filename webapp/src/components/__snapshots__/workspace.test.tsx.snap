@@ -373,10 +373,10 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   title="Share board"
                   type="button"
                 >
+                  <i
+                    class="CompassIcon icon-globe CompassIcon"
+                  />
                   <span>
-                    <i
-                      class="CompassIcon icon-globe CompassIcon"
-                    />
                     Share
                   </span>
                 </button>
@@ -1612,10 +1612,10 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   title="Share board"
                   type="button"
                 >
+                  <i
+                    class="CompassIcon icon-globe CompassIcon"
+                  />
                   <span>
-                    <i
-                      class="CompassIcon icon-globe CompassIcon"
-                    />
                     Share
                   </span>
                 </button>
@@ -2420,10 +2420,10 @@ exports[`src/components/workspace show add new view tooltip 1`] = `
             Add a new view
           </h4>
           <button
-            class="tutorial-tour-tip__header__close"
+            type="button"
           >
             <i
-              class="icon icon-close"
+              class="CompassIcon icon-close CloseIcon"
             />
           </button>
         </div>
@@ -2473,12 +2473,13 @@ exports[`src/components/workspace show add new view tooltip 1`] = `
               class="tutorial-tour-tip__btn-ctr"
             >
               <button
-                class="tutorial-tour-tip__btn tutorial-tour-tip__confirm-btn"
-                id="tipNextButton"
+                type="button"
               >
-                Next
+                <span>
+                  Next
+                </span>
                 <i
-                  class="icon icon-chevron-right"
+                  class="CompassIcon icon-chevron-right icon"
                 />
               </button>
             </div>
@@ -2522,10 +2523,10 @@ exports[`src/components/workspace show copy link tooltip 1`] = `
             Cpy link
           </h4>
           <button
-            class="tutorial-tour-tip__header__close"
+            type="button"
           >
             <i
-              class="icon icon-close"
+              class="CompassIcon icon-close CloseIcon"
             />
           </button>
         </div>
@@ -2575,21 +2576,24 @@ exports[`src/components/workspace show copy link tooltip 1`] = `
               class="tutorial-tour-tip__btn-ctr"
             >
               <button
-                class="tutorial-tour-tip__btn tutorial-tour-tip__cancel-btn"
-                id="tipPreviousButton"
+                title="Previous"
+                type="button"
               >
                 <i
-                  class="icon icon-chevron-left"
+                  class="CompassIcon icon-chevron-left icon"
                 />
-                Previous
+                <span>
+                  Previous
+                </span>
               </button>
               <button
-                class="tutorial-tour-tip__btn tutorial-tour-tip__confirm-btn"
-                id="tipNextButton"
+                type="button"
               >
-                Next
+                <span>
+                  Next
+                </span>
                 <i
-                  class="icon icon-chevron-right"
+                  class="CompassIcon icon-chevron-right icon"
                 />
               </button>
             </div>
@@ -2633,10 +2637,10 @@ exports[`src/components/workspace show open card tooltip 1`] = `
             Open a card
           </h4>
           <button
-            class="tutorial-tour-tip__header__close"
+            type="button"
           >
             <i
-              class="icon icon-close"
+              class="CompassIcon icon-close CloseIcon"
             />
           </button>
         </div>

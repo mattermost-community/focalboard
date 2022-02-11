@@ -213,7 +213,7 @@ describe('components/cardDetail/CardDetail', () => {
         // moving to next step
         mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
 
-        const nextBtn = document!.querySelector('#tipNextButton')
+        const nextBtn = document!.querySelector('.tipNextButton')
         expect(nextBtn).toBeDefined()
         expect(nextBtn).not.toBeNull()
         await act(async () => {
@@ -288,7 +288,7 @@ describe('components/cardDetail/CardDetail', () => {
         // moving to next step
         mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
 
-        const nextBtn = document!.querySelector('#tipNextButton')
+        const nextBtn = document!.querySelector('.tipNextButton')
         expect(nextBtn).toBeDefined()
         expect(nextBtn).not.toBeNull()
         await act(async () => {
@@ -368,7 +368,7 @@ describe('components/cardDetail/CardDetail', () => {
         // moving to next step
         mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
 
-        const nextBtn = document!.querySelector('#tipNextButton')
+        const nextBtn = document!.querySelector('.tipNextButton')
         expect(nextBtn).toBeDefined()
         expect(nextBtn).not.toBeNull()
         await act(async () => {

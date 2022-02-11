@@ -234,6 +234,7 @@ const TutorialTourTip = ({
                         {
                             !hideNavButtons && (
                                 <Button
+                                    className='tipNextButton'
                                     size='small'
                                     filled={true}
                                     onClick={handleNext}

@@ -28,10 +28,11 @@ exports[`components/onboardingTour/addComments/AddViewTourStep after hover 1`] =
             Add a new view
           </h4>
           <button
-            class="tutorial-tour-tip__header__close"
+            class="IconButton tutorial-tour-tip__header__close size--small"
+            type="button"
           >
             <i
-              class="icon icon-close"
+              class="CompassIcon icon-close CloseIcon"
             />
           </button>
         </div>
@@ -89,21 +90,26 @@ exports[`components/onboardingTour/addComments/AddViewTourStep after hover 1`] =
               class="tutorial-tour-tip__btn-ctr"
             >
               <button
-                class="tutorial-tour-tip__btn tutorial-tour-tip__cancel-btn"
-                id="tipPreviousButton"
+                class="Button emphasis--tertiary size--small"
+                title="Previous"
+                type="button"
               >
                 <i
-                  class="icon icon-chevron-left"
+                  class="CompassIcon icon-chevron-left icon"
                 />
-                Previous
+                <span>
+                  Previous
+                </span>
               </button>
               <button
-                class="tutorial-tour-tip__btn tutorial-tour-tip__confirm-btn"
-                id="tipNextButton"
+                class="Button filled size--small tipNextButton"
+                type="button"
               >
-                Next
+                <span>
+                  Next
+                </span>
                 <i
-                  class="icon icon-chevron-right"
+                  class="CompassIcon icon-chevron-right icon"
                 />
               </button>
             </div>

@@ -28,10 +28,11 @@ exports[`components/cardDetail/CardDetail should show add comments tour tip 1`] 
             Add comments
           </h4>
           <button
-            class="tutorial-tour-tip__header__close"
+            class="IconButton tutorial-tour-tip__header__close size--small"
+            type="button"
           >
             <i
-              class="icon icon-close"
+              class="CompassIcon icon-close CloseIcon"
             />
           </button>
         </div>
@@ -89,21 +90,26 @@ exports[`components/cardDetail/CardDetail should show add comments tour tip 1`] 
               class="tutorial-tour-tip__btn-ctr"
             >
               <button
-                class="tutorial-tour-tip__btn tutorial-tour-tip__cancel-btn"
-                id="tipPreviousButton"
+                class="Button emphasis--tertiary size--small"
+                title="Previous"
+                type="button"
               >
                 <i
-                  class="icon icon-chevron-left"
+                  class="CompassIcon icon-chevron-left icon"
                 />
-                Previous
+                <span>
+                  Previous
+                </span>
               </button>
               <button
-                class="tutorial-tour-tip__btn tutorial-tour-tip__confirm-btn"
-                id="tipNextButton"
+                class="Button filled size--small tipNextButton"
+                type="button"
               >
-                Next
+                <span>
+                  Next
+                </span>
                 <i
-                  class="icon icon-chevron-right"
+                  class="CompassIcon icon-chevron-right icon"
                 />
               </button>
             </div>
@@ -147,10 +153,11 @@ exports[`components/cardDetail/CardDetail should show add description tour tip 1
             Add description
           </h4>
           <button
-            class="tutorial-tour-tip__header__close"
+            class="IconButton tutorial-tour-tip__header__close size--small"
+            type="button"
           >
             <i
-              class="icon icon-close"
+              class="CompassIcon icon-close CloseIcon"
             />
           </button>
         </div>
@@ -208,19 +215,25 @@ exports[`components/cardDetail/CardDetail should show add description tour tip 1
               class="tutorial-tour-tip__btn-ctr"
             >
               <button
-                class="tutorial-tour-tip__btn tutorial-tour-tip__cancel-btn"
-                id="tipPreviousButton"
+                class="Button emphasis--tertiary size--small"
+                title="Previous"
+                type="button"
               >
                 <i
-                  class="icon icon-chevron-left"
+                  class="CompassIcon icon-chevron-left icon"
                 />
-                Previous
+                <span>
+                  Previous
+                </span>
               </button>
               <button
-                class="tutorial-tour-tip__btn tutorial-tour-tip__confirm-btn"
-                id="tipNextButton"
+                class="Button filled size--small tipNextButton"
+                type="button"
               >
-                Done
+                <span>
+                  Done
+                </span>
+                
               </button>
             </div>
           </div>
@@ -263,10 +276,11 @@ exports[`components/cardDetail/CardDetail should show add properties tour tip 1`
             Add properties
           </h4>
           <button
-            class="tutorial-tour-tip__header__close"
+            class="IconButton tutorial-tour-tip__header__close size--small"
+            type="button"
           >
             <i
-              class="icon icon-close"
+              class="CompassIcon icon-close CloseIcon"
             />
           </button>
         </div>
@@ -324,12 +338,14 @@ exports[`components/cardDetail/CardDetail should show add properties tour tip 1`
               class="tutorial-tour-tip__btn-ctr"
             >
               <button
-                class="tutorial-tour-tip__btn tutorial-tour-tip__confirm-btn"
-                id="tipNextButton"
+                class="Button filled size--small tipNextButton"
+                type="button"
               >
-                Next
+                <span>
+                  Next
+                </span>
                 <i
-                  class="icon icon-chevron-right"
+                  class="CompassIcon icon-chevron-right icon"
                 />
               </button>
             </div>
