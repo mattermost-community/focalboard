@@ -9,7 +9,7 @@ exports[`components/sidebarBoardItem sidebar call hideSidebar 1`] = `
       class="octo-sidebar-item ' expanded "
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <svg
@@ -43,7 +43,7 @@ exports[`components/sidebarBoardItem sidebar call hideSidebar 1`] = `
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i

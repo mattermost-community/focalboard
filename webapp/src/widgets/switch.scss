@@ -27,4 +27,20 @@
         transition: transform 200ms ease-out 0s, background 200ms ease-out 0s;
         transform: translateX(0) translateY(0);
     }
+
+    &.size--medium {
+        width: 36px;
+        height: 20px;
+
+        .octo-switch-inner {
+            width: 20px;
+            height: 20px;
+        }
+
+        &.on {
+            .octo-switch-inner {
+                transform: translateX(16px) translateY(0);
+            }
+        }
+    }
 }

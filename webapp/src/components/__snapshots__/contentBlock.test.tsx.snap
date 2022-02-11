@@ -17,7 +17,6 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -113,7 +112,7 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                   role="button"
                 >
                   <i
-                    class="CompassIcon icon-trash-can-outline trash-can-outline"
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
                   />
                   <div
                     class="menu-name"
@@ -200,7 +199,6 @@ exports[`components/contentBlock should match snapshot with commentBlock 1`] = `
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -279,7 +277,6 @@ exports[`components/contentBlock should match snapshot with dividerBlock 1`] = `
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -338,7 +335,6 @@ exports[`components/contentBlock should match snapshot with imageBlock 1`] = `
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -399,7 +395,6 @@ exports[`components/contentBlock should match snapshot with textBlock 1`] = `
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i

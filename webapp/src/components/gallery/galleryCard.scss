@@ -92,6 +92,10 @@
         padding: 5px 10px;
         overflow-wrap: anywhere;
 
+        .octo-tooltip {
+            max-width: 100%;
+        }
+
         .octo-icon {
             margin-right: 5px;
         }

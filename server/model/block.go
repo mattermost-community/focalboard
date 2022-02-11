@@ -108,12 +108,11 @@ type BlockPatchBatch struct {
 	BlockPatches []BlockPatch `json:"block_patches"`
 }
 
-// Archive is an import / export archive.
-type Archive struct {
-	Version int64   `json:"version"`
-	Date    int64   `json:"date"`
-	Blocks  []Block `json:"blocks"`
-}
+// BlockModifier is a callback that can modify each block during an import.
+// A cache of arbitrary data will be passed for each call and any changes
+// to the cache will be preserved for the next call.
+// Return true to import the block or false to skip import.
+type BlockModifier func(block *Block, cache map[string]interface{}) bool
 
 func BlocksFromJSON(data io.Reader) []Block {
 	var blocks []Block
