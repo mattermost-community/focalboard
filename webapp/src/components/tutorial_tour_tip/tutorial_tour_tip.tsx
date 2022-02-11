@@ -14,6 +14,11 @@ import 'tippy.js/animations/perspective-subtle.css'
 
 import {Placement} from 'tippy.js'
 
+import CloseIcon from '../../widgets/icons/close'
+import Button from '../../widgets/buttons/button'
+import IconButton from '../../widgets/buttons/iconButton'
+import CompassIcon from '../../widgets/icons/compassIcon'
+
 import PulsatingDot from '../pulsating_dot'
 
 import TutorialTourTipBackdrop, {Coords, TutorialTourTipPunchout} from './tutorial_tour_tip_backdrop'
@@ -119,7 +124,6 @@ const TutorialTourTip = ({
                     id={'tutorial_tip.ok'}
                     defaultMessage={'Next'}
                 />
-                <i className='icon icon-chevron-right'/>
             </>
         )
         if (singleTip) {
@@ -181,17 +185,17 @@ const TutorialTourTip = ({
                 <h4 className='tutorial-tour-tip__header__title'>
                     {title}
                 </h4>
-                <button
+                <IconButton
                     className='tutorial-tour-tip__header__close'
+                    size='small'
+                    icon={<CloseIcon/>}
                     onClick={(e) => {
                         if (skipCategoryFromBackdrop) {
                             handleDismiss(e)
                             handleSendToNextTour(tutorialCategory)
                         }
                     }}
-                >
-                    <i className='icon icon-close'/>
-                </button>
+                />
             </div>
             <div className='tutorial-tour-tip__body'>
                 {screen}
@@ -209,28 +213,41 @@ const TutorialTourTip = ({
                     <div className='tutorial-tour-tip__circles-ctr'>{dots}</div>
                     <div className={'tutorial-tour-tip__btn-ctr'}>
                         {!hideNavButtons && step !== 0 && (
-                            <button
-                                id='tipPreviousButton'
-                                className='tutorial-tour-tip__btn tutorial-tour-tip__cancel-btn'
+                            <Button
+                                title='Previous'
+                                size='small'
+                                emphasis='tertiary'
                                 onClick={handlePrevious}
+                                icon={
+                                    <CompassIcon
+                                        className='icon'
+                                        icon='chevron-left'
+                                    />}
                             >
-                                <i className='icon icon-chevron-left'/>
                                 <FormattedMessage
                                     id='generic.previous'
                                     defaultMessage='Previous'
                                 />
-                            </button>
+                            </Button>
                         )}
 
                         {
                             !hideNavButtons && (
-                                <button
-                                    id='tipNextButton'
-                                    className='tutorial-tour-tip__btn tutorial-tour-tip__confirm-btn'
+                                <Button
+                                    size='small'
+                                    filled={true}
                                     onClick={handleNext}
+                                    rightIcon={true}
+                                    icon={(singleTip || step === getLastStep()) ? '' : (
+                                        <CompassIcon
+                                            className='icon'
+                                            icon='chevron-right'
+                                        />
+                                    )
+                                    }
                                 >
                                     {getButtonText()}
-                                </button>
+                                </Button>
                             )
                         }
                     </div>
