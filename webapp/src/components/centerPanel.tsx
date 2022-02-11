@@ -182,7 +182,7 @@ class CenterPanel extends React.Component<Props, State> {
 
         const isOnboardingBoard = this.props.board.title === OnboardingBoardTitle
         const showTour = isOnboardingBoard && this.props.onboardingTourStarted
-        const showShareTourStep = this.props.showShared && showTour && this.props.onboardingTourCategory === TOUR_BOARD && this.props.onboardingTourStep === BoardTourSteps.SHARE_BOARD.toString()
+        const showShareTourStep = this.props.showShared && showTour && this.props.onboardingTourCategory === TOUR_BOARD && this.props.onboardingTourStep === BoardTourSteps.SHARE_BOARD?.toString()
 
         return (
             <div
