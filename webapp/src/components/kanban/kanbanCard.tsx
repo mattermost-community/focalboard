@@ -115,7 +115,9 @@ const KanbanCard = React.memo((props: Props) => {
     const me = useAppSelector(getMe)
 
     const handleOnClick = async (e: React.MouseEvent) => {
-        if (showTour && onboardingTourCategory === TOUR_CARD && onboardingTourStep === CardTourSteps.ADD_PROPERTIES.toString() && me) {
+        const cardTourStarted = onboardingTourCategory === TOUR_CARD && onboardingTourStep === CardTourSteps.ADD_PROPERTIES.toString()
+        const baseTourStarted = onboardingTourCategory === TOUR_BASE
+        if (showTour && (cardTourStarted || baseTourStarted) && me) {
             // send the user to next tour
             const patch: UserConfigPatch = {
                 updatedFields: {
