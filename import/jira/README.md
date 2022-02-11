@@ -20,4 +20,4 @@ The following aren't currently imported:
 * Comments
 * Embedded files
 
-[Contribute code](https://www.focalboard.com/contribute/getting-started/) to expand this.
+[Contribute code](https://mattermost.github.io/focalboard/) to expand this.

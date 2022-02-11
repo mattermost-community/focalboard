@@ -10,4 +10,4 @@ This node app converts an Asana json archive into a Focalboard archive. To use:
 
 ## Import scope
 
-Currently, the script imports all cards from a single board, including their section (column) membership, names, and notes. [Contribute code](https://www.focalboard.com/contribute/getting-started/) to expand this.
+Currently, the script imports all cards from a single board, including their section (column) membership, names, and notes. [Contribute code](https://mattermost.github.io/focalboard/) to expand this.

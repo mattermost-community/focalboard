@@ -56,7 +56,7 @@ Please [get in touch](https://www.focalboard.com/feedback/)!
 ## Want to Contribute?
 We’d love your help!
 
-Help shape the future of Focalboard by contributing ideas, bug reports, and code. Check out our [community page](https://www.focalboard.com/contribute/getting-started/) or [GitHub repo](https://github.com/mattermost/focalboard) to get started.
+Help shape the future of Focalboard by contributing ideas, bug reports, and code. Check out our [community page](https://mattermost.github.io/focalboard/) or [GitHub repo](https://github.com/mattermost/focalboard) to get started.
 
 You can also browse GitHub tickets with a “[help wanted](https://github.com/mattermost/focalboard/issues?q=is%3Aissue+is%3Aopen+label%3A%22Up+for+grabs%22)” tag to see what projects are available.
 
