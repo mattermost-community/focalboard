@@ -283,7 +283,7 @@ const TutorialTourTip = ({
             <TourTipOverlay
                 show={!hideBackdrop && show}
                 onClick={(e) => {
-                    handleNext(e)
+                    handleEventPropagationAndDefault(e)
                     handleHide(e)
                     if (onPunchholeClick) {
                         onPunchholeClick(e)
