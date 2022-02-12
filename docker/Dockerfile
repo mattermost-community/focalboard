@@ -4,7 +4,9 @@ FROM node:16.3.0 as nodebuild
 WORKDIR /webapp
 ADD webapp/ /webapp
 
-RUN npm install --no-optional && \
+### 'CPPFLAGS="-DPNG_ARM_NEON_OPT=0"' Needed To Avoid Bug Described in: https://github.com/imagemin/optipng-bin/issues/118#issuecomment-1019838562
+### Can be Removed when Ticket will be Closed
+RUN CPPFLAGS="-DPNG_ARM_NEON_OPT=0" npm install --no-optional && \
     npm run pack
 
 ### Go build
@@ -17,7 +19,7 @@ ADD . /go/src/focalboard
 ARG TARGETOS
 ARG TARGETARCH  
 
-RUN  make server-docker os=${TARGETOS} arch=${TARGETARCH}
+RUN make server-docker os=${TARGETOS} arch=${TARGETARCH}
 RUN mkdir /data
 
 ## Final image
