@@ -15,7 +15,7 @@ const ErrorPage = React.memo(() => {
     const errid = queryString.get('id')
     const errorDef = errorDefFromId(errid as ErrorId)
 
-    const handleButtonClick = useCallback((path: undefined | string | (()=>string)) => {
+    const handleButtonClick = useCallback((path: string | (()=>string)) => {
         let url = '/dashboard'
         if (typeof path === 'function') {
             url = path()
@@ -25,7 +25,7 @@ const ErrorPage = React.memo(() => {
         history.push(url)
     }, [history])
 
-    const makeButton = ((path: undefined | string | (()=>string), id: undefined | string, fill: undefined | boolean) => {
+    const makeButton = ((path: string | (()=>string), id: string, fill: boolean) => {
         return (
             <Button
                 filled={fill}
@@ -51,8 +51,12 @@ const ErrorPage = React.memo(() => {
                 />
             </div>
             <br/>
-            {makeButton(errorDef.button1Redirect, errorDef.button1Id, errorDef.button1Fill)}
-            {makeButton(errorDef.button2Redirect, errorDef.button2Id, errorDef.button2Fill)}
+            {
+                (errorDef.button1Enabled ? makeButton(errorDef.button1Redirect, errorDef.button1Id, errorDef.button1Fill) : null)
+            }
+            {
+                (errorDef.button2Enabled ? makeButton(errorDef.button2Redirect, errorDef.button2Id, errorDef.button2Fill) : null)
+            }
         </div>
     )
 })
