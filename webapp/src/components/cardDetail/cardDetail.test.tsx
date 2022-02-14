@@ -161,7 +161,7 @@ describe('components/cardDetail/CardDetail', () => {
                 me: {
                     id: 'user_id_1',
                     props: {
-                        focalboard_welcomePageViewed: true,
+                        focalboard_welcomePageViewed: '1',
                         focalboard_onboardingTourStarted: true,
                         focalboard_tourCategory: 'card',
                         focalboard_onboardingTourStep: '0',
@@ -236,7 +236,7 @@ describe('components/cardDetail/CardDetail', () => {
                 me: {
                     id: 'user_id_1',
                     props: {
-                        focalboard_welcomePageViewed: true,
+                        focalboard_welcomePageViewed: '1',
                         focalboard_onboardingTourStarted: true,
                         focalboard_tourCategory: 'card',
                         focalboard_onboardingTourStep: '1',
@@ -311,7 +311,7 @@ describe('components/cardDetail/CardDetail', () => {
                 me: {
                     id: 'user_id_1',
                     props: {
-                        focalboard_welcomePageViewed: true,
+                        focalboard_welcomePageViewed: '1',
                         focalboard_onboardingTourStarted: true,
                         focalboard_tourCategory: 'card',
                         focalboard_onboardingTourStep: '2',

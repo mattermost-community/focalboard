@@ -19,7 +19,7 @@ interface UserWorkspace {
 }
 
 interface UserConfigPatch {
-    updatedFields?: Record<string, any>
+    updatedFields?: Record<string, string>
     deletedFields?: string[]
 }
 

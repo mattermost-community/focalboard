@@ -10,7 +10,6 @@ import BoardWelcomeSmallPNG from '../../../static/boards-welcome-small.png'
 
 import Button from '../../widgets/buttons/button'
 import CompassIcon from '../../widgets/icons/compassIcon'
-import {UserSettingKey} from '../../userSettings'
 import {Utils} from '../../utils'
 
 import './welcomePage.scss'
@@ -21,6 +20,7 @@ import {fetchMe, getMe, patchProps} from '../../store/users'
 import octoClient from '../../octoClient'
 import {FINISHED, TOUR_ORDER} from '../../components/onboardingTour'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import {UserSettingKey} from '../../userSettings'
 
 const WelcomePage = React.memo(() => {
     const history = useHistory()
@@ -31,7 +31,7 @@ const WelcomePage = React.memo(() => {
     const setWelcomePageViewed = async (userID: string):Promise<any> => {
         const patch: UserConfigPatch = {}
         patch.updatedFields = {}
-        patch.updatedFields[UserPropPrefix + UserSettingKey.WelcomePageViewed] = true
+        patch.updatedFields[UserPropPrefix + UserSettingKey.WelcomePageViewed] = '1'
 
         const updatedProps = await mutator.patchUserConfig(userID, patch)
         if (updatedProps) {

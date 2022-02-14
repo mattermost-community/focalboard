@@ -85,7 +85,7 @@ Cypress.Commands.add('apiResetBoards', () => {
 Cypress.Commands.add('apiSkipTour', (userID: string) => {
     const body: UserConfigPatch = {
         updatedFields: {
-            focalboard_welcomePageViewed: true,
+            focalboard_welcomePageViewed: '1',
         },
     }
 

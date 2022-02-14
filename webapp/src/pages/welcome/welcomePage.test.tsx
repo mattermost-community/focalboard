@@ -40,7 +40,7 @@ const mockedOctoClient = mocked(octoClient, true)
 beforeEach(() => {
     jest.resetAllMocks()
     mockedMutator.patchUserConfig.mockImplementation(() => Promise.resolve({
-        welcomePageViewed: 'true',
+        welcomePageViewed: '1',
     }))
     mockedOctoClient.prepareOnboarding.mockResolvedValue({
         workspaceID: 'workspace_id_1',
@@ -136,7 +136,7 @@ describe('pages/welcome', () => {
             users: {
                 me: {
                     props: {
-                        focalboard_welcomePageViewed: 'true',
+                        focalboard_welcomePageViewed: '1',
                     },
                 },
             },
@@ -168,7 +168,7 @@ describe('pages/welcome', () => {
             users: {
                 me: {
                     props: {
-                        focalboard_welcomePageViewed: 'true',
+                        focalboard_welcomePageViewed: '1',
                     },
                 },
             },
@@ -228,7 +228,7 @@ describe('pages/welcome', () => {
         history.replace = jest.fn()
         const user = {
             props: {
-                focalboard_welcomePageViewed: true,
+                focalboard_welcomePageViewed: '1',
                 focalboard_onboardingTourStep: '0',
                 focalboard_tourCategory: 'onboarding',
             },
@@ -258,7 +258,7 @@ describe('pages/welcome', () => {
         history.replace = jest.fn()
         const user = {
             props: {
-                focalboard_welcomePageViewed: true,
+                focalboard_welcomePageViewed: '1',
                 focalboard_onboardingTourStep: '0',
                 focalboard_tourCategory: 'onboarding',
             },

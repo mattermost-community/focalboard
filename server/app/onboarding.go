@@ -38,8 +38,8 @@ func (a *App) PrepareOnboardingTour(userID string) (string, string, error) {
 
 	// set user's tour state to initial state
 	userPropPatch := model.UserPropPatch{
-		UpdatedFields: map[string]interface{}{
-			KeyOnboardingTourStarted:  true,
+		UpdatedFields: map[string]string{
+			KeyOnboardingTourStarted:  "1",
 			KeyOnboardingTourStep:     ValueOnboardingFirstStep,
 			KeyOnboardingTourCategory: ValueTourCategoryOnboarding,
 		},

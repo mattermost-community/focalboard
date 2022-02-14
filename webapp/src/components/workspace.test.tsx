@@ -278,7 +278,7 @@ describe('src/components/workspace', () => {
                     username: 'username_1',
                     email: '',
                     props: {
-                        focalboard_welcomePageViewed: true,
+                        focalboard_welcomePageViewed: '1',
                         focalboard_onboardingTourStarted: true,
                         focalboard_tourCategory: 'onboarding',
                         focalboard_onboardingTourStep: '0',
@@ -361,7 +361,7 @@ describe('src/components/workspace', () => {
                     username: 'username_1',
                     email: '',
                     props: {
-                        focalboard_welcomePageViewed: true,
+                        focalboard_welcomePageViewed: '1',
                         focalboard_onboardingTourStarted: true,
                         focalboard_tourCategory: 'board',
                         focalboard_onboardingTourStep: '0',
@@ -447,7 +447,7 @@ describe('src/components/workspace', () => {
                     username: 'username_1',
                     email: '',
                     props: {
-                        focalboard_welcomePageViewed: true,
+                        focalboard_welcomePageViewed: '1',
                         focalboard_onboardingTourStarted: true,
                         focalboard_tourCategory: 'board',
                         focalboard_onboardingTourStep: '1',
