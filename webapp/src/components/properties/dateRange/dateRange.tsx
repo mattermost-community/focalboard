@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useMemo, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {DateUtils} from 'react-day-picker'
 import MomentLocaleUtils from 'react-day-picker/moment'
@@ -50,6 +50,10 @@ export function createDatePropertyFromString(initialValue: string) : DatePropert
     return dateProperty
 }
 
+function datePropertyToString(dateProperty: DateProperty): string {
+    return dateProperty.from || dateProperty.to ? JSON.stringify(dateProperty) : ''
+}
+
 const loadedLocales: Record<string, moment.Locale> = {}
 
 function DateRange(props: Props): JSX.Element {
@@ -68,7 +72,7 @@ function DateRange(props: Props): JSX.Element {
         return new Date(date).getTimezoneOffset() * 60 * 1000
     }
 
-    const [dateProperty, setDateProperty] = useState<DateProperty>(createDatePropertyFromString(value as string))
+    const dateProperty = useMemo(() => createDatePropertyFromString(value as string), [value])
     const [showDialog, setShowDialog] = useState(false)
 
     // Keep dateProperty as UTC,
@@ -127,7 +131,7 @@ function DateRange(props: Props): JSX.Element {
             rangeUTC.to -= dateProperty.includeTime ? 0 : timeZoneOffset(rangeUTC.to)
         }
 
-        setDateProperty(rangeUTC)
+        onChange(datePropertyToString(rangeUTC))
         setFromInput(getDisplayDate(range.from ? new Date(range.from) : undefined))
         setToInput(getDisplayDate(range.to ? new Date(range.to) : undefined))
     }
@@ -141,16 +145,7 @@ function DateRange(props: Props): JSX.Element {
     }
 
     const onClose = () => {
-        // not actually setting here,
-        // but using to retreive the current state
-        setDateProperty((current) => {
-            if (current && current.from) {
-                onChange(JSON.stringify(current))
-            } else {
-                onChange('')
-            }
-            return {...current}
-        })
+        onChange(datePropertyToString(dateProperty))
         setShowDialog(false)
     }
 

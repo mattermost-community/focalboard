@@ -171,7 +171,12 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 className='octo-propertyvalue'
                 value={value.toString()}
                 showEmptyPlaceholder={showEmptyPlaceholder}
-                onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
+                onChange={(newValue) => {
+                    if (value !== newValue) {
+                        setValue(newValue)
+                        mutator.changePropertyValue(card, propertyTemplate.id, newValue)
+                    }
+                }}
             />
         )
     } else if (propertyTemplate.type === 'url') {

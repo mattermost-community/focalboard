@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useState} from 'react'
 import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {IntlProvider} from 'react-intl'
@@ -17,6 +17,27 @@ const June15 = new Date(Date.UTC(new Date().getFullYear(), 5, 15, 12))
 const June15Local = new Date(new Date().getFullYear(), 5, 15, 12)
 const June20 = new Date(Date.UTC(new Date().getFullYear(), 5, 20, 12))
 
+type Props = {
+    initialValue?: string
+    showEmptyPlaceholder?: boolean
+    onChange?: (value: string) => void
+}
+
+const DateRangeWrapper = (props: Props): JSX.Element => {
+    const [value, setValue] = useState(props.initialValue || '')
+    return (
+        <DateRange
+            className='octo-propertyvalue'
+            value={value}
+            showEmptyPlaceholder={props.showEmptyPlaceholder}
+            onChange={(newValue) => {
+                setValue(newValue)
+                props.onChange?.(newValue)
+            }}
+        />
+    )
+}
+
 describe('components/properties/dateRange', () => {
     beforeEach(() => {
         // Quick fix to disregard console error when unmounting a component
@@ -26,9 +47,8 @@ describe('components/properties/dateRange', () => {
 
     test('returns default correctly', () => {
         const component = wrapIntl(
-            <DateRange
-                className='octo-propertyvalue'
-                value={''}
+            <DateRangeWrapper
+                initialValue=''
                 onChange={jest.fn()}
             />,
         )
@@ -40,9 +60,8 @@ describe('components/properties/dateRange', () => {
     test('returns local correctly - es local', () => {
         const component = (
             <IntlProvider locale='es'>
-                <DateRange
-                    className='octo-propertyvalue'
-                    value={June15Local.getTime().toString()}
+                <DateRangeWrapper
+                    initialValue={June15Local.getTime().toString()}
                     onChange={jest.fn()}
                 />
             </IntlProvider>
@@ -57,9 +76,8 @@ describe('components/properties/dateRange', () => {
     test('handles calendar click event', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRange
-                className='octo-propertyvalue'
-                value={''}
+            <DateRangeWrapper
+                initialValue=''
                 showEmptyPlaceholder={true}
                 onChange={callback}
             />,
@@ -84,9 +102,8 @@ describe('components/properties/dateRange', () => {
     test('handles setting range', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRange
-                className='octo-propertyvalue'
-                value={''}
+            <DateRangeWrapper
+                initialValue={''}
                 showEmptyPlaceholder={true}
                 onChange={callback}
             />,
@@ -121,9 +138,8 @@ describe('components/properties/dateRange', () => {
     test('handle clear', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRange
-                className='octo-propertyvalue'
-                value={June15Local.getTime().toString()}
+            <DateRangeWrapper
+                initialValue={June15Local.getTime().toString()}
                 onChange={callback}
             />,
         )
@@ -146,9 +162,8 @@ describe('components/properties/dateRange', () => {
     test('set via text input', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRange
-                className='octo-propertyvalue'
-                value={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
+            <DateRangeWrapper
+                initialValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
                 onChange={callback}
             />,
         )
@@ -183,9 +198,8 @@ describe('components/properties/dateRange', () => {
 
         const component = (
             <IntlProvider locale='es'>
-                <DateRange
-                    className='octo-propertyvalue'
-                    value={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
+                <DateRangeWrapper
+                    initialValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
                     onChange={callback}
                 />
             </IntlProvider>
@@ -218,9 +232,8 @@ describe('components/properties/dateRange', () => {
     test('cancel set via text input', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRange
-                className='octo-propertyvalue'
-                value={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
+            <DateRangeWrapper
+                initialValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
                 onChange={callback}
             />,
         )
@@ -248,9 +261,8 @@ describe('components/properties/dateRange', () => {
     test('handles `Today` button click event', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRange
-                className='octo-propertyvalue'
-                value={''}
+            <DateRangeWrapper
+                initialValue={''}
                 showEmptyPlaceholder={true}
                 onChange={callback}
             />,
