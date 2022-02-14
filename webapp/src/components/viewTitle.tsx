@@ -21,7 +21,7 @@ type Props = {
     readonly: boolean
 }
 
-const ViewTitle = React.memo((props: Props) => {
+const ViewTitle = (props: Props) => {
     const {board} = props
 
     const [title, setTitle] = useState(board.title)
@@ -102,6 +102,6 @@ const ViewTitle = React.memo((props: Props) => {
             }
         </div>
     )
-})
+}
 
-export default ViewTitle
+export default React.memo(ViewTitle)

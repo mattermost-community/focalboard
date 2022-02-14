@@ -11,7 +11,7 @@ import {ClientConfig} from '../config/clientConfig'
 import {Block} from '../blocks/block'
 import {BlockIcons} from '../blockIcons'
 import {Card, createCard} from '../blocks/card'
-import {Board, IPropertyTemplate, IPropertyOption, BoardGroup} from '../blocks/board'
+import {Board, IPropertyTemplate} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
@@ -19,10 +19,12 @@ import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
 import {addCard, addTemplate} from '../store/cards'
 import {updateView} from '../store/views'
+import {getVisibleAndHiddenGroups} from '../boardUtils'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
+
+import ShareBoardButton from './shareBoard/shareBoardButton'
 
 import './centerPanel.scss'
-
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
@@ -58,6 +60,7 @@ type Props = {
 type State = {
     selectedCardIds: string[]
     cardIdToFocusOnRender: string
+    showShareDialog: boolean
 }
 
 class CenterPanel extends React.Component<Props, State> {
@@ -101,6 +104,7 @@ class CenterPanel extends React.Component<Props, State> {
         this.state = {
             selectedCardIds: [],
             cardIdToFocusOnRender: '',
+            showShareDialog: false,
         }
     }
 
@@ -114,7 +118,7 @@ class CenterPanel extends React.Component<Props, State> {
 
     render(): JSX.Element {
         const {groupByProperty, activeView, board, views, cards} = this.props
-        const {visible: visibleGroups, hidden: hiddenGroups} = this.getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
+        const {visible: visibleGroups, hidden: hiddenGroups} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
 
         return (
             <div
@@ -145,11 +149,18 @@ class CenterPanel extends React.Component<Props, State> {
 
                 <div className='top-head'>
                     <TopBar/>
-                    <ViewTitle
-                        key={board.id + board.title}
-                        board={board}
-                        readonly={this.props.readonly}
-                    />
+                    <div className='mid-head'>
+                        <ViewTitle
+                            key={board.id + board.title}
+                            board={board}
+                            readonly={this.props.readonly}
+                        />
+                        {!this.props.readonly && this.props.showShared &&
+                            <ShareBoardButton
+                                boardId={this.props.board.id}
+                            />
+                        }
+                    </div>
                     <ViewHeader
                         board={this.props.board}
                         activeView={this.props.activeView}
@@ -162,7 +173,6 @@ class CenterPanel extends React.Component<Props, State> {
                         addCardTemplate={this.addCardTemplate}
                         editCardTemplate={this.editCardTemplate}
                         readonly={this.props.readonly}
-                        showShared={this.props.showShared}
                     />
                 </div>
 
@@ -399,55 +409,6 @@ class CenterPanel extends React.Component<Props, State> {
         })
 
         this.setState({selectedCardIds: []})
-    }
-    private groupCardsByOptions(cards: Card[], optionIds: string[], groupByProperty?: IPropertyTemplate): BoardGroup[] {
-        const groups = []
-        for (const optionId of optionIds) {
-            if (optionId) {
-                const option = groupByProperty?.options.find((o) => o.id === optionId)
-                if (option) {
-                    const c = cards.filter((o) => optionId === o.fields.properties[groupByProperty!.id])
-                    const group: BoardGroup = {
-                        option,
-                        cards: c,
-                    }
-                    groups.push(group)
-                } else {
-                    Utils.logError(`groupCardsByOptions: Missing option with id: ${optionId}`)
-                }
-            } else {
-                // Empty group
-                const emptyGroupCards = cards.filter((card) => {
-                    const groupByOptionId = card.fields.properties[groupByProperty?.id || '']
-                    return !groupByOptionId || !groupByProperty?.options.find((option) => option.id === groupByOptionId)
-                })
-                const group: BoardGroup = {
-                    option: {id: '', value: `No ${groupByProperty?.name}`, color: ''},
-                    cards: emptyGroupCards,
-                }
-                groups.push(group)
-            }
-        }
-        return groups
-    }
-
-    private getVisibleAndHiddenGroups(cards: Card[], visibleOptionIds: string[], hiddenOptionIds: string[], groupByProperty?: IPropertyTemplate): {visible: BoardGroup[], hidden: BoardGroup[]} {
-        let unassignedOptionIds: string[] = []
-        if (groupByProperty) {
-            unassignedOptionIds = groupByProperty.options.
-                filter((o: IPropertyOption) => !visibleOptionIds.includes(o.id) && !hiddenOptionIds.includes(o.id)).
-                map((o: IPropertyOption) => o.id)
-        }
-        const allVisibleOptionIds = [...visibleOptionIds, ...unassignedOptionIds]
-
-        // If the empty group positon is not explicitly specified, make it the first visible column
-        if (!allVisibleOptionIds.includes('') && !hiddenOptionIds.includes('')) {
-            allVisibleOptionIds.unshift('')
-        }
-
-        const visibleGroups = this.groupCardsByOptions(cards, allVisibleOptionIds, groupByProperty)
-        const hiddenGroups = this.groupCardsByOptions(cards, hiddenOptionIds, groupByProperty)
-        return {visible: visibleGroups, hidden: hiddenGroups}
     }
 }
 

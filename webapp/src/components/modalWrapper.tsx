@@ -7,12 +7,12 @@ type Props = {
     children: React.ReactNode
 }
 
-const ModalWrapper = React.memo((props: Props) => {
+const ModalWrapper = (props: Props) => {
     return (
         <div className='ModalWrapper'>
             {props.children}
         </div>
     )
-})
+}
 
-export default ModalWrapper
+export default React.memo(ModalWrapper)

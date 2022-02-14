@@ -6,6 +6,7 @@ import (
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/mattermost-plugin-api/cluster"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -54,11 +55,6 @@ func New(params Params) (*SQLStore, error) {
 
 		return nil, err
 	}
-
-	if err := store.InitializeTemplates(); err != nil {
-		params.Logger.Error(`InitializeTemplates failed`, mlog.Err(err))
-	}
-
 	return store, nil
 }
 

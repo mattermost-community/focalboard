@@ -15,7 +15,7 @@ import {Utils} from '../../utils'
 
 import './welcomePage.scss'
 
-const WelcomePage = React.memo(() => {
+const WelcomePage = () => {
     const history = useHistory()
     const queryString = new URLSearchParams(useLocation().search)
 
@@ -84,6 +84,6 @@ const WelcomePage = React.memo(() => {
             </div>
         </div>
     )
-})
+}
 
-export default WelcomePage
+export default React.memo(WelcomePage)

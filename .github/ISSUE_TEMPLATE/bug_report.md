@@ -31,3 +31,8 @@ If applicable, add screenshots to elaborate on the problem.
 ## Additional context
 
 Add any other context about the problem here.
+
+Also set the Severity using the *Sev/1*, *Sev/2* or *Sev/3* labels as best you can:
+* Sev/1: Issue affects critical functionality without a workaround
+* Sev/2: Issue affects major functionality with a difficult or non-obvious workaround
+* Sev/3: Issue affects minor, non-critical functionality

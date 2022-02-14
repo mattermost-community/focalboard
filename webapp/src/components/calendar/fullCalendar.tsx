@@ -4,7 +4,7 @@
 import React, {useCallback, useMemo} from 'react'
 import {useIntl} from 'react-intl'
 
-import FullCalendar, {EventClickArg, EventChangeArg, EventInput, EventContentArg, DayCellContentArg} from '@fullcalendar/react'
+import FullCalendar, {EventChangeArg, EventInput, EventContentArg, DayCellContentArg} from '@fullcalendar/react'
 
 import interactionPlugin from '@fullcalendar/interaction'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -120,7 +120,10 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
         return (
-            <div>
+            <div
+                className='EventContent'
+                onClick={() => props.showCard(event.id)}
+            >
                 <div className='octo-icontitle'>
                     { event.extendedProps.icon ? <div className='octo-icon'>{event.extendedProps.icon}</div> : undefined }
                     <div
@@ -149,11 +152,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
             </div>
         )
     }
-
-    const eventClick = useCallback((eventProps: EventClickArg) => {
-        const {event} = eventProps
-        props.showCard(event.id)
-    }, [props.showCard])
 
     const eventChange = useCallback((eventProps: EventChangeArg) => {
         const {event} = eventProps
@@ -239,7 +237,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 eventResizableFromStart={isEditable()}
                 headerToolbar={toolbar}
                 buttonText={buttonText}
-                eventClick={eventClick}
                 eventContent={renderEventContent}
                 eventChange={eventChange}
 

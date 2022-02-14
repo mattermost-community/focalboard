@@ -91,6 +91,9 @@ func (pd PropDef) GetValue(v interface{}, resolver PropValueResolver) (string, e
 			if err != nil {
 				return "", err
 			}
+			if user == nil {
+				return userID, nil
+			}
 			return user.Username, nil
 		}
 		return userID, nil
