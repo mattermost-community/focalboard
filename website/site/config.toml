@@ -72,7 +72,7 @@ pygmentsStyle = "manni"
       weight = 2
 
     [[menu.postpend]]
-      url = "/contribute/getting-started"
+      url = "https://mattermost.github.io/focalboard/"
       name = "Contribute"
       weight = 3
 
@@ -125,7 +125,7 @@ pygmentsStyle = "manni"
   [[params.intro.item]]
     title = "Contribute"
     description = "Help build the future of productivity and submit code directly to the Focalboard open-source project."
-    url = "contribute/getting-started"
+    url = "https://mattermost.github.io/focalboard/"
     button = "Start Contributing"
     icon = "/img/contribute-icon.svg"
     draft = false

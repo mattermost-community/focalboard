@@ -18,3 +18,27 @@ brew install openapi-generator
 # Server API documentation
 
 See the generated [server API documentation here](https://htmlpreview.github.io/?https://github.com/mattermost/focalboard/blob/main/server/swagger/docs/html/index.html).
+
+# Differences for Mattermost Boards
+
+The auto-generated Swagger API documentation is for Focalboard Personal Server. If you are calling the API on Mattermost Boards, the additional changes are:
+
+### API URLs endpoint
+
+The API endpoint is at `https://SERVERNAME/plugins/focalboard/api/`, e.g. `https://community.mattermost.com/plugins/focalboard/api/`.
+
+### Use the Mattermost auth token
+
+Refer to the [Mattermost API documentation here](https://api.mattermost.com/#tag/authentication) on how to obtain the auth token.
+
+Pass this token as a bearer token to the Boards APIs, e.g.
+
+```
+curl -i -H "X-Requested-With: XMLHttpRequest" -H 'Authorization: Bearer abcdefghijklmnopqrstuvwxyz' https://community.mattermost.com/plugins/focalboard/api/v1/workspaces
+```
+
+Note that the `X-Requested-With: XMLHttpRequest` header is required to pass the CSRF check.
+
+# We want to hear from you!
+
+If you are planning on using the Boards API, we would love to hear about what you'd like to do, and how we can improve the APIs in the future. [See here](https://github.com/mattermost/focalboard/discussions/2139) for more details on how to connect.

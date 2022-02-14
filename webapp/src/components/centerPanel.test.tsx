@@ -110,6 +110,24 @@ describe('components/centerPanel', () => {
         activeView.fields.viewType = 'board'
         jest.clearAllMocks()
     })
+    test('should match snapshot for Kanban, not shared', () => {
+        const {container} = render(wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <CenterPanel
+                    cards={[card1]}
+                    views={[activeView]}
+                    board={board}
+                    activeView={activeView}
+                    readonly={false}
+                    showCard={jest.fn()}
+                    showShared={false}
+                    groupByProperty={groupProperty}
+                    shownCardId={card1.id}
+                />
+            </ReduxProvider>,
+        ))
+        expect(container).toMatchSnapshot()
+    })
     test('should match snapshot for Kanban', () => {
         const {container} = render(wrapDNDIntl(
             <ReduxProvider store={store}>

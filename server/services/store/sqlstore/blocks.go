@@ -553,8 +553,11 @@ func (s *SQLStore) getBlock(db sq.BaseRunner, c store.Container, blockID string)
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"id": blockID}).
-		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+		Where(sq.Eq{"id": blockID})
+
+	if c.WorkspaceID != "" {
+		query = query.Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+	}
 
 	rows, err := query.Query()
 	if err != nil {
