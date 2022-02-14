@@ -83,7 +83,7 @@ const TutorialTourTip = ({
     pulsatingDotPosition,
     stopPropagation = true,
     preventDefault = true,
-    width = 320,
+    width = window.innerWidth > 2560 ? 500 : 320,
     className,
     hideNavButtons = false,
     hideBackdrop = false,
