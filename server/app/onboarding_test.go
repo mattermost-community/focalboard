@@ -41,8 +41,8 @@ func TestPrepareOnboardingTour(t *testing.T) {
 		th.Store.EXPECT().CreatePrivateWorkspace("user_id_1").Return("workspace_id_1", nil)
 
 		userPropPatch := model.UserPropPatch{
-			UpdatedFields: map[string]interface{}{
-				KeyOnboardingTourStarted:  true,
+			UpdatedFields: map[string]string{
+				KeyOnboardingTourStarted:  "1",
 				KeyOnboardingTourStep:     ValueOnboardingFirstStep,
 				KeyOnboardingTourCategory: ValueTourCategoryOnboarding,
 			},
