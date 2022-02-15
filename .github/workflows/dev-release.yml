@@ -68,7 +68,7 @@ jobs:
         path: ${{ github.workspace }}/linux/dist/focalboard-linux.tar.gz
 
   macos:
-    runs-on: macos-10.15
+    runs-on: macos-11
 
     steps:
 
@@ -101,7 +101,7 @@ jobs:
     - name: Build macOS
       run: make mac-app
       env:
-        DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+        DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload macOS package
