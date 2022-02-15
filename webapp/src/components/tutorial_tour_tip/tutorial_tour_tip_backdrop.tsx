@@ -42,7 +42,10 @@ const TutorialTourTipBackdrop = (props: TutorialTourTipPunchout) => {
         <div
             className={'tip-backdrop'}
             style={{
-                clipPath: `polygon(${vertices.join(', ')})`,
+                left: x,
+                top: y,
+                width,
+                height,
             }}
             onClick={props.handleClick}
         />
