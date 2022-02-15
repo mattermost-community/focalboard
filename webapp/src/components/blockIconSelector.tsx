@@ -20,7 +20,7 @@ type Props = {
     readonly?: boolean
 }
 
-const BlockIconSelector = React.memo((props: Props) => {
+const BlockIconSelector = (props: Props) => {
     const {block, size} = props
     const intl = useIntl()
 
@@ -72,6 +72,6 @@ const BlockIconSelector = React.memo((props: Props) => {
             }
         </div>
     )
-})
+}
 
-export default BlockIconSelector
+export default React.memo(BlockIconSelector)

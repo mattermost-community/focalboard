@@ -9,7 +9,7 @@ import './errorPage.scss'
 
 import {errorDefFromId, ErrorId} from '../errors'
 
-const ErrorPage = React.memo(() => {
+const ErrorPage = () => {
     const history = useHistory()
     const queryString = new URLSearchParams(useLocation().search)
     const errid = queryString.get('id')
@@ -59,6 +59,6 @@ const ErrorPage = React.memo(() => {
             }
         </div>
     )
-})
+}
 
-export default ErrorPage
+export default React.memo(ErrorPage)

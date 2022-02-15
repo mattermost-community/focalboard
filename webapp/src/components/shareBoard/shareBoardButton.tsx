@@ -16,7 +16,7 @@ import ShareBoardDialog from './shareBoard'
 type Props = {
     boardId: string
 }
-const ShareBoardButton = React.memo((props: Props) => {
+const ShareBoardButton = (props: Props) => {
     const [showShareDialog, setShowShareDialog] = useState(false)
 
     return (
@@ -47,6 +47,6 @@ const ShareBoardButton = React.memo((props: Props) => {
             }
         </div>
     )
-})
+}
 
-export default ShareBoardButton
+export default React.memo(ShareBoardButton)

@@ -42,7 +42,7 @@ type Props = {
     onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
-const GalleryCard = React.memo((props: Props) => {
+const GalleryCard = (props: Props) => {
     const {card, board} = props
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
@@ -185,6 +185,6 @@ const GalleryCard = React.memo((props: Props) => {
                 />}
         </div>
     )
-})
+}
 
-export default GalleryCard
+export default React.memo(GalleryCard)

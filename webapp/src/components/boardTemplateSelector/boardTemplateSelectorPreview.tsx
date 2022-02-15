@@ -21,7 +21,7 @@ type Props = {
     activeTemplate: Board|null
 }
 
-const BoardTemplateSelectorPreview = React.memo((props: Props) => {
+const BoardTemplateSelectorPreview = (props: Props) => {
     const {activeTemplate} = props
     const [activeView, setActiveView] = useState<BoardView|null>(null)
     const [activeTemplateCards, setActiveTemplateCards] = useState<Card[]>([])
@@ -137,7 +137,7 @@ const BoardTemplateSelectorPreview = React.memo((props: Props) => {
             />}
         </div>
     )
-})
+}
 
-export default BoardTemplateSelectorPreview
+export default React.memo(BoardTemplateSelectorPreview)
 
