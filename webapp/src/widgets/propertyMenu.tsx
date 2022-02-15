@@ -89,7 +89,7 @@ export const PropertyTypes = (props: TypesProps): JSX.Element => {
     )
 }
 
-const PropertyMenu = React.memo((props: Props) => {
+const PropertyMenu = (props: Props) => {
     const intl = useIntl()
     const nameTextbox = useRef<HTMLInputElement>(null)
     const [name, setName] = useState(props.propertyName)
@@ -114,6 +114,7 @@ const PropertyMenu = React.memo((props: Props) => {
                 onChange={(e) => {
                     setName(e.target.value)
                 }}
+                title={name}
                 value={name}
                 onBlur={() => props.onTypeAndNameChanged(props.propertyType, name)}
                 onKeyDown={(e) => {
@@ -143,6 +144,6 @@ const PropertyMenu = React.memo((props: Props) => {
             />
         </Menu>
     )
-})
+}
 
-export default PropertyMenu
+export default React.memo(PropertyMenu)

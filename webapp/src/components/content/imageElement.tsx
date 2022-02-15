@@ -14,7 +14,7 @@ type Props = {
     block: ContentBlock
 }
 
-const ImageElement = React.memo((props: Props): JSX.Element|null => {
+const ImageElement = (props: Props): JSX.Element|null => {
     const [imageDataUrl, setImageDataUrl] = useState<string|null>(null)
 
     const {block} = props
@@ -40,7 +40,7 @@ const ImageElement = React.memo((props: Props): JSX.Element|null => {
             alt={block.title}
         />
     )
-})
+}
 
 contentRegistry.registerContentType({
     type: 'image',
@@ -56,7 +56,7 @@ contentRegistry.registerContentType({
                     block.fields.fileId = fileId || ''
                     resolve(block)
                 },
-                '.jpg,.jpeg,.png')
+                '.jpg,.jpeg,.png,.gif')
             },
         )
 
@@ -65,4 +65,4 @@ contentRegistry.registerContentType({
     createComponent: (block) => <ImageElement block={block}/>,
 })
 
-export default ImageElement
+export default React.memo(ImageElement)

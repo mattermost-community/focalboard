@@ -33,7 +33,7 @@ type Props = {
     hideSidebar: () => void
 }
 
-const SidebarBoardItem = React.memo((props: Props) => {
+const SidebarBoardItem = (props: Props) => {
     const [collapsed, setCollapsed] = useState(false)
     const intl = useIntl()
     const history = useHistory()
@@ -124,7 +124,8 @@ const SidebarBoardItem = React.memo((props: Props) => {
                     className='octo-sidebar-title'
                     title={displayTitle}
                 >
-                    {board.fields.icon ? `${board.fields.icon} ${displayTitle}` : displayTitle}
+                    {board.fields.icon ? <div className='octo-icon'>{board.fields.icon}</div> : undefined}
+                    <span className='octo-sidebar-name'>{displayTitle}</span>
                 </div>
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
@@ -206,6 +207,6 @@ const SidebarBoardItem = React.memo((props: Props) => {
             />}
         </div>
     )
-})
+}
 
-export default SidebarBoardItem
+export default React.memo(SidebarBoardItem)

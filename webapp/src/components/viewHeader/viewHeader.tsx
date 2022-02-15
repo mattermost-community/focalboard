@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import ViewMenu from '../../components/viewMenu'
 import mutator from '../../mutator'
@@ -38,14 +38,14 @@ type Props = {
     addCardTemplate: () => void
     editCardTemplate: (cardTemplateId: string) => void
     readonly: boolean
-    showShared: boolean
     dateDisplayProperty?: IPropertyTemplate
 }
 
-const ViewHeader = React.memo((props: Props) => {
+const ViewHeader = (props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
+    const intl = useIntl()
 
-    const {board, activeView, views, groupByProperty, cards, showShared, dateDisplayProperty} = props
+    const {board, activeView, views, groupByProperty, cards, dateDisplayProperty} = props
 
     const withGroupBy = activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table'
     const withDisplayBy = activeView.fields.viewType === 'calendar'
@@ -76,7 +76,7 @@ const ViewHeader = React.memo((props: Props) => {
                 spellCheck={true}
                 autoExpand={false}
             />
-            <MenuWrapper>
+            <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
                 <IconButton icon={<DropdownIcon/>}/>
                 <ViewMenu
                     board={board}
@@ -103,7 +103,7 @@ const ViewHeader = React.memo((props: Props) => {
                     <ViewHeaderGroupByMenu
                         properties={board.fields.cardProperties}
                         activeView={activeView}
-                        groupByPropertyName={groupByProperty?.name}
+                        groupByProperty={groupByProperty}
                     />}
 
                 {/* Display by */}
@@ -159,7 +159,6 @@ const ViewHeader = React.memo((props: Props) => {
                     board={board}
                     activeView={activeView}
                     cards={cards}
-                    showShared={showShared}
                 />
 
                 {/* New card button */}
@@ -174,6 +173,6 @@ const ViewHeader = React.memo((props: Props) => {
             }
         </div>
     )
-})
+}
 
-export default ViewHeader
+export default React.memo(ViewHeader)

@@ -10,7 +10,7 @@ type Props = {
     onAutoSizeColumn: (columnID: string) => void;
 }
 
-const HorizontalGrip = React.memo((props: Props): JSX.Element => {
+const HorizontalGrip = (props: Props): JSX.Element => {
     const [, drag] = useDrag(() => ({
         type: 'horizontalGrip',
         item: {id: props.templateId},
@@ -23,6 +23,6 @@ const HorizontalGrip = React.memo((props: Props): JSX.Element => {
             onDoubleClick={() => props.onAutoSizeColumn(props.templateId)}
         />
     )
-})
+}
 
-export default HorizontalGrip
+export default React.memo(HorizontalGrip)

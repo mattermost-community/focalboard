@@ -4,7 +4,7 @@
 import React, {useCallback, useMemo} from 'react'
 import {useIntl} from 'react-intl'
 
-import FullCalendar, {EventClickArg, EventChangeArg, EventInput, EventContentArg, DayCellContentArg} from '@fullcalendar/react'
+import FullCalendar, {EventChangeArg, EventInput, EventContentArg, DayCellContentArg} from '@fullcalendar/react'
 
 import interactionPlugin from '@fullcalendar/interaction'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -17,6 +17,8 @@ import {Card} from '../../blocks/card'
 import {DateProperty, createDatePropertyFromString} from '../properties/dateRange/dateRange'
 import Tooltip from '../../widgets/tooltip'
 import PropertyValueElement from '../propertyValueElement'
+import {Constants} from '../../constants'
+import CardBadges from '../cardBadges'
 
 import './fullcalendar.scss'
 
@@ -66,7 +68,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const isSelectable = !readonly
 
     const visiblePropertyTemplates = useMemo(() => (
-        board.fields.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+        activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
     ), [board.fields.cardProperties, activeView.fields.visiblePropertyIds])
 
     let {initialDate} = props
@@ -113,10 +115,15 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         })
     ), [cards, dateDisplayProperty])
 
+    const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
+
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
         return (
-            <div>
+            <div
+                className='EventContent'
+                onClick={() => props.showCard(event.id)}
+            >
                 <div className='octo-icontitle'>
                     { event.extendedProps.icon ? <div className='octo-icon'>{event.extendedProps.icon}</div> : undefined }
                     <div
@@ -140,14 +147,11 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                         />
                     </Tooltip>
                 ))}
+                {visibleBadges &&
+                <CardBadges card={cards.find((o) => o.id === event.id) || cards[0]}/> }
             </div>
         )
     }
-
-    const eventClick = useCallback((eventProps: EventClickArg) => {
-        const {event} = eventProps
-        props.showCard(event.id)
-    }, [props.showCard])
 
     const eventChange = useCallback((eventProps: EventChangeArg) => {
         const {event} = eventProps
@@ -216,7 +220,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 </div>
             </div>
         )
-    }, [])
+    }, [dateDisplayProperty])
 
     return (
         <div
@@ -233,7 +237,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 eventResizableFromStart={isEditable()}
                 headerToolbar={toolbar}
                 buttonText={buttonText}
-                eventClick={eventClick}
                 eventContent={renderEventContent}
                 eventChange={eventChange}
 

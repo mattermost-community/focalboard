@@ -2,7 +2,10 @@ package model
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/focalboard/server/utils"
 )
@@ -95,12 +98,21 @@ type BlockPatch struct {
 	DeletedFields []string `json:"deletedFields"`
 }
 
-// Archive is an import / export archive.
-type Archive struct {
-	Version int64   `json:"version"`
-	Date    int64   `json:"date"`
-	Blocks  []Block `json:"blocks"`
+// BlockPatchBatch is a batch of IDs and patches for modify blocks
+// swagger:model
+type BlockPatchBatch struct {
+	// The id's for of the blocks to patch
+	BlockIDs []string `json:"block_ids"`
+
+	// The BlockPatches to be applied
+	BlockPatches []BlockPatch `json:"block_patches"`
 }
+
+// BlockModifier is a callback that can modify each block during an import.
+// A cache of arbitrary data will be passed for each call and any changes
+// to the cache will be preserved for the next call.
+// Return true to import the block or false to skip import.
+type BlockModifier func(block *Block, cache map[string]interface{}) bool
 
 func BlocksFromJSON(data io.Reader) []Block {
 	var blocks []Block
@@ -156,11 +168,26 @@ func (p *BlockPatch) Patch(block *Block) *Block {
 	return block
 }
 
+// QuerySubtreeOptions are query options that can be passed to GetSubTree methods.
+type QuerySubtreeOptions struct {
+	BeforeUpdateAt int64  // if non-zero then filter for records with update_at less than BeforeUpdateAt
+	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
+	Limit          uint64 // if non-zero then limit the number of returned records
+}
+
+// QueryBlockHistoryOptions are query options that can be passed to GetBlockHistory.
+type QueryBlockHistoryOptions struct {
+	BeforeUpdateAt int64  // if non-zero then filter for records with update_at less than BeforeUpdateAt
+	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
+	Limit          uint64 // if non-zero then limit the number of returned records
+	Descending     bool   // if true then the records are sorted by insert_at in descending order
+}
+
 // GenerateBlockIDs generates new IDs for all the blocks of the list,
 // keeping consistent any references that other blocks would made to
 // the original IDs, so a tree of blocks can get new IDs and maintain
 // its shape.
-func GenerateBlockIDs(blocks []Block) []Block {
+func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 	blockIDs := map[string]BlockType{}
 	referenceIDs := map[string]bool{}
 	for _, block := range blocks {
@@ -173,6 +200,32 @@ func GenerateBlockIDs(blocks []Block) []Block {
 		}
 		if _, ok := referenceIDs[block.ParentID]; !ok {
 			referenceIDs[block.ParentID] = true
+		}
+
+		if _, ok := block.Fields["contentOrder"]; ok {
+			contentOrder, typeOk := block.Fields["contentOrder"].([]interface{})
+			if !typeOk {
+				logger.Warn(
+					"type assertion failed for content order when saving reference block IDs",
+					mlog.String("blockID", block.ID),
+					mlog.String("actionType", fmt.Sprintf("%T", block.Fields["contentOrder"])),
+					mlog.String("expectedType", "[]interface{}"),
+					mlog.String("contentOrder", fmt.Sprintf("%v", block.Fields["contentOrder"])),
+				)
+				continue
+			}
+
+			for _, blockID := range contentOrder {
+				switch v := blockID.(type) {
+				case []interface{}:
+					for _, columnBlockID := range v {
+						referenceIDs[columnBlockID.(string)] = true
+					}
+				case string:
+					referenceIDs[v] = true
+				default:
+				}
+			}
 		}
 	}
 
@@ -205,6 +258,31 @@ func GenerateBlockIDs(blocks []Block) []Block {
 		block.ID = getExistingOrNewID(block.ID)
 		block.RootID = getExistingOrOldID(block.RootID)
 		block.ParentID = getExistingOrOldID(block.ParentID)
+
+		if _, ok := block.Fields["contentOrder"]; ok {
+			contentOrder, typeOk := block.Fields["contentOrder"].([]interface{})
+			if !typeOk {
+				logger.Warn(
+					"type assertion failed for content order when setting new block IDs",
+					mlog.String("blockID", block.ID),
+					mlog.String("actionType", fmt.Sprintf("%T", block.Fields["contentOrder"])),
+					mlog.String("expectedType", "[]interface{}"),
+					mlog.String("contentOrder", fmt.Sprintf("%v", block.Fields["contentOrder"])),
+				)
+			} else {
+				for j := range contentOrder {
+					switch v := contentOrder[j].(type) {
+					case string:
+						contentOrder[j] = getExistingOrOldID(v)
+					case []interface{}:
+						subOrder := contentOrder[j].([]interface{})
+						for k := range v {
+							subOrder[k] = getExistingOrOldID(v[k].(string))
+						}
+					}
+				}
+			}
+		}
 
 		newBlocks[i] = block
 	}

@@ -7,4 +7,7 @@ weight: 1
 
 If you are new to Focalboard, [Personal Desktop](desktop) is the fastest way to try it out.
 
-You can also set up [Personal Server](ubuntu) on Ubuntu to use it with your team, and import boards from Personal Desktop.
+To use it with your team, use [Mattermost Boards](../mattermost).
+You can import boards from Personal Desktop to Mattermost Boards.
+
+You can also set up the standalone Development or Personal Server on [Ubuntu](ubuntu) or with [Docker](docker).

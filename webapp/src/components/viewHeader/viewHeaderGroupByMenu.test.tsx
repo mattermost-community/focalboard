@@ -21,7 +21,7 @@ const mockedMutator = mocked(mutator, true)
 
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
-const propertyName = 'Status'
+const property = board.fields.cardProperties.find((p) => p.name === 'Status')
 
 describe('components/viewHeader/viewHeaderGroupByMenu', () => {
     const state = {
@@ -41,7 +41,7 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
                 <ReduxProvider store={store}>
                     <ViewHeaderGroupByMenu
                         activeView={activeView}
-                        groupByPropertyName={propertyName}
+                        groupByProperty={property}
                         properties={board.fields.cardProperties}
                     />
                 </ReduxProvider>,
@@ -57,7 +57,7 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
                 <ReduxProvider store={store}>
                     <ViewHeaderGroupByMenu
                         activeView={activeView}
-                        groupByPropertyName={propertyName}
+                        groupByProperty={property}
                         properties={board.fields.cardProperties}
                     />
                 </ReduxProvider>,
@@ -77,7 +77,7 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
                 <ReduxProvider store={store}>
                     <ViewHeaderGroupByMenu
                         activeView={activeView}
-                        groupByPropertyName={propertyName}
+                        groupByProperty={property}
                         properties={board.fields.cardProperties}
                     />
                 </ReduxProvider>,

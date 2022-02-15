@@ -127,7 +127,7 @@ func New(params Params) (*Server, error) {
 	// Init notification services
 	notificationService, errNotify := initNotificationService(params.NotifyBackends, params.Logger)
 	if errNotify != nil {
-		return nil, fmt.Errorf("cannot initialize notification service: %w", errNotify)
+		return nil, fmt.Errorf("cannot initialize notification service(s): %w", errNotify)
 	}
 
 	appServices := app.Services{
@@ -374,8 +374,11 @@ func (s *Server) startLocalModeServer() error {
 	}
 
 	// TODO: Close and delete socket file on shutdown
-	if err := syscall.Unlink(s.config.LocalModeSocketLocation); err != nil {
-		s.logger.Error("Unable to unlink socket.", mlog.Err(err))
+	// Delete existing socket if it exists
+	if _, err := os.Stat(s.config.LocalModeSocketLocation); err == nil {
+		if err := syscall.Unlink(s.config.LocalModeSocketLocation); err != nil {
+			s.logger.Error("Unable to unlink socket.", mlog.Err(err))
+		}
 	}
 
 	socket := s.config.LocalModeSocketLocation

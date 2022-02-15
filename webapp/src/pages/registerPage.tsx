@@ -11,7 +11,7 @@ import Button from '../widgets/buttons/button'
 import client from '../octoClient'
 import './registerPage.scss'
 
-const RegisterPage = React.memo(() => {
+const RegisterPage = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
@@ -56,7 +56,7 @@ const RegisterPage = React.memo(() => {
                         id='login-email'
                         placeholder={'Enter email'}
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setEmail(e.target.value.trim())}
                     />
                 </div>
                 <div className='username'>
@@ -64,7 +64,7 @@ const RegisterPage = React.memo(() => {
                         id='login-username'
                         placeholder={'Enter username'}
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value.trim())}
                     />
                 </div>
                 <div className='password'>
@@ -96,6 +96,6 @@ const RegisterPage = React.memo(() => {
             }
         </div>
     )
-})
+}
 
-export default RegisterPage
+export default React.memo(RegisterPage)

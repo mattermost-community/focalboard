@@ -25,7 +25,9 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
           class="menu-options"
         >
           <div
+            aria-label="Status"
             class="MenuOption SwitchOption menu-option"
+            role="button"
           >
             <div
               class="noicon"
@@ -36,7 +38,7 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
               Status
             </div>
             <div
-              class="Switch on"
+              class="Switch size--small on"
             >
               <div
                 class="octo-switch-inner"

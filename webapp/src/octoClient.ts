@@ -8,6 +8,7 @@ import {IUser, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
+import {Subscription} from './wsclient'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -185,27 +186,24 @@ class OctoClient {
     }
 
     // If no boardID is provided, it will export the entire archive
-    async exportArchive(boardID = ''): Promise<Block[]> {
-        const path = `${this.workspacePath()}/blocks/export?root_id=${boardID}`
-        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return []
-        }
-        const blocks = (await this.getJson(response, [])) as Block[]
-        return this.fixBlocks(blocks)
+    async exportArchive(boardID = ''): Promise<Response> {
+        const path = `${this.workspacePath()}/archive/export?board_id=${boardID}`
+        return fetch(this.getBaseURL() + path, {headers: this.headers()})
     }
 
-    async importFullArchive(blocks: readonly Block[]): Promise<Response> {
-        Utils.log(`importFullArchive: ${blocks.length} blocks(s)`)
+    async importFullArchive(file: File): Promise<Response> {
+        const formData = new FormData()
+        formData.append('file', file)
 
-        // blocks.forEach((block) => {
-        //     Utils.log(`\t ${block.type}, ${block.id}`)
-        // })
-        const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.workspacePath() + '/blocks/import', {
+        const headers = this.headers() as Record<string, string>
+
+        // TIPTIP: Leave out Content-Type here, it will be automatically set by the browser
+        delete headers['Content-Type']
+
+        return fetch(this.getBaseURL() + this.workspacePath() + '/archive/import', {
             method: 'POST',
-            headers: this.headers(),
-            body,
+            headers,
+            body: formData,
         })
     }
 
@@ -268,9 +266,46 @@ class OctoClient {
         })
     }
 
+    async patchBlocks(blocks: Block[], blockPatches: BlockPatch[]): Promise<Response> {
+        Utils.log(`patchBlocks: ${blocks.length} blocks`)
+        const blockIds = blocks.map((block) => block.id)
+        const body = JSON.stringify({block_ids: blockIds, block_patches: blockPatches})
+
+        const path = this.getBaseURL() + this.workspacePath() + '/blocks'
+        const response = fetch(path, {
+            method: 'PATCH',
+            headers: this.headers(),
+            body,
+        })
+        return response
+    }
+
     async deleteBlock(blockId: string): Promise<Response> {
         Utils.log(`deleteBlock: ${blockId}`)
         return fetch(this.getBaseURL() + this.workspacePath() + `/blocks/${encodeURIComponent(blockId)}`, {
+            method: 'DELETE',
+            headers: this.headers(),
+        })
+    }
+
+    async followBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
+        const body: Subscription = {
+            blockType,
+            blockId,
+            workspaceId: this.workspaceId,
+            subscriberType: 'user',
+            subscriberId: userId,
+        }
+
+        return fetch(this.getBaseURL() + `/api/v1/workspaces/${this.workspaceId}/subscriptions`, {
+            method: 'POST',
+            headers: this.headers(),
+            body: JSON.stringify(body),
+        })
+    }
+
+    async unfollowBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
+        return fetch(this.getBaseURL() + `/api/v1/workspaces/${this.workspaceId}/subscriptions/${blockId}/${userId}`, {
             method: 'DELETE',
             headers: this.headers(),
         })
@@ -280,13 +315,14 @@ class OctoClient {
         return this.insertBlocks([block])
     }
 
-    async insertBlocks(blocks: Block[]): Promise<Response> {
+    async insertBlocks(blocks: Block[], sourceBoardID?: string): Promise<Response> {
         Utils.log(`insertBlocks: ${blocks.length} blocks(s)`)
         blocks.forEach((block) => {
             Utils.log(`\t ${block.type}, ${block.id}, ${block.title?.substr(0, 50) || ''}`)
         })
         const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.workspacePath() + '/blocks', {
+        const url = this.getBaseURL() + this.workspacePath() + '/blocks' + (sourceBoardID ? `?sourceBoardID=${encodeURIComponent(sourceBoardID)}` : '')
+        return fetch(url, {
             method: 'POST',
             headers: this.headers(),
             body,
@@ -423,6 +459,16 @@ class OctoClient {
     async getGlobalTemplates(): Promise<Block[]> {
         const path = this.workspacePath('0') + '/blocks?type=board'
         return this.getBlocksWithPath(path)
+    }
+
+    async getUserBlockSubscriptions(userId: string): Promise<Array<Subscription>> {
+        const path = `/api/v1/workspaces/${this.workspaceId}/subscriptions/${userId}`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as Subscription[]
     }
 }
 

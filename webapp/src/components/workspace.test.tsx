@@ -75,7 +75,7 @@ card3.id = 'card3'
 card3.title = 'card-3'
 card3.workspaceId = workspace1.id
 
-const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, createAt: 0, updateAt: 0}
+const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, create_at: 0, update_at: 0, is_bot: false}
 
 jest.mock('react-router-dom', () => {
     const originalModule = jest.requireActual('react-router-dom')
@@ -102,6 +102,7 @@ describe('src/components/workspace', () => {
         users: {
             me,
             workspaceUsers: [me],
+            blockSubscriptions: [],
         },
         boards: {
             current: board.id,
@@ -209,7 +210,7 @@ describe('src/components/workspace', () => {
         expect(container).toMatchSnapshot()
         expect(mockedUtils.getReadToken).toBeCalledTimes(1)
     })
-    test('return workspace with EmptyCenterPanel component', async () => {
+    test('return workspace with BoardTemplateSelector component', async () => {
         const emptyStore = mockStateStore([], {
             users: {
                 me,

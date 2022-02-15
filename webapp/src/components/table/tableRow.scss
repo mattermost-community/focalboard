@@ -27,4 +27,8 @@
             display: block;
         }
     }
+
+    .URLProperty:hover .Button_Copy {
+        display: none;
+    }
 }

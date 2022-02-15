@@ -28,7 +28,7 @@ type Props = {
     readonly: boolean
 }
 
-const ViewMenu = React.memo((props: Props) => {
+const ViewMenu = (props: Props) => {
     const history = useHistory()
     const match = useRouteMatch()
 
@@ -174,7 +174,7 @@ const ViewMenu = React.memo((props: Props) => {
 
         Utils.log('addview-calendar')
         const view = createBoardView()
-        view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar View'})
+        view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar view'})
         view.fields.viewType = 'calendar'
         view.parentId = board.id
         view.rootId = board.rootId
@@ -298,6 +298,6 @@ const ViewMenu = React.memo((props: Props) => {
             }
         </Menu>
     )
-})
+}
 
-export default injectIntl(ViewMenu)
+export default injectIntl(React.memo(ViewMenu))

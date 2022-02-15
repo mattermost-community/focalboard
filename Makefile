@@ -16,6 +16,13 @@ LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
 
+# MAC cpu architecture
+ifeq ($(shell uname -m),arm64)
+	MAC_GO_ARCH := arm64
+else
+	MAC_GO_ARCH := amd64
+endif
+
 all: webapp server ## Build server and webapp.
 
 prebuild: ## Run prebuild actions (install dependencies etc.).
@@ -33,7 +40,7 @@ server: ## Build server for local environment.
 server-mac: ## Build server for Mac.
 	mkdir -p bin/mac
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
-	cd server; env GOOS=darwin GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/mac/focalboard-server ./main
+	cd server; env GOOS=darwin GOARCH=$(MAC_GO_ARCH) go build -ldflags '$(LDFLAGS)' -o ../bin/mac/focalboard-server ./main
 
 server-linux: ## Build server for Linux.
 	mkdir -p bin/linux
@@ -102,11 +109,36 @@ watch-single-user: modd-precheck ## Run both server and webapp in single user mo
 watch-server-test: modd-precheck ## Run server tests watching for changes
 	modd -f modd-servertest.conf
 
-server-test: ## Run server tests
+server-test: server-test-sqlite server-test-mysql server-test-postgres ## Run server tests
+
+server-test-sqlite: ## Run server tests using sqlite
 	cd server; go test -race -v -count=1 ./...
+
+server-test-mysql: export FB_UNIT_TESTING=1
+server-test-mysql: export FB_STORE_TEST_DB_TYPE=mysql
+server-test-mysql: export FB_STORE_TEST_DOCKER_PORT=44445
+
+server-test-mysql: ## Run server tests using mysql
+	@echo Starting docker container for mysql
+	docker-compose -f ./docker-testing/docker-compose-mysql.yml run start_dependencies
+	cd server; go test -race -v -count=1 ./...
+	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
+
+server-test-postgres: export FB_UNIT_TESTING=1
+server-test-postgres: export FB_STORE_TEST_DB_TYPE=postgres
+server-test-postgres: export FB_STORE_TEST_DOCKER_PORT=44446
+
+server-test-postgres: ## Run server tests using postgres
+	@echo Starting docker container for postgres
+	docker-compose -f ./docker-testing/docker-compose-postgres.yml run start_dependencies
+	cd server; go test -race -v -count=1 ./...
+	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
 
 webapp: ## Build webapp.
 	cd webapp; npm run pack
+
+webapp-test: ## jest tests for webapp
+	cd webapp; npm run test
 
 watch-plugin: modd-precheck ## Run and upload the plugin to a development server
 	modd -f modd-watchplugin.conf

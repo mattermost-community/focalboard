@@ -536,3 +536,7 @@ func (ws *Server) BroadcastConfigChange(clientConfig model.ClientConfig) {
 		}
 	}
 }
+
+func (ws *Server) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
+	// not implemented for standalone server.
+}

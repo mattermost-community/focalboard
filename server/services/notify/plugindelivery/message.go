@@ -22,7 +22,3 @@ func formatMessage(author string, extract string, card string, link string, bloc
 	}
 	return fmt.Sprintf(template, author, card, link, extract)
 }
-
-func makeLink(serverRoot string, workspace string, board string, card string) string {
-	return fmt.Sprintf("%s/workspace/%s/%s/0/%s/", serverRoot, workspace, board, card)
-}

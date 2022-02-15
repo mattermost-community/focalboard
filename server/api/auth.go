@@ -297,6 +297,8 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
+	registerData.Email = strings.TrimSpace(registerData.Email)
+	registerData.Username = strings.TrimSpace(registerData.Username)
 
 	// Validate token
 	if len(registerData.Token) > 0 {
@@ -431,9 +433,9 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 
 			now := utils.GetMillis()
 			session := &model.Session{
-				ID:          SingleUser,
+				ID:          model.SingleUser,
 				Token:       token,
-				UserID:      SingleUser,
+				UserID:      model.SingleUser,
 				AuthService: a.authService,
 				Props:       map[string]interface{}{},
 				CreateAt:    now,

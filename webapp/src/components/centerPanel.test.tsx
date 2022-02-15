@@ -15,6 +15,16 @@ import {Constants} from '../constants'
 
 import CenterPanel from './centerPanel'
 Object.defineProperty(Constants, 'versionString', {value: '1.0.0'})
+jest.mock('react-router-dom', () => {
+    const originalModule = jest.requireActual('react-router-dom')
+
+    return {
+        ...originalModule,
+        useRouteMatch: jest.fn(() => {
+            return {url: '/board/view'}
+        }),
+    }
+})
 jest.mock('../utils')
 jest.mock('../mutator')
 jest.mock('../telemetry/telemetryClient')
@@ -58,12 +68,20 @@ describe('components/centerPanel', () => {
         ],
     }
     const state = {
+        clientConfig: {
+            value: {
+                featureFlags: {
+                    subscriptions: true,
+                },
+            },
+        },
         searchText: '',
         users: {
             me: {},
             workspaceUsers: [
                 {username: 'username_1'},
             ],
+            blockSubscriptions: [],
         },
         boards: {
             current: board.id,
@@ -91,6 +109,24 @@ describe('components/centerPanel', () => {
     beforeEach(() => {
         activeView.fields.viewType = 'board'
         jest.clearAllMocks()
+    })
+    test('should match snapshot for Kanban, not shared', () => {
+        const {container} = render(wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <CenterPanel
+                    cards={[card1]}
+                    views={[activeView]}
+                    board={board}
+                    activeView={activeView}
+                    readonly={false}
+                    showCard={jest.fn()}
+                    showShared={false}
+                    groupByProperty={groupProperty}
+                    shownCardId={card1.id}
+                />
+            </ReduxProvider>,
+        ))
+        expect(container).toMatchSnapshot()
     })
     test('should match snapshot for Kanban', () => {
         const {container} = render(wrapDNDIntl(

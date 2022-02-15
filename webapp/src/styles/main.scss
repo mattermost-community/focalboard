@@ -125,6 +125,11 @@ html {
         line-height: 1.2;
         align-self: baseline;
         overflow: visible;
+        font-weight: normal;
+    }
+
+    .text-light {
+        color: rgba(var(--center-channel-color-rgb), 0.56);
     }
 
     .octo-icontitle {
