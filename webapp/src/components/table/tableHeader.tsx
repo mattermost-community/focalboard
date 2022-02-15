@@ -32,7 +32,7 @@ type Props = {
     onAutoSizeColumn: (columnID: string, headerWidth: number) => void
 }
 
-const TableHeader = React.memo((props: Props): JSX.Element => {
+const TableHeader = (props: Props): JSX.Element => {
     const [isDragging, isOver, columnRef] = useSortable('column', props.template, !props.readonly, props.onDrop)
 
     const columnWidth = (templateId: string): number => {
@@ -85,6 +85,6 @@ const TableHeader = React.memo((props: Props): JSX.Element => {
             }
         </div>
     )
-})
+}
 
-export default TableHeader
+export default React.memo(TableHeader)

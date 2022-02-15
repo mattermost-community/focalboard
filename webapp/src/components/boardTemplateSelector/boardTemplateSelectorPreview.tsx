@@ -21,7 +21,7 @@ type Props = {
     activeTemplate: Board|null
 }
 
-const BoardTemplateSelectorPreview = React.memo((props: Props) => {
+const BoardTemplateSelectorPreview = (props: Props) => {
     const {activeTemplate} = props
     const [activeView, setActiveView] = useState<BoardView|null>(null)
     const [activeTemplateCards, setActiveTemplateCards] = useState<Card[]>([])
@@ -33,7 +33,7 @@ const BoardTemplateSelectorPreview = React.memo((props: Props) => {
             setActiveTemplateCards([])
             octoClient.getSubtree(activeTemplate.id, activeView?.fields.viewType === 'gallery' ? 3 : 2, activeTemplate.workspaceId).then((blocks) => {
                 const cards = blocks.filter((b) => b.type === 'card')
-                const views = blocks.filter((b) => b.type === 'view')
+                const views = blocks.filter((b) => b.type === 'view').sort((a, b) => a.title.localeCompare(b.title))
                 if (views.length > 0) {
                     setActiveView(views[0] as BoardView)
                 }
@@ -65,28 +65,26 @@ const BoardTemplateSelectorPreview = React.memo((props: Props) => {
 
     return (
         <div className='BoardTemplateSelectorPreview'>
-            <div className='prevent-click'/>
             {activeView &&
-                <div className='top-head'>
-                    <ViewTitle
-                        key={activeTemplate?.id + activeTemplate?.title}
-                        board={activeTemplate}
-                        readonly={true}
-                    />
-                    <ViewHeader
-                        board={activeTemplate}
-                        activeView={activeView}
-                        cards={activeTemplateCards}
-                        views={[activeView]}
-                        groupByProperty={groupByProperty}
-                        addCard={() => null}
-                        addCardFromTemplate={() => null}
-                        addCardTemplate={() => null}
-                        editCardTemplate={() => null}
-                        readonly={false}
-                        showShared={false}
-                    />
-                </div>}
+            <div className='top-head'>
+                <ViewTitle
+                    key={activeTemplate?.id + activeTemplate?.title}
+                    board={activeTemplate}
+                    readonly={true}
+                />
+                <ViewHeader
+                    board={activeTemplate}
+                    activeView={activeView}
+                    cards={activeTemplateCards}
+                    views={[activeView]}
+                    groupByProperty={groupByProperty}
+                    addCard={() => null}
+                    addCardFromTemplate={() => null}
+                    addCardTemplate={() => null}
+                    editCardTemplate={() => null}
+                    readonly={false}
+                />
+            </div>}
 
             {activeView?.fields.viewType === 'board' &&
             <Kanban
@@ -103,43 +101,43 @@ const BoardTemplateSelectorPreview = React.memo((props: Props) => {
                 showCard={() => null}
             />}
             {activeView?.fields.viewType === 'table' &&
-                <Table
-                    board={activeTemplate}
-                    activeView={activeView}
-                    cards={activeTemplateCards}
-                    groupByProperty={groupByProperty}
-                    views={[activeView]}
-                    visibleGroups={visibleGroups}
-                    selectedCardIds={[]}
-                    readonly={false}
-                    cardIdToFocusOnRender={''}
-                    onCardClicked={() => null}
-                    addCard={() => Promise.resolve()}
-                    showCard={() => null}
-                />}
+            <Table
+                board={activeTemplate}
+                activeView={activeView}
+                cards={activeTemplateCards}
+                groupByProperty={groupByProperty}
+                views={[activeView]}
+                visibleGroups={visibleGroups}
+                selectedCardIds={[]}
+                readonly={false}
+                cardIdToFocusOnRender={''}
+                onCardClicked={() => null}
+                addCard={() => Promise.resolve()}
+                showCard={() => null}
+            />}
             {activeView?.fields.viewType === 'gallery' &&
-                <Gallery
-                    board={activeTemplate}
-                    cards={activeTemplateCards}
-                    activeView={activeView}
-                    readonly={false}
-                    selectedCardIds={[]}
-                    onCardClicked={() => null}
-                    addCard={() => Promise.resolve()}
-                />}
+            <Gallery
+                board={activeTemplate}
+                cards={activeTemplateCards}
+                activeView={activeView}
+                readonly={false}
+                selectedCardIds={[]}
+                onCardClicked={() => null}
+                addCard={() => Promise.resolve()}
+            />}
             {activeView?.fields.viewType === 'calendar' &&
-                <CalendarFullView
-                    board={activeTemplate}
-                    cards={activeTemplateCards}
-                    activeView={activeView}
-                    readonly={false}
-                    dateDisplayProperty={dateDisplayProperty}
-                    showCard={() => null}
-                    addCard={() => Promise.resolve()}
-                />}
+            <CalendarFullView
+                board={activeTemplate}
+                cards={activeTemplateCards}
+                activeView={activeView}
+                readonly={false}
+                dateDisplayProperty={dateDisplayProperty}
+                showCard={() => null}
+                addCard={() => Promise.resolve()}
+            />}
         </div>
     )
-})
+}
 
-export default BoardTemplateSelectorPreview
+export default React.memo(BoardTemplateSelectorPreview)
 

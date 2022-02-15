@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8014951C261598D600A51700 /* PortUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8014951B261598D600A51700 /* PortUtils.swift */; };
 		804E57FC27441B6B008526F0 /* whatsnew.txt in Resources */ = {isa = PBXBuildFile; fileRef = 804E57FB27441B6B008526F0 /* whatsnew.txt */; };
+		80672A8B27BAFEBA00257B8C /* DownloadHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80672A8A27BAFEBA00257B8C /* DownloadHandler.swift */; };
 		80D6DEBB252E13CB00AEED9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DEBA252E13CB00AEED9E /* AppDelegate.swift */; };
 		80D6DEBD252E13CB00AEED9E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D6DEBC252E13CB00AEED9E /* ViewController.swift */; };
 		80D6DEBF252E13CD00AEED9E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 80D6DEBE252E13CD00AEED9E /* Assets.xcassets */; };
@@ -42,6 +43,7 @@
 /* Begin PBXFileReference section */
 		8014951B261598D600A51700 /* PortUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortUtils.swift; sourceTree = "<group>"; };
 		804E57FB27441B6B008526F0 /* whatsnew.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = whatsnew.txt; sourceTree = "<group>"; };
+		80672A8A27BAFEBA00257B8C /* DownloadHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadHandler.swift; sourceTree = "<group>"; };
 		80D6DEB7252E13CB00AEED9E /* Focalboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Focalboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80D6DEBA252E13CB00AEED9E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		80D6DEBC252E13CB00AEED9E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				80F8BF572624EB0C00FF3943 /* Globals.swift */,
 				8014951B261598D600A51700 /* PortUtils.swift */,
 				80D6DEBC252E13CB00AEED9E /* ViewController.swift */,
+				80672A8A27BAFEBA00257B8C /* DownloadHandler.swift */,
 				80F174B62788C1A2000A9EEA /* CustomWKWebView.swift */,
 				80F8BF4F2624E1BB00FF3943 /* WhatsNewViewController.swift */,
 				804E57FB27441B6B008526F0 /* whatsnew.txt */,
@@ -303,6 +306,7 @@
 				80F8BF502624E1BB00FF3943 /* WhatsNewViewController.swift in Sources */,
 				80F174B72788C1A2000A9EEA /* CustomWKWebView.swift in Sources */,
 				80F8BF582624EB0C00FF3943 /* Globals.swift in Sources */,
+				80672A8B27BAFEBA00257B8C /* DownloadHandler.swift in Sources */,
 				80D6DF18252F9BDE00AEED9E /* AutoSaveWindowController.swift in Sources */,
 				80D6DEBD252E13CB00AEED9E /* ViewController.swift in Sources */,
 				80D6DEBB252E13CB00AEED9E /* AppDelegate.swift in Sources */,
@@ -403,7 +407,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -458,7 +462,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;

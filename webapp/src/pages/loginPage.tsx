@@ -11,7 +11,7 @@ import Button from '../widgets/buttons/button'
 import client from '../octoClient'
 import './loginPage.scss'
 
-const LoginPage = React.memo(() => {
+const LoginPage = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
@@ -88,6 +88,6 @@ const LoginPage = React.memo(() => {
             }
         </div>
     )
-})
+}
 
-export default LoginPage
+export default React.memo(LoginPage)

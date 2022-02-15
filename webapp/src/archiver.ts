@@ -27,7 +27,7 @@ class Archiver {
                     link.style.display = 'none'
 
                     const date = new Date()
-                    const filename = `archive-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.focalboard`
+                    const filename = `archive-${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.boardarchive`
 
                     const file = new Blob([blob], {type: 'application/octet-stream'})
                     link.href = URL.createObjectURL(file)
@@ -64,7 +64,7 @@ class Archiver {
     static importFullArchive(onComplete?: () => void): void {
         const input = document.createElement('input')
         input.type = 'file'
-        input.accept = '.focalboard'
+        input.accept = '.boardarchive'
         input.onchange = async () => {
             const file = input.files && input.files[0]
             if (file) {

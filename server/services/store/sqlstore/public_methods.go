@@ -14,7 +14,6 @@ package sqlstore
 
 import (
 	"context"
-	"io"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -134,6 +133,11 @@ func (s *SQLStore) GetBoardAndCardByID(c store.Container, blockID string) (*mode
 
 }
 
+func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
+	return s.getDefaultTemplateBlocks(s.db)
+
+}
+
 func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint, error) {
 	return s.getNextNotificationHint(s.db, remove)
 
@@ -249,11 +253,6 @@ func (s *SQLStore) HasWorkspaceAccess(userID string, workspaceID string) (bool, 
 
 }
 
-func (s *SQLStore) ImportArchive(container store.Container, r io.Reader, userID string, mod model.BlockModifier) error {
-	return s.importArchive(s.db, container, r, userID, mod)
-
-}
-
 func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID string) error {
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
@@ -340,6 +339,11 @@ func (s *SQLStore) PatchBlocks(c store.Container, blockPatches *model.BlockPatch
 
 func (s *SQLStore) RefreshSession(session *model.Session) error {
 	return s.refreshSession(s.db, session)
+
+}
+
+func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
+	return s.removeDefaultTemplates(s.db, blocks)
 
 }
 
