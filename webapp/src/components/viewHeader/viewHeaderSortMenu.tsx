@@ -19,7 +19,7 @@ type Props = {
     activeView: BoardView
     orderedCards: Card[]
 }
-const ViewHeaderSortMenu = React.memo((props: Props) => {
+const ViewHeaderSortMenu = (props: Props) => {
     const {properties, activeView, orderedCards} = props
     const hasSort = activeView.fields.sortOptions?.length > 0
     const sortDisplayOptions = properties?.map((o) => ({id: o.id, name: o.name}))
@@ -101,6 +101,6 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
             </Menu>
         </MenuWrapper>
     )
-})
+}
 
-export default ViewHeaderSortMenu
+export default React.memo(ViewHeaderSortMenu)

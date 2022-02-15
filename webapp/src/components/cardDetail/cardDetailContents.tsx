@@ -147,7 +147,7 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
     )
 }
 
-const CardDetailContents = React.memo((props: Props) => {
+const CardDetailContents = (props: Props) => {
     const intl = useIntl()
     const {contents, card, id} = props
     if (contents.length) {
@@ -188,6 +188,6 @@ const CardDetailContents = React.memo((props: Props) => {
             </div>
         </div>
     )
-})
+}
 
-export default CardDetailContents
+export default React.memo(CardDetailContents)

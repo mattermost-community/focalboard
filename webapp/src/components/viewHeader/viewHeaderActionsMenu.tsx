@@ -92,7 +92,7 @@ function onExportCsvTrigger(board: Board, activeView: BoardView, cards: Card[], 
     }
 }
 
-const ViewHeaderActionsMenu = React.memo((props: Props) => {
+const ViewHeaderActionsMenu = (props: Props) => {
     const {board, activeView, cards} = props
     const intl = useIntl()
 
@@ -139,6 +139,6 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
             </MenuWrapper>
         </ModalWrapper>
     )
-})
+}
 
-export default ViewHeaderActionsMenu
+export default React.memo(ViewHeaderActionsMenu)

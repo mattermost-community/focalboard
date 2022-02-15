@@ -3,7 +3,7 @@
 import * as fs from 'fs'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {ArchiveUtils} from '../../webapp/src/blocks/archive'
+import {ArchiveUtils} from '../util/archive'
 import {Block} from '../../webapp/src/blocks/block'
 import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
 import {createBoardView} from '../../webapp/src/blocks/boardView'

@@ -21,7 +21,7 @@ type Props = {
     onDeleteElement?: () => void
 }
 
-const CheckboxElement = React.memo((props: Props) => {
+const CheckboxElement = (props: Props) => {
     const {block, readonly} = props
     const intl = useIntl()
     const titleRef = useRef<Focusable>(null)
@@ -83,7 +83,7 @@ const CheckboxElement = React.memo((props: Props) => {
             />
         </div>
     )
-})
+}
 
 contentRegistry.registerContentType({
     type: 'checkbox',
@@ -104,4 +104,4 @@ contentRegistry.registerContentType({
     },
 })
 
-export default CheckboxElement
+export default React.memo(CheckboxElement)

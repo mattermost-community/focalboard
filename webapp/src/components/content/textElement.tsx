@@ -16,7 +16,7 @@ type Props = {
     readonly: boolean
 }
 
-const TextElement = React.memo((props: Props): JSX.Element => {
+const TextElement = (props: Props): JSX.Element => {
     const {block, readonly} = props
     const intl = useIntl()
 
@@ -32,7 +32,7 @@ const TextElement = React.memo((props: Props): JSX.Element => {
             readonly={readonly}
         />
     )
-})
+}
 
 contentRegistry.registerContentType({
     type: 'text',
@@ -51,4 +51,4 @@ contentRegistry.registerContentType({
     },
 })
 
-export default TextElement
+export default React.memo(TextElement)

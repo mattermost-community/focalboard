@@ -43,7 +43,7 @@ type Props = {
     allCategories: Array<CategoryBlocks>
 }
 
-const SidebarBoardItem = React.memo((props: Props) => {
+const SidebarBoardItem = (props: Props) => {
     const [collapsed, setCollapsed] = useState(false)
     const intl = useIntl()
     const history = useHistory()
@@ -320,6 +320,6 @@ const SidebarBoardItem = React.memo((props: Props) => {
             }
         </div>
     )
-})
+}
 
-export default SidebarBoardItem
+export default React.memo(SidebarBoardItem)

@@ -14,7 +14,7 @@ type Props = {
     readonly?: boolean
 }
 
-const BlockIconSelector = React.memo((props: Props) => {
+const BlockIconSelector = (props: Props) => {
     const {block, size} = props
 
     const onSelectEmoji = useCallback((emoji: string) => {
@@ -43,6 +43,6 @@ const BlockIconSelector = React.memo((props: Props) => {
             onRemoveIcon={onRemoveIcon}
         />
     )
-})
+}
 
-export default BlockIconSelector
+export default React.memo(BlockIconSelector)

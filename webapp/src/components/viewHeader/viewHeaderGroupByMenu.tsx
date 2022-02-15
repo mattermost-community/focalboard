@@ -18,7 +18,7 @@ type Props = {
     groupByProperty?: IPropertyTemplate
 }
 
-const ViewHeaderGroupByMenu = React.memo((props: Props) => {
+const ViewHeaderGroupByMenu = (props: Props) => {
     const {properties, activeView, groupByProperty} = props
     const intl = useIntl()
     return (
@@ -74,6 +74,6 @@ const ViewHeaderGroupByMenu = React.memo((props: Props) => {
             </Menu>
         </MenuWrapper>
     )
-})
+}
 
-export default ViewHeaderGroupByMenu
+export default React.memo(ViewHeaderGroupByMenu)

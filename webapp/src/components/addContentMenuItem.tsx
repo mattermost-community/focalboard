@@ -18,7 +18,7 @@ type Props = {
     cords: {x: number, y?: number, z?: number}
 }
 
-const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
+const AddContentMenuItem = (props:Props): JSX.Element => {
     const {card, type, cords} = props
     const index = cords.x
     const contentOrder = card.fields.contentOrder.slice()
@@ -51,6 +51,6 @@ const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
             }}
         />
     )
-})
+}
 
-export default AddContentMenuItem
+export default React.memo(AddContentMenuItem)

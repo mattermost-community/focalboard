@@ -43,7 +43,7 @@ export const columnWidth = (resizingColumn: string, columnWidths: Record<string,
     return Math.max(Constants.minColumnWidth, columnWidths[templateId] || 0)
 }
 
-const TableRow = React.memo((props: Props) => {
+const TableRow = (props: Props) => {
     const {board, activeView, onSaveWithEnter, columnRefs, card} = props
     const contents = useAppSelector(getCardContents(card.id || ''))
     const comments = useAppSelector(getCardComments(card.id))
@@ -150,6 +150,6 @@ const TableRow = React.memo((props: Props) => {
             })}
         </div>
     )
-})
+}
 
-export default TableRow
+export default React.memo(TableRow)

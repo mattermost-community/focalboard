@@ -20,8 +20,8 @@ type Props = {
     onClose: () => void,
 }
 
-const Dialog = React.memo((props: Props) => {
-    const {toolsMenu, title, toolbar} = props
+const Dialog = (props: Props) => {
+    const {toolsMenu, toolbar, title} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
@@ -72,6 +72,6 @@ const Dialog = React.memo((props: Props) => {
             </div>
         </div>
     )
-})
+}
 
-export default Dialog
+export default React.memo(Dialog)

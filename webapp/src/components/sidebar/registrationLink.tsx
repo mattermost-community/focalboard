@@ -17,7 +17,7 @@ type Props = {
     onClose: () => void
 }
 
-const RegistrationLink = React.memo((props: Props) => {
+const RegistrationLink = (props: Props) => {
     const {onClose} = props
     const intl = useIntl()
 
@@ -89,6 +89,6 @@ const RegistrationLink = React.memo((props: Props) => {
             </div>
         </Modal>
     )
-})
+}
 
-export default RegistrationLink
+export default React.memo(RegistrationLink)

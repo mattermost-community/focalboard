@@ -25,7 +25,7 @@ type Props = {
     filter: FilterClause
 }
 
-const FilterEntry = React.memo((props: Props): JSX.Element => {
+const FilterEntry = (props: Props): JSX.Element => {
     const {board, view, filter} = props
     const intl = useIntl()
 
@@ -106,6 +106,6 @@ const FilterEntry = React.memo((props: Props): JSX.Element => {
             </Button>
         </div>
     )
-})
+}
 
-export default FilterEntry
+export default React.memo(FilterEntry)

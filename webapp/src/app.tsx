@@ -63,7 +63,7 @@ function WorkspaceToTeamRedirect() {
     return null
 }
 
-const App = React.memo((): JSX.Element => {
+const App = (): JSX.Element => {
     const language = useAppSelector<string>(getLanguage)
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
     const globalError = useAppSelector<string>(getGlobalError)
@@ -304,6 +304,6 @@ const App = React.memo((): JSX.Element => {
             </DndProvider>
         </IntlProvider>
     )
-})
+}
 
-export default App
+export default React.memo(App)

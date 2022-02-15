@@ -21,7 +21,7 @@ type Props = {
     addCard: () => void
 }
 
-const EmptyCardButton = React.memo((props: Props) => {
+const EmptyCardButton = (props: Props) => {
     const currentView = useAppSelector(getCurrentView)
     const board = useAppSelector(getCurrentBoard)
     const intl = useIntl()
@@ -54,6 +54,6 @@ const EmptyCardButton = React.memo((props: Props) => {
                 </MenuWrapper>
             }
         />)
-})
+}
 
-export default EmptyCardButton
+export default React.memo(EmptyCardButton)

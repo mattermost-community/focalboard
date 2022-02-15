@@ -19,7 +19,7 @@ type Props = {
     onEdit: (templateId: string) => void
 }
 
-const BoardTemplateSelectorItem = React.memo((props: Props) => {
+const BoardTemplateSelectorItem = (props: Props) => {
     const {isActive, template, onEdit, onDelete, onSelect} = props
     const intl = useIntl()
     const [deleteOpen, setDeleteOpen] = useState<boolean>(false)
@@ -65,6 +65,6 @@ const BoardTemplateSelectorItem = React.memo((props: Props) => {
             />}
         </div>
     )
-})
+}
 
-export default BoardTemplateSelectorItem
+export default React.memo(BoardTemplateSelectorItem)

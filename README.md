@@ -72,7 +72,7 @@ You can build standalone apps that package the server to run locally against SQL
 * Mac:
     * `make mac-app`
     * run `mac/dist/Focalboard.app`
-    * *Requires: macOS Catalina (10.15)+, Xcode 12+.*
+    * *Requires: macOS 11.3+, Xcode 13.2.1+*
 * Linux:
     * Install webgtk dependencies
         * `sudo apt-get install libgtk-3-dev`

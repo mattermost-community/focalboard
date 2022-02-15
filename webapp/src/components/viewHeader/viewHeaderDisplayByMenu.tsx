@@ -19,7 +19,7 @@ type Props = {
     dateDisplayPropertyName?: string
 }
 
-const ViewHeaderDisplayByMenu = React.memo((props: Props) => {
+const ViewHeaderDisplayByMenu = (props: Props) => {
     const {properties, activeView, dateDisplayPropertyName} = props
     const intl = useIntl()
 
@@ -74,6 +74,6 @@ const ViewHeaderDisplayByMenu = React.memo((props: Props) => {
             </Menu>
         </MenuWrapper>
     )
-})
+}
 
-export default ViewHeaderDisplayByMenu
+export default React.memo(ViewHeaderDisplayByMenu)
