@@ -46,5 +46,12 @@
         display: flex;
         flex-direction: row;
         position: relative;
+        padding: 6px 8px;
+        margin: -8px;
+
+        .MenuWrapper {
+            display: flex;
+            align-items: center;
+        }
     }
 }
