@@ -19,7 +19,7 @@ type Props = {
     onEdit: (templateId: string) => void
 }
 
-const BoardTemplateSelectorItem = React.memo((props: Props) => {
+const BoardTemplateSelectorItem = (props: Props) => {
     const {isActive, template, onEdit, onDelete, onSelect} = props
     const intl = useIntl()
     const [deleteOpen, setDeleteOpen] = useState<boolean>(false)
@@ -38,7 +38,7 @@ const BoardTemplateSelectorItem = React.memo((props: Props) => {
         >
             <span className='template-icon'>{template.fields.icon}</span>
             <span className='template-name'>{template.title}</span>
-            {template.workspaceId !== '0' &&
+            {!template.fields.templateVer &&
                 <div className='actions'>
                     <IconButton
                         icon={<DeleteIcon/>}
@@ -65,6 +65,6 @@ const BoardTemplateSelectorItem = React.memo((props: Props) => {
             />}
         </div>
     )
-})
+}
 
-export default BoardTemplateSelectorItem
+export default React.memo(BoardTemplateSelectorItem)

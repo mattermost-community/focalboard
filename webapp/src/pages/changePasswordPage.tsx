@@ -10,7 +10,7 @@ import {IUser} from '../user'
 import {useAppSelector} from '../store/hooks'
 import {getMe} from '../store/users'
 
-const ChangePasswordPage = React.memo(() => {
+const ChangePasswordPage = () => {
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
@@ -94,6 +94,6 @@ const ChangePasswordPage = React.memo(() => {
             }
         </div>
     )
-})
+}
 
-export default ChangePasswordPage
+export default React.memo(ChangePasswordPage)

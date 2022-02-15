@@ -42,7 +42,7 @@ declare let window: IAppWindow
 
 const UUID_REGEX = new RegExp(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/)
 
-const App = React.memo((): JSX.Element => {
+const App = (): JSX.Element => {
     const language = useAppSelector<string>(getLanguage)
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
     const globalError = useAppSelector<string>(getGlobalError)
@@ -277,6 +277,6 @@ const App = React.memo((): JSX.Element => {
             </DndProvider>
         </IntlProvider>
     )
-})
+}
 
-export default App
+export default React.memo(App)

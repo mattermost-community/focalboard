@@ -20,7 +20,7 @@ type Props = {
     isEditable: boolean
 }
 
-const SelectProperty = React.memo((props: Props) => {
+const SelectProperty = (props: Props) => {
     const {emptyValue, propertyValue, propertyTemplate, isEditable} = props
     const [open, setOpen] = useState(false)
 
@@ -56,6 +56,6 @@ const SelectProperty = React.memo((props: Props) => {
             onBlur={() => setOpen(false)}
         />
     )
-})
+}
 
-export default SelectProperty
+export default React.memo(SelectProperty)

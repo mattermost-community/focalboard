@@ -4,15 +4,9 @@
     width: 158%;
     height: 480px;
     border-radius: var(--modal-rad);
+    pointer-events: none;
 
     .Kanban {
         overflow: hidden;
-    }
-
-    .prevent-click {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        z-index: 1100;
     }
 }

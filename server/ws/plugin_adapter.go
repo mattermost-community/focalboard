@@ -14,6 +14,7 @@ import (
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const websocketMessagePrefix = "custom_focalboard_"
@@ -35,6 +36,7 @@ type PluginAdapter struct {
 	api            plugin.API
 	auth           auth.AuthInterface
 	staleThreshold time.Duration
+	logger         *mlog.Logger
 
 	listenersMU       sync.RWMutex
 	listeners         map[string]*PluginAdapterClient
@@ -45,11 +47,12 @@ type PluginAdapter struct {
 	listenersByBlock     map[string][]*PluginAdapterClient
 }
 
-func NewPluginAdapter(api plugin.API, auth auth.AuthInterface) *PluginAdapter {
+func NewPluginAdapter(api plugin.API, auth auth.AuthInterface, logger *mlog.Logger) *PluginAdapter {
 	return &PluginAdapter{
 		api:                  api,
 		auth:                 auth,
 		staleThreshold:       5 * time.Minute,
+		logger:               logger,
 		listeners:            make(map[string]*PluginAdapterClient),
 		listenersByUserID:    make(map[string][]*PluginAdapterClient),
 		listenersByWorkspace: make(map[string][]*PluginAdapterClient),
@@ -204,9 +207,9 @@ func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient,
 
 func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
 	if existingPAC, ok := pa.GetListenerByWebConnID(webConnID); ok {
-		pa.api.LogDebug("inactive connection found for webconn, reusing",
-			"webConnID", webConnID,
-			"userID", userID,
+		pa.logger.Debug("inactive connection found for webconn, reusing",
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
 		)
 		atomic.StoreInt64(&existingPAC.inactiveAt, 0)
 		return
@@ -227,9 +230,9 @@ func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
 func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
 	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
-		pa.api.LogDebug("received a disconnect for an unregistered webconn",
-			"webConnID", webConnID,
-			"userID", userID,
+		pa.logger.Debug("received a disconnect for an unregistered webconn",
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
 		)
 		return
 	}
@@ -260,10 +263,10 @@ func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error
 func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
 	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
-		pa.api.LogDebug("received a message for an unregistered webconn",
-			"webConnID", webConnID,
-			"userID", userID,
-			"action", req.Action,
+		pa.logger.Debug("received a message for an unregistered webconn",
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("action", req.Action),
 		)
 		return
 	}
@@ -275,11 +278,11 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 
 	command, err := commandFromRequest(req)
 	if err != nil {
-		pa.api.LogError("error getting command from request",
-			"err", err,
-			"action", req.Action,
-			"webConnID", webConnID,
-			"userID", userID,
+		pa.logger.Error("error getting command from request",
+			mlog.String("action", req.Action),
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.Err(err),
 		)
 		return
 	}
@@ -289,18 +292,18 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 	// as there is no such thing as unauthenticated websocket
 	// connections in plugin mode. Only a debug line is logged
 	case websocketActionSubscribeBlocks, websocketActionUnsubscribeBlocks:
-		pa.api.LogDebug(`Command not implemented in plugin mode`,
-			"command", command.Action,
-			"webConnID", webConnID,
-			"userID", userID,
-			"workspaceID", command.WorkspaceID,
+		pa.logger.Debug(`Command not implemented in plugin mode`,
+			mlog.String("command", command.Action),
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("workspaceID", command.WorkspaceID),
 		)
 
 	case websocketActionSubscribeWorkspace:
-		pa.api.LogDebug(`Command: SUBSCRIBE_WORKSPACE`,
-			"webConnID", webConnID,
-			"userID", userID,
-			"workspaceID", command.WorkspaceID,
+		pa.logger.Debug(`Command: SUBSCRIBE_WORKSPACE`,
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("workspaceID", command.WorkspaceID),
 		)
 
 		if !pa.auth.DoesUserHaveWorkspaceAccess(userID, command.WorkspaceID) {
@@ -309,10 +312,10 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 
 		pa.subscribeListenerToWorkspace(pac, command.WorkspaceID)
 	case websocketActionUnsubscribeWorkspace:
-		pa.api.LogDebug(`Command: UNSUBSCRIBE_WORKSPACE`,
-			"webConnID", webConnID,
-			"userID", userID,
-			"workspaceID", command.WorkspaceID,
+		pa.logger.Debug(`Command: UNSUBSCRIBE_WORKSPACE`,
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("workspaceID", command.WorkspaceID),
 		)
 
 		pa.unsubscribeListenerFromWorkspace(pac, command.WorkspaceID)
@@ -362,9 +365,9 @@ func (pa *PluginAdapter) sendWorkspaceMessage(event string, workspaceID string, 
 }
 
 func (pa *PluginAdapter) BroadcastBlockChange(workspaceID string, block model.Block) {
-	pa.api.LogInfo("BroadcastingBlockChange",
-		"workspaceID", workspaceID,
-		"blockID", block.ID,
+	pa.logger.Debug("BroadcastingBlockChange",
+		mlog.String("workspaceID", workspaceID),
+		mlog.String("blockID", block.ID),
 	)
 
 	message := UpdateMsg{
@@ -388,10 +391,10 @@ func (pa *PluginAdapter) BroadcastBlockDelete(workspaceID, blockID, parentID str
 }
 
 func (pa *PluginAdapter) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
-	pa.api.LogInfo("BroadcastingSubscriptionChange",
-		"workspaceID", workspaceID,
-		"blockID", subscription.BlockID,
-		"subscriberID", subscription.SubscriberID,
+	pa.logger.Debug("BroadcastingSubscriptionChange",
+		mlog.String("workspaceID", workspaceID),
+		mlog.String("blockID", subscription.BlockID),
+		mlog.String("subscriberID", subscription.SubscriberID),
 	)
 
 	message := UpdateSubscription{
