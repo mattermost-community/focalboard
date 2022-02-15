@@ -10,7 +10,7 @@ import HelpIcon from '../widgets/icons/help'
 import {Utils} from '../utils'
 import {Constants} from '../constants'
 
-const TopBar = React.memo((): JSX.Element => {
+const TopBar = (): JSX.Element => {
     if (Utils.isFocalboardPlugin()) {
         const feedbackUrl = 'https://www.focalboard.com/fwlink/feedback-boards.html?v=' + Constants.versionString
         return (
@@ -65,6 +65,6 @@ const TopBar = React.memo((): JSX.Element => {
             </a>
         </div>
     )
-})
+}
 
-export default TopBar
+export default React.memo(TopBar)

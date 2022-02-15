@@ -1,19 +1,10 @@
----
-title: "Code Review"
-date: 2021-02-03T08:00:00-00:00
-weight: 5
-subsection: Getting Started
----
+# Code Review Checklist
 
-Currently, all changes to the product must be reviewed by a [core committer](/contribute/getting-started/core-committers/#core-committers).
+Currently, all changes to the product must be reviewed by a [core committer](core-committers.md).
 
-<!-- * Documentation changes must be reviewed by a [product manager](/contribute/getting-started/core-committers/#product-managers).
-  * Product managers may ask for reviews from [core committers](/contribute/getting-started/core-committers/#core-committers) and [QA testers](/contribute/getting-started/core-committers/#qa-testers) as required. -->
+## If you are a community member seeking a review
 
-If you are a community member seeking a review
-----------------------------------------------
-
-1. Submit your pull request.
+1. Submit your pull request (PR).
     * Follow the [contribution checklist](../contribution-checklist/).
 2. Wait for a reviewer to be assigned.
     * Product managers are on the lookout for new pull requests and usually handle this for you automatically.
@@ -23,16 +14,15 @@ If you are a community member seeking a review
 3. [Wait for a review](#if-you-are-awaiting-a-review).
     * Expect some interaction with at least one reviewer within 5 business days (weekdays, Monday through Friday, excluding [statutory holidays](https://docs.mattermost.com/process/working-at-mattermost.html#holidays)).
     * Keep in mind that core committers are geographically distributed around the world and likely in a different time zone than your own.
-    * If no interaction has occurred after 5 business days, please at-mention a reviewer with a comment on your PR.
+    * If no interaction has occurred after 5 business days, please [at-mention](https://github.blog/2011-03-23-mention-somebody-they-re-notified/) a reviewer with a comment on your pull request.
 4. Make any necessary changes.
     * If a reviewer requests changes, your pull request will disappear from their queue of reviews.
-    * Once you've addressed the concerns, please at-mention the reviewer with a comment on your PR.
+    * Once you've addressed the concerns, please at-mention the reviewer with a comment on your pull request.
 5. Wait for your code to be merged.
     * Larger pull requests may require more time to review.
     * Once all reviewers have approved your changes, they will handle merging your code.
 
-If you are awaiting a review
-----------------------------
+## If you are awaiting a review
 
 1. Wait patiently for reviews to complete.
     * Expect some interaction with each of your reviewers within 5 business days.
@@ -41,8 +31,7 @@ If you are awaiting a review
     * If a reviewer requests changes, your pull request will disappear from their queue of reviews.
     * Once you've addressed the concerns, assign them as a reviewer again to put your pull request back in their queue.
 
-If you are a core committer asked to give a review
---------------------------------------------------
+## If you are a core committer asked to give a review
 
 1. Respond promptly to requested reviews.
     * Assume the requested review is urgent and blocking unless explicitly stated otherwise.

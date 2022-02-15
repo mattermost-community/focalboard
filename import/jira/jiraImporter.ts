@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import * as fs from 'fs'
 import {exit} from 'process'
-import {ArchiveUtils} from '../../webapp/src/blocks/archive'
+import {ArchiveUtils} from '../util/archive'
 import {Block} from '../../webapp/src/blocks/block'
 import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
 import {createBoardView} from '../../webapp/src/blocks/boardView'

@@ -39,7 +39,7 @@ function getWindowDimensions() {
     }
 }
 
-const Sidebar = React.memo((props: Props) => {
+const Sidebar = (props: Props) => {
     const [isHidden, setHidden] = useState(false)
     const [userHidden, setUserHidden] = useState(false)
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
@@ -209,6 +209,6 @@ const Sidebar = React.memo((props: Props) => {
                 <SidebarSettingsMenu activeTheme={getActiveThemeName()}/>}
         </div>
     )
-})
+}
 
-export default Sidebar
+export default React.memo(Sidebar)

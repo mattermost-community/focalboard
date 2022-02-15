@@ -32,7 +32,7 @@ type Props = {
     readonly: boolean
 }
 
-const CardDetailProperties = React.memo((props: Props) => {
+const CardDetailProperties = (props: Props) => {
     const {board, card, cards, views, activeView, contents, comments} = props
     const [newTemplateId, setNewTemplateId] = useState('')
     const intl = useIntl()
@@ -202,6 +202,6 @@ const CardDetailProperties = React.memo((props: Props) => {
             }
         </div>
     )
-})
+}
 
-export default CardDetailProperties
+export default React.memo(CardDetailProperties)

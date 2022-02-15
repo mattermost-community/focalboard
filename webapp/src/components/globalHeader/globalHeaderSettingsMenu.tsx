@@ -17,7 +17,7 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../teleme
 
 import './globalHeaderSettingsMenu.scss'
 
-const GlobalHeaderSettingsMenu = React.memo(() => {
+const GlobalHeaderSettingsMenu = () => {
     const intl = useIntl()
     const dispatch = useAppDispatch()
 
@@ -96,6 +96,6 @@ const GlobalHeaderSettingsMenu = React.memo(() => {
             </MenuWrapper>
         </div>
     )
-})
+}
 
-export default GlobalHeaderSettingsMenu
+export default React.memo(GlobalHeaderSettingsMenu)

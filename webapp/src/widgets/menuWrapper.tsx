@@ -14,7 +14,7 @@ type Props = {
     label?: string
 }
 
-const MenuWrapper = React.memo((props: Props) => {
+const MenuWrapper = (props: Props) => {
     const node = useRef<HTMLDivElement>(null)
     const [open, setOpen] = useState(Boolean(props.isOpen))
 
@@ -94,6 +94,6 @@ const MenuWrapper = React.memo((props: Props) => {
             {children && !props.disabled && open ? Object.values(children)[1] : null}
         </div>
     )
-})
+}
 
-export default MenuWrapper
+export default React.memo(MenuWrapper)
