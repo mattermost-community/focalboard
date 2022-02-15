@@ -41,7 +41,7 @@
 
         .templates-list {
             margin-right: 32px;
-            min-width: 200px;
+            width: 300px;
             max-height: 500px;
             overflow-y: auto;
 
@@ -80,6 +80,10 @@
                 bottom: 32px;
                 width: 100%;
                 justify-content: center;
+            }
+
+            .empty-board {
+                background-color: rgb(var(--center-channel-bg-rgb));
             }
 
             .Button {

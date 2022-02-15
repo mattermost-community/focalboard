@@ -110,11 +110,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       >
         <div
           class="BoardTemplateSelectorPreview"
-        >
-          <div
-            class="prevent-click"
-          />
-        </div>
+        />
         <div
           class="buttons"
         >
@@ -239,11 +235,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       >
         <div
           class="BoardTemplateSelectorPreview"
-        >
-          <div
-            class="prevent-click"
-          />
-        </div>
+        />
         <div
           class="buttons"
         >
@@ -368,11 +360,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       >
         <div
           class="BoardTemplateSelectorPreview"
-        >
-          <div
-            class="prevent-click"
-          />
-        </div>
+        />
         <div
           class="buttons"
         >
@@ -507,11 +495,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
       >
         <div
           class="BoardTemplateSelectorPreview"
-        >
-          <div
-            class="prevent-click"
-          />
-        </div>
+        />
         <div
           class="buttons"
         >

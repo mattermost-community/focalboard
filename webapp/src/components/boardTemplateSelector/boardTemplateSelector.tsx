@@ -27,7 +27,7 @@ type Props = {
     onClose?: () => void
 }
 
-const BoardTemplateSelector = React.memo((props: Props) => {
+const BoardTemplateSelector = (props: Props) => {
     const globalTemplates = useAppSelector<Board[]>(getGlobalTemplates) || []
     const currentBoard = useAppSelector<Board>(getCurrentBoard) || null
     const {title, description, onClose} = props
@@ -166,7 +166,6 @@ const BoardTemplateSelector = React.memo((props: Props) => {
             </div>
         </div>
     )
-})
+}
 
-export default BoardTemplateSelector
-
+export default React.memo(BoardTemplateSelector)

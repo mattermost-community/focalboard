@@ -1,9 +1,4 @@
----
-title: "Contributions Without Ticket"
-date: 2021-02-03T08:00:00-00:00
-weight: 3
-subsection: Getting Started
----
+# Contributions Without Ticket
 
 Contributions for minor corrections and improvements without a corresponding `Help Wanted` ticket are welcome. For example, a pull request for a bug or incremental improvement, with less than 20 lines of code change, is usually accepted if the change to existing behaviour is minor.
 

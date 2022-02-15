@@ -1,0 +1,950 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy link 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <h1
+            class="text-heading5 mt-2"
+          >
+            Share Board
+          </h1>
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Publish to the web
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Publish and share a “read only” link with everyone on the web
+                </div>
+              </div>
+              <div>
+                <div
+                  class="Switch size--medium on"
+                >
+                  <div
+                    class="octo-switch-inner"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/workspace/1/shared/1/1?r=oneToken
+              </a>
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="Regenerate token"
+              >
+                <button
+                  aria-label="Regenerate token"
+                  title="Regenerate token"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-refresh Icon Icon--right"
+                  />
+                </button>
+              </div>
+            </div>
+            <button
+              title="Copy link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy link 2`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <h1
+            class="text-heading5 mt-2"
+          >
+            Share Board
+          </h1>
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Publish to the web
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Publish and share a “read only” link with everyone on the web
+                </div>
+              </div>
+              <div>
+                <div
+                  class="Switch size--medium on"
+                >
+                  <div
+                    class="octo-switch-inner"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/workspace/1/shared/1/1?r=oneToken
+              </a>
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="Regenerate token"
+              >
+                <button
+                  aria-label="Regenerate token"
+                  title="Regenerate token"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-refresh Icon Icon--right"
+                  />
+                </button>
+              </div>
+            </div>
+            <button
+              title="Copy link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
+                Copied!
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard return shareBoard and click Regenerate token 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <h1
+            class="text-heading5 mt-2"
+          >
+            Share Board
+          </h1>
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Publish to the web
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Publish and share a “read only” link with everyone on the web
+                </div>
+              </div>
+              <div>
+                <div
+                  class="Switch size--medium on"
+                >
+                  <div
+                    class="octo-switch-inner"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/workspace/1/shared/1/1?r=oneToken
+              </a>
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="Regenerate token"
+              >
+                <button
+                  aria-label="Regenerate token"
+                  title="Regenerate token"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-refresh Icon Icon--right"
+                  />
+                </button>
+              </div>
+            </div>
+            <button
+              title="Copy link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard return shareBoard, and click switch 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <h1
+            class="text-heading5 mt-2"
+          >
+            Share Board
+          </h1>
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Publish to the web
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Publish and share a “read only” link with everyone on the web
+                </div>
+              </div>
+              <div>
+                <div
+                  class="Switch size--medium on"
+                >
+                  <div
+                    class="octo-switch-inner"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/workspace/1/shared/1/1?r=oneToken
+              </a>
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="Regenerate token"
+              >
+                <button
+                  aria-label="Regenerate token"
+                  title="Regenerate token"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-refresh Icon Icon--right"
+                  />
+                </button>
+              </div>
+            </div>
+            <button
+              title="Copy link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard return shareBoardComponent and click Switch without sharing 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <h1
+            class="text-heading5 mt-2"
+          >
+            Share Board
+          </h1>
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Publish to the web
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Publish and share a “read only” link with everyone on the web
+                </div>
+              </div>
+              <div>
+                <div
+                  class="Switch size--medium on"
+                >
+                  <div
+                    class="octo-switch-inner"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/workspace/1/shared/1/1?r=aToken"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/workspace/1/shared/1/1?r=aToken
+              </a>
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="Regenerate token"
+              >
+                <button
+                  aria-label="Regenerate token"
+                  title="Regenerate token"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-refresh Icon Icon--right"
+                  />
+                </button>
+              </div>
+            </div>
+            <button
+              title="Copy link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <h1
+            class="text-heading5 mt-2"
+          >
+            Share Board
+          </h1>
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Publish to the web
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Publish and share a “read only” link with everyone on the web
+                </div>
+              </div>
+              <div>
+                <div
+                  class="Switch size--medium"
+                >
+                  <div
+                    class="octo-switch-inner"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard should match snapshot with sharing 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <h1
+            class="text-heading5 mt-2"
+          >
+            Share Board
+          </h1>
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Publish to the web
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Publish and share a “read only” link with everyone on the web
+                </div>
+              </div>
+              <div>
+                <div
+                  class="Switch size--medium on"
+                >
+                  <div
+                    class="octo-switch-inner"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/workspace/1/shared/1/1?r=oneToken
+              </a>
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="Regenerate token"
+              >
+                <button
+                  aria-label="Regenerate token"
+                  title="Regenerate token"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-refresh Icon Icon--right"
+                  />
+                </button>
+              </div>
+            </div>
+            <button
+              title="Copy link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard should match snapshot with sharing and subpath 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <h1
+            class="text-heading5 mt-2"
+          >
+            Share Board
+          </h1>
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Publish to the web
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Publish and share a “read only” link with everyone on the web
+                </div>
+              </div>
+              <div>
+                <div
+                  class="Switch size--medium on"
+                >
+                  <div
+                    class="octo-switch-inner"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/test-subpath/plugins/boards/workspace/1/shared/1/1?r=oneToken"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/test-subpath/plugins/boards/workspace/1/shared/1/1?r=oneToken
+              </a>
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="Regenerate token"
+              >
+                <button
+                  aria-label="Regenerate token"
+                  title="Regenerate token"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-refresh Icon Icon--right"
+                  />
+                </button>
+              </div>
+            </div>
+            <button
+              title="Copy link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard should match snapshot with sharing and without workspaceId and subpath 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <h1
+            class="text-heading5 mt-2"
+          >
+            Share Board
+          </h1>
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Publish to the web
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Publish and share a “read only” link with everyone on the web
+                </div>
+              </div>
+              <div>
+                <div
+                  class="Switch size--medium on"
+                >
+                  <div
+                    class="octo-switch-inner"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/test-subpath/plugins/boards/shared/1/1?r=oneToken"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/test-subpath/plugins/boards/shared/1/1?r=oneToken
+              </a>
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="Regenerate token"
+              >
+                <button
+                  aria-label="Regenerate token"
+                  title="Regenerate token"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-refresh Icon Icon--right"
+                  />
+                </button>
+              </div>
+            </div>
+            <button
+              title="Copy link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
