@@ -135,10 +135,9 @@ const CardDetailProperties = (props: Props) => {
     return (
         <div className='octo-propertylist CardDetailProperties'>
             {board.fields.cardProperties.map((propertyTemplate: IPropertyTemplate) => {
-                const propertyValue = card.fields.properties[propertyTemplate.id]
                 return (
                     <div
-                        key={propertyTemplate.id + '-' + propertyTemplate.type + '-' + propertyValue}
+                        key={propertyTemplate.id + '-' + propertyTemplate.type}
                         className='octo-propertyrow'
                     >
                         {props.readonly && <div className='octo-propertyname octo-propertyname--readonly'>{propertyTemplate.name}</div>}
