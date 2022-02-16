@@ -148,7 +148,10 @@ export default class Plugin {
                 UserSettings.lastViewId = null
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
-            this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
+
+            if (registry.registerChannelIntroButtonAction) {
+                this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
+            }
 
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)

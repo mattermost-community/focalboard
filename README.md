@@ -84,7 +84,7 @@ You can build standalone apps that package the server to run locally against SQL
     * Open a git-bash prompt
     * `make win-wpf-app`
     * run `cd win-wpf/msix && focalboard.exe`
-    * *Requires: Windows 10*
+    * *Requires: Windows 10, [Windows 10 SDK](https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/) 10.0.19041.0, .NET 4.8 developer pack*
 * Docker:
     * To run it locally from Offical Image
     * `docker run -it -p 80:8000 mattermost/focalboard`
