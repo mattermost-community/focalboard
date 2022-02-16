@@ -179,7 +179,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onChange={(newValue) => {
                     if (value !== newValue) {
                         setValue(newValue)
-                        mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue)}
+                        mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue)
                     }
                 }}
             />
