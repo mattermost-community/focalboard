@@ -23,7 +23,6 @@ type Props = {
     card: Card
     contents: Array<ContentBlockType|ContentBlockType[]>
     readonly: boolean
-    showTour?: boolean
 }
 
 function addTextBlock(card: Card, intl: IntlShape, text: string): void {
@@ -167,7 +166,7 @@ const CardDetailContents = React.memo((props: Props) => {
                                 intl={intl}
                                 readonly={props.readonly}
                             />
-                            {props.showTour && x === 0 && <AddDescriptionTourStep/>}
+                            {x === 0 && <AddDescriptionTourStep/>}
                         </React.Fragment>
                     ),
                 )}

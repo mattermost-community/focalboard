@@ -53,7 +53,6 @@ import CalendarFullView from './calendar/fullCalendar'
 
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
-import {OnboardingBoardTitle} from './cardDetail/cardDetail'
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
 
 type Props = {
@@ -180,10 +179,6 @@ class CenterPanel extends React.Component<Props, State> {
         const {groupByProperty, activeView, board, views, cards} = this.props
         const {visible: visibleGroups, hidden: hiddenGroups} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
 
-        const isOnboardingBoard = this.props.board.title === OnboardingBoardTitle
-        const showTour = isOnboardingBoard && this.props.onboardingTourStarted
-        const showShareTourStep = this.props.showShared && showTour && this.props.onboardingTourCategory === TOUR_BOARD && this.props.onboardingTourStep === BoardTourSteps.SHARE_BOARD?.toString()
-
         return (
             <div
                 className='BoardComponent'
@@ -227,7 +222,7 @@ class CenterPanel extends React.Component<Props, State> {
                                     />
                                 )
                             }
-                            {showShareTourStep && <ShareBoardTourStep/>}
+                            <ShareBoardTourStep/>
                         </div>
                     </div>
                     <ViewHeader

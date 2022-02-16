@@ -9,7 +9,7 @@ import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
 import {getCardComments} from '../../store/comments'
 import {getCardContents} from '../../store/contents'
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
+import {useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -26,24 +26,7 @@ import PropertyValueElement from '../propertyValueElement'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import './kanbanCard.scss'
 import CardBadges from '../cardBadges'
-import {
-    getMe,
-    getOnboardingTourCategory,
-    getOnboardingTourStarted,
-    getOnboardingTourStep,
-    patchProps,
-} from '../../store/users'
 import OpenCardTourStep from '../onboardingTour/openCard/open_card'
-import {UserConfigPatch} from '../../user'
-import {
-    TOUR_CARD,
-    TOUR_BASE,
-    BoardTourSteps,
-    BaseTourSteps,
-    TOUR_BOARD,
-    CardTourSteps,
-} from '../onboardingTour'
-import octoClient from '../../octoClient'
 import CopyLinkTourStep from '../onboardingTour/copyLink/copy_link'
 
 export const OnboardingCardClassName = 'onboardingCard'
@@ -102,36 +85,9 @@ const KanbanCard = React.memo((props: Props) => {
         setShowConfirmationDialogBox(true)
     }
 
-    const isOnboardingBoard = board.title === 'Welcome to Boards!'
     const isOnboardingCard = card.title === 'Create a new card'
-    const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
-    const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
-    const onboardingTourStep = useAppSelector(getOnboardingTourStep)
-    const showTour = isOnboardingBoard && isOnboardingCard && onboardingTourStarted
-    const showOpenCardTourStep = showTour && onboardingTourCategory === TOUR_BASE && onboardingTourStep === BaseTourSteps.OPEN_A_CARD.toString()
-    const showCopyLinkTourStep = showTour && onboardingTourCategory === TOUR_BOARD && onboardingTourStep === BoardTourSteps.COPY_LINK.toString()
-
-    const dispatch = useAppDispatch()
-    const me = useAppSelector(getMe)
 
     const handleOnClick = async (e: React.MouseEvent) => {
-        const cardTourStarted = onboardingTourCategory === TOUR_CARD && onboardingTourStep === CardTourSteps.ADD_PROPERTIES.toString()
-        const baseTourStarted = onboardingTourCategory === TOUR_BASE
-        if (showTour && (cardTourStarted || baseTourStarted) && me) {
-            // send the user to next tour
-            const patch: UserConfigPatch = {
-                updatedFields: {
-                    focalboard_tourCategory: TOUR_CARD,
-                    focalboard_onboardingTourStep: CardTourSteps.ADD_PROPERTIES.toString(),
-                },
-            }
-
-            const patchedProps = await octoClient.patchUserConfig(me.id, patch)
-            if (patchedProps) {
-                await dispatch(patchProps(patchedProps))
-            }
-        }
-
         if (props.onClick) {
             props.onClick(e)
         }
@@ -148,7 +104,7 @@ const KanbanCard = React.memo((props: Props) => {
             >
                 {!props.readonly &&
                 <MenuWrapper
-                    className={`optionsMenu ${showCopyLinkTourStep ? 'show' : ''}`}
+                    className={`optionsMenu ${isOnboardingCard ? 'show' : ''}`}
                     stopPropagationOnToggle={true}
                 >
                     <IconButton icon={<OptionsIcon/>}/>
@@ -224,8 +180,8 @@ const KanbanCard = React.memo((props: Props) => {
                     </Tooltip>
                 ))}
                 {props.visibleBadges && <CardBadges card={card}/>}
-                {showOpenCardTourStep && <OpenCardTourStep onPunchholeClick={handleOnClick}/>}
-                {showCopyLinkTourStep && <CopyLinkTourStep/>}
+                {isOnboardingCard && <OpenCardTourStep/>}
+                {isOnboardingCard && <CopyLinkTourStep/>}
             </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}

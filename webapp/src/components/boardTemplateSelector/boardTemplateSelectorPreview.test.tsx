@@ -111,7 +111,13 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                     },
                 },
             },
-            cards: {templates: []},
+            cards: {
+                templates: [],
+                cards: {
+                    card_id_1: {title: 'Create a new card'},
+                },
+                current: 'card_id_1',
+            },
             views: {views: []},
             contents: {contents: []},
             comments: {comments: []},

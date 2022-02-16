@@ -19,8 +19,18 @@ describe('components/onboardingTour/addComments/CopyLinkTourStep', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {},
+                props: {
+                    focalboard_onboardingTourStarted: true,
+                    focalboard_tourCategory: 'board',
+                    focalboard_onboardingTourStep: '1',
+                },
             },
+        },
+        boards: {
+            boards: {
+                board_id_1: {title: 'Welcome to Boards!'},
+            },
+            current: 'board_id_1',
         },
     }
     let store = mockStore(state)

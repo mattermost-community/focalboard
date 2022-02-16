@@ -319,5 +319,6 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
 
 export const getCurrentCard = createSelector(
     (state: RootState) => state.cards.current,
-    (current) => current,
+    (state: RootState) => state.cards.cards,
+    (current, cards) => cards[current],
 )

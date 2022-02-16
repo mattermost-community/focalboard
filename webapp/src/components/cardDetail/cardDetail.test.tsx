@@ -72,6 +72,18 @@ describe('components/cardDetail/CardDetail', () => {
                     {username: 'username_1'},
                 ],
             },
+            boards: {
+                boards: {
+                    [board.id]: board,
+                },
+                current: board.id,
+            },
+            cards: {
+                cards: {
+                    [card.id]: card,
+                },
+                current: card.id,
+            },
         })
 
         const component = (
@@ -156,6 +168,13 @@ describe('components/cardDetail/CardDetail', () => {
 
     test('should show add properties tour tip', async () => {
         const mockStore = configureStore([])
+
+        const welcomeBoard = TestBlockFactory.createBoard()
+        welcomeBoard.title = 'Welcome to Boards!'
+
+        const welcomeCard = TestBlockFactory.createCard(welcomeBoard)
+        welcomeCard.title = 'Create a new card'
+
         const store = mockStore({
             users: {
                 me: {
@@ -170,6 +189,18 @@ describe('components/cardDetail/CardDetail', () => {
                 workspaceUsers: [
                     {username: 'username_1'},
                 ],
+            },
+            boards: {
+                boards: {
+                    [welcomeBoard.id]: welcomeBoard,
+                },
+                current: welcomeBoard.id,
+            },
+            cards: {
+                cards: {
+                    [welcomeCard.id]: welcomeCard,
+                },
+                current: welcomeCard.id,
             },
         })
 
@@ -231,6 +262,13 @@ describe('components/cardDetail/CardDetail', () => {
 
     test('should show add comments tour tip', async () => {
         const mockStore = configureStore([])
+
+        const welcomeBoard = TestBlockFactory.createBoard()
+        welcomeBoard.title = 'Welcome to Boards!'
+
+        const welcomeCard = TestBlockFactory.createCard(welcomeBoard)
+        welcomeCard.title = 'Create a new card'
+
         const store = mockStore({
             users: {
                 me: {
@@ -245,6 +283,18 @@ describe('components/cardDetail/CardDetail', () => {
                 workspaceUsers: [
                     {username: 'username_1'},
                 ],
+            },
+            boards: {
+                boards: {
+                    [welcomeBoard.id]: welcomeBoard,
+                },
+                current: welcomeBoard.id,
+            },
+            cards: {
+                cards: {
+                    [welcomeCard.id]: welcomeCard,
+                },
+                current: welcomeCard.id,
             },
         })
 
@@ -306,7 +356,12 @@ describe('components/cardDetail/CardDetail', () => {
 
     test('should show add description tour tip', async () => {
         const mockStore = configureStore([])
-        const store = mockStore({
+        const welcomeBoard = TestBlockFactory.createBoard()
+        welcomeBoard.title = 'Welcome to Boards!'
+
+        const welcomeCard = TestBlockFactory.createCard(welcomeBoard)
+        welcomeCard.title = 'Create a new card'
+        const state = {
             users: {
                 me: {
                     id: 'user_id_1',
@@ -321,7 +376,20 @@ describe('components/cardDetail/CardDetail', () => {
                     {username: 'username_1'},
                 ],
             },
-        })
+            boards: {
+                boards: {
+                    [welcomeBoard.id]: welcomeBoard,
+                },
+                current: welcomeBoard.id,
+            },
+            cards: {
+                cards: {
+                    [welcomeCard.id]: welcomeCard,
+                },
+                current: welcomeCard.id,
+            },
+        }
+        const store = mockStore(state)
 
         const onboardingBoard = TestBlockFactory.createBoard()
         onboardingBoard.title = 'Welcome to Boards!'

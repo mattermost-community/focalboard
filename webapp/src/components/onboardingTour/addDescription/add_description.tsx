@@ -4,18 +4,16 @@ import React from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
-import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
-import {useAppSelector} from '../../../store/hooks'
-import {getOnboardingTourStep} from '../../../store/users'
 
 import './add_description.scss'
 import {Utils} from '../../../utils'
 import addDescription from '../../../../static/addDescription.png'
 
-import {TOUR_CARD} from '../index'
+import {CardTourSteps, TOUR_CARD} from '../index'
+import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
 
-const AddDescriptionTourStep = (): JSX.Element => {
+const AddDescriptionTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
             id='OnboardingTour.AddDescription.Title'
@@ -30,22 +28,21 @@ const AddDescriptionTourStep = (): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts(['.octo-content div:nth-child(1)'], [])
-    const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (
-        <TourTip
+        <TourTipRenderer
+            key='AddDescriptionTourStep'
+            requireCard={true}
+            category={TOUR_CARD}
+            step={CardTourSteps.ADD_DESCRIPTION}
             screen={screen}
             title={title}
-            punchOut={punchout}
-            step={currentStep}
-            tutorialCategory={TOUR_CARD}
-            autoTour={true}
-            placement={'top-start'}
-            className='AddDescriptionTourStep'
-            hideBackdrop={true}
-            imageURL={Utils.buildURL(addDescription, true)}
-            skipCategoryFromBackdrop={true}
+            punchout={punchout}
+            classname='AddDescriptionTourStep'
             telemetryTag='tourPoint2c'
+            placement={'top-start'}
+            imageURL={Utils.buildURL(addDescription, true)}
+            hideBackdrop={true}
         />
     )
 }

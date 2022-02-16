@@ -4,16 +4,14 @@ import React from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
-import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
-import {useAppSelector} from '../../../store/hooks'
-import {getOnboardingTourStep} from '../../../store/users'
 
 import './add_view.scss'
 import {Utils} from '../../../utils'
 import changeViews from '../../../../static/changeViews.gif'
 
-import {TOUR_BOARD} from '../index'
+import {BoardTourSteps, TOUR_BOARD} from '../index'
+import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
 
 const AddViewTourStep = (): JSX.Element => {
     const title = (
@@ -30,22 +28,21 @@ const AddViewTourStep = (): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts(['.viewSelector'], [])
-    const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (
-        <TourTip
+        <TourTipRenderer
+            key='AddViewTourStep'
+            requireCard={false}
+            category={TOUR_BOARD}
+            step={BoardTourSteps.ADD_VIEW}
             screen={screen}
             title={title}
-            punchOut={punchout}
-            step={currentStep}
-            tutorialCategory={TOUR_BOARD}
-            autoTour={true}
-            placement={'bottom-start'}
-            className='AddViewTourStep'
-            imageURL={Utils.buildURL(changeViews, true)}
-            stopPropagation={true}
-            skipCategoryFromBackdrop={true}
+            punchout={punchout}
+            classname='AddViewTourStep'
             telemetryTag='tourPoint3a'
+            placement={'bottom-start'}
+            imageURL={Utils.buildURL(changeViews, true)}
+            hideBackdrop={false}
         />
     )
 }

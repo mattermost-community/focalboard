@@ -77,10 +77,10 @@ exports[`components/onboardingTour/addComments/AddDescriptionTourStep after hove
                 />
               </div>
               <div
-                class="tutorial-tour-tip__circular-ring"
+                class="tutorial-tour-tip__circular-ring tutorial-tour-tip__circular-ring-active"
               >
                 <a
-                  class="tutorial-tour-tip__circle"
+                  class="tutorial-tour-tip__circle active"
                   data-screen="2"
                   href="#"
                 />
@@ -106,11 +106,9 @@ exports[`components/onboardingTour/addComments/AddDescriptionTourStep after hove
                 type="button"
               >
                 <span>
-                  Next
+                  Done
                 </span>
-                <i
-                  class="CompassIcon icon-chevron-right icon"
-                />
+                
               </button>
             </div>
           </div>

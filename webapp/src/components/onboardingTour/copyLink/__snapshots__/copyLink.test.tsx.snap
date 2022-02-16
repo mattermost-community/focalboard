@@ -5,7 +5,7 @@ exports[`components/onboardingTour/addComments/CopyLinkTourStep after hover 1`] 
   class="tippy-box tutorial-tour-tip__box CopyLinkTourStep"
   data-animation="scale-subtle"
   data-escaped=""
-  data-placement="right-end"
+  data-placement="right-start"
   data-reference-hidden=""
   data-state="hidden"
   role="tooltip"
@@ -68,10 +68,10 @@ exports[`components/onboardingTour/addComments/CopyLinkTourStep after hover 1`] 
                 />
               </div>
               <div
-                class="tutorial-tour-tip__circular-ring"
+                class="tutorial-tour-tip__circular-ring tutorial-tour-tip__circular-ring-active"
               >
                 <a
-                  class="tutorial-tour-tip__circle"
+                  class="tutorial-tour-tip__circle active"
                   data-screen="1"
                   href="#"
                 />

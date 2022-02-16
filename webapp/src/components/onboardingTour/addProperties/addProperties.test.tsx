@@ -19,8 +19,24 @@ describe('components/onboardingTour/addComments/AddPropertiesTourStep', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {},
+                props: {
+                    focalboard_onboardingTourStarted: true,
+                    focalboard_tourCategory: 'card',
+                    focalboard_onboardingTourStep: '0',
+                },
             },
+        },
+        boards: {
+            boards: {
+                board_id_1: {title: 'Welcome to Boards!'},
+            },
+            current: 'board_id_1',
+        },
+        cards: {
+            cards: {
+                card_id_1: {title: 'Create a new card'},
+            },
+            current: 'card_id_1',
         },
     }
     let store = mockStore(state)

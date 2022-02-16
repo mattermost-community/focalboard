@@ -31,7 +31,6 @@ type Props = {
     activeView: BoardView
     views: BoardView[]
     readonly: boolean
-    showTour?: boolean
 }
 
 const CardDetailProperties = React.memo((props: Props) => {
@@ -201,7 +200,7 @@ const CardDetailProperties = React.memo((props: Props) => {
                         </Menu>
                     </MenuWrapper>
 
-                    {props.showTour && <AddPropertiesTourStep/>}
+                    <AddPropertiesTourStep/>
                 </div>
             }
         </div>

@@ -68,10 +68,10 @@ exports[`components/onboardingTour/addComments/AddCommentTourStep after hover 1`
                 />
               </div>
               <div
-                class="tutorial-tour-tip__circular-ring"
+                class="tutorial-tour-tip__circular-ring tutorial-tour-tip__circular-ring-active"
               >
                 <a
-                  class="tutorial-tour-tip__circle"
+                  class="tutorial-tour-tip__circle active"
                   data-screen="1"
                   href="#"
                 />

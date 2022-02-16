@@ -4,18 +4,16 @@ import React from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
-import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
-import {useAppSelector} from '../../../store/hooks'
-import {getOnboardingTourStep} from '../../../store/users'
 
 import './add_comments.scss'
 import {Utils} from '../../../utils'
 import addComment from '../../../../static/comment.gif'
 
-import {TOUR_CARD} from '../index'
+import {CardTourSteps, TOUR_CARD} from '../index'
+import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
 
-const AddCommentTourStep = (): JSX.Element => {
+const AddCommentTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
             id='OnboardingTour.AddComments.Title'
@@ -30,22 +28,21 @@ const AddCommentTourStep = (): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts(['.CommentsList__new'], [])
-    const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (
-        <TourTip
+        <TourTipRenderer
+            key='AddCommentTourStep'
+            requireCard={true}
+            category={TOUR_CARD}
+            step={CardTourSteps.ADD_COMMENTS}
             screen={screen}
             title={title}
-            punchOut={punchout}
-            step={currentStep}
-            tutorialCategory={TOUR_CARD}
-            autoTour={true}
-            placement={'right-end'}
-            className='AddCommentTourStep'
-            hideBackdrop={true}
-            imageURL={Utils.buildURL(addComment, true)}
-            skipCategoryFromBackdrop={true}
+            punchout={punchout}
+            classname='AddCommentTourStep'
             telemetryTag='tourPoint2b'
+            placement={'right-end'}
+            imageURL={Utils.buildURL(addComment, true)}
+            hideBackdrop={true}
         />
     )
 }

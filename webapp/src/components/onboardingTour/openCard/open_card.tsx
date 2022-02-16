@@ -6,21 +6,15 @@ import {bottom} from '@popperjs/core'
 
 import {FormattedMessage} from 'react-intl'
 
-import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
-import {useAppSelector} from '../../../store/hooks'
-import {getOnboardingTourStep} from '../../../store/users'
 
-import {TOUR_BASE} from '../index'
+import {BaseTourSteps, TOUR_BASE} from '../index'
 
 import './open_card.scss'
 import {OnboardingCardClassName} from '../../kanban/kanbanCard'
+import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
 
-type Props = {
-    onPunchholeClick: (e: React.MouseEvent) => void
-}
-
-const OpenCardTourStep = (props: Props): JSX.Element => {
+const OpenCardTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
             id='OnboardingTour.OpenACard.Title'
@@ -35,25 +29,22 @@ const OpenCardTourStep = (props: Props): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts([`.${OnboardingCardClassName}`], [])
-    const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (
-        <TourTip
+        <TourTipRenderer
+            key='OpenCardTourStep'
+            requireCard={false}
+            category={TOUR_BASE}
+            step={BaseTourSteps.OPEN_A_CARD}
             screen={screen}
             title={title}
-            punchOut={punchout}
-            step={currentStep}
-            tutorialCategory={TOUR_BASE}
-            autoTour={true}
-            placement={bottom}
-            className='OpenCardTourStep'
-            hideBackdrop={false}
-            clickThroughPunchhole={true}
-            hideNavButtons={true}
-            singleTip={true}
-            onPunchholeClick={props.onPunchholeClick}
-            skipCategoryFromBackdrop={true}
+            punchout={punchout}
+            classname='OpenCardTourStep'
             telemetryTag='tourPoint1'
+            placement={bottom}
+            singleTip={true}
+            hideNavButtons={true}
+            hideBackdrop={false}
         />
     )
 }

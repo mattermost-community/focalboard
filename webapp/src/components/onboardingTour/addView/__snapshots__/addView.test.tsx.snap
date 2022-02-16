@@ -59,10 +59,10 @@ exports[`components/onboardingTour/addComments/AddViewTourStep after hover 1`] =
               class="tutorial-tour-tip__circles-ctr"
             >
               <div
-                class="tutorial-tour-tip__circular-ring"
+                class="tutorial-tour-tip__circular-ring tutorial-tour-tip__circular-ring-active"
               >
                 <a
-                  class="tutorial-tour-tip__circle"
+                  class="tutorial-tour-tip__circle active"
                   data-screen="0"
                   href="#"
                 />
@@ -89,18 +89,6 @@ exports[`components/onboardingTour/addComments/AddViewTourStep after hover 1`] =
             <div
               class="tutorial-tour-tip__btn-ctr"
             >
-              <button
-                class="Button emphasis--tertiary size--small"
-                title="Previous"
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-chevron-left icon"
-                />
-                <span>
-                  Previous
-                </span>
-              </button>
               <button
                 class="Button filled size--small tipNextButton"
                 type="button"

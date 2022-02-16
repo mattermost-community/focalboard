@@ -4,18 +4,16 @@ import React from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
-import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
-import {useAppSelector} from '../../../store/hooks'
-import {getOnboardingTourStep} from '../../../store/users'
 
 import './shareBoard.scss'
 import {Utils} from '../../../utils'
 import shareBoard from '../../../../static/share.gif'
 
-import {TOUR_CARD} from '../index'
+import {BoardTourSteps, TOUR_BOARD} from '../index'
+import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
 
-const ShareBoardTourStep = (): JSX.Element => {
+const ShareBoardTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
             id='OnboardingTour.ShareBoard.Title'
@@ -30,23 +28,25 @@ const ShareBoardTourStep = (): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts(['.ShareBoardButton > button'], [])
-    const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (
-        <TourTip
-            screen={screen}
-            title={title}
-            punchOut={punchout}
-            step={currentStep}
-            tutorialCategory={TOUR_CARD}
-            autoTour={true}
-            placement={'bottom-end'}
-            className='ShareBoardTourStep'
-            hideBackdrop={true}
-            imageURL={Utils.buildURL(shareBoard, true)}
-            skipCategoryFromBackdrop={true}
-            telemetryTag='tourPoint2b'
-        />
+        <>
+            {BoardTourSteps.SHARE_BOARD &&
+                <TourTipRenderer
+                    key='ShareBoardTourStep'
+                    requireCard={false}
+                    category={TOUR_BOARD}
+                    step={BoardTourSteps.SHARE_BOARD}
+                    screen={screen}
+                    title={title}
+                    punchout={punchout}
+                    classname='ShareBoardTourStep'
+                    telemetryTag='tourPoint2b'
+                    placement={'bottom-end'}
+                    imageURL={Utils.buildURL(shareBoard, true)}
+                    hideBackdrop={true}
+                />}
+        </>
     )
 }
 

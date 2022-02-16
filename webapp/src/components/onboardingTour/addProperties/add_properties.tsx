@@ -4,18 +4,16 @@ import React from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
-import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
-import {useAppSelector} from '../../../store/hooks'
-import {getOnboardingTourStep} from '../../../store/users'
 
 import './add_properties.scss'
 import {Utils} from '../../../utils'
 import addProperty from '../../../../static/addProperty.gif'
 
-import {TOUR_CARD} from '../index'
+import {CardTourSteps, TOUR_CARD} from '../index'
+import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
 
-const AddPropertiesTourStep = (): JSX.Element => {
+const AddPropertiesTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
             id='OnboardingTour.AddProperties.Title'
@@ -30,23 +28,21 @@ const AddPropertiesTourStep = (): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts(['.octo-propertyname.add-property'], [])
-    const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (
-        <TourTip
+        <TourTipRenderer
+            key='AddPropertiesTourStep'
+            requireCard={true}
+            category={TOUR_CARD}
+            step={CardTourSteps.ADD_PROPERTIES}
             screen={screen}
             title={title}
-            punchOut={punchout}
-            step={currentStep}
-            tutorialCategory={TOUR_CARD}
-            autoTour={true}
-            placement={'right-end'}
-            className='AddPropertiesTourStep'
-            hideBackdrop={true}
-            imageURL={Utils.buildURL(addProperty, true)}
-            stopPropagation={true}
-            skipCategoryFromBackdrop={true}
+            punchout={punchout}
+            classname='AddPropertiesTourStep'
             telemetryTag='tourPoint2a'
+            placement={'right-end'}
+            imageURL={Utils.buildURL(addProperty, true)}
+            hideBackdrop={true}
         />
     )
 }

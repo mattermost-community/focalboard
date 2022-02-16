@@ -19,8 +19,24 @@ describe('components/onboardingTour/addComments/OpenCardTourStep', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {},
+                props: {
+                    focalboard_onboardingTourStarted: true,
+                    focalboard_tourCategory: 'onboarding',
+                    focalboard_onboardingTourStep: '0',
+                },
             },
+        },
+        boards: {
+            boards: {
+                board_id_1: {title: 'Welcome to Boards!'},
+            },
+            current: 'board_id_1',
+        },
+        cards: {
+            cards: {
+                card_id_1: {title: 'Create a new card'},
+            },
+            current: 'card_id_1',
         },
     }
     let store = mockStore(state)
@@ -32,7 +48,7 @@ describe('components/onboardingTour/addComments/OpenCardTourStep', () => {
     test('before hover', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <OpenCardTourStep onPunchholeClick={() => {}}/>
+                <OpenCardTourStep/>
             </ReduxProvider>,
         )
         const {container} = render(component)
@@ -42,7 +58,7 @@ describe('components/onboardingTour/addComments/OpenCardTourStep', () => {
     test('after hover', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <OpenCardTourStep onPunchholeClick={() => {}}/>
+                <OpenCardTourStep/>
             </ReduxProvider>,
         )
         render(component)

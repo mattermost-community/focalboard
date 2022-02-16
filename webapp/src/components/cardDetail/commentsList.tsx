@@ -25,7 +25,6 @@ type Props = {
     rootId: string
     cardId: string
     readonly: boolean
-    showTour: boolean
 }
 
 const CommentsList = React.memo((props: Props) => {
@@ -80,7 +79,7 @@ const CommentsList = React.memo((props: Props) => {
             </Button>
             }
 
-            {props.showTour && <AddCommentTourStep/>}
+            <AddCommentTourStep/>
         </div>
     )
 

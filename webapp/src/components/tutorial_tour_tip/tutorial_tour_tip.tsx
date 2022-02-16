@@ -119,12 +119,10 @@ const TutorialTourTip = ({
 
     const getButtonText = (): JSX.Element => {
         let buttonText = (
-            <>
-                <FormattedMessage
-                    id={'tutorial_tip.ok'}
-                    defaultMessage={'Next'}
-                />
-            </>
+            <FormattedMessage
+                id={'tutorial_tip.ok'}
+                defaultMessage={'Next'}
+            />
         )
         if (singleTip) {
             buttonText = (

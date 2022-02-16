@@ -4,19 +4,17 @@ import React from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
-import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
-import {useAppSelector} from '../../../store/hooks'
-import {getOnboardingTourStep} from '../../../store/users'
 
 import './copy_link.scss'
 import {Utils} from '../../../utils'
 import copyLink from '../../../../static/copyLink.gif'
 
-import {TOUR_BOARD} from '../index'
+import {BoardTourSteps, TOUR_BOARD} from '../index'
 import {OnboardingCardClassName} from '../../kanban/kanbanCard'
+import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
 
-const CopyLinkTourStep = (): JSX.Element => {
+const CopyLinkTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
             id='OnboardingTour.CopyLink.Title'
@@ -31,23 +29,21 @@ const CopyLinkTourStep = (): JSX.Element => {
     )
 
     const punchout = useMeasurePunchouts([`.${OnboardingCardClassName} .optionsMenu`], [])
-    const currentStep = parseInt(useAppSelector(getOnboardingTourStep), 10)
 
     return (
-        <TourTip
+        <TourTipRenderer
+            key='CopyLinkTourStep'
+            requireCard={false}
+            category={TOUR_BOARD}
+            step={BoardTourSteps.COPY_LINK}
             screen={screen}
             title={title}
-            punchOut={punchout}
-            step={currentStep}
-            tutorialCategory={TOUR_BOARD}
-            autoTour={true}
-            placement={'right-end'}
-            className='CopyLinkTourStep'
-            hideBackdrop={true}
-            imageURL={Utils.buildURL(copyLink, true)}
-            stopPropagation={true}
-            skipCategoryFromBackdrop={true}
+            punchout={punchout}
+            classname='CopyLinkTourStep'
             telemetryTag='tourPoint3b'
+            placement={'right-start'}
+            imageURL={Utils.buildURL(copyLink, true)}
+            hideBackdrop={true}
         />
     )
 }
