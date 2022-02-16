@@ -118,13 +118,13 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Dir 1
-      run: dir $(MSBuildProgramFiles32)\Windows Kits\10
+      run: dir C:\Program Files (x86)\Windows Kits\10
 
     - name: Dir 2
-      run: dir $(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata
+      run: dir C:\Program Files (x86)\Windows Kits\10\UnionMetadata
 
     - name: Dir 3
-      run: dir $(MSBuildProgramFiles32)\Windows Kits
+      run: dir C:\Program Files (x86)\Windows Kits
 
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
