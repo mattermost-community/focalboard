@@ -111,7 +111,7 @@ jobs:
         path: ${{ github.workspace }}/mac/dist/focalboard-mac.zip
 
   windows:
-    runs-on: windows-latest
+    runs-on: windows-2019
 
     steps:
     - name: Checkout
