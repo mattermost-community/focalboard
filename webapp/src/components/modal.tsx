@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useRef, useEffect} from 'react'
+import React, {useRef, useEffect, useCallback} from 'react'
 
 import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
@@ -17,20 +17,19 @@ const Modal = (props: Props): JSX.Element => {
 
     const {position, onClose, children} = props
 
-    const closeOnBlur = (e: Event) => {
+    const closeOnBlur = useCallback((e: Event) => {
         if (e.target && node.current?.contains(e.target as Node)) {
             return
         }
-
         onClose()
-    }
+    }, [onClose])
 
     useEffect(() => {
         document.addEventListener('click', closeOnBlur, true)
         return () => {
             document.removeEventListener('click', closeOnBlur, true)
         }
-    }, [])
+    }, [closeOnBlur])
 
     return (
         <div
