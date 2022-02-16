@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 
 export default function useElementAvailable(
     elementIds: string[],
@@ -28,5 +28,5 @@ export default function useElementAvailable(
         }, 500)
     }, [])
 
-    return useMemo(() => available, [available])
+    return available
 }

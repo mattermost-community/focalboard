@@ -12,31 +12,29 @@ type Props = {
     coords?: Coords;
 }
 
-export class PulsatingDot extends React.PureComponent<Props> {
-    public render() {
-        let customStyles = {}
-        if (this.props?.coords) {
-            customStyles = {
-                transform: `translate(${this.props.coords?.x}px, ${this.props.coords?.y}px)`,
-            }
+const PulsatingDot = (props: Props):JSX.Element => {
+    let customStyles = {}
+    if (props?.coords) {
+        customStyles = {
+            transform: `translate(${props.coords?.x}px, ${props.coords?.y}px)`,
         }
-        let effectiveClassName = 'pulsating_dot'
-        if (this.props.onClick) {
-            effectiveClassName += ' pulsating_dot-clickable'
-        }
-        if (this.props.className) {
-            effectiveClassName = effectiveClassName + ' ' + this.props.className
-        }
-
-        return (
-            <span
-                className={effectiveClassName}
-                onClick={this.props.onClick}
-                ref={this.props.targetRef}
-                style={{...customStyles}}
-            />
-        )
     }
+    let effectiveClassName = 'pulsating_dot'
+    if (props.onClick) {
+        effectiveClassName += ' pulsating_dot-clickable'
+    }
+    if (props.className) {
+        effectiveClassName = effectiveClassName + ' ' + props.className
+    }
+
+    return (
+        <span
+            className={effectiveClassName}
+            onClick={props.onClick}
+            ref={props.targetRef}
+            style={{...customStyles}}
+        />
+    )
 }
 
 export default PulsatingDot
