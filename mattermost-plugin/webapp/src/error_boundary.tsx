@@ -17,9 +17,7 @@ export default class ErrorBoundary extends React.Component {
 
     handleError = (): void => {
         const url = Utils.getBaseURL() + '/error?id=unknown'
-        /* eslint-disable no-console */
-        console.log('error boundary redirecting to ', url)
-        /* eslint-enable no-console */
+        Utils.log('error boundary redirecting to ' + url)
         window.location.replace(url)
     }
 
@@ -28,9 +26,7 @@ export default class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-        /* eslint-disable no-console */
-        console.log(error, errorInfo)
-        /* eslint-enable no-console */
+        Utils.logError(error + ': ' + errorInfo)
     }
 
     shouldComponentUpdate(): boolean {

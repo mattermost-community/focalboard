@@ -262,6 +262,7 @@
   "register.signup-title": "Sign up for your account",
   "error.workspace-undefined": "Not a valid workspace.",
   "error.not-logged-in": "Your session may have expired or you are not logged in.",
-  "error.go-dashboard": "Go to the Dashboard.",
-  "error.go-login": "Log in"
+  "error.go-dashboard": "Go to the Dashboard",
+  "error.go-login": "Log in",
+  "error.unknown": "An error occurred."
 }

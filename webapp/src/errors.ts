@@ -1,59 +1,63 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {useIntl} from 'react-intl'
+
 enum ErrorId {
     WorkspaceUndefined = 'workspace-undefined',
     NotLoggedIn = 'not-logged-in',
 }
 
 type ErrorDef = {
-    titleId: string
+    title: string
 
     button1Enabled: boolean
-    button1Id: string
+    button1Text: string
     button1Redirect: string | (() => string)
     button1Fill: boolean
 
     button2Enabled: boolean
-    button2Id: string
+    button2Text: string
     button2Redirect: string | (() => string)
     button2Fill: boolean
 }
 
 function errorDefFromId(id: ErrorId | null): ErrorDef {
     const errDef = {
-        titleId: '',
+        title: '',
         button1Enabled: false,
-        button1Id: '',
+        button1Text: '',
         button1Redirect: '',
         button1Fill: false,
         button2Enabled: false,
-        button2Id: '',
+        button2Text: '',
         button2Redirect: '',
         button2Fill: false,
     }
 
+    const intl = useIntl()
+
     switch (id) {
     case ErrorId.WorkspaceUndefined: {
-        errDef.titleId = 'error.workspace-undefined'
+        errDef.title = intl.formatMessage({id: 'error.workspace-undefined', defaultMessage: 'Not a valid workspace.'})
         errDef.button1Enabled = true
-        errDef.button1Id = 'error.go-dashboard'
+        errDef.button1Text = intl.formatMessage({id: 'error.go-dashboard', defaultMessage: 'Go to the Dashboard'})
         errDef.button1Redirect = '/dashboard'
         errDef.button1Fill = true
         break
     }
     case ErrorId.NotLoggedIn: {
-        errDef.titleId = 'error.not-logged-in'
+        errDef.title = intl.formatMessage({id: 'error.not-logged-in', defaultMessage: 'Your session may have expired or you are not logged in.'})
         errDef.button1Enabled = true
-        errDef.button1Id = 'error.go-login'
+        errDef.button1Text = intl.formatMessage({id: 'error.go-login', defaultMessage: 'Log in'})
         errDef.button1Redirect = '/login'
         errDef.button1Fill = true
         break
     }
     default: {
-        errDef.titleId = 'error.unknown'
+        errDef.title = intl.formatMessage({id: 'error.unknown', defaultMessage: 'An error occurred.'})
         errDef.button1Enabled = true
-        errDef.button1Id = 'error.go-dashboard'
+        errDef.button1Text = intl.formatMessage({id: 'error.go-dashboard', defaultMessage: 'Go to the Dashboard'})
         errDef.button1Redirect = '/dashboard'
         errDef.button1Fill = true
         break

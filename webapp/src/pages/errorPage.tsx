@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useCallback} from 'react'
-import {FormattedMessage} from 'react-intl'
 import {useHistory, useLocation} from 'react-router-dom'
 
 import Button from '../widgets/buttons/button'
@@ -25,7 +24,7 @@ const ErrorPage = () => {
         history.push(url)
     }, [history])
 
-    const makeButton = ((path: string | (()=>string), id: string, fill: boolean) => {
+    const makeButton = ((path: string | (()=>string), txt: string, fill: boolean) => {
         return (
             <Button
                 filled={fill}
@@ -33,10 +32,7 @@ const ErrorPage = () => {
                     handleButtonClick(path)
                 }}
             >
-                <FormattedMessage
-                    id={id}
-                    defaultMessage='OK'
-                />
+                {txt}
             </Button>
         )
     })
@@ -45,17 +41,14 @@ const ErrorPage = () => {
         <div className='ErrorPage'>
             <div className='title'>{'Error'}</div>
             <div>
-                <FormattedMessage
-                    id={errorDef.titleId}
-                    defaultMessage='Unknown error.'
-                />
+                {errorDef.title}
             </div>
             <br/>
             {
-                (errorDef.button1Enabled ? makeButton(errorDef.button1Redirect, errorDef.button1Id, errorDef.button1Fill) : null)
+                (errorDef.button1Enabled ? makeButton(errorDef.button1Redirect, errorDef.button1Text, errorDef.button1Fill) : null)
             }
             {
-                (errorDef.button2Enabled ? makeButton(errorDef.button2Redirect, errorDef.button2Id, errorDef.button2Fill) : null)
+                (errorDef.button2Enabled ? makeButton(errorDef.button2Redirect, errorDef.button2Text, errorDef.button2Fill) : null)
             }
         </div>
     )

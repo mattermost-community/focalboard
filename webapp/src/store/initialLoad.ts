@@ -29,7 +29,7 @@ export const initialLoad = createAsyncThunk(
 
         // if no workspace, either bad id, or user doesn't have access
         if (workspace === undefined) {
-            throw new Error('Workspace undefined')
+            throw new Error('workspace-undefined')
         }
         return {
             workspace,
