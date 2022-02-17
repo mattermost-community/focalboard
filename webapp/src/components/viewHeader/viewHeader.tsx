@@ -81,7 +81,7 @@ const ViewHeader = (props: Props) => {
                 autoExpand={false}
             />
             <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
-                <IconButton icon={<DropdownIcon/>}/>
+                <IconButton icon={<DropdownIcon />} />
                 <ViewMenu
                     board={board}
                     activeView={activeView}
@@ -90,99 +90,93 @@ const ViewHeader = (props: Props) => {
                 />
             </MenuWrapper>
 
-            <button
-                onClick={() => setShowShareDialog(!showShareDialog)}
-            >
-                {'Show Share Modal'}
-            </button>
-
-            <div className='octo-spacer'/>
+            <div className='octo-spacer' />
 
             {!props.readonly &&
-            <>
-                {/* Card properties */}
+                <>
+                    {/* Card properties */}
 
-                <ViewHeaderPropertiesMenu
-                    properties={board.cardProperties}
-                    activeView={activeView}
-                />
-
-                {/* Group by */}
-
-                {withGroupBy &&
-                <ViewHeaderGroupByMenu
-                    properties={board.cardProperties}
-                    activeView={activeView}
-                    groupByProperty={groupByProperty}
-                />}
-
-                {/* Display by */}
-
-                {withDisplayBy &&
-                <ViewHeaderDisplayByMenu
-                    properties={board.cardProperties}
-                    activeView={activeView}
-                    dateDisplayPropertyName={dateDisplayProperty?.name}
-                />}
-
-                {/* Filter */}
-
-                <ModalWrapper>
-                    <Button
-                        active={hasFilter}
-                        onClick={() => setShowFilter(true)}
-                    >
-                        <FormattedMessage
-                            id='ViewHeader.filter'
-                            defaultMessage='Filter'
-                        />
-                    </Button>
-                    {showFilter &&
-                    <FilterComponent
-                        board={board}
+                    <ViewHeaderPropertiesMenu
+                        properties={board.cardProperties}
                         activeView={activeView}
-                        onClose={() => setShowFilter(false)}
-                    />}
-                </ModalWrapper>
+                    />
 
-                {/* Sort */}
+                    {/* Group by */}
 
-                {withSortBy &&
-                <ViewHeaderSortMenu
-                    properties={board.cardProperties}
-                    activeView={activeView}
-                    orderedCards={cards}
-                />
-                }
-            </>
+                    {withGroupBy &&
+                        <ViewHeaderGroupByMenu
+                            properties={board.cardProperties}
+                            activeView={activeView}
+                            groupByProperty={groupByProperty}
+                        />}
+
+                    {/* Display by */}
+
+                    {withDisplayBy &&
+                        <ViewHeaderDisplayByMenu
+                            properties={board.cardProperties}
+                            activeView={activeView}
+                            dateDisplayPropertyName={dateDisplayProperty?.name}
+                        />}
+
+                    {/* Filter */}
+
+                    <ModalWrapper>
+                        <Button
+                            active={hasFilter}
+                            onClick={() => setShowFilter(true)}
+                        >
+                            <FormattedMessage
+                                id='ViewHeader.filter'
+                                defaultMessage='Filter'
+                            />
+                        </Button>
+                        {showFilter &&
+                            <FilterComponent
+                                board={board}
+                                activeView={activeView}
+                                onClose={() => setShowFilter(false)}
+                            />}
+                    </ModalWrapper>
+
+                    {/* Sort */}
+
+                    {withSortBy &&
+                        <ViewHeaderSortMenu
+                            properties={board.cardProperties}
+                            activeView={activeView}
+                            orderedCards={cards}
+                        />
+                    }
+                </>
             }
 
             {/* Search */}
 
-            <ViewHeaderSearch/>
+            <ViewHeaderSearch />
 
             {/* Options menu */}
 
             {!props.readonly &&
-            <>
-                <ViewHeaderActionsMenu
-                    board={board}
-                    activeView={activeView}
-                    cards={cards}
-                />
+                <>
+                    <ViewHeaderActionsMenu
+                        board={board}
+                        activeView={activeView}
+                        cards={cards}
+                    />
 
-                {/* New card button */}
+                    {/* New card button */}
 
-                <NewCardButton
-                    addCard={props.addCard}
-                    addCardFromTemplate={props.addCardFromTemplate}
-                    addCardTemplate={props.addCardTemplate}
-                    editCardTemplate={props.editCardTemplate}
-                />
-            </>
+                    <NewCardButton
+                        addCard={props.addCard}
+                        addCardFromTemplate={props.addCardFromTemplate}
+                        addCardTemplate={props.addCardTemplate}
+                        editCardTemplate={props.editCardTemplate}
+                    />
+                </>
             }
 
-            {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>}
+            {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)} />}
         </div>
     )
 }
