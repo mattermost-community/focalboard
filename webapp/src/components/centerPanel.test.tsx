@@ -428,6 +428,7 @@ describe('components/centerPanel', () => {
             userEvent.click(buttonNewTemplate)
             expect(mockedMutator.insertBlock).toBeCalledTimes(1)
         })
+
         // TODO: Fix this
         // test('click on new card to add card from template', () => {
         //     activeView.fields.viewType = 'table'

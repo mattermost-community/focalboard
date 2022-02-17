@@ -4,6 +4,7 @@
 import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {BoardView, createBoardView} from '../blocks/boardView'
+import {Utils} from '../utils'
 
 import {initialReadOnlyLoad, loadBoardData} from './initialLoad'
 import {getCurrentBoard} from './boards'
@@ -91,7 +92,7 @@ export const getCurrentBoardViews = createSelector(
     (state) => state.boards.current,
     getViews,
     (boardId, views) => {
-        console.log(`getCurrentBoardViews boardId: ${boardId} views: ${views.length}`)
+        Utils.log(`getCurrentBoardViews boardId: ${boardId} views: ${views.length}`)
         return Object.values(views).filter((v) => v.boardId === boardId).sort((a, b) => a.title.localeCompare(b.title)).map((v) => createBoardView(v))
     },
 )

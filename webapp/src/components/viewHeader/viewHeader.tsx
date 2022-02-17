@@ -16,6 +16,8 @@ import Editable from '../../widgets/editable'
 
 import ModalWrapper from '../modalWrapper'
 
+import ShareBoardDialog from '../shareBoard/shareBoard'
+
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
@@ -26,7 +28,6 @@ import ViewHeaderSearch from './viewHeaderSearch'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
-import ShareBoardDialog from '../shareBoard/shareBoard'
 
 type Props = {
     board: Board
@@ -98,62 +99,62 @@ const ViewHeader = (props: Props) => {
             <div className='octo-spacer'/>
 
             {!props.readonly &&
-             <>
-                 {/* Card properties */}
+            <>
+                {/* Card properties */}
 
-                 <ViewHeaderPropertiesMenu
-                     properties={board.cardProperties}
-                     activeView={activeView}
-                 />
+                <ViewHeaderPropertiesMenu
+                    properties={board.cardProperties}
+                    activeView={activeView}
+                />
 
-                 {/* Group by */}
+                {/* Group by */}
 
                 {withGroupBy &&
-                    <ViewHeaderGroupByMenu
-                        properties={board.cardProperties}
+                <ViewHeaderGroupByMenu
+                    properties={board.cardProperties}
+                    activeView={activeView}
+                    groupByProperty={groupByProperty}
+                />}
+
+                {/* Display by */}
+
+                {withDisplayBy &&
+                <ViewHeaderDisplayByMenu
+                    properties={board.cardProperties}
+                    activeView={activeView}
+                    dateDisplayPropertyName={dateDisplayProperty?.name}
+                />}
+
+                {/* Filter */}
+
+                <ModalWrapper>
+                    <Button
+                        active={hasFilter}
+                        onClick={() => setShowFilter(true)}
+                    >
+                        <FormattedMessage
+                            id='ViewHeader.filter'
+                            defaultMessage='Filter'
+                        />
+                    </Button>
+                    {showFilter &&
+                    <FilterComponent
+                        board={board}
                         activeView={activeView}
-                        groupByProperty={groupByProperty}
+                        onClose={() => setShowFilter(false)}
                     />}
+                </ModalWrapper>
 
-                 {/* Display by */}
+                {/* Sort */}
 
-                 {withDisplayBy &&
-                  <ViewHeaderDisplayByMenu
-                      properties={board.cardProperties}
-                      activeView={activeView}
-                      dateDisplayPropertyName={dateDisplayProperty?.name}
-                  />}
-
-                 {/* Filter */}
-
-                 <ModalWrapper>
-                     <Button
-                         active={hasFilter}
-                         onClick={() => setShowFilter(true)}
-                     >
-                         <FormattedMessage
-                             id='ViewHeader.filter'
-                             defaultMessage='Filter'
-                         />
-                     </Button>
-                     {showFilter &&
-                      <FilterComponent
-                          board={board}
-                          activeView={activeView}
-                          onClose={() => setShowFilter(false)}
-                      />}
-                 </ModalWrapper>
-
-                 {/* Sort */}
-
-                 {withSortBy &&
-                  <ViewHeaderSortMenu
-                      properties={board.cardProperties}
-                      activeView={activeView}
-                      orderedCards={cards}
-                  />
-                 }
-             </>
+                {withSortBy &&
+                <ViewHeaderSortMenu
+                    properties={board.cardProperties}
+                    activeView={activeView}
+                    orderedCards={cards}
+                />
+                }
+            </>
             }
 
             {/* Search */}
@@ -163,22 +164,22 @@ const ViewHeader = (props: Props) => {
             {/* Options menu */}
 
             {!props.readonly &&
-             <>
-                 <ViewHeaderActionsMenu
-                     board={board}
-                     activeView={activeView}
-                     cards={cards}
-                 />
+            <>
+                <ViewHeaderActionsMenu
+                    board={board}
+                    activeView={activeView}
+                    cards={cards}
+                />
 
-                 {/* New card button */}
+                {/* New card button */}
 
-                 <NewCardButton
-                     addCard={props.addCard}
-                     addCardFromTemplate={props.addCardFromTemplate}
-                     addCardTemplate={props.addCardTemplate}
-                     editCardTemplate={props.editCardTemplate}
-                 />
-             </>
+                <NewCardButton
+                    addCard={props.addCard}
+                    addCardFromTemplate={props.addCardFromTemplate}
+                    addCardTemplate={props.addCardTemplate}
+                    editCardTemplate={props.editCardTemplate}
+                />
+            </>
             }
 
             {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>}
