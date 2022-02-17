@@ -25,7 +25,7 @@ import './sidebarUserMenu.scss'
 
 declare let window: IAppWindow
 
-const SidebarUserMenu = React.memo(() => {
+const SidebarUserMenu = () => {
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
     const user = useAppSelector<IUser|null>(getMe)
@@ -106,6 +106,6 @@ const SidebarUserMenu = React.memo(() => {
             </ModalWrapper>
         </div>
     )
-})
+}
 
-export default SidebarUserMenu
+export default React.memo(SidebarUserMenu)

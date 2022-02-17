@@ -22,7 +22,7 @@ import {FINISHED, TOUR_ORDER} from '../../components/onboardingTour'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {UserSettingKey} from '../../userSettings'
 
-const WelcomePage = React.memo(() => {
+const WelcomePage = () => {
     const history = useHistory()
     const queryString = new URLSearchParams(useLocation().search)
     const me = useAppSelector<IUser|null>(getMe)
@@ -150,6 +150,6 @@ const WelcomePage = React.memo(() => {
             </div>
         </div>
     )
-})
+}
 
-export default WelcomePage
+export default React.memo(WelcomePage)

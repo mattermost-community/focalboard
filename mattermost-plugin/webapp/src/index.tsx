@@ -193,7 +193,9 @@ export default class Plugin {
                         anonymousId: TELEMETRY_OPTIONS.anonymousId,
                     })
 
-                TelemetryClient.setTelemetryHandler(new RudderTelemetryHandler())
+                rudderAnalytics.ready(() => {
+                    TelemetryClient.setTelemetryHandler(new RudderTelemetryHandler())
+                })
             }
         }
 

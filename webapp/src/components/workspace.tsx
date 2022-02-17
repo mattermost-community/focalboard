@@ -110,7 +110,7 @@ function CenterContent(props: Props) {
     )
 }
 
-const Workspace = React.memo((props: Props) => {
+const Workspace = (props: Props) => {
     const board = useAppSelector(getCurrentBoard)
     const view = useAppSelector(getCurrentView)
     const [boardTemplateSelectorOpen, setBoardTemplateSelectorOpen] = useState(false)
@@ -150,6 +150,6 @@ const Workspace = React.memo((props: Props) => {
             </div>
         </div>
     )
-})
+}
 
-export default Workspace
+export default React.memo(Workspace)

@@ -30,7 +30,7 @@ type Props = {
     activeTheme: string
 }
 
-const SidebarSettingsMenu = React.memo((props: Props) => {
+const SidebarSettingsMenu = (props: Props) => {
     const intl = useIntl()
     const dispatch = useAppDispatch()
 
@@ -164,6 +164,6 @@ const SidebarSettingsMenu = React.memo((props: Props) => {
             </MenuWrapper>
         </div>
     )
-})
+}
 
-export default SidebarSettingsMenu
+export default React.memo(SidebarSettingsMenu)

@@ -44,7 +44,7 @@ type Props = {
     isManualSort: boolean
 }
 
-const KanbanCard = React.memo((props: Props) => {
+const KanbanCard = (props: Props) => {
     const {card, board} = props
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
@@ -188,6 +188,6 @@ const KanbanCard = React.memo((props: Props) => {
 
         </>
     )
-})
+}
 
-export default KanbanCard
+export default React.memo(KanbanCard)

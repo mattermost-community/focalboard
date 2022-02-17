@@ -33,7 +33,7 @@ type Props = {
     onDrop: (srcOption: IPropertyOption, dstOption?: IPropertyOption) => void
 }
 
-const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
+const TableGroupHeaderRow = (props: Props): JSX.Element => {
     const {board, activeView, group, groupByProperty} = props
     const [groupTitle, setGroupTitle] = useState(group.option.value)
 
@@ -147,6 +147,6 @@ const TableGroupHeaderRow = React.memo((props: Props): JSX.Element => {
             }
         </div>
     )
-})
+}
 
-export default TableGroupHeaderRow
+export default React.memo(TableGroupHeaderRow)
