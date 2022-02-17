@@ -160,10 +160,12 @@ const TutorialTourTip = ({
             }
 
             dots.push(
-                <div className={circularRing}>
+                <div
+                    key={'dotactive' + i}
+                    className={circularRing}
+                >
                     <a
                         href='#'
-                        key={'dotactive' + i}
                         className={classname}
                         data-screen={i}
                         onClick={() => handleSavePreferences(i)}

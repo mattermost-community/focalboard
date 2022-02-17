@@ -29,24 +29,25 @@ const ShareBoardTourStep = (): JSX.Element | null => {
 
     const punchout = useMeasurePunchouts(['.ShareBoardButton > button'], [])
 
+    if (!BoardTourSteps.SHARE_BOARD) {
+        return null
+    }
+
     return (
-        <>
-            {BoardTourSteps.SHARE_BOARD &&
-                <TourTipRenderer
-                    key='ShareBoardTourStep'
-                    requireCard={false}
-                    category={TOUR_BOARD}
-                    step={BoardTourSteps.SHARE_BOARD}
-                    screen={screen}
-                    title={title}
-                    punchout={punchout}
-                    classname='ShareBoardTourStep'
-                    telemetryTag='tourPoint2b'
-                    placement={'bottom-end'}
-                    imageURL={Utils.buildURL(shareBoard, true)}
-                    hideBackdrop={true}
-                />}
-        </>
+        <TourTipRenderer
+            key='ShareBoardTourStep'
+            requireCard={false}
+            category={TOUR_BOARD}
+            step={BoardTourSteps.SHARE_BOARD}
+            screen={screen}
+            title={title}
+            punchout={punchout}
+            classname='ShareBoardTourStep'
+            telemetryTag='tourPoint2b'
+            placement={'bottom-end'}
+            imageURL={Utils.buildURL(shareBoard, true)}
+            hideBackdrop={true}
+        />
     )
 }
 
