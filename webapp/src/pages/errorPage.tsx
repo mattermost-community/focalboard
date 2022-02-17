@@ -8,7 +8,7 @@ import octoClient from '../octoClient'
 import Button from '../widgets/buttons/button'
 import './errorPage.scss'
 
-const ErrorPage = React.memo(() => {
+const ErrorPage = () => {
     const history = useHistory()
 
     return (
@@ -35,6 +35,6 @@ const ErrorPage = React.memo(() => {
             </Button>
         </div>
     )
-})
+}
 
-export default ErrorPage
+export default React.memo(ErrorPage)

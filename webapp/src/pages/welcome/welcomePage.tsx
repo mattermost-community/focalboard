@@ -19,7 +19,7 @@ import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {IUser, UserConfigPatch} from '../../user'
 import {getMe, patchProps} from '../../store/users'
 
-const WelcomePage = React.memo(() => {
+const WelcomePage = () => {
     const history = useHistory()
     const queryString = new URLSearchParams(useLocation().search)
     const me = useAppSelector<IUser|null>(getMe)
@@ -106,6 +106,6 @@ const WelcomePage = React.memo(() => {
             </div>
         </div>
     )
-})
+}
 
-export default WelcomePage
+export default React.memo(WelcomePage)

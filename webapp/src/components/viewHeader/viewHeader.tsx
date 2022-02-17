@@ -41,7 +41,7 @@ type Props = {
     dateDisplayProperty?: IPropertyTemplate
 }
 
-const ViewHeader = React.memo((props: Props) => {
+const ViewHeader = (props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
     const intl = useIntl()
 
@@ -173,6 +173,6 @@ const ViewHeader = React.memo((props: Props) => {
             }
         </div>
     )
-})
+}
 
-export default ViewHeader
+export default React.memo(ViewHeader)

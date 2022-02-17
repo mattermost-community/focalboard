@@ -37,7 +37,7 @@ function addContentMenu(intl: IntlShape, type: BlockTypes): JSX.Element {
     )
 }
 
-const CardDetailContentsMenu = React.memo(() => {
+const CardDetailContentsMenu = () => {
     const intl = useIntl()
     return (
         <div className='CardDetailContentsMenu content add-content'>
@@ -54,6 +54,6 @@ const CardDetailContentsMenu = React.memo(() => {
             </MenuWrapper>
         </div>
     )
-})
+}
 
-export default CardDetailContentsMenu
+export default React.memo(CardDetailContentsMenu)
