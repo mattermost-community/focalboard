@@ -15,6 +15,7 @@ type BlockType string
 
 const (
 	TypeUnknown = "unknown"
+	TypeBoard   = "board"
 	TypeCard    = "card"
 	TypeView    = "view"
 	TypeText    = "text"
@@ -29,6 +30,8 @@ func (bt BlockType) String() string {
 // BlockTypeFromString returns an appropriate BlockType for the specified string.
 func BlockTypeFromString(s string) (BlockType, error) {
 	switch strings.ToLower(s) {
+	case "board":
+		return TypeBoard, nil
 	case "card":
 		return TypeCard, nil
 	case "view":
@@ -46,6 +49,8 @@ func BlockTypeFromString(s string) (BlockType, error) {
 // BlockType2IDType returns an appropriate IDType for the specified BlockType.
 func BlockType2IDType(blockType BlockType) utils.IDType {
 	switch blockType {
+	case TypeBoard:
+		return utils.IDTypeBoard
 	case TypeCard:
 		return utils.IDTypeCard
 	case TypeView:
