@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState} from 'react'
+import React from 'react'
 import {useIntl} from 'react-intl'
 
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -16,7 +16,6 @@ import {getCurrentTeam} from '../../store/teams'
 import {getCurrentBoard} from '../../store/boards'
 
 import mutator from '../../mutator'
-
 
 function updateBoardType(board: Board, newType: string) {
     if (board.type === newType) {
@@ -34,7 +33,7 @@ const TeamPermissionsRow = (): JSX.Element => {
     const team = useAppSelector(getCurrentTeam)
     const board = useAppSelector(getCurrentBoard)
 
-    let currentRole = board.type === BoardTypeOpen ? 'Editor' : 'None'
+    const currentRole = board.type === BoardTypeOpen ? 'Editor' : 'None'
 
     return (
         <div className='user-item'>
@@ -57,13 +56,13 @@ const TeamPermissionsRow = (): JSX.Element => {
                     <Menu position='left'>
                         <Menu.Text
                             id='Editor'
-                            icon={'Editor' === currentRole ? <CheckIcon /> : null}
+                            icon={currentRole === 'Editor' ? <CheckIcon/> : null}
                             name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
                             onClick={() => updateBoardType(board, BoardTypeOpen)}
                         />
                         <Menu.Text
                             id='None'
-                            icon={'None' === currentRole ? <CheckIcon /> : null}
+                            icon={currentRole === 'None' ? <CheckIcon/> : null}
                             name={intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})}
                             onClick={() => updateBoardType(board, BoardTypePrivate)}
                         />

@@ -7,10 +7,11 @@ import {default as client} from '../octoClient'
 import {Board, BoardMember} from '../blocks/board'
 import {IUser} from '../user'
 
-import {initialLoad, initialReadOnlyLoad} from './initialLoad'
+import {initialLoad} from './initialLoad'
+
+import {addBoardUsers} from './users'
 
 import {RootState} from './index'
-import {addBoardUsers} from './users'
 
 type BoardsState = {
     current: string
@@ -25,15 +26,18 @@ export const fetchBoardMembers = createAsyncThunk(
         const members = await client.getBoardMembers(teamId, boardId)
         const boardUsers = thunkAPI.getState().users.boardUsers as {[key: string]: IUser}
         const newUsers = [] as IUser[]
+
+        /* eslint-disable no-await-in-loop */
         for (const member of members) {
             const memberFromStore = boardUsers[member.userId]
-            if (!!!memberFromStore) {
+            if (!memberFromStore) {
                 const user = await client.getUser(member.userId)
                 if (user) {
                     newUsers.push(user)
                 }
             }
         }
+        /* eslint-enable no-await-in-loop */
 
         thunkAPI.dispatch(addBoardUsers(newUsers))
         return members
@@ -49,6 +53,7 @@ export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
             const boards = thunkAPI.getState().boards.boards
             const myMemberships = members.filter((m) => m.userId === me.id)
             const boardsToUpdate: Board[] = []
+            /* eslint-disable no-await-in-loop */
             for (const member of myMemberships) {
                 if (!member.schemeAdmin && !member.schemeEditor) {
                     boardsToUpdate.push({id: member.boardId, deleteAt: 1} as Board)
@@ -64,6 +69,7 @@ export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
                     boardsToUpdate.push(board)
                 }
             }
+            /* eslint-enable no-await-in-loop */
 
             thunkAPI.dispatch(updateBoards(boardsToUpdate))
         }

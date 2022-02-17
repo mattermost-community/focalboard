@@ -5,7 +5,7 @@ import {IntlShape} from 'react-intl'
 import moment from 'moment'
 
 import {Block} from './blocks/block'
-import {Board, BoardMember, createBoard} from './blocks/board'
+import {Board as BoardType, BoardMember, createBoard} from './blocks/board'
 import {createBoardView} from './blocks/boardView'
 import {createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
@@ -22,7 +22,7 @@ const SpacerClass = 'octo-spacer'
 const HorizontalGripClass = 'HorizontalGrip'
 const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
 
-export type WSMessagePayloads = Block | Category | BlockCategoryWebsocketData | Board | BoardMember | null
+export type WSMessagePayloads = Block | Category | BlockCategoryWebsocketData | BoardType | BoardMember | null
 
 // eslint-disable-next-line no-shadow
 enum IDType {
@@ -573,7 +573,7 @@ class Utils {
         }
     }
 
-    static fixBoard(board: Board): Board {
+    static fixBoard(board: BoardType): BoardType {
         return createBoard(board)
     }
 
