@@ -1,7 +1,7 @@
 {{if .mysql}}
 
 UPDATE {{.prefix}}blocks_history AS bh SET bh.parent_id='' WHERE bh.parent_id IS NULL;
-UPDATE {{.prefix}}blocks_history AS bh SET bh.schema='' WHERE bh.schema IS NULL;
+UPDATE {{.prefix}}blocks_history AS bh SET bh.schema=1 WHERE bh.schema IS NULL;
 UPDATE {{.prefix}}blocks_history AS bh SET bh.type='' WHERE bh.type IS NULL;
 UPDATE {{.prefix}}blocks_history AS bh SET bh.title='' WHERE bh.title IS NULL;
 UPDATE {{.prefix}}blocks_history AS bh SET bh.fields='' WHERE bh.fields IS NULL;

@@ -7,6 +7,8 @@ import {HTML5Backend} from 'react-dnd-html5-backend'
 import configureStore, {MockStoreEnhanced} from 'redux-mock-store'
 import {Middleware} from 'redux'
 
+import {Block} from './blocks/block'
+
 export const wrapIntl = (children?: React.ReactNode): JSX.Element => <IntlProvider locale='en'>{children}</IntlProvider>
 export const wrapDNDIntl = (children?: React.ReactNode): JSX.Element => {
     return (
@@ -50,4 +52,13 @@ export function mockMatchMedia(result: {matches: boolean}): void {
 export function mockStateStore(middleware:Middleware[], state:unknown): MockStoreEnhanced<unknown, unknown> {
     const mockStore = configureStore(middleware)
     return mockStore(state)
+}
+
+export type BlocksById<BlockType> = {[key: string]: BlockType}
+
+export function blocksById<BlockType extends Block>(blocks: Array<BlockType>): BlocksById<BlockType> {
+    return blocks.reduce((res, block) => {
+        res[block.id] = block
+        return res
+    }, {} as BlocksById<BlockType>)
 }

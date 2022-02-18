@@ -133,6 +133,11 @@ func (s *SQLStore) GetBoardAndCardByID(c store.Container, blockID string) (*mode
 
 }
 
+func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
+	return s.getDefaultTemplateBlocks(s.db)
+
+}
+
 func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint, error) {
 	return s.getNextNotificationHint(s.db, remove)
 
@@ -334,6 +339,11 @@ func (s *SQLStore) PatchBlocks(c store.Container, blockPatches *model.BlockPatch
 
 func (s *SQLStore) RefreshSession(session *model.Session) error {
 	return s.refreshSession(s.db, session)
+
+}
+
+func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
+	return s.removeDefaultTemplates(s.db, blocks)
 
 }
 

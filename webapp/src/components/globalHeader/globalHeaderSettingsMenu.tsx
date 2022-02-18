@@ -13,10 +13,11 @@ import CheckIcon from '../../widgets/icons/check'
 import SettingsIcon from '../../widgets/icons/settings'
 
 import {Constants} from '../../constants'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
 
 import './globalHeaderSettingsMenu.scss'
 
-const GlobalHeaderSettingsMenu = React.memo(() => {
+const GlobalHeaderSettingsMenu = () => {
     const intl = useIntl()
     const dispatch = useAppDispatch()
 
@@ -33,15 +34,40 @@ const GlobalHeaderSettingsMenu = React.memo(() => {
                     <SettingsIcon/>
                 </div>
                 <Menu position='left'>
-                    <Menu.Text
+                    <Menu.SubMenu
                         id='import'
-                        name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
-                        onClick={async () => Archiver.importFullArchive()}
-                    />
+                        name={intl.formatMessage({id: 'Sidebar.import', defaultMessage: 'Import'})}
+                        position='left-bottom'
+                    >
+                        <Menu.Text
+                            id='import_archive'
+                            name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
+                            onClick={async () => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ImportArchive)
+                                Archiver.importFullArchive()
+                            }}
+                        />
+                        {
+                            Constants.imports.map((i) => (
+                                <Menu.Text
+                                    key={`${i.id}-import`}
+                                    id={`${i.id}-import`}
+                                    name={i.displayName}
+                                    onClick={() => {
+                                        TelemetryClient.trackEvent(TelemetryCategory, i.telemetryName)
+                                        window.open(i.href)
+                                    }}
+                                />
+                            ))
+                        }
+                    </Menu.SubMenu>
                     <Menu.Text
                         id='export'
                         name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
-                        onClick={async () => Archiver.exportFullArchive()}
+                        onClick={async () => {
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ExportArchive)
+                            Archiver.exportFullArchive()
+                        }}
                     />
                     <Menu.SubMenu
                         id='lang'
@@ -70,6 +96,6 @@ const GlobalHeaderSettingsMenu = React.memo(() => {
             </MenuWrapper>
         </div>
     )
-})
+}
 
-export default GlobalHeaderSettingsMenu
+export default React.memo(GlobalHeaderSettingsMenu)

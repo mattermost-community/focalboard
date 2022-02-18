@@ -11,7 +11,7 @@ type Props = {
     children: React.ReactNode
 }
 
-const KanbanColumn = React.memo((props: Props) => {
+const KanbanColumn = (props: Props) => {
     const [{isOver}, drop] = useDrop(() => ({
         accept: 'card',
         collect: (monitor) => ({
@@ -36,6 +36,6 @@ const KanbanColumn = React.memo((props: Props) => {
             {props.children}
         </div>
     )
-})
+}
 
-export default KanbanColumn
+export default React.memo(KanbanColumn)

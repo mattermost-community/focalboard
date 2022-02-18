@@ -54,8 +54,9 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
                     >
                       <div
                         class="version"
+                        title="v0.15.0"
                       >
-                        v0.12.0
+                        Mar 2022
                       </div>
                     </div>
                   </div>
@@ -71,7 +72,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
           class="sidebarSwitcher"
         >
           <button
-            class="Button IconButton"
+            class="IconButton"
             type="button"
           >
             <svg
@@ -332,7 +333,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
         >
           Show empty
           <div
-            class="Switch on"
+            class="Switch size--small on"
           >
             <div
               class="octo-switch-inner"

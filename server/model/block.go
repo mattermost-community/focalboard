@@ -3,8 +3,6 @@ package model
 import (
 	"encoding/json"
 	"io"
-
-	"github.com/mattermost/focalboard/server/utils"
 )
 
 // Block is the basic data unit
@@ -105,12 +103,11 @@ type BlockPatchBatch struct {
 	BlockPatches []BlockPatch `json:"block_patches"`
 }
 
-// Archive is an import / export archive.
-type Archive struct {
-	Version int64   `json:"version"`
-	Date    int64   `json:"date"`
-	Blocks  []Block `json:"blocks"`
-}
+// BlockModifier is a callback that can modify each block during an import.
+// A cache of arbitrary data will be passed for each call and any changes
+// to the cache will be preserved for the next call.
+// Return true to import the block or false to skip import.
+type BlockModifier func(block *Block, cache map[string]interface{}) bool
 
 func BlocksFromJSON(data io.Reader) []Block {
 	var blocks []Block
@@ -179,60 +176,4 @@ type QueryBlockHistoryOptions struct {
 	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
 	Limit          uint64 // if non-zero then limit the number of returned records
 	Descending     bool   // if true then the records are sorted by insert_at in descending order
-}
-
-// GenerateBlockIDs generates new IDs for all the blocks of the list,
-// keeping consistent any references that other blocks would made to
-// the original IDs, so a tree of blocks can get new IDs and maintain
-// its shape.
-func GenerateBlockIDs(blocks []Block) []Block {
-	blockIDs := map[string]BlockType{}
-	referenceIDs := map[string]bool{}
-	for _, block := range blocks {
-		if _, ok := blockIDs[block.ID]; !ok {
-			blockIDs[block.ID] = block.Type
-		}
-
-		if _, ok := referenceIDs[block.RootID]; !ok {
-			referenceIDs[block.RootID] = true
-		}
-		if _, ok := referenceIDs[block.ParentID]; !ok {
-			referenceIDs[block.ParentID] = true
-		}
-	}
-
-	newIDs := map[string]string{}
-	for id, blockType := range blockIDs {
-		for referenceID := range referenceIDs {
-			if id == referenceID {
-				newIDs[id] = utils.NewID(BlockType2IDType(blockType))
-				continue
-			}
-		}
-	}
-
-	getExistingOrOldID := func(id string) string {
-		if existingID, ok := newIDs[id]; ok {
-			return existingID
-		}
-		return id
-	}
-
-	getExistingOrNewID := func(id string) string {
-		if existingID, ok := newIDs[id]; ok {
-			return existingID
-		}
-		return utils.NewID(BlockType2IDType(blockIDs[id]))
-	}
-
-	newBlocks := make([]Block, len(blocks))
-	for i, block := range blocks {
-		block.ID = getExistingOrNewID(block.ID)
-		block.RootID = getExistingOrOldID(block.RootID)
-		block.ParentID = getExistingOrOldID(block.ParentID)
-
-		newBlocks[i] = block
-	}
-
-	return newBlocks
 }

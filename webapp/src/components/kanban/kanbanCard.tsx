@@ -25,12 +25,14 @@ import PropertyValueElement from '../propertyValueElement'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import './kanbanCard.scss'
+import CardBadges from '../cardBadges'
 
 type Props = {
     card: Card
     board: Board
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
+    visibleBadges: boolean
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
     readonly: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
@@ -38,7 +40,7 @@ type Props = {
     isManualSort: boolean
 }
 
-const KanbanCard = React.memo((props: Props) => {
+const KanbanCard = (props: Props) => {
     const {card, board} = props
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
@@ -165,12 +167,13 @@ const KanbanCard = React.memo((props: Props) => {
                         />
                     </Tooltip>
                 ))}
+                {props.visibleBadges && <CardBadges card={card}/>}
             </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
 
         </>
     )
-})
+}
 
-export default KanbanCard
+export default React.memo(KanbanCard)

@@ -1,5 +1,13 @@
 /* Markdown Editor */
 
+.product-wrapper {
+    .octo-editor-preview {
+        a {
+            color: rgba(var(--link-color-rgb), 1);
+        }
+    }
+}
+
 .MarkdownEditor {
     cursor: text;
 
@@ -12,9 +20,9 @@
     }
 
     .octo-editor-preview {
-        a {
-            color: rgba(var(--link-color-rgb), 1);
+        min-height: 2em;
 
+        a {
             &:hover {
                 text-decoration: underline;
             }
@@ -25,10 +33,6 @@
             word-break: break-word;
         }
     }
-
-    /* .dialog .octo-editor-preview {
-        min-height: 100px;
-    } */
 
     .octo-editor-activeEditor {
         overflow: hidden;

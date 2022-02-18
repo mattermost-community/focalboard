@@ -171,7 +171,12 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 className='octo-propertyvalue'
                 value={value.toString()}
                 showEmptyPlaceholder={showEmptyPlaceholder}
-                onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
+                onChange={(newValue) => {
+                    if (value !== newValue) {
+                        setValue(newValue)
+                        mutator.changePropertyValue(card, propertyTemplate.id, newValue)
+                    }
+                }}
             />
         )
     } else if (propertyTemplate.type === 'url') {
@@ -242,7 +247,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 />
             )
         }
-        return <div className='octo-propertyvalue'>{displayValue}</div>
+        return <div className='octo-propertyvalue octo-propertyvalue--readonly'>{displayValue}</div>
     }
     return <div className='octo-propertyvalue'>{finalDisplayValue}</div>
 }

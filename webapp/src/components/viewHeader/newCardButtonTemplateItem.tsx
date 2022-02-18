@@ -22,7 +22,7 @@ type Props = {
     editCardTemplate: (cardTemplateId: string) => void
 }
 
-const NewCardButtonTemplateItem = React.memo((props: Props) => {
+const NewCardButtonTemplateItem = (props: Props) => {
     const currentView = useAppSelector(getCurrentView)
     const {cardTemplate} = props
     const intl = useIntl()
@@ -77,6 +77,6 @@ const NewCardButtonTemplateItem = React.memo((props: Props) => {
             }
         />
     )
-})
+}
 
-export default NewCardButtonTemplateItem
+export default React.memo(NewCardButtonTemplateItem)

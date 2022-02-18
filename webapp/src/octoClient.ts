@@ -186,27 +186,24 @@ class OctoClient {
     }
 
     // If no boardID is provided, it will export the entire archive
-    async exportArchive(boardID = ''): Promise<Block[]> {
-        const path = `${this.workspacePath()}/blocks/export?root_id=${boardID}`
-        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return []
-        }
-        const blocks = (await this.getJson(response, [])) as Block[]
-        return this.fixBlocks(blocks)
+    async exportArchive(boardID = ''): Promise<Response> {
+        const path = `${this.workspacePath()}/archive/export?board_id=${boardID}`
+        return fetch(this.getBaseURL() + path, {headers: this.headers()})
     }
 
-    async importFullArchive(blocks: readonly Block[]): Promise<Response> {
-        Utils.log(`importFullArchive: ${blocks.length} blocks(s)`)
+    async importFullArchive(file: File): Promise<Response> {
+        const formData = new FormData()
+        formData.append('file', file)
 
-        // blocks.forEach((block) => {
-        //     Utils.log(`\t ${block.type}, ${block.id}`)
-        // })
-        const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.workspacePath() + '/blocks/import', {
+        const headers = this.headers() as Record<string, string>
+
+        // TIPTIP: Leave out Content-Type here, it will be automatically set by the browser
+        delete headers['Content-Type']
+
+        return fetch(this.getBaseURL() + this.workspacePath() + '/archive/import', {
             method: 'POST',
-            headers: this.headers(),
-            body,
+            headers,
+            body: formData,
         })
     }
 
@@ -318,13 +315,14 @@ class OctoClient {
         return this.insertBlocks([block])
     }
 
-    async insertBlocks(blocks: Block[]): Promise<Response> {
+    async insertBlocks(blocks: Block[], sourceBoardID?: string): Promise<Response> {
         Utils.log(`insertBlocks: ${blocks.length} blocks(s)`)
         blocks.forEach((block) => {
             Utils.log(`\t ${block.type}, ${block.id}, ${block.title?.substr(0, 50) || ''}`)
         })
         const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.workspacePath() + '/blocks', {
+        const url = this.getBaseURL() + this.workspacePath() + '/blocks' + (sourceBoardID ? `?sourceBoardID=${encodeURIComponent(sourceBoardID)}` : '')
+        return fetch(url, {
             method: 'POST',
             headers: this.headers(),
             body,

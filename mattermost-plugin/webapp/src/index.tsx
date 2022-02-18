@@ -20,6 +20,7 @@ import store from '../../../webapp/src/store'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
+import {UserSettings} from '../../../webapp/src/userSettings'
 
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
@@ -139,11 +140,21 @@ export default class Plugin {
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, 'Boards', 'Boards')
-            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
 
-            if (mmStore.getState().entities.general.config?.['FeatureFlagBoardsUnfurl' as keyof Partial<ClientConfig>] === 'true') {
-                this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
+            const goToFocalboardTemplate = () => {
+                const currentChannel = mmStore.getState().entities.channels.currentChannelId
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelIntro, {workspaceID: currentChannel})
+                UserSettings.lastBoardId = null
+                UserSettings.lastViewId = null
+                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
+
+            if (registry.registerChannelIntroButtonAction) {
+                this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
+            }
+
+            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
+            this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
@@ -164,7 +175,14 @@ export default class Plugin {
             }
 
             if (rudderKey !== '') {
-                rudderAnalytics.load(rudderKey, rudderUrl)
+                const rudderCfg = {} as {setCookieDomain: string}
+                if (siteURL && siteURL !== '') {
+                    try {
+                        rudderCfg.setCookieDomain = new URL(siteURL).hostname
+                        // eslint-disable-next-line no-empty
+                    } catch (_) {}
+                }
+                rudderAnalytics.load(rudderKey, rudderUrl, rudderCfg)
 
                 rudderAnalytics.identify(config?.telemetryid, {}, TELEMETRY_OPTIONS)
 
@@ -175,7 +193,9 @@ export default class Plugin {
                         anonymousId: TELEMETRY_OPTIONS.anonymousId,
                     })
 
-                TelemetryClient.setTelemetryHandler(new RudderTelemetryHandler())
+                rudderAnalytics.ready(() => {
+                    TelemetryClient.setTelemetryHandler(new RudderTelemetryHandler())
+                })
             }
         }
 

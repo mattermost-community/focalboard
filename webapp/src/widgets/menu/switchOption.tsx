@@ -17,6 +17,8 @@ function SwitchOption(props: SwitchOptionProps): JSX.Element {
     return (
         <div
             className='MenuOption SwitchOption menu-option'
+            role='button'
+            aria-label={name}
             onClick={(e: React.MouseEvent) => {
                 e.target.dispatchEvent(new Event('menuItemClicked'))
                 props.onClick(props.id)

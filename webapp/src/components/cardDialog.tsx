@@ -26,8 +26,6 @@ import {getUserBlockSubscriptionList} from '../store/initialLoad'
 import {IUser} from '../user'
 import {getMe} from '../store/users'
 
-import {getClientConfig} from '../store/clientConfig'
-
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 import {sendFlashMessage} from './flashMessages'
@@ -52,7 +50,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const comments = useAppSelector(getCardComments(props.cardId))
     const intl = useIntl()
     const me = useAppSelector<IUser|null>(getMe)
-    const clientConfig = useAppSelector(getClientConfig)
+    const isTemplate = card && card.fields.isTemplate
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
@@ -129,7 +127,7 @@ const CardDialog = (props: Props): JSX.Element => {
                     sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                 }}
             />
-            {(card && !card.fields.isTemplate) &&
+            {!isTemplate &&
                 <Menu.Text
                     id='makeTemplate'
                     name='New template from card'
@@ -163,16 +161,16 @@ const CardDialog = (props: Props): JSX.Element => {
 
     const followingCards = useAppSelector(getUserBlockSubscriptionList)
     const isFollowingCard = Boolean(followingCards.find((following) => following.blockId === props.cardId))
-    const toolbar = clientConfig.featureFlags.subscriptions ? followActionButton(isFollowingCard) : null
+    const toolbar = followActionButton(isFollowingCard)
 
     return (
         <>
             <Dialog
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && menu}
-                toolbar={toolbar}
+                toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar}
             >
-                {card && card.fields.isTemplate &&
+                {isTemplate &&
                     <div className='banner'>
                         <FormattedMessage
                             id='CardDialog.editing-template'

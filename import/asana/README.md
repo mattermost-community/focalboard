@@ -1,7 +1,7 @@
 # Asana importer
 
 This node app converts an Asana json archive into a Focalboard archive. To use:
-1. From the Asana Board Menu, select `Export / Print`, and `JSON`
+1. From the Asana Board Menu (dropdown next to board title), select `Export / Print`, and `JSON`
 2. Save it locally, e.g. to `asana.json`
 3. Run `npm install` from within `focalboard/webapp`
 4. Run `npm install` from within `focalboard/import/asana`
@@ -10,4 +10,4 @@ This node app converts an Asana json archive into a Focalboard archive. To use:
 
 ## Import scope
 
-Currently, the script imports all cards from a single board, including their section (column) membership, names, and notes. [Contribute code](https://www.focalboard.com/contribute/getting-started/) to expand this.
+Currently, the script imports all cards from a single board, including their section (column) membership, names, and notes. [Contribute code](https://mattermost.github.io/focalboard/) to expand this.

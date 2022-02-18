@@ -34,7 +34,7 @@ type Props = {
     cords: {x: number, y?: number, z?: number}
 }
 
-const ContentBlock = React.memo((props: Props): JSX.Element => {
+const ContentBlock = (props: Props): JSX.Element => {
     const {card, block, readonly, cords} = props
     const intl = useIntl()
     const [, , gripRef, itemRef] = useSortableWithGrip('content', {block, cords}, true, () => {})
@@ -158,6 +158,6 @@ const ContentBlock = React.memo((props: Props): JSX.Element => {
             />
         </div>
     )
-})
+}
 
-export default ContentBlock
+export default React.memo(ContentBlock)
