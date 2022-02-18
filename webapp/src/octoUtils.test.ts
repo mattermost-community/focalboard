@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 
 import {Block} from './blocks/block'
-import {Board} from './blocks/board'
 import {OctoUtils} from './octoUtils'
 
 import {TestBlockFactory} from './test/testBlockFactory'
@@ -53,26 +52,26 @@ test('duplicateBlockTree: Card', async () => {
     }
 })
 
-function createBoardTree(): [Block[], Board] {
-    const blocks: Block[] = []
+// function createBoardTree(): [Block[], Board] {
+//     const blocks: Block[] = []
 
-    const board = TestBlockFactory.createBoard()
-    board.id = 'board1'
+//     const board = TestBlockFactory.createBoard()
+//     board.id = 'board1'
 
-    for (let i = 0; i < 5; i++) {
-        const card = TestBlockFactory.createCard(board)
-        card.id = `card${i}`
-        blocks.push(card)
+//     for (let i = 0; i < 5; i++) {
+//         const card = TestBlockFactory.createCard(board)
+//         card.id = `card${i}`
+//         blocks.push(card)
 
-        for (let j = 0; j < 3; j++) {
-            const textBlock = TestBlockFactory.createText(card)
-            textBlock.id = `text${j}`
-            blocks.push(textBlock)
-        }
-    }
+//         for (let j = 0; j < 3; j++) {
+//             const textBlock = TestBlockFactory.createText(card)
+//             textBlock.id = `text${j}`
+//             blocks.push(textBlock)
+//         }
+//     }
 
-    return [blocks, board]
-}
+//     return [blocks, board]
+// }
 
 function createCardTree(): [Block[], Block] {
     const blocks: Block[] = []

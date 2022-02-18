@@ -10,14 +10,10 @@ import Menu from '../../widgets/menu'
 import CheckIcon from '../../widgets/icons/check'
 import CompassIcon from '../../widgets/icons/compassIcon'
 
-import {Board, BoardMember, BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
+import {BoardMember} from '../../blocks/board'
 import {IUser} from '../../user'
 
-import {useAppSelector} from '../../store/hooks'
-import {getCurrentBoard} from '../../store/boards'
-
 import mutator from '../../mutator'
-
 
 function updateBoardMember(member: BoardMember, newPermission: string) {
     const newMember = {
@@ -26,22 +22,22 @@ function updateBoardMember(member: BoardMember, newPermission: string) {
         roles: member.roles,
     } as BoardMember
 
-    switch(newPermission) {
-        case 'Admin':
-            if (member.schemeAdmin) {
-                return
-            }
-            newMember.schemeAdmin = true
-            newMember.schemeEditor = true
-            break
-        case 'Editor':
-            if (member.schemeEditor) {
-                return
-            }
-            newMember.schemeEditor = true
-            break
-        default:
+    switch (newPermission) {
+    case 'Admin':
+        if (member.schemeAdmin) {
             return
+        }
+        newMember.schemeAdmin = true
+        newMember.schemeEditor = true
+        break
+    case 'Editor':
+        if (member.schemeEditor) {
+            return
+        }
+        newMember.schemeEditor = true
+        break
+    default:
+        return
     }
 
     mutator.updateBoardMember(newMember, member)
@@ -54,12 +50,11 @@ function deleteBoardMember(member: BoardMember) {
 type Props = {
     user: IUser
     member: BoardMember
-    isMe: Boolean
+    isMe: boolean
 }
 
 const UserPermissionsRow = ({user, member, isMe}: Props): JSX.Element => {
     const intl = useIntl()
-    const board = useAppSelector(getCurrentBoard)
 
     const currentRole = member.schemeAdmin ? 'Admin' : 'Editor'
 
@@ -89,17 +84,17 @@ const UserPermissionsRow = ({user, member, isMe}: Props): JSX.Element => {
                     <Menu position='left'>
                         <Menu.Text
                             id='Editor'
-                            icon={'Editor' === currentRole ? <CheckIcon /> : null}
+                            icon={currentRole === 'Editor' ? <CheckIcon/> : null}
                             name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
                             onClick={() => updateBoardMember(member, 'Editor')}
                         />
                         <Menu.Text
                             id='Admin'
-                            icon={'Admin' === currentRole ? <CheckIcon /> : null}
+                            icon={currentRole === 'Admin' ? <CheckIcon/> : null}
                             name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
                             onClick={() => updateBoardMember(member, 'Admin')}
                         />
-                        <Menu.Separator />
+                        <Menu.Separator/>
                         <Menu.Text
                             id='Remove'
                             name={intl.formatMessage({id: 'ShareBoard.userPermissionsRemoveMemberText', defaultMessage: 'Remove member'})}

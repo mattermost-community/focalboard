@@ -25,8 +25,6 @@ import AddContentMenuItem from './addContentMenuItem'
 import {contentRegistry} from './content/contentRegistry'
 
 import './contentBlock.scss'
-import {useAppSelector} from '../store/hooks'
-import {getCurrentBoard} from '../store/boards'
 
 type Props = {
     block: ContentBlockType

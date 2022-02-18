@@ -5,8 +5,6 @@
 console.log = jest.fn()
 
 import {Block} from './blocks/block'
-import {Board} from './blocks/board'
-import {createBoard} from './blocks/board'
 import {createCard} from './blocks/card'
 import octoClient from './octoClient'
 import 'isomorphic-fetch'
@@ -57,7 +55,7 @@ test('OctoClient: insert blocks', async () => {
         }))
 })
 
-test.skip('OctoClient: importFullArchive', async () => {
+test('OctoClient: importFullArchive', async () => {
     const archive = new File([''], 'test')
 
     await octoClient.importFullArchive(archive)
