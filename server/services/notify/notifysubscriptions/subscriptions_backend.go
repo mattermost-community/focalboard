@@ -111,7 +111,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 				mlog.Err(err),
 			)
 		}
-		b.wsAdapter.BroadcastSubscriptionChange(evt.Team, sub)
+		b.wsAdapter.BroadcastSubscriptionChange(evt.TeamID, sub)
 	}
 
 	// notify board subscribers
@@ -200,7 +200,7 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 		)
 		return
 	}
-	b.wsAdapter.BroadcastSubscriptionChange(evt.Team, sub)
+	b.wsAdapter.BroadcastSubscriptionChange(evt.TeamID, sub)
 
 	b.logger.Debug("Subscribed mentioned user to card",
 		mlog.String("user_id", userID),

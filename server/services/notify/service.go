@@ -22,7 +22,7 @@ const (
 
 type BlockChangeEvent struct {
 	Action       Action
-	Team         string
+	TeamID       string
 	Board        *model.Board
 	Card         *model.Block
 	BlockChanged *model.Block

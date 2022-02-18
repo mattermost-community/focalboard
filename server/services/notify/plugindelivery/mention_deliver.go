@@ -14,12 +14,7 @@ import (
 
 // MentionDeliver notifies a user they have been mentioned in a block.
 func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string, evt notify.BlockChangeEvent) (string, error) {
-	teamID, err := pd.getTeamID(evt)
-	if err != nil {
-		return "", fmt.Errorf("cannot determine teamID for block change notification: %w", err)
-	}
-
-	member, err := teamMemberFromUsername(pd.api, mentionUsername, teamID)
+	member, err := teamMemberFromUsername(pd.api, mentionUsername, evt.TeamID)
 	if err != nil {
 		if isErrNotFound(err) {
 			// not really an error; could just be someone typed "@sometext"

@@ -56,13 +56,7 @@ func New(botID string, serverRoot string, api PluginAPI) *PluginDelivery {
 }
 
 func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt notify.BlockChangeEvent) error {
-	// determine which team the workspace is associated with
-	teamID, err := pd.getTeamID(evt)
-	if err != nil {
-		return fmt.Errorf("cannot determine teamID for block change notification: %w", err)
-	}
-
-	member, err := teamMemberFromUsername(pd.api, mentionUsername, teamID)
+	member, err := teamMemberFromUsername(pd.api, mentionUsername, evt.TeamID)
 	if err != nil {
 		if isErrNotFound(err) {
 			// not really an error; could just be someone typed "@sometext"
@@ -81,7 +75,7 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 	if err != nil {
 		return fmt.Errorf("cannot get direct channel: %w", err)
 	}
-	link := makeLink(pd.serverRoot, evt.Team, evt.Board.ID, evt.Card.ID)
+	link := makeLink(pd.serverRoot, evt.TeamID, evt.Board.ID, evt.Card.ID)
 
 	post := &model.Post{
 		UserId:    pd.botID,
@@ -89,13 +83,4 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),
 	}
 	return pd.api.CreatePost(post)
-}
-
-func (pd *PluginDelivery) getTeamID(evt notify.BlockChangeEvent) (string, error) {
-	// for now, the workspace ID is also the channel ID
-	channel, err := pd.api.GetChannelByID(evt.Team)
-	if err != nil {
-		return "", err
-	}
-	return channel.TeamId, nil
 }

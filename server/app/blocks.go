@@ -308,7 +308,7 @@ func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBl
 
 	evt := notify.BlockChangeEvent{
 		Action:       action,
-		Team:         board.TeamID,
+		TeamID:       board.TeamID,
 		Board:        board,
 		Card:         card,
 		BlockChanged: block,
