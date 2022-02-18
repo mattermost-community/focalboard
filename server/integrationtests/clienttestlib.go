@@ -35,7 +35,7 @@ type TestHelper struct {
 }
 
 func getTestConfig() (*config.Configuration, error) {
-	dbType, connectionString, err := sqlstore.PrepareNewTestDatabase()
+	dbType, _, err := sqlstore.PrepareNewTestDatabase()
 	if err != nil {
 		return nil, err
 	}
@@ -62,21 +62,17 @@ func getTestConfig() (*config.Configuration, error) {
 		}
 	}`
 
-	if dbType == "sqlite3" {
-		dbFile, err := ioutil.TempFile("", "focalboard-test-*.db")
-		if err != nil {
-			panic(err)
-		}
-		dbFile.Close()
-
-		connectionString = dbFile.Name()
+	dbFile, err := ioutil.TempFile("", "focalboard-test-*.db")
+	if err != nil {
+		panic(err)
 	}
+	dbFile.Close()
 
 	return &config.Configuration{
 		ServerRoot:        "http://localhost:8888",
 		Port:              8888,
 		DBType:            dbType,
-		DBConfigString:    connectionString,
+		DBConfigString:    dbFile.Name(),
 		DBTablePrefix:     "test_",
 		WebPath:           "./pack",
 		FilesDriver:       "local",
