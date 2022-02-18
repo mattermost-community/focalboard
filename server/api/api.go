@@ -280,8 +280,8 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	if board.IsTemplate {
 		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-			fmt.Println("FAILING HERE", userID, boardID, model.PermissionViewBoard)
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			fmt.Println("FAILING HERE for template", userID, boardID, model.PermissionViewBoard)
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
 			return
 		}
 	} else {
@@ -1886,7 +1886,7 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 
 	users, err := a.app.SearchTeamUsers(teamID, searchQuery)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "searchQuery="+searchQuery, err)
 		return
 	}
 
