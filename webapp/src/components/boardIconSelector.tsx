@@ -4,14 +4,10 @@ import React, {useCallback} from 'react'
 
 import {BlockIcons} from '../blockIcons'
 import {Board} from '../blocks/board'
-import {Card} from '../blocks/card'
+
 import mutator from '../mutator'
+
 import IconSelector from './iconSelector'
-import EmojiPicker from '../widgets/emojiPicker'
-import DeleteIcon from '../widgets/icons/delete'
-import EmojiIcon from '../widgets/icons/emoji'
-import Menu from '../widgets/menu'
-import MenuWrapper from '../widgets/menuWrapper'
 
 type Props = {
     board: Board

@@ -3,7 +3,6 @@
 import {useEffect} from 'react'
 
 import {Block} from '../blocks/block'
-import {Board} from '../blocks/board'
 import wsClient, {WSClient} from '../wsclient'
 
 export default function useCardListener(onChange: (blocks: Block[]) => void, onReconnect: () => void): void {

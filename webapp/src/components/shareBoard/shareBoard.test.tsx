@@ -389,7 +389,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                         onClose={jest.fn()}
                     />
                 </ReduxProvider>),
-                {wrapper: MemoryRouter})
+            {wrapper: MemoryRouter})
             container = result.container
         })
         expect(container).toMatchSnapshot()
@@ -411,7 +411,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                         onClose={jest.fn()}
                     />
                 </ReduxProvider>),
-                {wrapper: MemoryRouter})
+            {wrapper: MemoryRouter})
             container = result.container
         })
         expect(container).toMatchSnapshot()
