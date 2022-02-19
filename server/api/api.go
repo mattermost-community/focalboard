@@ -88,7 +88,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.attachSession(a.handleDuplicateBlock, false)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/{rootID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 
 	// Import&Export APIs
 	apiv1.HandleFunc("/boards/{boardID}/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
@@ -110,6 +109,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/teams/{teamID}/regenerate_signup_token", a.sessionRequired(a.handlePostTeamRegenerateSignupToken)).Methods("POST")
 	apiv1.HandleFunc("/teams/{teamID}/users", a.sessionRequired(a.handleGetTeamUsers)).Methods("GET")
 	apiv1.HandleFunc("/teams/{teamID}/archive/export", a.sessionRequired(a.handleArchiveExportTeam)).Methods("GET")
+	apiv1.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 
 	// User APIs
 	apiv1.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
@@ -138,7 +138,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	// Get Files API
 	files := r.PathPrefix("/files").Subrouter()
-	files.HandleFunc("/boards/{boardID}/{rootID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
+	files.HandleFunc("/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
 
 	// Subscriptions
 	apiv1.HandleFunc("/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
@@ -1678,7 +1678,6 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	boardID := vars["boardID"]
-	rootID := vars["rootID"]
 	filename := vars["filename"]
 	userID := getUserID(r)
 
@@ -1701,7 +1700,6 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("boardID", boardID)
 	auditRec.AddMeta("teamID", board.TeamID)
-	auditRec.AddMeta("rootID", rootID)
 	auditRec.AddMeta("filename", filename)
 
 	contentType := "image/jpg"
@@ -1717,7 +1715,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", contentType)
 
-	fileReader, err := a.app.GetFileReader(board.TeamID, rootID, filename)
+	fileReader, err := a.app.GetFileReader(board.TeamID, boardID, filename)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -1783,7 +1781,6 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	boardID := vars["boardID"]
-	rootID := vars["rootID"]
 	userID := getUserID(r)
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
@@ -1812,10 +1809,9 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("boardID", boardID)
 	auditRec.AddMeta("teamID", board.TeamID)
-	auditRec.AddMeta("rootID", rootID)
 	auditRec.AddMeta("filename", handle.Filename)
 
-	fileID, err := a.app.SaveFile(file, board.TeamID, rootID, handle.Filename)
+	fileID, err := a.app.SaveFile(file, board.TeamID, boardID, handle.Filename)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
