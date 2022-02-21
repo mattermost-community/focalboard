@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-
 	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 // Block is the basic data unit
