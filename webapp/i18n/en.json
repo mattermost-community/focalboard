@@ -258,7 +258,7 @@
   "login.log-in-button": "Log in",
   "login.log-in-title": "Log in",
   "login.register-button": "Create an account if you don't have one.",
-  "register.login-button": "or log in if you already have an account",
+  "register.login-button": "Log in if you already have an account.",
   "register.signup-title": "Sign up for your account",
   "error.workspace-undefined": "Not a valid workspace.",
   "error.not-logged-in": "Your session may have expired or you are not logged in.",
