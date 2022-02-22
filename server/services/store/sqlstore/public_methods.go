@@ -352,6 +352,27 @@ func (s *SQLStore) SetSystemSetting(key string, value string) error {
 
 }
 
+func (s *SQLStore) UndeleteBlock(c store.Container, blockID string, modifiedBy string) error {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.undeleteBlock(tx, c, blockID, modifiedBy)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "UndeleteBlock"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 func (s *SQLStore) UpdateSession(session *model.Session) error {
 	return s.updateSession(s.db, session)
 

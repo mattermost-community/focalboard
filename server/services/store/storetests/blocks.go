@@ -46,6 +46,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testDeleteBlock(t, store, container)
 	})
+	t.Run("UndeleteBlock", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testUndeleteBlock(t, store, container)
+	})
 	t.Run("GetSubTree2", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
@@ -381,6 +386,7 @@ func testPatchBlocks(t *testing.T, store store.Store, container store.Container)
 		blockIds := []string{"id-test", "id-test2"}
 		blockPatches := []model.BlockPatch{blockPatch, blockPatch2}
 
+		time.Sleep(1 * time.Millisecond)
 		err := store.PatchBlocks(container, &model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
 		require.NoError(t, err)
 
@@ -631,6 +637,96 @@ func testDeleteBlock(t *testing.T, store store.Store, container store.Container)
 		time.Sleep(1 * time.Millisecond)
 		err := store.DeleteBlock(container, "not-exists", userID)
 		require.NoError(t, err)
+	})
+}
+
+func testUndeleteBlock(t *testing.T, store store.Store, container store.Container) {
+	userID := testUserID
+
+	blocks, err := store.GetAllBlocks(container)
+	require.NoError(t, err)
+	initialCount := len(blocks)
+
+	blocksToInsert := []model.Block{
+		{
+			ID:         "block1",
+			RootID:     "block1",
+			ModifiedBy: userID,
+		},
+		{
+			ID:         "block2",
+			RootID:     "block2",
+			ModifiedBy: userID,
+		},
+		{
+			ID:         "block3",
+			RootID:     "block3",
+			ModifiedBy: userID,
+		},
+	}
+	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+
+	blocks, err = store.GetAllBlocks(container)
+	require.NoError(t, err)
+	require.Len(t, blocks, initialCount+3)
+
+	t.Run("exiting id", func(t *testing.T) {
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err := store.DeleteBlock(container, "block1", userID)
+		require.NoError(t, err)
+
+		block, err := store.GetBlock(container, "block1")
+		require.NoError(t, err)
+		require.Nil(t, block)
+
+		err = store.UndeleteBlock(container, "block1", userID)
+		require.NoError(t, err)
+
+		block, err = store.GetBlock(container, "block1")
+		require.NoError(t, err)
+		require.NotNil(t, block)
+	})
+
+	t.Run("exiting id multiple times", func(t *testing.T) {
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err := store.DeleteBlock(container, "block1", userID)
+		require.NoError(t, err)
+
+		block, err := store.GetBlock(container, "block1")
+		require.NoError(t, err)
+		require.Nil(t, block)
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err = store.UndeleteBlock(container, "block1", userID)
+		require.NoError(t, err)
+
+		block, err = store.GetBlock(container, "block1")
+		require.NoError(t, err)
+		require.NotNil(t, block)
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err = store.UndeleteBlock(container, "block1", userID)
+		require.NoError(t, err)
+
+		block, err = store.GetBlock(container, "block1")
+		require.NoError(t, err)
+		require.NotNil(t, block)
+	})
+
+	t.Run("from not existing id", func(t *testing.T) {
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err := store.UndeleteBlock(container, "not-exists", userID)
+		require.NoError(t, err)
+
+		block, err := store.GetBlock(container, "not-exists")
+		require.NoError(t, err)
+		require.Nil(t, block)
 	})
 }
 

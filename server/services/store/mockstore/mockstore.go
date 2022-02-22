@@ -802,6 +802,20 @@ func (mr *MockStoreMockRecorder) Shutdown() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Shutdown", reflect.TypeOf((*MockStore)(nil).Shutdown))
 }
 
+// UndeleteBlock mocks base method.
+func (m *MockStore) UndeleteBlock(arg0 store.Container, arg1, arg2 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UndeleteBlock", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UndeleteBlock indicates an expected call of UndeleteBlock.
+func (mr *MockStoreMockRecorder) UndeleteBlock(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UndeleteBlock", reflect.TypeOf((*MockStore)(nil).UndeleteBlock), arg0, arg1, arg2)
+}
+
 // UpdateSession mocks base method.
 func (m *MockStore) UpdateSession(arg0 *model.Session) error {
 	m.ctrl.T.Helper()

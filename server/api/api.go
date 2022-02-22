@@ -72,6 +72,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handlePatchBlocks)).Methods("PATCH")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
+	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}/undelete", a.sessionRequired(a.handleUndeleteBlock)).Methods("POST")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 
@@ -628,6 +629,64 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	a.logger.Debug("DELETE Block", mlog.String("blockID", blockID))
+	jsonStringResponse(w, http.StatusOK, "{}")
+
+	auditRec.Success()
+}
+
+func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks/{blockID}/undelete undeleteBlock
+	//
+	// Undeletes a block
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
+	// - name: blockID
+	//   in: path
+	//   description: ID of block to undelete
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	vars := mux.Vars(r)
+	blockID := vars["blockID"]
+
+	container, err := a.getContainer(r)
+	if err != nil {
+		a.noContainerErrorResponse(w, r.URL.Path, err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "undeleteBlock", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("blockID", blockID)
+
+	err = a.app.UndeleteBlock(*container, blockID, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("UNDELETE Block", mlog.String("blockID", blockID))
 	jsonStringResponse(w, http.StatusOK, "{}")
 
 	auditRec.Success()

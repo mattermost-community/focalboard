@@ -33,6 +33,8 @@ type Store interface {
 	InsertBlocks(c Container, blocks []model.Block, userID string) error
 	// @withTransaction
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
+	// @withTransaction
+	UndeleteBlock(c Container, blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
 	GetBlock(c Container, blockID string) (*model.Block, error)
 	// @withTransaction

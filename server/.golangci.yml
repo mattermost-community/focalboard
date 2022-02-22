@@ -14,6 +14,8 @@ linters-settings:
       - fieldalignment
   lll:
     line-length: 150
+  dupl:
+    threshold: 200
   revive:
     enableAllRules: true
     rules:
