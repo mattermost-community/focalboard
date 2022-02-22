@@ -3,7 +3,8 @@
 
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 
-import {default as client, OctoClient} from '../octoClient'
+import {default as client} from '../octoClient'
+
 import {Board} from '../blocks/board'
 
 import {RootState} from './index'
@@ -13,8 +14,7 @@ import {RootState} from './index'
 export const fetchGlobalTemplates = createAsyncThunk(
     'globalTemplates/fetch',
     async () => {
-        const rootClient = new OctoClient(client.serverUrl, '0')
-        const templates = await rootClient.getTeamTemplates() // ToDo: pass team id?
+        const templates = await client.getGlobalTemplates() // ToDo: pass team id?
         return templates.sort((a, b) => a.title.localeCompare(b.title))
     },
 )

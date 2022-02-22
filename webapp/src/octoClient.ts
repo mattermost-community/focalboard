@@ -579,6 +579,11 @@ class OctoClient {
         return this.getBoardsWithPath(path)
     }
 
+    async getGlobalTemplates(): Promise<Board[]> {
+        const path = this.teamPath('0') + '/templates'
+        return this.getBoardsWithPath(path)
+    }
+
     // Boards
     // ToDo: .
     // - goal? make the interface show boards & blocks for boards
