@@ -16,12 +16,13 @@ type Props = {
     toolbar?: React.ReactNode
     hideCloseButton?: boolean
     className?: string
+    title?: string
     onClose: () => void,
 }
 
-const Dialog = React.memo((props: Props) => {
+const Dialog = (props: Props) => {
     const {toolsMenu} = props
-    const {toolbar} = props
+    const {toolbar, title} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
@@ -36,6 +37,7 @@ const Dialog = React.memo((props: Props) => {
             <div
                 className='wrapper'
                 onClick={(e) => {
+                    e.stopPropagation()
                     if (e.target === e.currentTarget) {
                         props.onClose()
                     }
@@ -46,19 +48,20 @@ const Dialog = React.memo((props: Props) => {
                     className='dialog'
                 >
                     <div className='toolbar'>
+                        {title && <h1 className='text-heading5 mt-2'>{title}</h1>}
                         {
                             !props.hideCloseButton &&
                             <IconButton
                                 onClick={props.onClose}
                                 icon={<CloseIcon/>}
                                 title={closeDialogText}
-                                className='IconButton--large'
+                                size='medium'
                             />
                         }
                         {toolbar && <div className='cardToolbar'>{toolbar}</div>}
                         {toolsMenu && <MenuWrapper>
                             <IconButton
-                                className='IconButton--large'
+                                size='medium'
                                 icon={<OptionsIcon/>}
                             />
                             {toolsMenu}
@@ -70,6 +73,6 @@ const Dialog = React.memo((props: Props) => {
             </div>
         </div>
     )
-})
+}
 
-export default Dialog
+export default React.memo(Dialog)

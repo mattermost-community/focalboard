@@ -1,6 +1,5 @@
 .Button {
     --danger-button-bg-rgb: 247, 67, 67;
-
     font-family: 'Open Sans', sans-serif;
     display: flex;
     flex: 0 0 auto;
@@ -13,7 +12,7 @@
     overflow: hidden;
     background: transparent;
     border: 0;
-    transition: background 100ms ease-out 0s;
+    transition: all 100ms ease-out 0s;
     color: inherit;
     height: 32px;
     padding: 0 10px;

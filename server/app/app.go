@@ -15,13 +15,14 @@ import (
 )
 
 type Services struct {
-	Auth          *auth.Auth
-	Store         store.Store
-	FilesBackend  filestore.FileBackend
-	Webhook       *webhook.Client
-	Metrics       *metrics.Metrics
-	Notifications *notify.Service
-	Logger        *mlog.Logger
+	Auth             *auth.Auth
+	Store            store.Store
+	FilesBackend     filestore.FileBackend
+	Webhook          *webhook.Client
+	Metrics          *metrics.Metrics
+	Notifications    *notify.Service
+	Logger           *mlog.Logger
+	SkipTemplateInit bool
 }
 
 type App struct {
@@ -41,7 +42,7 @@ func (a *App) SetConfig(config *config.Configuration) {
 }
 
 func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) *App {
-	return &App{
+	app := &App{
 		config:        config,
 		store:         services.Store,
 		auth:          services.Auth,
@@ -52,4 +53,6 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 		notifications: services.Notifications,
 		logger:        services.Logger,
 	}
+	app.initialize(services.SkipTemplateInit)
+	return app
 }

@@ -11,7 +11,7 @@ export default function DeleteIcon(): JSX.Element {
     return (
         <CompassIcon
             icon='trash-can-outline'
-            className='trash-can-outline'
+            className='DeleteIcon trash-can-outline'
         />
     )
 }

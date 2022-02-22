@@ -164,6 +164,10 @@
             white-space: nowrap;
             width: inherit;
         }
+
+        .DateRange.octo-propertyvalue {
+            overflow: unset;
+        }
     }
 
     .octo-table-body {

@@ -13,12 +13,12 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       value="view title"
     />
     <div
-      aria-label="menuwrapper"
+      aria-label="View menu"
       class="MenuWrapper"
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i
@@ -100,12 +100,12 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="ModalWrapper"
     >
       <div
-        aria-label="View menu"
+        aria-label="View header menu"
         class="MenuWrapper"
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i
@@ -154,12 +154,12 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
       value="view title"
     />
     <div
-      aria-label="menuwrapper"
+      aria-label="View menu"
       class="MenuWrapper"
       role="button"
     >
       <button
-        class="Button IconButton"
+        class="IconButton"
         type="button"
       >
         <i

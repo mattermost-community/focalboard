@@ -90,6 +90,9 @@ type Store interface {
 	GetNotificationHint(c Container, blockID string) (*model.NotificationHint, error)
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
 
+	RemoveDefaultTemplates(blocks []model.Block) error
+	GetDefaultTemplateBlocks() ([]model.Block, error)
+
 	IsErrNotFound(err error) bool
 }
 
