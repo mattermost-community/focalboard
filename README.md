@@ -78,7 +78,8 @@ You can build standalone apps that package the server to run locally against SQL
         * `sudo apt-get install libgtk-3-dev`
         * `sudo apt-get install libwebkit2gtk-4.0-dev`
     * `make linux-app`
-    * run `linux/dist/focalboard-app`
+    * uncompress `linux/dist/focalboard-linux.tar.gz` to a directory of your choice
+    * run `focalboard-app` from the directory you have chosen
     * *Tested with: Ubuntu 18.04*
 * Windows:
     * Open a git-bash prompt
