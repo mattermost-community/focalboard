@@ -158,7 +158,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu and gro
 </div>
 `;
 
-exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu and ungroup in viewType table 1`] = `
+exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEmptyGroups and ungroup in viewType table 1`] = `
 <div>
   <div
     aria-label="menuwrapper"
@@ -187,6 +187,27 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu and ung
         <div
           class="menu-options"
         >
+          <div
+            aria-label="Hide empty groups"
+            class="MenuOption SwitchOption menu-option"
+            role="button"
+          >
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Hide empty groups
+            </div>
+            <div
+              class="Switch size--small"
+            >
+              <div
+                class="octo-switch-inner"
+              />
+            </div>
+          </div>
           <div
             aria-label="Ungroup"
             class="MenuOption TextOption menu-option"

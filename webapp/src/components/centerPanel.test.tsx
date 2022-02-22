@@ -93,6 +93,10 @@ describe('components/centerPanel', () => {
             boards: {
                 [board.id]: board,
             },
+<<<<<<< HEAD
+=======
+            templates: [],
+>>>>>>> GH-1304 Add Toggle to hide empty groups for TableView
         },
         cards: {
             templates: [card1, card2],

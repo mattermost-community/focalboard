@@ -22,14 +22,34 @@ const mockedMutator = mocked(mutator, true)
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
 const property = board.fields.cardProperties.find((p) => p.name === 'Status')
+const card = TestBlockFactory.createCard(board)
 
 describe('components/viewHeader/viewHeaderGroupByMenu', () => {
     const state = {
         users: {
             me: {
                 id: 'user-id-1',
-                username: 'username_1'},
+                username: 'username_1',
+            },
         },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            templates: [],
+        },
+        views: {
+            views: {
+                [activeView.id]: activeView,
+            },
+            current: activeView.id,
+        },
+        cards: {
+            templates: [],
+            cards: [card],
+        },
+        searchText: {},
     }
     const store = mockStateStore([], state)
     beforeEach(() => {
@@ -70,7 +90,7 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
         expect(container).toMatchSnapshot()
         expect(mockedMutator.changeViewGroupById).toBeCalledTimes(1)
     })
-    test('return groupBy menu and ungroup in viewType table', () => {
+    test('return groupBy menu, hideEmptyGroups and ungroup in viewType table', () => {
         activeView.fields.viewType = 'table'
         const {container} = render(
             wrapIntl(
@@ -83,11 +103,23 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
                 </ReduxProvider>,
             ),
         )
-        const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
-        userEvent.click(buttonElement)
+
+        const menuButton = screen.getByRole('button', {name: 'menuwrapper'})
+        userEvent.click(menuButton)
         expect(container).toMatchSnapshot()
-        const buttonStatus = screen.getByRole('button', {name: 'Ungroup'})
-        userEvent.click(buttonStatus)
+
+        let hideEmptyGroupsButton = screen.getByRole('button', {name: 'Hide empty groups'})
+        userEvent.click(hideEmptyGroupsButton)
+        expect(mockedMutator.hideViewColumns).toBeCalledTimes(1)
+
+        userEvent.click(menuButton)
+        hideEmptyGroupsButton = screen.getByRole('button', {name: 'Hide empty groups'})
+        userEvent.click(hideEmptyGroupsButton)
+        expect(mockedMutator.unhideViewColumns).toBeCalledTimes(1)
+
+        userEvent.click(menuButton)
+        const ungroupButton = screen.getByRole('button', {name: 'Ungroup'})
+        userEvent.click(ungroupButton)
         expect(mockedMutator.changeViewGroupById).toBeCalledTimes(1)
     })
 })

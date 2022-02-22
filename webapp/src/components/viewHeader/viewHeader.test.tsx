@@ -42,13 +42,21 @@ describe('components/viewHeader/viewHeader', () => {
         },
         boards: {
             current: board,
+            boards: {
+                [board.id]: board,
+            },
+            templates: [],
         },
         cards: {
             templates: [card],
+<<<<<<< HEAD
             cards: {
                 [card2.id]: card2,
             },
             current: card2.id,
+=======
+            cards: [card],
+>>>>>>> GH-1304 Add Toggle to hide empty groups for TableView
         },
         views: {
             views: {

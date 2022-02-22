@@ -97,12 +97,27 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
     const template1Title = 'Template 1'
     const globalTemplateTitle = 'Template Global'
     const boardTitle = 'Board 1'
-    let store:MockStoreEnhanced<unknown, unknown>
+    let store: MockStoreEnhanced<unknown, unknown>
     beforeAll(mockDOM)
     beforeEach(() => {
         jest.clearAllMocks()
+        const board = {
+            id: '2',
+            title: boardTitle,
+            workspaceId: workspace1.id,
+            fields: {
+                icon: '🚴🏻‍♂️',
+                cardProperties: [groupProperty],
+                dateDisplayPropertyId: 'id-6',
+            },
+        }
+        const card = {
+            parentId: board.id,
+        }
+
         const state = {
             searchText: {value: ''},
+<<<<<<< HEAD
             users: {
                 me: {
                     id: 'user-id',
@@ -117,6 +132,12 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                     card_id_1: {title: 'Create a new card'},
                 },
                 current: 'card_id_1',
+=======
+            users: {me: {id: 'user-id'}},
+            cards: {
+                templates: [card],
+                cards: [card],
+>>>>>>> GH-1304 Add Toggle to hide empty groups for TableView
             },
             views: {views: []},
             contents: {contents: []},
@@ -126,18 +147,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                 current: workspace1,
             },
             boards: {
-                boards: [
-                    {
-                        id: '2',
-                        title: boardTitle,
-                        workspaceId: workspace1.id,
-                        fields: {
-                            icon: '🚴🏻‍♂️',
-                            cardProperties: [groupProperty],
-                            dateDisplayPropertyId: 'id-6',
-                        },
-                    },
-                ],
+                boards: [board],
                 templates: [
                     {
                         id: '1',
