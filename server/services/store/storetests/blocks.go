@@ -386,6 +386,7 @@ func testPatchBlocks(t *testing.T, store store.Store, container store.Container)
 		blockIds := []string{"id-test", "id-test2"}
 		blockPatches := []model.BlockPatch{blockPatch, blockPatch2}
 
+		time.Sleep(1 * time.Millisecond)
 		err := store.PatchBlocks(container, &model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
 		require.NoError(t, err)
 
