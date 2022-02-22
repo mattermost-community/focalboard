@@ -570,8 +570,8 @@ func (s *SQLStore) undeleteBlock(db sq.BaseRunner, c store.Container, blockID st
 		block.CreatedBy,
 	}
 	insertHistoryQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "blocks_history").
-		Columns(append(columns, "insert_at")...).
-		Values(append(values, now)...)
+		Columns(columns...).
+		Values(values...)
 	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "blocks").
 		Columns(columns...).
 		Values(values...)
