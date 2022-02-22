@@ -226,6 +226,7 @@ func testInsertBlocks(t *testing.T, store store.Store, container store.Container
 
 		newBlocks := []model.Block{validBlock, invalidBlock}
 
+		time.Sleep(1 * time.Millisecond)
 		err := store.InsertBlocks(container, newBlocks, "user-id-1")
 		require.Error(t, err)
 
@@ -400,6 +401,10 @@ func testPatchBlocks(t *testing.T, store store.Store, container store.Container)
 	})
 
 	t.Run("invalid block id, nothing updated existing blocks", func(t *testing.T) {
+		if store.DBType() == "sqlite3" {
+			t.Skip("No transactions support int sqlite")
+		}
+
 		title := "Another Title"
 		blockPatch := model.BlockPatch{
 			Title: &title,

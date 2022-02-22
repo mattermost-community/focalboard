@@ -95,6 +95,8 @@ type Store interface {
 	RemoveDefaultTemplates(blocks []model.Block) error
 	GetDefaultTemplateBlocks() ([]model.Block, error)
 
+	DBType() string
+
 	IsErrNotFound(err error) bool
 }
 

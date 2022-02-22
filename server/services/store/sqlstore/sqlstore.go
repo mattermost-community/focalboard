@@ -70,6 +70,11 @@ func (s *SQLStore) DBHandle() *sql.DB {
 	return s.db
 }
 
+// DBType returns the DB driver used for the store.
+func (s *SQLStore) DBType() string {
+	return s.dbType
+}
+
 func (s *SQLStore) getQueryBuilder(db sq.BaseRunner) sq.StatementBuilderType {
 	builder := sq.StatementBuilder
 	if s.dbType == postgresDBType || s.dbType == sqliteDBType {

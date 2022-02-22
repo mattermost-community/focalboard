@@ -444,6 +444,11 @@ func (s *SQLStore) patchBlocks(db sq.BaseRunner, c store.Container, blockPatches
 }
 
 func (s *SQLStore) insertBlocks(db sq.BaseRunner, c store.Container, blocks []model.Block, userID string) error {
+	for _, block := range blocks {
+		if block.RootID == "" {
+			return RootIDNilError{}
+		}
+	}
 	for i := range blocks {
 		err := s.insertBlock(db, c, &blocks[i], userID)
 		if err != nil {
