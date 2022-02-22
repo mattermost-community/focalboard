@@ -3,6 +3,8 @@
 import React, {useCallback} from 'react'
 import {useHistory, useLocation} from 'react-router-dom'
 
+import ErrorIllustration from '../svg/error-illustration'
+
 import Button from '../widgets/buttons/button'
 import './errorPage.scss'
 
@@ -28,6 +30,7 @@ const ErrorPage = () => {
         return (
             <Button
                 filled={fill}
+                size='large'
                 onClick={async () => {
                     handleButtonClick(path)
                 }}
@@ -39,17 +42,20 @@ const ErrorPage = () => {
 
     return (
         <div className='ErrorPage'>
-            <div className='title'>{'Error'}</div>
             <div>
-                {errorDef.title}
+                <div className='title'>{'Sorry, something went wrong'}</div>
+                <div className='subtitle'>
+                    {errorDef.title}
+                </div>
+                <ErrorIllustration/>
+                <br/>
+                {
+                    (errorDef.button1Enabled ? makeButton(errorDef.button1Redirect, errorDef.button1Text, errorDef.button1Fill) : null)
+                }
+                {
+                    (errorDef.button2Enabled ? makeButton(errorDef.button2Redirect, errorDef.button2Text, errorDef.button2Fill) : null)
+                }
             </div>
-            <br/>
-            {
-                (errorDef.button1Enabled ? makeButton(errorDef.button1Redirect, errorDef.button1Text, errorDef.button1Fill) : null)
-            }
-            {
-                (errorDef.button2Enabled ? makeButton(errorDef.button2Redirect, errorDef.button2Text, errorDef.button2Fill) : null)
-            }
         </div>
     )
 }
