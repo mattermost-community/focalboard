@@ -195,7 +195,7 @@ func (s *SQLStore) Migrate() error {
 
 	if err := s.runUniqueIDsMigration(); err != nil {
 		if s.isPlugin {
-			s.logger.Debug("Releasing cluster lock for Unique IDs migration1")
+			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
 			mutex.Unlock()
 		}
 		return fmt.Errorf("error running unique IDs migration: %w", err)
@@ -207,22 +207,14 @@ func (s *SQLStore) Migrate() error {
 
 	if err := s.runCategoryUuidIdMigration(); err != nil {
 		if s.isPlugin {
-			s.logger.Debug("Releasing cluster lock for Unique IDs migration2")
+			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
 			mutex.Unlock()
 		}
 		return fmt.Errorf("error running categoryID migration: %w", err)
 	}
 
-	// if err := s.runTemplatesToTeamsMigration(); err != nil {
-	// 	if s.isPlugin {
-	// 		s.logger.Debug("Releasing cluster lock for template to teams migration")
-	// 		mutex.Unlock()
-	// 	}
-	// 	return fmt.Errorf("error running template to teams migration: %w", err)
-	// }
-
 	if s.isPlugin {
-		s.logger.Debug("Releasing cluster lock for Unique IDs migration3")
+		s.logger.Debug("Releasing cluster lock for Unique IDs migration")
 		mutex.Unlock()
 	}
 
