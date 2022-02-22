@@ -70,7 +70,7 @@ func (s *SQLStore) DBHandle() *sql.DB {
 	return s.db
 }
 
-// DBType returns the DB driver used for the store
+// DBType returns the DB driver used for the store.
 func (s *SQLStore) DBType() string {
 	return s.dbType
 }
