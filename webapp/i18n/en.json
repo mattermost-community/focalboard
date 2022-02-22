@@ -259,7 +259,7 @@
   "login.log-in-title": "Log in",
   "login.register-button": "Create an account if you don't have one.",
   "register.login-button": "Log in if you already have an account.",
-  "register.signup-title": "Sign up for your account",
+  "register.signup-title": "Sign up for an account.",
   "error.workspace-undefined": "Not a valid workspace.",
   "error.not-logged-in": "Your session may have expired or you are not logged in.",
   "error.go-dashboard": "Go to the Dashboard",
