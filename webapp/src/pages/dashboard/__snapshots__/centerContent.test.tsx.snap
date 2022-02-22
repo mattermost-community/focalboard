@@ -18,7 +18,7 @@ exports[`pages/dashboard/CenterContent base case - find all workspaces 1`] = `
       >
         Show empty
         <div
-          class="Switch size--small on"
+          class="Switch override-main size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -184,7 +184,7 @@ exports[`pages/dashboard/CenterContent search filter - 5 matching workspaces 1`]
       >
         Show empty
         <div
-          class="Switch size--small on"
+          class="Switch override-main size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -308,7 +308,7 @@ exports[`pages/dashboard/CenterContent search filter - number search 1`] = `
       >
         Show empty
         <div
-          class="Switch size--small on"
+          class="Switch override-main size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -390,7 +390,7 @@ exports[`pages/dashboard/CenterContent search filter - search for all workspaces
       >
         Show empty
         <div
-          class="Switch size--small on"
+          class="Switch override-main size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -486,7 +486,7 @@ exports[`pages/dashboard/CenterContent search filter - search for amount of boar
       >
         Show empty
         <div
-          class="Switch size--small on"
+          class="Switch override-main size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -568,7 +568,7 @@ exports[`pages/dashboard/CenterContent search filter - search for foo baz 1`] = 
       >
         Show empty
         <div
-          class="Switch size--small on"
+          class="Switch override-main size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -636,7 +636,7 @@ exports[`pages/dashboard/CenterContent search filter - search for workspace name
       >
         Show empty
         <div
-          class="Switch size--small on"
+          class="Switch override-main size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -732,7 +732,7 @@ exports[`pages/dashboard/CenterContent search filter - search for workspace name
       >
         Show empty
         <div
-          class="Switch size--small on"
+          class="Switch override-main size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -884,7 +884,7 @@ exports[`pages/dashboard/CenterContent search filter - search for workspace with
       >
         Show empty
         <div
-          class="Switch size--small on"
+          class="Switch override-main size--small on"
         >
           <div
             class="octo-switch-inner"
@@ -952,7 +952,7 @@ exports[`pages/dashboard/CenterContent search filter - search non-existing works
       >
         Show empty
         <div
-          class="Switch size--small on"
+          class="Switch override-main size--small on"
         >
           <div
             class="octo-switch-inner"
