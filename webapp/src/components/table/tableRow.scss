@@ -22,10 +22,30 @@
 
     &:hover {
         background-color: rgba(var(--center-channel-color-rgb), 0.05);
+        overflow: initial;
+        margin-left: -60px;
+
+        .delete-button {
+            display: block;
+        }
 
         .open-button {
             display: block;
         }
+        
+        .action-cell{
+            display: block;
+            overflow: inherit;
+            background-color: white;
+        }
+
+        .octo-table-cell-btn {
+            display: flex;
+        }
+    }
+
+    .action-cell {
+        display: none;
     }
 
     .URLProperty:hover .Button_Copy {

@@ -202,6 +202,7 @@
   "TableHeaderMenu.sort-ascending": "Sort ascending",
   "TableHeaderMenu.sort-descending": "Sort descending",
   "TableRow.open": "Open",
+  "TableRow.delete": "Delete",
   "TopBar.give-feedback": "Give Feedback",
   "ValueSelector.noOptions": "No options. Start typing to add the first one!",
   "ValueSelector.valueSelector": "Value selector",

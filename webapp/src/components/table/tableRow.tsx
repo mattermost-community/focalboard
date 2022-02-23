@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useEffect, useRef, useState, useMemo} from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Card} from '../../blocks/card'
 import {Board, IPropertyTemplate} from '../../blocks/board'
@@ -16,8 +16,19 @@ import {useAppSelector} from '../../store/hooks'
 import {getCardContents} from '../../store/contents'
 
 import {getCardComments} from '../../store/comments'
+import {Utils} from '../../utils'
 
 import PropertyValueElement from '../propertyValueElement'
+import Menu from '../../widgets/menu'
+import MenuWrapper from '../../widgets/menuWrapper'
+import IconButton from '../../widgets/buttons/iconButton'
+import GripIcon from '../../widgets/icons/grip'
+import OptionsIcon from '../../widgets/icons/options'
+import DeleteIcon from '../../widgets/icons/delete'
+import AddIcon from '../../widgets/icons/add'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+
 import './tableRow.scss'
 
 type Props = {
@@ -44,6 +55,7 @@ export const columnWidth = (resizingColumn: string, columnWidths: Record<string,
 }
 
 const TableRow = (props: Props) => {
+    const intl = useIntl()
     const {board, activeView, onSaveWithEnter, columnRefs, card} = props
     const contents = useAppSelector(getCardContents(card.id || ''))
     const comments = useAppSelector(getCardComments(card.id))
@@ -53,6 +65,7 @@ const TableRow = (props: Props) => {
     const isManualSort = activeView.fields.sortOptions.length === 0
     const isGrouped = Boolean(activeView.fields.groupById)
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
+    const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
 
     useEffect(() => {
         if (props.focusOnMount) {
@@ -80,6 +93,35 @@ const TableRow = (props: Props) => {
         columnRefs.set(Constants.titleColumnId, React.createRef())
     }
 
+    const handleDeleteCard = async () => {
+        if (!card) {
+            Utils.assertFailure()
+            return
+        }
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: board.id, card: card.id})
+        await mutator.deleteBlock(card, 'delete card')
+    }
+
+    const confirmDialogProps: ConfirmationDialogBoxProps = {
+        heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+        confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+        onConfirm: handleDeleteCard,
+        onClose: () => {
+            setShowConfirmationDialogBox(false)
+        },
+    }
+
+    const handleDeleteButtonOnClick = () => {
+        // user trying to delete a card with blank name
+        // but content present cannot be deleted without
+        // confirmation dialog
+        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
+            handleDeleteCard()
+            return
+        }
+        setShowConfirmationDialogBox(true)
+    }
+
     return (
         <div
             className={className}
@@ -87,6 +129,28 @@ const TableRow = (props: Props) => {
             ref={cardRef}
             style={{opacity: isDragging ? 0.5 : 1}}
         >
+
+            <div
+                className='octo-table-cell action-cell octo-table-cell-btn'
+                key={'dafd'}
+                style={{width: '60px'}}
+            >
+                <MenuWrapper
+                    className='optionsMenu'
+                    stopPropagationOnToggle={true}
+                >
+                    <IconButton icon={<OptionsIcon/>}/>
+                    <Menu>
+                        <Menu.Text
+                            icon={<DeleteIcon/>}
+                            id='delete'
+                            name={intl.formatMessage({id: 'TableRow.delete', defaultMessage: 'Delete'})}
+                            onClick={handleDeleteButtonOnClick}
+                        />
+                    </Menu>
+                </MenuWrapper>
+                <IconButton icon={<GripIcon/>}/>
+            </div>
 
             {/* Name / title */}
             <div
@@ -148,6 +212,8 @@ const TableRow = (props: Props) => {
                     </div>
                 )
             })}
+
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
         </div>
     )
 }
