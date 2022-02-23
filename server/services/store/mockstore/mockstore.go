@@ -108,6 +108,20 @@ func (mr *MockStoreMockRecorder) CreateUser(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockStore)(nil).CreateUser), arg0)
 }
 
+// DBType mocks base method.
+func (m *MockStore) DBType() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DBType")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// DBType indicates an expected call of DBType.
+func (mr *MockStoreMockRecorder) DBType() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DBType", reflect.TypeOf((*MockStore)(nil).DBType))
+}
+
 // DeleteBlock mocks base method.
 func (m *MockStore) DeleteBlock(arg0 store.Container, arg1, arg2 string) error {
 	m.ctrl.T.Helper()
@@ -829,6 +843,20 @@ func (m *MockStore) Shutdown() error {
 func (mr *MockStoreMockRecorder) Shutdown() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Shutdown", reflect.TypeOf((*MockStore)(nil).Shutdown))
+}
+
+// UndeleteBlock mocks base method.
+func (m *MockStore) UndeleteBlock(arg0 store.Container, arg1, arg2 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UndeleteBlock", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UndeleteBlock indicates an expected call of UndeleteBlock.
+func (mr *MockStoreMockRecorder) UndeleteBlock(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UndeleteBlock", reflect.TypeOf((*MockStore)(nil).UndeleteBlock), arg0, arg1, arg2)
 }
 
 // UpdateSession mocks base method.

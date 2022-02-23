@@ -48,6 +48,9 @@ func (s *SQLStore) CreateUser(user *model.User) error {
 }
 
 func (s *SQLStore) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
+	if s.dbType == sqliteDBType {
+		return s.deleteBlock(s.db, c, blockID, modifiedBy)
+	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
@@ -259,6 +262,9 @@ func (s *SQLStore) HasWorkspaceAccess(userID string, workspaceID string) (bool, 
 }
 
 func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID string) error {
+	if s.dbType == sqliteDBType {
+		return s.insertBlock(s.db, c, block, userID)
+	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
@@ -280,6 +286,9 @@ func (s *SQLStore) InsertBlock(c store.Container, block *model.Block, userID str
 }
 
 func (s *SQLStore) InsertBlocks(c store.Container, blocks []model.Block, userID string) error {
+	if s.dbType == sqliteDBType {
+		return s.insertBlocks(s.db, c, blocks, userID)
+	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
@@ -301,6 +310,9 @@ func (s *SQLStore) InsertBlocks(c store.Container, blocks []model.Block, userID 
 }
 
 func (s *SQLStore) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, userID string) error {
+	if s.dbType == sqliteDBType {
+		return s.patchBlock(s.db, c, blockID, blockPatch, userID)
+	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
@@ -322,6 +334,9 @@ func (s *SQLStore) PatchBlock(c store.Container, blockID string, blockPatch *mod
 }
 
 func (s *SQLStore) PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch, userID string) error {
+	if s.dbType == sqliteDBType {
+		return s.patchBlocks(s.db, c, blockPatches, userID)
+	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
@@ -359,6 +374,27 @@ func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
 
 func (s *SQLStore) SetSystemSetting(key string, value string) error {
 	return s.setSystemSetting(s.db, key, value)
+
+}
+
+func (s *SQLStore) UndeleteBlock(c store.Container, blockID string, modifiedBy string) error {
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.undeleteBlock(tx, c, blockID, modifiedBy)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "UndeleteBlock"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 
 }
 

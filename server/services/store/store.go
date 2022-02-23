@@ -33,6 +33,8 @@ type Store interface {
 	InsertBlocks(c Container, blocks []model.Block, userID string) error
 	// @withTransaction
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
+	// @withTransaction
+	UndeleteBlock(c Container, blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
 	GetBlock(c Container, blockID string) (*model.Block, error)
 	// @withTransaction
@@ -94,6 +96,8 @@ type Store interface {
 
 	RemoveDefaultTemplates(blocks []model.Block) error
 	GetDefaultTemplateBlocks() ([]model.Block, error)
+
+	DBType() string
 
 	IsErrNotFound(err error) bool
 }
