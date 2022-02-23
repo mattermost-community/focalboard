@@ -25,7 +25,6 @@ import IconButton from '../../widgets/buttons/iconButton'
 import GripIcon from '../../widgets/icons/grip'
 import OptionsIcon from '../../widgets/icons/options'
 import DeleteIcon from '../../widgets/icons/delete'
-import AddIcon from '../../widgets/icons/add'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
