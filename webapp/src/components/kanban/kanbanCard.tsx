@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
+import {useRouteMatch} from 'react-router-dom'
 import {useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
@@ -49,6 +50,7 @@ const KanbanCard = (props: Props) => {
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
     if (props.isManualSort && isOver) {
         className += ' dragover'
@@ -86,6 +88,7 @@ const KanbanCard = (props: Props) => {
     }
 
     const isOnboardingCard = card.title === 'Create a new card'
+    const showOnboarding = isOnboardingCard && !match.params.cardId && !board.fields.isTemplate
 
     const handleOnClick = async (e: React.MouseEvent) => {
         if (props.onClick) {
@@ -97,14 +100,14 @@ const KanbanCard = (props: Props) => {
         <>
             <div
                 ref={props.readonly ? () => null : cardRef}
-                className={`${className} ${isOnboardingCard && OnboardingCardClassName}`}
+                className={`${className} ${showOnboarding && OnboardingCardClassName}`}
                 draggable={!props.readonly}
                 style={{opacity: isDragging ? 0.5 : 1}}
                 onClick={handleOnClick}
             >
                 {!props.readonly &&
                 <MenuWrapper
-                    className={`optionsMenu ${isOnboardingCard ? 'show' : ''}`}
+                    className={`optionsMenu ${showOnboarding ? 'show' : ''}`}
                     stopPropagationOnToggle={true}
                 >
                     <IconButton icon={<OptionsIcon/>}/>
@@ -180,8 +183,8 @@ const KanbanCard = (props: Props) => {
                     </Tooltip>
                 ))}
                 {props.visibleBadges && <CardBadges card={card}/>}
-                {isOnboardingCard && <OpenCardTourStep/>}
-                {isOnboardingCard && <CopyLinkTourStep/>}
+                {showOnboarding && !match.params.cardId && <OpenCardTourStep/>}
+                {showOnboarding && !match.params.cardId && <CopyLinkTourStep/>}
             </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}

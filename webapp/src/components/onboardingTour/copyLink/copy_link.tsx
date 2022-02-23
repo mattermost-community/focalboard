@@ -18,7 +18,7 @@ const CopyLinkTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
             id='OnboardingTour.CopyLink.Title'
-            defaultMessage='Cpy link'
+            defaultMessage='Copy link'
         />
     )
     const screen = (
