@@ -142,7 +142,8 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string,
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
-		Where(sq.Eq{"board_id": boardID})
+		Where(sq.Eq{"board_id": boardID}).
+		OrderBy("insert_at")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -189,7 +190,8 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, boardID string, blockID string,
 		Join(s.tablePrefix + "blocks" + " as l2 on l2.parent_id = l1.id or l2.id = l1.id").
 		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
-		Where(sq.Eq{"l3.board_id": boardID})
+		Where(sq.Eq{"l3.board_id": boardID}).
+		OrderBy("insert_at")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -424,6 +426,9 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 		return err
 	}
 
+	block.UpdateAt = utils.GetMillis()
+	block.ModifiedBy = userID
+
 	insertQuery := s.getQueryBuilder(db).Insert("").
 		Columns(
 			"channel_id",
@@ -450,15 +455,12 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 		"title":                 block.Title,
 		"fields":                fieldsJSON,
 		"delete_at":             block.DeleteAt,
-		"created_by":            block.CreatedBy,
+		"created_by":            userID,
 		"modified_by":           block.ModifiedBy,
-		"create_at":             block.CreateAt,
+		"create_at":             utils.GetMillis(),
 		"update_at":             block.UpdateAt,
 		"board_id":              block.BoardID,
 	}
-
-	block.UpdateAt = utils.GetMillis()
-	block.ModifiedBy = userID
 
 	if existingBlock != nil {
 		// block with ID exists, so this is an update operation
@@ -480,16 +482,6 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 			return err
 		}
 	} else {
-		block.CreatedBy = userID
-		block.CreateAt = utils.GetMillis()
-		block.ModifiedBy = userID
-		block.UpdateAt = utils.GetMillis()
-
-		insertQueryValues["created_by"] = block.CreatedBy
-		insertQueryValues["create_at"] = block.CreateAt
-		insertQueryValues["update_at"] = block.UpdateAt
-		insertQueryValues["modified_by"] = block.ModifiedBy
-
 		query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "blocks")
 		if _, err := query.Exec(); err != nil {
 			return err

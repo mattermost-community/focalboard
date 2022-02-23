@@ -8,7 +8,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/services/notify"
 
-	"github.com/mattermost/mattermost-server/v6/model"
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -77,7 +76,7 @@ func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt no
 	}
 	link := makeLink(pd.serverRoot, evt.TeamID, evt.Board.ID, evt.Card.ID)
 
-	post := &model.Post{
+	post := &mm_model.Post{
 		UserId:    pd.botID,
 		ChannelId: channel.Id,
 		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),

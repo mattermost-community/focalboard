@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 )
@@ -49,10 +50,10 @@ func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) 
 	}
 
 	category.UpdateAt = utils.GetMillis()
-	if err := category.IsValid(); err != nil {
+	if err = category.IsValid(); err != nil {
 		return nil, err
 	}
-	if err := a.store.UpdateCategory(*category); err != nil {
+	if err = a.store.UpdateCategory(*category); err != nil {
 		return nil, err
 	}
 
@@ -85,7 +86,7 @@ func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category
 		return nil, ErrorCategoryPermissionDenied
 	}
 
-	if err := a.store.DeleteCategory(categoryID, userID, teamID); err != nil {
+	if err = a.store.DeleteCategory(categoryID, userID, teamID); err != nil {
 		return nil, err
 	}
 

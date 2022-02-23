@@ -12,7 +12,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-var BlocksFromMultipleBoardsErr = errors.New("the block set contain blocks from multiple boards")
+var ErrBlocksFromMultipleBoards = errors.New("the block set contain blocks from multiple boards")
 
 func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Block, error) {
 	if boardID == "" {
@@ -148,7 +148,7 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 	boardID := blocks[0].BoardID
 	for _, block := range blocks {
 		if block.BoardID != boardID {
-			return nil, BlocksFromMultipleBoardsErr
+			return nil, ErrBlocksFromMultipleBoards
 		}
 	}
 
