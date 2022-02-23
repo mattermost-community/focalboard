@@ -434,7 +434,7 @@ func (s *MattermostAuthLayer) userWorkspacesFromRows(rows *sql.Rows) ([]model.Us
 
 			for _, userID := range userIDs {
 				user, exists := users[userID]
-				//Shows "(Deleted User)" instead of long, unreadable UUID in case the user is not found
+				// Shows "(Deleted User)" instead of long, unreadable UUID in case the user is not found
 				username := "(Deleted User)"
 				if exists {
 					username = user.Username
