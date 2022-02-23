@@ -1,6 +1,6 @@
 # Mattermost Boards Developer's Guide
 
-[Mattermost Boards](https://mattermost.com/boards/) is the Focalboard (aka Boards) plugin running in [Mattermost]. It is pre-packaed, and runs out of the box with Mattermost 6.0 and later.
+[Mattermost Boards](https://mattermost.com/boards/) is the Focalboard (aka Boards) plugin running in Mattermost. It is pre-packaed, and runs out of the box with Mattermost 6.0 and later.
 
 To build your own version of it:
 1. Build [mattermost-plugin](https://github.com/mattermost/focalboard/tree/main/mattermost-plugin) in the [Focalboard repo](https://github.com/mattermost/focalboard)
