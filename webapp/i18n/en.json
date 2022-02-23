@@ -268,7 +268,7 @@
   "OnboardingTour.AddComments.Title": "Add comments",
   "OnboardingTour.AddComments.Body": "You can comment on issues, and even @mention your fellow Mattermost users to get their attention.",
   "OnboardingTour.AddDescription.Title": "Add description",
-  "OnboardingTour.AddDescription.Body": "Add a description to your card so people know what the card is about.",
+  "OnboardingTour.AddDescription.Body": "Add a description to your card so your teammates know what the card is about.",
   "OnboardingTour.AddView.Title": "Add a new view",
   "OnboardingTour.AddView.Body": "Go here to create a new view to organise your board using different layouts.",
   "OnboardingTour.CopyLink.Title": "Copy link",
