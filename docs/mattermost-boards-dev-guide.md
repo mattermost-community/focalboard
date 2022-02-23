@@ -10,7 +10,7 @@ Here are the steps in more detail:
 
 ### Building the Boards plugin
 
-Fork or clone the [Focalboard repo](https://github.com/mattermost/focalboard), and follow the steps in the readme to set up your dev environment.
+Fork the [Focalboard repo](https://github.com/mattermost/focalboard), clone it locally, and follow the steps in the readme to set up your dev environment.
 
 Install dependencies:
 ```
@@ -45,9 +45,13 @@ Alternatively, you can install Mattermost locally and use `make deploy` to auto-
 First, build and run Mattermost locally:
 1. Follow the [Mattermost Developers Guide](https://developers.mattermost.com/contribute/server/developer-setup/) to set up your environment
   * In particuler, make sure Docker is set up and running
-2. Clone / fork [mattermost-webapp](https://github.com/mattermost/mattermost-webapp) and `make build`
-3. Clone / fork [mattermost-server](https://github.com/mattermost/mattermost-server)
-4. Edit `config.json` with a site url, enable [plugin uploads](https://developers.mattermost.com/integrate/admin-guide/admin-plugins-beta/#custom-plugins), and enable [local mode](https://docs.mattermost.com/configure/configuration-settings.html#enable-local-mode)
+2. Fork [mattermost-webapp](https://github.com/mattermost/mattermost-webapp), clone it locally, and `make build`
+3. Fork [mattermost-server](https://github.com/mattermost/mattermost-server) and clone it locally
+3. Run `make config-reset` to generate the `config/config.json` file
+4. Edit `config/config.json`:
+  * Set `SiteURL` to `http://localhost:8065` ([docs](https://docs.mattermost.com/configure/configuration-settings.html#site-url))
+  * Set `EnableUploads` to `true` ([docs](https://developers.mattermost.com/integrate/admin-guide/admin-plugins-beta/#custom-plugins))
+  * Set `EnableLocalMode` to `true` ([docs](https://docs.mattermost.com/configure/configuration-settings.html#enable-local-mode))
 5. Add an ENV var `MM_SERVICESETTINGS_SITEURL` with the same site URL used in the config
 6. Run `make run-server` in Mattermost
 
