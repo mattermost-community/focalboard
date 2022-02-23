@@ -81,7 +81,7 @@ const ViewHeader = (props: Props) => {
                 autoExpand={false}
             />
             <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
-                <IconButton icon={<DropdownIcon />} />
+                <IconButton icon={<DropdownIcon/>}/>
                 <ViewMenu
                     board={board}
                     activeView={activeView}
@@ -90,7 +90,7 @@ const ViewHeader = (props: Props) => {
                 />
             </MenuWrapper>
 
-            <div className='octo-spacer' />
+            <div className='octo-spacer'/>
 
             {!props.readonly &&
                 <>
@@ -153,7 +153,7 @@ const ViewHeader = (props: Props) => {
 
             {/* Search */}
 
-            <ViewHeaderSearch />
+            <ViewHeaderSearch/>
 
             {/* Options menu */}
 
@@ -176,7 +176,7 @@ const ViewHeader = (props: Props) => {
                 </>
             }
 
-            {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)} />}
+            {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>}
         </div>
     )
 }
