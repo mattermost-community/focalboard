@@ -22,9 +22,9 @@ On Linux, to build the Linux app:
 * `sudo apt-get install libwebkit2gtk-4.0-dev`
 * `sudo apt-get install autoconf dh-autoreconf`
 
-## Clone the project source code
+## Fork and clone the project source code
 
-Clone the [GitHub repo here](https://github.com/mattermost/focalboard).
+Fork the [Focalboard GitHub repo](https://github.com/mattermost/focalboard), and clone it locally.
 
 ## Build and run from the terminal
 
