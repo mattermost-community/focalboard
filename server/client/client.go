@@ -242,6 +242,16 @@ func (c *Client) DuplicateBlock(boardID, blockID string, asTemplate bool) (bool,
 	return true, BuildResponse(r)
 }
 
+func (c *Client) UndeleteBlock(boardID, blockID string) (bool, *Response) {
+	r, err := c.DoAPIPost(c.GetBlockRoute(boardID, blockID)+"/undelete", "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
 func (c *Client) InsertBlocks(boardID string, blocks []model.Block) ([]model.Block, *Response) {
 	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID), toJSON(blocks))
 	if err != nil {

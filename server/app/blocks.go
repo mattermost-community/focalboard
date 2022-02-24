@@ -286,6 +286,46 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 	return nil
 }
 
+func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
+	blocks, err := a.store.GetBlockHistory(blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return err
+	}
+
+	if len(blocks) == 0 {
+		// deleting non-existing block not considered an error
+		return nil
+	}
+
+	err = a.store.UndeleteBlock(blockID, modifiedBy)
+	if err != nil {
+		return err
+	}
+
+	block, err := a.store.GetBlock(blockID)
+	if err != nil {
+		return err
+	}
+
+	board, err := a.store.GetBoard(block.BoardID)
+	if err != nil {
+		return err
+	}
+
+	if block == nil {
+		a.logger.Error("Error loading the block after undelete, not propagating through websockets or notifications")
+		return nil
+	}
+
+	a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
+	a.metrics.IncrementBlocksInserted(1)
+	go func() {
+		a.webhook.NotifyUpdate(*block)
+		a.notifyBlockChanged(notify.Add, block, nil, modifiedBy)
+	}()
+	return nil
+}
+
 func (a *App) GetBlockCountsByType() (map[string]int64, error) {
 	return a.store.GetBlockCountsByType()
 }
