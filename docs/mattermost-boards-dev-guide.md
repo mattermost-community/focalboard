@@ -60,7 +60,7 @@ Now, to build and deploy the Boards plugin:
 2. Install the dependencies (see above)
 3. Run:
 ```
-cd mattermost-plugin
 make webapp
+cd mattermost-plugin
 make deploy
 ```
