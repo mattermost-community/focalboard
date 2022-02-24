@@ -49,9 +49,9 @@ First, build and run Mattermost locally:
 3. Fork [mattermost-server](https://github.com/mattermost/mattermost-server) and clone it locally
 3. Run `make config-reset` to generate the `config/config.json` file
 4. Edit `config/config.json`:
-  * Set `SiteURL` to `http://localhost:8065` ([docs](https://docs.mattermost.com/configure/configuration-settings.html#site-url))
-  * Set `EnableUploads` to `true` ([docs](https://developers.mattermost.com/integrate/admin-guide/admin-plugins-beta/#custom-plugins))
-  * Set `EnableLocalMode` to `true` ([docs](https://docs.mattermost.com/configure/configuration-settings.html#enable-local-mode))
+  * Set `ServiceSettings > SiteURL` to `http://localhost:8065` ([docs](https://docs.mattermost.com/configure/configuration-settings.html#site-url))
+  * Set `ServiceSettings > EnableLocalMode` to `true` ([docs](https://docs.mattermost.com/configure/configuration-settings.html#enable-local-mode))
+  * Set `PluginSettings > EnableUploads` to `true` ([docs](https://developers.mattermost.com/integrate/admin-guide/admin-plugins-beta/#custom-plugins))
 5. Add an ENV var `MM_SERVICESETTINGS_SITEURL` with the same site URL used in the config
 6. Run `make run-server` in Mattermost
 
@@ -61,6 +61,6 @@ Now, to build and deploy the Boards plugin:
 3. Run:
 ```
 cd mattermost-plugin
-run make webapp
-run make deploy
+make webapp
+make deploy
 ```
