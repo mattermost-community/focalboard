@@ -129,16 +129,15 @@ const TableRow = (props: Props) => {
             style={{opacity: isDragging ? 0.5 : 1}}
         >
 
-            <div
-                className='octo-table-cell action-cell octo-table-cell-btn'
-                key={'dafd'}
-                style={{width: '60px'}}
-            >
+            <div className='octo-table-cell action-cell octo-table-cell-btn'>
                 <MenuWrapper
                     className='optionsMenu'
                     stopPropagationOnToggle={true}
                 >
-                    <IconButton icon={<OptionsIcon/>}/>
+                    <IconButton
+                        title='MenuBtn'
+                        icon={<OptionsIcon/>}
+                    />
                     <Menu>
                         <Menu.Text
                             icon={<DeleteIcon/>}
