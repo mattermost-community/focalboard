@@ -169,7 +169,7 @@ class Mutator {
                 await octoClient.deleteBlock(block.boardId, block.id)
             },
             async () => {
-                await octoClient.insertBlock(block.boardId, block)
+                await octoClient.undeleteBlock(block.id)
                 await afterUndo?.()
             },
             actualDescription,

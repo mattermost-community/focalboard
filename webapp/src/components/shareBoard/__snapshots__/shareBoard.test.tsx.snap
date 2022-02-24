@@ -167,7 +167,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               </div>
               <div>
                 <div
-                  class="Switch size--medium on"
+                  class="Switch override-main size--medium on"
                 >
                   <div
                     class="octo-switch-inner"
@@ -391,7 +391,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               </div>
               <div>
                 <div
-                  class="Switch size--medium on"
+                  class="Switch override-main size--medium on"
                 >
                   <div
                     class="octo-switch-inner"
@@ -615,7 +615,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
               </div>
               <div>
                 <div
-                  class="Switch size--medium on"
+                  class="Switch override-main size--medium on"
                 >
                   <div
                     class="octo-switch-inner"
@@ -839,7 +839,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
               </div>
               <div>
                 <div
-                  class="Switch size--medium on"
+                  class="Switch override-main size--medium on"
                 >
                   <div
                     class="octo-switch-inner"
@@ -1063,7 +1063,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
               </div>
               <div>
                 <div
-                  class="Switch size--medium on"
+                  class="Switch override-main size--medium on"
                 >
                   <div
                     class="octo-switch-inner"
@@ -1287,7 +1287,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
               </div>
               <div>
                 <div
-                  class="Switch size--medium"
+                  class="Switch override-main size--medium"
                 >
                   <div
                     class="octo-switch-inner"
@@ -1470,7 +1470,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </div>
               <div>
                 <div
-                  class="Switch size--medium on"
+                  class="Switch override-main size--medium on"
                 >
                   <div
                     class="octo-switch-inner"
@@ -1694,7 +1694,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </div>
               <div>
                 <div
-                  class="Switch size--medium on"
+                  class="Switch override-main size--medium on"
                 >
                   <div
                     class="octo-switch-inner"
@@ -1918,7 +1918,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </div>
               <div>
                 <div
-                  class="Switch size--medium on"
+                  class="Switch override-main size--medium on"
                 >
                   <div
                     class="octo-switch-inner"
