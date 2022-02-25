@@ -4,6 +4,7 @@ export interface IAppWindow extends Window {
     baseURL?: string
     frontendBaseURL?: string
     isFocalboardPlugin?: boolean
+    getCurrentTeamId?: () => string
     msCrypto: Crypto
     openInNewBrowser?: ((href: string) => void) | null
     webkit?: {messageHandlers: {nativeApp?: {postMessage: <T>(message: T) => void}}}
@@ -16,6 +17,7 @@ export interface IAppWindow extends Window {
 export type SuiteWindow = Window & {
     setTeamInSidebar?: (teamID: string) => void
     setTeamInFocalboard?: (teamID: string) => void
+    getCurrentTeamId?: () => string
     baseURL?: string
     frontendBaseURL?: string
     isFocalboardPlugin?: boolean

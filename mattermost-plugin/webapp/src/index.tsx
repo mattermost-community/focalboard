@@ -258,6 +258,11 @@ export default class Plugin {
             // @ts-ignore
             mmStore.dispatch(selectTeam(teamID))
         }
+        windowAny.getCurrentTeamId = (): string => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            return mmStore.getState().entities.teams.currentTeamId
+        }
     }
 
     uninitialize(): void {

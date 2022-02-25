@@ -86,3 +86,4 @@ export const {setTeam} = teamSlice.actions
 export const {reducer} = teamSlice
 
 export const getCurrentTeam = (state: RootState): Team|null => state.teams.current
+export const getAllTeams = (state: RootState): Team[] => state.teams.allTeams

@@ -75,9 +75,6 @@ const BoardPage = (props: Props): JSX.Element => {
         }, [teamId])
     }
 
-    // Backward compatibility: This can be removed in the future, this is for
-    // transform the old query params into routes
-    //
     useEffect(() => {
         // This function is called when the user selected a team from the team sidebar.
         (window as any).setTeamInFocalboard = (newTeamID: string) => {
