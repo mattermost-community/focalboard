@@ -31,7 +31,6 @@ function FBRoute(props: RouteProps) {
     }
 
     if (Utils.isFocalboardPlugin() && loggedIn === true && !UserSettings.welcomePageViewed) {
-        console.log("WELCOME REDIRECT", props.path)
         if (originalPath) {
             return <Redirect to={`/welcome?r=${originalPath}`}/>
         }
@@ -39,7 +38,6 @@ function FBRoute(props: RouteProps) {
     }
 
     if (loggedIn === false && props.loginRequired) {
-        console.log("LOGIN REDIRECT", props.path)
         if (originalPath) {
             let redirectUrl = '/' + Utils.buildURL(originalPath)
             if (redirectUrl.indexOf('//') === 0) {
@@ -52,7 +50,6 @@ function FBRoute(props: RouteProps) {
     }
 
     if (loggedIn === true || !props.loginRequired) {
-        console.log("RENDERING", props.path)
         return (
             <Route
                 path={props.path}
@@ -63,7 +60,6 @@ function FBRoute(props: RouteProps) {
             </Route>
         )
     }
-    console.log("NOT RENDERING", props.path)
     return null
 }
 
