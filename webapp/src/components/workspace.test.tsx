@@ -87,7 +87,6 @@ jest.mock('react-router-dom', () => {
                 params: {
                     boardId: board.id,
                     viewId: activeView.id,
-                    cardId: card1.id,
                 },
             }
         }),
@@ -260,6 +259,8 @@ describe('src/components/workspace', () => {
     })
 
     test('show open card tooltip', async () => {
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+
         const welcomeBoard = TestBlockFactory.createBoard()
         welcomeBoard.title = 'Welcome to Boards!'
 
@@ -429,6 +430,8 @@ describe('src/components/workspace', () => {
     })
 
     test('show copy link tooltip', async () => {
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+
         const welcomeBoard = TestBlockFactory.createBoard()
         welcomeBoard.title = 'Welcome to Boards!'
 

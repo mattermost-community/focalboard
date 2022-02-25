@@ -39,7 +39,7 @@ exports[`components/onboardingTour/addComments/AddDescriptionTourStep after hove
         <div
           class="tutorial-tour-tip__body"
         >
-          Add a description to your card so people know what the card is about.
+          Add a description to your card so your teammates know what the card is about.
         </div>
         <div
           class="tutorial-tour-tip__image"

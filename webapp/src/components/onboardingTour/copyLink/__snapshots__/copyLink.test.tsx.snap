@@ -25,7 +25,7 @@ exports[`components/onboardingTour/addComments/CopyLinkTourStep after hover 1`] 
           <h4
             class="tutorial-tour-tip__header__title"
           >
-            Cpy link
+            Copy link
           </h4>
           <button
             class="IconButton tutorial-tour-tip__header__close size--small"

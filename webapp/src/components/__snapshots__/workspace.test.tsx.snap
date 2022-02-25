@@ -2520,7 +2520,7 @@ exports[`src/components/workspace show copy link tooltip 1`] = `
           <h4
             class="tutorial-tour-tip__header__title"
           >
-            Cpy link
+            Copy link
           </h4>
           <button
             type="button"

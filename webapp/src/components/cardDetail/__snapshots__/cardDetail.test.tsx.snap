@@ -164,7 +164,7 @@ exports[`components/cardDetail/CardDetail should show add description tour tip 1
         <div
           class="tutorial-tour-tip__body"
         >
-          Add a description to your card so people know what the card is about.
+          Add a description to your card so your teammates know what the card is about.
         </div>
         <div
           class="tutorial-tour-tip__image"
