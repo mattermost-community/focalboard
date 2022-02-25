@@ -67,6 +67,8 @@
 
         > .IconButton {
             background-color: var(--sidebar-bg-rgb);
+            color: rgb(var(--sidebar-text-rgb));
+            margin-left: 4px;
 
             &:hover {
                 background-color: rgba(var(--sidebar-text-rgb), 0.1);
@@ -146,5 +148,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+    }
+
+    .Menu.noselect.left {
+        position: fixed;
+        right: calc(100% - 480px + 50px);
+        left: calc(240px - 50px);
     }
 }
