@@ -150,7 +150,6 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					board.ModifiedBy = userID
 					board.UpdateAt = now
 					board.TeamID = opt.TeamID
-					board.TemplateTrackingCode = board.ID
 					boardsAndBlocks.Boards = append(boardsAndBlocks.Boards, &board)
 				default:
 					return "", model.NewErrUnsupportedArchiveLineType(lineNum, archiveLine.Type)

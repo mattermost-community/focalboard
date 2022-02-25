@@ -36,7 +36,6 @@ func boardFields(prefix string) []string {
 		"show_description",
 		"is_template",
 		"template_version",
-		"template_tracking_code",
 		"COALESCE(properties, '{}')",
 		"COALESCE(card_properties, '{}')",
 		"COALESCE(column_calculations, '{}')",
@@ -92,7 +91,6 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			&board.ShowDescription,
 			&board.IsTemplate,
 			&board.TemplateVersion,
-			&board.TemplateTrackingCode,
 			&propertiesBytes,
 			&cardPropertiesBytes,
 			&columnCalculationsBytes,
@@ -234,25 +232,24 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		Columns(boardFields("")...)
 
 	insertQueryValues := map[string]interface{}{
-		"id":                     board.ID,
-		"team_id":                board.TeamID,
-		"channel_id":             board.ChannelID,
-		"created_by":             board.CreatedBy,
-		"modified_by":            userID,
-		"type":                   board.Type,
-		"title":                  board.Title,
-		"description":            board.Description,
-		"icon":                   board.Icon,
-		"show_description":       board.ShowDescription,
-		"is_template":            board.IsTemplate,
-		"template_version":       board.TemplateVersion,
-		"template_tracking_code": board.TemplateTrackingCode,
-		"properties":             propertiesBytes,
-		"card_properties":        cardPropertiesBytes,
-		"column_calculations":    columnCalculationsBytes,
-		"create_at":              board.CreateAt,
-		"update_at":              board.UpdateAt,
-		"delete_at":              board.DeleteAt,
+		"id":                  board.ID,
+		"team_id":             board.TeamID,
+		"channel_id":          board.ChannelID,
+		"created_by":          board.CreatedBy,
+		"modified_by":         userID,
+		"type":                board.Type,
+		"title":               board.Title,
+		"description":         board.Description,
+		"icon":                board.Icon,
+		"show_description":    board.ShowDescription,
+		"is_template":         board.IsTemplate,
+		"template_version":    board.TemplateVersion,
+		"properties":          propertiesBytes,
+		"card_properties":     cardPropertiesBytes,
+		"column_calculations": columnCalculationsBytes,
+		"create_at":           board.CreateAt,
+		"update_at":           board.UpdateAt,
+		"delete_at":           board.DeleteAt,
 	}
 
 	now := utils.GetMillis()
@@ -268,7 +265,6 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Set("show_description", board.ShowDescription).
 			Set("is_template", board.IsTemplate).
 			Set("template_version", board.TemplateVersion).
-			Set("template_tracking_code", board.TemplateTrackingCode).
 			Set("properties", propertiesBytes).
 			Set("card_properties", cardPropertiesBytes).
 			Set("column_calculations", columnCalculationsBytes).

@@ -18,7 +18,7 @@ var (
 func (s *SQLStore) removeDefaultTemplates(db sq.BaseRunner, boards []*model.Board) error {
 	count := 0
 	for _, board := range boards {
-		if board.TemplateTrackingCode == "" {
+		if board.CreatedBy != "system" {
 			continue
 		}
 		// default template deletion does not need to go to blocks_history
