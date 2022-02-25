@@ -293,7 +293,7 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
 	}
 
 	if len(blocks) == 0 {
-		// deleting non-existing block not considered an error
+		// undeleting non-existing block not considered an error
 		return nil
 	}
 

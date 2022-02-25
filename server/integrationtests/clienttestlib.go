@@ -134,7 +134,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 }
 
 // Start starts the test server and ensures that it's correctly
-// responding to requests before returning
+// responding to requests before returning.
 func (th *TestHelper) Start() *TestHelper {
 	go func() {
 		if err := th.Server.Start(); err != nil {
@@ -245,6 +245,16 @@ func (th *TestHelper) Me(client *client.Client) *model.User {
 	th.CheckOK(resp)
 	require.NotNil(th.T, user)
 	return user
+}
+
+func (th *TestHelper) CreateBoard(teamID string, boardType model.BoardType) *model.Board {
+	newBoard := &model.Board{
+		TeamID: teamID,
+		Type:   boardType,
+	}
+	board, resp := th.Client.CreateBoard(newBoard)
+	th.CheckOK(resp)
+	return board
 }
 
 func (th *TestHelper) GetUser1() *model.User {
