@@ -277,6 +277,10 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
+	if board == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "Board not found", nil)
+		return
+	}
 
 	if board.IsTemplate {
 		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
