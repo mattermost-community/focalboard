@@ -81,9 +81,11 @@ func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
 	}
 
 	switch block.Type {
-	// TODO: Fix this
-	// case model.TypeBoard:
-	// 	return dg.generateDiffsForBoard(block, schema)
+	case model.TypeBoard:
+		dg.logger.Warn("generateDiffs for board skipped", mlog.String("block_id", block.ID))
+		// TODO: Fix this
+		// return dg.generateDiffsForBoard(block, schema)
+		return nil, nil
 	case model.TypeCard:
 		diff, err := dg.generateDiffsForCard(block, schema)
 		if err != nil || diff == nil {
@@ -99,44 +101,45 @@ func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
 	}
 }
 
+// TODO: fix this
+/*
 func (dg *diffGenerator) generateDiffsForBoard(board *model.Board, schema model.PropSchema) ([]*Diff, error) {
-	// TODO: Fix this
-	return nil, nil
-	// opts := model.QuerySubtreeOptions{
-	// 	AfterUpdateAt: dg.lastNotifyAt,
-	// }
+	opts := model.QuerySubtreeOptions{
+		AfterUpdateAt: dg.lastNotifyAt,
+	}
 
-	// // find all child blocks of the board that updated since last notify.
-	// blocks, err := dg.store.GetSubTree2(board.ID, board.ID, opts)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("could not get subtree for board %s: %w", board.ID, err)
-	// }
+	find all child blocks of the board that updated since last notify.
+	blocks, err := dg.store.GetSubTree2(board.ID, board.ID, opts)
+	if err != nil {
+		return nil, fmt.Errorf("could not get subtree for board %s: %w", board.ID, err)
+	}
 
-	// var diffs []*Diff
+	var diffs []*Diff
 
-	// // generate diff for board title change or description
-	// boardDiff, err := dg.generateDiffForBlock(board, schema)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("could not generate diff for board %s: %w", board.ID, err)
-	// }
+	generate diff for board title change or description
+	boardDiff, err := dg.generateDiffForBlock(board, schema)
+	if err != nil {
+		return nil, fmt.Errorf("could not generate diff for board %s: %w", board.ID, err)
+	}
 
-	// if boardDiff != nil {
-	// 	// TODO: phase 2 feature (generate schema diffs and add to board diff) goes here.
-	// 	diffs = append(diffs, boardDiff)
-	// }
+	if boardDiff != nil {
+		TODO: phase 2 feature (generate schema diffs and add to board diff) goes here.
+		diffs = append(diffs, boardDiff)
+	}
 
-	// for _, b := range blocks {
-	// 	block := b
-	// 	if block.Type == model.TypeCard {
-	// 		cardDiffs, err := dg.generateDiffsForCard(&block, schema)
-	// 		if err != nil {
-	// 			return nil, err
-	// 		}
-	// 		diffs = append(diffs, cardDiffs)
-	// 	}
-	// }
-	// return diffs, nil
+	for _, b := range blocks {
+		block := b
+		if block.Type == model.TypeCard {
+			cardDiffs, err := dg.generateDiffsForCard(&block, schema)
+			if err != nil {
+				return nil, err
+			}
+			diffs = append(diffs, cardDiffs)
+		}
+	}
+	return diffs, nil
 }
+*/
 
 func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.PropSchema) (*Diff, error) {
 	// generate diff for card title change and properties.

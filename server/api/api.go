@@ -3104,7 +3104,7 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("patchedUserID", paramsUserID)
 
 	member, err := a.app.UpdateBoardMember(newBoardMember)
-	if errors.Is(err, app.BoardMemberIsLastAdminErr) {
+	if errors.Is(err, app.ErrBoardMemberIsLastAdmin) {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 		return
 	}
@@ -3184,7 +3184,7 @@ func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("addedUserID", paramsUserID)
 
 	deleteErr := a.app.DeleteBoardMember(boardID, paramsUserID)
-	if errors.Is(deleteErr, app.BoardMemberIsLastAdminErr) {
+	if errors.Is(deleteErr, app.ErrBoardMemberIsLastAdmin) {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", deleteErr)
 		return
 	}

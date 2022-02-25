@@ -11,6 +11,7 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -398,7 +399,8 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 	} else {
 		query = query.Suffix(
 			`ON CONFLICT (board_id, user_id)
-             DO UPDATE SET scheme_admin = EXCLUDED.scheme_admin, scheme_editor = EXCLUDED.scheme_editor, scheme_commenter = EXCLUDED.scheme_commenter, scheme_viewer = EXCLUDED.scheme_viewer`,
+             DO UPDATE SET scheme_admin = EXCLUDED.scheme_admin, scheme_editor = EXCLUDED.scheme_editor, 
+			   scheme_commenter = EXCLUDED.scheme_commenter, scheme_viewer = EXCLUDED.scheme_viewer`,
 		)
 	}
 
@@ -467,7 +469,7 @@ func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*mode
 // searchBoardsForUserAndTeam returns all boards that match with the
 // term that are either private and which the user is a member of, or
 // they're open, regardless of the user membership.
-// Search is case-insensitive
+// Search is case-insensitive.
 func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, teamID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
@@ -488,7 +490,7 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 		// break search query into space separated words
 		// and search for each word.
 		// This should later be upgraded to industrial-strength
-		// work tokenizer, that uses much more than space
+		// word tokenizer, that uses much more than space
 		// to break words.
 
 		conditions := sq.Or{}
