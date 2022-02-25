@@ -330,10 +330,18 @@ func TestDeleteBlock(t *testing.T) {
 }
 
 func TestUndeleteBlock(t *testing.T) {
-	th := SetupTestHelper().InitBasic()
+	th := SetupTestHelper(t).InitBasic()
 	defer th.TearDown()
 
-	blocks, resp := th.Client.GetBlocks()
+	newBoard := &model.Board{
+		TeamID: "team-id",
+		Type:   model.BoardTypeOpen,
+	}
+
+	board, resp := th.Client.CreateBoard(newBoard)
+	th.CheckOK(resp)
+
+	blocks, resp := th.Client.GetBlocksForBoard(board.ID)
 	require.NoError(t, resp.Error)
 	initialCount := len(blocks)
 
@@ -342,21 +350,21 @@ func TestUndeleteBlock(t *testing.T) {
 		initialID := utils.NewID(utils.IDTypeBlock)
 		block := model.Block{
 			ID:       initialID,
-			RootID:   initialID,
+			BoardID:  initialID,
 			CreateAt: 1,
 			UpdateAt: 1,
 			Type:     model.TypeBoard,
 			Title:    "New title",
 		}
 
-		newBlocks, resp := th.Client.InsertBlocks([]model.Block{block})
+		newBlocks, resp := th.Client.InsertBlocks(board.ID, []model.Block{block})
 		require.NoError(t, resp.Error)
 		require.Len(t, newBlocks, 1)
 		require.NotZero(t, newBlocks[0].ID)
 		require.NotEqual(t, initialID, newBlocks[0].ID)
 		blockID = newBlocks[0].ID
 
-		blocks, resp := th.Client.GetBlocks()
+		blocks, resp := th.Client.GetBlocksForBoard(board.ID)
 		require.NoError(t, resp.Error)
 		require.Len(t, blocks, initialCount+1)
 
@@ -372,12 +380,12 @@ func TestUndeleteBlock(t *testing.T) {
 		// id,insert_at on block history
 		time.Sleep(10 * time.Millisecond)
 
-		_, resp := th.Client.DeleteBlock(blockID)
+		_, resp := th.Client.DeleteBlock(board.ID, blockID)
 		require.NoError(t, resp.Error)
 
-		blocks, resp := th.Client.GetBlocks()
+		blocks, resp := th.Client.GetBlocksForBoard(board.ID)
 		require.NoError(t, resp.Error)
-		require.Len(t, blocks, initialCount)
+		require.Empty(t, blocks)
 	})
 
 	t.Run("Undelete a block", func(t *testing.T) {
@@ -385,10 +393,10 @@ func TestUndeleteBlock(t *testing.T) {
 		// id,insert_at on block history
 		time.Sleep(10 * time.Millisecond)
 
-		_, resp := th.Client.UndeleteBlock(blockID)
+		_, resp := th.Client.UndeleteBlock(board.ID, blockID)
 		require.NoError(t, resp.Error)
 
-		blocks, resp := th.Client.GetBlocks()
+		blocks, resp := th.Client.GetBlocksForBoard(board.ChannelID)
 		require.NoError(t, resp.Error)
 		require.Len(t, blocks, initialCount+1)
 	})
