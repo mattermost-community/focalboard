@@ -690,7 +690,7 @@ class Utils {
         return navigator.platform.toUpperCase().indexOf('MAC') >= 0
     }
 
-    static cmdOrCtrlPressed(e, allowAlt = false) {
+    static cmdOrCtrlPressed(e: KeyboardEvent, allowAlt = false) {
         if (allowAlt) {
             return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey)
         }
