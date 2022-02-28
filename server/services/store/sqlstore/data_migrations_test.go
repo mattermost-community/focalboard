@@ -135,7 +135,7 @@ func TestReplaceBlockID(t *testing.T) {
 	require.Equal(t, newID, newBlock3.BoardID)
 	require.Equal(t, newID, newBlock5.BoardID)
 	require.Equal(t, newID, newBlock5.ParentID)
-	require.Equal(t, newBlock8.Fields["contentOrder"].([]interface{})[0], newID)
+	require.Equal(t, newBlock8.Fields["contentOrder"].([]interface{})[0], newID) // TODO: check why this is specifically failing
 	require.Equal(t, newBlock8.Fields["contentOrder"].([]interface{})[1], "block-id-2")
 
 	require.Equal(t, currentID, newBlock6.ID)
