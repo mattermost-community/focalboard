@@ -81,10 +81,6 @@ func (b *Backend) getBlockUpdateFreq(blockType model.BlockType) time.Duration {
 	}
 }
 
-func (b *Backend) getBoardUpdateFreq() time.Duration {
-	return time.Second * time.Duration(b.notifyFreqBoardSeconds)
-}
-
 func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	if evt.Board == nil {
 		b.logger.Warn("No board found for block, skipping notify",

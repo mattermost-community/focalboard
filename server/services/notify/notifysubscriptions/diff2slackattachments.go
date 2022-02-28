@@ -160,6 +160,7 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 		mlog.String("card_id", cardDiff.Card.ID),
 		mlog.String("new_block_id", cardDiff.NewBlock.ID),
 		mlog.String("old_block_id", cardDiff.OldBlock.ID),
+		mlog.Int("childDiffs", len(cardDiff.Diffs)),
 	)
 
 	buf.Reset()

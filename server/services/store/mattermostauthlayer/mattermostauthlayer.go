@@ -222,7 +222,7 @@ func (s *MattermostAuthLayer) GetTeam(id string) (*model.Team, error) {
 	return &model.Team{ID: id, Title: displayName}, nil
 }
 
-// GetTeamsForUser retrieves all the teams that the user is a member of
+// GetTeamsForUser retrieves all the teams that the user is a member of.
 func (s *MattermostAuthLayer) GetTeamsForUser(userID string) ([]*model.Team, error) {
 	query := s.getQueryBuilder().
 		Select("t.Id", "t.DisplayName").

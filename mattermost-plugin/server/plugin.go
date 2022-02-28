@@ -361,7 +361,6 @@ func postWithBoardsEmbed(post *mmModel.Post) *mmModel.Post {
 	post.Message = newPostMessage
 
 	if firstLink == "" {
-		fmt.Println("######## firstLInk empty")
 		return post
 	}
 

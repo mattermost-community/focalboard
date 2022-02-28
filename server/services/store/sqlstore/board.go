@@ -11,6 +11,7 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -36,7 +37,6 @@ func boardFields(prefix string) []string {
 		"show_description",
 		"is_template",
 		"template_version",
-		"template_tracking_code",
 		"COALESCE(properties, '{}')",
 		"COALESCE(card_properties, '{}')",
 		"COALESCE(column_calculations, '{}')",
@@ -92,7 +92,6 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			&board.ShowDescription,
 			&board.IsTemplate,
 			&board.TemplateVersion,
-			&board.TemplateTrackingCode,
 			&propertiesBytes,
 			&cardPropertiesBytes,
 			&columnCalculationsBytes,
@@ -234,25 +233,24 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		Columns(boardFields("")...)
 
 	insertQueryValues := map[string]interface{}{
-		"id":                     board.ID,
-		"team_id":                board.TeamID,
-		"channel_id":             board.ChannelID,
-		"created_by":             board.CreatedBy,
-		"modified_by":            userID,
-		"type":                   board.Type,
-		"title":                  board.Title,
-		"description":            board.Description,
-		"icon":                   board.Icon,
-		"show_description":       board.ShowDescription,
-		"is_template":            board.IsTemplate,
-		"template_version":       board.TemplateVersion,
-		"template_tracking_code": board.TemplateTrackingCode,
-		"properties":             propertiesBytes,
-		"card_properties":        cardPropertiesBytes,
-		"column_calculations":    columnCalculationsBytes,
-		"create_at":              board.CreateAt,
-		"update_at":              board.UpdateAt,
-		"delete_at":              board.DeleteAt,
+		"id":                  board.ID,
+		"team_id":             board.TeamID,
+		"channel_id":          board.ChannelID,
+		"created_by":          board.CreatedBy,
+		"modified_by":         userID,
+		"type":                board.Type,
+		"title":               board.Title,
+		"description":         board.Description,
+		"icon":                board.Icon,
+		"show_description":    board.ShowDescription,
+		"is_template":         board.IsTemplate,
+		"template_version":    board.TemplateVersion,
+		"properties":          propertiesBytes,
+		"card_properties":     cardPropertiesBytes,
+		"column_calculations": columnCalculationsBytes,
+		"create_at":           board.CreateAt,
+		"update_at":           board.UpdateAt,
+		"delete_at":           board.DeleteAt,
 	}
 
 	now := utils.GetMillis()
@@ -268,7 +266,6 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Set("show_description", board.ShowDescription).
 			Set("is_template", board.IsTemplate).
 			Set("template_version", board.TemplateVersion).
-			Set("template_tracking_code", board.TemplateTrackingCode).
 			Set("properties", propertiesBytes).
 			Set("card_properties", cardPropertiesBytes).
 			Set("column_calculations", columnCalculationsBytes).
@@ -398,7 +395,8 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 	} else {
 		query = query.Suffix(
 			`ON CONFLICT (board_id, user_id)
-             DO UPDATE SET scheme_admin = EXCLUDED.scheme_admin, scheme_editor = EXCLUDED.scheme_editor, scheme_commenter = EXCLUDED.scheme_commenter, scheme_viewer = EXCLUDED.scheme_viewer`,
+             DO UPDATE SET scheme_admin = EXCLUDED.scheme_admin, scheme_editor = EXCLUDED.scheme_editor, 
+			   scheme_commenter = EXCLUDED.scheme_commenter, scheme_viewer = EXCLUDED.scheme_viewer`,
 		)
 	}
 
@@ -467,7 +465,7 @@ func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*mode
 // searchBoardsForUserAndTeam returns all boards that match with the
 // term that are either private and which the user is a member of, or
 // they're open, regardless of the user membership.
-// Search is case-insensitive
+// Search is case-insensitive.
 func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, teamID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
@@ -488,7 +486,7 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 		// break search query into space separated words
 		// and search for each word.
 		// This should later be upgraded to industrial-strength
-		// work tokenizer, that uses much more than space
+		// word tokenizer, that uses much more than space
 		// to break words.
 
 		conditions := sq.Or{}

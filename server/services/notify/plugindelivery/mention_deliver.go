@@ -33,7 +33,7 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 	if err != nil {
 		return "", fmt.Errorf("cannot get direct channel: %w", err)
 	}
-	link := utils.MakeCardLink(pd.serverRoot, evt.Board.ID, evt.Card.ID)
+	link := utils.MakeCardLink(pd.serverRoot, evt.Board.TeamID, evt.Board.ID, evt.Card.ID)
 
 	post := &model.Post{
 		UserId:    pd.botID,

@@ -14,12 +14,12 @@ type Props = {
     initialValue?: string
     onClose: () => void
     onCreate: (name: string) => void
+    title: JSX.Element
 }
 
 const CreateCategory = (props: Props): JSX.Element => {
     const intl = useIntl()
 
-    const title = intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})
     const placeholder = intl.formatMessage({id: 'Categories.CreateCategoryDialog.Placeholder', defaultMessage: 'Name your category'})
     const cancelText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CancelText', defaultMessage: 'Cancel'})
     const createText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CreateText', defaultMessage: 'Create'})
@@ -33,7 +33,7 @@ const CreateCategory = (props: Props): JSX.Element => {
             onClose={props.onClose}
         >
             <div className='CreateCategory'>
-                <h3>{title}</h3>
+                <h3>{props.title}</h3>
                 <input
                     className='categoryNameInput'
                     type='text'
