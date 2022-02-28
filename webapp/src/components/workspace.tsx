@@ -66,13 +66,8 @@ function CenterContent(props: Props) {
     }, [])
 
     useEffect(() => {
-        console.log('USEEFFECT')
-        if (me) {
-            console.log('ME.ID' + me.id)
-            if (members[me.id]) {
-                console.log('Found me ' + members[me.id].schemeAdmin)
-                setShowShared(members[me.id].schemeAdmin)
-            }
+        if (me && members[me.id]) {
+            setShowShared(members[me.id].schemeAdmin)
         }
     }, [me, members])
 

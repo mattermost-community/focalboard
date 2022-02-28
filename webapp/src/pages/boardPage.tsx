@@ -57,11 +57,6 @@ const BoardPage = (props: Props): JSX.Element => {
     const categories = useAppSelector(getSidebarCategories)
     const me = useAppSelector<IUser|null>(getMe)
 
-    // dispatch(fetchBoardMembers({
-    //     teamId,
-    //     boardId: match.params.boardId,
-    // }))
-
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
     if (Utils.isFocalboardLegacy() && !props.readonly) {
@@ -109,7 +104,6 @@ const BoardPage = (props: Props): JSX.Element => {
 
             // and fetch its data
             dispatch(loadBoardData(match.params.boardId))
-
             dispatch(fetchBoardMembers({
                 teamId,
                 boardId: match.params.boardId,
