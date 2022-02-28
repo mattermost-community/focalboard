@@ -191,7 +191,7 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, boardID string, blockID string,
 		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"l3.board_id": boardID}).
-		OrderBy("insert_at")
+		OrderBy("l1.insert_at")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -482,6 +482,7 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 			return err
 		}
 	} else {
+		block.CreatedBy = userID
 		query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "blocks")
 		if _, err := query.Exec(); err != nil {
 			return err
