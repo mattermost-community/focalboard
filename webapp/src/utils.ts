@@ -12,6 +12,7 @@ import {createCommentBlock} from './blocks/commentBlock'
 import {IAppWindow} from './types'
 import {ChangeHandlerType, WSMessage} from './wsclient'
 import {BlockCategoryWebsocketData, Category} from './store/sidebar'
+import {Constants} from './constants'
 
 declare let window: IAppWindow
 
@@ -662,6 +663,38 @@ class Utils {
 
     static uuid(): string {
         return (window as any).URL.createObjectURL(new Blob([])).substr(-36)
+    }
+
+    static isKeyPressed(event: KeyboardEvent, key: [string, number]) {
+        // There are two types of keyboards
+        // 1. English with different layouts(Ex: Dvorak)
+        // 2. Different language keyboards(Ex: Russian)
+
+        if (event.keyCode === Constants.keyCodes.COMPOSING[1]) {
+            return false
+        }
+
+        // checks for event.key for older browsers and also for the case of different English layout keyboards.
+        if (typeof event.key !== 'undefined' && event.key !== 'Unidentified' && event.key !== 'Dead') {
+            const isPressedByCode = event.key === key[0] || event.key === key[0].toUpperCase()
+            if (isPressedByCode) {
+                return true
+            }
+        }
+
+        // used for different language keyboards to detect the position of keys
+        return event.keyCode === key[1]
+    }
+
+    static isMac() {
+        return navigator.platform.toUpperCase().indexOf('MAC') >= 0
+    }
+
+    static cmdOrCtrlPressed(e, allowAlt = false) {
+        if (allowAlt) {
+            return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey)
+        }
+        return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey && !e.altKey)
     }
 }
 
