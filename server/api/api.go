@@ -284,13 +284,11 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	if board.IsTemplate {
 		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-			fmt.Println("FAILING HERE for template", userID, boardID, model.PermissionViewBoard)
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
 			return
 		}
 	} else {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-			fmt.Println("FAILING HERE", userID, boardID, model.PermissionViewBoard)
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 			return
 		}
@@ -1799,7 +1797,7 @@ func FileUploadResponseFromJSON(data io.Reader) (*FileUploadResponse, error) {
 }
 
 func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards/{boardID}/{rootID}/files uploadFile
+	// swagger:operation POST /api/v1/teams/{teamID}/boards/{boardID}/files uploadFile
 	//
 	// Upload a binary file, attached to a root block
 	//
@@ -1809,14 +1807,14 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: ID of the team
+	//   required: true
+	//   type: string
 	// - name: boardID
 	//   in: path
 	//   description: Board ID
-	//   required: true
-	//   type: string
-	// - name: rootID
-	//   in: path
-	//   description: ID of the root block
 	//   required: true
 	//   type: string
 	// - name: uploaded file
@@ -3107,7 +3105,7 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("patchedUserID", paramsUserID)
 
 	member, err := a.app.UpdateBoardMember(newBoardMember)
-	if errors.Is(err, app.BoardMemberIsLastAdminErr) {
+	if errors.Is(err, app.ErrBoardMemberIsLastAdmin) {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 		return
 	}
@@ -3187,7 +3185,7 @@ func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("addedUserID", paramsUserID)
 
 	deleteErr := a.app.DeleteBoardMember(boardID, paramsUserID)
-	if errors.Is(deleteErr, app.BoardMemberIsLastAdminErr) {
+	if errors.Is(deleteErr, app.ErrBoardMemberIsLastAdmin) {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", deleteErr)
 		return
 	}

@@ -337,7 +337,6 @@ func TestUndeleteBlock(t *testing.T) {
 		TeamID: "team-id",
 		Type:   model.BoardTypeOpen,
 	}
-
 	board, resp := th.Client.CreateBoard(newBoard)
 	th.CheckOK(resp)
 
@@ -350,7 +349,7 @@ func TestUndeleteBlock(t *testing.T) {
 		initialID := utils.NewID(utils.IDTypeBlock)
 		block := model.Block{
 			ID:       initialID,
-			BoardID:  initialID,
+			BoardID:  board.ID,
 			CreateAt: 1,
 			UpdateAt: 1,
 			Type:     model.TypeBoard,
@@ -396,7 +395,7 @@ func TestUndeleteBlock(t *testing.T) {
 		_, resp := th.Client.UndeleteBlock(board.ID, blockID)
 		require.NoError(t, resp.Error)
 
-		blocks, resp := th.Client.GetBlocksForBoard(board.ChannelID)
+		blocks, resp := th.Client.GetBlocksForBoard(board.ID)
 		require.NoError(t, resp.Error)
 		require.Len(t, blocks, initialCount+1)
 	})

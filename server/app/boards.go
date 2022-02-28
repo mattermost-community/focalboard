@@ -9,7 +9,7 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 )
 
-var BoardMemberIsLastAdminErr = errors.New("cannot leave a board with no admins")
+var ErrBoardMemberIsLastAdmin = errors.New("cannot leave a board with no admins")
 
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
@@ -173,7 +173,7 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 			return nil, err
 		}
 		if isLastAdmin {
-			return nil, BoardMemberIsLastAdminErr
+			return nil, ErrBoardMemberIsLastAdmin
 		}
 	}
 
@@ -228,7 +228,7 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 			return err
 		}
 		if isLastAdmin {
-			return BoardMemberIsLastAdminErr
+			return ErrBoardMemberIsLastAdmin
 		}
 	}
 

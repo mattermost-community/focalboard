@@ -149,6 +149,10 @@ func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
 	userID := "user-id"
 
 	t.Run("on failure, nothing should be saved", func(t *testing.T) {
+		if store.DBType() == "sqlite3" {
+			t.Skip("No transactions support int sqlite")
+		}
+
 		initialTitle := "initial title"
 		newTitle := "new title"
 
@@ -267,6 +271,10 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 	userID := "user-id"
 
 	t.Run("should not delete anything if a block doesn't belong to any of the boards", func(t *testing.T) {
+		if store.DBType() == "sqlite3" {
+			t.Skip("No transactions support int sqlite")
+		}
+
 		newBoard1 := &model.Board{
 			ID:     utils.NewID(utils.IDTypeBoard),
 			TeamID: teamID,
@@ -340,6 +348,10 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 	})
 
 	t.Run("should not delete anything if a board doesn't exist", func(t *testing.T) {
+		if store.DBType() == "sqlite3" {
+			t.Skip("No transactions support int sqlite")
+		}
+
 		newBoard1 := &model.Board{
 			ID:     utils.NewID(utils.IDTypeBoard),
 			TeamID: teamID,
@@ -412,6 +424,10 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 	})
 
 	t.Run("should not delete anything if a block doesn't exist", func(t *testing.T) {
+		if store.DBType() == "sqlite3" {
+			t.Skip("No transactions support int sqlite")
+		}
+
 		newBoard1 := &model.Board{
 			ID:     utils.NewID(utils.IDTypeBoard),
 			TeamID: teamID,

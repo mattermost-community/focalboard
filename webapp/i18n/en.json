@@ -201,7 +201,7 @@
   "SidebarCategories.CategoryMenu.Delete": "Delete Category",
   "SidebarCategories.CategoryMenu.DeleteModal.Body": "Boards in <b>{categoryName}</b> will move back to the Boards categories. You're not removed from any boards.",
   "SidebarCategories.CategoryMenu.DeleteModal.Title": "Delete this category?",
-  "SidebarCategories.CategoryMenu.Update": "SidebarCategories.CategoryMenu.Update",
+  "SidebarCategories.CategoryMenu.Update": "Rename Category",
   "TableComponent.add-icon": "Add icon",
   "TableComponent.name": "Name",
   "TableComponent.plus-new": "+ New",
