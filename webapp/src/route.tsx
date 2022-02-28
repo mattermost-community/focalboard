@@ -30,7 +30,7 @@ function FBRoute(props: RouteProps) {
         originalPath = props.getOriginalPath(match)
     }
 
-    if (Utils.isFocalboardPlugin() && loggedIn === true && !UserSettings.welcomePageViewed) {
+    if (Utils.isFocalboardPlugin() && props.path !== '/welcome' && loggedIn === true && !UserSettings.welcomePageViewed) {
         if (originalPath) {
             return <Redirect to={`/welcome?r=${originalPath}`}/>
         }

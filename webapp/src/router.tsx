@@ -86,10 +86,12 @@ function GlobalErrorRedirect() {
 }
 
 const FocalboardRouter = (): JSX.Element => {
+    const isPlugin = Utils.isFocalboardPlugin()
+
     const browserHistory: ReturnType<typeof createBrowserHistory> = useMemo(() => {
         const history = createBrowserHistory({basename: Utils.getFrontendBaseURL()})
 
-        if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
+        if (Utils.isDesktop() && isPlugin) {
             window.addEventListener('message', (event: MessageEvent) => {
                 if (event.origin !== window.location.origin) {
                     return
@@ -107,7 +109,7 @@ const FocalboardRouter = (): JSX.Element => {
         return {
             ...history,
             push: (path: string, state?: unknown) => {
-                if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
+                if (Utils.isDesktop() && isPlugin) {
                     window.postMessage(
                         {
                             type: 'browser-history-push',
@@ -124,7 +126,7 @@ const FocalboardRouter = (): JSX.Element => {
         }
     }, [])
 
-    if (Utils.isFocalboardPlugin()) {
+    if (isPlugin) {
         useEffect(() => {
             if (window.frontendBaseURL) {
                 browserHistory.replace(window.location.pathname.replace(window.frontendBaseURL, ''))
@@ -136,25 +138,36 @@ const FocalboardRouter = (): JSX.Element => {
         <Router history={browserHistory}>
             <GlobalErrorRedirect/>
             <Switch>
-                {Utils.isFocalboardPlugin() &&
+                {isPlugin &&
                     <HomeToCurrentTeam
                         path='/'
                         exact={true}
                     />}
+                {isPlugin &&
+                    <FBRoute
+                        exact={true}
+                        path='/welcome'
+                    >
+                        <WelcomePage/>
+                    </FBRoute>}
 
                 <FBRoute path='/error'>
                     <ErrorPage/>
                 </FBRoute>
 
-                <FBRoute path='/login'>
-                    <LoginPage/>
-                </FBRoute>
-                <FBRoute path='/register'>
-                    <RegisterPage/>
-                </FBRoute>
-                <FBRoute path='/change_password'>
-                    <ChangePasswordPage/>
-                </FBRoute>
+                {!isPlugin &&
+                    <FBRoute path='/login'>
+                        <LoginPage/>
+                    </FBRoute>}
+                {!isPlugin &&
+                    <FBRoute path='/register'>
+                        <RegisterPage/>
+                    </FBRoute>}
+                {!isPlugin &&
+                    <FBRoute path='/change_password'>
+                        <ChangePasswordPage/>
+                    </FBRoute>}
+
                 <FBRoute path='/shared/:boardId?/:viewId?/:cardId?'>
                     <BoardPage readonly={true}/>
                 </FBRoute>
@@ -179,14 +192,8 @@ const FocalboardRouter = (): JSX.Element => {
                 >
                     <BoardPage/>
                 </FBRoute>
-                <FBRoute
-                    exact={true}
-                    path='/welcome'
-                >
-                    <WelcomePage/>
-                </FBRoute>
 
-                {!Utils.isFocalboardPlugin() &&
+                {!isPlugin &&
                     <FBRoute
                         path='/:boardId?/:viewId?/:cardId?'
                         loginRequired={true}
