@@ -18,6 +18,7 @@ import undoManager from './undomanager'
 import {Utils, IDType} from './utils'
 import {UserSettings} from './userSettings'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/telemetryClient'
+import {UserConfigPatch} from './user'
 import store from './store'
 import {updateBoards} from './store/boards'
 import {updateViews} from './store/views'
@@ -714,6 +715,10 @@ class Mutator {
             'follow block',
             this.undoGroupId,
         )
+    }
+
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
+        return octoClient.patchUserConfig(userID, patch)
     }
 
     // Duplicate

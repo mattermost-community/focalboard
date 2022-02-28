@@ -27,6 +27,11 @@ func (s *SQLStore) CleanUpSessions(expireTime int64) error {
 
 }
 
+func (s *SQLStore) CreatePrivateWorkspace(userID string) (string, error) {
+	return s.createPrivateWorkspace(s.db, userID)
+
+}
+
 func (s *SQLStore) CreateSession(session *model.Session) error {
 	return s.createSession(s.db, session)
 
@@ -349,6 +354,11 @@ func (s *SQLStore) PatchBlocks(c store.Container, blockPatches *model.BlockPatch
 	}
 
 	return nil
+
+}
+
+func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
+	return s.patchUserProps(s.db, userID, patch)
 
 }
 

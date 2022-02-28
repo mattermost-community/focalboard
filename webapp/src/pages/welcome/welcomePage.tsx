@@ -10,34 +10,90 @@ import BoardWelcomeSmallPNG from '../../../static/boards-welcome-small.png'
 
 import Button from '../../widgets/buttons/button'
 import CompassIcon from '../../widgets/icons/compassIcon'
-import {UserSettings} from '../../userSettings'
 import {Utils} from '../../utils'
 
 import './welcomePage.scss'
+import mutator from '../../mutator'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
+import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
+import {fetchMe, getMe, patchProps} from '../../store/users'
+import octoClient from '../../octoClient'
+import {FINISHED, TOUR_ORDER} from '../../components/onboardingTour'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import {UserSettingKey} from '../../userSettings'
 
 const WelcomePage = () => {
     const history = useHistory()
     const queryString = new URLSearchParams(useLocation().search)
+    const me = useAppSelector<IUser|null>(getMe)
+    const dispatch = useAppDispatch()
+
+    const setWelcomePageViewed = async (userID: string):Promise<any> => {
+        const patch: UserConfigPatch = {}
+        patch.updatedFields = {}
+        patch.updatedFields[UserPropPrefix + UserSettingKey.WelcomePageViewed] = '1'
+
+        const updatedProps = await mutator.patchUserConfig(userID, patch)
+        if (updatedProps) {
+            return dispatch(patchProps(updatedProps))
+        }
+
+        return Promise.resolve()
+    }
 
     const goForward = () => {
-        UserSettings.welcomePageViewed = 'true'
-
         if (queryString.get('r')) {
             history.replace(queryString.get('r')!)
             return
         }
 
-        history.replace('/dashboard')
+        const nextURL = Utils.isFocalboardPlugin() ? '/dashboard' : '/'
+        history.replace(nextURL)
     }
 
-    if (UserSettings.welcomePageViewed) {
+    const skipTour = async () => {
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.SkipTour)
+
+        if (me) {
+            await setWelcomePageViewed(me.id)
+            const patch: UserConfigPatch = {
+                updatedFields: {
+                    focalboard_tourCategory: TOUR_ORDER[TOUR_ORDER.length - 1],
+                    focalboard_onboardingTourStep: FINISHED.toString(),
+                },
+            }
+
+            const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+            if (patchedProps) {
+                await dispatch(patchProps(patchedProps))
+            }
+        }
+
+        goForward()
+    }
+
+    const startTour = async () => {
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.StartTour)
+
+        if (!me) {
+            return
+        }
+
+        await setWelcomePageViewed(me.id)
+        const onboardingData = await octoClient.prepareOnboarding()
+        await dispatch(fetchMe())
+        const newPath = `/workspace/${onboardingData?.workspaceID}/${onboardingData?.boardID}`
+        history.replace(newPath)
+    }
+
+    if (me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
         goForward()
         return null
     }
 
     return (
         <div className='WelcomePage'>
-            <div>
+            <div className='wrapper'>
                 <h1 className='text-heading9'>
                     <FormattedMessage
                         id='WelcomePage.Heading'
@@ -66,7 +122,7 @@ const WelcomePage = () => {
                 />
 
                 <Button
-                    onClick={goForward}
+                    onClick={startTour}
                     filled={true}
                     size='large'
                     icon={
@@ -78,9 +134,19 @@ const WelcomePage = () => {
                 >
                     <FormattedMessage
                         id='WelcomePage.Explore.Button'
-                        defaultMessage='Explore'
+                        defaultMessage='Take a tour'
                     />
                 </Button>
+
+                <a
+                    className='skip'
+                    onClick={skipTour}
+                >
+                    <FormattedMessage
+                        id='WelcomePage.NoThanks.Text'
+                        defaultMessage="No thanks, I'll figure it out myself"
+                    />
+                </a>
             </div>
         </div>
     )

@@ -87,6 +87,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
 	apiv1.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
 	apiv1.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
+	apiv1.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
 
 	apiv1.HandleFunc("/login", a.handleLogin).Methods("POST")
 	apiv1.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
@@ -106,6 +107,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
+
+	// onboarding tour endpoints
+	apiv1.HandleFunc("/onboard", a.sessionRequired(a.handleOnboard)).Methods(http.MethodPost)
 
 	// archives
 	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/export", a.sessionRequired(a.handleArchiveExport)).Methods("GET")
@@ -333,25 +337,6 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func stampModificationMetadata(r *http.Request, blocks []model.Block, auditRec *audit.Record) {
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	userID := session.UserID
-	if userID == model.SingleUser {
-		userID = ""
-	}
-
-	now := utils.GetMillis()
-	for i := range blocks {
-		blocks[i].ModifiedBy = userID
-		blocks[i].UpdateAt = now
-
-		if auditRec != nil {
-			auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), blocks[i])
-		}
-	}
-}
-
 func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks updateBlocks
 	//
@@ -436,10 +421,11 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
-	stampModificationMetadata(r, blocks, auditRec)
-
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	model.StampModificationMetadata(userID, blocks, auditRec)
 
 	// this query param exists when creating template from board, or board from template
 	sourceBoardID := r.URL.Query().Get("sourceBoardID")
@@ -467,6 +453,80 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, json)
 
 	auditRec.AddMeta("blockCount", len(blocks))
+	auditRec.Success()
+}
+
+func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation PATCH /api/v1/users/{userID}/config updateUserConfig
+	//
+	// Updates user config
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: userID
+	//   in: path
+	//   description: User ID
+	//   required: true
+	//   type: string
+	// - name: Body
+	//   in: body
+	//   description: User config patch to apply
+	//   required: true
+	//   schema:
+	//     "$ref": "#/definitions/UserPropPatch"
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var patch *model.UserPropPatch
+	err = json.Unmarshal(requestBody, &patch)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	vars := mux.Vars(r)
+	userID := vars["userID"]
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	auditRec := a.makeAuditRecord(r, "updateUserConfig", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	// a user can update only own config
+	if userID != session.UserID {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	updatedConfig, err := a.app.UpdateUserConfig(userID, *patch)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(updatedConfig)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
 	auditRec.Success()
 }
 
@@ -1693,6 +1753,47 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 
 	auditRec.AddMeta("subscription_count", len(subs))
 	auditRec.Success()
+}
+
+func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/onboard onboard
+	//
+	// Onboards a user on Boards.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//         "$ref": "#/definitions/OnboardingResponse"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	workspaceID, boardID, err := a.app.PrepareOnboardingTour(session.UserID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	response := map[string]string{
+		"workspaceID": workspaceID,
+		"boardID":     boardID,
+	}
+	data, err := json.Marshal(response)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
 }
 
 // Response helpers

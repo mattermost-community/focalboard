@@ -134,14 +134,13 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                     title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
                                 >
                                     <IconButton
+                                        size='small'
                                         onClick={onRegenerateToken}
                                         icon={
                                             <CompassIcon
                                                 icon='refresh'
-                                                className='Icon Icon--right'
                                             />}
                                         title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
-                                        className='IconButton--large'
                                     />
                                 </Tooltip>
                             </div>
@@ -149,16 +148,18 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                 emphasis='secondary'
                                 size='medium'
                                 title='Copy link'
+                                icon={
+                                    <CompassIcon
+                                        icon='content-copy'
+                                        className='CompassIcon'
+                                    />
+                                }
                                 onClick={() => {
                                     TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: props.boardId})
                                     Utils.copyTextToClipboard(shareUrl.toString())
                                     setWasCopied(true)
                                 }}
                             >
-                                <CompassIcon
-                                    icon='content-copy'
-                                    className='CompassIcon'
-                                />
                                 {wasCopied &&
                                     <FormattedMessage
                                         id='ShareBoard.copiedLink'

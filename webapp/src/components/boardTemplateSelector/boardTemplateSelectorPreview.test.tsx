@@ -103,8 +103,21 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
         jest.clearAllMocks()
         const state = {
             searchText: {value: ''},
-            users: {me: {id: 'user-id'}},
-            cards: {templates: []},
+            users: {
+                me: {
+                    id: 'user-id',
+                    props: {
+                        focalboard_onboardingTourStarted: false,
+                    },
+                },
+            },
+            cards: {
+                templates: [],
+                cards: {
+                    card_id_1: {title: 'Create a new card'},
+                },
+                current: 'card_id_1',
+            },
             views: {views: []},
             contents: {contents: []},
             comments: {comments: []},

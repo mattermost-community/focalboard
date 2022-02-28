@@ -60,6 +60,7 @@ type Store interface {
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
 	GetUsersByWorkspace(workspaceID string) ([]*model.User, error)
+	PatchUserProps(userID string, patch model.UserPropPatch) error
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
@@ -78,6 +79,7 @@ type Store interface {
 	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
 	GetWorkspaceCount() (int64, error)
 	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
+	CreatePrivateWorkspace(userID string) (string, error)
 
 	CreateSubscription(c Container, sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(c Container, blockID string, subscriberID string) error

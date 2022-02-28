@@ -50,6 +50,21 @@ func (mr *MockStoreMockRecorder) CleanUpSessions(arg0 interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CleanUpSessions", reflect.TypeOf((*MockStore)(nil).CleanUpSessions), arg0)
 }
 
+// CreatePrivateWorkspace mocks base method.
+func (m *MockStore) CreatePrivateWorkspace(arg0 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePrivateWorkspace", arg0)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreatePrivateWorkspace indicates an expected call of CreatePrivateWorkspace.
+func (mr *MockStoreMockRecorder) CreatePrivateWorkspace(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePrivateWorkspace", reflect.TypeOf((*MockStore)(nil).CreatePrivateWorkspace), arg0)
+}
+
 // CreateSession mocks base method.
 func (m *MockStore) CreateSession(arg0 *model.Session) error {
 	m.ctrl.T.Helper()
@@ -758,6 +773,20 @@ func (m *MockStore) PatchBlocks(arg0 store.Container, arg1 *model.BlockPatchBatc
 func (mr *MockStoreMockRecorder) PatchBlocks(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchBlocks", reflect.TypeOf((*MockStore)(nil).PatchBlocks), arg0, arg1, arg2)
+}
+
+// PatchUserProps mocks base method.
+func (m *MockStore) PatchUserProps(arg0 string, arg1 model.UserPropPatch) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PatchUserProps", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PatchUserProps indicates an expected call of PatchUserProps.
+func (mr *MockStoreMockRecorder) PatchUserProps(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchUserProps", reflect.TypeOf((*MockStore)(nil).PatchUserProps), arg0, arg1)
 }
 
 // RefreshSession mocks base method.

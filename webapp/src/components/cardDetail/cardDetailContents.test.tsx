@@ -60,6 +60,18 @@ describe('components/cardDetail/cardDetailContents', () => {
                 5: {username: 'g'},
             },
         },
+        boards: {
+            boards: {
+                [board.id]: board,
+            },
+            current: board.id,
+        },
+        cards: {
+            cards: {
+                [card.id]: card,
+            },
+            current: card.id,
+        },
     }
     const store = mockStateStore([], state)
     const wrap = (child: ReactNode): ReactElement => (

@@ -14,7 +14,10 @@ import {MarkdownEditor} from '../markdownEditor'
 import {IUser} from '../../user'
 import {getMe} from '../../store/users'
 
+import AddCommentTourStep from '../onboardingTour/addComments/addComments'
+
 import Comment from './comment'
+
 import './commentsList.scss'
 
 type Props = {
@@ -75,6 +78,8 @@ const CommentsList = (props: Props) => {
                 />
             </Button>
             }
+
+            <AddCommentTourStep/>
         </div>
     )
 
