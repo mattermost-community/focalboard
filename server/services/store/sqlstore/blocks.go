@@ -191,7 +191,7 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, boardID string, blockID string,
 		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"l3.board_id": boardID}).
-		OrderBy("insert_at")
+		OrderBy("l1.insert_at")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -249,84 +249,6 @@ func getIsTemplateFilter(dbType string) (sq.Sqlizer, error) {
 	default:
 		return nil, fmt.Errorf("invalid dbType")
 	}
-}
-
-// getAllBoardTemplateBlocks is used to run a data migration. After
-// the migration is run, the board templates should live on the boards
-// table and not on the blocks table.
-func (s *SQLStore) getAllBoardTemplateBlocks(db sq.BaseRunner) ([]model.Block, []model.Block, error) {
-	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"type": legacyTypeBoard})
-
-	filter, err := getIsTemplateFilter(s.dbType)
-	if err != nil {
-		return nil, nil, err
-	}
-	query = query.Where(filter)
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`getAllBoardTemplateBlocks ERROR`, mlog.Err(err))
-		return nil, nil, err
-	}
-	defer s.CloseRows(rows)
-
-	boardTemplateBlocks, err := s.blocksFromRows(rows)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	historyQuery := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks_history").
-		Where(sq.Eq{"type": legacyTypeBoard}).
-		Where(filter)
-
-	historyRows, err := historyQuery.Query()
-	if err != nil {
-		s.logger.Error(`getAllBoardTemplateBlocks ERROR`, mlog.Err(err))
-
-		return nil, nil, err
-	}
-	defer s.CloseRows(historyRows)
-
-	boardTemplateHistoryBlocks, err := s.blocksFromRows(historyRows)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return boardTemplateBlocks, boardTemplateHistoryBlocks, nil
-}
-
-// deleteAllBoardTemplateBlocks is used to run a data migration, and
-// it's related to the getAllBoardTemplateBlocks (see its docstring)
-func (s *SQLStore) deleteAllBoardTemplateBlocks(db sq.BaseRunner) error {
-	query := s.getQueryBuilder(db).
-		Delete(s.tablePrefix + "blocks").
-		Where(sq.Eq{"type": legacyTypeBoard})
-
-	filter, err := getIsTemplateFilter(s.dbType)
-	if err != nil {
-		return err
-	}
-	query = query.Where(filter)
-
-	if _, err := query.Exec(); err != nil {
-		return err
-	}
-
-	historyQuery := s.getQueryBuilder(db).
-		Delete(s.tablePrefix + "blocks").
-		Where(sq.Eq{"type": legacyTypeBoard}).
-		Where(filter)
-
-	if _, err := historyQuery.Exec(); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
@@ -482,6 +404,7 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 			return err
 		}
 	} else {
+		block.CreatedBy = userID
 		query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "blocks")
 		if _, err := query.Exec(); err != nil {
 			return err

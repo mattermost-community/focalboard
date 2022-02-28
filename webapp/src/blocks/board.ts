@@ -27,7 +27,6 @@ type Board = {
     showDescription: boolean
     isTemplate: boolean
     templateVersion: number
-    templateTrackingCode: string
     properties: Record<string, string | string[]>
     cardProperties: IPropertyTemplate[]
     columnCalculations: Record<string, string>
@@ -131,7 +130,6 @@ function createBoard(board?: Board): Board {
         showDescription: board?.showDescription || false,
         isTemplate: board?.isTemplate || false,
         templateVersion: board?.templateVersion || 0,
-        templateTrackingCode: board?.templateTrackingCode || '',
         properties: board?.properties || {},
         cardProperties,
         columnCalculations: board?.columnCalculations || {},

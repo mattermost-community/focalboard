@@ -645,6 +645,7 @@ func testUndeleteBlock(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 		require.Nil(t, block)
 
+		time.Sleep(1 * time.Millisecond)
 		err = store.UndeleteBlock("block1", userID)
 		require.NoError(t, err)
 

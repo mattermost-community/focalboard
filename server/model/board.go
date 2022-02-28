@@ -63,10 +63,6 @@ type Board struct {
 	// required: false
 	TemplateVersion int `json:"templateVersion"`
 
-	// Marks the template boards
-	// required: false
-	TemplateTrackingCode string `json:"templateTrackingCode"`
-
 	// The properties of the board
 	// required: false
 	Properties map[string]interface{} `json:"properties"`
