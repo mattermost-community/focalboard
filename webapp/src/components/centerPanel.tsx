@@ -158,6 +158,7 @@ class CenterPanel extends React.Component<Props, State> {
                         {!this.props.readonly && this.props.showShared &&
                             <ShareBoardButton
                                 boardId={this.props.board.id}
+                                enableSharedBoards={this.props.clientConfig?.enablePublicSharedBoards || false}
                             />
                         }
                     </div>

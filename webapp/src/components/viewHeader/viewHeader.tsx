@@ -61,8 +61,6 @@ const ViewHeader = (props: Props) => {
 
     const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
 
-    const [showShareDialog, setShowShareDialog] = useState(false)
-
     return (
         <div className='ViewHeader'>
             <Editable
@@ -175,8 +173,6 @@ const ViewHeader = (props: Props) => {
                     />
                 </>
             }
-
-            {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>}
         </div>
     )
 }

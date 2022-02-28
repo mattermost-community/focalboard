@@ -15,6 +15,7 @@ import ShareBoardDialog from './shareBoard'
 
 type Props = {
     boardId: string
+    enableSharedBoards: boolean
 }
 const ShareBoardButton = (props: Props) => {
     const [showShareDialog, setShowShareDialog] = useState(false)
@@ -40,7 +41,10 @@ const ShareBoardButton = (props: Props) => {
                 />
             </Button>
             {showShareDialog &&
-                <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>
+                <ShareBoardDialog
+                    onClose={() => setShowShareDialog(false)}
+                    enableSharedBoards={props.enableSharedBoards}
+                />
             }
         </div>
     )

@@ -40,6 +40,7 @@ import './shareBoard.scss'
 
 type Props = {
     onClose: () => void
+    enableSharedBoards: boolean
 }
 
 const baseStyles = getSelectBaseStyle()
@@ -197,77 +198,79 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                 })}
             </div>
 
-            <div className='tabs-modal'>
-                <div>
-                    <div className='d-flex justify-content-between'>
-                        <div className='d-flex flex-column'>
-                            <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.PublishTitle', defaultMessage: 'Publish to the web'})}</div>
-                            <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.PublishDescription', defaultMessage: 'Publish and share a “read only” link with everyone on the web'})}</div>
-                        </div>
-                        <div>
-                            <Switch
-                                isOn={isSharing}
-                                size='medium'
-                                onChanged={onShareChanged}
-                            />
+            {props.enableSharedBoards &&
+                (<div className='tabs-modal'>
+                    <div>
+                        <div className='d-flex justify-content-between'>
+                            <div className='d-flex flex-column'>
+                                <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.PublishTitle', defaultMessage: 'Publish to the web'})}</div>
+                                <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.PublishDescription', defaultMessage: 'Publish and share a “read only” link with everyone on the web'})}</div>
+                            </div>
+                            <div>
+                                <Switch
+                                    isOn={isSharing}
+                                    size='medium'
+                                    onChanged={onShareChanged}
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
-                {isSharing &&
-                        (<div className='d-flex justify-content-between tabs-inputs'>
-                            <div className='d-flex input-container'>
-                                <a
-                                    className='shareUrl'
-                                    href={shareUrl.toString()}
-                                    target='_blank'
-                                    rel='noreferrer'
-                                >
-                                    {shareUrl.toString()}
-                                </a>
-                                <Tooltip
-                                    key={'regenerateToken'}
-                                    title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
-                                >
-                                    <IconButton
-                                        onClick={onRegenerateToken}
-                                        icon={
-                                            <CompassIcon
-                                                icon='refresh'
-                                                className='Icon Icon--right'
-                                            />}
+                    {isSharing &&
+                            (<div className='d-flex justify-content-between tabs-inputs'>
+                                <div className='d-flex input-container'>
+                                    <a
+                                        className='shareUrl'
+                                        href={shareUrl.toString()}
+                                        target='_blank'
+                                        rel='noreferrer'
+                                    >
+                                        {shareUrl.toString()}
+                                    </a>
+                                    <Tooltip
+                                        key={'regenerateToken'}
                                         title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
-                                        className='IconButton--large'
+                                    >
+                                        <IconButton
+                                            onClick={onRegenerateToken}
+                                            icon={
+                                                <CompassIcon
+                                                    icon='refresh'
+                                                    className='Icon Icon--right'
+                                                />}
+                                            title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
+                                            className='IconButton--large'
+                                        />
+                                    </Tooltip>
+                                </div>
+                                <Button
+                                    emphasis='secondary'
+                                    size='medium'
+                                    title='Copy link'
+                                    onClick={() => {
+                                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: board.id})
+                                        Utils.copyTextToClipboard(shareUrl.toString())
+                                        setWasCopied(true)
+                                    }}
+                                >
+                                    <CompassIcon
+                                        icon='content-copy'
+                                        className='CompassIcon'
                                     />
-                                </Tooltip>
-                            </div>
-                            <Button
-                                emphasis='secondary'
-                                size='medium'
-                                title='Copy link'
-                                onClick={() => {
-                                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: board.id})
-                                    Utils.copyTextToClipboard(shareUrl.toString())
-                                    setWasCopied(true)
-                                }}
-                            >
-                                <CompassIcon
-                                    icon='content-copy'
-                                    className='CompassIcon'
-                                />
-                                {wasCopied &&
-                                    <FormattedMessage
-                                        id='ShareBoard.copiedLink'
-                                        defaultMessage='Copied!'
-                                    />}
-                                {!wasCopied &&
-                                    <FormattedMessage
-                                        id='ShareBoard.copyLink'
-                                        defaultMessage='Copy link'
-                                    />}
-                            </Button>
-                        </div>)
-                }
-            </div>
+                                    {wasCopied &&
+                                        <FormattedMessage
+                                            id='ShareBoard.copiedLink'
+                                            defaultMessage='Copied!'
+                                        />}
+                                    {!wasCopied &&
+                                        <FormattedMessage
+                                            id='ShareBoard.copyLink'
+                                            defaultMessage='Copy link'
+                                        />}
+                                </Button>
+                            </div>)
+                    }
+                </div>)
+            }
         </Dialog>
     )
 }

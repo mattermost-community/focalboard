@@ -140,6 +140,7 @@ const boardsSlice = createSlice({
             })
         })
         builder.addCase(fetchBoardMembers.fulfilled, (state, action) => {
+            console.log('fetchBoardMembers fulfilled')
             if (action.payload.length === 0) {
                 return
             }
@@ -151,6 +152,8 @@ const boardsSlice = createSlice({
                 acc[val.userId] = val
                 return acc
             }, {})
+            console.log('membersInBoards ' + Object.keys(boardMembersMap).length)
+
             state.membersInBoards[boardId] = boardMembersMap
         })
         builder.addCase(updateMembersEnsuringBoardsAndUsers.fulfilled, updateMembers)
