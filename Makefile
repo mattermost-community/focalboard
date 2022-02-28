@@ -114,7 +114,7 @@ watch-server-test: modd-precheck ## Run server tests watching for changes
 server-test: server-test-sqlite server-test-mysql server-test-postgres ## Run server tests
 
 server-test-sqlite: ## Run server tests using sqlite
-	cd server; go test -tags='$(BUILD_TAGS)' -race -v -count=1 ./...
+	cd server; go test -tags '$(BUILD_TAGS)' -race -v -count=1 ./...
 
 server-test-mysql: export FB_UNIT_TESTING=1
 server-test-mysql: export FB_STORE_TEST_DB_TYPE=mysql
