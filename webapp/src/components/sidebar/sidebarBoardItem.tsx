@@ -163,7 +163,7 @@ const SidebarBoardItem = (props: Props) => {
                                 />
                                 <Menu.Text
                                     id='updateCategory'
-                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'SidebarCategories.CategoryMenu.Update'})}
+                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'Rename Category'})}
                                     icon={<Update/>}
                                     onClick={handleUpdateCategory}
                                 />
@@ -239,6 +239,12 @@ const SidebarBoardItem = (props: Props) => {
                 showCreateCategoryModal && (
                     <CreateCategory
                         onClose={() => setShowCreateCategoryModal(false)}
+                        title={(
+                            <FormattedMessage
+                                id='SidebarCategories.CategoryMenu.CreateNew'
+                                defaultMessage='Create New Category'
+                            />
+                        )}
                         onCreate={async (name) => {
                             if (!me) {
                                 Utils.logError('me not initialized')
@@ -262,6 +268,12 @@ const SidebarBoardItem = (props: Props) => {
                 showUpdateCategoryModal && (
                     <CreateCategory
                         initialValue={props.categoryBlocks.name}
+                        title={(
+                            <FormattedMessage
+                                id='SidebarCategories.CategoryMenu.Update'
+                                defaultMessage='Rename Category'
+                            />
+                        )}
                         onClose={() => setShowUpdateCategoryModal(false)}
                         onCreate={async (name) => {
                             if (!me) {

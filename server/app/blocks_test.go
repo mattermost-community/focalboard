@@ -61,3 +61,75 @@ func TestPatchBlocks(t *testing.T) {
 		require.Error(t, err, "error")
 	})
 }
+
+func TestDeleteBlock(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	t.Run("success scenerio", func(t *testing.T) {
+		boardID := "board-id"
+		board := &model.Board{ID: boardID}
+		block := model.Block{
+			ID:      "block-id",
+			BoardID: board.ID,
+		}
+		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
+		th.Store.EXPECT().DeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(nil)
+		th.Store.EXPECT().GetBoard(gomock.Eq("board-id")).Return(board, nil)
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+		err := th.App.DeleteBlock("block-id", "user-id-1")
+		require.NoError(t, err)
+	})
+
+	t.Run("error scenerio", func(t *testing.T) {
+		boardID := "board-id"
+		board := &model.Board{ID: boardID}
+		block := model.Block{
+			ID:      "block-id",
+			BoardID: board.ID,
+		}
+		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
+		th.Store.EXPECT().DeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(blockError{"error"})
+		th.Store.EXPECT().GetBoard(gomock.Eq("board-id")).Return(board, nil)
+		err := th.App.DeleteBlock("block-id", "user-id-1")
+		require.Error(t, err, "error")
+	})
+}
+
+func TestUndeleteBlock(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	t.Run("success scenerio", func(t *testing.T) {
+		boardID := "board-id"
+		board := &model.Board{ID: boardID}
+		block := model.Block{
+			ID:      "block-id",
+			BoardID: board.ID,
+		}
+		th.Store.EXPECT().GetBlockHistory(
+			gomock.Eq("block-id"),
+			gomock.Eq(model.QueryBlockHistoryOptions{Limit: 1, Descending: true}),
+		).Return([]model.Block{block}, nil)
+		th.Store.EXPECT().UndeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(nil)
+		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+		err := th.App.UndeleteBlock("block-id", "user-id-1")
+		require.NoError(t, err)
+	})
+
+	t.Run("error scenerio", func(t *testing.T) {
+		block := model.Block{
+			ID: "block-id",
+		}
+		th.Store.EXPECT().GetBlockHistory(
+			gomock.Eq("block-id"),
+			gomock.Eq(model.QueryBlockHistoryOptions{Limit: 1, Descending: true}),
+		).Return([]model.Block{block}, nil)
+		th.Store.EXPECT().UndeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(blockError{"error"})
+		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
+		err := th.App.UndeleteBlock("block-id", "user-id-1")
+		require.Error(t, err, "error")
+	})
+}

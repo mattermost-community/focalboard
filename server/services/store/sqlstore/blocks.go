@@ -142,7 +142,8 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string,
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
-		Where(sq.Eq{"board_id": boardID})
+		Where(sq.Eq{"board_id": boardID}).
+		OrderBy("insert_at")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -189,7 +190,8 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, boardID string, blockID string,
 		Join(s.tablePrefix + "blocks" + " as l2 on l2.parent_id = l1.id or l2.id = l1.id").
 		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
-		Where(sq.Eq{"l3.board_id": boardID})
+		Where(sq.Eq{"l3.board_id": boardID}).
+		OrderBy("l1.insert_at")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -247,84 +249,6 @@ func getIsTemplateFilter(dbType string) (sq.Sqlizer, error) {
 	default:
 		return nil, fmt.Errorf("invalid dbType")
 	}
-}
-
-// getAllBoardTemplateBlocks is used to run a data migration. After
-// the migration is run, the board templates should live on the boards
-// table and not on the blocks table.
-func (s *SQLStore) getAllBoardTemplateBlocks(db sq.BaseRunner) ([]model.Block, []model.Block, error) {
-	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"type": legacyTypeBoard})
-
-	filter, err := getIsTemplateFilter(s.dbType)
-	if err != nil {
-		return nil, nil, err
-	}
-	query = query.Where(filter)
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`getAllBoardTemplateBlocks ERROR`, mlog.Err(err))
-		return nil, nil, err
-	}
-	defer s.CloseRows(rows)
-
-	boardTemplateBlocks, err := s.blocksFromRows(rows)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	historyQuery := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks_history").
-		Where(sq.Eq{"type": legacyTypeBoard}).
-		Where(filter)
-
-	historyRows, err := historyQuery.Query()
-	if err != nil {
-		s.logger.Error(`getAllBoardTemplateBlocks ERROR`, mlog.Err(err))
-
-		return nil, nil, err
-	}
-	defer s.CloseRows(historyRows)
-
-	boardTemplateHistoryBlocks, err := s.blocksFromRows(historyRows)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return boardTemplateBlocks, boardTemplateHistoryBlocks, nil
-}
-
-// deleteAllBoardTemplateBlocks is used to run a data migration, and
-// it's related to the getAllBoardTemplateBlocks (see its docstring)
-func (s *SQLStore) deleteAllBoardTemplateBlocks(db sq.BaseRunner) error {
-	query := s.getQueryBuilder(db).
-		Delete(s.tablePrefix + "blocks").
-		Where(sq.Eq{"type": legacyTypeBoard})
-
-	filter, err := getIsTemplateFilter(s.dbType)
-	if err != nil {
-		return err
-	}
-	query = query.Where(filter)
-
-	if _, err := query.Exec(); err != nil {
-		return err
-	}
-
-	historyQuery := s.getQueryBuilder(db).
-		Delete(s.tablePrefix + "blocks").
-		Where(sq.Eq{"type": legacyTypeBoard}).
-		Where(filter)
-
-	if _, err := historyQuery.Exec(); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
@@ -424,6 +348,9 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 		return err
 	}
 
+	block.UpdateAt = utils.GetMillis()
+	block.ModifiedBy = userID
+
 	insertQuery := s.getQueryBuilder(db).Insert("").
 		Columns(
 			"channel_id",
@@ -450,15 +377,12 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 		"title":                 block.Title,
 		"fields":                fieldsJSON,
 		"delete_at":             block.DeleteAt,
-		"created_by":            block.CreatedBy,
+		"created_by":            userID,
 		"modified_by":           block.ModifiedBy,
-		"create_at":             block.CreateAt,
+		"create_at":             utils.GetMillis(),
 		"update_at":             block.UpdateAt,
 		"board_id":              block.BoardID,
 	}
-
-	block.UpdateAt = utils.GetMillis()
-	block.ModifiedBy = userID
 
 	if existingBlock != nil {
 		// block with ID exists, so this is an update operation
@@ -481,15 +405,6 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 		}
 	} else {
 		block.CreatedBy = userID
-		block.CreateAt = utils.GetMillis()
-		block.ModifiedBy = userID
-		block.UpdateAt = utils.GetMillis()
-
-		insertQueryValues["created_by"] = block.CreatedBy
-		insertQueryValues["create_at"] = block.CreateAt
-		insertQueryValues["update_at"] = block.UpdateAt
-		insertQueryValues["modified_by"] = block.ModifiedBy
-
 		query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "blocks")
 		if _, err := query.Exec(); err != nil {
 			return err
@@ -529,6 +444,11 @@ func (s *SQLStore) patchBlocks(db sq.BaseRunner, blockPatches *model.BlockPatchB
 }
 
 func (s *SQLStore) insertBlocks(db sq.BaseRunner, blocks []model.Block, userID string) error {
+	for _, block := range blocks {
+		if block.BoardID == "" {
+			return BoardIDNilError{}
+		}
+	}
 	for i := range blocks {
 		err := s.insertBlock(db, &blocks[i], userID)
 		if err != nil {
@@ -593,6 +513,74 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy stri
 		Where(sq.Eq{"id": blockID})
 
 	if _, err := deleteQuery.Exec(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *SQLStore) undeleteBlock(db sq.BaseRunner, blockID string, modifiedBy string) error {
+	blocks, err := s.getBlockHistory(db, blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return err
+	}
+
+	if len(blocks) == 0 {
+		return nil // deleting non-exiting block is not considered an error (for now)
+	}
+	block := blocks[0]
+
+	if block.DeleteAt == 0 {
+		return nil // undeleting not deleted block is not considered an error (for now)
+	}
+
+	fieldsJSON, err := json.Marshal(block.Fields)
+	if err != nil {
+		return err
+	}
+
+	now := utils.GetMillis()
+	columns := []string{
+		"board_id",
+		"id",
+		"parent_id",
+		s.escapeField("schema"),
+		"type",
+		"title",
+		"fields",
+		"modified_by",
+		"create_at",
+		"update_at",
+		"delete_at",
+		"created_by",
+	}
+
+	values := []interface{}{
+		block.BoardID,
+		block.ID,
+		block.ParentID,
+		block.Schema,
+		block.Type,
+		block.Title,
+		fieldsJSON,
+		modifiedBy,
+		block.CreateAt,
+		now,
+		0,
+		block.CreatedBy,
+	}
+	insertHistoryQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "blocks_history").
+		Columns(columns...).
+		Values(values...)
+	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "blocks").
+		Columns(columns...).
+		Values(values...)
+
+	if _, err := insertHistoryQuery.Exec(); err != nil {
+		return err
+	}
+
+	if _, err := insertQuery.Exec(); err != nil {
 		return err
 	}
 

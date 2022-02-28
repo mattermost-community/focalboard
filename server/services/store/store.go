@@ -26,6 +26,7 @@ type Store interface {
 	// @withTransaction
 	InsertBlocks(blocks []model.Block, userID string) error
 	// @withTransaction
+	UndeleteBlock(blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
 	GetBlock(blockID string) (*model.Block, error)
 	// @withTransaction
@@ -123,6 +124,8 @@ type Store interface {
 
 	RemoveDefaultTemplates(boards []*model.Board) error
 	GetTemplateBoards(teamID string) ([]*model.Board, error)
+
+	DBType() string
 
 	IsErrNotFound(err error) bool
 }

@@ -319,6 +319,14 @@ class OctoClient {
         })
     }
 
+    async undeleteBlock(blockId: string): Promise<Response> {
+        Utils.log(`undeleteBlock: ${blockId}`)
+        return fetch(this.getBaseURL() + this.teamPath() + `/blocks/${encodeURIComponent(blockId)}/undelete`, {
+            method: 'POST',
+            headers: this.headers(),
+        })
+    }
+
     async followBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
         const body: Subscription = {
             teamId: this.teamId,
@@ -574,8 +582,8 @@ class OctoClient {
         return (await this.getJson(response, [])) as IUser[]
     }
 
-    async getTeamTemplates(): Promise<Board[]> {
-        const path = this.teamPath() + '/templates'
+    async getTeamTemplates(teamId?: string): Promise<Board[]> {
+        const path = this.teamPath(teamId) + '/templates'
         return this.getBoardsWithPath(path)
     }
 

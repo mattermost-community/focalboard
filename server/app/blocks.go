@@ -12,7 +12,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-var BlocksFromMultipleBoardsErr = errors.New("the block set contain blocks from multiple boards")
+var ErrBlocksFromMultipleBoards = errors.New("the block set contain blocks from multiple boards")
 
 func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Block, error) {
 	if boardID == "" {
@@ -148,7 +148,7 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 	boardID := blocks[0].BoardID
 	for _, block := range blocks {
 		if block.BoardID != boardID {
-			return nil, BlocksFromMultipleBoardsErr
+			return nil, ErrBlocksFromMultipleBoards
 		}
 	}
 
@@ -282,6 +282,46 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 		a.wsAdapter.BroadcastBlockDelete(board.TeamID, blockID, block.BoardID)
 		a.metrics.IncrementBlocksDeleted(1)
 		a.notifyBlockChanged(notify.Delete, block, block, modifiedBy)
+	}()
+	return nil
+}
+
+func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
+	blocks, err := a.store.GetBlockHistory(blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return err
+	}
+
+	if len(blocks) == 0 {
+		// deleting non-existing block not considered an error
+		return nil
+	}
+
+	err = a.store.UndeleteBlock(blockID, modifiedBy)
+	if err != nil {
+		return err
+	}
+
+	block, err := a.store.GetBlock(blockID)
+	if err != nil {
+		return err
+	}
+
+	board, err := a.store.GetBoard(block.BoardID)
+	if err != nil {
+		return err
+	}
+
+	if block == nil {
+		a.logger.Error("Error loading the block after undelete, not propagating through websockets or notifications")
+		return nil
+	}
+
+	a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
+	a.metrics.IncrementBlocksInserted(1)
+	go func() {
+		a.webhook.NotifyUpdate(*block)
+		a.notifyBlockChanged(notify.Add, block, nil, modifiedBy)
 	}()
 	return nil
 }

@@ -73,7 +73,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	// Board APIs
 	apiv1.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
-	apiv1.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
 	apiv1.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
 	apiv1.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
 	apiv1.HandleFunc("/boards", a.sessionRequired(a.handleCreateBoard)).Methods("POST")
@@ -86,6 +85,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePatchBlocks)).Methods("PATCH")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
+	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/undelete", a.sessionRequired(a.handleUndeleteBlock)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.attachSession(a.handleDuplicateBlock, false)).Methods("POST")
 
@@ -277,16 +277,18 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
+	if board == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "Board not found", nil)
+		return
+	}
 
 	if board.IsTemplate {
 		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-			fmt.Println("FAILING HERE for template", userID, boardID, model.PermissionViewBoard)
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
 			return
 		}
 	} else {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-			fmt.Println("FAILING HERE", userID, boardID, model.PermissionViewBoard)
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 			return
 		}
@@ -877,6 +879,58 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	a.logger.Debug("DELETE Block", mlog.String("boardID", boardID), mlog.String("blockID", blockID))
+	jsonStringResponse(w, http.StatusOK, "{}")
+
+	auditRec.Success()
+}
+
+func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks/{blockID}/undelete undeleteBlock
+	//
+	// Undeletes a block
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: workspaceID
+	//   in: path
+	//   description: Workspace ID
+	//   required: true
+	//   type: string
+	// - name: blockID
+	//   in: path
+	//   description: ID of block to undelete
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	vars := mux.Vars(r)
+	blockID := vars["blockID"]
+
+	auditRec := a.makeAuditRecord(r, "undeleteBlock", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("blockID", blockID)
+
+	err := a.app.UndeleteBlock(blockID, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("UNDELETE Block", mlog.String("blockID", blockID))
 	jsonStringResponse(w, http.StatusOK, "{}")
 
 	auditRec.Success()
@@ -1743,7 +1797,7 @@ func FileUploadResponseFromJSON(data io.Reader) (*FileUploadResponse, error) {
 }
 
 func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards/{boardID}/{rootID}/files uploadFile
+	// swagger:operation POST /api/v1/teams/{teamID}/boards/{boardID}/files uploadFile
 	//
 	// Upload a binary file, attached to a root block
 	//
@@ -1753,14 +1807,14 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: ID of the team
+	//   required: true
+	//   type: string
 	// - name: boardID
 	//   in: path
 	//   description: Board ID
-	//   required: true
-	//   type: string
-	// - name: rootID
-	//   in: path
-	//   description: ID of the root block
 	//   required: true
 	//   type: string
 	// - name: uploaded file
@@ -3051,7 +3105,7 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("patchedUserID", paramsUserID)
 
 	member, err := a.app.UpdateBoardMember(newBoardMember)
-	if errors.Is(err, app.BoardMemberIsLastAdminErr) {
+	if errors.Is(err, app.ErrBoardMemberIsLastAdmin) {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 		return
 	}
@@ -3131,7 +3185,7 @@ func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("addedUserID", paramsUserID)
 
 	deleteErr := a.app.DeleteBoardMember(boardID, paramsUserID)
-	if errors.Is(deleteErr, app.BoardMemberIsLastAdminErr) {
+	if errors.Is(deleteErr, app.ErrBoardMemberIsLastAdmin) {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", deleteErr)
 		return
 	}
