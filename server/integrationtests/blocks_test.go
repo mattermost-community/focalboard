@@ -384,7 +384,7 @@ func TestUndeleteBlock(t *testing.T) {
 
 		blocks, resp := th.Client.GetBlocksForBoard(board.ID)
 		require.NoError(t, resp.Error)
-		require.Empty(t, blocks)
+		require.Len(t, blocks, initialCount)
 	})
 
 	t.Run("Undelete a block", func(t *testing.T) {
