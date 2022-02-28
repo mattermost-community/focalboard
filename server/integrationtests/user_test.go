@@ -217,9 +217,9 @@ func TestTeamUploadFile(t *testing.T) {
 		defer th.TearDown()
 
 		teamID := "0"
-		rootID := utils.NewID(utils.IDTypeBlock)
+		boardID := utils.NewID(utils.IDTypeBoard)
 		data := randomBytes(t, 1024)
-		result, resp := th.Client.TeamUploadFile(teamID, rootID, bytes.NewReader(data))
+		result, resp := th.Client.TeamUploadFile(teamID, boardID, bytes.NewReader(data))
 		require.Error(t, resp.Error)
 		require.Nil(t, result)
 	})
@@ -237,9 +237,8 @@ func TestTeamUploadFile(t *testing.T) {
 		th.CheckOK(resp)
 		require.NotNil(t, board)
 
-		rootID := utils.NewID(utils.IDTypeBlock)
 		data := randomBytes(t, 1024)
-		result, resp := th.Client.TeamUploadFile(board.ID, rootID, bytes.NewReader(data))
+		result, resp := th.Client.TeamUploadFile(teamID, board.ID, bytes.NewReader(data))
 		th.CheckOK(resp)
 		require.NotNil(t, result)
 		require.NotEmpty(t, result.FileID)
@@ -259,11 +258,10 @@ func TestTeamUploadFile(t *testing.T) {
 		th.CheckOK(resp)
 		require.NotNil(t, board)
 
-		rootID := utils.NewID(utils.IDTypeBlock)
 		data := randomBytes(t, 1024)
 
 		// a user that doesn't belong to the board tries to upload the file
-		result, resp := th.Client2.TeamUploadFile(board.ID, rootID, bytes.NewReader(data))
+		result, resp := th.Client2.TeamUploadFile(teamID, board.ID, bytes.NewReader(data))
 		th.CheckForbidden(resp)
 		require.Nil(t, result)
 	})
