@@ -2,7 +2,6 @@ package integrationtests
 
 import (
 	"errors"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"testing"
@@ -35,7 +34,7 @@ type TestHelper struct {
 }
 
 func getTestConfig() (*config.Configuration, error) {
-	dbType, _, err := sqlstore.PrepareNewTestDatabase()
+	dbType, connectionString, err := sqlstore.PrepareNewTestDatabase()
 	if err != nil {
 		return nil, err
 	}
@@ -62,17 +61,11 @@ func getTestConfig() (*config.Configuration, error) {
 		}
 	}`
 
-	dbFile, err := ioutil.TempFile("", "focalboard-test-*.db")
-	if err != nil {
-		panic(err)
-	}
-	dbFile.Close()
-
 	return &config.Configuration{
 		ServerRoot:        "http://localhost:8888",
 		Port:              8888,
 		DBType:            dbType,
-		DBConfigString:    dbFile.Name(),
+		DBConfigString:    connectionString,
 		DBTablePrefix:     "test_",
 		WebPath:           "./pack",
 		FilesDriver:       "local",
