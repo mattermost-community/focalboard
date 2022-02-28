@@ -52,6 +52,18 @@ describe('components/cardDetail/CommentsList', () => {
                     {username: 'username_1'},
                 ],
             },
+            boards: {
+                boards: {
+                    board_id_1: {title: 'Board'},
+                },
+                current: 'board_id_1',
+            },
+            cards: {
+                cards: {
+                    card_id_1: {title: 'Card'},
+                },
+                current: 'card_id_1',
+            },
         })
 
         const component = (

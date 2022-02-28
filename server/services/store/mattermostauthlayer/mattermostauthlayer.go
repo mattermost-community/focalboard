@@ -487,3 +487,15 @@ func (s *MattermostAuthLayer) userWorkspacesFromRows(rows *sql.Rows) ([]model.Us
 
 	return userWorkspaces, nil
 }
+
+func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, error) {
+	// we emulate a private workspace by creating
+	// a DM channel from the user to themselves.
+	channel, err := s.pluginAPI.GetDirectChannel(userID, userID)
+	if err != nil {
+		s.logger.Error("error fetching private workspace", mlog.String("userID", userID), mlog.Err(err))
+		return "", err
+	}
+
+	return channel.Id, nil
+}

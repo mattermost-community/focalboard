@@ -33,6 +33,8 @@ type Store interface {
 	InsertBlocks(c Container, blocks []model.Block, userID string) error
 	// @withTransaction
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
+	// @withTransaction
+	UndeleteBlock(c Container, blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
 	GetBlock(c Container, blockID string) (*model.Block, error)
 	// @withTransaction
@@ -77,6 +79,7 @@ type Store interface {
 	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
 	GetWorkspaceCount() (int64, error)
 	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
+	CreatePrivateWorkspace(userID string) (string, error)
 
 	CreateSubscription(c Container, sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(c Container, blockID string, subscriberID string) error
@@ -93,6 +96,8 @@ type Store interface {
 
 	RemoveDefaultTemplates(blocks []model.Block) error
 	GetDefaultTemplateBlocks() ([]model.Block, error)
+
+	DBType() string
 
 	IsErrNotFound(err error) bool
 }

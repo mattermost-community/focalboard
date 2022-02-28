@@ -22,22 +22,26 @@
         background-color: rgba(var(--center-channel-color-rgb), 0.08);
     }
 
-    .Icon {
+    .CompassIcon {
         align-items: center;
         display: flex;
-        height: 14px;
+        height: 18px;
         justify-content: center;
         margin-right: 0;
-        width: 14px;
+        width: 18px;
+        font-size: 18px;
+
+        &:first-child {
+            margin-right: 8px;
+        }
+
+        &:last-child {
+            margin-left: 8px;
+        }
     }
 
-    .Icon--right {
-        height: 14px;
-        margin-left: 4px;
-        width: 14px;
-    }
-
-    &.filled {
+    &.filled,
+    &.emphasis--primary {
         color: #fff;
         background-color: rgb(var(--button-bg-rgb));
         padding: 6px 12px;
@@ -103,6 +107,20 @@
         font-size: 12px;
         padding: 0 16px;
         height: 32px;
+
+        .CompassIcon {
+            font-size: 14.4px;
+            width: 12px;
+            height: 12px;
+
+            &:first-child {
+                margin-right: 6px;
+            }
+
+            &:last-child {
+                margin-left: 6px;
+            }
+        }
     }
 
     &.size--medium {
@@ -117,11 +135,18 @@
         height: 48px;
         padding: 0 24px;
 
-        .Icon--right {
+        .CompassIcon {
             font-size: 24px;
-            height: 20px;
-            margin-left: 10px;
             width: 20px;
+            height: 20px;
+
+            &:first-child {
+                margin-right: 10px;
+            }
+
+            &:last-child {
+                margin-left: 10px;
+            }
         }
     }
 }

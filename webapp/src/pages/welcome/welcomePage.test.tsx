@@ -16,9 +16,15 @@ import configureStore from 'redux-mock-store'
 
 import {mocked} from 'ts-jest/utils'
 
+import thunk from 'redux-thunk'
+
 import {wrapIntl} from '../../testUtils'
 
 import mutator from '../../mutator'
+
+import octoClient from '../../octoClient'
+
+import {IUser} from '../../user'
 
 import WelcomePage from './welcomePage'
 
@@ -28,11 +34,18 @@ const oldBaseURL = w.baseURL
 jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)
 
+jest.mock('../../octoClient')
+const mockedOctoClient = mocked(octoClient, true)
+
 beforeEach(() => {
     jest.resetAllMocks()
     mockedMutator.patchUserConfig.mockImplementation(() => Promise.resolve({
-        welcomePageViewed: 'true',
+        welcomePageViewed: '1',
     }))
+    mockedOctoClient.prepareOnboarding.mockResolvedValue({
+        workspaceID: 'workspace_id_1',
+        boardID: 'board_id_1',
+    })
 })
 
 afterEach(() => {
@@ -40,14 +53,18 @@ afterEach(() => {
 })
 
 describe('pages/welcome', () => {
-    const history = createMemoryHistory()
-    const mockStore = configureStore([])
+    let history = createMemoryHistory()
+    const mockStore = configureStore([thunk])
     const store = mockStore({
         users: {
             me: {
                 props: {},
             },
         },
+    })
+
+    beforeEach(() => {
+        history = createMemoryHistory()
     })
 
     test('Welcome Page shows Explore Page', () => {
@@ -103,11 +120,11 @@ describe('pages/welcome', () => {
         )
 
         render(component)
-        const exploreButton = screen.getByText('Take a tour')
+        const exploreButton = screen.getByText('No thanks, I\'ll figure it out myself')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
         await waitFor(() => {
-            expect(history.replace).toBeCalledWith('/dashboard')
+            expect(history.replace).toBeCalledWith('/')
             expect(mockedMutator.patchUserConfig).toBeCalledTimes(1)
         })
     })
@@ -119,7 +136,7 @@ describe('pages/welcome', () => {
             users: {
                 me: {
                     props: {
-                        welcomePageViewed: 'true',
+                        focalboard_welcomePageViewed: '1',
                     },
                 },
             },
@@ -139,7 +156,7 @@ describe('pages/welcome', () => {
 
         render(component)
         await waitFor(() => {
-            expect(history.replace).toBeCalledWith('/dashboard')
+            expect(history.replace).toBeCalledWith('/')
         })
     })
 
@@ -151,7 +168,7 @@ describe('pages/welcome', () => {
             users: {
                 me: {
                     props: {
-                        welcomePageViewed: 'true',
+                        focalboard_welcomePageViewed: '1',
                     },
                 },
             },
@@ -177,6 +194,47 @@ describe('pages/welcome', () => {
     test('Welcome Page redirects us when we have a r query parameter with welcomePageViewed set to null', async () => {
         history.replace = jest.fn()
         history.location.search = 'r=123'
+
+        const localStore = mockStore({
+            users: {
+                me: {
+                    props: {},
+                },
+            },
+        })
+
+        const component = (
+            <ReduxProvider store={localStore}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+        render(component)
+        const exploreButton = screen.getByText('No thanks, I\'ll figure it out myself')
+        expect(exploreButton).toBeDefined()
+        userEvent.click(exploreButton)
+        await waitFor(() => {
+            expect(history.replace).toBeCalledWith('123')
+            expect(mockedMutator.patchUserConfig).toBeCalledTimes(1)
+        })
+    })
+
+    test('Welcome page starts tour on clicking Take a tour button', async () => {
+        history.replace = jest.fn()
+        const user = {
+            props: {
+                focalboard_welcomePageViewed: '1',
+                focalboard_onboardingTourStep: '0',
+                focalboard_tourCategory: 'onboarding',
+            },
+        } as unknown as IUser
+        mockedOctoClient.getMe.mockResolvedValue(user)
+
         const component = (
             <ReduxProvider store={store}>
                 {
@@ -192,9 +250,36 @@ describe('pages/welcome', () => {
         const exploreButton = screen.getByText('Take a tour')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
-        await waitFor(() => {
-            expect(history.replace).toBeCalledWith('123')
-            expect(mockedMutator.patchUserConfig).toBeCalledTimes(1)
-        })
+        await waitFor(() => expect(mockedOctoClient.prepareOnboarding).toBeCalledTimes(1))
+        await waitFor(() => expect(history.replace).toBeCalledWith('/workspace/workspace_id_1/board_id_1'))
+    })
+
+    test('Welcome page skips tour on clicking no thanks option', async () => {
+        history.replace = jest.fn()
+        const user = {
+            props: {
+                focalboard_welcomePageViewed: '1',
+                focalboard_onboardingTourStep: '0',
+                focalboard_tourCategory: 'onboarding',
+            },
+        } as unknown as IUser
+        mockedOctoClient.getMe.mockResolvedValue(user)
+
+        const component = (
+            <ReduxProvider store={store}>
+                {
+                    wrapIntl(
+                        <Router history={history}>
+                            <WelcomePage/>
+                        </Router>,
+                    )
+                }
+            </ReduxProvider>
+        )
+        render(component)
+        const exploreButton = screen.getByText('No thanks, I\'ll figure it out myself')
+        expect(exploreButton).toBeDefined()
+        userEvent.click(exploreButton)
+        await waitFor(() => expect(history.replace).toBeCalledWith('/'))
     })
 })

@@ -16,6 +16,7 @@ import ViewHeader from './viewHeader'
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
 const card = TestBlockFactory.createCard(board)
+const card2 = TestBlockFactory.createCard(board)
 
 jest.mock('react-router-dom', () => {
     const originalModule = jest.requireActual('react-router-dom')
@@ -34,6 +35,7 @@ describe('components/viewHeader/viewHeader', () => {
             me: {
                 id: 'user-id-1',
                 username: 'username_1',
+                props: {},
             },
         },
         searchText: {
@@ -43,6 +45,10 @@ describe('components/viewHeader/viewHeader', () => {
         },
         cards: {
             templates: [card],
+            cards: {
+                [card2.id]: card2,
+            },
+            current: card2.id,
         },
         views: {
             views: {

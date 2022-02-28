@@ -19,8 +19,10 @@ interface UserWorkspace {
 }
 
 interface UserConfigPatch {
-    updatedFields?: Record<string, any>
+    updatedFields?: Record<string, string>
     deletedFields?: string[]
 }
 
-export {IUser, UserWorkspace, UserConfigPatch}
+const UserPropPrefix = 'focalboard_'
+
+export {IUser, UserWorkspace, UserConfigPatch, UserPropPrefix}
