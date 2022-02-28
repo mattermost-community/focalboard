@@ -582,8 +582,8 @@ class OctoClient {
         return (await this.getJson(response, [])) as IUser[]
     }
 
-    async getTeamTemplates(): Promise<Board[]> {
-        const path = this.teamPath() + '/templates'
+    async getTeamTemplates(teamId?: string): Promise<Board[]> {
+        const path = this.teamPath(teamId) + '/templates'
         return this.getBoardsWithPath(path)
     }
 

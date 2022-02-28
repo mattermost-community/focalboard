@@ -2,7 +2,6 @@ package app
 
 import (
 	"bytes"
-	"database/sql"
 	"fmt"
 	"strings"
 
@@ -15,6 +14,7 @@ import (
 
 const (
 	defaultTemplateVersion = 2
+	globalTeamID           = "0"
 )
 
 //go:embed templates.boardarchive
@@ -24,42 +24,37 @@ func (a *App) InitTemplates() error {
 	return a.initializeTemplates()
 }
 
-// initializeTemplates imports default templates if the blocks table is empty.
+// initializeTemplates imports default templates if the boards table is empty.
 func (a *App) initializeTemplates() error {
-	teams, err := a.store.GetAllTeams()
-	if err != nil && err != sql.ErrNoRows {
+	boards, err := a.store.GetTemplateBoards(globalTeamID)
+	if err != nil {
 		return fmt.Errorf("cannot initialize templates: %w", err)
 	}
-	for _, team := range teams {
-		boards, err := a.store.GetTemplateBoards(team.ID)
-		if err != nil {
-			return fmt.Errorf("cannot initialize templates: %w", err)
-		}
 
-		a.logger.Debug("Fetched template boards", mlog.Int("count", len(boards)))
+	a.logger.Debug("Fetched template boards", mlog.Int("count", len(boards)))
 
-		isNeeded, reason := a.isInitializationNeeded(boards)
-		if !isNeeded {
-			a.logger.Debug("Template import not needed, skipping")
-			return nil
-		}
+	isNeeded, reason := a.isInitializationNeeded(boards)
+	if !isNeeded {
+		a.logger.Debug("Template import not needed, skipping")
+		return nil
+	}
 
-		a.logger.Debug("Importing new default templates", mlog.String("reason", reason))
+	a.logger.Debug("Importing new default templates", mlog.String("reason", reason))
 
-		if err := a.store.RemoveDefaultTemplates(boards); err != nil {
-			return fmt.Errorf("cannot remove old templates: %w", err)
-		}
+	// Remove in case of newer Templates
+	if err := a.store.RemoveDefaultTemplates(boards); err != nil {
+		return fmt.Errorf("cannot remove old template boards: %w", err)
+	}
 
-		r := bytes.NewReader(defTemplates)
+	r := bytes.NewReader(defTemplates)
 
-		opt := model.ImportArchiveOptions{
-			TeamID:        team.ID,
-			ModifiedBy:    "system",
-			BoardModifier: fixTemplateBoard,
-		}
-		if err = a.ImportArchive(r, opt); err != nil {
-			return fmt.Errorf("cannot initialize templates for team %s: %w", team.ID, err)
-		}
+	opt := model.ImportArchiveOptions{
+		TeamID:        globalTeamID,
+		ModifiedBy:    "system",
+		BoardModifier: fixTemplateBoard,
+	}
+	if err = a.ImportArchive(r, opt); err != nil {
+		return fmt.Errorf("cannot initialize global templates for team %s: %w", globalTeamID, err)
 	}
 	return nil
 }
@@ -71,9 +66,10 @@ func (a *App) isInitializationNeeded(boards []*model.Board) (bool, string) {
 		return true, "no default templates found"
 	}
 
-	// look for any template blocks with the wrong version number (or no version #).
+	// look for any built-in template boards with the wrong version number (or no version #).
 	for _, board := range boards {
-		if board.TemplateTrackingCode == "" {
+		// if not built-in board...skip
+		if board.CreatedBy != "system" {
 			continue
 		}
 		if board.TemplateVersion < defaultTemplateVersion {

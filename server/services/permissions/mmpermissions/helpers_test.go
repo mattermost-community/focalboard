@@ -38,7 +38,8 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 	}
 }
 
-func (th *TestHelper) checkBoardPermissions(roleName string, member *model.BoardMember, teamID string, hasPermissionTo, hasNotPermissionTo []*mmModel.Permission) {
+func (th *TestHelper) checkBoardPermissions(roleName string, member *model.BoardMember, teamID string,
+	hasPermissionTo, hasNotPermissionTo []*mmModel.Permission) {
 	for _, p := range hasPermissionTo {
 		th.t.Run(roleName+" "+p.Id, func(t *testing.T) {
 			th.store.EXPECT().

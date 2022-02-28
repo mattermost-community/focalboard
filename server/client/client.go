@@ -532,11 +532,11 @@ func (c *Client) DeleteBoardMember(member *model.BoardMember) (bool, *Response) 
 	return true, BuildResponse(r)
 }
 
-func (c *Client) GetTeamUploadFileRoute(boardID, rootID string) string {
-	return fmt.Sprintf("%s/%s/files", c.GetBoardRoute(boardID), rootID)
+func (c *Client) GetTeamUploadFileRoute(teamID, boardID string) string {
+	return fmt.Sprintf("%s/%s/files", c.GetTeamRoute(teamID), boardID)
 }
 
-func (c *Client) TeamUploadFile(boardID, rootID string, data io.Reader) (*api.FileUploadResponse, *Response) {
+func (c *Client) TeamUploadFile(teamID, boardID string, data io.Reader) (*api.FileUploadResponse, *Response) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 	part, err := writer.CreateFormFile(api.UploadFormFileKey, "file")
@@ -552,7 +552,7 @@ func (c *Client) TeamUploadFile(boardID, rootID string, data io.Reader) (*api.Fi
 		r.Header.Add("Content-Type", writer.FormDataContentType())
 	}
 
-	r, err := c.doAPIRequestReader(http.MethodPost, c.APIURL+c.GetTeamUploadFileRoute(boardID, rootID), body, "", opt)
+	r, err := c.doAPIRequestReader(http.MethodPost, c.APIURL+c.GetTeamUploadFileRoute(teamID, boardID), body, "", opt)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}

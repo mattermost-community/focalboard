@@ -56,7 +56,8 @@ func (s *SQLStore) createBoardsAndBlocks(db sq.BaseRunner, bab *model.BoardsAndB
 	}
 
 	for _, block := range bab.Blocks {
-		err := s.insertBlock(db, &block, userID)
+		b := block
+		err := s.insertBlock(db, &b, userID)
 		if err != nil {
 			return nil, err
 		}
