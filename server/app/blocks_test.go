@@ -22,7 +22,7 @@ func TestInsertBlock(t *testing.T) {
 	defer tearDown()
 
 	t.Run("success scenerio", func(t *testing.T) {
-		boardID := "test-board-id"
+		boardID := testBoardID
 		block := model.Block{BoardID: boardID}
 		board := &model.Board{ID: boardID}
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
@@ -33,7 +33,7 @@ func TestInsertBlock(t *testing.T) {
 	})
 
 	t.Run("error scenerio", func(t *testing.T) {
-		boardID := "test-board-id"
+		boardID := testBoardID
 		block := model.Block{BoardID: boardID}
 		board := &model.Board{ID: boardID}
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
@@ -67,7 +67,7 @@ func TestDeleteBlock(t *testing.T) {
 	defer tearDown()
 
 	t.Run("success scenerio", func(t *testing.T) {
-		boardID := "board-id"
+		boardID := testBoardID
 		board := &model.Board{ID: boardID}
 		block := model.Block{
 			ID:      "block-id",
@@ -75,14 +75,14 @@ func TestDeleteBlock(t *testing.T) {
 		}
 		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
 		th.Store.EXPECT().DeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(nil)
-		th.Store.EXPECT().GetBoard(gomock.Eq("board-id")).Return(board, nil)
+		th.Store.EXPECT().GetBoard(gomock.Eq(testBoardID)).Return(board, nil)
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
 		err := th.App.DeleteBlock("block-id", "user-id-1")
 		require.NoError(t, err)
 	})
 
 	t.Run("error scenerio", func(t *testing.T) {
-		boardID := "board-id"
+		boardID := testBoardID
 		board := &model.Board{ID: boardID}
 		block := model.Block{
 			ID:      "block-id",
@@ -90,7 +90,7 @@ func TestDeleteBlock(t *testing.T) {
 		}
 		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
 		th.Store.EXPECT().DeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(blockError{"error"})
-		th.Store.EXPECT().GetBoard(gomock.Eq("board-id")).Return(board, nil)
+		th.Store.EXPECT().GetBoard(gomock.Eq(testBoardID)).Return(board, nil)
 		err := th.App.DeleteBlock("block-id", "user-id-1")
 		require.Error(t, err, "error")
 	})
@@ -101,7 +101,7 @@ func TestUndeleteBlock(t *testing.T) {
 	defer tearDown()
 
 	t.Run("success scenerio", func(t *testing.T) {
-		boardID := "board-id"
+		boardID := testBoardID
 		board := &model.Board{ID: boardID}
 		block := model.Block{
 			ID:      "block-id",

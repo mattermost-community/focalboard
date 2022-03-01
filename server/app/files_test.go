@@ -5,15 +5,16 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore/mocks"
-	"github.com/stretchr/testify/assert"
 )
 
 const (
 	testFileName = "temp-file-name"
-	testBoardID  = "test-root-id"
+	testBoardID  = "test-board-id"
 	testFilePath = "1/test-root-id/temp-file-name"
 )
 

@@ -2429,7 +2429,7 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := newBoard.IsValid(); err != nil {
+	if err = newBoard.IsValid(); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
 	}
@@ -2649,7 +2649,7 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := patch.IsValid(); err != nil {
+	if err = patch.IsValid(); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
 	}
@@ -3522,7 +3522,7 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if err := pbab.IsValid(); err != nil {
+	if err = pbab.IsValid(); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 		return
 	}
@@ -3533,7 +3533,7 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 		boardIDMap[boardID] = true
 		patch := pbab.BoardPatches[i]
 
-		if err := patch.IsValid(); err != nil {
+		if err = patch.IsValid(); err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 			return
 		}
@@ -3550,9 +3550,9 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 			}
 		}
 
-		board, err := a.app.GetBoard(boardID)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		board, err2 := a.app.GetBoard(boardID)
+		if err2 != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err2)
 			return
 		}
 		if board == nil {
@@ -3570,9 +3570,9 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 	}
 
 	for _, blockID := range pbab.BlockIDs {
-		block, err := a.app.GetBlockByID(blockID)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		block, err2 := a.app.GetBlockByID(blockID)
+		if err2 != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err2)
 			return
 		}
 		if block == nil {
@@ -3741,10 +3741,6 @@ func (a *API) errorResponseWithCode(w http.ResponseWriter, api string, statusCod
 	}
 	w.WriteHeader(statusCode)
 	_, _ = w.Write(data)
-}
-
-func (a *API) noContainerErrorResponse(w http.ResponseWriter, api string, sourceError error) {
-	a.errorResponseWithCode(w, api, http.StatusBadRequest, ErrorNoTeamCode, ErrorNoTeamMessage, sourceError)
 }
 
 func jsonStringResponse(w http.ResponseWriter, code int, message string) { //nolint:unparam
