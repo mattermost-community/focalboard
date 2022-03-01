@@ -102,7 +102,7 @@ func TestGetTeam(t *testing.T) {
 			false,
 		},
 		{
-			"Fail, Return nil, when get team by mockstore retruns an error",
+			"Fail, Return nil, when get team by mockstore returns an error",
 			"invalid-team-id",
 			true,
 		},
