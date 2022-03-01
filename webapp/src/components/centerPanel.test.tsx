@@ -93,6 +93,7 @@ describe('components/centerPanel', () => {
             boards: {
                 [board.id]: board,
             },
+            templates: [],
         },
         cards: {
             templates: [card1, card2],

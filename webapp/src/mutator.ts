@@ -660,29 +660,37 @@ class Mutator {
         )
     }
 
-    async hideViewColumn(view: BoardView, columnOptionId: string): Promise<void> {
-        if (view.fields.hiddenOptionIds.includes(columnOptionId)) {
+    async hideViewColumns(view: BoardView, columnOptionIds: string[]): Promise<void> {
+        if (columnOptionIds.every((o) => view.fields.hiddenOptionIds.includes(o))) {
             return
         }
 
         const newView = createBoardView(view)
-        newView.fields.visibleOptionIds = newView.fields.visibleOptionIds.filter((o) => o !== columnOptionId)
-        newView.fields.hiddenOptionIds = [...newView.fields.hiddenOptionIds, columnOptionId]
+        newView.fields.visibleOptionIds = newView.fields.visibleOptionIds.filter((o) => !columnOptionIds.includes(o))
+        newView.fields.hiddenOptionIds = [...newView.fields.hiddenOptionIds, ...columnOptionIds]
         await this.updateBlock(newView, view, 'hide column')
     }
 
-    async unhideViewColumn(view: BoardView, columnOptionId: string): Promise<void> {
-        if (!view.fields.hiddenOptionIds.includes(columnOptionId)) {
+    async hideViewColumn(view: BoardView, columnOptionId: string): Promise<void> {
+        return this.hideViewColumns(view, [columnOptionId])
+    }
+
+    async unhideViewColumns(view: BoardView, columnOptionIds: string[]): Promise<void> {
+        if (columnOptionIds.every((o) => view.fields.visibleOptionIds.includes(o))) {
             return
         }
 
         const newView = createBoardView(view)
-        newView.fields.hiddenOptionIds = newView.fields.hiddenOptionIds.filter((o) => o !== columnOptionId)
+        newView.fields.hiddenOptionIds = newView.fields.hiddenOptionIds.filter((o) => !columnOptionIds.includes(o))
 
-        // Put the column at the end of the visible list
-        newView.fields.visibleOptionIds = newView.fields.visibleOptionIds.filter((o) => o !== columnOptionId)
-        newView.fields.visibleOptionIds = [...newView.fields.visibleOptionIds, columnOptionId]
+        // Put the columns at the end of the visible list
+        newView.fields.visibleOptionIds = newView.fields.visibleOptionIds.filter((o) => !columnOptionIds.includes(o))
+        newView.fields.visibleOptionIds = [...newView.fields.visibleOptionIds, ...columnOptionIds]
         await this.updateBlock(newView, view, 'show column')
+    }
+
+    async unhideViewColumn(view: BoardView, columnOptionId: string): Promise<void> {
+        return this.unhideViewColumns(view, [columnOptionId])
     }
 
     async changeViewCardOrder(view: BoardView, cardOrder: string[], description = 'reorder'): Promise<void> {
