@@ -85,7 +85,8 @@ func (s *SQLStore) CreateCategory(category model.Category) error {
 }
 
 func (s *SQLStore) CreatePrivateWorkspace(userID string) (string, error) {
-	return s.createPrivateWorkspace(s.db, userID)
+	//return s.createPrivateWorkspace(s.db, userID)
+	return "", nil
 
 }
 
@@ -225,15 +226,15 @@ func (s *SQLStore) DuplicateBlock(boardID string, blockID string, userID string,
 
 }
 
-func (s *SQLStore) DuplicateBoard(boardID string, userID string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+func (s *SQLStore) DuplicateBoard(boardID string, userID string, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	if s.dbType == sqliteDBType {
-		return s.duplicateBoard(s.db, boardID, userID, asTemplate)
+		return s.duplicateBoard(s.db, boardID, userID, toTeam, asTemplate)
 	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return nil, nil, txErr
 	}
-	result, resultVar1, err := s.duplicateBoard(tx, boardID, userID, asTemplate)
+	result, resultVar1, err := s.duplicateBoard(tx, boardID, userID, toTeam, asTemplate)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "DuplicateBoard"))

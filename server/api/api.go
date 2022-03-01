@@ -684,7 +684,6 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
-	userID := session.UserID
 
 	model.StampModificationMetadata(userID, blocks, auditRec)
 
@@ -2766,6 +2765,12 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 	query := r.URL.Query()
 	asTemplate := query.Get("asTemplate")
+	toTeam := query.Get("toTeam")
+
+	if toTeam != "" && !a.permissions.HasPermissionToTeam(userID, toTeam, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
 
 	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
 	if userID == "" && !hasValidReadToken {
@@ -2805,7 +2810,7 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		mlog.String("boardID", boardID),
 	)
 
-	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, asTemplate == "true")
+	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, toTeam, asTemplate == "true")
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
