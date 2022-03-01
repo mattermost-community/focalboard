@@ -25,10 +25,12 @@ import './shareBoard.scss'
 type Props = {
     boardId: string
     onClose: () => void
+    enableSharedBoards: boolean
 }
 
 export default function ShareBoardDialog(props: Props): JSX.Element {
-    const [wasCopied, setWasCopied] = useState(false)
+    const [wasCopiedPublic, setWasCopiedPublic] = useState(false)
+    const [wasCopiedInternal, setWasCopiedInternal] = useState(false)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
 
     const intl = useIntl()
@@ -37,7 +39,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const loadData = async () => {
         const newSharing = await client.getSharing(props.boardId)
         setSharing(newSharing)
-        setWasCopied(false)
+        setWasCopiedPublic(false)
     }
 
     const createSharingInfo = () => {
@@ -80,6 +82,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const readToken = (sharing && isSharing) ? sharing.token : ''
     const shareUrl = new URL(window.location.toString())
     shareUrl.searchParams.set('r', readToken)
+    const boardUrl = new URL(window.location.toString())
 
     if (match.params.workspaceId) {
         const newPath = generatePath('/workspace/:workspaceId/shared/:boardId/:viewId', {
@@ -88,12 +91,23 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             workspaceId: match.params.workspaceId,
         })
         shareUrl.pathname = Utils.buildURL(newPath)
+
+        const boardPath = generatePath('/workspace/:workspaceId/:boardId', {
+            boardId: match.params.boardId,
+            workspaceId: match.params.workspaceId,
+        })
+        boardUrl.pathname = Utils.getFrontendBaseURL() + boardPath
     } else {
         const newPath = generatePath('/shared/:boardId/:viewId', {
             boardId: match.params.boardId,
             viewId: match.params.viewId,
         })
         shareUrl.pathname = Utils.buildURL(newPath)
+        boardUrl.pathname = Utils.buildURL(
+            generatePath(':boardId', {
+                boardId: match.params.boardId,
+            },
+            ))
     }
 
     return (
@@ -102,7 +116,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             className='ShareBoardDialog'
             title={intl.formatMessage({id: 'ShareBoard.Title', defaultMessage: 'Share Board'})}
         >
-            <div className='tabs-modal'>
+            {props.enableSharedBoards &&
+            (<div className='tabs-modal'>
                 <div>
                     <div className='d-flex justify-content-between'>
                         <div className='d-flex flex-column'>
@@ -157,15 +172,16 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                 onClick={() => {
                                     TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: props.boardId})
                                     Utils.copyTextToClipboard(shareUrl.toString())
-                                    setWasCopied(true)
+                                    setWasCopiedPublic(true)
+                                    setWasCopiedInternal(false)
                                 }}
                             >
-                                {wasCopied &&
+                                {wasCopiedPublic &&
                                     <FormattedMessage
                                         id='ShareBoard.copiedLink'
                                         defaultMessage='Copied!'
                                     />}
-                                {!wasCopied &&
+                                {!wasCopiedPublic &&
                                     <FormattedMessage
                                         id='ShareBoard.copyLink'
                                         defaultMessage='Copy link'
@@ -173,6 +189,56 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             </Button>
                         </div>)
                 }
+            </div>
+            )}
+
+            <div className='tabs-modal'>
+                <div>
+                    <div className='d-flex justify-content-between'>
+                        <div className='d-flex flex-column'>
+                            <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.ShareInternal', defaultMessage: 'Share internally'})}</div>
+                            <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.ShareInternalDescription', defaultMessage: 'Users who have permissions will be able to use this link'})}</div>
+                        </div>
+                    </div>
+                </div>
+                <div className='d-flex justify-content-between tabs-inputs'>
+                    <div className='d-flex input-container'>
+                        <a
+                            className='shareUrl'
+                            href={boardUrl.toString()}
+                            target='_blank'
+                            rel='noreferrer'
+                        >
+                            {boardUrl.toString()}
+                        </a>
+                    </div>
+                    <Button
+                        emphasis='secondary'
+                        size='medium'
+                        title='Copy link'
+                        onClick={() => {
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkInternalCopy, {board: props.boardId})
+                            Utils.copyTextToClipboard(boardUrl.toString())
+                            setWasCopiedPublic(false)
+                            setWasCopiedInternal(true)
+                        }}
+                    >
+                        <CompassIcon
+                            icon='content-copy'
+                            className='CompassIcon'
+                        />
+                        {wasCopiedInternal &&
+                        <FormattedMessage
+                            id='ShareBoard.copiedLink'
+                            defaultMessage='Copied!'
+                        />}
+                        {!wasCopiedInternal &&
+                        <FormattedMessage
+                            id='ShareBoard.copyLink'
+                            defaultMessage='Copy link'
+                        />}
+                    </Button>
+                </div>
             </div>
         </Dialog>
     )

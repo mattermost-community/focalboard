@@ -32,6 +32,7 @@ export const TelemetryActions = {
     ViewSharedBoard: 'viewSharedBoard',
     ShareBoardOpenModal: 'shareBoard_openModal',
     ShareLinkPublicCopy: 'shareLinkPublic_copy',
+    ShareLinkInternalCopy: 'shareLinkInternal_copy',
     ImportArchive: 'settings_importArchive',
     ImportTrello: 'settings_importTrello',
     ImportAsana: 'settings_importAsana',
