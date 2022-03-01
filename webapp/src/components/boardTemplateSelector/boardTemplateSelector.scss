@@ -65,7 +65,8 @@
         }
 
         .template-preview-box {
-            position: relative;
+            padding-bottom: 32px;
+
             background-color: rgb(var(--center-channel-bg-rgb));
             box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
                 rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
@@ -76,8 +77,6 @@
 
             .buttons {
                 display: flex;
-                position: absolute;
-                bottom: 32px;
                 width: 100%;
                 justify-content: center;
             }
@@ -90,6 +89,10 @@
                 &:first-child {
                     margin-right: 16px;
                 }
+            }
+
+            > .buttons:first-child {
+                padding-top: 32px;
             }
         }
     }

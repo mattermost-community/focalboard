@@ -52,7 +52,7 @@
             justify-content: space-between;
         }
     }
-    
+
 
     > div:nth-child(2) {
         padding: 0 0 0 1px;
@@ -63,5 +63,10 @@
             padding-left: 20px;
             -webkit-overflow-scrolling: touch;
         }
+    }
+
+    .shareButtonWrapper {
+        position: relative;
+        flex: 0 0 auto;
     }
 }

@@ -1,0 +1,362 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/cardDetail/CardDetail should show add comments tour tip 1`] = `
+<div
+  class="tippy-box tutorial-tour-tip__box AddCommentTourStep"
+  data-animation="scale-subtle"
+  data-escaped=""
+  data-placement="right-end"
+  data-reference-hidden=""
+  data-state="visible"
+  role="tooltip"
+  style="max-width: 320px; transition-duration: 250ms;"
+  tabindex="-1"
+>
+  <div
+    class="tippy-content"
+    data-state="visible"
+    style="transition-duration: 250ms;"
+  >
+    <div>
+      <div>
+        <div
+          class="tutorial-tour-tip__header"
+        >
+          <h4
+            class="tutorial-tour-tip__header__title"
+          >
+            Add comments
+          </h4>
+          <button
+            class="IconButton tutorial-tour-tip__header__close size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tutorial-tour-tip__body"
+        >
+          You can comment on issues, and even @mention your fellow Mattermost users to get their attention.
+        </div>
+        <div
+          class="tutorial-tour-tip__image"
+        >
+          <img
+            alt="tutorial tour tip product image"
+            src="test-file-stub"
+          />
+        </div>
+        <div
+          class="tutorial-tour-tip__footer"
+        >
+          <div
+            class="tutorial-tour-tip__footer-buttons"
+          >
+            <div
+              class="tutorial-tour-tip__circles-ctr"
+            >
+              <div
+                class="tutorial-tour-tip__circular-ring"
+              >
+                <a
+                  class="tutorial-tour-tip__circle"
+                  data-screen="0"
+                  href="#"
+                />
+              </div>
+              <div
+                class="tutorial-tour-tip__circular-ring tutorial-tour-tip__circular-ring-active"
+              >
+                <a
+                  class="tutorial-tour-tip__circle active"
+                  data-screen="1"
+                  href="#"
+                />
+              </div>
+              <div
+                class="tutorial-tour-tip__circular-ring"
+              >
+                <a
+                  class="tutorial-tour-tip__circle"
+                  data-screen="2"
+                  href="#"
+                />
+              </div>
+            </div>
+            <div
+              class="tutorial-tour-tip__btn-ctr"
+            >
+              <button
+                class="Button emphasis--tertiary size--small"
+                title="Previous"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-chevron-left icon"
+                />
+                <span>
+                  Previous
+                </span>
+              </button>
+              <button
+                class="Button filled size--small tipNextButton"
+                type="button"
+              >
+                <span>
+                  Next
+                </span>
+                <i
+                  class="CompassIcon icon-chevron-right icon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="tippy-arrow"
+    style="position: absolute; top: 0px; transform: translate(0px, 3px);"
+  />
+</div>
+`;
+
+exports[`components/cardDetail/CardDetail should show add description tour tip 1`] = `
+<div
+  class="tippy-box tutorial-tour-tip__box AddDescriptionTourStep"
+  data-animation="scale-subtle"
+  data-escaped=""
+  data-placement="top-start"
+  data-reference-hidden=""
+  data-state="visible"
+  role="tooltip"
+  style="max-width: 320px; transition-duration: 250ms;"
+  tabindex="-1"
+>
+  <div
+    class="tippy-content"
+    data-state="visible"
+    style="transition-duration: 250ms;"
+  >
+    <div>
+      <div>
+        <div
+          class="tutorial-tour-tip__header"
+        >
+          <h4
+            class="tutorial-tour-tip__header__title"
+          >
+            Add description
+          </h4>
+          <button
+            class="IconButton tutorial-tour-tip__header__close size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tutorial-tour-tip__body"
+        >
+          Add a description to your card so your teammates know what the card is about.
+        </div>
+        <div
+          class="tutorial-tour-tip__image"
+        >
+          <img
+            alt="tutorial tour tip product image"
+            src="test-file-stub"
+          />
+        </div>
+        <div
+          class="tutorial-tour-tip__footer"
+        >
+          <div
+            class="tutorial-tour-tip__footer-buttons"
+          >
+            <div
+              class="tutorial-tour-tip__circles-ctr"
+            >
+              <div
+                class="tutorial-tour-tip__circular-ring"
+              >
+                <a
+                  class="tutorial-tour-tip__circle"
+                  data-screen="0"
+                  href="#"
+                />
+              </div>
+              <div
+                class="tutorial-tour-tip__circular-ring"
+              >
+                <a
+                  class="tutorial-tour-tip__circle"
+                  data-screen="1"
+                  href="#"
+                />
+              </div>
+              <div
+                class="tutorial-tour-tip__circular-ring tutorial-tour-tip__circular-ring-active"
+              >
+                <a
+                  class="tutorial-tour-tip__circle active"
+                  data-screen="2"
+                  href="#"
+                />
+              </div>
+            </div>
+            <div
+              class="tutorial-tour-tip__btn-ctr"
+            >
+              <button
+                class="Button emphasis--tertiary size--small"
+                title="Previous"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-chevron-left icon"
+                />
+                <span>
+                  Previous
+                </span>
+              </button>
+              <button
+                class="Button filled size--small tipNextButton"
+                type="button"
+              >
+                <span>
+                  Done
+                </span>
+                
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="tippy-arrow"
+    style="position: absolute; left: 0px; transform: translate(3px, 0px);"
+  />
+</div>
+`;
+
+exports[`components/cardDetail/CardDetail should show add properties tour tip 1`] = `
+<div
+  class="tippy-box tutorial-tour-tip__box AddPropertiesTourStep"
+  data-animation="scale-subtle"
+  data-escaped=""
+  data-placement="right-end"
+  data-reference-hidden=""
+  data-state="visible"
+  role="tooltip"
+  style="max-width: 320px; transition-duration: 250ms;"
+  tabindex="-1"
+>
+  <div
+    class="tippy-content"
+    data-state="visible"
+    style="transition-duration: 250ms;"
+  >
+    <div>
+      <div>
+        <div
+          class="tutorial-tour-tip__header"
+        >
+          <h4
+            class="tutorial-tour-tip__header__title"
+          >
+            Add properties
+          </h4>
+          <button
+            class="IconButton tutorial-tour-tip__header__close size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="tutorial-tour-tip__body"
+        >
+          Add various properties to cards to make them more powerful!
+        </div>
+        <div
+          class="tutorial-tour-tip__image"
+        >
+          <img
+            alt="tutorial tour tip product image"
+            src="test-file-stub"
+          />
+        </div>
+        <div
+          class="tutorial-tour-tip__footer"
+        >
+          <div
+            class="tutorial-tour-tip__footer-buttons"
+          >
+            <div
+              class="tutorial-tour-tip__circles-ctr"
+            >
+              <div
+                class="tutorial-tour-tip__circular-ring tutorial-tour-tip__circular-ring-active"
+              >
+                <a
+                  class="tutorial-tour-tip__circle active"
+                  data-screen="0"
+                  href="#"
+                />
+              </div>
+              <div
+                class="tutorial-tour-tip__circular-ring"
+              >
+                <a
+                  class="tutorial-tour-tip__circle"
+                  data-screen="1"
+                  href="#"
+                />
+              </div>
+              <div
+                class="tutorial-tour-tip__circular-ring"
+              >
+                <a
+                  class="tutorial-tour-tip__circle"
+                  data-screen="2"
+                  href="#"
+                />
+              </div>
+            </div>
+            <div
+              class="tutorial-tour-tip__btn-ctr"
+            >
+              <button
+                class="Button filled size--small tipNextButton"
+                type="button"
+              >
+                <span>
+                  Next
+                </span>
+                <i
+                  class="CompassIcon icon-chevron-right icon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="tippy-arrow"
+    style="position: absolute; top: 0px; transform: translate(0px, 3px);"
+  />
+</div>
+`;

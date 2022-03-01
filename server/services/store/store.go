@@ -57,6 +57,7 @@ type Store interface {
 	UpdateUserPasswordByID(userID, password string) error
 	GetUsersByTeam(teamID string) ([]*model.User, error)
 	SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error)
+	PatchUserProps(userID string, patch model.UserPropPatch) error
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
@@ -108,6 +109,9 @@ type Store interface {
 
 	GetUserCategoryBlocks(userID, teamID string) ([]model.CategoryBlocks, error)
 	AddUpdateCategoryBlock(userID, categoryID, blockID string) error
+
+	// TODO remove this
+	CreatePrivateWorkspace(userID string) (string, error)
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(blockID string, subscriberID string) error

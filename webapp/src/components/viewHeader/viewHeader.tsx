@@ -17,6 +17,20 @@ import Editable from '../../widgets/editable'
 import ModalWrapper from '../modalWrapper'
 
 import ShareBoardDialog from '../shareBoard/shareBoard'
+import {useAppSelector} from '../../store/hooks'
+import {
+    getOnboardingTourCategory,
+    getOnboardingTourStarted,
+    getOnboardingTourStep,
+} from '../../store/users'
+import {
+    BoardTourSteps,
+    TOUR_BOARD,
+    TourCategoriesMapToSteps,
+} from '../onboardingTour'
+import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
+import AddViewTourStep from '../onboardingTour/addView/add_view'
+import {getCurrentCard} from '../../store/cards'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
@@ -41,13 +55,14 @@ type Props = {
     editCardTemplate: (cardTemplateId: string) => void
     readonly: boolean
     dateDisplayProperty?: IPropertyTemplate
+    showShared?: boolean
 }
 
 const ViewHeader = (props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
     const intl = useIntl()
 
-    const {board, activeView, views, groupByProperty, cards, dateDisplayProperty} = props
+    const {board, activeView, views, groupByProperty, cards, dateDisplayProperty, showShared} = props
 
     const withGroupBy = activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table'
     const withDisplayBy = activeView.fields.viewType === 'calendar'
@@ -63,32 +78,73 @@ const ViewHeader = (props: Props) => {
 
     const [showShareDialog, setShowShareDialog] = useState(false)
 
+    const isOnboardingBoard = props.board.title === OnboardingBoardTitle
+    const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
+    const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
+    const onboardingTourStep = useAppSelector(getOnboardingTourStep)
+
+    const currentCard = useAppSelector(getCurrentCard)
+    const noCardOpen = !currentCard
+
+    const showTourBaseCondition = isOnboardingBoard &&
+        onboardingTourStarted &&
+        noCardOpen &&
+        onboardingTourCategory === TOUR_BOARD &&
+        onboardingTourStep === BoardTourSteps.ADD_VIEW.toString()
+
+    const [delayComplete, setDelayComplete] = useState(false)
+
+    useEffect(() => {
+        if (showTourBaseCondition) {
+            setTimeout(() => {
+                setDelayComplete(true)
+            }, 800)
+        }
+    }, [showTourBaseCondition])
+
+    useEffect(() => {
+        if (showShared && !BoardTourSteps.SHARE_BOARD) {
+            BoardTourSteps.SHARE_BOARD = 2
+        } else if (!showShared) {
+            delete BoardTourSteps.SHARE_BOARD
+        }
+
+        TourCategoriesMapToSteps[TOUR_BOARD] = BoardTourSteps
+    }, [showShared])
+
+    const showAddViewTourStep = showTourBaseCondition && delayComplete
+
     return (
         <div className='ViewHeader'>
-            <Editable
-                value={viewTitle}
-                placeholderText='Untitled View'
-                onSave={(): void => {
-                    mutator.changeBlockTitle(board.id, activeView.id, activeView.title, viewTitle)
-                }}
-                onCancel={(): void => {
-                    setViewTitle(activeView.title)
-                }}
-                onChange={setViewTitle}
-                saveOnEsc={true}
-                readonly={props.readonly}
-                spellCheck={true}
-                autoExpand={false}
-            />
-            <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
-                <IconButton icon={<DropdownIcon/>}/>
-                <ViewMenu
-                    board={board}
-                    activeView={activeView}
-                    views={views}
+            <div className='viewSelector'>
+                <Editable
+                    value={viewTitle}
+                    placeholderText='Untitled View'
+                    onSave={(): void => {
+                        mutator.changeBlockTitle(activeView.boardId, activeView.id, activeView.title, viewTitle)
+                    }}
+                    onCancel={(): void => {
+                        setViewTitle(activeView.title)
+                    }}
+                    onChange={setViewTitle}
+                    saveOnEsc={true}
                     readonly={props.readonly}
+                    spellCheck={true}
+                    autoExpand={false}
                 />
-            </MenuWrapper>
+                <div>
+                    <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
+                        <IconButton icon={<DropdownIcon/>}/>
+                        <ViewMenu
+                            board={board}
+                            activeView={activeView}
+                            views={views}
+                            readonly={props.readonly}
+                        />
+                    </MenuWrapper>
+                    {showAddViewTourStep && <AddViewTourStep/>}
+                </div>
+            </div>
 
             <button
                 onClick={() => setShowShareDialog(!showShareDialog)}
@@ -179,8 +235,7 @@ const ViewHeader = (props: Props) => {
                     addCardTemplate={props.addCardTemplate}
                     editCardTemplate={props.editCardTemplate}
                 />
-            </>
-            }
+            </>}
 
             {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>}
         </div>

@@ -84,6 +84,11 @@ func (s *SQLStore) CreateCategory(category model.Category) error {
 
 }
 
+func (s *SQLStore) CreatePrivateWorkspace(userID string) (string, error) {
+	return s.createPrivateWorkspace(s.db, userID)
+
+}
+
 func (s *SQLStore) CreateSession(session *model.Session) error {
 	return s.createSession(s.db, session)
 
@@ -609,6 +614,11 @@ func (s *SQLStore) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID
 	}
 
 	return result, nil
+
+}
+
+func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
+	return s.patchUserProps(s.db, userID, patch)
 
 }
 

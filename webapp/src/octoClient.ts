@@ -4,13 +4,14 @@ import {Block, BlockPatch} from './blocks/block'
 import {Board, BoardsAndBlocks, BoardsAndBlocksPatch, BoardPatch, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
-import {IUser} from './user'
+import {IUser, UserConfigPatch, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
 import {Category, CategoryBlocks} from './store/sidebar'
 import {Team} from './store/teams'
 import {Subscription} from './wsclient'
+import {PrepareOnboardingResponse} from './onboardingTour'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -182,6 +183,22 @@ class OctoClient {
         }
         const user = (await this.getJson(response, {})) as IUser
         return user
+    }
+
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
+        const path = `/api/v1/users/${encodeURIComponent(userID)}/config`
+        const body = JSON.stringify(patch)
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'PUT',
+            body,
+        })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as Record<string, string>
     }
 
     async getSubtree(boardId?: string, levels = 2, teamID?: string): Promise<Block[]> {
@@ -582,8 +599,8 @@ class OctoClient {
         return (await this.getJson(response, [])) as IUser[]
     }
 
-    async getTeamTemplates(): Promise<Board[]> {
-        const path = this.teamPath() + '/templates'
+    async getTeamTemplates(teamId?: string): Promise<Board[]> {
+        const path = this.teamPath(teamId) + '/templates'
         return this.getBoardsWithPath(path)
     }
 
@@ -761,6 +778,20 @@ class OctoClient {
         }
 
         return (await this.getJson(response, [])) as Subscription[]
+    }
+
+    // onboarding
+    async prepareOnboarding(): Promise<PrepareOnboardingResponse | undefined> {
+        const path = '/api/v1/onboard'
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+        })
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, [])) as PrepareOnboardingResponse
     }
 }
 
