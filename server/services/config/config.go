@@ -74,7 +74,7 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	viper.AutomaticEnv() // read config values from env like FOCALBOARD_SERVERROOT=...
 	viper.SetDefault("ServerRoot", DefaultServerRoot)
 	viper.SetDefault("Port", DefaultPort)
-	viper.SetDefault("DBType", "sqlite")
+	viper.SetDefault("DBType", "sqlite3")
 	viper.SetDefault("DBConfigString", "./focalboard.db")
 	viper.SetDefault("DBTablePrefix", "")
 	viper.SetDefault("SecureCookie", false)
