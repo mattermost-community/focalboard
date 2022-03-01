@@ -143,7 +143,7 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string,
 		From(s.tablePrefix + "blocks").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
 		Where(sq.Eq{"board_id": boardID}).
-		OrderBy("insert_at")
+		OrderBy("insertAt")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -191,7 +191,7 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, boardID string, blockID string,
 		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"l3.board_id": boardID}).
-		OrderBy("l1.insert_at")
+		OrderBy("insertAt")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -542,6 +542,7 @@ func (s *SQLStore) undeleteBlock(db sq.BaseRunner, blockID string, modifiedBy st
 	now := utils.GetMillis()
 	columns := []string{
 		"board_id",
+		"channel_id",
 		"id",
 		"parent_id",
 		s.escapeField("schema"),
@@ -557,6 +558,7 @@ func (s *SQLStore) undeleteBlock(db sq.BaseRunner, blockID string, modifiedBy st
 
 	values := []interface{}{
 		block.BoardID,
+		"",
 		block.ID,
 		block.ParentID,
 		block.Schema,
@@ -654,7 +656,7 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks_history").
 		Where(sq.Eq{"id": blockID}).
-		OrderBy("insert_at" + order)
+		OrderBy("insertAt" + order)
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})

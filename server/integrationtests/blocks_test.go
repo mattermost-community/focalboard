@@ -320,9 +320,10 @@ func TestUndeleteBlock(t *testing.T) {
 
 	var blockID string
 	t.Run("Create a block", func(t *testing.T) {
-		initialID := utils.NewID(utils.IDTypeBlock)
+		initialID := utils.NewID(utils.IDTypeBoard)
 		block := model.Block{
 			ID:       initialID,
+			BoardID:  board.ID,
 			CreateAt: 1,
 			UpdateAt: 1,
 			Type:     model.TypeBoard,
