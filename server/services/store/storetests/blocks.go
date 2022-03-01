@@ -18,6 +18,7 @@ const (
 	testBoardID = "board-id"
 )
 
+//nolint:dupl
 func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	t.Run("InsertBlock", func(t *testing.T) {
 		store, tearDown := setup(t)

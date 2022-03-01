@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+//nolint:dupl
 func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	t.Run("GetBoard", func(t *testing.T) {
 		store, tearDown := setup(t)

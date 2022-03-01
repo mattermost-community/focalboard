@@ -177,19 +177,19 @@ func TestRunUniqueIDsMigration(t *testing.T) {
 	block7 := model.Block{ID: "block-id-2", BoardID: "board-id-2"}
 
 	for _, block := range []model.Block{block1, block2, block3} {
-		err := sqlStore.insertLegacyBlock(sqlStore.db, container1, &block, "user-id")
+		err := sqlStore.insertLegacyBlock(sqlStore.db, container1, &block, "user-id-2")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	for _, block := range []model.Block{block4, block5, block6} {
-		err := sqlStore.insertLegacyBlock(sqlStore.db, container2, &block, "user-id")
+		err := sqlStore.insertLegacyBlock(sqlStore.db, container2, &block, "user-id-2")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	for _, block := range []model.Block{block7} {
-		err := sqlStore.insertLegacyBlock(sqlStore.db, container3, &block, "user-id")
+		err := sqlStore.insertLegacyBlock(sqlStore.db, container3, &block, "user-id-2")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}

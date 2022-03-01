@@ -1114,6 +1114,7 @@ func TestDeleteMember(t *testing.T) {
 	})
 
 	t.Run("should correctly delete a member for a valid board", func(t *testing.T) {
+		//nolint:dupl
 		t.Run("admin removing a user", func(t *testing.T) {
 			th := SetupTestHelper(t).InitBasic()
 			defer th.TearDown()
@@ -1155,6 +1156,7 @@ func TestDeleteMember(t *testing.T) {
 			require.Len(t, members, 1)
 		})
 
+		//nolint:dupl
 		t.Run("user removing themselves", func(t *testing.T) {
 			th := SetupTestHelper(t).InitBasic()
 			defer th.TearDown()
@@ -1196,6 +1198,7 @@ func TestDeleteMember(t *testing.T) {
 			require.Len(t, members, 1)
 		})
 
+		//nolint:dupl
 		t.Run("a non admin user should not be able to remove another user", func(t *testing.T) {
 			th := SetupTestHelper(t).InitBasic()
 			defer th.TearDown()

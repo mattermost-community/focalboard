@@ -15,6 +15,7 @@ import (
 // legacyBlocksFromRows is the old getBlock version that still uses
 // the old block model. This method is kept to enable the unique IDs
 // data migration.
+//nolint:unused
 func (s *SQLStore) legacyBlocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	results := []model.Block{}
 
@@ -67,6 +68,7 @@ func (s *SQLStore) legacyBlocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 // getLegacyBlock is the old getBlock version that still uses the old
 // block model. This method is kept to enable the unique IDs data
 // migration.
+//nolint:unused
 func (s *SQLStore) getLegacyBlock(db sq.BaseRunner, workspaceID string, blockID string) (*model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(
@@ -110,6 +112,7 @@ func (s *SQLStore) getLegacyBlock(db sq.BaseRunner, workspaceID string, blockID 
 // insertLegacyBlock is the old insertBlock version that still uses
 // the old block model. This method is kept to enable the unique IDs
 // data migration.
+//nolint:unused
 func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block *model.Block, userID string) error {
 	if block.BoardID == "" {
 		return BoardIDNilError{}
