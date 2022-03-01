@@ -5,7 +5,7 @@ import React from 'react'
 
 type Props = {
     icon: string,
-    className: string,
+    className?: string,
 }
 
 export default function CompassIcon(props: Props): JSX.Element {

@@ -4,6 +4,7 @@
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {IntlProvider} from 'react-intl'
+import {History} from 'history'
 
 import HelpIcon from '../../widgets/icons/help'
 import store from '../../store'
@@ -17,7 +18,11 @@ import GlobalHeaderSettingsMenu from './globalHeaderSettingsMenu'
 
 import './globalHeader.scss'
 
-const HeaderItems = () => {
+type HeaderItemProps = {
+    history: History<unknown>
+}
+
+const HeaderItems = (props: HeaderItemProps) => {
     const language = useAppSelector<string>(getLanguage)
     const helpUrl = 'https://www.focalboard.com/fwlink/doc-boards.html?v=' + Constants.versionString
 
@@ -36,16 +41,20 @@ const HeaderItems = () => {
                 >
                     <HelpIcon/>
                 </a>
-                <GlobalHeaderSettingsMenu/>
+                <GlobalHeaderSettingsMenu history={props.history}/>
             </div>
         </IntlProvider>
     )
 }
 
-const GlobalHeader = (): JSX.Element => {
+type Props = {
+    history: History<unknown>
+}
+
+const GlobalHeader = (props: Props): JSX.Element => {
     return (
         <ReduxProvider store={store}>
-            <HeaderItems/>
+            <HeaderItems history={props.history}/>
         </ReduxProvider>
     )
 }

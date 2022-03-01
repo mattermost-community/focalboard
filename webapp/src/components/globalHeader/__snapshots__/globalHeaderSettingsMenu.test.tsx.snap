@@ -246,6 +246,23 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                 />
               </div>
             </div>
+            <div
+              aria-label="Product tour"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Product tour
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -717,6 +734,23 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                 />
               </div>
             </div>
+            <div
+              aria-label="Product tour"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Product tour
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -878,6 +912,23 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
                   class="octo-switch-inner"
                 />
               </div>
+            </div>
+            <div
+              aria-label="Product tour"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Product tour
+              </div>
+              <div
+                class="noicon"
+              />
             </div>
           </div>
           <div
