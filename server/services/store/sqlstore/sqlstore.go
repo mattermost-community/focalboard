@@ -5,15 +5,10 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/mattermost-plugin-api/cluster"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-)
-
-const (
-	mysqlDBType    = "mysql"
-	sqliteDBType   = "sqlite3"
-	postgresDBType = "postgres"
 )
 
 // SQLStore is a SQL database.
@@ -77,7 +72,7 @@ func (s *SQLStore) DBType() string {
 
 func (s *SQLStore) getQueryBuilder(db sq.BaseRunner) sq.StatementBuilderType {
 	builder := sq.StatementBuilder
-	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
 		builder = builder.PlaceholderFormat(sq.Dollar)
 	}
 
@@ -85,10 +80,10 @@ func (s *SQLStore) getQueryBuilder(db sq.BaseRunner) sq.StatementBuilderType {
 }
 
 func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		return "`" + fieldName + "`"
 	}
-	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
 		return "\"" + fieldName + "\""
 	}
 	return fieldName

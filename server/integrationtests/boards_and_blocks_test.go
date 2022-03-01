@@ -9,7 +9,7 @@ import (
 )
 
 func TestCreateBoardsAndBlocks(t *testing.T) {
-	teamID := "team-id"
+	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
 		th := SetupTestHelper(t).Start()
@@ -182,8 +182,8 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		defer th.TearDown()
 
 		userID := th.GetUser1().ID
-		initialTitle := "initial title"
-		newTitle := "new title"
+		initialTitle := "initial title 1"
+		newTitle := "new title 1"
 
 		newBoard1 := &model.Board{
 			Title:  initialTitle,
@@ -321,8 +321,8 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		defer th.TearDown()
 
 		userID := th.GetUser1().ID
-		initialTitle := "initial title"
-		newTitle := "new title"
+		initialTitle := "initial title 2"
+		newTitle := "new title 2"
 
 		newBoard1 := &model.Board{
 			Title:  initialTitle,
@@ -385,8 +385,8 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		defer th.TearDown()
 
 		userID := th.GetUser1().ID
-		initialTitle := "initial title"
-		newTitle := "new title"
+		initialTitle := "initial title 3"
+		newTitle := "new title 3"
 
 		newBoard1 := &model.Board{
 			Title:  initialTitle,
@@ -449,8 +449,8 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		defer th.TearDown()
 
 		userID := th.GetUser1().ID
-		initialTitle := "initial title"
-		newTitle := "new title"
+		initialTitle := "initial title 4"
+		newTitle := "new title 4"
 
 		newBoard1 := &model.Board{
 			Title:  initialTitle,

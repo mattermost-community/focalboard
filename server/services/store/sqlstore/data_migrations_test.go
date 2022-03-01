@@ -10,7 +10,7 @@ import (
 )
 
 //nolint:gosec
-func tTestGetBlocksWithSameID(t *testing.T) {
+func TestGetBlocksWithSameID(t *testing.T) {
 	t.Skip("we need to setup a test with the database migrated up to version 14 and then run these tests")
 
 	store, tearDown := SetupTests(t)

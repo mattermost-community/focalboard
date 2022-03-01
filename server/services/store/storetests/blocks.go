@@ -13,7 +13,9 @@ import (
 )
 
 const (
-	testUserID = "user-id"
+	testUserID  = "user-id"
+	testTeamID  = "team-id"
+	testBoardID = "board-id"
 )
 
 func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
@@ -76,7 +78,7 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 
 func testInsertBlock(t *testing.T, store store.Store) {
 	userID := testUserID
-	boardID := "board-id"
+	boardID := testBoardID
 
 	blocks, errBlocks := store.GetBlocksForBoard(boardID)
 	require.NoError(t, errBlocks)
@@ -130,7 +132,7 @@ func testInsertBlock(t *testing.T, store store.Store) {
 
 	t.Run("insert new block", func(t *testing.T) {
 		block := model.Block{
-			BoardID: "board-id",
+			BoardID: testBoardID,
 		}
 
 		err := store.InsertBlock(&block, "user-id-2")
@@ -400,7 +402,7 @@ func testPatchBlocks(t *testing.T, store store.Store) {
 	})
 
 	t.Run("invalid block id, nothing updated existing blocks", func(t *testing.T) {
-		if store.DBType() == "sqlite3" {
+		if store.DBType() == model.SqliteDBType {
 			t.Skip("No transactions support int sqlite")
 		}
 
@@ -430,36 +432,36 @@ var (
 	subtreeSampleBlocks = []model.Block{
 		{
 			ID:         "parent",
-			BoardID:    "board-id",
+			BoardID:    testBoardID,
 			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "child1",
-			BoardID:    "board-id",
+			BoardID:    testBoardID,
 			ParentID:   "parent",
 			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "child2",
-			BoardID:    "board-id",
+			BoardID:    testBoardID,
 			ParentID:   "parent",
 			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "grandchild1",
-			BoardID:    "board-id",
+			BoardID:    testBoardID,
 			ParentID:   "child1",
 			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "grandchild2",
-			BoardID:    "board-id",
+			BoardID:    testBoardID,
 			ParentID:   "child2",
 			ModifiedBy: testUserID,
 		},
 		{
 			ID:         "greatgrandchild1",
-			BoardID:    "board-id",
+			BoardID:    testBoardID,
 			ParentID:   "grandchild1",
 			ModifiedBy: testUserID,
 		},
@@ -467,7 +469,7 @@ var (
 )
 
 func testGetSubTree2(t *testing.T, store store.Store) {
-	boardID := "board-id"
+	boardID := testBoardID
 	blocks, err := store.GetBlocksForBoard(boardID)
 	require.NoError(t, err)
 	initialCount := len(blocks)
@@ -505,7 +507,7 @@ func testGetSubTree2(t *testing.T, store store.Store) {
 }
 
 func testGetSubTree3(t *testing.T, store store.Store) {
-	boardID := "board-id"
+	boardID := testBoardID
 	blocks, err := store.GetBlocksForBoard(boardID)
 	require.NoError(t, err)
 	initialCount := len(blocks)
@@ -547,7 +549,7 @@ func testGetSubTree3(t *testing.T, store store.Store) {
 
 func testDeleteBlock(t *testing.T, store store.Store) {
 	userID := testUserID
-	boardID := "board-id"
+	boardID := testBoardID
 
 	blocks, err := store.GetBlocksForBoard(boardID)
 	require.NoError(t, err)
@@ -604,7 +606,7 @@ func testDeleteBlock(t *testing.T, store store.Store) {
 }
 
 func testUndeleteBlock(t *testing.T, store store.Store) {
-	boardID := "board-id"
+	boardID := testBoardID
 	userID := testUserID
 
 	blocks, err := store.GetBlocksForBoard(boardID)
@@ -696,7 +698,7 @@ func testUndeleteBlock(t *testing.T, store store.Store) {
 }
 
 func testGetBlocks(t *testing.T, store store.Store) {
-	boardID := "board-id"
+	boardID := testBoardID
 	blocks, err := store.GetBlocksForBoard(boardID)
 	require.NoError(t, err)
 
@@ -839,21 +841,21 @@ func testDuplicateBlock(t *testing.T, store store.Store) {
 	defer DeleteBlocks(t, store, subtreeSampleBlocks, "test")
 
 	t.Run("duplicate existing block as no template", func(t *testing.T) {
-		blocks, err := store.DuplicateBlock("board-id", "child1", testUserID, false)
+		blocks, err := store.DuplicateBlock(testBoardID, "child1", testUserID, false)
 		require.NoError(t, err)
 		require.Len(t, blocks, 3)
 		require.Equal(t, false, blocks[0].Fields["isTemplate"])
 	})
 
 	t.Run("duplicate existing block as template", func(t *testing.T) {
-		blocks, err := store.DuplicateBlock("board-id", "child1", testUserID, true)
+		blocks, err := store.DuplicateBlock(testBoardID, "child1", testUserID, true)
 		require.NoError(t, err)
 		require.Len(t, blocks, 3)
 		require.Equal(t, true, blocks[0].Fields["isTemplate"])
 	})
 
 	t.Run("duplicate not existing block", func(t *testing.T) {
-		blocks, err := store.DuplicateBlock("board-id", "not-existing-id", testUserID, false)
+		blocks, err := store.DuplicateBlock(testBoardID, "not-existing-id", testUserID, false)
 		require.Error(t, err)
 		require.Nil(t, blocks)
 	})

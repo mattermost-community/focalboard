@@ -21,6 +21,7 @@ import (
 	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
 	_ "github.com/lib/pq" // postgres driver
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
 	"github.com/mattermost/mattermost-plugin-api/cluster"
 )
@@ -102,7 +103,7 @@ func appendMultipleStatementsFlag(connectionString string) (string, error) {
 // enabled.
 func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	connectionString := s.connectionString
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		var err error
 		connectionString, err = appendMultipleStatementsFlag(s.connectionString)
 		if err != nil {
@@ -127,7 +128,7 @@ func (s *SQLStore) Migrate() error {
 	var err error
 	migrationsTable := fmt.Sprintf("%sschema_migrations", s.tablePrefix)
 
-	if s.dbType == sqliteDBType {
+	if s.dbType == model.SqliteDBType {
 		driver, err = sqlite3.WithInstance(s.db, &sqlite3.Config{MigrationsTable: migrationsTable})
 		if err != nil {
 			return err
@@ -140,14 +141,14 @@ func (s *SQLStore) Migrate() error {
 	}
 	defer db.Close()
 
-	if s.dbType == postgresDBType {
+	if s.dbType == model.PostgresDBType {
 		driver, err = postgres.WithInstance(db, &postgres.Config{MigrationsTable: migrationsTable})
 		if err != nil {
 			return err
 		}
 	}
 
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		driver, err = mysql.WithInstance(db, &mysql.Config{MigrationsTable: migrationsTable})
 		if err != nil {
 			return err
@@ -165,9 +166,9 @@ func (s *SQLStore) Migrate() error {
 		Bindata:  d.(*bindata.Bindata),
 		prefix:   s.tablePrefix,
 		plugin:   s.isPlugin,
-		postgres: s.dbType == postgresDBType,
-		sqlite:   s.dbType == sqliteDBType,
-		mysql:    s.dbType == mysqlDBType,
+		postgres: s.dbType == model.PostgresDBType,
+		sqlite:   s.dbType == model.SqliteDBType,
+		mysql:    s.dbType == model.MysqlDBType,
 	}
 
 	m, err := migrate.NewWithInstance("prefixed-migration", prefixedData, s.dbType, driver)
@@ -205,7 +206,7 @@ func (s *SQLStore) Migrate() error {
 		return err
 	}
 
-	if err := s.runCategoryUuidIdMigration(); err != nil {
+	if err := s.runCategoryUUIDIDMigration(); err != nil {
 		if s.isPlugin {
 			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
 			mutex.Unlock()
