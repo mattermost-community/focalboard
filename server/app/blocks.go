@@ -293,7 +293,7 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
 	}
 
 	if len(blocks) == 0 {
-		// deleting non-existing block not considered an error
+		// undeleting non-existing block not considered an error
 		return nil
 	}
 
@@ -307,14 +307,14 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
 		return err
 	}
 
-	board, err := a.store.GetBoard(block.BoardID)
-	if err != nil {
-		return err
-	}
-
 	if block == nil {
 		a.logger.Error("Error loading the block after undelete, not propagating through websockets or notifications")
 		return nil
+	}
+
+	board, err := a.store.GetBoard(block.BoardID)
+	if err != nil {
+		return err
 	}
 
 	a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
