@@ -111,13 +111,9 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                 dateDisplayPropertyId: 'id-6',
             },
         }
-        const card = {
-            parentId: board.id,
-        }
 
         const state = {
             searchText: {value: ''},
-<<<<<<< HEAD
             users: {
                 me: {
                     id: 'user-id',
@@ -132,12 +128,6 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                     card_id_1: {title: 'Create a new card'},
                 },
                 current: 'card_id_1',
-=======
-            users: {me: {id: 'user-id'}},
-            cards: {
-                templates: [card],
-                cards: [card],
->>>>>>> GH-1304 Add Toggle to hide empty groups for TableView
             },
             views: {views: []},
             contents: {contents: []},
