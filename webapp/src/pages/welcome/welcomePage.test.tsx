@@ -43,7 +43,7 @@ beforeEach(() => {
         welcomePageViewed: '1',
     }))
     mockedOctoClient.prepareOnboarding.mockResolvedValue({
-        workspaceID: 'workspace_id_1',
+        teamID: 'team_id_1',
         boardID: 'board_id_1',
     })
 })
@@ -250,7 +250,7 @@ describe('pages/welcome', () => {
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
         await waitFor(() => expect(mockedOctoClient.prepareOnboarding).toBeCalledTimes(1))
-        await waitFor(() => expect(history.replace).toBeCalledWith('/workspace/workspace_id_1/board_id_1'))
+        await waitFor(() => expect(history.replace).toBeCalledWith('/team/team_id_1/board_id_1'))
     })
 
     test('Welcome page skips tour on clicking no thanks option', async () => {

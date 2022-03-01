@@ -114,7 +114,7 @@ watch-server-test: modd-precheck ## Run server tests watching for changes
 server-test: server-test-sqlite server-test-mysql server-test-postgres ## Run server tests
 
 server-test-sqlite: ## Run server tests using sqlite
-	cd server; go test -tags='$(BUILD_TAGS)' -race -v -count=1 ./...
+	cd server; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
 
 server-test-mysql: export FB_UNIT_TESTING=1
 server-test-mysql: export FB_STORE_TEST_DB_TYPE=mysql
@@ -124,7 +124,7 @@ server-test-mysql: ## Run server tests using mysql
 	@echo Starting docker container for mysql
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml run start_dependencies
-	cd server; go test -race -v -count=1 ./...
+	cd server; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
 
 server-test-postgres: export FB_UNIT_TESTING=1
@@ -135,7 +135,7 @@ server-test-postgres: ## Run server tests using postgres
 	@echo Starting docker container for postgres
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml run start_dependencies
-	cd server; go test -race -v -count=1 ./...
+	cd server; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
 
 webapp: ## Build webapp.

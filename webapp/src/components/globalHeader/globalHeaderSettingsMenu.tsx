@@ -112,6 +112,9 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                             if (!me) {
                                 return
                             }
+                            if (!currentTeam) {
+                                return
+                            }
 
                             const patch: UserConfigPatch = {
                                 updatedFields: {
