@@ -66,5 +66,5 @@ export default function useImagePaste(boardId: string, cardId: string, contentOr
             document.removeEventListener('paste', onPaste)
             document.removeEventListener('drop', onDrop)
         }
-    }, [uploadItems])
+    }, [uploadItems, onPaste, onDrop])
 }
