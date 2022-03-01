@@ -22,15 +22,9 @@ var (
 	errUnableToFindWelcomeBoard = errors.New("unable to find welcome board in newly created blocks")
 )
 
-func (a *App) PrepareOnboardingTour(userID string) (string, string, error) {
-	// create a private workspace for the user
-	workspaceID, err := a.store.CreatePrivateWorkspace(userID)
-	if err != nil {
-		return "", "", err
-	}
-
+func (a *App) PrepareOnboardingTour(userID string, teamID string) (string, string, error) {
 	// copy the welcome board into this workspace
-	boardID, err := a.createWelcomeBoard(userID, workspaceID)
+	boardID, err := a.createWelcomeBoard(userID, teamID)
 	if err != nil {
 		return "", "", err
 	}
@@ -47,7 +41,7 @@ func (a *App) PrepareOnboardingTour(userID string) (string, string, error) {
 		return "", "", err
 	}
 
-	return workspaceID, boardID, nil
+	return teamID, boardID, nil
 }
 
 func (a *App) getOnboardingBoardID() (string, error) {
@@ -71,40 +65,20 @@ func (a *App) getOnboardingBoardID() (string, error) {
 	return onboardingBoardID, nil
 }
 
-func (a *App) createWelcomeBoard(userID, workspaceID string) (string, error) {
-	//onboardingBoardID, err := a.getOnboardingBoardID()
-	//if err != nil {
-	//	return "", err
-	//}
-	//
-	//blocks, err := a.GetSubTree(store.Container{WorkspaceID: "0"}, onboardingBoardID, 3)
-	//if err != nil {
-	//	return "", err
-	//}
-	//
-	//blocks = model.GenerateBlockIDs(blocks, a.logger)
-	//
-	//// we're copying from a global template, so we need to set the
-	//// `isTemplate` flag to false on the board
-	//var welcomeBoardID string
-	//for i := range blocks {
-	//	if blocks[i].Type == model.TypeBoard {
-	//		blocks[i].Fields["isTemplate"] = false
-	//
-	//		if blocks[i].Title == WelcomeBoardTitle {
-	//			welcomeBoardID = blocks[i].ID
-	//			break
-	//		}
-	//	}
-	//}
-	//
-	//model.StampModificationMetadata(userID, blocks, nil)
-	//_, err = a.InsertBlocks(store.Container{WorkspaceID: workspaceID}, blocks, userID, false)
-	//if err != nil {
-	//	return "", err
-	//}
-	//
-	//return welcomeBoardID, nil
+func (a *App) createWelcomeBoard(userID, teamID string) (string, error) {
+	onboardingBoardID, err := a.getOnboardingBoardID()
+	if err != nil {
+		return "", err
+	}
 
-	return "", nil
+	bab, _, err := a.DuplicateBoard(onboardingBoardID, userID, teamID, false)
+	if err != nil {
+		return "", err
+	}
+
+	if len(bab.Boards) != 1 {
+		return "", errors.New("the new board wasn't created")
+	}
+
+	return bab.Boards[0].ID, nil
 }

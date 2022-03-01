@@ -147,7 +147,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
 
 	// onboarding tour endpoints
-	apiv1.HandleFunc("/onboard", a.sessionRequired(a.handleOnboard)).Methods(http.MethodPost)
+	apiv1.HandleFunc("/teams/{teamID}/onboard", a.sessionRequired(a.handleOnboard)).Methods(http.MethodPost)
 
 	// archives
 	apiv1.HandleFunc("/boards/{boardID}/archive/export", a.sessionRequired(a.handleArchiveExportBoard)).Methods("GET")
@@ -2466,13 +2466,19 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/onboard onboard
+	// swagger:operation POST /api/v1/team/{teamID}/onboard onboard
 	//
 	// Onboards a user on Boards.
 	//
 	// ---
 	// produces:
 	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -2484,18 +2490,19 @@ func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	teamID := mux.Vars(r)["teamID"]
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 
-	workspaceID, boardID, err := a.app.PrepareOnboardingTour(session.UserID)
+	teamID, boardID, err := a.app.PrepareOnboardingTour(session.UserID, teamID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	response := map[string]string{
-		"workspaceID": workspaceID,
-		"boardID":     boardID,
+		"teamID":  teamID,
+		"boardID": boardID,
 	}
 	data, err := json.Marshal(response)
 	if err != nil {
