@@ -54,7 +54,6 @@ type Props = {
     addTemplate: (template: Card) => void
     shownCardId?: string
     showCard: (cardId?: string) => void
-    showShared: boolean
 }
 
 type State = {
@@ -155,7 +154,7 @@ class CenterPanel extends React.Component<Props, State> {
                             board={board}
                             readonly={this.props.readonly}
                         />
-                        {!this.props.readonly && this.props.showShared &&
+                        {!this.props.readonly &&
                             <ShareBoardButton
                                 boardId={this.props.board.id}
                                 enableSharedBoards={this.props.clientConfig?.enablePublicSharedBoards || false}

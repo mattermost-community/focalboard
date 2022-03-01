@@ -5,16 +5,12 @@ import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
 import {getCurrentTeam} from '../store/teams'
-import {getCurrentBoard, getCurrentBoardMembers} from '../store/boards'
+import {getCurrentBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentViewDisplayBy, getCurrentView} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
-import {getMe} from '../store/users'
-
-import {IUser} from '../user'
 
 import {getClientConfig, setClientConfig} from '../store/clientConfig'
-import {BoardMember} from '../blocks/board'
 
 import wsClient, {WSClient} from '../wsclient'
 import {ClientConfig} from '../config/clientConfig'
@@ -34,8 +30,6 @@ function CenterContent(props: Props) {
     const team = useAppSelector(getCurrentTeam)
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const board = useAppSelector(getCurrentBoard)
-    const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
-    const me = useAppSelector<IUser|null>(getMe)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
     const activeView = useAppSelector(getView(match.params.viewId))
     const views = useAppSelector(getCurrentBoardViews)
@@ -44,7 +38,6 @@ function CenterContent(props: Props) {
     const clientConfig = useAppSelector(getClientConfig)
     const history = useHistory()
     const dispatch = useAppDispatch()
-    const [showShared, setShowShared] = useState(false)
 
     const showCard = useCallback((cardId?: string) => {
         const params = {...match.params, cardId}
@@ -64,12 +57,6 @@ function CenterContent(props: Props) {
             wsClient.removeOnConfigChange(onConfigChangeHandler)
         }
     }, [])
-
-    useEffect(() => {
-        if (me && members[me.id]) {
-            setShowShared(members[me.id].schemeAdmin)
-        }
-    }, [me, members])
 
     if (board && activeView) {
         let property = groupByProperty
@@ -94,7 +81,6 @@ function CenterContent(props: Props) {
                 groupByProperty={property}
                 dateDisplayProperty={displayProperty}
                 views={views}
-                showShared={showShared}
             />
         )
     }
