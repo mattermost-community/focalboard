@@ -9,8 +9,7 @@ import {
     useHistory,
     generatePath,
 } from 'react-router-dom'
-
-import {createBrowserHistory} from 'history'
+import {createBrowserHistory, History} from 'history'
 
 import {IAppWindow} from './types'
 import BoardPage from './pages/boardPage'
@@ -85,46 +84,21 @@ function GlobalErrorRedirect() {
     return null
 }
 
-const FocalboardRouter = (): JSX.Element => {
+type Props = {
+    history?: History<unknown>
+}
+
+const FocalboardRouter = (props: Props): JSX.Element => {
     const isPlugin = Utils.isFocalboardPlugin()
 
-    const browserHistory: ReturnType<typeof createBrowserHistory> = useMemo(() => {
-        const history = createBrowserHistory({basename: Utils.getFrontendBaseURL()})
-
-        if (Utils.isDesktop() && isPlugin) {
-            window.addEventListener('message', (event: MessageEvent) => {
-                if (event.origin !== window.location.origin) {
-                    return
-                }
-
-                const pathName = event.data.message?.pathName
-                if (!pathName || !pathName.startsWith(window.frontendBaseURL)) {
-                    return
-                }
-
-                Utils.log(`Navigating Boards to ${pathName}`)
-                history.replace(pathName.replace(window.frontendBaseURL, ''))
-            })
-        }
-        return {
-            ...history,
-            push: (path: string, state?: unknown) => {
-                if (Utils.isDesktop() && isPlugin) {
-                    window.postMessage(
-                        {
-                            type: 'browser-history-push',
-                            message: {
-                                path: `${window.frontendBaseURL}${path}`,
-                            },
-                        },
-                        window.location.origin,
-                    )
-                } else {
-                    history.push(path, state)
-                }
-            },
-        }
-    }, [])
+    let browserHistory: History<unknown>
+    if (props.history) {
+        browserHistory = props.history
+    } else {
+        browserHistory = useMemo(() => {
+            return createBrowserHistory({basename: Utils.getFrontendBaseURL()})
+        }, [])
+    }
 
     if (isPlugin) {
         useEffect(() => {

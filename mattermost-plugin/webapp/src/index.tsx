@@ -3,6 +3,7 @@
 import React, {useEffect} from 'react'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
+import {createBrowserHistory, History} from 'history'
 
 import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/rudder'
 
@@ -21,6 +22,7 @@ windowAny.isFocalboardPlugin = true
 
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
+import {Utils} from '../../../webapp/src/utils'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
@@ -77,6 +79,46 @@ type Props = {
     webSocketClient: MMWebSocketClient
 }
 
+function customHistory() {
+    const history = createBrowserHistory({basename: Utils.getFrontendBaseURL()})
+
+    if (Utils.isDesktop()) {
+        window.addEventListener('message', (event: MessageEvent) => {
+            if (event.origin !== windowAny.location.origin) {
+                return
+            }
+
+            const pathName = event.data.message?.pathName
+            if (!pathName || !pathName.startsWith(windowAny.frontendBaseURL)) {
+                return
+            }
+
+            Utils.log(`Navigating Boards to ${pathName}`)
+            history.replace(pathName.replace(windowAny.frontendBaseURL, ''))
+        })
+    }
+    return {
+        ...history,
+        push: (path: string, state?: unknown) => {
+            if (Utils.isDesktop()) {
+                windowAny.postMessage(
+                    {
+                        type: 'browser-history-push',
+                        message: {
+                            path: `${windowAny.frontendBaseURL}${path}`,
+                        },
+                    },
+                    windowAny.location.origin,
+                )
+            } else {
+                history.push(path, state as Record<string, never>)
+            }
+        },
+    }
+}
+
+let browserHistory: History<unknown>
+
 const MainApp = (props: Props) => {
     wsClient.initPlugin(manifest.id, manifest.version, props.webSocketClient)
 
@@ -101,7 +143,7 @@ const MainApp = (props: Props) => {
         <ErrorBoundary>
             <ReduxProvider store={store}>
                 <div id='focalboard-app'>
-                    <App/>
+                    <App history={browserHistory}/>
                 </div>
                 <div id='focalboard-root-portal'/>
             </ReduxProvider>
@@ -112,7 +154,7 @@ const MainApp = (props: Props) => {
 const HeaderComponent = () => {
     return (
         <ErrorBoundary>
-            <GlobalHeader/>
+            <GlobalHeader history={browserHistory}/>
         </ErrorBoundary>
     )
 }
@@ -127,6 +169,7 @@ export default class Plugin {
         const subpath = siteURL ? getSubpath(siteURL) : ''
         windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
         windowAny.baseURL = subpath + windowAny.baseURL
+        browserHistory = customHistory()
 
         this.registry = registry
 

@@ -5,6 +5,7 @@ import {IntlProvider} from 'react-intl'
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import {TouchBackend} from 'react-dnd-touch-backend'
+import {History} from 'history'
 
 import TelemetryClient from './telemetry/telemetryClient'
 
@@ -21,7 +22,11 @@ import FocalboardRouter from './router'
 
 import {IUser} from './user'
 
-const App = (): JSX.Element => {
+type Props = {
+    history?: History<unknown>
+}
+
+const App = (props: Props): JSX.Element => {
     const language = useAppSelector<string>(getLanguage)
     const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
@@ -62,7 +67,7 @@ const App = (): JSX.Element => {
                 <div id='frame'>
                     <div id='main'>
                         <NewVersionBanner/>
-                        <FocalboardRouter/>
+                        <FocalboardRouter history={props.history}/>
                     </div>
                 </div>
             </DndProvider>
