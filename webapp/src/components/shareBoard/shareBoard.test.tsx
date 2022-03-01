@@ -74,6 +74,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
@@ -100,6 +101,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
@@ -126,6 +128,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
@@ -167,6 +170,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
@@ -200,6 +204,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
@@ -225,6 +230,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
@@ -243,6 +249,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />))
         })
 
@@ -269,6 +276,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                 <ShareBoard
                     boardId={board.id}
                     onClose={jest.fn()}
+                    enableSharedBoards={true}
                 />), {wrapper: MemoryRouter})
             container = result.container
         })
@@ -289,6 +297,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                 <ShareBoard
                     boardId={board.id}
                     onClose={jest.fn()}
+                    enableSharedBoards={true}
                 />), {wrapper: MemoryRouter})
             container = result.container
         })

@@ -33,9 +33,23 @@
                 flex: 1;
                 margin-right: 12px;
                 height: 40px;
+                width: 400px;
                 align-items: center;
                 display: flex;
                 padding: 0 4px 0 16px;
+            }
+
+            .IconButton {
+                height: 100%;
+                width: 40px;
+            }
+            .icon-refresh {
+                margin: 4px;
+                font-size: 18px;
+            }
+            .icon-content-copy {
+                margin-right: 4px;
+                font-size: 18px;
             }
 
             .shareUrl {
