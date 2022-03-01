@@ -3,9 +3,7 @@ package app
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,31 +12,18 @@ func TestPrepareOnboardingTour(t *testing.T) {
 	defer tearDown()
 
 	t.Run("base case", func(t *testing.T) {
-		welcomeBoard := model.Block{
-			ID:    "block_id_1",
-			Type:  model.TypeBoard,
-			Title: "Welcome to Boards!",
-			Fields: map[string]interface{}{
-				"isTemplate": true,
-			},
+		teamID := "team_id"
+		userID := "user_id_1"
+		welcomeBoard := model.Board{
+			ID:         "board_id_1",
+			Title:      "Welcome to Boards!",
+			TeamID:     "0",
+			IsTemplate: true,
 		}
 
-		blocks := []model.Block{welcomeBoard}
-		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
-
-		th.Store.EXPECT().GetSubTree3(
-			store.Container{WorkspaceID: "0"},
-			"block_id_1",
-			gomock.Any(),
-		).Return([]model.Block{welcomeBoard}, nil)
-
-		th.Store.EXPECT().InsertBlock(
-			store.Container{WorkspaceID: "workspace_id_1"},
-			gomock.Any(),
-			"user_id_1",
-		).Return(nil)
-
-		th.Store.EXPECT().CreatePrivateWorkspace("user_id_1").Return("workspace_id_1", nil)
+		th.Store.EXPECT().GetTemplateBoards("0").Return([]*model.Board{&welcomeBoard}, nil)
+		th.Store.EXPECT().DuplicateBoard(welcomeBoard.ID, userID, teamID, false).Return(&model.BoardsAndBlocks{Boards: []*model.Board{&welcomeBoard}}, nil, nil)
+		th.Store.EXPECT().GetMembersForBoard(welcomeBoard.ID).Return([]*model.BoardMember{}, nil)
 
 		userPropPatch := model.UserPropPatch{
 			UpdatedFields: map[string]string{
@@ -48,11 +33,11 @@ func TestPrepareOnboardingTour(t *testing.T) {
 			},
 		}
 
-		th.Store.EXPECT().PatchUserProps("user_id_1", userPropPatch).Return(nil)
+		th.Store.EXPECT().PatchUserProps(userID, userPropPatch).Return(nil)
 
-		workspaceID, boardID, err := th.App.PrepareOnboardingTour("user_id_1")
+		teamID, boardID, err := th.App.PrepareOnboardingTour(userID, teamID)
 		assert.NoError(t, err)
-		assert.Equal(t, "workspace_id_1", workspaceID)
+		assert.Equal(t, "team_id", teamID)
 		assert.NotEmpty(t, boardID)
 	})
 }
@@ -62,86 +47,40 @@ func TestCreateWelcomeBoard(t *testing.T) {
 	defer tearDown()
 
 	t.Run("base case", func(t *testing.T) {
-		welcomeBoard := model.Block{
-			ID:    "block_id_1",
-			Type:  model.TypeBoard,
-			Title: "Welcome to Boards!",
-			Fields: map[string]interface{}{
-				"isTemplate": true,
-			},
+		teamID := "team_id"
+		userID := "user_id_1"
+		welcomeBoard := model.Board{
+			ID:         "board_id_1",
+			Title:      "Welcome to Boards!",
+			TeamID:     "0",
+			IsTemplate: true,
 		}
+		th.Store.EXPECT().GetTemplateBoards("0").Return([]*model.Board{&welcomeBoard}, nil)
+		th.Store.EXPECT().DuplicateBoard(welcomeBoard.ID, userID, teamID, false).Return(&model.BoardsAndBlocks{Boards: []*model.Board{&welcomeBoard}}, nil, nil)
+		th.Store.EXPECT().GetMembersForBoard(welcomeBoard.ID).Return([]*model.BoardMember{}, nil)
 
-		blocks := []model.Block{welcomeBoard}
-		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
-
-		th.Store.EXPECT().GetSubTree3(
-			store.Container{WorkspaceID: "0"},
-			"block_id_1",
-			gomock.Any(),
-		).Return([]model.Block{welcomeBoard}, nil)
-
-		th.Store.EXPECT().InsertBlock(
-			store.Container{WorkspaceID: "workspace_id_1"},
-			gomock.Any(),
-			"user_id_1",
-		).Return(nil)
-
-		boardID, err := th.App.createWelcomeBoard("user_id_1", "workspace_id_1")
+		boardID, err := th.App.createWelcomeBoard(userID, teamID)
 		assert.Nil(t, err)
 		assert.NotEmpty(t, boardID)
 	})
 
 	t.Run("template doesn't contain a board", func(t *testing.T) {
-		welcomeBoard := model.Block{
-			ID:    "block_id_1",
-			Type:  model.TypeComment,
-			Title: "Welcome to Boards!",
-		}
-		blocks := []model.Block{welcomeBoard}
-		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
-
-		th.Store.EXPECT().GetSubTree3(
-			store.Container{WorkspaceID: "0"},
-			"buixxjic3xjfkieees4iafdrznc",
-			gomock.Any(),
-		).Return([]model.Block{welcomeBoard}, nil)
-
-		th.Store.EXPECT().InsertBlock(
-			store.Container{WorkspaceID: "workspace_id_1"},
-			gomock.Any(),
-			"user_id_1",
-		).Return(nil)
-
-		boardID, err := th.App.createWelcomeBoard("user_id_1", "workspace_id_1")
+		teamID := "team_id"
+		th.Store.EXPECT().GetTemplateBoards("0").Return([]*model.Board{}, nil)
+		boardID, err := th.App.createWelcomeBoard("user_id_1", teamID)
 		assert.Error(t, err)
 		assert.Empty(t, boardID)
 	})
 
 	t.Run("template doesn't contain the welcome board", func(t *testing.T) {
-		welcomeBoard := model.Block{
-			ID:    "block_id_1",
-			Type:  model.TypeBoard,
-			Title: "Jean luc Picard",
-			Fields: map[string]interface{}{
-				"isTemplate": true,
-			},
+		teamID := "team_id"
+		welcomeBoard := model.Board{
+			ID:         "board_id_1",
+			Title:      "Other template",
+			TeamID:     teamID,
+			IsTemplate: true,
 		}
-
-		blocks := []model.Block{welcomeBoard}
-		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
-
-		th.Store.EXPECT().GetSubTree3(
-			store.Container{WorkspaceID: "0"},
-			"buixxjic3xjfkieees4iafdrznc",
-			gomock.Any(),
-		).Return([]model.Block{welcomeBoard}, nil)
-
-		th.Store.EXPECT().InsertBlock(
-			store.Container{WorkspaceID: "workspace_id_1"},
-			gomock.Any(),
-			"user_id_1",
-		).Return(nil)
-
+		th.Store.EXPECT().GetTemplateBoards("0").Return([]*model.Board{&welcomeBoard}, nil)
 		boardID, err := th.App.createWelcomeBoard("user_id_1", "workspace_id_1")
 		assert.Error(t, err)
 		assert.Empty(t, boardID)
@@ -153,24 +92,13 @@ func TestGetOnboardingBoardID(t *testing.T) {
 	defer tearDown()
 
 	t.Run("base case", func(t *testing.T) {
-		board := model.Block{
-			ID:    "board_id_1",
-			Type:  model.TypeBoard,
-			Title: "Welcome to Boards!",
+		welcomeBoard := model.Board{
+			ID:         "board_id_1",
+			Title:      "Welcome to Boards!",
+			TeamID:     "0",
+			IsTemplate: true,
 		}
-
-		card := model.Block{
-			ID:       "card_id_1",
-			Type:     model.TypeCard,
-			ParentID: board.ID,
-		}
-
-		blocks := []model.Block{
-			board,
-			card,
-		}
-
-		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
+		th.Store.EXPECT().GetTemplateBoards("0").Return([]*model.Board{&welcomeBoard}, nil)
 
 		onboardingBoardID, err := th.App.getOnboardingBoardID()
 		assert.NoError(t, err)
@@ -178,9 +106,7 @@ func TestGetOnboardingBoardID(t *testing.T) {
 	})
 
 	t.Run("no blocks found", func(t *testing.T) {
-		blocks := []model.Block{}
-
-		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
+		th.Store.EXPECT().GetTemplateBoards("0").Return([]*model.Board{}, nil)
 
 		onboardingBoardID, err := th.App.getOnboardingBoardID()
 		assert.Error(t, err)
@@ -188,24 +114,13 @@ func TestGetOnboardingBoardID(t *testing.T) {
 	})
 
 	t.Run("onboarding board doesn't exists", func(t *testing.T) {
-		board := model.Block{
-			ID:    "board_id_1",
-			Type:  model.TypeBoard,
-			Title: "Some board title",
+		welcomeBoard := model.Board{
+			ID:         "board_id_1",
+			Title:      "Other template",
+			TeamID:     "0",
+			IsTemplate: true,
 		}
-
-		card := model.Block{
-			ID:       "card_id_1",
-			Type:     model.TypeCard,
-			ParentID: board.ID,
-		}
-
-		blocks := []model.Block{
-			board,
-			card,
-		}
-
-		th.Store.EXPECT().GetDefaultTemplateBlocks().Return(blocks, nil)
+		th.Store.EXPECT().GetTemplateBoards("0").Return([]*model.Board{&welcomeBoard}, nil)
 
 		onboardingBoardID, err := th.App.getOnboardingBoardID()
 		assert.Error(t, err)

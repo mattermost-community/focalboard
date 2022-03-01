@@ -110,9 +110,6 @@ type Store interface {
 	GetUserCategoryBlocks(userID, teamID string) ([]model.CategoryBlocks, error)
 	AddUpdateCategoryBlock(userID, categoryID, blockID string) error
 
-	// TODO remove this
-	CreatePrivateWorkspace(userID string) (string, error)
-
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(blockID string, subscriberID string) error
 	GetSubscription(blockID string, subscriberID string) (*model.Subscription, error)

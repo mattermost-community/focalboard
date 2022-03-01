@@ -594,7 +594,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 	require.Len(t, bab.Blocks, 2)
 
 	t.Run("duplicate existing board as no template", func(t *testing.T) {
-		bab, members, err := store.DuplicateBoard("board-id-1", userID, "team-id", false)
+		bab, members, err := store.DuplicateBoard("board-id-1", userID, teamID, false)
 		require.NoError(t, err)
 		require.Len(t, members, 1)
 		require.Len(t, bab.Boards, 1)
@@ -603,7 +603,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 	})
 
 	t.Run("duplicate existing board as template", func(t *testing.T) {
-		bab, members, err := store.DuplicateBoard("board-id-1", userID, "team-id", true)
+		bab, members, err := store.DuplicateBoard("board-id-1", userID, teamID, true)
 		require.NoError(t, err)
 		require.Len(t, members, 1)
 		require.Len(t, bab.Boards, 1)
@@ -612,7 +612,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 	})
 
 	t.Run("duplicate not existing board", func(t *testing.T) {
-		bab, members, err := store.DuplicateBoard("not-existing-id", userID, "team-id", false)
+		bab, members, err := store.DuplicateBoard("not-existing-id", userID, teamID, false)
 		require.Error(t, err)
 		require.Nil(t, members)
 		require.Nil(t, bab)

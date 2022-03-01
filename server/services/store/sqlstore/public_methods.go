@@ -84,12 +84,6 @@ func (s *SQLStore) CreateCategory(category model.Category) error {
 
 }
 
-func (s *SQLStore) CreatePrivateWorkspace(userID string) (string, error) {
-	//return s.createPrivateWorkspace(s.db, userID)
-	return "", nil
-
-}
-
 func (s *SQLStore) CreateSession(session *model.Session) error {
 	return s.createSession(s.db, session)
 
