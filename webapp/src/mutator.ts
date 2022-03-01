@@ -20,6 +20,7 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/
 import {Category} from './store/sidebar'
 
 /* eslint-disable max-lines */
+import {UserConfigPatch} from './user'
 import store from './store'
 import {updateBoards} from './store/boards'
 import {updateViews} from './store/views'
@@ -908,6 +909,10 @@ class Mutator {
         )
     }
 
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
+        return octoClient.patchUserConfig(userID, patch)
+    }
+
     // Duplicate
 
     async duplicateCard(
@@ -973,10 +978,11 @@ class Mutator {
         asTemplate = false,
         afterRedo?: (newBoardId: string) => Promise<void>,
         beforeUndo?: () => Promise<void>,
+        toTeam?: string,
     ): Promise<[Block[], string]> {
         return undoManager.perform(
             async () => {
-                const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate)
+                const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate, toTeam)
                 if (boardsAndBlocks) {
                     updateAllBoardsAndBlocks(boardsAndBlocks.boards, boardsAndBlocks.blocks)
                     await afterRedo?.(boardsAndBlocks.boards[0]?.id)
@@ -1005,12 +1011,13 @@ class Mutator {
         afterRedo: (id: string) => Promise<void>,
         beforeUndo: () => Promise<void>,
         boardTemplateId: string,
+        toTeam?: string,
     ): Promise<[Block[], string]> {
         const asTemplate = false
         const actionDescription = intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'})
 
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId})
-        return mutator.duplicateBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
+        return mutator.duplicateBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo, toTeam)
     }
 
     async addEmptyBoard(

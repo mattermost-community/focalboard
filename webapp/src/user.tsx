@@ -18,4 +18,11 @@ interface UserWorkspace {
     boardCount: number
 }
 
-export {IUser, UserWorkspace}
+interface UserConfigPatch {
+    updatedFields?: Record<string, string>
+    deletedFields?: string[]
+}
+
+const UserPropPrefix = 'focalboard_'
+
+export {IUser, UserWorkspace, UserConfigPatch, UserPropPrefix}

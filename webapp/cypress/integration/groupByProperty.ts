@@ -5,6 +5,7 @@ describe('Group board by different properties', () => {
     beforeEach(() => {
         cy.apiInitServer()
         cy.apiResetBoards()
+        cy.apiGetMe().then((userID) => cy.apiSkipTour(userID))
         localStorage.setItem('welcomePageViewed', 'true')
     })
 

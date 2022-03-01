@@ -6,14 +6,14 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
     class="ShareBoardButton"
   >
     <button
-      class="Button emphasis--secondary size--medium"
+      class="Button emphasis--primary size--medium"
       title="Share board"
       type="button"
     >
+      <i
+        class="CompassIcon icon-globe CompassIcon"
+      />
       <span>
-        <i
-          class="CompassIcon icon-globe CompassIcon"
-        />
         Share
       </span>
     </button>
