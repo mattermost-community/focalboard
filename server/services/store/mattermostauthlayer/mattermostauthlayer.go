@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mattermost/mattermost-server/v6/plugin"
+
 	"github.com/pkg/errors"
 
 	sq "github.com/Masterminds/squirrel"
@@ -40,18 +42,20 @@ func (pe NotSupportedError) Error() string {
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
-	dbType string
-	mmDB   *sql.DB
-	logger *mlog.Logger
+	dbType    string
+	mmDB      *sql.DB
+	logger    *mlog.Logger
+	pluginAPI plugin.API
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger) (*MattermostAuthLayer, error) {
+func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
-		Store:  store,
-		dbType: dbType,
-		mmDB:   db,
-		logger: logger,
+		Store:     store,
+		dbType:    dbType,
+		mmDB:      db,
+		logger:    logger,
+		pluginAPI: pluginAPI,
 	}
 
 	return layer, nil
@@ -154,6 +158,33 @@ func (s *MattermostAuthLayer) UpdateUserPassword(username, password string) erro
 
 func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) error {
 	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+}
+
+func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
+	user, err := s.pluginAPI.GetUser(userID)
+	if err != nil {
+		s.logger.Error("failed to fetch user", mlog.String("userID", userID), mlog.Err(err))
+		return err
+	}
+
+	props := user.Props
+
+	for _, key := range patch.DeletedFields {
+		delete(props, key)
+	}
+
+	for key, value := range patch.UpdatedFields {
+		props[key] = value
+	}
+
+	user.Props = props
+
+	if _, err := s.pluginAPI.UpdateUser(user); err != nil {
+		s.logger.Error("failed to update user", mlog.String("userID", userID), mlog.Err(err))
+		return err
+	}
+
+	return nil
 }
 
 // GetActiveUserCount returns the number of users with active sessions within N seconds ago.
@@ -455,4 +486,16 @@ func (s *MattermostAuthLayer) userWorkspacesFromRows(rows *sql.Rows) ([]model.Us
 	}
 
 	return userWorkspaces, nil
+}
+
+func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, error) {
+	// we emulate a private workspace by creating
+	// a DM channel from the user to themselves.
+	channel, err := s.pluginAPI.GetDirectChannel(userID, userID)
+	if err != nil {
+		s.logger.Error("error fetching private workspace", mlog.String("userID", userID), mlog.Err(err))
+		return "", err
+	}
+
+	return channel.Id, nil
 }

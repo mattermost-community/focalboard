@@ -22,9 +22,23 @@ import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
-import ShareBoardButton from './shareBoard/shareBoardButton'
-
 import './centerPanel.scss'
+
+import {RootState} from '../store'
+
+import {
+    getMe,
+    getOnboardingTourCategory,
+    getOnboardingTourStarted,
+    getOnboardingTourStep,
+    patchProps,
+} from '../store/users'
+
+import {IUser, UserConfigPatch} from '../user'
+
+import octoClient from '../octoClient'
+
+import ShareBoardButton from './shareBoard/shareBoardButton'
 
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
@@ -38,6 +52,8 @@ import Table from './table/table'
 import CalendarFullView from './calendar/fullCalendar'
 
 import Gallery from './gallery/gallery'
+import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
+import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
 
 type Props = {
     clientConfig?: ClientConfig
@@ -55,6 +71,12 @@ type Props = {
     shownCardId?: string
     showCard: (cardId?: string) => void
     showShared: boolean
+    onboardingTourStarted: boolean
+    onboardingTourCategory: string
+    onboardingTourStep: string
+    me: IUser|null
+    patchProps: (props: Record<string, string>) => void
+    currentCard?: string
 }
 
 type State = {
@@ -112,8 +134,45 @@ class CenterPanel extends React.Component<Props, State> {
         return true
     }
 
+    shouldStartBoardsTour(): boolean {
+        const isOnboardingBoard = this.props.board.title === 'Welcome to Boards!'
+        const isTourStarted = this.props.onboardingTourStarted
+        const completedCardsTour = this.props.onboardingTourCategory === TOUR_CARD && this.props.onboardingTourStep === FINISHED.toString()
+        const noCardOpen = !this.props.currentCard
+
+        return isOnboardingBoard && isTourStarted && completedCardsTour && noCardOpen
+    }
+
+    async prepareBoardsTour(): Promise<void> {
+        if (!this.props.me) {
+            return
+        }
+
+        const patch: UserConfigPatch = {
+            updatedFields: {
+                focalboard_tourCategory: TOUR_BOARD,
+                focalboard_onboardingTourStep: BoardTourSteps.ADD_VIEW.toString(),
+            },
+        }
+
+        const patchedProps = await octoClient.patchUserConfig(this.props.me.id, patch)
+        if (patchedProps) {
+            await this.props.patchProps(patchedProps)
+        }
+    }
+
+    async startBoardsTour(): Promise<void> {
+        if (!this.shouldStartBoardsTour()) {
+            return
+        }
+
+        await this.prepareBoardsTour()
+    }
+
     componentDidUpdate(): void {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: this.props.board.id, view: this.props.activeView.id, viewType: this.props.activeView.fields.viewType})
+
+        this.startBoardsTour()
     }
 
     render(): JSX.Element {
@@ -155,11 +214,16 @@ class CenterPanel extends React.Component<Props, State> {
                             board={board}
                             readonly={this.props.readonly}
                         />
-                        {!this.props.readonly && this.props.showShared &&
-                            <ShareBoardButton
-                                boardId={this.props.board.id}
-                            />
-                        }
+                        <div className='shareButtonWrapper'>
+                            {!this.props.readonly && this.props.showShared &&
+                                (
+                                    <ShareBoardButton
+                                        boardId={this.props.board.id}
+                                    />
+                                )
+                            }
+                            <ShareBoardTourStep/>
+                        </div>
                     </div>
                     <ViewHeader
                         board={this.props.board}
@@ -173,6 +237,7 @@ class CenterPanel extends React.Component<Props, State> {
                         addCardTemplate={this.addCardTemplate}
                         editCardTemplate={this.editCardTemplate}
                         readonly={this.props.readonly}
+                        showShared={this.props.showShared}
                     />
                 </div>
 
@@ -412,4 +477,25 @@ class CenterPanel extends React.Component<Props, State> {
     }
 }
 
-export default connect(undefined, {addCard, addTemplate, updateView})(injectIntl(CenterPanel))
+function mapStateToProps(state: RootState) {
+    const onboardingTourStarted = getOnboardingTourStarted(state)
+    const onboardingTourCategory = getOnboardingTourCategory(state)
+    const onboardingTourStep = getOnboardingTourStep(state)
+    const me = getMe(state)
+    const currentCard = state.cards.current
+
+    return {
+        onboardingTourStarted,
+        onboardingTourCategory,
+        onboardingTourStep,
+        me,
+        currentCard,
+    }
+}
+
+export default connect(mapStateToProps, {
+    addCard,
+    addTemplate,
+    updateView,
+    patchProps,
+})(injectIntl(CenterPanel))

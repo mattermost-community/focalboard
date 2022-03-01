@@ -11,8 +11,7 @@ import {IntlProvider} from 'react-intl'
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
 import {TouchBackend} from 'react-dnd-touch-backend'
-
-import {createBrowserHistory} from 'history'
+import {createBrowserHistory, History} from 'history'
 
 import TelemetryClient from './telemetry/telemetryClient'
 
@@ -35,57 +34,32 @@ import {setGlobalError, getGlobalError} from './store/globalError'
 import {useAppSelector, useAppDispatch} from './store/hooks'
 import {fetchClientConfig} from './store/clientConfig'
 
-import {IUser} from './user'
-import {UserSettings} from './userSettings'
+import {IUser, UserPropPrefix} from './user'
+import {UserSettingKey, UserSettings} from './userSettings'
 
 declare let window: IAppWindow
 
 const UUID_REGEX = new RegExp(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/)
 
-const App = (): JSX.Element => {
+type Props = {
+    history?: History<unknown>
+}
+
+const App = (props: Props): JSX.Element => {
     const language = useAppSelector<string>(getLanguage)
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
     const globalError = useAppSelector<string>(getGlobalError)
     const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
 
-    const browserHistory: ReturnType<typeof createBrowserHistory> = useMemo(() => {
-        const history = createBrowserHistory({basename: Utils.getFrontendBaseURL()})
-
-        if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
-            window.addEventListener('message', (event: MessageEvent) => {
-                if (event.origin !== window.location.origin) {
-                    return
-                }
-
-                const pathName = event.data.message?.pathName
-                if (!pathName || !pathName.startsWith(window.frontendBaseURL)) {
-                    return
-                }
-
-                Utils.log(`Navigating Boards to ${pathName}`)
-                history.replace(pathName.replace(window.frontendBaseURL, ''))
-            })
-        }
-        return {
-            ...history,
-            push: (path: string, state?: unknown) => {
-                if (Utils.isDesktop() && Utils.isFocalboardPlugin()) {
-                    window.postMessage(
-                        {
-                            type: 'browser-history-push',
-                            message: {
-                                path: `${window.frontendBaseURL}${path}`,
-                            },
-                        },
-                        window.location.origin,
-                    )
-                } else {
-                    history.push(path, state)
-                }
-            },
-        }
-    }, [])
+    let browserHistory: History<unknown>
+    if (props.history) {
+        browserHistory = props.history
+    } else {
+        browserHistory = useMemo(() => {
+            return createBrowserHistory({basename: Utils.getFrontendBaseURL()})
+        }, [])
+    }
 
     useEffect(() => {
         dispatch(fetchLanguage())
@@ -128,7 +102,7 @@ const App = (): JSX.Element => {
     }
 
     const continueToWelcomeScreen = () => {
-        return Utils.isFocalboardPlugin() && loggedIn === true && !UserSettings.welcomePageViewed
+        return loggedIn === true && !me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]
     }
 
     return (

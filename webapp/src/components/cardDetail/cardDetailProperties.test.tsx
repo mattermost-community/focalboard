@@ -8,6 +8,9 @@ import {mocked} from 'ts-jest/utils'
 import '@testing-library/jest-dom'
 import {createIntl} from 'react-intl'
 
+import configureStore from 'redux-mock-store'
+import {Provider as ReduxProvider} from 'react-redux'
+
 import {PropertyType} from '../../blocks/board'
 import {wrapIntl} from '../../testUtils'
 import {TestBlockFactory} from '../../test/testBlockFactory'
@@ -67,19 +70,53 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
     const cards = [card]
 
+    const state = {
+        users: {
+            me: {
+                id: 'user_id_1',
+                props: {
+                    focalboard_onboardingTourStarted: true,
+                    focalboard_tourCategory: 'card',
+                    focalboard_onboardingTourStep: '1',
+                },
+            },
+        },
+        boards: {
+            boards: {
+                [board.id]: board,
+            },
+            current: board.id,
+        },
+        cards: {
+            cards: {
+                [card.id]: card,
+            },
+            current: card.id,
+        },
+    }
+
+    const mockStore = configureStore([])
+    let store = mockStore(state)
+
+    beforeEach(() => {
+        store = mockStore(state)
+    })
+
     function renderComponent() {
-        const component = wrapIntl((
-            <CardDetailProperties
-                board={board!}
-                card={card}
-                cards={[card]}
-                contents={[]}
-                comments={[]}
-                activeView={view}
-                views={views}
-                readonly={false}
-            />
-        ))
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <CardDetailProperties
+                    board={board!}
+                    card={card}
+                    cards={[card]}
+                    contents={[]}
+                    comments={[]}
+                    activeView={view}
+                    views={views}
+                    readonly={false}
+                />
+            </ReduxProvider>,
+        )
 
         return render(component)
     }

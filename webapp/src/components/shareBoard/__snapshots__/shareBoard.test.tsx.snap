@@ -86,7 +86,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh Icon Icon--right"
+                    class="CompassIcon icon-refresh undefined"
                   />
                 </button>
               </div>
@@ -95,10 +95,10 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               title="Copy link"
               type="button"
             >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-content-copy CompassIcon"
-                />
                 Copy link
               </span>
             </button>
@@ -196,7 +196,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh Icon Icon--right"
+                    class="CompassIcon icon-refresh undefined"
                   />
                 </button>
               </div>
@@ -205,10 +205,10 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               title="Copy link"
               type="button"
             >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-content-copy CompassIcon"
-                />
                 Copied!
               </span>
             </button>
@@ -306,7 +306,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh Icon Icon--right"
+                    class="CompassIcon icon-refresh undefined"
                   />
                 </button>
               </div>
@@ -315,10 +315,10 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
               title="Copy link"
               type="button"
             >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-content-copy CompassIcon"
-                />
                 Copy link
               </span>
             </button>
@@ -416,7 +416,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh Icon Icon--right"
+                    class="CompassIcon icon-refresh undefined"
                   />
                 </button>
               </div>
@@ -425,10 +425,10 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
               title="Copy link"
               type="button"
             >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-content-copy CompassIcon"
-                />
                 Copy link
               </span>
             </button>
@@ -526,7 +526,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh Icon Icon--right"
+                    class="CompassIcon icon-refresh undefined"
                   />
                 </button>
               </div>
@@ -535,10 +535,10 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
               title="Copy link"
               type="button"
             >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-content-copy CompassIcon"
-                />
                 Copy link
               </span>
             </button>
@@ -705,7 +705,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh Icon Icon--right"
+                    class="CompassIcon icon-refresh undefined"
                   />
                 </button>
               </div>
@@ -714,10 +714,10 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               title="Copy link"
               type="button"
             >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-content-copy CompassIcon"
-                />
                 Copy link
               </span>
             </button>
@@ -815,7 +815,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh Icon Icon--right"
+                    class="CompassIcon icon-refresh undefined"
                   />
                 </button>
               </div>
@@ -824,10 +824,10 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               title="Copy link"
               type="button"
             >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-content-copy CompassIcon"
-                />
                 Copy link
               </span>
             </button>
@@ -925,7 +925,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh Icon Icon--right"
+                    class="CompassIcon icon-refresh undefined"
                   />
                 </button>
               </div>
@@ -934,10 +934,10 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               title="Copy link"
               type="button"
             >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-content-copy CompassIcon"
-                />
                 Copy link
               </span>
             </button>

@@ -3,6 +3,9 @@ package model
 import (
 	"encoding/json"
 	"io"
+	"strconv"
+
+	"github.com/mattermost/focalboard/server/services/audit"
 )
 
 // Block is the basic data unit
@@ -176,4 +179,20 @@ type QueryBlockHistoryOptions struct {
 	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
 	Limit          uint64 // if non-zero then limit the number of returned records
 	Descending     bool   // if true then the records are sorted by insert_at in descending order
+}
+
+func StampModificationMetadata(userID string, blocks []Block, auditRec *audit.Record) {
+	if userID == SingleUser {
+		userID = ""
+	}
+
+	now := GetMillis()
+	for i := range blocks {
+		blocks[i].ModifiedBy = userID
+		blocks[i].UpdateAt = now
+
+		if auditRec != nil {
+			auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), blocks[i])
+		}
+	}
 }

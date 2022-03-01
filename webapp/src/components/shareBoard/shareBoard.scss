@@ -30,23 +30,12 @@
             .input-container {
                 border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
                 border-radius: 4px;
-                width: 400px;
+                flex: 1;
+                margin-right: 12px;
                 height: 40px;
-            }
-
-            .IconButton {
-                height: 100%;
-                width: 40px;
-            }
-
-            .icon-refresh {
-                margin: 4px;
-                font-size: 18px;
-            }
-            
-            .icon-content-copy {
-                margin-right: 4px;
-                font-size: 18px;
+                align-items: center;
+                display: flex;
+                padding: 0 4px 0 16px;
             }
 
             .shareUrl {
@@ -55,7 +44,8 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 margin: auto 4px;
-                padding: 0 16px;
+                padding: 0 4px;
+                border-radius: 4px;
 
                 :hover {
                     background-color: rgb(var(--center-channel-color-rgb), 0.1);
