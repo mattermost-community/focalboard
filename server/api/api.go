@@ -55,7 +55,8 @@ type API struct {
 	audit           *audit.Audit
 }
 
-func NewAPI(app *app.App, singleUserToken string, authService string, permissions permissions.PermissionsService, logger *mlog.Logger, audit *audit.Audit) *API {
+func NewAPI(app *app.App, singleUserToken string, authService string, permissions permissions.PermissionsService,
+	logger *mlog.Logger, audit *audit.Audit) *API {
 	return &API{
 		app:             app,
 		singleUserToken: singleUserToken,
@@ -486,11 +487,12 @@ func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
 
 	updatedCategory, err := a.app.UpdateCategory(&category)
 	if err != nil {
-		if errors.Is(err, app.ErrorCategoryDeleted) {
+		switch {
+		case errors.Is(err, app.ErrorCategoryDeleted):
 			a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", err)
-		} else if errors.Is(err, app.ErrorCategoryPermissionDenied) {
+		case errors.Is(err, app.ErrorCategoryPermissionDenied):
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
-		} else {
+		default:
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		}
 		return
@@ -3723,23 +3725,6 @@ func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message
 		data = []byte("{}")
 	}
 	w.WriteHeader(code)
-	_, _ = w.Write(data)
-}
-
-func (a *API) errorResponseWithCode(w http.ResponseWriter, api string, statusCode int, errorCode int, message string, sourceError error) {
-	a.logger.Error("API ERROR",
-		mlog.Int("status", statusCode),
-		mlog.Int("code", errorCode),
-		mlog.Err(sourceError),
-		mlog.String("msg", message),
-		mlog.String("api", api),
-	)
-	w.Header().Set("Content-Type", "application/json")
-	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: errorCode})
-	if err != nil {
-		data = []byte("{}")
-	}
-	w.WriteHeader(statusCode)
 	_, _ = w.Write(data)
 }
 

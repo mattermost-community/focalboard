@@ -7,14 +7,15 @@ import (
 	"io"
 
 	"github.com/mattermost/focalboard/server/utils"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-var NoBoardsInBoardsAndBlocksErr = errors.New("at least one board is required")
-var NoBlocksInBoardsAndBlocksErr = errors.New("at least one block is required")
-var NoTeamInBoardsAndBlocksErr = errors.New("team ID cannot be empty")
-var BoardIDsAndPatchesMissmatchInBoardsAndBlocksErr = errors.New("board ids and patches need to match")
-var BlockIDsAndPatchesMissmatchInBoardsAndBlocksErr = errors.New("block ids and patches need to match")
+var ErrNoBoardsInBoardsAndBlocks = errors.New("at least one board is required")
+var ErrNoBlocksInBoardsAndBlocks = errors.New("at least one block is required")
+var ErrNoTeamInBoardsAndBlocks = errors.New("team ID cannot be empty")
+var ErrBoardIDsAndPatchesMissmatchInBoardsAndBlocks = errors.New("board ids and patches need to match")
+var ErrBlockIDsAndPatchesMissmatchInBoardsAndBlocks = errors.New("block ids and patches need to match")
 
 type BlockDoesntBelongToAnyBoardErr struct {
 	blockID string
@@ -39,11 +40,11 @@ type BoardsAndBlocks struct {
 
 func (bab *BoardsAndBlocks) IsValid() error {
 	if len(bab.Boards) == 0 {
-		return NoBoardsInBoardsAndBlocksErr
+		return ErrNoBoardsInBoardsAndBlocks
 	}
 
 	if len(bab.Blocks) == 0 {
-		return NoBlocksInBoardsAndBlocksErr
+		return ErrNoBlocksInBoardsAndBlocks
 	}
 
 	boardsMap := map[string]bool{}
@@ -74,11 +75,11 @@ type DeleteBoardsAndBlocks struct {
 
 func (dbab *DeleteBoardsAndBlocks) IsValid() error {
 	if len(dbab.Boards) == 0 {
-		return NoBoardsInBoardsAndBlocksErr
+		return ErrNoBoardsInBoardsAndBlocks
 	}
 
 	if len(dbab.Blocks) == 0 {
-		return NoBlocksInBoardsAndBlocksErr
+		return ErrNoBlocksInBoardsAndBlocks
 	}
 
 	return nil
@@ -107,19 +108,19 @@ type PatchBoardsAndBlocks struct {
 
 func (dbab *PatchBoardsAndBlocks) IsValid() error {
 	if len(dbab.BoardIDs) == 0 {
-		return NoBoardsInBoardsAndBlocksErr
+		return ErrNoBoardsInBoardsAndBlocks
 	}
 
 	if len(dbab.BoardIDs) != len(dbab.BoardPatches) {
-		return BoardIDsAndPatchesMissmatchInBoardsAndBlocksErr
+		return ErrBoardIDsAndPatchesMissmatchInBoardsAndBlocks
 	}
 
 	if len(dbab.BlockIDs) == 0 {
-		return NoBlocksInBoardsAndBlocksErr
+		return ErrNoBlocksInBoardsAndBlocks
 	}
 
 	if len(dbab.BlockIDs) != len(dbab.BlockPatches) {
-		return BlockIDsAndPatchesMissmatchInBoardsAndBlocksErr
+		return ErrBlockIDsAndPatchesMissmatchInBoardsAndBlocks
 	}
 
 	return nil
