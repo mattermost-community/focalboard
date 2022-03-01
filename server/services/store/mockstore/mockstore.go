@@ -68,17 +68,9 @@ func (m *MockStore) CreateBoardsAndBlocks(arg0 *model.BoardsAndBlocks, arg1 stri
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateBoardsAndBlocks", arg0, arg1)
 	ret0, _ := ret[0].(*model.BoardsAndBlocks)
-}
-
-// CreatePrivateWorkspace mocks base method.
-func (m *MockStore) CreatePrivateWorkspace(arg0 string) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreatePrivateWorkspace", arg0)
-	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
-
 
 // CreateBoardsAndBlocks indicates an expected call of CreateBoardsAndBlocks.
 func (mr *MockStoreMockRecorder) CreateBoardsAndBlocks(arg0, arg1 interface{}) *gomock.Call {
@@ -114,6 +106,15 @@ func (m *MockStore) CreateCategory(arg0 model.Category) error {
 func (mr *MockStoreMockRecorder) CreateCategory(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCategory", reflect.TypeOf((*MockStore)(nil).CreateCategory), arg0)
+}
+
+// CreatePrivateWorkspace mocks base method.
+func (m *MockStore) CreatePrivateWorkspace(arg0 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePrivateWorkspace", arg0)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreatePrivateWorkspace indicates an expected call of CreatePrivateWorkspace.
@@ -307,9 +308,9 @@ func (mr *MockStoreMockRecorder) DuplicateBlock(arg0, arg1, arg2, arg3 interface
 }
 
 // DuplicateBoard mocks base method.
-func (m *MockStore) DuplicateBoard(arg0, arg1 string, arg2 bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+func (m *MockStore) DuplicateBoard(arg0, arg1, arg2 string, arg3 bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DuplicateBoard", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "DuplicateBoard", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(*model.BoardsAndBlocks)
 	ret1, _ := ret[1].([]*model.BoardMember)
 	ret2, _ := ret[2].(error)
@@ -317,9 +318,9 @@ func (m *MockStore) DuplicateBoard(arg0, arg1 string, arg2 bool) (*model.BoardsA
 }
 
 // DuplicateBoard indicates an expected call of DuplicateBoard.
-func (mr *MockStoreMockRecorder) DuplicateBoard(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) DuplicateBoard(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DuplicateBoard", reflect.TypeOf((*MockStore)(nil).DuplicateBoard), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DuplicateBoard", reflect.TypeOf((*MockStore)(nil).DuplicateBoard), arg0, arg1, arg2, arg3)
 }
 
 // GetActiveUserCount mocks base method.

@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 )
 
 const (
@@ -73,39 +72,39 @@ func (a *App) getOnboardingBoardID() (string, error) {
 }
 
 func (a *App) createWelcomeBoard(userID, workspaceID string) (string, error) {
-	onboardingBoardID, err := a.getOnboardingBoardID()
-	if err != nil {
-		return "", err
-	}
+	//onboardingBoardID, err := a.getOnboardingBoardID()
+	//if err != nil {
+	//	return "", err
+	//}
+	//
+	//blocks, err := a.GetSubTree(store.Container{WorkspaceID: "0"}, onboardingBoardID, 3)
+	//if err != nil {
+	//	return "", err
+	//}
+	//
+	//blocks = model.GenerateBlockIDs(blocks, a.logger)
+	//
+	//// we're copying from a global template, so we need to set the
+	//// `isTemplate` flag to false on the board
+	//var welcomeBoardID string
+	//for i := range blocks {
+	//	if blocks[i].Type == model.TypeBoard {
+	//		blocks[i].Fields["isTemplate"] = false
+	//
+	//		if blocks[i].Title == WelcomeBoardTitle {
+	//			welcomeBoardID = blocks[i].ID
+	//			break
+	//		}
+	//	}
+	//}
+	//
+	//model.StampModificationMetadata(userID, blocks, nil)
+	//_, err = a.InsertBlocks(store.Container{WorkspaceID: workspaceID}, blocks, userID, false)
+	//if err != nil {
+	//	return "", err
+	//}
+	//
+	//return welcomeBoardID, nil
 
-	blocks, err := a.GetSubTree(onboardingBoardID, )
-
-	blocks, err := a.GetSubTree(store.Container{WorkspaceID: "0"}, onboardingBoardID, 3)
-	if err != nil {
-		return "", err
-	}
-
-	blocks = model.GenerateBlockIDs(blocks, a.logger)
-
-	// we're copying from a global template, so we need to set the
-	// `isTemplate` flag to false on the board
-	var welcomeBoardID string
-	for i := range blocks {
-		if blocks[i].Type == model.TypeBoard {
-			blocks[i].Fields["isTemplate"] = false
-
-			if blocks[i].Title == WelcomeBoardTitle {
-				welcomeBoardID = blocks[i].ID
-				break
-			}
-		}
-	}
-
-	model.StampModificationMetadata(userID, blocks, nil)
-	_, err = a.InsertBlocks(store.Container{WorkspaceID: workspaceID}, blocks, userID, false)
-	if err != nil {
-		return "", err
-	}
-
-	return welcomeBoardID, nil
+	return "", nil
 }
