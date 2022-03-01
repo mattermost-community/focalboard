@@ -15,7 +15,7 @@ import (
 const (
 	testFileName = "temp-file-name"
 	testBoardID  = "test-board-id"
-	testFilePath = "1/test-root-id/temp-file-name"
+	testFilePath = "1/test-board-id/temp-file-name"
 )
 
 type TestError struct{}
