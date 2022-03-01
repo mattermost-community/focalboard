@@ -14,12 +14,7 @@ func TestGetBlocks(t *testing.T) {
 	th := SetupTestHelperWithToken(t).Start()
 	defer th.TearDown()
 
-	newBoard := &model.Board{
-		TeamID: "team-id",
-		Type:   model.BoardTypeOpen,
-	}
-	board, resp := th.Client.CreateBoard(newBoard)
-	th.CheckOK(resp)
+	board := th.CreateBoard("team-id", model.BoardTypeOpen)
 
 	initialID1 := utils.NewID(utils.IDTypeBlock)
 	initialID2 := utils.NewID(utils.IDTypeBlock)
@@ -39,7 +34,7 @@ func TestGetBlocks(t *testing.T) {
 			Type:     model.TypeCard,
 		},
 	}
-	newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks)
+	newBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks)
 	require.NoError(t, resp.Error)
 	require.Len(t, newBlocks, 2)
 	blockID1 := newBlocks[0].ID
@@ -61,12 +56,7 @@ func TestPostBlock(t *testing.T) {
 	th := SetupTestHelperWithToken(t).Start()
 	defer th.TearDown()
 
-	newBoard := &model.Board{
-		TeamID: "team-id",
-		Type:   model.BoardTypeOpen,
-	}
-	board, resp := th.Client.CreateBoard(newBoard)
-	th.CheckOK(resp)
+	board := th.CreateBoard("team-id", model.BoardTypeOpen)
 
 	var blockID1 string
 	var blockID2 string
@@ -177,12 +167,7 @@ func TestPatchBlock(t *testing.T) {
 
 	initialID := utils.NewID(utils.IDTypeBlock)
 
-	newBoard := &model.Board{
-		TeamID: "team-id",
-		Type:   model.BoardTypeOpen,
-	}
-	board, resp := th.Client.CreateBoard(newBoard)
-	th.CheckOK(resp)
+	board := th.CreateBoard("team-id", model.BoardTypeOpen)
 
 	block := model.Block{
 		ID:       initialID,
@@ -277,13 +262,7 @@ func TestDeleteBlock(t *testing.T) {
 	th := SetupTestHelperWithToken(t).Start()
 	defer th.TearDown()
 
-	newBoard := &model.Board{
-		TeamID: "team-id",
-		Type:   model.BoardTypeOpen,
-	}
-
-	board, resp := th.Client.CreateBoard(newBoard)
-	th.CheckOK(resp)
+	board := th.CreateBoard("team-id", model.BoardTypeOpen)
 
 	var blockID string
 	t.Run("Create a block", func(t *testing.T) {
@@ -333,12 +312,7 @@ func TestUndeleteBlock(t *testing.T) {
 	th := SetupTestHelper(t).InitBasic()
 	defer th.TearDown()
 
-	newBoard := &model.Board{
-		TeamID: "team-id",
-		Type:   model.BoardTypeOpen,
-	}
-	board, resp := th.Client.CreateBoard(newBoard)
-	th.CheckOK(resp)
+	board := th.CreateBoard("team-id", model.BoardTypeOpen)
 
 	blocks, resp := th.Client.GetBlocksForBoard(board.ID)
 	require.NoError(t, resp.Error)
@@ -346,7 +320,7 @@ func TestUndeleteBlock(t *testing.T) {
 
 	var blockID string
 	t.Run("Create a block", func(t *testing.T) {
-		initialID := utils.NewID(utils.IDTypeBlock)
+		initialID := utils.NewID(utils.IDTypeBoard)
 		block := model.Block{
 			ID:       initialID,
 			BoardID:  board.ID,
@@ -407,12 +381,7 @@ func TestGetSubtree(t *testing.T) {
 	th := SetupTestHelperWithToken(t).Start()
 	defer th.TearDown()
 
-	newBoard := &model.Board{
-		TeamID: "team-id",
-		Type:   model.BoardTypeOpen,
-	}
-	board, resp := th.Client.CreateBoard(newBoard)
-	th.CheckOK(resp)
+	board := th.CreateBoard("team-id", model.BoardTypeOpen)
 
 	parentBlockID := utils.NewID(utils.IDTypeBlock)
 	childBlockID1 := utils.NewID(utils.IDTypeBlock)

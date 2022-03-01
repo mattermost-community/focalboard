@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 
 import {Board} from '../../src/blocks/board'
+import {UserConfigPatch} from '../../src/user'
 
 Cypress.Commands.add('apiRegisterUser', (data: Cypress.UserData, token?: string, failOnError?: boolean) => {
     return cy.request({
@@ -78,6 +79,21 @@ Cypress.Commands.add('apiResetBoards', () => {
             const toDelete = boards.filter((b) => !b.fields.isTemplate).map((b) => b.id)
             deleteBlocks(toDelete)
         }
+    })
+})
+
+Cypress.Commands.add('apiSkipTour', (userID: string) => {
+    const body: UserConfigPatch = {
+        updatedFields: {
+            focalboard_welcomePageViewed: '1',
+        },
+    }
+
+    return cy.request({
+        method: 'PUT',
+        url: `/api/v1/users/${encodeURIComponent(userID)}/config`,
+        ...headers(),
+        body,
     })
 })
 
