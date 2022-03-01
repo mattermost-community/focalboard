@@ -87,7 +87,22 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const intl = useIntl()
     const match = useRouteMatch<{teamId?: string, boardId: string, viewId: string}>()
 
-    const isAdmin = me ? members[me.id].schemeAdmin : false
+    const displayPermissions = () => {
+        if (Utils.isFocalboardPlugin()) {
+            return me ? members[me.id].schemeAdmin : false
+        }
+        return false
+    }
+
+    const displaySharedBoards = () => {
+        if (props.enableSharedBoards) {
+            if (!Utils.isFocalboardPlugin()) {
+                return true
+            }
+            return me ? members[me.id].schemeAdmin : false
+        }
+        return false
+    }
 
     const loadData = async () => {
         const newSharing = await client.getSharing(board.id)
@@ -143,7 +158,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             viewId: match.params.viewId,
             teamId: match.params.teamId,
         })
-        shareUrl.pathname = Utils.getFrontendBaseURL() + newPath
+        shareUrl.pathname = Utils.buildURL(newPath)
 
         const boardPath = generatePath('/team/:teamId/:boardId', {
             boardId: match.params.boardId,
@@ -170,7 +185,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             title={intl.formatMessage({id: 'ShareBoard.Title', defaultMessage: 'Share Board'})}
         >
             {/* ToDo: Make an autocomplete */}
-            { isAdmin &&
+            { displayPermissions() &&
             (<>
                 <div className='share-input__container'>
                     <div className='share-input'>
@@ -216,7 +231,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                 </div></>)
             }
 
-            {props.enableSharedBoards && isAdmin &&
+            { displaySharedBoards() &&
                 (<div className='tabs-modal'>
                     <div>
                         <div className='d-flex justify-content-between'>
