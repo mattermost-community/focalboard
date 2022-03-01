@@ -9,6 +9,7 @@ describe('Create and delete board / card', () => {
     beforeEach(() => {
         cy.apiInitServer()
         cy.apiResetBoards()
+        cy.apiGetMe().then((userID) => cy.apiSkipTour(userID))
         localStorage.setItem('welcomePageViewed', 'true')
     })
 
@@ -59,8 +60,8 @@ describe('Create and delete board / card', () => {
         // Rename board view
         cy.log('**Rename board view**')
         const boardViewTitle = `Test board (${timestamp})`
-        cy.get(".ViewHeader>.Editable[title='Board view']").should('exist')
-        cy.get('.ViewHeader>.Editable').
+        cy.get(".ViewHeader>.viewSelector>.Editable[title='Board view']").should('exist')
+        cy.get('.ViewHeader>.viewSelector>.Editable').
             clear().
             type(boardViewTitle).
             type('{esc}')

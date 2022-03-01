@@ -3,8 +3,6 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
-	"errors"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -14,8 +12,7 @@ import (
 )
 
 var (
-	errUnsupportedOperation = errors.New("unsupported operation")
-	teamFields              = []string{
+	teamFields = []string{
 		"id",
 		"signup_token",
 		"COALESCE(settings, '{}')",

@@ -1,5 +1,7 @@
 # Developer Tips and Tricks
 
+These tips and tricks apply to developing the standalone Personal Server of Focalboard. For most features, this is the easiest way to get started working against code that ships across editions. For working with Mattermost Boards, refer to the [Mattermost Boards developer's guide](mattermost-boards-dev-guide.md).
+
 ## Installation prerequisites
 
 Check that you have recent versions of the basic dependencies installed:
@@ -20,9 +22,9 @@ On Linux, to build the Linux app:
 * `sudo apt-get install libwebkit2gtk-4.0-dev`
 * `sudo apt-get install autoconf dh-autoreconf`
 
-## Clone the project source code
+## Fork and clone the project source code
 
-Clone the [GitHub repo here](https://github.com/mattermost/focalboard).
+Fork the [Focalboard GitHub repo](https://github.com/mattermost/focalboard), and clone it locally.
 
 ## Build and run from the terminal
 
