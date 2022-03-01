@@ -276,11 +276,11 @@ describe('src/components/workspace', () => {
         const onboardingCard = TestBlockFactory.createCard(welcomeBoard)
         onboardingCard.id = 'card1'
         onboardingCard.title = 'Create a new card'
-        onboardingCard.workspaceId = workspace1.id
+        onboardingCard.boardId = welcomeBoard.id
 
         const localState = {
-            workspace: {
-                current: workspace1,
+            teams: {
+                current: {id: 'team-id', title: 'Test Team'},
             },
             users: {
                 me: {
@@ -297,7 +297,7 @@ describe('src/components/workspace', () => {
                     update_at: 0,
                     is_bot: false,
                 },
-                workspaceUsers: [me],
+                boardUsers: [me],
                 blockSubscriptions: [],
             },
             boards: {
@@ -335,8 +335,13 @@ describe('src/components/workspace', () => {
             comments: {
                 comments: {},
             },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
+            },
         }
-        const localStore = mockStateStore([], localState)
+        const localStore = mockStateStore([thunk], localState)
 
         await act(async () => {
             render(wrapDNDIntl(
@@ -359,11 +364,11 @@ describe('src/components/workspace', () => {
         const onboardingCard = TestBlockFactory.createCard(welcomeBoard)
         onboardingCard.id = 'card1'
         onboardingCard.title = 'Create a new card'
-        onboardingCard.workspaceId = workspace1.id
+        onboardingCard.boardId = welcomeBoard.id
 
         const localState = {
-            workspace: {
-                current: workspace1,
+            teams: {
+                current: {id: 'team-id', title: 'Test Team'},
             },
             users: {
                 me: {
@@ -380,7 +385,7 @@ describe('src/components/workspace', () => {
                     update_at: 0,
                     is_bot: false,
                 },
-                workspaceUsers: [me],
+                boardUsers: [me],
                 blockSubscriptions: [],
             },
             boards: {
@@ -418,8 +423,13 @@ describe('src/components/workspace', () => {
             comments: {
                 comments: {},
             },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
+            },
         }
-        const localStore = mockStateStore([], localState)
+        const localStore = mockStateStore([thunk], localState)
 
         await act(async () => {
             render(wrapDNDIntl(
@@ -447,11 +457,11 @@ describe('src/components/workspace', () => {
         const onboardingCard = TestBlockFactory.createCard(welcomeBoard)
         onboardingCard.id = 'card1'
         onboardingCard.title = 'Create a new card'
-        onboardingCard.workspaceId = workspace1.id
+        onboardingCard.boardId = welcomeBoard.id
 
         const localState = {
-            workspace: {
-                current: workspace1,
+            teams: {
+                current: {id: 'team-id', title: 'Test Team'},
             },
             users: {
                 me: {
@@ -468,7 +478,7 @@ describe('src/components/workspace', () => {
                     update_at: 0,
                     is_bot: false,
                 },
-                workspaceUsers: [me],
+                boardUsers: [me],
                 blockSubscriptions: [],
             },
             boards: {
@@ -506,8 +516,13 @@ describe('src/components/workspace', () => {
             comments: {
                 comments: {},
             },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
+            },
         }
-        const localStore = mockStateStore([], localState)
+        const localStore = mockStateStore([thunk], localState)
 
         await act(async () => {
             render(wrapDNDIntl(

@@ -59,18 +59,20 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             title="View"
             value="View"
           />
-          <div
-            aria-label="View menu"
-            class="MenuWrapper"
-            role="button"
-          >
-            <button
-              type="button"
+          <div>
+            <div
+              aria-label="View menu"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <button>

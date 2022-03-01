@@ -186,7 +186,7 @@ describe('components/cardDetail/CardDetail', () => {
                         focalboard_onboardingTourStep: '0',
                     },
                 },
-                workspaceUsers: [
+                boardUsers: [
                     {username: 'username_1'},
                 ],
             },
@@ -280,7 +280,7 @@ describe('components/cardDetail/CardDetail', () => {
                         focalboard_onboardingTourStep: '1',
                     },
                 },
-                workspaceUsers: [
+                boardUsers: [
                     {username: 'username_1'},
                 ],
             },
@@ -372,7 +372,7 @@ describe('components/cardDetail/CardDetail', () => {
                         focalboard_onboardingTourStep: '2',
                     },
                 },
-                workspaceUsers: [
+                boardUsers: [
                     {username: 'username_1'},
                 ],
             },

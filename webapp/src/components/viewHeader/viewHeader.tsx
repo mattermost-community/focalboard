@@ -117,32 +117,33 @@ const ViewHeader = (props: Props) => {
     return (
         <div className='ViewHeader'>
             <div className='viewSelector'>
-            <Editable
-                value={viewTitle}
-                placeholderText='Untitled View'
-                onSave={(): void => {
-                    mutator.changeTitle(activeView.id, activeView.title, viewTitle)
-                }}
-                onCancel={(): void => {
-                    setViewTitle(activeView.title)
-                }}
-                onChange={setViewTitle}
-                saveOnEsc={true}
-                readonly={props.readonly}
-                spellCheck={true}
-                autoExpand={false}
-            />
-            <div>
-                <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
-                    <IconButton icon={<DropdownIcon/>}/>
-                    <ViewMenu
-                        board={board}
-                        activeView={activeView}
-                        views={views}
-                        readonly={props.readonly}
-                    />
-                </MenuWrapper>
-                {showAddViewTourStep && <AddViewTourStep/>}
+                <Editable
+                    value={viewTitle}
+                    placeholderText='Untitled View'
+                    onSave={(): void => {
+                        mutator.changeBlockTitle(activeView.boardId, activeView.id, activeView.title, viewTitle)
+                    }}
+                    onCancel={(): void => {
+                        setViewTitle(activeView.title)
+                    }}
+                    onChange={setViewTitle}
+                    saveOnEsc={true}
+                    readonly={props.readonly}
+                    spellCheck={true}
+                    autoExpand={false}
+                />
+                <div>
+                    <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
+                        <IconButton icon={<DropdownIcon/>}/>
+                        <ViewMenu
+                            board={board}
+                            activeView={activeView}
+                            views={views}
+                            readonly={props.readonly}
+                        />
+                    </MenuWrapper>
+                    {showAddViewTourStep && <AddViewTourStep/>}
+                </div>
             </div>
 
             <button
@@ -234,8 +235,7 @@ const ViewHeader = (props: Props) => {
                     addCardTemplate={props.addCardTemplate}
                     editCardTemplate={props.editCardTemplate}
                 />
-            </>
-            }
+            </>}
 
             {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>}
         </div>
