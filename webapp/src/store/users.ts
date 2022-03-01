@@ -112,7 +112,7 @@ export const getOnboardingTourStarted = createSelector(
             return false
         }
 
-        return Boolean(me.props.focalboard_onboardingTourStarted)
+        return Boolean(me.props?.focalboard_onboardingTourStarted)
     },
 )
 
@@ -123,11 +123,11 @@ export const getOnboardingTourStep = createSelector(
             return ''
         }
 
-        return me.props.focalboard_onboardingTourStep
+        return me.props?.focalboard_onboardingTourStep
     },
 )
 
 export const getOnboardingTourCategory = createSelector(
     getMe,
-    (me): string => (me ? me.props.focalboard_tourCategory : ''),
+    (me): string => (me ? me.props?.focalboard_tourCategory : ''),
 )
