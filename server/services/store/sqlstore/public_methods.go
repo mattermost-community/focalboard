@@ -81,7 +81,10 @@ func (s *SQLStore) CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, us
 
 func (s *SQLStore) CreateCategory(category model.Category) error {
 	return s.createCategory(s.db, category)
+}
 
+func (s *SQLStore) CreatePrivateWorkspace(userID string) (string, error) {
+	return s.createPrivateWorkspace(s.db, userID)
 }
 
 func (s *SQLStore) CreateSession(session *model.Session) error {
@@ -609,7 +612,10 @@ func (s *SQLStore) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID
 	}
 
 	return result, nil
+}
 
+func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
+	return s.patchUserProps(s.db, userID, patch)
 }
 
 func (s *SQLStore) RefreshSession(session *model.Session) error {

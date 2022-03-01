@@ -5,7 +5,9 @@ exports[`pages/welcome Welcome Page shows Explore Page 1`] = `
   <div
     class="WelcomePage"
   >
-    <div>
+    <div
+      class="wrapper"
+    >
       <h1
         class="text-heading9"
       >
@@ -19,24 +21,29 @@ exports[`pages/welcome Welcome Page shows Explore Page 1`] = `
       <img
         alt="Boards Welcome Image"
         class="WelcomePage__image WelcomePage__image--large"
-        src="http://localhost/test-file-stub"
+        src="test-file-stub"
       />
       <img
         alt="Boards Welcome Image"
         class="WelcomePage__image WelcomePage__image--small"
-        src="http://localhost/test-file-stub"
+        src="test-file-stub"
       />
       <button
         class="Button filled size--large"
         type="button"
       >
         <span>
-          Explore
+          Take a tour
         </span>
         <i
           class="CompassIcon icon-chevron-right Icon Icon--right"
         />
       </button>
+      <a
+        class="skip"
+      >
+        No thanks, I'll figure it out myself
+      </a>
     </div>
   </div>
 </div>
@@ -47,7 +54,9 @@ exports[`pages/welcome Welcome Page shows Explore Page with subpath 1`] = `
   <div
     class="WelcomePage"
   >
-    <div>
+    <div
+      class="wrapper"
+    >
       <h1
         class="text-heading9"
       >
@@ -61,24 +70,29 @@ exports[`pages/welcome Welcome Page shows Explore Page with subpath 1`] = `
       <img
         alt="Boards Welcome Image"
         class="WelcomePage__image WelcomePage__image--large"
-        src="http://localhost/subpath/test-file-stub"
+        src="test-file-stub"
       />
       <img
         alt="Boards Welcome Image"
         class="WelcomePage__image WelcomePage__image--small"
-        src="http://localhost/subpath/test-file-stub"
+        src="test-file-stub"
       />
       <button
         class="Button filled size--large"
         type="button"
       >
         <span>
-          Explore
+          Take a tour
         </span>
         <i
           class="CompassIcon icon-chevron-right Icon Icon--right"
         />
       </button>
+      <a
+        class="skip"
+      >
+        No thanks, I'll figure it out myself
+      </a>
     </div>
   </div>
 </div>

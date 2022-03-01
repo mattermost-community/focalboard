@@ -68,9 +68,17 @@ func (m *MockStore) CreateBoardsAndBlocks(arg0 *model.BoardsAndBlocks, arg1 stri
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateBoardsAndBlocks", arg0, arg1)
 	ret0, _ := ret[0].(*model.BoardsAndBlocks)
+}
+
+// CreatePrivateWorkspace mocks base method.
+func (m *MockStore) CreatePrivateWorkspace(arg0 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePrivateWorkspace", arg0)
+	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
+
 
 // CreateBoardsAndBlocks indicates an expected call of CreateBoardsAndBlocks.
 func (mr *MockStoreMockRecorder) CreateBoardsAndBlocks(arg0, arg1 interface{}) *gomock.Call {
@@ -106,6 +114,12 @@ func (m *MockStore) CreateCategory(arg0 model.Category) error {
 func (mr *MockStoreMockRecorder) CreateCategory(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateCategory", reflect.TypeOf((*MockStore)(nil).CreateCategory), arg0)
+}
+
+// CreatePrivateWorkspace indicates an expected call of CreatePrivateWorkspace.
+func (mr *MockStoreMockRecorder) CreatePrivateWorkspace(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePrivateWorkspace", reflect.TypeOf((*MockStore)(nil).CreatePrivateWorkspace), arg0)
 }
 
 // CreateSession mocks base method.
@@ -1024,6 +1038,20 @@ func (m *MockStore) PatchBoardsAndBlocks(arg0 *model.PatchBoardsAndBlocks, arg1 
 func (mr *MockStoreMockRecorder) PatchBoardsAndBlocks(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchBoardsAndBlocks", reflect.TypeOf((*MockStore)(nil).PatchBoardsAndBlocks), arg0, arg1)
+}
+
+// PatchUserProps mocks base method.
+func (m *MockStore) PatchUserProps(arg0 string, arg1 model.UserPropPatch) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PatchUserProps", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PatchUserProps indicates an expected call of PatchUserProps.
+func (mr *MockStoreMockRecorder) PatchUserProps(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchUserProps", reflect.TypeOf((*MockStore)(nil).PatchUserProps), arg0, arg1)
 }
 
 // RefreshSession mocks base method.

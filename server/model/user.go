@@ -57,6 +57,16 @@ type User struct {
 	IsBot bool `json:"is_bot"`
 }
 
+type UserPropPatch struct {
+	// The user prop updated fields
+	// required: false
+	UpdatedFields map[string]string `json:"updatedFields"`
+
+	// The user prop removed fields
+	// required: false
+	DeletedFields []string `json:"deletedFields"`
+}
+
 type Session struct {
 	ID          string                 `json:"id"`
 	Token       string                 `json:"token"`
