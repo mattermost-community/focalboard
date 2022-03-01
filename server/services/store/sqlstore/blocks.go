@@ -17,8 +17,7 @@ import (
 )
 
 const (
-	legacyTypeBoard = "board"
-	maxSearchDepth  = 50
+	maxSearchDepth = 50
 )
 
 type BoardIDNilError struct{}
@@ -238,19 +237,6 @@ func (s *SQLStore) getBlocksForBoard(db sq.BaseRunner, boardID string) ([]model.
 	return s.blocksFromRows(rows)
 }
 
-func getIsTemplateFilter(dbType string) (sq.Sqlizer, error) {
-	switch dbType {
-	case mysqlDBType:
-		return sq.Expr("json_extract(fields, '$.isTemplate')"), nil
-	case sqliteDBType:
-		return sq.Expr("fields->'$.isTemplate'"), nil
-	case postgresDBType:
-		return sq.Expr("(fields->'isTemplate')::text::boolean"), nil
-	default:
-		return nil, fmt.Errorf("invalid dbType")
-	}
-}
-
 func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	results := []model.Block{}
 
@@ -297,40 +283,6 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 	}
 
 	return results, nil
-}
-
-func (s *SQLStore) getBoardID(db sq.BaseRunner, blockID string) (string, error) {
-	query := s.getQueryBuilder(db).Select("board_id").
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"id": blockID})
-
-	row := query.QueryRow()
-
-	var boardID string
-
-	err := row.Scan(&boardID)
-	if err != nil {
-		return "", err
-	}
-
-	return boardID, nil
-}
-
-func (s *SQLStore) getParentID(db sq.BaseRunner, blockID string) (string, error) {
-	query := s.getQueryBuilder(db).Select("parent_id").
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"id": blockID})
-
-	row := query.QueryRow()
-
-	var parentID string
-
-	err := row.Scan(&parentID)
-	if err != nil {
-		return "", err
-	}
-
-	return parentID, nil
 }
 
 func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID string) error {
@@ -722,9 +674,9 @@ func (s *SQLStore) getBoardAndCard(db sq.BaseRunner, block *model.Block) (board 
 			break
 		}
 
-		blocks, err := s.getBlockHistory(db, iter.ParentID, opts)
-		if err != nil {
-			return nil, nil, err
+		blocks, err2 := s.getBlockHistory(db, iter.ParentID, opts)
+		if err2 != nil {
+			return nil, nil, err2
 		}
 		if len(blocks) == 0 {
 			return board, card, nil
