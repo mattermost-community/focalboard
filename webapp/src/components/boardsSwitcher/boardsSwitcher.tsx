@@ -21,6 +21,14 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
 
     const [showSwitcher, setShowSwitcher] = useState<boolean>(false)
 
+    // We need this keyboard handling (copied from Mattermost webapp) instead of
+    // using react-hotkeys-hook as react-hotkeys-hook is unable to handle keyboard shortcuts that
+    // the browser uses when the user is focused in an input field.
+    //
+    // For example, you press Cmd + k, then type something in the search input field. Pressing Cmd + k again
+    // is expected to close the board switcher, however, with react-hotkeys-hook it doesn't.
+    // This is because Cmd + k is a Firefox shortcut and react-hotkeys-hook is
+    // unable to override it if the user is focused on any input field.
     const handleQuickSwitchKeyPress = (e: KeyboardEvent) => {
         if (Utils.cmdOrCtrlPressed(e) && !e.shiftKey && Utils.isKeyPressed(e, Constants.keyCodes.K)) {
             if (!e.altKey) {
