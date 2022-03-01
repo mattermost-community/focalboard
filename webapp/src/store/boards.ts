@@ -135,6 +135,7 @@ const boardsSlice = createSlice({
             action.payload.boards.forEach((board) => {
                 state.boards[board.id] = board
             })
+            state.templates = {}
             action.payload.boardTemplates.forEach((board) => {
                 state.templates[board.id] = board
             })
