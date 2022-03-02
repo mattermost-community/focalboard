@@ -43,7 +43,7 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
             return
         }
         const newPath = generatePath(match.path, {...match.params, boardId, viewId: undefined})
-        const member = await octoClient.joinBoard(me.id, boardId)
+        const member = await octoClient.createBoardMember({userId: me.id, boardId})
         if (member && member.boardId) {
             history.push(newPath)
             props.onClose()
