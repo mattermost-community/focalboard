@@ -20,6 +20,7 @@ windowAny.isFocalboardPlugin = true
 
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
+import {setTeam} from '../../../webapp/src/store/teams'
 import {Utils} from '../../../webapp/src/utils'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
