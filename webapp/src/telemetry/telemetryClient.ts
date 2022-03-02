@@ -39,6 +39,8 @@ export const TelemetryActions = {
     ImportJira: 'settings_importJira',
     ImportTodoist: 'settings_importTodoist',
     ExportArchive: 'settings_exportArchive',
+    StartTour: 'welcomeScreen_startTour',
+    SkipTour: 'welcomeScreen_skipTour',
 }
 
 interface IEventProps {

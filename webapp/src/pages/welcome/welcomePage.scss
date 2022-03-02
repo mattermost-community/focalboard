@@ -20,6 +20,23 @@
     .Button {
         display: inline-flex;
     }
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .skip {
+        margin-top: 12px;
+        color: rgba(var(--link-color-rgb), 1);
+        cursor: pointer;
+
+        &:hover {
+            background: none;
+        }
+    }
 }
 
 .WelcomePage__image {
@@ -49,7 +66,6 @@
 .WelcomePage__subtitle {
     font-size: 16px;
     line-height: 1.6;
-    margin: 24px 0 0;
 
     @media (min-width: 2000px) {
         font-size: 20px;

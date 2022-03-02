@@ -109,6 +109,23 @@ definitions:
         x-go-name: UpdatedFields
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
+  UserPropPatch:
+    description: UserConfigPatch is a patch for user config
+    properties:
+      deletedFields:
+        description: The config fields removed
+        items:
+          type: string
+        type: array
+        x-go-name: DeletedFields
+      updatedFields:
+        additionalProperties:
+          type: object
+        description: The updated config
+        type: object
+        x-go-name: UpdatedFields
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
   BlockPatchBatch:
     description: BlockPatchBatch is a batch of IDs and patches for modify blocks
     properties:
@@ -476,6 +493,15 @@ definitions:
     - updateAt
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
+  OnboardingResponse:
+    description: OnboardResponse contains basic data required by the client to complete the onboarding
+    properties:
+      workspaceID:
+        description: the workspace to send to user to, to start the onboarding tour
+        type: string
+      boardID:
+        description: the board to send to user to, to start the onboarding tour
+        type: string
 host: localhost
 info:
   contact:

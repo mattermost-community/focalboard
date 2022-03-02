@@ -204,6 +204,16 @@ func (c *Client) DeleteBlock(blockID string) (bool, *Response) {
 	return true, BuildResponse(r)
 }
 
+func (c *Client) UndeleteBlock(blockID string) (bool, *Response) {
+	r, err := c.DoAPIPost(c.GetBlockRoute(blockID)+"/undelete", "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
 func (c *Client) GetSubtree(blockID string) ([]model.Block, *Response) {
 	r, err := c.DoAPIGet(c.GetSubtreeRoute(blockID), "")
 	if err != nil {

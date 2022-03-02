@@ -49,7 +49,7 @@ Most development can be done on the Personal Server edition. Please refer to the
 
 First, install basic dependencies:
 * Go 1.15+
-* Node 10+ and npm
+* Node 16.3+ and npm
 * Mingw64 on Windows
 
 ```

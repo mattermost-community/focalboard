@@ -8,14 +8,25 @@ import {act, render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 import {Provider as ReduxProvider} from 'react-redux'
 
+import userEvent from '@testing-library/user-event'
+
+import {mocked} from 'ts-jest/utils'
+
 import {FetchMock} from '../../test/fetchMock'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
-import {mockDOM, wrapIntl} from '../../testUtils'
+import {mockDOM, wrapDNDIntl, wrapIntl} from '../../testUtils'
+
+import octoClient from '../../octoClient'
+
+import {createTextBlock} from '../../blocks/textBlock'
 
 import CardDetail from './cardDetail'
 
 global.fetch = FetchMock.fn
+jest.mock('../../octoClient')
+
+const mockedOctoClient = mocked(octoClient, true)
 
 beforeEach(() => {
     FetchMock.fn.mockReset()
@@ -60,6 +71,18 @@ describe('components/cardDetail/CardDetail', () => {
                 workspaceUsers: [
                     {username: 'username_1'},
                 ],
+            },
+            boards: {
+                boards: {
+                    [board.id]: board,
+                },
+                current: board.id,
+            },
+            cards: {
+                cards: {
+                    [card.id]: card,
+                },
+                current: card.id,
             },
         })
 
@@ -141,5 +164,291 @@ describe('components/cardDetail/CardDetail', () => {
         // Add comment option is not shown in readonly mode
         const newCommentSection = container!.querySelectorAll('.newcomment')
         expect(newCommentSection.length).toBe(0)
+    })
+
+    test('should show add properties tour tip', async () => {
+        const mockStore = configureStore([])
+
+        const welcomeBoard = TestBlockFactory.createBoard()
+        welcomeBoard.title = 'Welcome to Boards!'
+
+        const welcomeCard = TestBlockFactory.createCard(welcomeBoard)
+        welcomeCard.title = 'Create a new card'
+
+        const store = mockStore({
+            users: {
+                me: {
+                    id: 'user_id_1',
+                    props: {
+                        focalboard_welcomePageViewed: '1',
+                        focalboard_onboardingTourStarted: true,
+                        focalboard_tourCategory: 'card',
+                        focalboard_onboardingTourStep: '0',
+                    },
+                },
+                workspaceUsers: [
+                    {username: 'username_1'},
+                ],
+            },
+            boards: {
+                boards: {
+                    [welcomeBoard.id]: welcomeBoard,
+                },
+                current: welcomeBoard.id,
+            },
+            cards: {
+                cards: {
+                    [welcomeCard.id]: welcomeCard,
+                },
+                current: welcomeCard.id,
+            },
+        })
+
+        const onboardingBoard = TestBlockFactory.createBoard()
+        onboardingBoard.title = 'Welcome to Boards!'
+
+        const onboardingCard = TestBlockFactory.createCard(board)
+        onboardingCard.title = 'Create a new card'
+
+        const component = (
+            <ReduxProvider store={store}>
+                {wrapIntl(
+                    <CardDetail
+                        board={onboardingBoard}
+                        activeView={view}
+                        views={[view]}
+                        cards={[onboardingCard]}
+                        card={onboardingCard}
+                        comments={[comment1, comment2]}
+                        contents={[]}
+                        readonly={false}
+                    />,
+                )}
+            </ReduxProvider>
+        )
+
+        let container: Element | DocumentFragment | null = null
+
+        await act(async () => {
+            const result = render(component)
+            container = result.container
+        })
+
+        expect(container).toBeDefined()
+        expect(container).not.toBeNull()
+
+        const tourTip = document.querySelectorAll('.AddPropertiesTourStep')
+        expect(tourTip.length).toBe(2)
+        expect(tourTip[1]).toMatchSnapshot()
+
+        // moving to next step
+        mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
+
+        const nextBtn = document!.querySelector('.tipNextButton')
+        expect(nextBtn).toBeDefined()
+        expect(nextBtn).not.toBeNull()
+        await act(async () => {
+            userEvent.click(nextBtn!)
+        })
+        expect(mockedOctoClient.patchUserConfig).toBeCalledWith(
+            'user_id_1',
+            {
+                updatedFields: {
+                    focalboard_onboardingTourStep: '1',
+                },
+            },
+        )
+    })
+
+    test('should show add comments tour tip', async () => {
+        const mockStore = configureStore([])
+
+        const welcomeBoard = TestBlockFactory.createBoard()
+        welcomeBoard.title = 'Welcome to Boards!'
+
+        const welcomeCard = TestBlockFactory.createCard(welcomeBoard)
+        welcomeCard.title = 'Create a new card'
+
+        const store = mockStore({
+            users: {
+                me: {
+                    id: 'user_id_1',
+                    props: {
+                        focalboard_welcomePageViewed: '1',
+                        focalboard_onboardingTourStarted: true,
+                        focalboard_tourCategory: 'card',
+                        focalboard_onboardingTourStep: '1',
+                    },
+                },
+                workspaceUsers: [
+                    {username: 'username_1'},
+                ],
+            },
+            boards: {
+                boards: {
+                    [welcomeBoard.id]: welcomeBoard,
+                },
+                current: welcomeBoard.id,
+            },
+            cards: {
+                cards: {
+                    [welcomeCard.id]: welcomeCard,
+                },
+                current: welcomeCard.id,
+            },
+        })
+
+        const onboardingBoard = TestBlockFactory.createBoard()
+        onboardingBoard.title = 'Welcome to Boards!'
+
+        const onboardingCard = TestBlockFactory.createCard(board)
+        onboardingCard.title = 'Create a new card'
+
+        const component = (
+            <ReduxProvider store={store}>
+                {wrapIntl(
+                    <CardDetail
+                        board={onboardingBoard}
+                        activeView={view}
+                        views={[view]}
+                        cards={[onboardingCard]}
+                        card={onboardingCard}
+                        comments={[comment1, comment2]}
+                        contents={[]}
+                        readonly={false}
+                    />,
+                )}
+            </ReduxProvider>
+        )
+
+        let container: Element | DocumentFragment | null = null
+
+        await act(async () => {
+            const result = render(component)
+            container = result.container
+        })
+
+        expect(container).toBeDefined()
+        expect(container).not.toBeNull()
+
+        const tourTip = document.querySelectorAll('.AddCommentTourStep')
+        expect(tourTip.length).toBe(2)
+        expect(tourTip[1]).toMatchSnapshot()
+
+        // moving to next step
+        mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
+
+        const nextBtn = document!.querySelector('.tipNextButton')
+        expect(nextBtn).toBeDefined()
+        expect(nextBtn).not.toBeNull()
+        await act(async () => {
+            userEvent.click(nextBtn!)
+        })
+        expect(mockedOctoClient.patchUserConfig).toBeCalledWith(
+            'user_id_1',
+            {
+                updatedFields: {
+                    focalboard_onboardingTourStep: '2',
+                },
+            },
+        )
+    })
+
+    test('should show add description tour tip', async () => {
+        const mockStore = configureStore([])
+        const welcomeBoard = TestBlockFactory.createBoard()
+        welcomeBoard.title = 'Welcome to Boards!'
+
+        const welcomeCard = TestBlockFactory.createCard(welcomeBoard)
+        welcomeCard.title = 'Create a new card'
+        const state = {
+            users: {
+                me: {
+                    id: 'user_id_1',
+                    props: {
+                        focalboard_welcomePageViewed: '1',
+                        focalboard_onboardingTourStarted: true,
+                        focalboard_tourCategory: 'card',
+                        focalboard_onboardingTourStep: '2',
+                    },
+                },
+                workspaceUsers: [
+                    {username: 'username_1'},
+                ],
+            },
+            boards: {
+                boards: {
+                    [welcomeBoard.id]: welcomeBoard,
+                },
+                current: welcomeBoard.id,
+            },
+            cards: {
+                cards: {
+                    [welcomeCard.id]: welcomeCard,
+                },
+                current: welcomeCard.id,
+            },
+        }
+        const store = mockStore(state)
+
+        const onboardingBoard = TestBlockFactory.createBoard()
+        onboardingBoard.title = 'Welcome to Boards!'
+
+        const onboardingCard = TestBlockFactory.createCard(board)
+        onboardingCard.title = 'Create a new card'
+
+        const text = createTextBlock()
+        text.title = 'description'
+        text.parentId = onboardingCard.id
+        onboardingCard.fields.contentOrder = [text.id]
+
+        const component = (
+            <ReduxProvider store={store}>
+                {wrapDNDIntl(
+                    <CardDetail
+                        board={onboardingBoard}
+                        activeView={view}
+                        views={[view]}
+                        cards={[onboardingCard]}
+                        card={onboardingCard}
+                        comments={[comment1, comment2]}
+                        contents={[text]}
+                        readonly={false}
+                    />,
+                )}
+            </ReduxProvider>
+        )
+
+        let container: Element | DocumentFragment | null = null
+
+        await act(async () => {
+            const result = render(component)
+            container = result.container
+        })
+
+        expect(container).toBeDefined()
+        expect(container).not.toBeNull()
+
+        const tourTip = document.querySelectorAll('.AddDescriptionTourStep')
+        expect(tourTip.length).toBe(2)
+        expect(tourTip[1]).toMatchSnapshot()
+
+        // moving to next step
+        mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
+
+        const nextBtn = document!.querySelector('.tipNextButton')
+        expect(nextBtn).toBeDefined()
+        expect(nextBtn).not.toBeNull()
+        await act(async () => {
+            userEvent.click(nextBtn!)
+        })
+        expect(mockedOctoClient.patchUserConfig).toBeCalledWith(
+            'user_id_1',
+            {
+                updatedFields: {
+                    focalboard_onboardingTourStep: '999',
+                },
+            },
+        )
     })
 })
