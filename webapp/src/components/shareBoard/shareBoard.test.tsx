@@ -107,7 +107,7 @@ describe('src/components/shareBoard/shareBoard', () => {
             )
             container = result.container
         })
-        const copyLinkElement = screen.getByRole('button', {name: 'Copy public link'})
+        const copyLinkElement = screen.getByRole('button', {name: 'Copy internal link'})
         expect(copyLinkElement).toBeDefined()
 
         expect(container).toMatchSnapshot()
@@ -181,6 +181,14 @@ describe('src/components/shareBoard/shareBoard', () => {
         mockedUtils.createGuid.mockReturnValue('anotherToken')
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
         mockedOctoClient.setSharing.mockResolvedValue(true)
+
+        const publishButton = screen.getByRole('button', {name: 'Publish'})
+        expect(publishButton).toBeDefined()
+        userEvent.click(publishButton)
+        await act(async () => {
+            jest.runOnlyPendingTimers()
+        })
+
         const regenerateTokenElement = screen.getByRole('button', {name: 'Regenerate token'})
         expect(regenerateTokenElement).toBeDefined()
         userEvent.click(regenerateTokenElement)
@@ -210,6 +218,14 @@ describe('src/components/shareBoard/shareBoard', () => {
             )
             container = result.container
         })
+
+        const publishButton = screen.getByRole('button', {name: 'Publish'})
+        expect(publishButton).toBeDefined()
+        userEvent.click(publishButton)
+        await act(async () => {
+            jest.runOnlyPendingTimers()
+        })
+
         const switchElement = container?.querySelector('.Switch')
         expect(switchElement).toBeDefined()
         await act(async () => {
@@ -240,6 +256,12 @@ describe('src/components/shareBoard/shareBoard', () => {
                 enabled: true,
                 token: 'aToken',
             })
+
+            const publishButton = screen.getByRole('button', {name: 'Publish'})
+            expect(publishButton).toBeDefined()
+            userEvent.click(publishButton)
+            jest.runOnlyPendingTimers()
+
             const switchElement = container?.querySelector('.Switch')
             expect(switchElement).toBeDefined()
             userEvent.click(switchElement!)
