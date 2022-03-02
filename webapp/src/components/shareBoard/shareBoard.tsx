@@ -162,7 +162,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             <Button
                                 emphasis='secondary'
                                 size='medium'
-                                title='Copy link'
+                                title='Copy public link'
                                 icon={
                                     <CompassIcon
                                         icon='content-copy'
@@ -215,7 +215,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     <Button
                         emphasis='secondary'
                         size='medium'
-                        title='Copy link'
+                        title='Copy internal link'
                         onClick={() => {
                             TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkInternalCopy, {board: props.boardId})
                             Utils.copyTextToClipboard(boardUrl.toString())

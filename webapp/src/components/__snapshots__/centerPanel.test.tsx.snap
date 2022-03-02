@@ -8377,7 +8377,23 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
         </div>
         <div
           class="shareButtonWrapper"
-        />
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"

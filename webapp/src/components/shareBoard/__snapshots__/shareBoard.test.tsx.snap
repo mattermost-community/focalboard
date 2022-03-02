@@ -92,13 +92,64 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy public link"
               type="button"
             >
               <i
                 class="CompassIcon icon-content-copy CompassIcon"
               />
               <span>
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Share internally
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Users who have permissions will be able to use this link
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/undefined/workspace/1/1"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/undefined/workspace/1/1
+              </a>
+            </div>
+            <button
+              title="Copy internal link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
                 Copy link
               </span>
             </button>
@@ -202,13 +253,64 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy public link"
               type="button"
             >
               <i
                 class="CompassIcon icon-content-copy CompassIcon"
               />
               <span>
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Share internally
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Users who have permissions will be able to use this link
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/undefined/workspace/1/1"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/undefined/workspace/1/1
+              </a>
+            </div>
+            <button
+              title="Copy internal link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
                 Copied!
               </span>
             </button>
@@ -312,13 +414,64 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
               </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy public link"
               type="button"
             >
               <i
                 class="CompassIcon icon-content-copy CompassIcon"
               />
               <span>
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Share internally
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Users who have permissions will be able to use this link
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/undefined/workspace/1/1"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/undefined/workspace/1/1
+              </a>
+            </div>
+            <button
+              title="Copy internal link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
                 Copy link
               </span>
             </button>
@@ -422,13 +575,64 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
               </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy public link"
               type="button"
             >
               <i
                 class="CompassIcon icon-content-copy CompassIcon"
               />
               <span>
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Share internally
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Users who have permissions will be able to use this link
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/undefined/workspace/1/1"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/undefined/workspace/1/1
+              </a>
+            </div>
+            <button
+              title="Copy internal link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
                 Copy link
               </span>
             </button>
@@ -532,13 +736,64 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
               </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy public link"
               type="button"
             >
               <i
                 class="CompassIcon icon-content-copy CompassIcon"
               />
               <span>
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Share internally
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Users who have permissions will be able to use this link
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/undefined/workspace/1/1"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/undefined/workspace/1/1
+              </a>
+            </div>
+            <button
+              title="Copy internal link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
                 Copy link
               </span>
             </button>
@@ -611,6 +866,57 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Share internally
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Users who have permissions will be able to use this link
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/undefined/workspace/1/1"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/undefined/workspace/1/1
+              </a>
+            </div>
+            <button
+              title="Copy internal link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
+                Copy link
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -711,13 +1017,64 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy public link"
               type="button"
             >
               <i
                 class="CompassIcon icon-content-copy CompassIcon"
               />
               <span>
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Share internally
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Users who have permissions will be able to use this link
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/undefined/workspace/1/1"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/undefined/workspace/1/1
+              </a>
+            </div>
+            <button
+              title="Copy internal link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
                 Copy link
               </span>
             </button>
@@ -821,13 +1178,64 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy public link"
               type="button"
             >
               <i
                 class="CompassIcon icon-content-copy CompassIcon"
               />
               <span>
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Share internally
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Users who have permissions will be able to use this link
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/undefined/workspace/1/1"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/undefined/workspace/1/1
+              </a>
+            </div>
+            <button
+              title="Copy internal link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
                 Copy link
               </span>
             </button>
@@ -931,13 +1339,64 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy public link"
               type="button"
             >
               <i
                 class="CompassIcon icon-content-copy CompassIcon"
               />
               <span>
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="tabs-modal"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Share internally
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Users who have permissions will be able to use this link
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/test-subpath/plugins/boards1"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/test-subpath/plugins/boards1
+              </a>
+            </div>
+            <button
+              title="Copy internal link"
+              type="button"
+            >
+              <span>
+                <i
+                  class="CompassIcon icon-content-copy CompassIcon"
+                />
                 Copy link
               </span>
             </button>
