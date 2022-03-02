@@ -32,6 +32,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopiedPublic, setWasCopiedPublic] = useState(false)
     const [wasCopiedInternal, setWasCopiedInternal] = useState(false)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
+    const [publish, setPublish] = useState(false)
 
     const intl = useIntl()
     const match = useRouteMatch<{workspaceId?: string, boardId: string, viewId: string}>()
@@ -114,10 +115,22 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         <Dialog
             onClose={props.onClose}
             className='ShareBoardDialog'
-            title={intl.formatMessage({id: 'ShareBoard.Title', defaultMessage: 'Share Board'})}
+            title={' '}
         >
-            {props.enableSharedBoards &&
-            (<div className='tabs-modal'>
+            {props.enableSharedBoards && (
+                <div className='tabs-container'>
+                    <button
+                        onClick={() => setPublish(false)}
+                        className={`tab-item ${!publish && 'tab-item--active'}`}
+                    >{'Share'}</button>
+                    <button
+                        onClick={() => setPublish(true)}
+                        className={`tab-item ${publish && 'tab-item--active'}`}
+                    >{'Publish'}</button>
+                </div>
+            )}
+            {(props.enableSharedBoards && publish) &&
+            (<div className='tabs-content'>
                 <div>
                     <div className='d-flex justify-content-between'>
                         <div className='d-flex flex-column'>
@@ -192,54 +205,58 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             </div>
             )}
 
-            <div className='tabs-modal'>
-                <div>
-                    <div className='d-flex justify-content-between'>
-                        <div className='d-flex flex-column'>
-                            <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.ShareInternal', defaultMessage: 'Share internally'})}</div>
-                            <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.ShareInternalDescription', defaultMessage: 'Users who have permissions will be able to use this link'})}</div>
+            {!publish && (
+                <div className='tabs-content'>
+                    <div>
+                        <div className='d-flex justify-content-between'>
+                            <div className='d-flex flex-column'>
+                                <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.ShareInternal', defaultMessage: 'Share internally'})}</div>
+                                <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.ShareInternalDescription', defaultMessage: 'Users who have permissions will be able to use this link'})}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className='d-flex justify-content-between tabs-inputs'>
-                    <div className='d-flex input-container'>
-                        <a
-                            className='shareUrl'
-                            href={boardUrl.toString()}
-                            target='_blank'
-                            rel='noreferrer'
+                    <div className='d-flex justify-content-between tabs-inputs'>
+                        <div className='d-flex input-container'>
+                            <a
+                                className='shareUrl'
+                                href={boardUrl.toString()}
+                                target='_blank'
+                                rel='noreferrer'
+                            >
+                                {boardUrl.toString()}
+                            </a>
+                        </div>
+                        <Button
+                            emphasis='secondary'
+                            size='medium'
+                            title='Copy internal link'
+                            onClick={() => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkInternalCopy, {board: props.boardId})
+                                Utils.copyTextToClipboard(boardUrl.toString())
+                                setWasCopiedPublic(false)
+                                setWasCopiedInternal(true)
+                            }}
+                            icon={
+                                <CompassIcon
+                                    icon='content-copy'
+                                    className='CompassIcon'
+                                />
+                            }
                         >
-                            {boardUrl.toString()}
-                        </a>
+                            {wasCopiedInternal &&
+                                <FormattedMessage
+                                    id='ShareBoard.copiedLink'
+                                    defaultMessage='Copied!'
+                                />}
+                            {!wasCopiedInternal &&
+                                <FormattedMessage
+                                    id='ShareBoard.copyLink'
+                                    defaultMessage='Copy link'
+                                />}
+                        </Button>
                     </div>
-                    <Button
-                        emphasis='secondary'
-                        size='medium'
-                        title='Copy internal link'
-                        onClick={() => {
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkInternalCopy, {board: props.boardId})
-                            Utils.copyTextToClipboard(boardUrl.toString())
-                            setWasCopiedPublic(false)
-                            setWasCopiedInternal(true)
-                        }}
-                    >
-                        <CompassIcon
-                            icon='content-copy'
-                            className='CompassIcon'
-                        />
-                        {wasCopiedInternal &&
-                        <FormattedMessage
-                            id='ShareBoard.copiedLink'
-                            defaultMessage='Copied!'
-                        />}
-                        {!wasCopiedInternal &&
-                        <FormattedMessage
-                            id='ShareBoard.copyLink'
-                            defaultMessage='Copy link'
-                        />}
-                    </Button>
                 </div>
-            </div>
+            )}
         </Dialog>
     )
 }
