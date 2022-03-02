@@ -108,6 +108,8 @@
 		"copy-webpack-plugin": "^8.1.0",
 		"cross-env": "^7.0.3",
 		"css-loader": "^5.2.0",
+		"cypress": "^9.5.0",
+		"cypress-failed-log": "^2.9.2",
 		"cypress-real-events": "^1.6.0",
 		"eslint": "^7.22.0",
 		"eslint-import-resolver-webpack": "0.13.0",

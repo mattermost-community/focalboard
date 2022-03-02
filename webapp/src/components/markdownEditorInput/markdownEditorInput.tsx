@@ -80,11 +80,11 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         const emojiPlugin = createEmojiPlugin()
         const markdownPlugin = createLiveMarkdownPlugin()
 
-        // eslint-disable-next-line no-shadow
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const {EmojiSuggestions} = emojiPlugin
-        // eslint-disable-next-line no-shadow
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const {MentionSuggestions} = mentionPlugin
-        // eslint-disable-next-line no-shadow
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const plugins = [
             mentionPlugin,
             emojiPlugin,

@@ -125,7 +125,7 @@ const App = (props: Props): JSX.Element => {
                                         exact={true}
                                         render={() => {
                                             if (loggedIn === false) {
-                                                return <Redirect to='/login'/>
+                                                return <Redirect to='/error?id=not-logged-in'/>
                                             }
 
                                             if (continueToWelcomeScreen()) {
@@ -164,7 +164,7 @@ const App = (props: Props): JSX.Element => {
                                     path='/board/:boardId?/:viewId?/:cardId?'
                                     render={({match: {params: {boardId, viewId, cardId}}}) => {
                                         if (loggedIn === false) {
-                                            return <Redirect to='/login'/>
+                                            return <Redirect to='/error?id=not-logged-in'/>
                                         }
 
                                         if (continueToWelcomeScreen()) {
@@ -228,7 +228,7 @@ const App = (props: Props): JSX.Element => {
                                             const boardIdIsValidUUIDV4 = UUID_REGEX.test(boardId || '')
 
                                             if (loggedIn === false) {
-                                                return <Redirect to='/login'/>
+                                                return <Redirect to='/error?id=not-logged-in'/>
                                             }
 
                                             if (continueToWelcomeScreen()) {
