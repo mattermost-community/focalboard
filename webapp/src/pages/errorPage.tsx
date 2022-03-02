@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useCallback} from 'react'
 import {useHistory, useLocation} from 'react-router-dom'
+import {FormattedMessage} from 'react-intl'
 
 import ErrorIllustration from '../svg/error-illustration'
 
@@ -43,7 +44,12 @@ const ErrorPage = () => {
     return (
         <div className='ErrorPage'>
             <div>
-                <div className='title'>{'Sorry, something went wrong'}</div>
+                <div className='title'>
+                    <FormattedMessage
+                        id='error.page.title'
+                        defaultMessage={'Sorry, something went wrong'}
+                    />
+                </div>
                 <div className='subtitle'>
                     {errorDef.title}
                 </div>

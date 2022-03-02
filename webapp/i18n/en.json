@@ -261,6 +261,7 @@
   "register.login-button": "Log in if you already have an account.",
   "register.signup-title": "Sign up for an account.",
   "error.workspace-undefined": "Not a valid workspace.",
+  "error.page.title": "Sorry, something went wrong",
   "error.not-logged-in": "Your session may have expired or you're not logged in.",
   "error.go-dashboard": "Go to the Dashboard",
   "error.go-login": "Log in",
