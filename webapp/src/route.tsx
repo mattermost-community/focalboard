@@ -8,14 +8,16 @@ import {
 } from 'react-router-dom'
 
 import {Utils} from './utils'
-import {getLoggedIn} from './store/users'
+import {getLoggedIn, getMe} from './store/users'
 import {useAppSelector} from './store/hooks'
-import {UserSettings} from './userSettings'
+import {UserSettingKey} from './userSettings'
+import {IUser, UserPropPrefix} from './user'
 
 type RouteProps = {
     path: string|string[]
     exact?: boolean
     render?: (props: any) => React.ReactElement
+    component?: React.ComponentType
     children?: React.ReactElement
     getOriginalPath?: (match: any) => string
     loginRequired?: boolean
@@ -24,13 +26,14 @@ type RouteProps = {
 function FBRoute(props: RouteProps) {
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
     const match = useRouteMatch<any>()
+    const me = useAppSelector<IUser|null>(getMe)
 
     let originalPath
     if (props.getOriginalPath) {
         originalPath = props.getOriginalPath(match)
     }
 
-    if (Utils.isFocalboardPlugin() && props.path !== '/welcome' && loggedIn === true && !UserSettings.welcomePageViewed) {
+    if (Utils.isFocalboardPlugin() && props.path !== '/welcome' && loggedIn === true && !me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
         if (originalPath) {
             return <Redirect to={`/welcome?r=${originalPath}`}/>
         }
@@ -54,6 +57,7 @@ function FBRoute(props: RouteProps) {
             <Route
                 path={props.path}
                 render={props.render}
+                component={props.component}
                 exact={props.exact}
             >
                 {props.children}

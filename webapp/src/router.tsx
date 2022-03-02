@@ -22,6 +22,7 @@ import {Utils} from './utils'
 import octoClient from './octoClient'
 import {setGlobalError, getGlobalError} from './store/globalError'
 import {useAppSelector, useAppDispatch} from './store/hooks'
+import {getFirstTeam, fetchTeams, Team} from './store/teams'
 import {UserSettings} from './userSettings'
 import FBRoute from './route'
 
@@ -35,8 +36,18 @@ function HomeToCurrentTeam(props: {path: string, exact: boolean}) {
             path={props.path}
             exact={props.exact}
             loginRequired={true}
-            render={() => {
-                const teamID = (window.getCurrentTeamId && window.getCurrentTeamId()) || ''
+            component={() => {
+                const firstTeam = useAppSelector<Team|null>(getFirstTeam)
+                const dispatch = useAppDispatch()
+                useEffect(() => {
+                    dispatch(fetchTeams())
+                }, [])
+
+                let teamID = (window.getCurrentTeamId && window.getCurrentTeamId()) || ''
+                if (!teamID && !firstTeam) {
+                    return <></>
+                }
+                teamID = teamID || firstTeam?.id || ''
 
                 if (UserSettings.lastBoardId) {
                     const lastBoardID = UserSettings.lastBoardId[teamID]

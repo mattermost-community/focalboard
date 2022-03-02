@@ -14,6 +14,7 @@ import {ClientConfig} from 'mattermost-redux/types/config'
 import {selectTeam} from 'mattermost-redux/actions/teams'
 
 import {SuiteWindow} from '../../../webapp/src/types/index'
+import {fetchTeams, setTeam} from '../../../webapp/src/store/teams'
 
 const windowAny = (window as SuiteWindow)
 windowAny.baseURL = '/plugins/focalboard'
@@ -177,7 +178,7 @@ export default class Plugin {
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
         let prevTeamID: string
-        mmStore.subscribe(() => {
+        mmStore.subscribe(async () => {
             const currentUserId = mmStore.getState().entities.users.currentUserId
             const currentChannel = mmStore.getState().entities.channels.currentChannelId
             if (lastViewedChannel !== currentChannel && currentChannel) {
