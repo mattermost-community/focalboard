@@ -278,7 +278,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                 <Button
                                     emphasis='secondary'
                                     size='medium'
-                                    title='Copy link'
+                                    title='Copy public link'
                                     onClick={() => {
                                         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: board.id})
                                         Utils.copyTextToClipboard(shareUrl.toString())
@@ -329,7 +329,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     <Button
                         emphasis='secondary'
                         size='medium'
-                        title='Copy link'
+                        title='Copy internal link'
                         onClick={() => {
                             TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkInternalCopy, {board: board.id})
                             Utils.copyTextToClipboard(boardUrl.toString())

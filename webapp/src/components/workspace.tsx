@@ -82,6 +82,7 @@ function CenterContent(props: Props) {
                 groupByProperty={property}
                 dateDisplayProperty={displayProperty}
                 views={views}
+                showShared={true}
             />
         )
     }

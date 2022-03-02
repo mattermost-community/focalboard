@@ -75,8 +75,6 @@ const ViewHeader = (props: Props) => {
 
     const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
 
-    const [showShareDialog, setShowShareDialog] = useState(false)
-
     const isOnboardingBoard = props.board.title === OnboardingBoardTitle
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)

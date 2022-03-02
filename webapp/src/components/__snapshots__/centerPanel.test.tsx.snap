@@ -192,9 +192,6 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -742,9 +739,6 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -1228,9 +1222,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -1868,9 +1859,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -2508,9 +2496,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -3148,9 +3133,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -3788,9 +3770,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -4428,9 +4407,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -5068,9 +5044,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -5708,9 +5681,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -6348,9 +6318,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -6988,9 +6955,6 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -7306,9 +7270,6 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -7807,7 +7768,23 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
         </div>
         <div
           class="shareButtonWrapper"
-        />
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
@@ -7838,9 +7815,6 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
@@ -8386,9 +8360,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />

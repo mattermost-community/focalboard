@@ -75,9 +75,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />
