@@ -13,6 +13,7 @@ import Globe from '../../widgets/icons/globe'
 import LockOutline from '../../widgets/icons/lockOutline'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentTeam} from '../../store/teams'
+import {getMe} from '../../store/users'
 import {BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
 
 type Props = {
@@ -22,6 +23,7 @@ type Props = {
 const BoardSwitcherDialog = (props: Props): JSX.Element => {
     const intl = useIntl()
     const team = useAppSelector(getCurrentTeam)
+    const me = useAppSelector(getMe)
     const title = intl.formatMessage({id: 'FindBoardsDialog.Title', defaultMessage: 'Find Boards'})
     const subTitle = intl.formatMessage(
         {
@@ -36,10 +38,16 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const history = useHistory()
 
-    const showBoard = (boardId: string): void => {
+    const selectBoard = async (boardId: string): Promise<void> => {
+        if (!me) {
+            return
+        }
         const newPath = generatePath(match.path, {...match.params, boardId, viewId: undefined})
-        history.push(newPath)
-        props.onClose()
+        const member = await octoClient.joinBoard(me.id, boardId)
+        if (member && member.boardId) {
+            history.push(newPath)
+            props.onClose()
+        }
     }
 
     const searchHandler = async (query: string): Promise<Array<ReactNode>> => {
@@ -53,7 +61,7 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
             <div
                 key={item.id}
                 className='blockSearchResult'
-                onClick={() => showBoard(item.id)}
+                onClick={() => selectBoard(item.id)}
             >
                 {item.type === BoardTypeOpen && <Globe/>}
                 {item.type === BoardTypePrivate && <LockOutline/>}
