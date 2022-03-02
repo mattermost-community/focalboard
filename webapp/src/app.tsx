@@ -102,7 +102,7 @@ const App = (props: Props): JSX.Element => {
     }
 
     const continueToWelcomeScreen = () => {
-        return loggedIn === true && !me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]
+        return (me?.id !== 'single-user') && loggedIn === true && !(me?.props && me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed])
     }
 
     return (
