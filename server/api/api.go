@@ -508,11 +508,6 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "updateUserConfig", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
-	// Ignore for single-user
-	if session.UserID == model.SingleUser {
-		return
-	}
-
 	// a user can update only own config
 	if userID != session.UserID {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
@@ -1781,11 +1776,6 @@ func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
-
-	// Ignore for single-user
-	if session.UserID == model.SingleUser {
-		return
-	}
 
 	workspaceID, boardID, err := a.app.PrepareOnboardingTour(session.UserID)
 	if err != nil {
