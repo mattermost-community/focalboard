@@ -9,12 +9,9 @@ import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/r
 
 import {GlobalState} from 'mattermost-redux/types/store'
 
-import {ClientConfig} from 'mattermost-redux/types/config'
-
 import {selectTeam} from 'mattermost-redux/actions/teams'
 
 import {SuiteWindow} from '../../../webapp/src/types/index'
-import {fetchTeams, setTeam} from '../../../webapp/src/store/teams'
 
 const windowAny = (window as SuiteWindow)
 windowAny.baseURL = '/plugins/focalboard'
@@ -27,7 +24,6 @@ import {Utils} from '../../../webapp/src/utils'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
-import {UserSettings} from '../../../webapp/src/userSettings'
 
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
@@ -178,7 +174,7 @@ export default class Plugin {
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
         let prevTeamID: string
-        mmStore.subscribe(async () => {
+        mmStore.subscribe(() => {
             const currentUserId = mmStore.getState().entities.users.currentUserId
             const currentChannel = mmStore.getState().entities.channels.currentChannelId
             if (lastViewedChannel !== currentChannel && currentChannel) {
@@ -220,8 +216,6 @@ export default class Plugin {
             const goToFocalboardTemplate = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelIntro, {channelID: currentChannel})
-                // UserSettings.lastBoardId = null
-                // UserSettings.lastViewId = null
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
 

@@ -44,10 +44,11 @@ function HomeToCurrentTeam(props: {path: string, exact: boolean}) {
                 }, [])
 
                 let teamID = (window.getCurrentTeamId && window.getCurrentTeamId()) || ''
-                if (!teamID && !firstTeam) {
+                const lastTeamID = UserSettings.lastTeamId
+                if (!teamID && !firstTeam && !lastTeamID) {
                     return <></>
                 }
-                teamID = teamID || firstTeam?.id || ''
+                teamID = teamID || lastTeamID || firstTeam?.id || ''
 
                 if (UserSettings.lastBoardId) {
                     const lastBoardID = UserSettings.lastBoardId[teamID]
