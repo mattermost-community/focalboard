@@ -789,7 +789,7 @@ func _000017_add_teams_and_boardsUpSql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "000017_add_teams_and_boards.up.sql", size: 15607, mode: os.FileMode(420), modTime: time.Unix(1646130404, 0)}
+	info := bindataFileInfo{name: "000017_add_teams_and_boards.up.sql", size: 15607, mode: os.FileMode(436), modTime: time.Unix(1646076407, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

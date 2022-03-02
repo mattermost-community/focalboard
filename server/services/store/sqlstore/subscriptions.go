@@ -76,7 +76,7 @@ func (s *SQLStore) createSubscription(db sq.BaseRunner, sub *model.Subscription)
 		Columns(subscriptionFields...).
 		Values(valuesForSubscription(&subAdd)...)
 
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE delete_at = 0, notified_at = ?", now)
 	} else {
 		query = query.Suffix("ON CONFLICT (block_id,subscriber_id) DO UPDATE SET delete_at = 0, notified_at = ?", now)

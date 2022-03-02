@@ -140,21 +140,6 @@ class OctoClient {
         }
     }
 
-    // ToDo: delete
-    /**
-     * Generates workspace's path.
-     * Uses workspace ID from `workspaceId` param is provided,
-     * Else uses Client's workspaceID if available, else the user's last visited workspace ID.
-     */
-    // private workspacePath(workspaceId?: string) {
-    //     let workspaceIdToUse = workspaceId
-    //     if (!workspaceId) {
-    //         workspaceIdToUse = this.workspaceId === '0' ? UserSettings.lastWorkspaceId || this.workspaceId : this.workspaceId
-    //     }
-    //
-    //     return `/api/v1/workspaces/${workspaceIdToUse}`
-    // }
-
     // ToDo: document
     private teamPath(teamId?: string): string {
         let teamIdToUse = teamId
@@ -487,19 +472,6 @@ class OctoClient {
         return true
     }
 
-    // Workspace
-
-    // async getWorkspace(): Promise<IWorkspace | undefined> {
-    //     const path = this.workspacePath()
-    //     const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-    //     if (response.status !== 200) {
-    //         return undefined
-    //     }
-    //     const workspace = (await this.getJson(response, undefined)) as IWorkspace
-    //     return workspace
-    // }
-    //
-
     async regenerateTeamSignupToken(): Promise<void> {
         const path = this.teamPath() + '/regenerate_signup_token'
         await fetch(this.getBaseURL() + path, {
@@ -785,8 +757,8 @@ class OctoClient {
     }
 
     // onboarding
-    async prepareOnboarding(): Promise<PrepareOnboardingResponse | undefined> {
-        const path = '/api/v1/onboard'
+    async prepareOnboarding(teamId: string): Promise<PrepareOnboardingResponse | undefined> {
+        const path = `/api/v1/teams/${teamId}/onboard`
         const response = await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
             method: 'POST',
@@ -795,7 +767,7 @@ class OctoClient {
             return undefined
         }
 
-        return (await this.getJson(response, [])) as PrepareOnboardingResponse
+        return (await this.getJson(response, {})) as PrepareOnboardingResponse
     }
 }
 

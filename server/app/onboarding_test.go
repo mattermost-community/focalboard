@@ -7,12 +7,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	testTeamID = "team_id"
+)
+
 func TestPrepareOnboardingTour(t *testing.T) {
 	th, tearDown := SetupTestHelper(t)
 	defer tearDown()
 
 	t.Run("base case", func(t *testing.T) {
-		teamID := "team_id"
+		teamID := testTeamID
 		userID := "user_id_1"
 		welcomeBoard := model.Board{
 			ID:         "board_id_1",
@@ -22,7 +26,8 @@ func TestPrepareOnboardingTour(t *testing.T) {
 		}
 
 		th.Store.EXPECT().GetTemplateBoards("0").Return([]*model.Board{&welcomeBoard}, nil)
-		th.Store.EXPECT().DuplicateBoard(welcomeBoard.ID, userID, teamID, false).Return(&model.BoardsAndBlocks{Boards: []*model.Board{&welcomeBoard}}, nil, nil)
+		th.Store.EXPECT().DuplicateBoard(welcomeBoard.ID, userID, teamID, false).Return(&model.BoardsAndBlocks{Boards: []*model.Board{&welcomeBoard}},
+			nil, nil)
 		th.Store.EXPECT().GetMembersForBoard(welcomeBoard.ID).Return([]*model.BoardMember{}, nil)
 
 		userPropPatch := model.UserPropPatch{
@@ -37,7 +42,7 @@ func TestPrepareOnboardingTour(t *testing.T) {
 
 		teamID, boardID, err := th.App.PrepareOnboardingTour(userID, teamID)
 		assert.NoError(t, err)
-		assert.Equal(t, "team_id", teamID)
+		assert.Equal(t, testTeamID, teamID)
 		assert.NotEmpty(t, boardID)
 	})
 }
@@ -47,7 +52,7 @@ func TestCreateWelcomeBoard(t *testing.T) {
 	defer tearDown()
 
 	t.Run("base case", func(t *testing.T) {
-		teamID := "team_id"
+		teamID := testTeamID
 		userID := "user_id_1"
 		welcomeBoard := model.Board{
 			ID:         "board_id_1",
@@ -56,7 +61,8 @@ func TestCreateWelcomeBoard(t *testing.T) {
 			IsTemplate: true,
 		}
 		th.Store.EXPECT().GetTemplateBoards("0").Return([]*model.Board{&welcomeBoard}, nil)
-		th.Store.EXPECT().DuplicateBoard(welcomeBoard.ID, userID, teamID, false).Return(&model.BoardsAndBlocks{Boards: []*model.Board{&welcomeBoard}}, nil, nil)
+		th.Store.EXPECT().DuplicateBoard(welcomeBoard.ID, userID, teamID, false).
+			Return(&model.BoardsAndBlocks{Boards: []*model.Board{&welcomeBoard}}, nil, nil)
 		th.Store.EXPECT().GetMembersForBoard(welcomeBoard.ID).Return([]*model.BoardMember{}, nil)
 
 		boardID, err := th.App.createWelcomeBoard(userID, teamID)
@@ -65,7 +71,7 @@ func TestCreateWelcomeBoard(t *testing.T) {
 	})
 
 	t.Run("template doesn't contain a board", func(t *testing.T) {
-		teamID := "team_id"
+		teamID := testTeamID
 		th.Store.EXPECT().GetTemplateBoards("0").Return([]*model.Board{}, nil)
 		boardID, err := th.App.createWelcomeBoard("user_id_1", teamID)
 		assert.Error(t, err)
@@ -73,7 +79,7 @@ func TestCreateWelcomeBoard(t *testing.T) {
 	})
 
 	t.Run("template doesn't contain the welcome board", func(t *testing.T) {
-		teamID := "team_id"
+		teamID := testTeamID
 		welcomeBoard := model.Board{
 			ID:         "board_id_1",
 			Title:      "Other template",

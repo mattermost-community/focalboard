@@ -282,7 +282,7 @@ func (c *Client) GetSubtree(boardID, blockID string) ([]model.Block, *Response) 
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-// Boards and blocks
+// Boards and blocks.
 func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
 	r, err := c.DoAPIPost(c.GetBoardsAndBlocksRoute(), toJSON(bab))
 	if err != nil {

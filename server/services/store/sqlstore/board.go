@@ -388,7 +388,7 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 		Insert(s.tablePrefix + "board_members").
 		SetMap(queryValues)
 
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		query = query.Suffix(
 			"ON DUPLICATE KEY UPDATE scheme_admin = ?, scheme_editor = ?, scheme_commenter = ?, scheme_viewer = ?",
 			bm.SchemeAdmin, bm.SchemeEditor, bm.SchemeCommenter, bm.SchemeViewer)

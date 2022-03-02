@@ -20,6 +20,7 @@ const (
 
 var (
 	errUnableToFindWelcomeBoard = errors.New("unable to find welcome board in newly created blocks")
+	errCannotCreateBoard        = errors.New("new board wasn't created")
 )
 
 func (a *App) PrepareOnboardingTour(userID string, teamID string) (string, string, error) {
@@ -77,7 +78,7 @@ func (a *App) createWelcomeBoard(userID, teamID string) (string, error) {
 	}
 
 	if len(bab.Boards) != 1 {
-		return "", errors.New("the new board wasn't created")
+		return "", errCannotCreateBoard
 	}
 
 	return bab.Boards[0].ID, nil

@@ -18,6 +18,7 @@ import (
 	mysqldriver "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq" // postgres driver
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
 	"github.com/mattermost/mattermost-plugin-api/cluster"
 )
@@ -45,7 +46,7 @@ func appendMultipleStatementsFlag(connectionString string) (string, error) {
 // enabled.
 func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	connectionString := s.connectionString
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		var err error
 		connectionString, err = appendMultipleStatementsFlag(s.connectionString)
 		if err != nil {
@@ -74,7 +75,7 @@ func (s *SQLStore) Migrate() error {
 		MigrationsTable:        fmt.Sprintf("%sschema_migrations", s.tablePrefix),
 	}
 
-	if s.dbType == sqliteDBType {
+	if s.dbType == model.SqliteDBType {
 		driver, err = sqlite.WithInstance(s.db, &sqlite.Config{Config: migrationConfig})
 		if err != nil {
 			return err
@@ -82,7 +83,7 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	var db *sql.DB
-	if s.dbType != sqliteDBType {
+	if s.dbType != model.SqliteDBType {
 		db, err = s.getMigrationConnection()
 		if err != nil {
 			return err
@@ -91,14 +92,14 @@ func (s *SQLStore) Migrate() error {
 		defer db.Close()
 	}
 
-	if s.dbType == postgresDBType {
+	if s.dbType == model.PostgresDBType {
 		driver, err = postgres.WithInstance(db, &postgres.Config{Config: migrationConfig})
 		if err != nil {
 			return err
 		}
 	}
 
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		driver, err = mysql.WithInstance(db, &mysql.Config{Config: migrationConfig})
 		if err != nil {
 			return err
@@ -109,6 +110,15 @@ func (s *SQLStore) Migrate() error {
 	for i, assetName := range migrations.AssetNames() {
 		assetNamesForDriver[i] = filepath.Base(assetName)
 	}
+
+	params := map[string]interface{}{
+		"prefix":   s.tablePrefix,
+		"postgres": s.dbType == model.PostgresDBType,
+		"sqlite":   s.dbType == model.SqliteDBType,
+		"mysql":    s.dbType == model.MysqlDBType,
+		"plugin":   s.isPlugin,
+	}
+
 	src, err := mbindata.WithInstance(&mbindata.AssetSource{
 		Names: assetNamesForDriver,
 		AssetFunc: func(name string) ([]byte, error) {
@@ -122,13 +132,7 @@ func (s *SQLStore) Migrate() error {
 				return nil, pErr
 			}
 			buffer := bytes.NewBufferString("")
-			params := map[string]interface{}{
-				"prefix":   s.tablePrefix,
-				"postgres": s.dbType == postgresDBType,
-				"sqlite":   s.dbType == sqliteDBType,
-				"mysql":    s.dbType == mysqlDBType,
-				"plugin":   s.isPlugin,
-			}
+
 			err = tmpl.Execute(buffer, params)
 			if err != nil {
 				return nil, err
@@ -146,7 +150,7 @@ func (s *SQLStore) Migrate() error {
 		morph.WithLock("mm-lock-key"),
 	}
 
-	if s.dbType == sqliteDBType {
+	if s.dbType == model.SqliteDBType {
 		opts = opts[:0] // sqlite driver does not support locking, it doesn't need to anyway.
 	}
 
@@ -186,7 +190,7 @@ func (s *SQLStore) Migrate() error {
 		return err
 	}
 
-	if err := s.runCategoryUuidIdMigration(); err != nil {
+	if err := s.runCategoryUUIDIDMigration(); err != nil {
 		if s.isPlugin {
 			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
 			mutex.Unlock()

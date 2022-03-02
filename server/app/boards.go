@@ -3,13 +3,15 @@ package app
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 )
 
-var ErrBoardMemberIsLastAdmin = errors.New("cannot leave a board with no admins")
+var (
+	ErrBoardMemberIsLastAdmin = errors.New("cannot leave a board with no admins")
+	ErrNewBoardCannotHaveID   = errors.New("new board cannot have an ID")
+)
 
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
@@ -53,7 +55,7 @@ func (a *App) GetTemplateBoards(teamID string) ([]*model.Board, error) {
 
 func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*model.Board, error) {
 	if board.ID != "" {
-		return nil, fmt.Errorf("new board cannot have an ID")
+		return nil, ErrNewBoardCannotHaveID
 	}
 	board.ID = utils.NewID(utils.IDTypeBoard)
 
@@ -168,9 +170,9 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 	// if we're updating an admin, we need to check that there is at
 	// least still another admin on the board
 	if oldMember.SchemeAdmin && !member.SchemeAdmin {
-		isLastAdmin, err := a.isLastAdmin(member.UserID, member.BoardID)
-		if err != nil {
-			return nil, err
+		isLastAdmin, err2 := a.isLastAdmin(member.UserID, member.BoardID)
+		if err2 != nil {
+			return nil, err2
 		}
 		if isLastAdmin {
 			return nil, ErrBoardMemberIsLastAdmin
