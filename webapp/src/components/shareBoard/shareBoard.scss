@@ -6,11 +6,37 @@
         }
     }
 
-    .tabs-modal {
+    .tabs-container {
+        display: flex;
+        margin: -48px 24px 0;
+        border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+
+        .tab-item {
+            margin-right: 12px;
+            display: flex;
+            font-family: Metropolis, sans-serif;
+            font-size: 16px;
+            background-color: transparent;
+            border: 0;
+            padding: 0 8px;
+            height: 37px;
+            font-weight: 600;
+            color: rgba(var(--center-channel-color-rgb), 0.56);
+
+            &:hover {
+                color: rgba(var(--center-channel-color-rgb), 0.72);
+            }
+
+            &.tab-item--active {
+                color: inherit;
+                border-bottom: 3px solid rgba(var(--button-bg-rgb), 1);
+            }
+        }
+    }
+
+    .tabs-content {
         padding: 24px;
         border-radius: 8px;
-        background: rgba(var(--center-channel-bg-rgb), 1);
-        border-top: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
 
         .d-flex {
             display: flex;
@@ -33,9 +59,41 @@
                 flex: 1;
                 margin-right: 12px;
                 height: 40px;
+                width: 400px;
                 align-items: center;
                 display: flex;
-                padding: 0 4px 0 16px;
+                padding: 0 4px 0 8px;
+            }
+
+            .IconButton {
+                width: 32px;
+                height: 32px;
+                margin-right: 4px;
+            }
+
+            .icon-refresh {
+                margin: 4px;
+                font-size: 18px;
+            }
+
+            .icon-content-copy {
+                margin-right: 4px;
+                font-size: 18px;
+            }
+
+            .IconButton {
+                height: 100%;
+                width: 40px;
+            }
+
+            .icon-refresh {
+                margin: 4px;
+                font-size: 18px;
+            }
+            
+            .icon-content-copy {
+                margin-right: 4px;
+                font-size: 18px;
             }
 
             .shareUrl {

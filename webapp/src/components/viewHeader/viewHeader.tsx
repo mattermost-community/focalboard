@@ -54,14 +54,13 @@ type Props = {
     editCardTemplate: (cardTemplateId: string) => void
     readonly: boolean
     dateDisplayProperty?: IPropertyTemplate
-    showShared?: boolean
 }
 
 const ViewHeader = (props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
     const intl = useIntl()
 
-    const {board, activeView, views, groupByProperty, cards, dateDisplayProperty, showShared} = props
+    const {board, activeView, views, groupByProperty, cards, dateDisplayProperty} = props
 
     const withGroupBy = activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table'
     const withDisplayBy = activeView.fields.viewType === 'calendar'
@@ -100,14 +99,12 @@ const ViewHeader = (props: Props) => {
     }, [showTourBaseCondition])
 
     useEffect(() => {
-        if (showShared && !BoardTourSteps.SHARE_BOARD) {
+        if (!BoardTourSteps.SHARE_BOARD) {
             BoardTourSteps.SHARE_BOARD = 2
-        } else if (!showShared) {
-            delete BoardTourSteps.SHARE_BOARD
         }
 
         TourCategoriesMapToSteps[TOUR_BOARD] = BoardTourSteps
-    }, [showShared])
+    }, [])
 
     const showAddViewTourStep = showTourBaseCondition && delayComplete
 
