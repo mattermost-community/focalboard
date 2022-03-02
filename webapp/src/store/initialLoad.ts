@@ -11,14 +11,16 @@ import {RootState} from './index'
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
-        const [team, boards, boardTemplates] = await Promise.all([
+        const [team, teams, boards, boardTemplates] = await Promise.all([
             client.getTeam(),
+            client.getTeams(),
             client.getBoards(),
             client.getTeamTemplates(),
         ])
 
         return {
             team,
+            teams,
             boards,
             boardTemplates,
         }

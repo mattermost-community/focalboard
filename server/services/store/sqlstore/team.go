@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -38,7 +39,7 @@ func (s *SQLStore) upsertTeamSignupToken(db sq.BaseRunner, team model.Team) erro
 			team.ModifiedBy,
 			now,
 		)
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE signup_token = ?, modified_by = ?, update_at = ?",
 			team.SignupToken, team.ModifiedBy, now)
 	} else {
@@ -77,7 +78,7 @@ func (s *SQLStore) upsertTeamSettings(db sq.BaseRunner, team model.Team) error {
 			team.ModifiedBy,
 			now,
 		)
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE settings = ?, modified_by = ?, update_at = ?", settingsJSON, team.ModifiedBy, now)
 	} else {
 		query = query.Suffix(

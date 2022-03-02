@@ -6,8 +6,6 @@ import (
 
 	"github.com/mattermost/mattermost-server/v6/plugin"
 
-	"github.com/pkg/errors"
-
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -15,18 +13,6 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-)
-
-const (
-	sqliteDBType   = "sqlite3"
-	postgresDBType = "postgres"
-	mysqlDBType    = "mysql"
-
-	directChannelType = "D"
-)
-
-var (
-	errUnsupportedDatabaseError = errors.New("method is unsupported on current database. Supported databases are - MySQL and PostgreSQL")
 )
 
 type NotSupportedError struct {
@@ -287,7 +273,7 @@ func (s *MattermostAuthLayer) GetTeamsForUser(userID string) ([]*model.Team, err
 
 func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 	builder := sq.StatementBuilder
-	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
 		builder = builder.PlaceholderFormat(sq.Dollar)
 	}
 

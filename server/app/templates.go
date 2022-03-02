@@ -42,7 +42,7 @@ func (a *App) initializeTemplates() error {
 	a.logger.Debug("Importing new default templates", mlog.String("reason", reason))
 
 	// Remove in case of newer Templates
-	if err := a.store.RemoveDefaultTemplates(boards); err != nil {
+	if err = a.store.RemoveDefaultTemplates(boards); err != nil {
 		return fmt.Errorf("cannot remove old template boards: %w", err)
 	}
 

@@ -384,9 +384,9 @@ func (ws *Server) unsubscribeListenerFromBlocks(listener *websocketSession, bloc
 func (ws *Server) removeListenerFromTeam(listener *websocketSession, teamID string) {
 	// we remove the listener from the team index
 	newTeamListeners := []*websocketSession{}
-	for _, listener := range ws.listenersByTeam[teamID] {
-		if listener != listener {
-			newTeamListeners = append(newTeamListeners, listener)
+	for _, l := range ws.listenersByTeam[teamID] {
+		if l != listener {
+			newTeamListeners = append(newTeamListeners, l)
 		}
 	}
 	ws.listenersByTeam[teamID] = newTeamListeners
@@ -406,9 +406,9 @@ func (ws *Server) removeListenerFromTeam(listener *websocketSession, teamID stri
 func (ws *Server) removeListenerFromBlock(listener *websocketSession, blockID string) {
 	// we remove the listener from the block index
 	newBlockListeners := []*websocketSession{}
-	for _, listener := range ws.listenersByBlock[blockID] {
-		if listener != listener {
-			newBlockListeners = append(newBlockListeners, listener)
+	for _, l := range ws.listenersByBlock[blockID] {
+		if l != listener {
+			newBlockListeners = append(newBlockListeners, l)
 		}
 	}
 	ws.listenersByBlock[blockID] = newBlockListeners

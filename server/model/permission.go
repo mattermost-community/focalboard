@@ -9,11 +9,11 @@ var (
 	PermissionViewMembers           = mmModel.PermissionViewMembers
 	PermissionCreatePublicChannel   = mmModel.PermissionCreatePublicChannel
 	PermissionCreatePrivateChannel  = mmModel.PermissionCreatePrivateChannel
-	PermissionManageBoardType       = &mmModel.Permission{"manage_board_type", "", "", ""}
-	PermissionDeleteBoard           = &mmModel.Permission{"delete_board", "", "", ""}
-	PermissionViewBoard             = &mmModel.Permission{"view_board", "", "", ""}
-	PermissionManageBoardRoles      = &mmModel.Permission{"manage_board_roles", "", "", ""}
-	PermissionShareBoard            = &mmModel.Permission{"share_board", "", "", ""}
-	PermissionManageBoardCards      = &mmModel.Permission{"manage_board_cards", "", "", ""}
-	PermissionManageBoardProperties = &mmModel.Permission{"manage_board_properties", "", "", ""}
+	PermissionManageBoardType       = &mmModel.Permission{Id: "manage_board_type", Name: "", Description: "", Scope: ""}
+	PermissionDeleteBoard           = &mmModel.Permission{Id: "delete_board", Name: "", Description: "", Scope: ""}
+	PermissionViewBoard             = &mmModel.Permission{Id: "view_board", Name: "", Description: "", Scope: ""}
+	PermissionManageBoardRoles      = &mmModel.Permission{Id: "manage_board_roles", Name: "", Description: "", Scope: ""}
+	PermissionShareBoard            = &mmModel.Permission{Id: "share_board", Name: "", Description: "", Scope: ""}
+	PermissionManageBoardCards      = &mmModel.Permission{Id: "manage_board_cards", Name: "", Description: "", Scope: ""}
+	PermissionManageBoardProperties = &mmModel.Permission{Id: "manage_board_properties", Name: "", Description: "", Scope: ""}
 )

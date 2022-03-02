@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -25,22 +26,22 @@ func (s *SQLStore) IsErrNotFound(err error) bool {
 func PrepareNewTestDatabase() (dbType string, connectionString string, err error) {
 	dbType = strings.TrimSpace(os.Getenv("FB_STORE_TEST_DB_TYPE"))
 	if dbType == "" {
-		dbType = sqliteDBType
+		dbType = model.SqliteDBType
 	}
 
 	var dbName string
 	var rootUser string
 
-	if dbType == sqliteDBType {
+	if dbType == model.SqliteDBType {
 		connectionString = ":memory:"
 	} else if port := strings.TrimSpace(os.Getenv("FB_STORE_TEST_DOCKER_PORT")); port != "" {
 		// docker unit tests take priority over any DSN env vars
 		var template string
 		switch dbType {
-		case mysqlDBType:
+		case model.MysqlDBType:
 			template = "%s:mostest@tcp(localhost:%s)/%s?charset=utf8mb4,utf8&writeTimeout=30s"
 			rootUser = "root"
-		case postgresDBType:
+		case model.PostgresDBType:
 			template = "postgres://%s:mostest@localhost:%s/%s?sslmode=disable\u0026connect_timeout=10"
 			rootUser = "mmuser"
 		default:
@@ -67,7 +68,7 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 			return "", "", fmt.Errorf("cannot create %s database %s: %w", dbType, dbName, err)
 		}
 
-		if dbType != postgresDBType {
+		if dbType != model.PostgresDBType {
 			_, err = sqlDB.Exec(fmt.Sprintf("GRANT ALL PRIVILEGES ON %s.* TO mmuser;", dbName))
 			if err != nil {
 				return "", "", fmt.Errorf("cannot grant permissions on %s database %s: %w", dbType, dbName, err)
