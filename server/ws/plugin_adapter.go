@@ -3,7 +3,6 @@ package ws
 
 import (
 	"fmt"
-	"math/rand"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -395,16 +394,6 @@ func (pa *PluginAdapter) sendMessageToAll(payload map[string]interface{}) {
 
 func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) {
 	pa.sendMessageToAll(utils.StructToMap(pluginConfig))
-}
-
-var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-func randSeq(n int) string {
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(b)
 }
 
 // sendTeamMessageSkipCluster sends a message to all the users

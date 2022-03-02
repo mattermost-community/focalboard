@@ -150,6 +150,10 @@ class OctoClient {
         return `/api/v1/teams/${teamIdToUse}`
     }
 
+    private teamsPath(): string {
+        return '/api/v1/teams'
+    }
+
     async getMe(): Promise<IUser | undefined> {
         const path = '/api/v1/users/me'
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
@@ -544,7 +548,7 @@ class OctoClient {
     }
 
     async getTeams(): Promise<Array<Team>> {
-        const path = this.teamPath()
+        const path = this.teamsPath()
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []

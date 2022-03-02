@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+//nolint:dupl
 func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	t.Run("GetBoard", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -71,12 +72,12 @@ func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, fu
 }
 
 func testGetBoard(t *testing.T, store store.Store) {
-	userID := "user-id"
+	userID := testUserID
 
 	t.Run("existing board", func(t *testing.T) {
 		board := &model.Board{
 			ID:     "id-1",
-			TeamID: "team-id",
+			TeamID: testTeamID,
 			Type:   model.BoardTypeOpen,
 		}
 
@@ -180,12 +181,12 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 }
 
 func testInsertBoard(t *testing.T, store store.Store) {
-	userID := "user-id"
+	userID := testUserID
 
 	t.Run("valid public board", func(t *testing.T) {
 		board := &model.Board{
 			ID:     "id-test-public",
-			TeamID: "team-id",
+			TeamID: testTeamID,
 			Type:   model.BoardTypeOpen,
 		}
 
@@ -203,7 +204,7 @@ func testInsertBoard(t *testing.T, store store.Store) {
 	t.Run("valid private board", func(t *testing.T) {
 		board := &model.Board{
 			ID:     "id-test-private",
-			TeamID: "team-id",
+			TeamID: testTeamID,
 			Type:   model.BoardTypePrivate,
 		}
 
@@ -221,7 +222,7 @@ func testInsertBoard(t *testing.T, store store.Store) {
 	t.Run("invalid properties field board", func(t *testing.T) {
 		board := &model.Board{
 			ID:         "id-test-props",
-			TeamID:     "team-id",
+			TeamID:     testTeamID,
 			Properties: map[string]interface{}{"no-serializable-value": t.Run},
 		}
 
@@ -236,7 +237,7 @@ func testInsertBoard(t *testing.T, store store.Store) {
 	t.Run("update board", func(t *testing.T) {
 		board := &model.Board{
 			ID:     "id-test-public",
-			TeamID: "team-id",
+			TeamID: testTeamID,
 			Title:  "New title",
 		}
 
@@ -275,7 +276,7 @@ func testInsertBoard(t *testing.T, store store.Store) {
 }
 
 func testPatchBoard(t *testing.T, store store.Store) {
-	userID := "user-id"
+	userID := testUserID
 
 	t.Run("should return error if the board doesn't exist", func(t *testing.T) {
 		newTitle := "A new title"
@@ -292,7 +293,7 @@ func testPatchBoard(t *testing.T, store store.Store) {
 
 		board := &model.Board{
 			ID:          boardID,
-			TeamID:      "team-id",
+			TeamID:      testTeamID,
 			Type:        model.BoardTypeOpen,
 			Title:       "A simple title",
 			Description: "A simple description",
@@ -322,7 +323,7 @@ func testPatchBoard(t *testing.T, store store.Store) {
 
 		board := &model.Board{
 			ID:     boardID,
-			TeamID: "team-id",
+			TeamID: testTeamID,
 			Type:   model.BoardTypeOpen,
 			Properties: map[string]interface{}{
 				"one": "1",
@@ -355,7 +356,7 @@ func testPatchBoard(t *testing.T, store store.Store) {
 
 		board := &model.Board{
 			ID:     boardID,
-			TeamID: "team-id",
+			TeamID: testTeamID,
 			Type:   model.BoardTypeOpen,
 		}
 
@@ -382,7 +383,7 @@ func testPatchBoard(t *testing.T, store store.Store) {
 
 		board := &model.Board{
 			ID:                 boardID,
-			TeamID:             "team-id",
+			TeamID:             testTeamID,
 			Type:               model.BoardTypeOpen,
 			Properties:         properties,
 			CardProperties:     cardProperties,
@@ -419,7 +420,7 @@ func testPatchBoard(t *testing.T, store store.Store) {
 
 		board := &model.Board{
 			ID:             boardID,
-			TeamID:         "team-id",
+			TeamID:         testTeamID,
 			Type:           model.BoardTypeOpen,
 			CardProperties: cardProperties,
 		}
@@ -446,7 +447,7 @@ func testPatchBoard(t *testing.T, store store.Store) {
 }
 
 func testDeleteBoard(t *testing.T, store store.Store) {
-	userID := "user-id"
+	userID := testUserID
 
 	t.Run("should return an error if the board doesn't exist", func(t *testing.T) {
 		require.Error(t, store.DeleteBoard("nonexistent-board-id", userID))
@@ -457,7 +458,7 @@ func testDeleteBoard(t *testing.T, store store.Store) {
 
 		board := &model.Board{
 			ID:     boardID,
-			TeamID: "team-id",
+			TeamID: testTeamID,
 			Type:   model.BoardTypeOpen,
 		}
 
@@ -481,14 +482,14 @@ func testDeleteBoard(t *testing.T, store store.Store) {
 }
 
 func testInsertBoardWithAdmin(t *testing.T, store store.Store) {
-	userID := "user-id"
+	userID := testUserID
 
 	t.Run("should correctly create a board and the admin membership with the creator", func(t *testing.T) {
 		boardID := utils.NewID(utils.IDTypeBoard)
 
 		board := &model.Board{
 			ID:     boardID,
-			TeamID: "team-id",
+			TeamID: testTeamID,
 			Type:   model.BoardTypeOpen,
 		}
 
@@ -506,8 +507,8 @@ func testInsertBoardWithAdmin(t *testing.T, store store.Store) {
 }
 
 func testSaveMember(t *testing.T, store store.Store) {
-	userID := "user-id"
-	boardID := "board-id"
+	userID := testUserID
+	boardID := testBoardID
 
 	t.Run("should correctly create a member", func(t *testing.T) {
 		bm := &model.BoardMember{
@@ -544,8 +545,8 @@ func testSaveMember(t *testing.T, store store.Store) {
 }
 
 func testGetMemberForBoard(t *testing.T, store store.Store) {
-	userID := "user-id"
-	boardID := "board-id"
+	userID := testUserID
+	boardID := testBoardID
 
 	t.Run("should return a no rows error for nonexisting membership", func(t *testing.T) {
 		bm, err := store.GetMemberForBoard(boardID, userID)
@@ -575,7 +576,7 @@ func testGetMemberForBoard(t *testing.T, store store.Store) {
 
 func testGetMembersForBoard(t *testing.T, store store.Store) {
 	t.Run("should return empty if there are no members on a board", func(t *testing.T) {
-		members, err := store.GetMembersForBoard("board-id")
+		members, err := store.GetMembersForBoard(testBoardID)
 		require.NoError(t, err)
 		require.Empty(t, members)
 	})
@@ -584,9 +585,9 @@ func testGetMembersForBoard(t *testing.T, store store.Store) {
 		boardID1 := "board-id-1"
 		boardID2 := "board-id-2"
 
-		userID1 := "user-id-1"
-		userID2 := "user-id-2"
-		userID3 := "user-id-3"
+		userID1 := "user-id-11"
+		userID2 := "user-id-12"
+		userID3 := "user-id-13"
 
 		bm1 := &model.BoardMember{BoardID: boardID1, UserID: userID1, SchemeAdmin: true}
 		_, err1 := store.SaveMember(bm1)
@@ -621,8 +622,8 @@ func testGetMembersForBoard(t *testing.T, store store.Store) {
 }
 
 func testDeleteMember(t *testing.T, store store.Store) {
-	userID := "user-id"
-	boardID := "board-id"
+	userID := testUserID
+	boardID := testBoardID
 
 	t.Run("should return nil if deleting a nonexistent member", func(t *testing.T) {
 		require.NoError(t, store.DeleteMember(boardID, userID))

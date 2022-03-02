@@ -38,8 +38,8 @@ func StoreTestBoardsAndBlocksStore(t *testing.T, setup func(t *testing.T) (store
 }
 
 func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
-	teamID := "team-id"
-	userID := "user-id"
+	teamID := testTeamID
+	userID := testUserID
 
 	boards, err := store.GetBoardsForUserAndTeam(userID, teamID)
 	require.Nil(t, err)
@@ -145,11 +145,11 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 }
 
 func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
-	teamID := "team-id"
-	userID := "user-id"
+	teamID := testTeamID
+	userID := testUserID
 
 	t.Run("on failure, nothing should be saved", func(t *testing.T) {
-		if store.DBType() == "sqlite3" {
+		if store.DBType() == model.SqliteDBType {
 			t.Skip("No transactions support int sqlite")
 		}
 
@@ -267,11 +267,11 @@ func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
 }
 
 func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
-	teamID := "team-id"
-	userID := "user-id"
+	teamID := testTeamID
+	userID := testUserID
 
 	t.Run("should not delete anything if a block doesn't belong to any of the boards", func(t *testing.T) {
-		if store.DBType() == "sqlite3" {
+		if store.DBType() == model.SqliteDBType {
 			t.Skip("No transactions support int sqlite")
 		}
 
@@ -348,7 +348,7 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 	})
 
 	t.Run("should not delete anything if a board doesn't exist", func(t *testing.T) {
-		if store.DBType() == "sqlite3" {
+		if store.DBType() == model.SqliteDBType {
 			t.Skip("No transactions support int sqlite")
 		}
 
@@ -424,7 +424,7 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 	})
 
 	t.Run("should not delete anything if a block doesn't exist", func(t *testing.T) {
-		if store.DBType() == "sqlite3" {
+		if store.DBType() == model.SqliteDBType {
 			t.Skip("No transactions support int sqlite")
 		}
 
@@ -572,8 +572,8 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 }
 
 func testDuplicateBoard(t *testing.T, store store.Store) {
-	teamID := "team-id"
-	userID := "user-id"
+	teamID := testTeamID
+	userID := testUserID
 
 	newBab := &model.BoardsAndBlocks{
 		Boards: []*model.Board{

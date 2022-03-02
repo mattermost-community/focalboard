@@ -99,7 +99,7 @@ func (s *SQLStore) patchBoardsAndBlocks(db sq.BaseRunner, pbab *model.PatchBoard
 
 // deleteBoardsAndBlocks deletes all the boards and blocks entities of
 // the DeleteBoardsAndBlocks struct, making sure that all the blocks
-// belong to the boards in the struct
+// belong to the boards in the struct.
 func (s *SQLStore) deleteBoardsAndBlocks(db sq.BaseRunner, dbab *model.DeleteBoardsAndBlocks, userID string) error {
 	boardIDMap := map[string]bool{}
 	for _, boardID := range dbab.Boards {

@@ -112,6 +112,9 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                             if (!me) {
                                 return
                             }
+                            if (!currentTeam) {
+                                return
+                            }
 
                             const patch: UserConfigPatch = {
                                 updatedFields: {
@@ -127,7 +130,7 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
 
                             const onboardingData = await octoClient.prepareOnboarding(currentTeam.id)
 
-                            const newPath = `/workspace/${onboardingData?.teamID}/${onboardingData?.boardID}`
+                            const newPath = `/team/${onboardingData?.teamID}/${onboardingData?.boardID}`
 
                             props.history.push(newPath)
                         }}
