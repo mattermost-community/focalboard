@@ -93,8 +93,9 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         })
         shareUrl.pathname = Utils.buildURL(newPath)
 
-        const boardPath = generatePath('/workspace/:workspaceId/:boardId', {
+        const boardPath = generatePath('/workspace/:workspaceId/:boardId/:viewId', {
             boardId: match.params.boardId,
+            viewId: match.params.viewId,
             workspaceId: match.params.workspaceId,
         })
         boardUrl.pathname = Utils.getFrontendBaseURL() + boardPath
@@ -105,8 +106,9 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         })
         shareUrl.pathname = Utils.buildURL(newPath)
         boardUrl.pathname = Utils.buildURL(
-            generatePath(':boardId', {
+            generatePath(':boardId/:viewId', {
                 boardId: match.params.boardId,
+                viewId: match.params.viewId,
             },
             ))
     }

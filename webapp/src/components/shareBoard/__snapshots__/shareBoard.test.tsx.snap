@@ -75,11 +75,11 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             >
               <a
                 class="shareUrl"
-                href="http://localhost/undefined/workspace/1/1"
+                href="http://localhost/undefined/workspace/1/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/undefined/workspace/1/1
+                http://localhost/undefined/workspace/1/1/1
               </a>
             </div>
             <button
@@ -176,11 +176,11 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             >
               <a
                 class="shareUrl"
-                href="http://localhost/undefined/workspace/1/1"
+                href="http://localhost/undefined/workspace/1/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/undefined/workspace/1/1
+                http://localhost/undefined/workspace/1/1/1
               </a>
             </div>
             <button
@@ -649,11 +649,11 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
             >
               <a
                 class="shareUrl"
-                href="http://localhost/undefined/workspace/1/1"
+                href="http://localhost/undefined/workspace/1/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/undefined/workspace/1/1
+                http://localhost/undefined/workspace/1/1/1
               </a>
             </div>
             <button
@@ -750,11 +750,11 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               <a
                 class="shareUrl"
-                href="http://localhost/undefined/workspace/1/1"
+                href="http://localhost/undefined/workspace/1/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/undefined/workspace/1/1
+                http://localhost/undefined/workspace/1/1/1
               </a>
             </div>
             <button
@@ -851,11 +851,11 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               <a
                 class="shareUrl"
-                href="http://localhost/undefined/workspace/1/1"
+                href="http://localhost/undefined/workspace/1/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/undefined/workspace/1/1
+                http://localhost/undefined/workspace/1/1/1
               </a>
             </div>
             <button
@@ -952,11 +952,11 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               <a
                 class="shareUrl"
-                href="http://localhost/test-subpath/plugins/boards1"
+                href="http://localhost/test-subpath/plugins/boards1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/test-subpath/plugins/boards1
+                http://localhost/test-subpath/plugins/boards1/1
               </a>
             </div>
             <button
