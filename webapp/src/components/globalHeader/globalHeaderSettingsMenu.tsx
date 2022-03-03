@@ -130,7 +130,7 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
 
                             const onboardingData = await octoClient.prepareOnboarding(currentTeam.id)
 
-                            const newPath = `/workspace/${onboardingData?.teamID}/${onboardingData?.boardID}`
+                            const newPath = `/team/${onboardingData?.teamID}/${onboardingData?.boardID}`
 
                             props.history.push(newPath)
                         }}

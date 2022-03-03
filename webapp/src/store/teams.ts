@@ -56,6 +56,10 @@ const teamSlice = createSlice({
                 return
             }
 
+            if (state.current === team) {
+                return
+            }
+
             state.current = team
 
             const suiteWindow = (window as SuiteWindow)
@@ -67,6 +71,8 @@ const teamSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             state.current = action.payload.team
+            state.allTeams = action.payload.teams
+            state.allTeams.sort((a: Team, b: Team) => (a.title < b.title ? -1 : 1))
 
             const windowAny = (window as any)
             if (windowAny.setTeamInSidebar && action.payload?.team?.id) {
@@ -75,6 +81,7 @@ const teamSlice = createSlice({
         })
         builder.addCase(fetchTeams.fulfilled, (state, action) => {
             state.allTeams = action.payload
+            state.allTeams.sort((a: Team, b: Team) => (a.title < b.title ? -1 : 1))
         })
         builder.addCase(refreshCurrentTeam.fulfilled, (state, action) => {
             state.current = action.payload
@@ -86,3 +93,4 @@ export const {setTeam} = teamSlice.actions
 export const {reducer} = teamSlice
 
 export const getCurrentTeam = (state: RootState): Team|null => state.teams.current
+export const getFirstTeam = (state: RootState): Team|null => state.teams.allTeams[0]

@@ -71,6 +71,18 @@ const styles = {
     }),
 }
 
+function isLastAdmin(members: BoardMember[]) {
+    let adminCount = 0
+    for (const member of members) {
+        if (member.schemeAdmin) {
+            if (++adminCount > 1) {
+                return false
+            }
+        }
+    }
+    return true
+}
+
 export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopied, setWasCopied] = useState(false)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
@@ -121,6 +133,47 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             const description = intl.formatMessage({id: 'ShareBoard.tokenRegenrated', defaultMessage: 'Token regenerated'})
             sendFlashMessage({content: description, severity: 'low'})
         }
+    }
+
+    const onUpdateBoardMember = (member: BoardMember, newPermission: string) => {
+        if (member.userId === me?.id && isLastAdmin(Object.values(members))) {
+            sendFlashMessage({content: intl.formatMessage({id: 'shareBoard.lastAdmin', defaultMessage: 'Boards must have at least one Administrator'}), severity: 'low'})
+            return
+        }
+
+        const newMember = {
+            boardId: member.boardId,
+            userId: member.userId,
+            roles: member.roles,
+        } as BoardMember
+
+        switch (newPermission) {
+        case 'Admin':
+            if (member.schemeAdmin) {
+                return
+            }
+            newMember.schemeAdmin = true
+            newMember.schemeEditor = true
+            break
+        case 'Editor':
+            if (!member.schemeAdmin && member.schemeEditor) {
+                return
+            }
+            newMember.schemeEditor = true
+            break
+        default:
+            return
+        }
+
+        mutator.updateBoardMember(newMember, member)
+    }
+
+    const onDeleteBoardMember = (member: BoardMember) => {
+        if (member.userId === me?.id && isLastAdmin(Object.values(members))) {
+            sendFlashMessage({content: intl.formatMessage({id: 'shareBoard.lastAdmin', defaultMessage: 'Boards must have at least one Administrator'}), severity: 'low'})
+            return
+        }
+        mutator.deleteBoardMember(member)
     }
 
     useEffect(() => {
@@ -191,6 +244,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             key={user.id}
                             user={user}
                             member={member}
+                            onDeleteBoardMember={onDeleteBoardMember}
+                            onUpdateBoardMember={onUpdateBoardMember}
                             isMe={user.id === me?.id}
                         />
                     )
