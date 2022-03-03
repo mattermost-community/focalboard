@@ -5,7 +5,7 @@ Focalboard is an open source, self-hosted alternative to Trello, Notion, Asana a
 This changelog summarizes updates to our open source project. You can also find the [latest releases and release notes on GitHub here](https://github.com/mattermost/focalboard/releases).
 
 ## v0.15 Release - March, 2022
-* Onboarding tour for Boards plugin. Thanks @harshilsharma63! @jespino!
+* Onboarding tour. Thanks @harshilsharma63! @jespino!
 * Channel intro link to Boards. Thanks @sbishel!
 * Improved share board UI. Thanks @sbishel!
 * Login via publicly shared board and new error pages. Thanks @wiggin77! @asaadmahmood!
