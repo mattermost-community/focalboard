@@ -8,7 +8,7 @@ This changelog summarizes updates to our open source project. You can also find 
 * Onboarding tour. Thanks @harshilsharma63! @jespino!
 * Channel intro link to Boards. Thanks @sbishel!
 * Improved share board UI. Thanks @sbishel!
-* Login via publicly shared board and new error pages. Thanks @wiggin77! @asaadmahmood!
+* New error pages. Thanks @wiggin77! @asaadmahmood!
 * In-app links to import Help Docs. Thanks @justinegeffen! @sbishel!
 * Toggle to hide empty groups for TableView. Thanks @vish9812!
 * Removed transactions from sqlite backend to prevent locking issues. Thanks @jespino!
