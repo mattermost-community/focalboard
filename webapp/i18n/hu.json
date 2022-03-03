@@ -278,11 +278,7 @@
   "register.signup-title": "Regisztráljon fiókjáért",
   "tutorial_tip.finish_tour": "Kész",
   "tutorial_tip.got_it": "Értettem",
-<<<<<<< HEAD
-  "tutorial_tip.ok": "Következő"
-=======
   "tutorial_tip.ok": "Következő",
   "tutorial_tip.out": "Ezen tippek kikapcsolása",
   "tutorial_tip.seen": "Ezt látta már?"
->>>>>>> weblate/main
 }
