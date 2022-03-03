@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 )
@@ -84,8 +85,8 @@ func (a *App) createWelcomeBoard(userID, workspaceID string) (string, error) {
 
 	blocks = model.GenerateBlockIDs(blocks, a.logger)
 
-	if err := a.CopyCardFiles(onboardingBoardID, workspaceID, blocks); err != nil {
-		return "", err
+	if updateFileIDsErr := a.CopyCardFiles(onboardingBoardID, workspaceID, blocks); updateFileIDsErr != nil {
+		return "", updateFileIDsErr
 	}
 
 	// we're copying from a global template, so we need to set the
