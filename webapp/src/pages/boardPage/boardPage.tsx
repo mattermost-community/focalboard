@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState, useMemo} from 'react'
+import React, {useEffect, useState, useMemo, useCallback} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
@@ -13,6 +13,7 @@ import {getCurrentView, setCurrent as setCurrentView} from '../../store/views'
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {setTeam} from '../../store/teams'
+import {setGlobalError} from '../../store/globalError'
 import {UserSettings} from '../../userSettings'
 
 import IconButton from '../../widgets/buttons/iconButton'
@@ -77,27 +78,40 @@ const BoardPage = (props: Props): JSX.Element => {
         return initialLoad
     }, [props.readonly])
 
+    const loadOrJoinBoard = useCallback(async (userId: string, boardTeamId: string, boardId: string, viewId: string) => {
+        // set the active board if we're able to pick one
+        dispatch(setCurrentBoard(boardId))
+
+        // and fetch its data
+        const result: any = await dispatch(loadBoardData(boardId))
+        if (result.payload.blocks.length === 0) {
+            const member = await octoClient.createBoardMember({userId, boardId})
+            if (!member) {
+                dispatch(setGlobalError('board-not-found'))
+                return
+            }
+            await dispatch(loadBoardData(boardId))
+        }
+
+        dispatch(fetchBoardMembers({
+            teamId: boardTeamId,
+            boardId,
+        }))
+
+        // and set it as most recently viewed board
+        UserSettings.setLastBoardID(boardTeamId, boardId)
+
+        if (viewId) {
+            dispatch(setCurrentView(viewId))
+            UserSettings.setLastViewId(boardId, viewId)
+        }
+    }, [])
+
     useEffect(() => {
         dispatch(loadAction(match.params.boardId))
 
-        if (match.params.boardId) {
-            // set the active board if we're able to pick one
-            dispatch(setCurrentBoard(match.params.boardId))
-
-            // and fetch its data
-            dispatch(loadBoardData(match.params.boardId))
-            dispatch(fetchBoardMembers({
-                teamId,
-                boardId: match.params.boardId,
-            }))
-
-            // and set it as most recently viewed board
-            UserSettings.setLastBoardID(teamId, match.params.boardId)
-
-            if (match.params.viewId) {
-                dispatch(setCurrentView(match.params.viewId))
-                UserSettings.setLastViewId(match.params.boardId, match.params.viewId)
-            }
+        if (match.params.boardId && me) {
+            loadOrJoinBoard(me.id, teamId, match.params.boardId, match.params.viewId)
         }
     }, [teamId, match.params.boardId, match.params.viewId])
 
