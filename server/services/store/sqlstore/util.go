@@ -33,7 +33,7 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 	var rootUser string
 
 	if dbType == model.SqliteDBType {
-		connectionString = ":memory:"
+		connectionString = "file::memory:?cache=shared"
 	} else if port := strings.TrimSpace(os.Getenv("FB_STORE_TEST_DOCKER_PORT")); port != "" {
 		// docker unit tests take priority over any DSN env vars
 		var template string
