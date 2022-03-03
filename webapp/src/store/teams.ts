@@ -56,6 +56,10 @@ const teamSlice = createSlice({
                 return
             }
 
+            if (state.current === team) {
+                return
+            }
+
             state.current = team
 
             const suiteWindow = (window as SuiteWindow)
