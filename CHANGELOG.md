@@ -16,6 +16,7 @@ This changelog summarizes updates to our open source project. You can also find 
 * Change wrapping in React.memo. Thanks @kamre!
 * Don't use property value for key construction. Thanks @kamre!
 * Updated comment box alignment. Thanks @asaadmahmood!
+* Show "(Deleted User)" instead of UUID when user not found. Thanks @akkivasu!
 
 ## v0.14 Release - February, 2022
 * Template selector dialog. Thanks @jespino!
