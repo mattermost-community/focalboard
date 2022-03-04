@@ -38,6 +38,8 @@ func TestPrepareOnboardingTour(t *testing.T) {
 			"user_id_1",
 		).Return(nil)
 
+		th.Store.EXPECT().GetBlock(gomock.Any(), "block_id_1").Return(&welcomeBoard, nil)
+
 		th.Store.EXPECT().CreatePrivateWorkspace("user_id_1").Return("workspace_id_1", nil)
 
 		userPropPatch := model.UserPropPatch{
