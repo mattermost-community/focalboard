@@ -20,6 +20,7 @@ import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmation
 import {sendFlashMessage} from '../flashMessages'
 import Menu from '../../widgets/menu'
 import {IDType, Utils} from '../../utils'
+import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
 
 type Props = {
     board: Board
@@ -32,7 +33,7 @@ type Props = {
     readonly: boolean
 }
 
-const CardDetailProperties = React.memo((props: Props) => {
+const CardDetailProperties = (props: Props) => {
     const {board, card, cards, views, activeView, contents, comments} = props
     const [newTemplateId, setNewTemplateId] = useState('')
     const intl = useIntl()
@@ -135,10 +136,9 @@ const CardDetailProperties = React.memo((props: Props) => {
     return (
         <div className='octo-propertylist CardDetailProperties'>
             {board.fields.cardProperties.map((propertyTemplate: IPropertyTemplate) => {
-                const propertyValue = card.fields.properties[propertyTemplate.id]
                 return (
                     <div
-                        key={propertyTemplate.id + '-' + propertyTemplate.type + '-' + propertyValue}
+                        key={propertyTemplate.id + '-' + propertyTemplate.type}
                         className='octo-propertyrow'
                     >
                         {props.readonly && <div className='octo-propertyname octo-propertyname--readonly'>{propertyTemplate.name}</div>}
@@ -198,10 +198,12 @@ const CardDetailProperties = React.memo((props: Props) => {
                             />
                         </Menu>
                     </MenuWrapper>
+
+                    <AddPropertiesTourStep/>
                 </div>
             }
         </div>
     )
-})
+}
 
-export default CardDetailProperties
+export default React.memo(CardDetailProperties)

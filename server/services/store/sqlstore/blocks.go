@@ -444,6 +444,11 @@ func (s *SQLStore) patchBlocks(db sq.BaseRunner, c store.Container, blockPatches
 }
 
 func (s *SQLStore) insertBlocks(db sq.BaseRunner, c store.Container, blocks []model.Block, userID string) error {
+	for _, block := range blocks {
+		if block.RootID == "" {
+			return RootIDNilError{}
+		}
+	}
 	for i := range blocks {
 		err := s.insertBlock(db, c, &blocks[i], userID)
 		if err != nil {
@@ -511,6 +516,76 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, c store.Container, blockID stri
 		Where(sq.Eq{"COALESCE(workspace_id, '0')": c.WorkspaceID})
 
 	if _, err := deleteQuery.Exec(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *SQLStore) undeleteBlock(db sq.BaseRunner, c store.Container, blockID string, modifiedBy string) error {
+	blocks, err := s.getBlockHistory(db, c, blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return err
+	}
+
+	if len(blocks) == 0 {
+		return nil // deleting non-exiting block is not considered an error (for now)
+	}
+	block := blocks[0]
+
+	if block.DeleteAt == 0 {
+		return nil // undeleting not deleted block is not considered an error (for now)
+	}
+
+	fieldsJSON, err := json.Marshal(block.Fields)
+	if err != nil {
+		return err
+	}
+
+	now := utils.GetMillis()
+	columns := []string{
+		"workspace_id",
+		"id",
+		"parent_id",
+		s.escapeField("schema"),
+		"type",
+		"title",
+		"fields",
+		"root_id",
+		"modified_by",
+		"create_at",
+		"update_at",
+		"delete_at",
+		"created_by",
+	}
+
+	values := []interface{}{
+		c.WorkspaceID,
+		block.ID,
+		block.ParentID,
+		block.Schema,
+		block.Type,
+		block.Title,
+		fieldsJSON,
+		block.RootID,
+		modifiedBy,
+		block.CreateAt,
+		now,
+		0,
+		block.CreatedBy,
+	}
+	insertHistoryQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "blocks_history").
+		Columns(columns...).
+		Values(values...)
+	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "blocks").
+		Columns(columns...).
+		Values(values...)
+
+	if _, err := insertHistoryQuery.Exec(); err != nil {
+		return err
+	}
+
+	if _, err := insertQuery.Exec(); err != nil {
 		return err
 	}
 

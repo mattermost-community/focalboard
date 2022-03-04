@@ -2,12 +2,10 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
+	"strconv"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/focalboard/server/services/audit"
 )
 
 // Block is the basic data unit
@@ -183,109 +181,18 @@ type QueryBlockHistoryOptions struct {
 	Descending     bool   // if true then the records are sorted by insert_at in descending order
 }
 
-// GenerateBlockIDs generates new IDs for all the blocks of the list,
-// keeping consistent any references that other blocks would made to
-// the original IDs, so a tree of blocks can get new IDs and maintain
-// its shape.
-func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
-	blockIDs := map[string]BlockType{}
-	referenceIDs := map[string]bool{}
-	for _, block := range blocks {
-		if _, ok := blockIDs[block.ID]; !ok {
-			blockIDs[block.ID] = block.Type
-		}
-
-		if _, ok := referenceIDs[block.RootID]; !ok {
-			referenceIDs[block.RootID] = true
-		}
-		if _, ok := referenceIDs[block.ParentID]; !ok {
-			referenceIDs[block.ParentID] = true
-		}
-
-		if _, ok := block.Fields["contentOrder"]; ok {
-			contentOrder, typeOk := block.Fields["contentOrder"].([]interface{})
-			if !typeOk {
-				logger.Warn(
-					"type assertion failed for content order when saving reference block IDs",
-					mlog.String("blockID", block.ID),
-					mlog.String("actionType", fmt.Sprintf("%T", block.Fields["contentOrder"])),
-					mlog.String("expectedType", "[]interface{}"),
-					mlog.String("contentOrder", fmt.Sprintf("%v", block.Fields["contentOrder"])),
-				)
-				continue
-			}
-
-			for _, blockID := range contentOrder {
-				switch v := blockID.(type) {
-				case []interface{}:
-					for _, columnBlockID := range v {
-						referenceIDs[columnBlockID.(string)] = true
-					}
-				case string:
-					referenceIDs[v] = true
-				default:
-				}
-			}
-		}
+func StampModificationMetadata(userID string, blocks []Block, auditRec *audit.Record) {
+	if userID == SingleUser {
+		userID = ""
 	}
 
-	newIDs := map[string]string{}
-	for id, blockType := range blockIDs {
-		for referenceID := range referenceIDs {
-			if id == referenceID {
-				newIDs[id] = utils.NewID(BlockType2IDType(blockType))
-				continue
-			}
+	now := GetMillis()
+	for i := range blocks {
+		blocks[i].ModifiedBy = userID
+		blocks[i].UpdateAt = now
+
+		if auditRec != nil {
+			auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), blocks[i])
 		}
 	}
-
-	getExistingOrOldID := func(id string) string {
-		if existingID, ok := newIDs[id]; ok {
-			return existingID
-		}
-		return id
-	}
-
-	getExistingOrNewID := func(id string) string {
-		if existingID, ok := newIDs[id]; ok {
-			return existingID
-		}
-		return utils.NewID(BlockType2IDType(blockIDs[id]))
-	}
-
-	newBlocks := make([]Block, len(blocks))
-	for i, block := range blocks {
-		block.ID = getExistingOrNewID(block.ID)
-		block.RootID = getExistingOrOldID(block.RootID)
-		block.ParentID = getExistingOrOldID(block.ParentID)
-
-		if _, ok := block.Fields["contentOrder"]; ok {
-			contentOrder, typeOk := block.Fields["contentOrder"].([]interface{})
-			if !typeOk {
-				logger.Warn(
-					"type assertion failed for content order when setting new block IDs",
-					mlog.String("blockID", block.ID),
-					mlog.String("actionType", fmt.Sprintf("%T", block.Fields["contentOrder"])),
-					mlog.String("expectedType", "[]interface{}"),
-					mlog.String("contentOrder", fmt.Sprintf("%v", block.Fields["contentOrder"])),
-				)
-			} else {
-				for j := range contentOrder {
-					switch v := contentOrder[j].(type) {
-					case string:
-						contentOrder[j] = getExistingOrOldID(v)
-					case []interface{}:
-						subOrder := contentOrder[j].([]interface{})
-						for k := range v {
-							subOrder[k] = getExistingOrOldID(v[k].(string))
-						}
-					}
-				}
-			}
-		}
-
-		newBlocks[i] = block
-	}
-
-	return newBlocks
 }

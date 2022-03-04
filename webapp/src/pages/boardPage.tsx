@@ -97,7 +97,7 @@ const BoardPage = (props: Props): JSX.Element => {
         }
 
         // we can pick workspace ID from board if it's not available anywhere,
-        const workspaceIDToUse = workspaceId || board.workspaceId
+        const workspaceIDToUse = Utils.isFocalboardPlugin() ? workspaceId || board.workspaceId : '0'
 
         const newPath = Utils.buildOriginalPath(workspaceIDToUse, match.params.boardId, match.params.viewId, match.params.cardId)
         history.replace(`/workspace/${newPath}`)

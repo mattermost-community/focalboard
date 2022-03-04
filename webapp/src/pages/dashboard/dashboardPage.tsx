@@ -7,13 +7,13 @@ import Sidebar from '../../components/sidebar/sidebar'
 
 import DashboardCenterContent from './centerContent'
 
-const DashboardPage = React.memo(() => (
+const DashboardPage = () => (
     <div className='DashboardPage'>
         <Sidebar
             isDashboard={true}
         />
         <DashboardCenterContent/>
     </div>
-))
+)
 
-export default DashboardPage
+export default React.memo(DashboardPage)

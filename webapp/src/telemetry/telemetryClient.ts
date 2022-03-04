@@ -30,6 +30,9 @@ export const TelemetryActions = {
     DeleteCard: 'deleteCard',
     AddTemplateFromCard: 'addTemplateFromCard',
     ViewSharedBoard: 'viewSharedBoard',
+    ShareBoardOpenModal: 'shareBoard_openModal',
+    ShareLinkPublicCopy: 'shareLinkPublic_copy',
+    ShareLinkInternalCopy: 'shareLinkInternal_copy',
     ImportArchive: 'settings_importArchive',
     ImportTrello: 'settings_importTrello',
     ImportAsana: 'settings_importAsana',
@@ -37,6 +40,8 @@ export const TelemetryActions = {
     ImportJira: 'settings_importJira',
     ImportTodoist: 'settings_importTodoist',
     ExportArchive: 'settings_exportArchive',
+    StartTour: 'welcomeScreen_startTour',
+    SkipTour: 'welcomeScreen_skipTour',
 }
 
 interface IEventProps {

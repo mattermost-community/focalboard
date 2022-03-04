@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 
 import {getCurrentWorkspace} from '../store/workspace'
 import {getCurrentBoard} from '../store/boards'
-import {getCurrentViewCardsSortedFilteredAndGrouped} from '../store/cards'
+import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
@@ -46,6 +46,7 @@ function CenterContent(props: Props) {
             newPath += `?r=${Utils.getReadToken()}`
         }
         history.push(newPath)
+        dispatch(setCurrentCard(cardId || ''))
     }, [match, history])
 
     useEffect(() => {
@@ -109,7 +110,7 @@ function CenterContent(props: Props) {
     )
 }
 
-const Workspace = React.memo((props: Props) => {
+const Workspace = (props: Props) => {
     const board = useAppSelector(getCurrentBoard)
     const view = useAppSelector(getCurrentView)
     const [boardTemplateSelectorOpen, setBoardTemplateSelectorOpen] = useState(false)
@@ -149,6 +150,6 @@ const Workspace = React.memo((props: Props) => {
             </div>
         </div>
     )
-})
+}
 
-export default Workspace
+export default React.memo(Workspace)

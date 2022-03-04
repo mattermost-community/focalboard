@@ -23,8 +23,8 @@ jobs:
     - name: Replace token 2 webapp
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
-    - name: npm install
-      run: cd webapp; npm install --no-optional
+    - name: npm ci
+      run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -63,7 +63,7 @@ jobs:
         path: ${{ github.workspace }}/linux/dist/focalboard-linux.tar.gz
 
   macos:
-    runs-on: macos-10.15
+    runs-on: macos-11
 
     steps:
 
@@ -82,8 +82,8 @@ jobs:
     - name: Replace token 2 webapp
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
-    - name: npm install
-      run: cd webapp; npm install --no-optional
+    - name: npm ci
+      run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -96,7 +96,7 @@ jobs:
     - name: Build macOS
       run: make mac-app
       env:
-        DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+        DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload macOS package
@@ -106,7 +106,7 @@ jobs:
         path: ${{ github.workspace }}/mac/dist/focalboard-mac.zip
 
   windows:
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:
     - name: Checkout
@@ -127,8 +127,8 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: npm install
-      run: cd webapp; npm install --no-optional
+    - name: npm ci
+      run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -179,8 +179,8 @@ jobs:
     - name: Replace token 2 webapp
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
-    - name: npm install
-      run: cd webapp; npm install --no-optional
+    - name: npm ci
+      run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -195,8 +195,8 @@ jobs:
     - name: Build webapp
       run: make webapp
 
-    - name: npm install plugin dependencies
-      run: cd mattermost-plugin/webapp; npm install --no-optional
+    - name: npm ci plugin dependencies
+      run: cd mattermost-plugin/webapp; npm ci --no-optional
 
     - name: Build plugin
       run: cd mattermost-plugin; make dist

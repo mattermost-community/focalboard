@@ -14,7 +14,10 @@ import {MarkdownEditor} from '../markdownEditor'
 import {IUser} from '../../user'
 import {getMe} from '../../store/users'
 
+import AddCommentTourStep from '../onboardingTour/addComments/addComments'
+
 import Comment from './comment'
+
 import './commentsList.scss'
 
 type Props = {
@@ -24,7 +27,7 @@ type Props = {
     readonly: boolean
 }
 
-const CommentsList = React.memo((props: Props) => {
+const CommentsList = (props: Props) => {
     const [newComment, setNewComment] = useState('')
     const me = useAppSelector<IUser|null>(getMe)
 
@@ -75,6 +78,8 @@ const CommentsList = React.memo((props: Props) => {
                 />
             </Button>
             }
+
+            <AddCommentTourStep/>
         </div>
     )
 
@@ -97,6 +102,6 @@ const CommentsList = React.memo((props: Props) => {
             {!(comments.length === 0 && props.readonly) && <hr className='CommentsList__divider'/>}
         </div>
     )
-})
+}
 
-export default CommentsList
+export default React.memo(CommentsList)

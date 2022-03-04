@@ -12,6 +12,8 @@ import {useSortableWithGrip} from '../../hooks/sortable'
 import ContentBlock from '../contentBlock'
 import {MarkdownEditor} from '../markdownEditor'
 
+import AddDescriptionTourStep from '../onboardingTour/addDescription/add_description'
+
 import {dragAndDropRearrange} from './cardDetailContentsUtility'
 
 export type Position = 'left' | 'right' | 'above' | 'below' | 'aboveRow' | 'belowRow'
@@ -147,7 +149,7 @@ const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) =>
     )
 }
 
-const CardDetailContents = React.memo((props: Props) => {
+const CardDetailContents = (props: Props) => {
     const intl = useIntl()
     const {contents, card, id} = props
     if (contents.length) {
@@ -155,15 +157,17 @@ const CardDetailContents = React.memo((props: Props) => {
             <div className='octo-content'>
                 {contents.map((block, x) =>
                     (
-                        <ContentBlockWithDragAndDrop
-                            key={x}
-                            block={block}
-                            x={x}
-                            card={card}
-                            contents={contents}
-                            intl={intl}
-                            readonly={props.readonly}
-                        />
+                        <React.Fragment key={x}>
+                            <ContentBlockWithDragAndDrop
+                                block={block}
+                                x={x}
+                                card={card}
+                                contents={contents}
+                                intl={intl}
+                                readonly={props.readonly}
+                            />
+                            {x === 0 && <AddDescriptionTourStep/>}
+                        </React.Fragment>
                     ),
                 )}
             </div>
@@ -188,6 +192,6 @@ const CardDetailContents = React.memo((props: Props) => {
             </div>
         </div>
     )
-})
+}
 
-export default CardDetailContents
+export default React.memo(CardDetailContents)
