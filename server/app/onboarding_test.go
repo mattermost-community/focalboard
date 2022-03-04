@@ -88,6 +88,8 @@ func TestCreateWelcomeBoard(t *testing.T) {
 			"user_id_1",
 		).Return(nil)
 
+		th.Store.EXPECT().GetBlock(gomock.Any(), "block_id_1").Return(&welcomeBoard, nil)
+
 		boardID, err := th.App.createWelcomeBoard("user_id_1", "workspace_id_1")
 		assert.Nil(t, err)
 		assert.NotEmpty(t, boardID)
