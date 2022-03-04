@@ -5,7 +5,7 @@ import {notifySettingsChanged} from './nativeApp'
 import {Utils} from './utils'
 
 // eslint-disable-next-line no-shadow
-enum UserSettingKey {
+export enum UserSettingKey {
     Language = 'language',
     Theme = 'theme',
     LastWorkspaceId = 'lastWorkspaceId',
@@ -43,14 +43,6 @@ export class UserSettings {
 
     static set language(newValue: string | null) {
         UserSettings.set(UserSettingKey.Language, newValue)
-    }
-
-    static get welcomePageViewed(): string | null {
-        return UserSettings.get(UserSettingKey.WelcomePageViewed)
-    }
-
-    static set welcomePageViewed(newValue: string | null) {
-        UserSettings.set(UserSettingKey.WelcomePageViewed, newValue)
     }
 
     static get theme(): string | null {

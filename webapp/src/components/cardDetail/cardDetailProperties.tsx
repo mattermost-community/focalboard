@@ -20,6 +20,7 @@ import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmation
 import {sendFlashMessage} from '../flashMessages'
 import Menu from '../../widgets/menu'
 import {IDType, Utils} from '../../utils'
+import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
 
 type Props = {
     board: Board
@@ -197,6 +198,8 @@ const CardDetailProperties = (props: Props) => {
                             />
                         </Menu>
                     </MenuWrapper>
+
+                    <AddPropertiesTourStep/>
                 </div>
             }
         </div>

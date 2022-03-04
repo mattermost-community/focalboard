@@ -154,3 +154,9 @@ func (s *SQLStore) getWorkspaceCount(db sq.BaseRunner) (int64, error) {
 func (s *SQLStore) getUserWorkspaces(_ sq.BaseRunner, _ string) ([]model.UserWorkspace, error) {
 	return nil, fmt.Errorf("GetUserWorkspaces %w", errUnsupportedOperation)
 }
+
+func (s *SQLStore) createPrivateWorkspace(_ sq.BaseRunner, _ string) (string, error) {
+	// for personal server we always have only
+	// a single workspace, with id "0".
+	return "0", nil
+}

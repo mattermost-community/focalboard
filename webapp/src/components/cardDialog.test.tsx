@@ -56,6 +56,12 @@ describe('components/cardDialog', () => {
                 [card.id]: card,
             },
         },
+        boards: {
+            boards: {
+                [board.id]: board,
+            },
+            current: board.id,
+        },
         users: {
             workspaceUsers: {
                 1: {username: 'abc'},

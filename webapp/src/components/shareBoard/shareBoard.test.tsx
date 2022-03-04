@@ -74,6 +74,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
@@ -100,12 +101,13 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
             container = result.container
         })
-        const copyLinkElement = screen.getByRole('button', {name: 'Copy link'})
+        const copyLinkElement = screen.getByRole('button', {name: 'Copy internal link'})
         expect(copyLinkElement).toBeDefined()
 
         expect(container).toMatchSnapshot()
@@ -126,6 +128,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
@@ -134,7 +137,7 @@ describe('src/components/shareBoard/shareBoard', () => {
 
         expect(container).toMatchSnapshot()
 
-        const copyLinkElement = screen.getByRole('button', {name: 'Copy link'})
+        const copyLinkElement = screen.getByRole('button', {name: 'Copy internal link'})
         expect(copyLinkElement).toBeDefined()
 
         await act(async () => {
@@ -144,7 +147,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(mockedUtils.copyTextToClipboard).toBeCalledTimes(1)
         expect(container).toMatchSnapshot()
 
-        const copiedLinkElement = screen.getByRole('button', {name: 'Copy link'})
+        const copiedLinkElement = screen.getByRole('button', {name: 'Copy internal link'})
         expect(copiedLinkElement).toBeDefined()
         expect(copiedLinkElement.textContent).toContain('Copied!')
     })
@@ -167,6 +170,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
@@ -177,6 +181,14 @@ describe('src/components/shareBoard/shareBoard', () => {
         mockedUtils.createGuid.mockReturnValue('anotherToken')
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
         mockedOctoClient.setSharing.mockResolvedValue(true)
+
+        const publishButton = screen.getByRole('button', {name: 'Publish'})
+        expect(publishButton).toBeDefined()
+        userEvent.click(publishButton)
+        await act(async () => {
+            jest.runOnlyPendingTimers()
+        })
+
         const regenerateTokenElement = screen.getByRole('button', {name: 'Regenerate token'})
         expect(regenerateTokenElement).toBeDefined()
         userEvent.click(regenerateTokenElement)
@@ -200,11 +212,20 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
             container = result.container
         })
+
+        const publishButton = screen.getByRole('button', {name: 'Publish'})
+        expect(publishButton).toBeDefined()
+        userEvent.click(publishButton)
+        await act(async () => {
+            jest.runOnlyPendingTimers()
+        })
+
         const switchElement = container?.querySelector('.Switch')
         expect(switchElement).toBeDefined()
         await act(async () => {
@@ -225,6 +246,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />),
                 {wrapper: MemoryRouter},
             )
@@ -234,6 +256,12 @@ describe('src/components/shareBoard/shareBoard', () => {
                 enabled: true,
                 token: 'aToken',
             })
+
+            const publishButton = screen.getByRole('button', {name: 'Publish'})
+            expect(publishButton).toBeDefined()
+            userEvent.click(publishButton)
+            jest.runOnlyPendingTimers()
+
             const switchElement = container?.querySelector('.Switch')
             expect(switchElement).toBeDefined()
             userEvent.click(switchElement!)
@@ -243,6 +271,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         boardId={board.id}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />))
         })
 
@@ -269,6 +298,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                 <ShareBoard
                     boardId={board.id}
                     onClose={jest.fn()}
+                    enableSharedBoards={true}
                 />), {wrapper: MemoryRouter})
             container = result.container
         })
@@ -289,6 +319,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                 <ShareBoard
                     boardId={board.id}
                     onClose={jest.fn()}
+                    enableSharedBoards={true}
                 />), {wrapper: MemoryRouter})
             container = result.container
         })
