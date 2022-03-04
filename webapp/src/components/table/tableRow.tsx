@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useRef, useState, useMemo} from 'react'
+import React, {useEffect, useRef, useState, useMemo, useCallback} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Card} from '../../blocks/card'
@@ -92,25 +92,27 @@ const TableRow = (props: Props) => {
         columnRefs.set(Constants.titleColumnId, React.createRef())
     }
 
-    const handleDeleteCard = async () => {
+    const handleDeleteCard = useCallback(async () => {
         if (!card) {
             Utils.assertFailure()
             return
         }
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: board.id, card: card.id})
         await mutator.deleteBlock(card, 'delete card')
-    }
+    }, [card, board.id])
 
-    const confirmDialogProps: ConfirmationDialogBoxProps = {
-        heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
-        confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
-        onConfirm: handleDeleteCard,
-        onClose: () => {
-            setShowConfirmationDialogBox(false)
-        },
-    }
+    const confirmDialogProps: ConfirmationDialogBoxProps = useMemo(() => {
+        return {
+            heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+            confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+            onConfirm: handleDeleteCard,
+            onClose: () => {
+                setShowConfirmationDialogBox(false)
+            },
+        }
+    }, [handleDeleteCard])
 
-    const handleDeleteButtonOnClick = () => {
+    const handleDeleteButtonOnClick = useCallback(() => {
         // user trying to delete a card with blank name
         // but content present cannot be deleted without
         // confirmation dialog
@@ -119,7 +121,7 @@ const TableRow = (props: Props) => {
             return
         }
         setShowConfirmationDialogBox(true)
-    }
+    }, [card.title, card.fields.contentOrder, handleDeleteCard])
 
     return (
         <div
