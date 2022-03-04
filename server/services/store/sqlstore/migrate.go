@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"database/sql"
+	"embed"
 	"fmt"
 	"path/filepath"
 	"text/template"
@@ -19,9 +20,11 @@ import (
 	_ "github.com/lib/pq" // postgres driver
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
 	"github.com/mattermost/mattermost-plugin-api/cluster"
 )
+
+//go:embed migrations
+var assets embed.FS
 
 const (
 	uniqueIDsMigrationRequiredVersion = 14
@@ -106,9 +109,13 @@ func (s *SQLStore) Migrate() error {
 		}
 	}
 
-	assetNamesForDriver := make([]string, len(migrations.AssetNames()))
-	for i, assetName := range migrations.AssetNames() {
-		assetNamesForDriver[i] = filepath.Base(assetName)
+	assetsList, err := assets.ReadDir("migrations")
+	if err != nil {
+		return err
+	}
+	assetNamesForDriver := make([]string, len(assetsList))
+	for i, dirEntry := range assetsList {
+		assetNamesForDriver[i] = dirEntry.Name()
 	}
 
 	params := map[string]interface{}{
@@ -122,7 +129,7 @@ func (s *SQLStore) Migrate() error {
 	src, err := mbindata.WithInstance(&mbindata.AssetSource{
 		Names: assetNamesForDriver,
 		AssetFunc: func(name string) ([]byte, error) {
-			asset, mErr := migrations.Asset(name)
+			asset, mErr := assets.ReadFile(filepath.Join("migrations", name))
 			if mErr != nil {
 				return nil, mErr
 			}
