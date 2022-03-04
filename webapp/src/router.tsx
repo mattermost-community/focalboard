@@ -12,7 +12,7 @@ import {
 import {createBrowserHistory, History} from 'history'
 
 import {IAppWindow} from './types'
-import BoardPage from './pages/boardPage'
+import BoardPage from './pages/boardPage/boardPage'
 import ChangePasswordPage from './pages/changePasswordPage'
 import WelcomePage from './pages/welcome/welcomePage'
 import ErrorPage from './pages/errorPage'

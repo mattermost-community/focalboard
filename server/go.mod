@@ -5,7 +5,6 @@ go 1.16
 require (
 	github.com/Masterminds/squirrel v1.5.0
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/golang/mock v1.5.0
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.4.2
@@ -14,6 +13,7 @@ require (
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mattermost/mattermost-plugin-api v0.0.21
 	github.com/mattermost/mattermost-server/v6 v6.0.0-20210913141218-bb659d03fde0
+	github.com/mattermost/morph v0.0.0-20220222074146-cff3f12ff131
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/oklog/run v1.1.0
