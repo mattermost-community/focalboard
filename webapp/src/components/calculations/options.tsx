@@ -191,7 +191,7 @@ const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
             isSearchable={false}
             components={{DropdownIndicator, ...(props.components || {})}}
             defaultMenuIsOpen={props.menuOpen}
-            autoFocus={true}
+            autoFocus={false}
             formatOptionLabel={(option: Option, meta) => {
                 return meta.context === 'menu' ? optionLabelString(option, intl) : optionDisplayNameString(option, intl)
             }}
