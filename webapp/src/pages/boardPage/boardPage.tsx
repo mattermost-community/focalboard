@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState, useMemo, useCallback} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+import {useRouteMatch} from 'react-router-dom'
 
 import Workspace from '../../components/workspace'
 import octoClient from '../../octoClient'
@@ -12,7 +12,6 @@ import {getCurrentBoard, setCurrent as setCurrentBoard, fetchBoardMembers} from 
 import {getCurrentView, setCurrent as setCurrentView} from '../../store/views'
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
-import {setTeam} from '../../store/teams'
 import {setGlobalError} from '../../store/globalError'
 import {UserSettings} from '../../userSettings'
 
@@ -44,7 +43,6 @@ const BoardPage = (props: Props): JSX.Element => {
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
     const teamId = match.params.teamId || UserSettings.lastTeamId || '0'
     const me = useAppSelector<IUser|null>(getMe)
-    const history = useHistory()
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -69,6 +67,10 @@ const BoardPage = (props: Props): JSX.Element => {
         UserSettings.lastTeamId = teamId
         octoClient.teamId = teamId
         wsClient.teamId = teamId
+        const windowAny = (window as any)
+        if (windowAny.setTeamInSidebar) {
+            windowAny.setTeamInSidebar(teamId)
+        }
     }, [teamId])
 
     const loadAction: (boardId: string) => any = useMemo(() => {
@@ -122,17 +124,6 @@ const BoardPage = (props: Props): JSX.Element => {
             }
         }, [board?.id, activeView?.id])
     }
-
-    useEffect(() => {
-        // This function is called when the user selected a team from the team sidebar.
-        (window as any).setTeamInFocalboard = (newTeamID: string) => {
-            // wsClient.unsubscribeToTeam(teamId)
-            dispatch(setTeam(newTeamID))
-            const params = {teamId: newTeamID}
-            history.push(generatePath(match.path, params))
-            wsClient.subscribeToTeam(newTeamID)
-        }
-    }, [])
 
     return (
         <div className='BoardPage'>
