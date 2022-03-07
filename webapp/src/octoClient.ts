@@ -404,15 +404,21 @@ class OctoClient {
     }
 
     // BoardMember
-    async createBoardMember(member: BoardMember): Promise<Response> {
+    async createBoardMember(member: Partial<BoardMember>): Promise<BoardMember|undefined> {
         Utils.log(`createBoardMember: user ${member.userId} and board ${member.boardId}`)
 
         const body = JSON.stringify(member)
-        return fetch(this.getBaseURL() + `/api/v1/boards/${member.boardId}/members`, {
+        const response = await fetch(this.getBaseURL() + `/api/v1/boards/${member.boardId}/members`, {
             method: 'POST',
             headers: this.headers(),
             body,
         })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return this.getJson<BoardMember>(response, {} as BoardMember)
     }
 
     async updateBoardMember(member: BoardMember): Promise<Response> {

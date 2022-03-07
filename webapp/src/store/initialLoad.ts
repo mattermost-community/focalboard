@@ -38,10 +38,7 @@ export const initialReadOnlyLoad = createAsyncThunk(
 export const loadBoardData = createAsyncThunk(
     'loadBoardData',
     async (boardID: string) => {
-        const [blocks] = await Promise.all([
-            client.getAllBlocks(boardID),
-        ])
-
+        const blocks = await client.getAllBlocks(boardID)
         return {
             blocks,
         }
