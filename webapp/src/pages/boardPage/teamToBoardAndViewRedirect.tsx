@@ -51,7 +51,7 @@ const TeamToBoardAndViewRedirect = (): null => {
 
         // when a view isn't open,
         // but the data is available, try opening a view
-        if (!match.params.viewId && board && board.id === match.params.boardId && boardViews && boardViews.length > 0) {
+        if ((!viewID || viewID === '0') && board && board.id === match.params.boardId && boardViews && boardViews.length > 0) {
             // most recent view gets the first preference
             viewID = UserSettings.lastViewId[boardID]
             if (viewID) {

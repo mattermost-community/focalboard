@@ -101,7 +101,7 @@ const BoardPage = (props: Props): JSX.Element => {
         // and set it as most recently viewed board
         UserSettings.setLastBoardID(boardTeamId, boardId)
 
-        if (viewId) {
+        if (viewId && viewId !== '0') {
             dispatch(setCurrentView(viewId))
             UserSettings.setLastViewId(boardId, viewId)
         }

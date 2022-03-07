@@ -2128,7 +2128,7 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
-	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+	if teamID != "0" && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
 		return
 	}
