@@ -25,11 +25,7 @@ const Entry = (props: EntryComponentProps): ReactElement => {
                 />
                 <div className={theme?.mentionSuggestionsEntryText}>
                     {mention.name}
-                    {BotBadge &&
-                        <BotBadge
-                            show={mention.isBot}
-                        />
-                    }
+                    {BotBadge && <BotBadge show={mention.is_bot}/>}
                 </div>
             </div>
         </div>
