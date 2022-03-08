@@ -265,7 +265,6 @@
   "calendar.week": "週",
   "default-properties.badges": "コメントと説明",
   "default-properties.title": "タイトル",
-  "error.no-workspace": "あなたのセッションは有効期限が切れているか、あなたはこのワークスペースにアクセスできない可能性があります。",
   "error.relogin": "もう一度ログインする",
   "generic.previous": "前へ",
   "login.log-in-button": "ログイン",

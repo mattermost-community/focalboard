@@ -267,7 +267,6 @@
   "calendar.week": "Week",
   "default-properties.badges": "Comments and Description",
   "default-properties.title": "Title",
-  "error.no-workspace": "Your session may have expired or you may not have access to this workspace.",
   "error.relogin": "Log in again",
   "generic.previous": "Previous",
   "login.log-in-button": "Log in",

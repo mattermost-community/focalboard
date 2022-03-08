@@ -220,7 +220,6 @@
   "calendar.today": "IDAG",
   "calendar.week": "Vecka",
   "default-properties.title": "Titel",
-  "error.no-workspace": "Din session kan ha utgått eller så saknar du kanske åtkomst till den här arbetsytan.",
   "error.relogin": "Logga in igen",
   "login.log-in-button": "Logga in",
   "login.log-in-title": "Logga in",

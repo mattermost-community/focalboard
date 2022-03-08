@@ -226,7 +226,6 @@
   "calendar.today": "СЕГОДНЯ",
   "calendar.week": "Неделя",
   "default-properties.title": "Заголовок",
-  "error.no-workspace": "Возможно, срок вашей сессии истек, или вы не имеете доступа к этому рабочему пространству.",
   "error.relogin": "Снова войдите в систему",
   "login.log-in-button": "Вход в систему",
   "login.log-in-title": "Вход в систему",
