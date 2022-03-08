@@ -49,7 +49,7 @@ function FBRoute(props: RouteProps) {
             const loginUrl = `/login?r=${encodeURIComponent(redirectUrl)}`
             return <Redirect to={loginUrl}/>
         }
-        return <Redirect to='/login'/>
+        return <Redirect to='/error?id=not-logged-in'/>
     }
 
     if (loggedIn === true || !props.loginRequired) {
