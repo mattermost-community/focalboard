@@ -25,40 +25,39 @@ const mockedMutator = mocked(mutator, true)
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
 const property = board.cardProperties.find((p) => p.name === 'Status')!
+const optionQ1: IPropertyOption = {
+    color: 'propColorOrange',
+    id: 'property_value_id_1',
+    value: 'Q1',
+}
+const optionQ2: IPropertyOption = {
+    color: 'propColorBlue',
+    id: 'property_value_id_2',
+    value: 'Q2',
+}
+const optionQ3: IPropertyOption = {
+    color: 'propColorDefault',
+    id: 'property_value_id_3',
+    value: 'Q3',
+}
+property.options = [optionQ1, optionQ2, optionQ3]
+
+activeView.fields.filter = {filters: [], operation: 'and'}
+activeView.fields.visibleOptionIds = [optionQ1.id, optionQ2.id]
+
+const card1 = TestBlockFactory.createCard(board)
+card1.fields.properties = {[property.id]: 'property_value_id_1'}
+const card2 = TestBlockFactory.createCard(board)
+card2.fields.properties = {[property.id]: 'property_value_id_2'}
+const card3 = TestBlockFactory.createCard(board)
+card3.fields.properties = {[property.id]: 'property_value_id_3'}
 
 describe('components/viewHeader/viewHeaderGroupByMenu', () => {
     let state: any
     let store: MockStoreEnhanced<unknown, unknown>
 
     const setDefaultOptions = () => {
-        const optionQ1: IPropertyOption = {
-            color: 'propColorOrange',
-            id: 'property_value_id_1',
-            value: 'Q1',
-        }
-        const optionQ2: IPropertyOption = {
-            color: 'propColorBlue',
-            id: 'property_value_id_2',
-            value: 'Q2',
-        }
-        const optionQ3: IPropertyOption = {
-            color: 'propColorDefault',
-            id: 'property_value_id_3',
-            value: 'Q3',
-        }
-
-        activeView.fields.filter = {filters: [], operation: 'and'}
-        activeView.fields.visibleOptionIds = [optionQ1.id, optionQ2.id]
         activeView.fields.hiddenOptionIds = [optionQ3.id]
-
-        property.options = [optionQ1, optionQ2, optionQ3]
-
-        const card1 = TestBlockFactory.createCard(board)
-        card1.fields.properties = {[property.id]: 'property_value_id_1'}
-        const card2 = TestBlockFactory.createCard(board)
-        card2.fields.properties = {[property.id]: 'property_value_id_2'}
-        const card3 = TestBlockFactory.createCard(board)
-        card3.fields.properties = {[property.id]: 'property_value_id_3'}
 
         state = {
             users: {
@@ -66,7 +65,7 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
                     id: 'user-id-1',
                     username: 'username_1',
                 },
-                workspaceUsers: [
+                boardUsers: [
                     {username: 'username_1'},
                 ],
             },
