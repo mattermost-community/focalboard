@@ -87,6 +87,8 @@ const BoardPage = (props: Props): JSX.Element => {
         if (result.payload.blocks.length === 0) {
             const member = await octoClient.createBoardMember({userId, boardId})
             if (!member) {
+                UserSettings.setLastBoardID(boardTeamId, null)
+                UserSettings.setLastViewId(boardId, null)
                 dispatch(setGlobalError('board-not-found'))
                 return
             }
