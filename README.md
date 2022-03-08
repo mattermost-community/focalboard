@@ -4,12 +4,15 @@
 ![CodeQL](https://github.com/mattermost/focalboard/actions/workflows/codeql-analysis.yml/badge.svg)
 ![Dev Release](https://github.com/mattermost/focalboard/actions/workflows/dev-release.yml/badge.svg)
 ![Prod Release](https://github.com/mattermost/focalboard/actions/workflows/prod-release.yml/badge.svg)
+<a href="https://translate.mattermost.com/engage/focalboard/">
+<img src="https://translate.mattermost.com/widgets/focalboard/-/svg-badge.svg" alt="Translation status" />
+</a>
 
 Like what you see? :eyes: Give us a GitHub Star! :star:
 
 [![Focalboard](website/site/static/img/hero.jpg)](https://www.focalboard.com)
 
-[Focalboard](https://www.focalboard.com) is an open source, self-hosted project management tool that's an alternative to Trello, Notion, and Asana.
+[Focalboard](https://www.focalboard.com) is an open source, multilingual, self-hosted project management tool that's an alternative to Trello, Notion, and Asana.
 
 It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two main editions:
 
@@ -42,11 +45,11 @@ Download the latest server release from [GitHub releases](https://github.com/mat
 
 ## Building the server
 
-Most development can be done on the Personal Server edition. Please refer to the [Developer's Tips & Tricks](https://www.focalboard.com/contribute/getting-started/dev-tips/) for more detailed steps. Here's a summary:
+Most development can be done on the Personal Server edition. Please refer to the [Developer's Tips & Tricks](https://mattermost.github.io/focalboard/dev-tips) for more detailed steps. Here's a summary:
 
 First, install basic dependencies:
 * Go 1.15+
-* Node 10+ and npm
+* Node 16.3+ and npm
 * Mingw64 on Windows
 
 ```
@@ -69,19 +72,20 @@ You can build standalone apps that package the server to run locally against SQL
 * Mac:
     * `make mac-app`
     * run `mac/dist/Focalboard.app`
-    * *Requires: macOS Catalina (10.15)+, Xcode 12+.*
+    * *Requires: macOS 11.3+, Xcode 13.2.1+*
 * Linux:
     * Install webgtk dependencies
         * `sudo apt-get install libgtk-3-dev`
         * `sudo apt-get install libwebkit2gtk-4.0-dev`
     * `make linux-app`
-    * run `linux/dist/focalboard-app`
+    * uncompress `linux/dist/focalboard-linux.tar.gz` to a directory of your choice
+    * run `focalboard-app` from the directory you have chosen
     * *Tested with: Ubuntu 18.04*
 * Windows:
     * Open a git-bash prompt
     * `make win-wpf-app`
     * run `cd win-wpf/msix && focalboard.exe`
-    * *Requires: Windows 10*
+    * *Requires: Windows 10, [Windows 10 SDK](https://developer.microsoft.com/en-us/windows/downloads/sdk-archive/) 10.0.19041.0, .NET 4.8 developer pack*
 * Docker:
     * To run it locally from Offical Image
     * `docker run -it -p 80:8000 mattermost/focalboard`
@@ -113,3 +117,7 @@ File bugs, suggest features, join our forum, learn more [here](https://github.co
 ## Contributing
 
 Contribute code, bug reports, and ideas to the future of the Focalboard project. We welcome your input! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to get involved.
+
+## Translating
+
+Help translate Focalboard! The app is already translated into several languages. We welcome corrections and new language translations! You can add new languages or improve existing translations at [Weblate](https://translate.mattermost.com/engage/focalboard/).

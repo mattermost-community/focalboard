@@ -25,6 +25,7 @@
     }
   },
   "rules": {
+    "max-lines": "off",
     "no-unused-expressions": 0,
     "babel/no-unused-expressions": [2, {"allowShortCircuit": true}],
     "eol-last": ["error", "always"],
@@ -59,7 +60,9 @@
     ],
     "react/no-string-refs": 2,
     "no-only-tests/no-only-tests": ["error", {"focus": ["only", "skip"]}],
-    "max-nested-callbacks": ["error", {"max": 5}]
+    "max-nested-callbacks": ["error", {"max": 5}],
+	"no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error"	
   },
   "overrides": [
     {

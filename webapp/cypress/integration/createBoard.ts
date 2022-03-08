@@ -9,6 +9,7 @@ describe('Create and delete board / card', () => {
     beforeEach(() => {
         cy.apiInitServer()
         cy.apiResetBoards()
+        cy.apiGetMe().then((userID) => cy.apiSkipTour(userID))
         localStorage.setItem('welcomePageViewed', 'true')
     })
 
@@ -18,15 +19,15 @@ describe('Create and delete board / card', () => {
         cy.contains('+ Add board').should('exist').click()
 
         // Tests for template selector
-        cy.contains('Select a template').should('exist')
+        cy.contains('Use this template').should('exist')
 
         // Some options are present
-        cy.contains('Meeting Notes').should('exist')
+        cy.contains('Meeting Agenda').should('exist')
         cy.contains('Personal Goals').should('exist')
         cy.contains('Project Tasks').should('exist')
 
         // Create empty board
-        cy.contains('Empty board').should('exist').click()
+        cy.contains('Create empty board').should('exist').click({force: true})
         cy.get('.BoardComponent').should('exist')
         cy.get('.Editable.title').invoke('attr', 'placeholder').should('contain', 'Untitled board')
 
@@ -40,7 +41,7 @@ describe('Create and delete board / card', () => {
     it('Can create and delete a board and a card', () => {
         // Visit a page and create new empty board
         cy.visit('/')
-        cy.uiCreateBoard('Empty board')
+        cy.uiCreateEmptyBoard()
 
         // Change board title
         cy.log('**Change board title**')
@@ -59,8 +60,8 @@ describe('Create and delete board / card', () => {
         // Rename board view
         cy.log('**Rename board view**')
         const boardViewTitle = `Test board (${timestamp})`
-        cy.get(".ViewHeader>.Editable[title='Board view']").should('exist')
-        cy.get('.ViewHeader>.Editable').
+        cy.get(".ViewHeader>.viewSelector>.Editable[title='Board view']").should('exist')
+        cy.get('.ViewHeader>.viewSelector>.Editable').
             clear().
             type(boardViewTitle).
             type('{esc}')
@@ -90,7 +91,7 @@ describe('Create and delete board / card', () => {
 
         // Create a card by clicking on the + button
         cy.log('**Create a card by clicking on the + button**')
-        cy.get('.KanbanColumnHeader .Button .AddIcon').click()
+        cy.get('.KanbanColumnHeader button .AddIcon').click()
         cy.get('.CardDetail').should('exist')
         cy.get('.Dialog.dialog-back .wrapper').click({force: true})
 
@@ -132,7 +133,7 @@ describe('Create and delete board / card', () => {
             parent().
             parent().
             find('.MenuWrapper').
-            find('.Button.IconButton').
+            find('button.IconButton').
             click({force: true})
         cy.contains('Delete board').click({force: true})
         cy.get('.DeleteBoardDialog button.danger').click({force: true})
@@ -142,7 +143,7 @@ describe('Create and delete board / card', () => {
     it('MM-T4433 Scrolls the kanban board when dragging card to edge', () => {
         // Visit a page and create new empty board
         cy.visit('/')
-        cy.uiCreateBoard('Empty board')
+        cy.uiCreateEmptyBoard()
 
         // Create 10 empty groups
         cy.log('**Create new empty groups**')

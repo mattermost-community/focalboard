@@ -30,106 +30,110 @@ exports[`components/centerPanel return centerPanel and click on card to show car
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -139,30 +143,52 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -233,12 +259,11 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -311,7 +336,6 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -320,7 +344,6 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </button>
           </div>
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -365,7 +388,6 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -374,7 +396,6 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </button>
           </div>
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -419,7 +440,6 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -428,7 +448,6 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </button>
           </div>
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -467,17 +486,16 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="octo-board-column"
         >
           <div
-            class="KanbanCard"
+            class="KanbanCard false"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu"
+              class="MenuWrapper optionsMenu "
               role="button"
             >
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -501,17 +519,16 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </div>
           </div>
           <div
-            class="KanbanCard"
+            class="KanbanCard false"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu"
+              class="MenuWrapper optionsMenu "
               role="button"
             >
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -589,106 +606,110 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -698,30 +719,52 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -792,12 +835,11 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -880,7 +922,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -914,7 +955,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -923,7 +963,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -945,7 +984,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -983,7 +1021,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -992,7 +1029,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -1092,7 +1128,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -1130,7 +1165,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -1139,7 +1173,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -1208,90 +1241,94 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        />
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
-          >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
-            >
-              <div
-                class="octo-icon size-m"
-              >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
-          </div>
-          <input
-            class="Editable readonly title"
-            placeholder="Untitled board"
-            readonly=""
-            spellcheck="true"
-            title="board title"
-            value="board title"
+            class="add-buttons add-visible"
           />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable readonly title"
+              placeholder="Untitled board"
+              readonly=""
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1301,31 +1338,37 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        />
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable readonly undefined"
-          placeholder="Untitled View"
-          readonly=""
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable readonly undefined"
+            placeholder="Untitled View"
+            readonly=""
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -1385,7 +1428,6 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton readonly"
                   type="button"
                 >
                   <svg
@@ -1428,7 +1470,6 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton readonly"
                   type="button"
                 >
                   <svg
@@ -1556,7 +1597,6 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton readonly"
                   type="button"
                 >
                   <svg
@@ -1651,106 +1691,110 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1760,30 +1804,52 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -1854,12 +1920,11 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -1942,7 +2007,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -1976,7 +2040,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -1985,7 +2048,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -2007,7 +2069,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -2045,7 +2106,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -2054,7 +2114,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -2154,7 +2213,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -2192,7 +2250,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -2201,7 +2258,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -2270,106 +2326,110 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2379,30 +2439,52 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -2473,12 +2555,11 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -2561,7 +2642,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -2595,7 +2675,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -2604,7 +2683,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -2626,7 +2704,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -2664,7 +2741,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -2673,7 +2749,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -2773,7 +2848,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -2811,7 +2885,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -2820,7 +2893,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -2889,106 +2961,110 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2998,30 +3074,52 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -3092,12 +3190,11 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -3180,7 +3277,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -3214,7 +3310,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -3223,7 +3318,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -3245,7 +3339,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -3283,7 +3376,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -3292,7 +3384,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -3392,7 +3483,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -3430,7 +3520,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -3439,7 +3528,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -3508,106 +3596,110 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -3617,30 +3709,52 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -3711,12 +3825,11 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -3799,7 +3912,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -3833,7 +3945,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -3842,7 +3953,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -3864,7 +3974,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -3902,7 +4011,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -3911,7 +4019,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -4011,7 +4118,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -4049,7 +4155,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -4058,7 +4163,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -4127,106 +4231,110 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4236,30 +4344,52 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -4330,12 +4460,11 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -4418,7 +4547,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -4452,7 +4580,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -4461,7 +4588,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -4483,7 +4609,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -4521,7 +4646,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -4530,7 +4654,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -4630,7 +4753,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -4668,7 +4790,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -4677,7 +4798,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -4746,106 +4866,110 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4855,30 +4979,52 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -4949,12 +5095,11 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -5037,7 +5182,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -5071,7 +5215,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -5080,7 +5223,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -5102,7 +5244,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -5140,7 +5281,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -5149,7 +5289,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -5249,7 +5388,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -5287,7 +5425,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -5296,7 +5433,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -5365,106 +5501,110 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -5474,30 +5614,52 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -5568,12 +5730,11 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -5656,7 +5817,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -5690,7 +5850,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -5699,7 +5858,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -5721,7 +5879,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -5759,7 +5916,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -5768,7 +5924,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -5868,7 +6023,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -5906,7 +6060,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -5915,7 +6068,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -5984,106 +6136,110 @@ exports[`components/centerPanel return centerPanel and select one card and click
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -6093,30 +6249,52 @@ exports[`components/centerPanel return centerPanel and select one card and click
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -6187,12 +6365,11 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -6275,7 +6452,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -6309,7 +6485,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -6318,7 +6493,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -6340,7 +6514,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -6378,7 +6551,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -6387,7 +6559,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -6487,7 +6658,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -6525,7 +6695,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -6534,7 +6703,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -6603,106 +6771,110 @@ exports[`components/centerPanel return centerPanel and select one card and click
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -6712,30 +6884,52 @@ exports[`components/centerPanel return centerPanel and select one card and click
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -6806,12 +7000,11 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -6894,7 +7087,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -6928,7 +7120,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -6937,7 +7128,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -6959,7 +7149,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -6997,7 +7186,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -7006,7 +7194,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -7106,7 +7293,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -7144,7 +7330,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -7153,7 +7338,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -7222,106 +7406,110 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -7331,30 +7519,52 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -7407,12 +7617,11 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -7459,7 +7668,6 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -7511,106 +7719,110 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -7620,30 +7832,52 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -7714,12 +7948,11 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -7792,7 +8025,6 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -7801,7 +8033,6 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </button>
           </div>
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -7846,7 +8077,6 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -7855,7 +8085,6 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </button>
           </div>
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -7900,7 +8129,6 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -7909,7 +8137,6 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </button>
           </div>
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -7948,17 +8175,559 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="octo-board-column"
         >
           <div
-            class="KanbanCard"
+            class="KanbanCard false"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu"
+              class="MenuWrapper optionsMenu "
               role="button"
             >
               <button
-                class="Button IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <div
+                class="octo-titletext"
+              >
+                card1
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+          >
+            <span>
+              + New
+            </span>
+          </button>
+        </div>
+        <div
+          class="octo-board-column"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              + New
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/centerPanel should match snapshot for Kanban, not shared 1`] = `
+<div>
+  <div
+    class="BoardComponent"
+  >
+    <div
+      class="top-head"
+    >
+      <div
+        class="TopBar"
+      >
+        <a
+          class="link"
+          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Give Feedback
+        </a>
+        <a
+          href="https://www.focalboard.com/guide/user?utm_source=webapp"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <i
+            class="CompassIcon icon-help-circle-outline HelpIcon"
+          />
+        </a>
+      </div>
+      <div
+        class="mid-head"
+      >
+        <div
+          class="ViewTitle"
+        >
+          <div
+            class="add-buttons add-visible"
+          >
+            <button
+              type="button"
+            >
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
+          </div>
+          <div
+            class="title"
+          >
+            <div
+              class="BlockIconSelector"
+            >
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <div
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
+                >
+                  <div
+                    class="DraftEditor-editorContainer"
+                  >
+                    <div
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    >
+                      <div
+                        data-contents="true"
+                      >
+                        <div
+                          class=""
+                          data-block="true"
+                          data-editor="123"
+                          data-offset-key="123-0-0"
+                        >
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                            data-offset-key="123-0-0"
+                          >
+                            <span
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="ViewHeader"
+      >
+        <div
+          class="viewSelector"
+        >
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          aria-label="Properties menu"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              Properties
+            </span>
+          </button>
+        </div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              Group by: 
+              <span
+                id="groupByLabel"
+              >
+                name
+              </span>
+            </span>
+          </button>
+        </div>
+        <div
+          class="ModalWrapper"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              Filter
+            </span>
+          </button>
+        </div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              Sort
+            </span>
+          </button>
+        </div>
+        <button
+          type="button"
+        >
+          <span>
+            Search
+          </span>
+        </button>
+        <div
+          class="ModalWrapper"
+        >
+          <div
+            aria-label="View header menu"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="ButtonWithMenu"
+        >
+          <div
+            class="button-text"
+          >
+            New
+          </div>
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <div
+              class="button-dropdown"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Kanban"
+    >
+      <div
+        class="octo-board-header"
+        id="mainBoardHeader"
+      >
+        <div
+          class="octo-board-header-cell KanbanColumnHeader"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <span
+            class="Label empty "
+            title="Items with an empty name property will go here. This column cannot be removed."
+          >
+            No name
+          </span>
+          
+          <div
+            class="KanbanCalculation"
+          >
+            <button
+              title="0"
+              type="button"
+            >
+              <span>
+                0
+              </span>
+            </button>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <button
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-plus AddIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="octo-board-header-cell KanbanColumnHeader"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <span
+            class="Label propColorOrange "
+          >
+            <input
+              class="Editable undefined"
+              placeholder="New Select"
+              spellcheck="true"
+              title="Q1"
+              value="Q1"
+            />
+          </span>
+          <div
+            class="KanbanCalculation"
+          >
+            <button
+              title="1"
+              type="button"
+            >
+              <span>
+                1
+              </span>
+            </button>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <button
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-plus AddIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="octo-board-header-cell KanbanColumnHeader"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <span
+            class="Label propColorBlue "
+          >
+            <input
+              class="Editable undefined"
+              placeholder="New Select"
+              spellcheck="true"
+              title="Q2"
+              value="Q2"
+            />
+          </span>
+          <div
+            class="KanbanCalculation"
+          >
+            <button
+              title="0"
+              type="button"
+            >
+              <span>
+                0
+              </span>
+            </button>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+          <button
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-plus AddIcon"
+            />
+          </button>
+        </div>
+        <div
+          class="octo-board-header-cell narrow"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              + Add a group
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="octo-board-body"
+        id="mainBoardBody"
+      >
+        <div
+          class="octo-board-column"
+        >
+          <button
+            type="button"
+          >
+            <span>
+              + New
+            </span>
+          </button>
+        </div>
+        <div
+          class="octo-board-column"
+        >
+          <div
+            class="KanbanCard false"
+            draggable="true"
+            style="opacity: 1;"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper optionsMenu "
+              role="button"
+            >
+              <button
                 type="button"
               >
                 <i
@@ -8036,106 +8805,110 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
         </a>
       </div>
       <div
-        class="ViewTitle"
+        class="mid-head"
       >
         <div
-          class="add-buttons add-visible"
-        >
-          <button
-            type="button"
-          >
-            <svg
-              class="HideIcon Icon"
-              viewBox="0 0 640 512"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-              />
-            </svg>
-            <span>
-              hide description
-            </span>
-          </button>
-        </div>
-        <div
-          class="title"
+          class="ViewTitle"
         >
           <div
-            class="BlockIconSelector"
+            class="add-buttons add-visible"
           >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <div
-                class="octo-icon size-m"
+              <svg
+                class="HideIcon Icon"
+                viewBox="0 0 640 512"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <span>
-                  i
-                </span>
-              </div>
-            </div>
+                <path
+                  d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
+                />
+              </svg>
+              <span>
+                hide description
+              </span>
+            </button>
           </div>
-          <input
-            class="Editable title"
-            placeholder="Untitled board"
-            spellcheck="true"
-            title="board title"
-            value="board title"
-          />
-        </div>
-        <div
-          class="description"
-        >
           <div
-            class="MarkdownEditor octo-editor  "
+            class="title"
           >
             <div
-              class="octo-editor-preview"
-              data-testid="preview-element"
-            />
-            <div
-              class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              class="BlockIconSelector"
             >
               <div
-                class="DraftEditor-root"
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
                 <div
-                  class="DraftEditor-editorContainer"
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
                 >
                   <div
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    class="notranslate public-DraftEditor-content"
-                    contenteditable="true"
-                    role="combobox"
-                    spellcheck="false"
-                    style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    class="DraftEditor-editorContainer"
                   >
                     <div
-                      data-contents="true"
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
                     >
                       <div
-                        class=""
-                        data-block="true"
-                        data-editor="123"
-                        data-offset-key="123-0-0"
+                        data-contents="true"
                       >
                         <div
-                          class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                          class=""
+                          data-block="true"
+                          data-editor="123"
                           data-offset-key="123-0-0"
                         >
-                          <span
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
                             data-offset-key="123-0-0"
                           >
                             <span
-                              data-text="true"
+                              data-offset-key="123-0-0"
                             >
-                              description
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -8145,30 +8918,52 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             </div>
           </div>
         </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-globe CompassIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="view title"
-          value="view title"
-        />
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            class="Button IconButton"
-            type="button"
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div
+            aria-label="View menu"
+            class="MenuWrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -8239,12 +9034,11 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="View menu"
+            aria-label="View header menu"
             class="MenuWrapper"
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -8327,7 +9121,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -8361,7 +9154,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -8370,7 +9162,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -8392,7 +9183,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -8430,7 +9220,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -8439,7 +9228,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i
@@ -8500,7 +9288,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <svg
@@ -8538,7 +9325,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 role="button"
               >
                 <button
-                  class="Button IconButton"
                   type="button"
                 >
                   <i
@@ -8547,7 +9333,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </button>
               </div>
               <button
-                class="Button IconButton"
                 type="button"
               >
                 <i

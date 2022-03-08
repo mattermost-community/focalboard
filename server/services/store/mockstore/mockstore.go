@@ -50,6 +50,21 @@ func (mr *MockStoreMockRecorder) CleanUpSessions(arg0 interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CleanUpSessions", reflect.TypeOf((*MockStore)(nil).CleanUpSessions), arg0)
 }
 
+// CreatePrivateWorkspace mocks base method.
+func (m *MockStore) CreatePrivateWorkspace(arg0 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreatePrivateWorkspace", arg0)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreatePrivateWorkspace indicates an expected call of CreatePrivateWorkspace.
+func (mr *MockStoreMockRecorder) CreatePrivateWorkspace(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePrivateWorkspace", reflect.TypeOf((*MockStore)(nil).CreatePrivateWorkspace), arg0)
+}
+
 // CreateSession mocks base method.
 func (m *MockStore) CreateSession(arg0 *model.Session) error {
 	m.ctrl.T.Helper()
@@ -91,6 +106,20 @@ func (m *MockStore) CreateUser(arg0 *model.User) error {
 func (mr *MockStoreMockRecorder) CreateUser(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockStore)(nil).CreateUser), arg0)
+}
+
+// DBType mocks base method.
+func (m *MockStore) DBType() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DBType")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// DBType indicates an expected call of DBType.
+func (mr *MockStoreMockRecorder) DBType() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DBType", reflect.TypeOf((*MockStore)(nil).DBType))
 }
 
 // DeleteBlock mocks base method.
@@ -314,6 +343,21 @@ func (m *MockStore) GetBoardAndCardByID(arg0 store.Container, arg1 string) (*mod
 func (mr *MockStoreMockRecorder) GetBoardAndCardByID(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoardAndCardByID", reflect.TypeOf((*MockStore)(nil).GetBoardAndCardByID), arg0, arg1)
+}
+
+// GetDefaultTemplateBlocks mocks base method.
+func (m *MockStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDefaultTemplateBlocks")
+	ret0, _ := ret[0].([]model.Block)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDefaultTemplateBlocks indicates an expected call of GetDefaultTemplateBlocks.
+func (mr *MockStoreMockRecorder) GetDefaultTemplateBlocks() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultTemplateBlocks", reflect.TypeOf((*MockStore)(nil).GetDefaultTemplateBlocks))
 }
 
 // GetNextNotificationHint mocks base method.
@@ -731,6 +775,20 @@ func (mr *MockStoreMockRecorder) PatchBlocks(arg0, arg1, arg2 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchBlocks", reflect.TypeOf((*MockStore)(nil).PatchBlocks), arg0, arg1, arg2)
 }
 
+// PatchUserProps mocks base method.
+func (m *MockStore) PatchUserProps(arg0 string, arg1 model.UserPropPatch) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PatchUserProps", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PatchUserProps indicates an expected call of PatchUserProps.
+func (mr *MockStoreMockRecorder) PatchUserProps(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchUserProps", reflect.TypeOf((*MockStore)(nil).PatchUserProps), arg0, arg1)
+}
+
 // RefreshSession mocks base method.
 func (m *MockStore) RefreshSession(arg0 *model.Session) error {
 	m.ctrl.T.Helper()
@@ -743,6 +801,20 @@ func (m *MockStore) RefreshSession(arg0 *model.Session) error {
 func (mr *MockStoreMockRecorder) RefreshSession(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RefreshSession", reflect.TypeOf((*MockStore)(nil).RefreshSession), arg0)
+}
+
+// RemoveDefaultTemplates mocks base method.
+func (m *MockStore) RemoveDefaultTemplates(arg0 []model.Block) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveDefaultTemplates", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RemoveDefaultTemplates indicates an expected call of RemoveDefaultTemplates.
+func (mr *MockStoreMockRecorder) RemoveDefaultTemplates(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveDefaultTemplates", reflect.TypeOf((*MockStore)(nil).RemoveDefaultTemplates), arg0)
 }
 
 // SetSystemSetting mocks base method.
@@ -771,6 +843,20 @@ func (m *MockStore) Shutdown() error {
 func (mr *MockStoreMockRecorder) Shutdown() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Shutdown", reflect.TypeOf((*MockStore)(nil).Shutdown))
+}
+
+// UndeleteBlock mocks base method.
+func (m *MockStore) UndeleteBlock(arg0 store.Container, arg1, arg2 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UndeleteBlock", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UndeleteBlock indicates an expected call of UndeleteBlock.
+func (mr *MockStoreMockRecorder) UndeleteBlock(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UndeleteBlock", reflect.TypeOf((*MockStore)(nil).UndeleteBlock), arg0, arg1, arg2)
 }
 
 // UpdateSession mocks base method.

@@ -1,11 +1,13 @@
 package app
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -20,10 +22,6 @@ func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([
 	}
 
 	return a.store.GetBlocksWithParent(c, parentID)
-}
-
-func (a *App) GetBlockWithID(c store.Container, blockID string) (*model.Block, error) {
-	return a.store.GetBlock(c, blockID)
 }
 
 func (a *App) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {
@@ -133,6 +131,54 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID
 	return blocks, nil
 }
 
+func (a *App) CopyCardFiles(sourceBoardID string, destWorkspaceID string, blocks []model.Block) error {
+	// Images attached in cards have a path comprising the card's board ID.
+	// When we create a template from this board, we need to copy the files
+	// with the new board ID in path.
+	// Not doing so causing images in templates (and boards created from this
+	// template) to fail to load.
+
+	// look up ID of source board, which may be different than the blocks.
+	board, err := a.GetBlockByID(store.Container{}, sourceBoardID)
+	if err != nil || board == nil {
+		return fmt.Errorf("cannot fetch board %s for CopyCardFiles: %w", sourceBoardID, err)
+	}
+
+	for i := range blocks {
+		block := blocks[i]
+
+		fileName, ok := block.Fields["fileId"]
+		if block.Type == model.TypeImage && ok {
+			// create unique filename in case we are copying cards within the same board.
+			ext := filepath.Ext(fileName.(string))
+			destFilename := utils.NewID(utils.IDTypeNone) + ext
+
+			sourceFilePath := filepath.Join(board.WorkspaceID, sourceBoardID, fileName.(string))
+			destinationFilePath := filepath.Join(destWorkspaceID, block.RootID, destFilename)
+
+			a.logger.Debug(
+				"Copying card file",
+				mlog.String("sourceFilePath", sourceFilePath),
+				mlog.String("destinationFilePath", destinationFilePath),
+			)
+
+			if err := a.filesBackend.CopyFile(sourceFilePath, destinationFilePath); err != nil {
+				a.logger.Error(
+					"CopyCardFiles failed to copy file",
+					mlog.String("sourceFilePath", sourceFilePath),
+					mlog.String("destinationFilePath", destinationFilePath),
+					mlog.Err(err),
+				)
+
+				return err
+			}
+			block.Fields["fileId"] = destFilename
+		}
+	}
+
+	return nil
+}
+
 func (a *App) GetSubTree(c store.Container, blockID string, levels int) ([]model.Block, error) {
 	// Only 2 or 3 levels are supported for now
 	if levels >= 3 {
@@ -143,6 +189,10 @@ func (a *App) GetSubTree(c store.Container, blockID string, levels int) ([]model
 
 func (a *App) GetAllBlocks(c store.Container) ([]model.Block, error) {
 	return a.store.GetAllBlocks(c)
+}
+
+func (a *App) GetBlockByID(c store.Container, blockID string) (*model.Block, error) {
+	return a.store.GetBlock(c, blockID)
 }
 
 func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
@@ -179,6 +229,41 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 	a.metrics.IncrementBlocksDeleted(1)
 	go func() {
 		a.notifyBlockChanged(notify.Delete, c, block, block, modifiedBy)
+	}()
+	return nil
+}
+
+func (a *App) UndeleteBlock(c store.Container, blockID string, modifiedBy string) error {
+	blocks, err := a.store.GetBlockHistory(c, blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return err
+	}
+
+	if len(blocks) == 0 {
+		// deleting non-existing block not considered an error
+		return nil
+	}
+
+	err = a.store.UndeleteBlock(c, blockID, modifiedBy)
+	if err != nil {
+		return err
+	}
+
+	block, err := a.store.GetBlock(c, blockID)
+	if err != nil {
+		return err
+	}
+
+	if block == nil {
+		a.logger.Error("Error loading the block after undelete, not propagating through websockets or notifications")
+		return nil
+	}
+
+	a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *block)
+	a.metrics.IncrementBlocksInserted(1)
+	go func() {
+		a.webhook.NotifyUpdate(*block)
+		a.notifyBlockChanged(notify.Add, c, block, nil, modifiedBy)
 	}()
 	return nil
 }

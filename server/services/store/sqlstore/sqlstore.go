@@ -6,6 +6,7 @@ import (
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/mattermost-plugin-api/cluster"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -54,11 +55,6 @@ func New(params Params) (*SQLStore, error) {
 
 		return nil, err
 	}
-
-	if err := store.InitializeTemplates(); err != nil {
-		params.Logger.Error(`InitializeTemplates failed`, mlog.Err(err))
-	}
-
 	return store, nil
 }
 
@@ -72,6 +68,11 @@ func (s *SQLStore) Shutdown() error {
 // raw SQL queries.
 func (s *SQLStore) DBHandle() *sql.DB {
 	return s.db
+}
+
+// DBType returns the DB driver used for the store.
+func (s *SQLStore) DBType() string {
+	return s.dbType
 }
 
 func (s *SQLStore) getQueryBuilder(db sq.BaseRunner) sq.StatementBuilderType {

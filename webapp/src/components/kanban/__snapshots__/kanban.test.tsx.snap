@@ -52,7 +52,6 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -61,7 +60,6 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           </button>
         </div>
         <button
-          class="Button IconButton"
           type="button"
         >
           <i
@@ -106,7 +104,6 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -115,7 +112,6 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           </button>
         </div>
         <button
-          class="Button IconButton"
           type="button"
         >
           <i
@@ -148,17 +144,16 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
         class="octo-board-column"
       >
         <div
-          class="KanbanCard"
+          class="KanbanCard false"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu"
+            class="MenuWrapper optionsMenu "
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -182,17 +177,16 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           </div>
         </div>
         <div
-          class="KanbanCard"
+          class="KanbanCard false"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu"
+            class="MenuWrapper optionsMenu "
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -227,17 +221,16 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
         class="octo-board-column"
       >
         <div
-          class="KanbanCard"
+          class="KanbanCard false"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu"
+            class="MenuWrapper optionsMenu "
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -504,7 +497,6 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -513,7 +505,6 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           </button>
         </div>
         <button
-          class="Button IconButton"
           type="button"
         >
           <i
@@ -558,7 +549,6 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -567,7 +557,6 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           </button>
         </div>
         <button
-          class="Button IconButton"
           type="button"
         >
           <i
@@ -600,17 +589,16 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
         class="octo-board-column"
       >
         <div
-          class="KanbanCard"
+          class="KanbanCard false"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu"
+            class="MenuWrapper optionsMenu "
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -634,17 +622,16 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           </div>
         </div>
         <div
-          class="KanbanCard"
+          class="KanbanCard false"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu"
+            class="MenuWrapper optionsMenu "
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -679,17 +666,16 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
         class="octo-board-column"
       >
         <div
-          class="KanbanCard"
+          class="KanbanCard false"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu"
+            class="MenuWrapper optionsMenu "
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -797,7 +783,6 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -806,7 +791,6 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           </button>
         </div>
         <button
-          class="Button IconButton"
           type="button"
         >
           <i
@@ -851,7 +835,6 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           role="button"
         >
           <button
-            class="Button IconButton"
             type="button"
           >
             <i
@@ -860,7 +843,6 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           </button>
         </div>
         <button
-          class="Button IconButton"
           type="button"
         >
           <i
@@ -893,17 +875,16 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
         class="octo-board-column"
       >
         <div
-          class="KanbanCard"
+          class="KanbanCard false"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu"
+            class="MenuWrapper optionsMenu "
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -927,17 +908,16 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           </div>
         </div>
         <div
-          class="KanbanCard"
+          class="KanbanCard false"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu"
+            class="MenuWrapper optionsMenu "
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i
@@ -972,17 +952,16 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
         class="octo-board-column"
       >
         <div
-          class="KanbanCard"
+          class="KanbanCard false"
           draggable="true"
           style="opacity: 1;"
         >
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper optionsMenu"
+            class="MenuWrapper optionsMenu "
             role="button"
           >
             <button
-              class="Button IconButton"
               type="button"
             >
               <i

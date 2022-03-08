@@ -14,6 +14,7 @@ Follow these steps it up on an Ubuntu server. To upgrade an existing installatio
 Popular hosted options include:
 * [Digital Ocean](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-18-04)
 * [Amazon EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html)
+* [Linode](https://www.linode.com/docs/products/compute/)
 
 ## Install Focalboard
 
@@ -37,6 +38,7 @@ sudo apt install nginx
 You may need to adjust your firewall settings depending on the host, e.g.
 * [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04)
 * [EC2](https://docs.nginx.com/nginx/deployment-guides/amazon-web-services/ec2-instances-for-nginx/)
+* [Linode](https://www.linode.com/docs/guides/how-to-install-nginx-ubuntu-18-04/)
 
 ### Configure NGINX
 

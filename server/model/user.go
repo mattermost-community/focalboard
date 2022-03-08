@@ -5,6 +5,10 @@ import (
 	"io"
 )
 
+const (
+	SingleUser = "single-user"
+)
+
 // User is a user
 // swagger:model
 type User struct {
@@ -51,6 +55,16 @@ type User struct {
 	// If the user is a bot or not
 	// required: true
 	IsBot bool `json:"is_bot"`
+}
+
+type UserPropPatch struct {
+	// The user prop updated fields
+	// required: false
+	UpdatedFields map[string]string `json:"updatedFields"`
+
+	// The user prop removed fields
+	// required: false
+	DeletedFields []string `json:"deletedFields"`
 }
 
 type Session struct {

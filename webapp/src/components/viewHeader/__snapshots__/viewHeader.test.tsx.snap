@@ -5,26 +5,30 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
   <div
     class="ViewHeader"
   >
-    <input
-      class="Editable undefined"
-      placeholder="Untitled View"
-      spellcheck="true"
-      title="view title"
-      value="view title"
-    />
     <div
-      aria-label="menuwrapper"
-      class="MenuWrapper"
-      role="button"
+      class="viewSelector"
     >
-      <button
-        class="Button IconButton"
-        type="button"
+      <input
+        class="Editable undefined"
+        placeholder="Untitled View"
+        spellcheck="true"
+        title="view title"
+        value="view title"
+      />
+      <div
+        aria-label="View menu"
+        class="MenuWrapper"
+        role="button"
       >
-        <i
-          class="CompassIcon icon-chevron-down DropdownIcon"
-        />
-      </button>
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-chevron-down DropdownIcon"
+          />
+        </button>
+      </div>
     </div>
     <div
       class="octo-spacer"
@@ -100,12 +104,12 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="ModalWrapper"
     >
       <div
-        aria-label="View menu"
+        aria-label="View header menu"
         class="MenuWrapper"
         role="button"
       >
         <button
-          class="Button IconButton"
+          class="IconButton"
           type="button"
         >
           <i
@@ -145,27 +149,31 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
   <div
     class="ViewHeader"
   >
-    <input
-      class="Editable readonly undefined"
-      placeholder="Untitled View"
-      readonly=""
-      spellcheck="true"
-      title="view title"
-      value="view title"
-    />
     <div
-      aria-label="menuwrapper"
-      class="MenuWrapper"
-      role="button"
+      class="viewSelector"
     >
-      <button
-        class="Button IconButton"
-        type="button"
+      <input
+        class="Editable readonly undefined"
+        placeholder="Untitled View"
+        readonly=""
+        spellcheck="true"
+        title="view title"
+        value="view title"
+      />
+      <div
+        aria-label="View menu"
+        class="MenuWrapper"
+        role="button"
       >
-        <i
-          class="CompassIcon icon-chevron-down DropdownIcon"
-        />
-      </button>
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-chevron-down DropdownIcon"
+          />
+        </button>
+      </div>
     </div>
     <div
       class="octo-spacer"

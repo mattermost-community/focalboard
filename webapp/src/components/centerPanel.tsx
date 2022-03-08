@@ -11,7 +11,7 @@ import {ClientConfig} from '../config/clientConfig'
 import {Block} from '../blocks/block'
 import {BlockIcons} from '../blockIcons'
 import {Card, createCard} from '../blocks/card'
-import {Board, IPropertyTemplate, IPropertyOption, BoardGroup} from '../blocks/board'
+import {Board, IPropertyTemplate} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
@@ -19,10 +19,26 @@ import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
 import {addCard, addTemplate} from '../store/cards'
 import {updateView} from '../store/views'
+import {getVisibleAndHiddenGroups} from '../boardUtils'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
 import './centerPanel.scss'
 
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
+import {RootState} from '../store'
+
+import {
+    getMe,
+    getOnboardingTourCategory,
+    getOnboardingTourStarted,
+    getOnboardingTourStep,
+    patchProps,
+} from '../store/users'
+
+import {IUser, UserConfigPatch} from '../user'
+
+import octoClient from '../octoClient'
+
+import ShareBoardButton from './shareBoard/shareBoardButton'
 
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
@@ -36,6 +52,8 @@ import Table from './table/table'
 import CalendarFullView from './calendar/fullCalendar'
 
 import Gallery from './gallery/gallery'
+import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
+import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
 
 type Props = {
     clientConfig?: ClientConfig
@@ -53,11 +71,18 @@ type Props = {
     shownCardId?: string
     showCard: (cardId?: string) => void
     showShared: boolean
+    onboardingTourStarted: boolean
+    onboardingTourCategory: string
+    onboardingTourStep: string
+    me: IUser|null
+    patchProps: (props: Record<string, string>) => void
+    currentCard?: string
 }
 
 type State = {
     selectedCardIds: string[]
     cardIdToFocusOnRender: string
+    showShareDialog: boolean
 }
 
 class CenterPanel extends React.Component<Props, State> {
@@ -101,6 +126,7 @@ class CenterPanel extends React.Component<Props, State> {
         this.state = {
             selectedCardIds: [],
             cardIdToFocusOnRender: '',
+            showShareDialog: false,
         }
     }
 
@@ -108,13 +134,50 @@ class CenterPanel extends React.Component<Props, State> {
         return true
     }
 
+    shouldStartBoardsTour(): boolean {
+        const isOnboardingBoard = this.props.board.title === 'Welcome to Boards!'
+        const isTourStarted = this.props.onboardingTourStarted
+        const completedCardsTour = this.props.onboardingTourCategory === TOUR_CARD && this.props.onboardingTourStep === FINISHED.toString()
+        const noCardOpen = !this.props.currentCard
+
+        return isOnboardingBoard && isTourStarted && completedCardsTour && noCardOpen
+    }
+
+    async prepareBoardsTour(): Promise<void> {
+        if (!this.props.me) {
+            return
+        }
+
+        const patch: UserConfigPatch = {
+            updatedFields: {
+                focalboard_tourCategory: TOUR_BOARD,
+                focalboard_onboardingTourStep: BoardTourSteps.ADD_VIEW.toString(),
+            },
+        }
+
+        const patchedProps = await octoClient.patchUserConfig(this.props.me.id, patch)
+        if (patchedProps) {
+            await this.props.patchProps(patchedProps)
+        }
+    }
+
+    async startBoardsTour(): Promise<void> {
+        if (!this.shouldStartBoardsTour()) {
+            return
+        }
+
+        await this.prepareBoardsTour()
+    }
+
     componentDidUpdate(): void {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: this.props.board.id, view: this.props.activeView.id, viewType: this.props.activeView.fields.viewType})
+
+        this.startBoardsTour()
     }
 
     render(): JSX.Element {
         const {groupByProperty, activeView, board, views, cards} = this.props
-        const {visible: visibleGroups, hidden: hiddenGroups} = this.getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
+        const {visible: visibleGroups, hidden: hiddenGroups} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
 
         return (
             <div
@@ -145,11 +208,24 @@ class CenterPanel extends React.Component<Props, State> {
 
                 <div className='top-head'>
                     <TopBar/>
-                    <ViewTitle
-                        key={board.id + board.title}
-                        board={board}
-                        readonly={this.props.readonly}
-                    />
+                    <div className='mid-head'>
+                        <ViewTitle
+                            key={board.id + board.title}
+                            board={board}
+                            readonly={this.props.readonly}
+                        />
+                        <div className='shareButtonWrapper'>
+                            {!this.props.readonly &&
+                                (
+                                    <ShareBoardButton
+                                        boardId={this.props.board.id}
+                                        enableSharedBoards={this.props.clientConfig?.enablePublicSharedBoards || false}
+                                    />
+                                )
+                            }
+                            <ShareBoardTourStep/>
+                        </div>
+                    </div>
                     <ViewHeader
                         board={this.props.board}
                         activeView={this.props.activeView}
@@ -162,7 +238,6 @@ class CenterPanel extends React.Component<Props, State> {
                         addCardTemplate={this.addCardTemplate}
                         editCardTemplate={this.editCardTemplate}
                         readonly={this.props.readonly}
-                        showShared={this.props.showShared}
                     />
                 </div>
 
@@ -400,55 +475,27 @@ class CenterPanel extends React.Component<Props, State> {
 
         this.setState({selectedCardIds: []})
     }
-    private groupCardsByOptions(cards: Card[], optionIds: string[], groupByProperty?: IPropertyTemplate): BoardGroup[] {
-        const groups = []
-        for (const optionId of optionIds) {
-            if (optionId) {
-                const option = groupByProperty?.options.find((o) => o.id === optionId)
-                if (option) {
-                    const c = cards.filter((o) => optionId === o.fields.properties[groupByProperty!.id])
-                    const group: BoardGroup = {
-                        option,
-                        cards: c,
-                    }
-                    groups.push(group)
-                } else {
-                    Utils.logError(`groupCardsByOptions: Missing option with id: ${optionId}`)
-                }
-            } else {
-                // Empty group
-                const emptyGroupCards = cards.filter((card) => {
-                    const groupByOptionId = card.fields.properties[groupByProperty?.id || '']
-                    return !groupByOptionId || !groupByProperty?.options.find((option) => option.id === groupByOptionId)
-                })
-                const group: BoardGroup = {
-                    option: {id: '', value: `No ${groupByProperty?.name}`, color: ''},
-                    cards: emptyGroupCards,
-                }
-                groups.push(group)
-            }
-        }
-        return groups
-    }
+}
 
-    private getVisibleAndHiddenGroups(cards: Card[], visibleOptionIds: string[], hiddenOptionIds: string[], groupByProperty?: IPropertyTemplate): {visible: BoardGroup[], hidden: BoardGroup[]} {
-        let unassignedOptionIds: string[] = []
-        if (groupByProperty) {
-            unassignedOptionIds = groupByProperty.options.
-                filter((o: IPropertyOption) => !visibleOptionIds.includes(o.id) && !hiddenOptionIds.includes(o.id)).
-                map((o: IPropertyOption) => o.id)
-        }
-        const allVisibleOptionIds = [...visibleOptionIds, ...unassignedOptionIds]
+function mapStateToProps(state: RootState) {
+    const onboardingTourStarted = getOnboardingTourStarted(state)
+    const onboardingTourCategory = getOnboardingTourCategory(state)
+    const onboardingTourStep = getOnboardingTourStep(state)
+    const me = getMe(state)
+    const currentCard = state.cards.current
 
-        // If the empty group positon is not explicitly specified, make it the first visible column
-        if (!allVisibleOptionIds.includes('') && !hiddenOptionIds.includes('')) {
-            allVisibleOptionIds.unshift('')
-        }
-
-        const visibleGroups = this.groupCardsByOptions(cards, allVisibleOptionIds, groupByProperty)
-        const hiddenGroups = this.groupCardsByOptions(cards, hiddenOptionIds, groupByProperty)
-        return {visible: visibleGroups, hidden: hiddenGroups}
+    return {
+        onboardingTourStarted,
+        onboardingTourCategory,
+        onboardingTourStep,
+        me,
+        currentCard,
     }
 }
 
-export default connect(undefined, {addCard, addTemplate, updateView})(injectIntl(CenterPanel))
+export default connect(mapStateToProps, {
+    addCard,
+    addTemplate,
+    updateView,
+    patchProps,
+})(injectIntl(CenterPanel))

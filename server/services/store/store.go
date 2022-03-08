@@ -33,6 +33,8 @@ type Store interface {
 	InsertBlocks(c Container, blocks []model.Block, userID string) error
 	// @withTransaction
 	DeleteBlock(c Container, blockID string, modifiedBy string) error
+	// @withTransaction
+	UndeleteBlock(c Container, blockID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
 	GetBlock(c Container, blockID string) (*model.Block, error)
 	// @withTransaction
@@ -58,6 +60,7 @@ type Store interface {
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
 	GetUsersByWorkspace(workspaceID string) ([]*model.User, error)
+	PatchUserProps(userID string, patch model.UserPropPatch) error
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
@@ -76,6 +79,7 @@ type Store interface {
 	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
 	GetWorkspaceCount() (int64, error)
 	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
+	CreatePrivateWorkspace(userID string) (string, error)
 
 	CreateSubscription(c Container, sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(c Container, blockID string, subscriberID string) error
@@ -89,6 +93,11 @@ type Store interface {
 	DeleteNotificationHint(c Container, blockID string) error
 	GetNotificationHint(c Container, blockID string) (*model.NotificationHint, error)
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
+
+	RemoveDefaultTemplates(blocks []model.Block) error
+	GetDefaultTemplateBlocks() ([]model.Block, error)
+
+	DBType() string
 
 	IsErrNotFound(err error) bool
 }

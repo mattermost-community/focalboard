@@ -4,11 +4,12 @@ import {Block, BlockPatch} from './blocks/block'
 import {ISharing} from './blocks/sharing'
 import {IWorkspace} from './blocks/workspace'
 import {OctoUtils} from './octoUtils'
-import {IUser, UserWorkspace} from './user'
+import {IUser, UserConfigPatch, UserWorkspace} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
 import {Subscription} from './wsclient'
+import {PrepareOnboardingResponse} from './onboardingTour'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -171,6 +172,22 @@ class OctoClient {
         return user
     }
 
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
+        const path = `/api/v1/users/${encodeURIComponent(userID)}/config`
+        const body = JSON.stringify(patch)
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'PUT',
+            body,
+        })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as Record<string, string>
+    }
+
     async getSubtree(rootId?: string, levels = 2, workspaceID?: string): Promise<Block[]> {
         let path = this.workspacePath(workspaceID) + `/blocks/${encodeURIComponent(rootId || '')}/subtree?l=${levels}`
         const readToken = Utils.getReadToken()
@@ -186,27 +203,24 @@ class OctoClient {
     }
 
     // If no boardID is provided, it will export the entire archive
-    async exportArchive(boardID = ''): Promise<Block[]> {
-        const path = `${this.workspacePath()}/blocks/export?root_id=${boardID}`
-        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return []
-        }
-        const blocks = (await this.getJson(response, [])) as Block[]
-        return this.fixBlocks(blocks)
+    async exportArchive(boardID = ''): Promise<Response> {
+        const path = `${this.workspacePath()}/archive/export?board_id=${boardID}`
+        return fetch(this.getBaseURL() + path, {headers: this.headers()})
     }
 
-    async importFullArchive(blocks: readonly Block[]): Promise<Response> {
-        Utils.log(`importFullArchive: ${blocks.length} blocks(s)`)
+    async importFullArchive(file: File): Promise<Response> {
+        const formData = new FormData()
+        formData.append('file', file)
 
-        // blocks.forEach((block) => {
-        //     Utils.log(`\t ${block.type}, ${block.id}`)
-        // })
-        const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.workspacePath() + '/blocks/import', {
+        const headers = this.headers() as Record<string, string>
+
+        // TIPTIP: Leave out Content-Type here, it will be automatically set by the browser
+        delete headers['Content-Type']
+
+        return fetch(this.getBaseURL() + this.workspacePath() + '/archive/import', {
             method: 'POST',
-            headers: this.headers(),
-            body,
+            headers,
+            body: formData,
         })
     }
 
@@ -291,6 +305,14 @@ class OctoClient {
         })
     }
 
+    async undeleteBlock(blockId: string): Promise<Response> {
+        Utils.log(`undeleteBlock: ${blockId}`)
+        return fetch(this.getBaseURL() + this.workspacePath() + `/blocks/${encodeURIComponent(blockId)}/undelete`, {
+            method: 'POST',
+            headers: this.headers(),
+        })
+    }
+
     async followBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
         const body: Subscription = {
             blockType,
@@ -318,13 +340,14 @@ class OctoClient {
         return this.insertBlocks([block])
     }
 
-    async insertBlocks(blocks: Block[]): Promise<Response> {
+    async insertBlocks(blocks: Block[], sourceBoardID?: string): Promise<Response> {
         Utils.log(`insertBlocks: ${blocks.length} blocks(s)`)
         blocks.forEach((block) => {
             Utils.log(`\t ${block.type}, ${block.id}, ${block.title?.substr(0, 50) || ''}`)
         })
         const body = JSON.stringify(blocks)
-        return fetch(this.getBaseURL() + this.workspacePath() + '/blocks', {
+        const url = this.getBaseURL() + this.workspacePath() + '/blocks' + (sourceBoardID ? `?sourceBoardID=${encodeURIComponent(sourceBoardID)}` : '')
+        return fetch(url, {
             method: 'POST',
             headers: this.headers(),
             body,
@@ -471,6 +494,20 @@ class OctoClient {
         }
 
         return (await this.getJson(response, [])) as Subscription[]
+    }
+
+    // onboarding
+    async prepareOnboarding(): Promise<PrepareOnboardingResponse | undefined> {
+        const path = '/api/v1/onboard'
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+        })
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, [])) as PrepareOnboardingResponse
     }
 }
 

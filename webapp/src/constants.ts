@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import {TelemetryActions} from './telemetry/telemetryClient'
+
 class Constants {
     static readonly menuColors: {[key: string]: string} = {
         propColorDefault: 'Default',
@@ -20,8 +22,42 @@ class Constants {
     static readonly titleColumnId = '__title'
     static readonly badgesColumnId = '__badges'
 
-    static readonly versionString = '0.14.0'
-    static readonly versionDisplayString = 'Feb 2022'
+    static readonly versionString = '0.16.0'
+    static readonly versionDisplayString = 'Apr 2022'
+
+    static readonly archiveHelpPage = 'https://docs.mattermost.com/boards/data-and-archives.html'
+    static readonly imports = [
+        {
+            id: 'trello',
+            displayName: 'Trello',
+            telemetryName: TelemetryActions.ImportTrello,
+            href: Constants.archiveHelpPage + '#import-from-trello',
+        },
+        {
+            id: 'asana',
+            displayName: 'Asana',
+            telemetryName: TelemetryActions.ImportAsana,
+            href: Constants.archiveHelpPage + '#import-from-asana',
+        },
+        {
+            id: 'notion',
+            displayName: 'Notion',
+            telemetryName: TelemetryActions.ImportNotion,
+            href: Constants.archiveHelpPage + '#import-from-notion',
+        },
+        {
+            id: 'jira',
+            displayName: 'Jira',
+            telemetryName: TelemetryActions.ImportJira,
+            href: Constants.archiveHelpPage + '#import-from-jira',
+        },
+        {
+            id: 'todoist',
+            displayName: 'Todoist',
+            telemetryName: TelemetryActions.ImportTodoist,
+            href: Constants.archiveHelpPage + '#import-from-todoist',
+        },
+    ]
 
     static readonly languages = [
         {
@@ -32,7 +68,7 @@ class Constants {
         {
             code: 'es',
             name: 'spanish',
-            displayName: 'Español (Alpha)',
+            displayName: 'Español',
         },
         {
             code: 'de',
@@ -47,7 +83,7 @@ class Constants {
         {
             code: 'fr',
             name: 'french',
-            displayName: 'Français (Beta)',
+            displayName: 'Français',
         },
         {
             code: 'nl',
@@ -57,7 +93,7 @@ class Constants {
         {
             code: 'ru',
             name: 'russian',
-            displayName: 'Pусский (Beta)',
+            displayName: 'Pусский',
         },
         {
             code: 'zh-cn',
@@ -82,32 +118,32 @@ class Constants {
         {
             code: 'pt_BR',
             name: 'portuguese',
-            displayName: 'Português (Brasil) (Beta)',
+            displayName: 'Português (Brasil)',
         },
         {
             code: 'ca',
             name: 'catalan',
-            displayName: 'Català (Beta)',
+            displayName: 'Català',
         },
         {
             code: 'el',
             name: 'greek',
-            displayName: 'Ελληνικά (Alpha)',
+            displayName: 'Ελληνικά',
         },
         {
             code: 'id',
             name: 'indonesian',
-            displayName: 'bahasa Indonesia (Alpha)',
+            displayName: 'bahasa Indonesia',
         },
         {
             code: 'it',
             name: 'italian',
-            displayName: 'Italiano (Beta)',
+            displayName: 'Italiano',
         },
         {
             code: 'sv',
             name: 'swedish',
-            displayName: 'Svenska (Beta)',
+            displayName: 'Svenska',
         },
     ]
 }

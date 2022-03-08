@@ -105,14 +105,14 @@ func (p *Plugin) OnActivate() error {
 		return fmt.Errorf("error initializing the DB: %w", err)
 	}
 	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger)
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API)
 		if err2 != nil {
 			return fmt.Errorf("error initializing the DB: %w", err2)
 		}
 		db = layeredStore
 	}
 
-	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
+	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db), logger)
 
 	backendParams := notifyBackendParams{
 		cfg:        cfg,
@@ -329,10 +329,10 @@ func defaultLoggingConfig() string {
 				"Filename": "focalboard_errors.log",
 				"MaxAgeDays": 0,
 				"MaxBackups": 5,
-				"MaxSizeMB": 10 
+				"MaxSizeMB": 10
 			},
 			"MaxQueueSize": 1000
-		}		
+		}
 	}`
 }
 

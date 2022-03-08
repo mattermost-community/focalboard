@@ -17,6 +17,8 @@ declare namespace Cypress {
         apiInitServer: () => Chainable
         apiDeleteBlock: (id: string) => Chainable
         apiResetBoards: () => Chainable
+        apiSkipTour: (userID: string) => Chainable
+
         uiCreateNewBoard: (title?: string) => Chainable
         uiAddNewGroup: (name?: string) => Chainable
         uiAddNewCard: (title?: string, columnIndex?: number) => Chainable
@@ -27,5 +29,6 @@ declare namespace Cypress {
          * @param {string} item - one of the template menu options, ex. 'Empty board'
          */
         uiCreateBoard: (item: string) => Chainable
+        uiCreateEmptyBoard: () => Chainable
     }
 }

@@ -1,9 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import '@testing-library/cypress/add-commands'
-
 import {Board} from '../../src/blocks/board'
+import {UserConfigPatch} from '../../src/user'
 
 Cypress.Commands.add('apiRegisterUser', (data: Cypress.UserData, token?: string, failOnError?: boolean) => {
     return cy.request({
@@ -83,6 +82,21 @@ Cypress.Commands.add('apiResetBoards', () => {
     })
 })
 
+Cypress.Commands.add('apiSkipTour', (userID: string) => {
+    const body: UserConfigPatch = {
+        updatedFields: {
+            focalboard_welcomePageViewed: '1',
+        },
+    }
+
+    return cy.request({
+        method: 'PUT',
+        url: `/api/v1/users/${encodeURIComponent(userID)}/config`,
+        ...headers(),
+        body,
+    })
+})
+
 Cypress.Commands.add('apiGetMe', () => {
     return cy.request({
         method: 'GET',
@@ -104,8 +118,9 @@ Cypress.Commands.add('apiChangePassword', (userId: string, oldPassword: string, 
 Cypress.Commands.add('uiCreateNewBoard', (title?: string) => {
     cy.log('**Create new empty board**')
     cy.findByText('+ Add board').click()
-    cy.findByRole('button', {name: 'Empty board'}).click()
+    cy.get('.empty-board').first().click({force: true})
     cy.findByPlaceholderText('Untitled board').should('exist')
+    cy.wait(10)
     if (title) {
         cy.log('**Rename board**')
         cy.findByPlaceholderText('Untitled board').type(`${title}{enter}`)

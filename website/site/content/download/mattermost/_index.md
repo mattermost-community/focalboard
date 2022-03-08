@@ -5,9 +5,9 @@ section: "download"
 weight: 2
 ---
 
-Focalboard is installed with Mattermost v6.0, where it's called Boards. To access and use Boards, [install or upgrade to Mattermost v6.0 or later](https://mattermost.com/get-started/?utm_source=focalboard&utm_campaign=focalboard). Then, select the Product menu in the top left corner of Mattermost and choose **Boards**.
+Focalboard is installed with Mattermost v6 and later, where it's called Boards. You can [install Mattermost as a self-hosted server](https://mattermost.com/deploy/?utm_source=focalboard&utm_campaign=focalboard) or [sign up for Mattermost Cloud](https://customers.mattermost.com/cloud/signup?utm_source=focalboard&utm_campaign=focalboard).
 
-No additional server or web-proxy configuration is required.
+## Mattermost Boards usage notes:
 
 ### Enable shared boards
 

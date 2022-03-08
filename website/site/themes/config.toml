@@ -28,7 +28,7 @@ theme = "hugo-elate-theme"
 
     # postpended links
     [[menu.postpend]]
-      url = "/contribute/"
+      url = "https://mattermost.github.io/focalboard/"
       name = "Contribute"
       weight = 10
 
@@ -44,7 +44,7 @@ theme = "hugo-elate-theme"
   [[params.intro.item]]
     title = "Contribute"
     description = "Join the hunrdeds of contributors and submit code directly to the Focalboard open-source project."
-    url = "/contribute/"
+    url = "https://mattermost.github.io/focalboard/"
     button = "Start Contributing"
     icon = "icon-bulb"
     img = "img_7.jpg"
