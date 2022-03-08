@@ -56,10 +56,6 @@ html {
     a {
         text-decoration: none;
         color: var(--link-color-rgb);
-
-        &:hover {
-            background-color: rgba(192, 192, 255, 0.2);
-        }
     }
 
     hr {
@@ -72,10 +68,6 @@ html {
     }
 
     #focalboard-app {
-        a:visited {
-            color: var(--link-visited-color-rgb);
-        }
-
         button {
             &.style--none {
                 background: transparent;
