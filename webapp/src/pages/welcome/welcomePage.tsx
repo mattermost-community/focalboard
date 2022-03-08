@@ -90,7 +90,7 @@ const WelcomePage = () => {
         history.replace(newPath)
     }
 
-    if (me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
+    if (me?.props && me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
         goForward()
         return null
     }
