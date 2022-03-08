@@ -9,8 +9,6 @@ import mutator from '../mutator'
 import Button from '../widgets/buttons/button'
 import Editable from '../widgets/editable'
 import CompassIcon from '../widgets/icons/compassIcon'
-import HideIcon from '../widgets/icons/hide'
-import ShowIcon from '../widgets/icons/show'
 
 import BlockIconSelector from './blockIconSelector'
 import {MarkdownEditor} from './markdownEditor'
