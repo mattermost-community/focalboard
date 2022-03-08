@@ -7,3 +7,5 @@ import 'cypress-real-events/support'
 
 import './api_commands'
 import './ui_commands'
+
+import 'cypress-failed-log'

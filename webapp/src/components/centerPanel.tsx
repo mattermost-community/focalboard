@@ -215,10 +215,11 @@ class CenterPanel extends React.Component<Props, State> {
                             readonly={this.props.readonly}
                         />
                         <div className='shareButtonWrapper'>
-                            {!this.props.readonly && this.props.showShared &&
+                            {!this.props.readonly &&
                                 (
                                     <ShareBoardButton
                                         boardId={this.props.board.id}
+                                        enableSharedBoards={this.props.clientConfig?.enablePublicSharedBoards || false}
                                     />
                                 )
                             }
@@ -237,7 +238,6 @@ class CenterPanel extends React.Component<Props, State> {
                         addCardTemplate={this.addCardTemplate}
                         editCardTemplate={this.editCardTemplate}
                         readonly={this.props.readonly}
-                        showShared={this.props.showShared}
                     />
                 </div>
 
