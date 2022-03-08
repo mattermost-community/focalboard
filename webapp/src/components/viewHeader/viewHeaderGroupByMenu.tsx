@@ -39,10 +39,10 @@ const ViewHeaderGroupByMenu = (props: Props) => {
 
         if (show) {
             const columnsToShow = getColumnIds(hiddenGroups)
-            mutator.unhideViewColumns(activeView, columnsToShow)
+            mutator.unhideViewColumns(activeView.boardId, activeView, columnsToShow)
         } else {
             const columnsToHide = getColumnIds(emptyVisibleGroups)
-            mutator.hideViewColumns(activeView, columnsToHide)
+            mutator.hideViewColumns(activeView.boardId, activeView, columnsToHide)
         }
     }
 
