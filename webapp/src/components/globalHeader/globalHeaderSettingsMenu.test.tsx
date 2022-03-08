@@ -27,6 +27,9 @@ describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
     let store = mockStore({})
     beforeEach(() => {
         store = mockStore({
+            teams: {
+                current: {id: 'team_id_1'},
+            },
             users: {
                 me: {
                     id: 'user-id',
