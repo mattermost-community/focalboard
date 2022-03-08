@@ -53,6 +53,11 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
     beforeEach(() => {
         jest.clearAllMocks()
         const state = {
+            users: {
+                me: {
+                    id: 'user_id_1',
+                },
+            },
             workspace: {
                 userWorkspaces: new Array<UserWorkspace>(workspace1),
                 current: workspace1,
