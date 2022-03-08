@@ -349,9 +349,16 @@ const BoardPage = (props: Props): JSX.Element => {
                 <div className='error'>
                     {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
                 </div>}
-            <Workspace
-                readonly={props.readonly || false}
-            />
+
+            {
+
+                // Don't display Templates page
+                // if readonly mode and no board defined.
+                (!props.readonly || board !== undefined) &&
+                <Workspace
+                    readonly={props.readonly || false}
+                />
+            }
         </div>
     )
 }
