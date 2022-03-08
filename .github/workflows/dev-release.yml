@@ -28,8 +28,8 @@ jobs:
     - name: Replace token 2 webapp
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
-    - name: npm install
-      run: cd webapp; npm install --no-optional
+    - name: npm ci
+      run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -87,8 +87,8 @@ jobs:
     - name: Replace token 2 webapp
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
-    - name: npm install
-      run: cd webapp; npm install --no-optional
+    - name: npm ci
+      run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -132,8 +132,8 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: npm install
-      run: cd webapp; npm install --no-optional
+    - name: npm ci
+      run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -184,8 +184,8 @@ jobs:
     - name: Replace token 2 webapp
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
-    - name: npm install
-      run: cd webapp; npm install --no-optional
+    - name: npm ci
+      run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -200,8 +200,8 @@ jobs:
     - name: Build webapp
       run: make webapp
 
-    - name: npm install plugin dependencies
-      run: cd mattermost-plugin/webapp; npm install --no-optional
+    - name: npm ci plugin dependencies
+      run: cd mattermost-plugin/webapp; npm ci --no-optional
 
     - name: Build plugin
       run: cd mattermost-plugin; make dist
