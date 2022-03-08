@@ -18,6 +18,10 @@ export const initialLoad = createAsyncThunk(
             client.getTeamTemplates(),
         ])
 
+        // if no team, either bad id, or user doesn't have access
+        if (team === undefined) {
+            throw new Error('Team undefined')
+        }
         return {
             team,
             teams,

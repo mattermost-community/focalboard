@@ -89,10 +89,19 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
     const template1Title = 'Template 1'
     const globalTemplateTitle = 'Template Global'
     const boardTitle = 'Board 1'
-    let store:MockStoreEnhanced<unknown, unknown>
+    let store: MockStoreEnhanced<unknown, unknown>
     beforeAll(mockDOM)
     beforeEach(() => {
         jest.clearAllMocks()
+        const board = {
+            id: '2',
+            title: boardTitle,
+            teamId: 'team-id',
+            icon: '🚴🏻‍♂️',
+            cardProperties: [groupProperty],
+            dateDisplayPropertyId: 'id-6',
+        }
+
         const state = {
             searchText: {value: ''},
             users: {
@@ -117,16 +126,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                 current: 'team-id',
             },
             boards: {
-                boards: [
-                    {
-                        id: '2',
-                        title: boardTitle,
-                        teamId: 'team-id',
-                        icon: '🚴🏻‍♂️',
-                        cardProperties: [groupProperty],
-                        dateDisplayPropertyId: 'id-6',
-                    },
-                ],
+                boards: [board],
                 templates: [
                     {
                         id: '1',

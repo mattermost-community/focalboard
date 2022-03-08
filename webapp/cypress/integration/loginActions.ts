@@ -8,19 +8,21 @@ describe('Login actions', () => {
 
     it('Can perform login/register actions', () => {
         // Redirects to login page
-        cy.log('**Redirects to login page**')
+        cy.log('**Redirects to error then login page**')
         cy.visit('/')
+        cy.location('pathname').should('eq', '/error')
+        cy.get('button').contains('Log in').click()
         cy.location('pathname').should('eq', '/login')
         cy.get('.LoginPage').contains('Log in')
         cy.get('#login-username').should('exist')
         cy.get('#login-password').should('exist')
         cy.get('button').contains('Log in')
-        cy.get('a').contains('create an account')
+        cy.get('a').contains('create an account', {matchCase: false})
 
         // Can register a user
         cy.log('**Can register a user**')
         cy.visit('/login')
-        cy.get('a').contains('create an account').click()
+        cy.get('a').contains('create an account', {matchCase: false}).click()
         cy.location('pathname').should('eq', '/register')
         cy.get('.RegisterPage').contains('Sign up')
         cy.get('#login-email').type(email)
@@ -40,7 +42,7 @@ describe('Login actions', () => {
         // User should not be logged in automatically
         cy.log('**User should not be logged in automatically**')
         cy.visit('/')
-        cy.location('pathname').should('eq', '/login')
+        cy.location('pathname').should('eq', '/error')
 
         // Can log in registered user
         cy.log('**Can log in registered user**')

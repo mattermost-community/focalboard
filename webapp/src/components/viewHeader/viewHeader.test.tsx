@@ -42,6 +42,10 @@ describe('components/viewHeader/viewHeader', () => {
         },
         boards: {
             current: board,
+            boards: {
+                [board.id]: board,
+            },
+            templates: [],
         },
         cards: {
             templates: [card],

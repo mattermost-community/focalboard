@@ -11,8 +11,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: npm install
-      run: cd webapp; npm install
+    - name: npm ci
+      run: cd webapp; npm ci
 
     - name: ESLint
       run: cd webapp; npm run check
