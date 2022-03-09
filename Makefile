@@ -33,27 +33,35 @@ ci: server-test
 	cd webapp; npm run test
 	cd webapp; npm run cypress:ci
 
-server: ## Build server for local environment.
+.PHONY templates-archive
+templates-archive:
 	rm -f server/app/templates.boardarchive
 	cd server/app/templates-boardarchive; zip -r ../templates.boardarchive *
+
+.PHONY templates-archive-win
+templates-archive-win:
+	if exist server\app\templates.boardarchive del /f /q server\app\templates.boardarchive
+	powershell Compress-Archive -Path server\app\templates-boardarchive\* -DestinationPath server\app\templates.boardarchive
+
+server: templates-archive ## Build server for local environment.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
 	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/focalboard-server ./main
 
-server-mac: ## Build server for Mac.
+server-mac: templates-archive ## Build server for Mac.
 	mkdir -p bin/mac
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
 	cd server; env GOOS=darwin GOARCH=$(MAC_GO_ARCH) go build -ldflags '$(LDFLAGS)' -o ../bin/mac/focalboard-server ./main
 
-server-linux: ## Build server for Linux.
+server-linux: templates-archive ## Build server for Linux.
 	mkdir -p bin/linux
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
 	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/linux/focalboard-server ./main
 
-server-win: ## Build server for Windows.
+server-win: templates-archive-win ## Build server for Windows.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
 	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -o ../bin/win/focalboard-server.exe ./main
 
-server-dll: ## Build server as Windows DLL.
+server-dll: templates-archive-win ## Build server as Windows DLL.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
 	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -buildmode=c-shared -o ../bin/win-dll/focalboard-server.dll ./main
 
