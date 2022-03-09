@@ -152,7 +152,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
         // Ensure boardViews is for our boardId before redirecting
         const isCorrectBoardView = boardViews.length > 0 && boardViews[0].parentId === boardId
-        if (!viewId && isCorrectBoardView) {
+        if ((!viewId || viewId === '0') && isCorrectBoardView) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
             history.replace(newPath)
             return
