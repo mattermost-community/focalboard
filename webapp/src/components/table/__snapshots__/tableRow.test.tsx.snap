@@ -8,7 +8,7 @@ exports[`components/table/TableRow should match snapshot 1`] = `
     style="opacity: 1;"
   >
     <div
-      class="octo-table-cell action-cell octo-table-cell-btn"
+      class="action-cell octo-table-cell-btn"
     >
       <div
         aria-label="menuwrapper"
@@ -91,7 +91,7 @@ exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
     style="opacity: 1;"
   >
     <div
-      class="octo-table-cell action-cell octo-table-cell-btn"
+      class="action-cell octo-table-cell-btn"
     >
       <div
         aria-label="menuwrapper"
@@ -174,7 +174,7 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
     style="opacity: 1;"
   >
     <div
-      class="octo-table-cell action-cell octo-table-cell-btn"
+      class="action-cell octo-table-cell-btn"
     >
       <div
         aria-label="menuwrapper"
@@ -295,7 +295,7 @@ exports[`components/table/TableRow should match snapshot, isSelected 1`] = `
     style="opacity: 1;"
   >
     <div
-      class="octo-table-cell action-cell octo-table-cell-btn"
+      class="action-cell octo-table-cell-btn"
     >
       <div
         aria-label="menuwrapper"
@@ -378,7 +378,7 @@ exports[`components/table/TableRow should match snapshot, read-only 1`] = `
     style="opacity: 1;"
   >
     <div
-      class="octo-table-cell action-cell octo-table-cell-btn"
+      class="action-cell octo-table-cell-btn"
     >
       <div
         aria-label="menuwrapper"
@@ -462,7 +462,7 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
     style="opacity: 1;"
   >
     <div
-      class="octo-table-cell action-cell octo-table-cell-btn"
+      class="action-cell octo-table-cell-btn"
     >
       <div
         aria-label="menuwrapper"

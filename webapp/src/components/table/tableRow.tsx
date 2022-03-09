@@ -131,7 +131,7 @@ const TableRow = (props: Props) => {
             style={{opacity: isDragging ? 0.5 : 1}}
         >
 
-            <div className='octo-table-cell action-cell octo-table-cell-btn'>
+            <div className='action-cell octo-table-cell-btn'>
                 <MenuWrapper
                     className='optionsMenu'
                     stopPropagationOnToggle={true}

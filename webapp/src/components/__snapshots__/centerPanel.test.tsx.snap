@@ -1026,7 +1026,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -1101,7 +1101,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -1558,7 +1558,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -1634,7 +1634,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -2240,7 +2240,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -2315,7 +2315,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -2939,7 +2939,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -3014,7 +3014,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -3638,7 +3638,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -3713,7 +3713,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -4337,7 +4337,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -4412,7 +4412,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -5036,7 +5036,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -5111,7 +5111,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -5735,7 +5735,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -5810,7 +5810,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -6434,7 +6434,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -6509,7 +6509,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -7133,7 +7133,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -7208,7 +7208,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -7832,7 +7832,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -7907,7 +7907,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"
@@ -9891,7 +9891,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
               style="opacity: 1;"
             >
               <div
-                class="octo-table-cell action-cell octo-table-cell-btn"
+                class="action-cell octo-table-cell-btn"
               >
                 <div
                   aria-label="menuwrapper"

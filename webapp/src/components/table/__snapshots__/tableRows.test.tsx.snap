@@ -8,7 +8,7 @@ exports[`components/table/TableRows should match snapshot, fire events 1`] = `
     style="opacity: 1;"
   >
     <div
-      class="octo-table-cell action-cell octo-table-cell-btn"
+      class="action-cell octo-table-cell-btn"
     >
       <div
         aria-label="menuwrapper"

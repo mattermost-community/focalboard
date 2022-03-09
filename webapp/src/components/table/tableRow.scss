@@ -34,13 +34,29 @@
         }
         
         .action-cell {
-            display: block;
-            overflow: inherit;
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: row;
+            color: rgb(var(--center-channel-color-rgb));
+            border-left: 1px solid transparent;
+            border-top: 1px solid transparent;
+            border-bottom: 1px solid transparent;
+            box-sizing: border-box;
+            padding: 8px;
+            height: 44px;
+            font-size: 14px;
+            text-overflow: ellipsis;
             background-color: rgb(255, 255, 255);
+            position: fixed;
+            z-index: 100;
         }
 
         .octo-table-cell-btn {
             display: flex;
+        }
+
+        .title-cell {
+            margin-left: 60px;
         }
     }
 
