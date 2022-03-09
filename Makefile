@@ -38,6 +38,11 @@ templates-archive:
 	rm -f server/app/templates.boardarchive
 	cd server/app/templates-boardarchive; zip -r ../templates.boardarchive *
 
+.PHONY: templates-archive-win
+templates-archive-win:
+	rm -f server/app/templates.boardarchive
+	powershell Compress-Archive -Path server\app\templates-boardarchive\* -DestinationPath server\app\templates.boardarchive
+
 server: templates-archive ## Build server for local environment.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
 	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/focalboard-server ./main
