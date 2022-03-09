@@ -33,12 +33,12 @@ ci: server-test
 	cd webapp; npm run test
 	cd webapp; npm run cypress:ci
 
-.PHONY templates-archive
+.PHONY: templates-archive
 templates-archive:
 	rm -f server/app/templates.boardarchive
 	cd server/app/templates-boardarchive; zip -r ../templates.boardarchive *
 
-.PHONY templates-archive-win
+.PHONY: templates-archive-win
 templates-archive-win:
 	if exist server\app\templates.boardarchive del /f /q server\app\templates.boardarchive
 	powershell Compress-Archive -Path server\app\templates-boardarchive\* -DestinationPath server\app\templates.boardarchive
