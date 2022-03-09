@@ -277,9 +277,9 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             <UserPermissionsRow
                                 key={user.id}
                                 user={user}
-                                member={member}
                                 onDeleteBoardMember={onDeleteBoardMember}
                                 onUpdateBoardMember={onUpdateBoardMember}
+                                member={member}
                                 isMe={user.id === me?.id}
                             />
                         )
