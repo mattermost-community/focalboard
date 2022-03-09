@@ -24,6 +24,7 @@ function TextInputOption(props: TextInputOptionProps): JSX.Element {
             onClick={(e) => e.stopPropagation()}
             onChange={(e) => setValue(e.target.value)}
             value={value}
+            title={value}
             onBlur={() => props.onValueChanged(value)}
             onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === 'Escape') {
