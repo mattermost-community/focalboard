@@ -190,7 +190,7 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, boardID string, blockID string,
 		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
 		Where(sq.Eq{"l1.id": blockID}).
 		Where(sq.Eq{"l3.board_id": boardID}).
-		OrderBy("insertAt")
+		OrderBy("insertAt,l3.id")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -201,7 +201,7 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, boardID string, blockID string,
 	}
 
 	if s.dbType == model.PostgresDBType {
-		query = query.Options("DISTINCT ON (l3.id)")
+		query = query.Options("DISTINCT ON (insertAt,l3.id)")
 	} else {
 		query = query.Distinct()
 	}
