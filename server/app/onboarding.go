@@ -85,6 +85,10 @@ func (a *App) createWelcomeBoard(userID, workspaceID string) (string, error) {
 
 	blocks = model.GenerateBlockIDs(blocks, a.logger)
 
+	if errUpdateFileIDs := a.CopyCardFiles(onboardingBoardID, workspaceID, blocks); errUpdateFileIDs != nil {
+		return "", errUpdateFileIDs
+	}
+
 	// we're copying from a global template, so we need to set the
 	// `isTemplate` flag to false on the board
 	var welcomeBoardID string

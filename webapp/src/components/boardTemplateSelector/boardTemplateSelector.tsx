@@ -16,10 +16,14 @@ import {fetchGlobalTemplates, getGlobalTemplates} from '../../store/globalTempla
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
+import './boardTemplateSelector.scss'
+import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
+import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
+import {getMe, patchProps} from '../../store/users'
+import {BaseTourSteps, TOUR_BASE} from '../onboardingTour'
+
 import BoardTemplateSelectorPreview from './boardTemplateSelectorPreview'
 import BoardTemplateSelectorItem from './boardTemplateSelectorItem'
-
-import './boardTemplateSelector.scss'
 
 type Props = {
     title?: React.ReactNode
@@ -35,6 +39,7 @@ const BoardTemplateSelector = (props: Props) => {
     const intl = useIntl()
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId?: string}>()
+    const me = useAppSelector<IUser|null>(getMe)
 
     const showBoard = useCallback(async (boardId) => {
         const params = {...match.params, boardId: boardId || ''}
@@ -68,6 +73,33 @@ const BoardTemplateSelector = (props: Props) => {
     const unsortedTemplates = useAppSelector(getTemplates)
     const templates = useMemo(() => Object.values(unsortedTemplates).sort((a: Board, b: Board) => a.createAt - b.createAt), [unsortedTemplates])
     const allTemplates = globalTemplates.concat(templates)
+
+    const resetTour = async () => {
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.StartTour)
+
+        if (!me) {
+            return
+        }
+
+        const patch: UserConfigPatch = {
+            updatedFields: {
+                [UserPropPrefix + 'onboardingTourStep']: BaseTourSteps.OPEN_A_CARD.toString(),
+                [UserPropPrefix + 'tourCategory']: TOUR_BASE,
+            },
+        }
+
+        const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+        if (patchedProps) {
+            await dispatch(patchProps(patchedProps))
+        }
+    }
+
+    const handleUseTemplate = async () => {
+        await mutator.addBoardFromTemplate(intl, showBoard, () => showBoard(currentBoard.id), activeTemplate.id, activeTemplate.workspaceId === '0')
+        if (activeTemplate.title === OnboardingBoardTitle) {
+            resetTour()
+        }
+    }
 
     const [activeTemplate, setActiveTemplate] = useState<Board>(allTemplates[0])
 
@@ -142,7 +174,7 @@ const BoardTemplateSelector = (props: Props) => {
                         <Button
                             filled={true}
                             size={'medium'}
-                            onClick={() => mutator.addBoardFromTemplate(intl, showBoard, () => showBoard(currentBoard.id), activeTemplate.id, activeTemplate.workspaceId === '0')}
+                            onClick={handleUseTemplate}
                         >
                             <FormattedMessage
                                 id='BoardTemplateSelector.use-this-template'
