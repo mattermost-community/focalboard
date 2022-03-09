@@ -15,6 +15,7 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
           <input
             class="PropertyMenu menu-textbox menu-option"
             spellcheck="true"
+            title="test-property"
             type="text"
             value="test-property"
           />
