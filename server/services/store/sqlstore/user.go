@@ -234,3 +234,24 @@ func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
 
 	return users, nil
 }
+
+func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.UserPropPatch) error {
+	user, err := s.getUserByID(db, userID)
+	if err != nil {
+		return err
+	}
+
+	if user.Props == nil {
+		user.Props = map[string]interface{}{}
+	}
+
+	for _, key := range patch.DeletedFields {
+		delete(user.Props, key)
+	}
+
+	for key, value := range patch.UpdatedFields {
+		user.Props[key] = value
+	}
+
+	return s.updateUser(db, user)
+}

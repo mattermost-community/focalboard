@@ -18,6 +18,9 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 
 import BlockIconSelector from '../blockIconSelector'
 
+import {useAppDispatch} from '../../store/hooks'
+import {setCurrent as setCurrentCard} from '../../store/cards'
+
 import CommentsList from './commentsList'
 import {CardDetailProvider} from './cardDetailContext'
 import CardDetailContents from './cardDetailContents'
@@ -26,6 +29,9 @@ import CardDetailProperties from './cardDetailProperties'
 import useImagePaste from './imagePaste'
 
 import './cardDetail.scss'
+
+export const OnboardingBoardTitle = 'Welcome to Boards!'
+export const OnboardingCardTitle = 'Create a new card'
 
 type Props = {
     board: Board
@@ -78,6 +84,11 @@ const CardDetail = (props: Props): JSX.Element|null => {
         const newIcon = BlockIcons.shared.randomIcon()
         mutator.changeIcon(card.id, card.fields.icon, newIcon)
     }, [card.id, card.fields.icon])
+
+    const dispatch = useAppDispatch()
+    useEffect(() => {
+        dispatch(setCurrentCard(card.id))
+    }, [card.id])
 
     if (!card) {
         return null

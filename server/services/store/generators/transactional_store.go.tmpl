@@ -25,6 +25,9 @@ import (
 {{range $index, $element := .Methods}}
 func (s *SQLStore) {{$index}}({{$element.Params | joinParamsWithType}}) {{$element.Results | joinResultsForSignature}} {
     {{- if $element.WithTransaction}}
+    	if s.dbType == sqliteDBType {
+    	    return s.{{$index | renameStoreMethod}}(s.db, {{$element.Params | joinParams}})
+    	}
     	tx, txErr := s.db.BeginTx(context.Background(), nil)
         if txErr != nil {
             return {{ genErrorResultsVars $element.Results "txErr"}}

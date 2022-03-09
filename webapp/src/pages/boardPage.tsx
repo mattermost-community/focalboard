@@ -97,7 +97,7 @@ const BoardPage = (props: Props): JSX.Element => {
         }
 
         // we can pick workspace ID from board if it's not available anywhere,
-        const workspaceIDToUse = workspaceId || board.workspaceId
+        const workspaceIDToUse = Utils.isFocalboardPlugin() ? workspaceId || board.workspaceId : '0'
 
         const newPath = Utils.buildOriginalPath(workspaceIDToUse, match.params.boardId, match.params.viewId, match.params.cardId)
         history.replace(`/workspace/${newPath}`)
@@ -152,7 +152,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
         // Ensure boardViews is for our boardId before redirecting
         const isCorrectBoardView = boardViews.length > 0 && boardViews[0].parentId === boardId
-        if (!viewId && isCorrectBoardView) {
+        if ((!viewId || viewId === '0') && isCorrectBoardView) {
             const newPath = generatePath(match.path, {...match.params, boardId, viewId: boardViews[0].id})
             history.replace(newPath)
             return

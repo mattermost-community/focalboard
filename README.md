@@ -49,7 +49,7 @@ Most development can be done on the Personal Server edition. Please refer to the
 
 First, install basic dependencies:
 * Go 1.15+
-* Node 10+ and npm
+* Node 16.3+ and npm
 * Mingw64 on Windows
 
 ```
@@ -78,7 +78,8 @@ You can build standalone apps that package the server to run locally against SQL
         * `sudo apt-get install libgtk-3-dev`
         * `sudo apt-get install libwebkit2gtk-4.0-dev`
     * `make linux-app`
-    * run `linux/dist/focalboard-app`
+    * uncompress `linux/dist/focalboard-linux.tar.gz` to a directory of your choice
+    * run `focalboard-app` from the directory you have chosen
     * *Tested with: Ubuntu 18.04*
 * Windows:
     * Open a git-bash prompt

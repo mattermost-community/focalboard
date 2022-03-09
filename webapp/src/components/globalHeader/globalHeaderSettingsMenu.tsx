@@ -2,12 +2,16 @@
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
+import {History} from 'history'
 
 import {Archiver} from '../../archiver'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {useAppDispatch} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {storeLanguage} from '../../store/language'
+import {patchProps, getMe} from '../../store/users'
+import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
+import octoClient from '../../octoClient'
 import {UserSettings} from '../../userSettings'
 import CheckIcon from '../../widgets/icons/check'
 import SettingsIcon from '../../widgets/icons/settings'
@@ -17,8 +21,13 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../teleme
 
 import './globalHeaderSettingsMenu.scss'
 
-const GlobalHeaderSettingsMenu = () => {
+type Props = {
+    history: History<unknown>
+}
+
+const GlobalHeaderSettingsMenu = (props: Props) => {
     const intl = useIntl()
+    const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
 
     const [randomIcons, setRandomIcons] = useState(UserSettings.prefillRandomIcons)
@@ -91,6 +100,35 @@ const GlobalHeaderSettingsMenu = () => {
                         name={intl.formatMessage({id: 'Sidebar.random-icons', defaultMessage: 'Random icons'})}
                         isOn={randomIcons}
                         onClick={async () => toggleRandomIcons()}
+                    />
+                    <Menu.Text
+                        id='product-tour'
+                        name={intl.formatMessage({id: 'Sidebar.product-tour', defaultMessage: 'Product tour'})}
+                        onClick={async () => {
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.StartTour)
+
+                            if (!me) {
+                                return
+                            }
+
+                            const patch: UserConfigPatch = {
+                                updatedFields: {
+                                    [UserPropPrefix + 'onboardingTourStep']: '0',
+                                    [UserPropPrefix + 'tourCategory']: 'onboarding',
+                                },
+                            }
+
+                            const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+                            if (patchedProps) {
+                                await dispatch(patchProps(patchedProps))
+                            }
+
+                            const onboardingData = await octoClient.prepareOnboarding()
+
+                            const newPath = `/workspace/${onboardingData?.workspaceID}/${onboardingData?.boardID}`
+
+                            props.history.push(newPath)
+                        }}
                     />
                 </Menu>
             </MenuWrapper>
