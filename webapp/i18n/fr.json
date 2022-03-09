@@ -158,7 +158,6 @@
   "WelcomePage.Explore.Button": "Explorer",
   "Workspace.editing-board-template": "Vous éditez un modèle de tableau.",
   "default-properties.title": "Titre",
-  "error.no-workspace": "Votre session à peut-être expirée ou vous n'avez pas accès à cet espace de travail.",
   "error.relogin": "Connectez-vous à nouveau",
   "login.log-in-button": "Connexion",
   "login.log-in-title": "Connexion",
