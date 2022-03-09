@@ -45,6 +45,20 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
           </button>
         </div>
         <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
           class="tabs-content"
         >
           <div>
@@ -75,11 +89,11 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             >
               <a
                 class="shareUrl"
-                href="http://localhost/1"
+                href="http://localhost/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/1
+                http://localhost/1/1
               </a>
             </div>
             <button
@@ -146,6 +160,20 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
           </button>
         </div>
         <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
           class="tabs-content"
         >
           <div>
@@ -176,11 +204,11 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             >
               <a
                 class="shareUrl"
-                href="http://localhost/1"
+                href="http://localhost/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/1
+                http://localhost/1/1
               </a>
             </div>
             <button
@@ -230,6 +258,20 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
             <i
               class="CompassIcon icon-close CloseIcon"
             />
+          </button>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item false"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item tab-item--active"
+          >
+            Publish
           </button>
         </div>
         <div
@@ -371,6 +413,20 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
           </button>
         </div>
         <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item false"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item tab-item--active"
+          >
+            Publish
+          </button>
+        </div>
+        <div
           class="tabs-content"
         >
           <div>
@@ -479,6 +535,120 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item false"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-2b097c-container"
+            >
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-kpfmlq-ValueContainer"
+                >
+                  <div
+                    class=" css-1wa3eu0-placeholder"
+                  >
+                    Select...
+                  </div>
+                  <div
+                    class="css-1shkodo-Input"
+                  >
+                    <div
+                      class=""
+                      style="display: inline-block;"
+                    >
+                      <input
+                        aria-autocomplete="list"
+                        autocapitalize="none"
+                        autocomplete="off"
+                        autocorrect="off"
+                        id="react-select-7-input"
+                        spellcheck="false"
+                        style="box-sizing: content-box; width: 2px; border: 0px; opacity: 1; outline: 0; padding: 0px;"
+                        tabindex="0"
+                        type="text"
+                        value=""
+                      />
+                      <div
+                        style="position: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px; overflow: scroll; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1yvy2vo-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="tabs-container"
@@ -619,6 +789,20 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
           </button>
         </div>
         <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
           class="tabs-content"
         >
           <div>
@@ -649,11 +833,11 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
             >
               <a
                 class="shareUrl"
-                href="http://localhost/1"
+                href="http://localhost/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/1
+                http://localhost/1/1
               </a>
             </div>
             <button
@@ -720,6 +904,20 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
           </button>
         </div>
         <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
           class="tabs-content"
         >
           <div>
@@ -750,11 +948,11 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               <a
                 class="shareUrl"
-                href="http://localhost/1"
+                href="http://localhost/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/1
+                http://localhost/1/1
               </a>
             </div>
             <button
@@ -821,6 +1019,20 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
           </button>
         </div>
         <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
           class="tabs-content"
         >
           <div>
@@ -851,11 +1063,11 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               <a
                 class="shareUrl"
-                href="http://localhost/test-subpath/plugins/boards1"
+                href="http://localhost/test-subpath/plugins/boards1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/test-subpath/plugins/boards1
+                http://localhost/test-subpath/plugins/boards1/1
               </a>
             </div>
             <button
@@ -922,6 +1134,20 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
           </button>
         </div>
         <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
           class="tabs-content"
         >
           <div>
@@ -952,11 +1178,11 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               <a
                 class="shareUrl"
-                href="http://localhost/test-subpath/plugins/boards1"
+                href="http://localhost/test-subpath/plugins/boards1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/test-subpath/plugins/boards1
+                http://localhost/test-subpath/plugins/boards1/1
               </a>
             </div>
             <button

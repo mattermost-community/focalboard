@@ -46,8 +46,7 @@ const ShareBoardButton = (props: Props) => {
                 <ShareBoardDialog
                     onClose={() => setShowShareDialog(false)}
                     enableSharedBoards={props.enableSharedBoards}
-                />
-            }
+                />}
         </div>
     )
 }

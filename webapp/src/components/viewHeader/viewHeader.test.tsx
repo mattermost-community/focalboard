@@ -42,6 +42,10 @@ describe('components/viewHeader/viewHeader', () => {
         },
         boards: {
             current: board,
+            boards: {
+                [board.id]: board,
+            },
+            templates: [],
         },
         cards: {
             templates: [card],
@@ -73,6 +77,7 @@ describe('components/viewHeader/viewHeader', () => {
                         addCardTemplate={jest.fn()}
                         editCardTemplate={jest.fn()}
                         readonly={false}
+                        enableSharedBoards={false}
                     />
                 </ReduxProvider>,
             ),
@@ -94,6 +99,7 @@ describe('components/viewHeader/viewHeader', () => {
                         addCardTemplate={jest.fn()}
                         editCardTemplate={jest.fn()}
                         readonly={true}
+                        enableSharedBoards={false}
                     />
                 </ReduxProvider>,
             ),

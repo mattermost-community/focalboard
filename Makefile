@@ -85,7 +85,6 @@ server-linux-package-docker:
 
 generate: ## Install and run code generators.
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
-	cd server; go get -modfile=go.tools.mod github.com/jteeuwen/go-bindata
 	cd server; go generate ./...
 
 server-lint: ## Run linters on server code.

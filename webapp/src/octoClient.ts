@@ -150,6 +150,10 @@ class OctoClient {
         return `/api/v1/teams/${teamIdToUse}`
     }
 
+    private teamsPath(): string {
+        return '/api/v1/teams'
+    }
+
     async getMe(): Promise<IUser | undefined> {
         const path = '/api/v1/users/me'
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
@@ -400,15 +404,21 @@ class OctoClient {
     }
 
     // BoardMember
-    async createBoardMember(member: BoardMember): Promise<Response> {
+    async createBoardMember(member: Partial<BoardMember>): Promise<BoardMember|undefined> {
         Utils.log(`createBoardMember: user ${member.userId} and board ${member.boardId}`)
 
         const body = JSON.stringify(member)
-        return fetch(this.getBaseURL() + `/api/v1/boards/${member.boardId}/members`, {
+        const response = await fetch(this.getBaseURL() + `/api/v1/boards/${member.boardId}/members`, {
             method: 'POST',
             headers: this.headers(),
             body,
         })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return this.getJson<BoardMember>(response, {} as BoardMember)
     }
 
     async updateBoardMember(member: BoardMember): Promise<Response> {
@@ -544,7 +554,7 @@ class OctoClient {
     }
 
     async getTeams(): Promise<Array<Team>> {
-        const path = this.teamPath()
+        const path = this.teamsPath()
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []

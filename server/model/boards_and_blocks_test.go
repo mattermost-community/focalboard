@@ -3,8 +3,9 @@ package model
 import (
 	"testing"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/stretchr/testify/require"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 func TestIsValidBoardsAndBlocks(t *testing.T) {
@@ -16,7 +17,7 @@ func TestIsValidBoardsAndBlocks(t *testing.T) {
 			},
 		}
 
-		require.ErrorIs(t, bab.IsValid(), NoBoardsInBoardsAndBlocksErr)
+		require.ErrorIs(t, bab.IsValid(), ErrNoBoardsInBoardsAndBlocks)
 	})
 
 	t.Run("no blocks", func(t *testing.T) {
@@ -27,7 +28,7 @@ func TestIsValidBoardsAndBlocks(t *testing.T) {
 			},
 		}
 
-		require.ErrorIs(t, bab.IsValid(), NoBlocksInBoardsAndBlocksErr)
+		require.ErrorIs(t, bab.IsValid(), ErrNoBlocksInBoardsAndBlocks)
 	})
 
 	t.Run("block that doesn't belong to the boards", func(t *testing.T) {
@@ -164,7 +165,7 @@ func TestIsValidPatchBoardsAndBlocks(t *testing.T) {
 			},
 		}
 
-		require.ErrorIs(t, pbab.IsValid(), NoBoardsInBoardsAndBlocksErr)
+		require.ErrorIs(t, pbab.IsValid(), ErrNoBoardsInBoardsAndBlocks)
 	})
 
 	t.Run("missmatch board IDs and patches", func(t *testing.T) {
@@ -179,7 +180,7 @@ func TestIsValidPatchBoardsAndBlocks(t *testing.T) {
 			},
 		}
 
-		require.ErrorIs(t, pbab.IsValid(), BoardIDsAndPatchesMissmatchInBoardsAndBlocksErr)
+		require.ErrorIs(t, pbab.IsValid(), ErrBoardIDsAndPatchesMissmatchInBoardsAndBlocks)
 	})
 
 	t.Run("no block ids", func(t *testing.T) {
@@ -192,7 +193,7 @@ func TestIsValidPatchBoardsAndBlocks(t *testing.T) {
 			BlockIDs: []string{},
 		}
 
-		require.ErrorIs(t, pbab.IsValid(), NoBlocksInBoardsAndBlocksErr)
+		require.ErrorIs(t, pbab.IsValid(), ErrNoBlocksInBoardsAndBlocks)
 	})
 
 	t.Run("missmatch block IDs and patches", func(t *testing.T) {
@@ -209,7 +210,7 @@ func TestIsValidPatchBoardsAndBlocks(t *testing.T) {
 			},
 		}
 
-		require.ErrorIs(t, pbab.IsValid(), BlockIDsAndPatchesMissmatchInBoardsAndBlocksErr)
+		require.ErrorIs(t, pbab.IsValid(), ErrBlockIDsAndPatchesMissmatchInBoardsAndBlocks)
 	})
 
 	t.Run("valid", func(t *testing.T) {
@@ -230,32 +231,34 @@ func TestIsValidPatchBoardsAndBlocks(t *testing.T) {
 }
 
 func TestIsValidDeleteBoardsAndBlocks(t *testing.T) {
-	// TODO fix this
-	//t.Run("no board ids", func(t *testing.T) {
-	//	dbab := &DeleteBoardsAndBlocks{
-	//		TeamID: "team-id",
-	//		Blocks: []string{"block-id-1"},
-	//	}
-	//
-	//	require.ErrorIs(t, dbab.IsValid(), NoBoardsInBoardsAndBlocksErr)
-	//})
-	//
-	//t.Run("no block ids", func(t *testing.T) {
-	//	dbab := &DeleteBoardsAndBlocks{
-	//		TeamID: "team-id",
-	//		Boards: []string{"board-id-1", "board-id-2"},
-	//	}
-	//
-	//	require.ErrorIs(t, dbab.IsValid(), NoBlocksInBoardsAndBlocksErr)
-	//})
-	//
-	//t.Run("valid", func(t *testing.T) {
-	//	dbab := &DeleteBoardsAndBlocks{
-	//		TeamID: "team-id",
-	//		Boards: []string{"board-id-1", "board-id-2"},
-	//		Blocks: []string{"block-id-1"},
-	//	}
-	//
-	//	require.NoError(t, dbab.IsValid())
-	//})
+	/*
+		TODO fix this
+		t.Run("no board ids", func(t *testing.T) {
+			dbab := &DeleteBoardsAndBlocks{
+				TeamID: "team-id",
+				Blocks: []string{"block-id-1"},
+			}
+
+			require.ErrorIs(t, dbab.IsValid(), NoBoardsInBoardsAndBlocksErr)
+		})
+
+		t.Run("no block ids", func(t *testing.T) {
+			dbab := &DeleteBoardsAndBlocks{
+				TeamID: "team-id",
+				Boards: []string{"board-id-1", "board-id-2"},
+			}
+
+			require.ErrorIs(t, dbab.IsValid(), NoBlocksInBoardsAndBlocksErr)
+		})
+
+		t.Run("valid", func(t *testing.T) {
+			dbab := &DeleteBoardsAndBlocks{
+				TeamID: "team-id",
+				Boards: []string{"board-id-1", "board-id-2"},
+				Blocks: []string{"block-id-1"},
+			}
+
+			require.NoError(t, dbab.IsValid())
+		})
+	*/
 }

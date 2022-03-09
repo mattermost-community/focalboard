@@ -238,7 +238,7 @@ class CenterPanel extends React.Component<Props, State> {
                         addCardTemplate={this.addCardTemplate}
                         editCardTemplate={this.editCardTemplate}
                         readonly={this.props.readonly}
-                        showShared={this.props.showShared}
+                        enableSharedBoards={this.props.clientConfig?.enablePublicSharedBoards || false}
                     />
                 </div>
 

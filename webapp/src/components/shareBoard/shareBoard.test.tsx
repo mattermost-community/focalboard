@@ -186,6 +186,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                         <ShareBoard
                             enableSharedBoards={true}
                             onClose={jest.fn()}
+                            enableSharedBoards={true}
                         />
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
@@ -214,6 +215,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                         <ShareBoard
                             enableSharedBoards={true}
                             onClose={jest.fn()}
+                            enableSharedBoards={true}
                         />
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
@@ -242,6 +244,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                         <ShareBoard
                             enableSharedBoards={true}
                             onClose={jest.fn()}
+                            enableSharedBoards={true}
                         />
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
@@ -285,6 +288,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                         <ShareBoard
                             enableSharedBoards={true}
                             onClose={jest.fn()}
+                            enableSharedBoards={true}
                         />
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
@@ -328,6 +332,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                         <ShareBoard
                             enableSharedBoards={true}
                             onClose={jest.fn()}
+                            enableSharedBoards={true}
                         />
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
@@ -363,6 +368,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                         <ShareBoard
                             enableSharedBoards={true}
                             onClose={jest.fn()}
+                            enableSharedBoards={true}
                         />
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
@@ -389,6 +395,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                         <ShareBoard
                             enableSharedBoards={true}
                             onClose={jest.fn()}
+                            enableSharedBoards={true}
                         />
                     </ReduxProvider>))
         })
@@ -417,6 +424,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         enableSharedBoards={true}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />
                 </ReduxProvider>),
             {wrapper: MemoryRouter})
@@ -440,6 +448,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                     <ShareBoard
                         enableSharedBoards={true}
                         onClose={jest.fn()}
+                        enableSharedBoards={true}
                     />
                 </ReduxProvider>),
             {wrapper: MemoryRouter})

@@ -3,10 +3,16 @@ package sqlstore
 import (
 	"database/sql"
 	"errors"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+)
+
+var (
+	errDuplicateCategoryEntries = errors.New("duplicate entries found for user-board-category mapping")
 )
 
 func (s *SQLStore) getUserCategoryBlocks(db sq.BaseRunner, userID, teamID string) ([]model.CategoryBlocks, error) {
@@ -62,7 +68,7 @@ func (s *SQLStore) addUpdateCategoryBlock(db sq.BaseRunner, userID, categoryID, 
 	}
 
 	if rowsAffected > 1 {
-		return errors.New("duplicate entries found for user-board-category mapping")
+		return errDuplicateCategoryEntries
 	}
 
 	if rowsAffected == 0 {
@@ -73,6 +79,7 @@ func (s *SQLStore) addUpdateCategoryBlock(db sq.BaseRunner, userID, categoryID, 
 	return nil
 }
 
+/*
 func (s *SQLStore) userCategoryBlockExists(db sq.BaseRunner, userID, teamID, categoryID, blockID string) (bool, error) {
 	query := s.getQueryBuilder(db).
 		Select("blocks.id").
@@ -93,6 +100,7 @@ func (s *SQLStore) userCategoryBlockExists(db sq.BaseRunner, userID, teamID, cat
 
 	return rows.Next(), nil
 }
+*/
 
 func (s *SQLStore) updateUserCategoryBlock(db sq.BaseRunner, userID, blockID, categoryID string) (int64, error) {
 	result, err := s.getQueryBuilder(db).

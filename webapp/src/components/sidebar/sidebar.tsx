@@ -29,7 +29,7 @@ import wsClient, {WSClient} from '../../wsclient'
 
 import {getCurrentTeam} from '../../store/teams'
 
-import SidebarBoardItem from './sidebarBoardItem'
+import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
 import {addMissingItems} from './utils'
@@ -176,7 +176,7 @@ const Sidebar = (props: Props) => {
             <div className='octo-sidebar-list'>
                 {
                     sidebarCategories.map((category) => (
-                        <SidebarBoardItem
+                        <SidebarCategory
                             hideSidebar={hideSidebar}
                             key={category.id}
                             activeBoardID={props.activeBoardId}
