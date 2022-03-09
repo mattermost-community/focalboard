@@ -195,6 +195,12 @@ export default class Plugin {
             }
 
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
+
+            if (this.registry.registerAppBarComponent) {
+                const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
+                this.registry.registerAppBarComponent(appBarIconURL, goToFocalboardWorkspace, 'Open Boards Workspace')
+            }
+
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'
