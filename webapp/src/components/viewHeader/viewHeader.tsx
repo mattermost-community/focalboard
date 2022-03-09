@@ -55,6 +55,7 @@ type Props = {
     editCardTemplate: (cardTemplateId: string) => void
     readonly: boolean
     dateDisplayProperty?: IPropertyTemplate
+    enableSharedBoards: boolean
 }
 
 const ViewHeader = (props: Props) => {
@@ -234,7 +235,11 @@ const ViewHeader = (props: Props) => {
                 />
             </>}
 
-            {showShareDialog && <ShareBoardDialog onClose={() => setShowShareDialog(false)}/>}
+            {showShareDialog &&
+                <ShareBoardDialog
+                    onClose={() => setShowShareDialog(false)}
+                    enableSharedBoards={props.enableSharedBoards}
+                />}
         </div>
     )
 }
