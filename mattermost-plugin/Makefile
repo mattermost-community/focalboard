@@ -80,9 +80,14 @@ ifneq ($(HAS_SERVER),)
 	golangci-lint run ./...
 endif
 
+.PHONY: templates-archive
+templates-archive:
+	rm -f ../server/app/templates.boardarchive
+	cd ../server/app/templates-boardarchive; zip -r ../templates.boardarchive *
+
 ## Builds the server, if it exists, for all supported architectures.
 .PHONY: server
-server:
+server: templates-archive
 ifneq ($(HAS_SERVER),)
 	mkdir -p server/dist;
 ifeq ($(MM_DEBUG),)
