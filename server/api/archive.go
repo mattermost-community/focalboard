@@ -25,7 +25,7 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 	// parameters:
 	// - name: boardID
 	//   in: path
-	//   description: Id of board to to export
+	//   description: Id of board to export
 	//   required: true
 	//   type: string
 	// security:
@@ -85,9 +85,9 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
-	// - name: boardID
+	// - name: teamID
 	//   in: path
-	//   description: Id of board to to export
+	//   description: Id of team
 	//   required: true
 	//   type: string
 	// security:
