@@ -34,6 +34,8 @@ ci: server-test
 	cd webapp; npm run cypress:ci
 
 server: ## Build server for local environment.
+	rm -f server/app/templates.boardarchive
+	cd server/app/templates-boardarchive; zip -r ../templates.boardarchive *
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
 	cd server; go build -ldflags '$(LDFLAGS)' -o ../bin/focalboard-server ./main
 
