@@ -41,7 +41,7 @@ CREATE TABLE {{.prefix}}boards (
     icon VARCHAR(256),
     show_description BOOLEAN,
     is_template BOOLEAN,
-    template_version INT NOT NULL DEFAULT 0, 
+    template_version INT DEFAULT 0,
     {{if .mysql}}
     properties JSON,
     card_properties JSON,
@@ -79,7 +79,7 @@ CREATE TABLE {{.prefix}}boards_history (
     icon VARCHAR(256),
     show_description BOOLEAN,
     is_template BOOLEAN,
-    template_version INT NOT NULL DEFAULT 0, 
+    template_version INT DEFAULT 0,
     {{if .mysql}}
     properties JSON,
     card_properties JSON,
@@ -109,7 +109,7 @@ CREATE TABLE {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->>'description')::text,
                  B.fields->>'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
-                (B.fields->'templateVer')::text::int,
+                COALESCE((B.fields->'templateVer')::text, '0')::int,
                  '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
@@ -119,7 +119,7 @@ CREATE TABLE {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards_history (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->>'description')::text,
                  B.fields->>'icon', (B.fields->'showDescription')::text::boolean, (B.fields->'isTemplate')::text::boolean,
-                (B.fields->'templateVer')::text::int,
+                COALESCE((B.fields->'templateVer')::text, '0')::int,
                  '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B
@@ -130,8 +130,8 @@ CREATE TABLE {{.prefix}}boards_history (
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
-                 JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')), B.fields->'$.showDescription', B.fields->'$.isTemplate',
-                 B.fields->'$.templateVer',
+                 JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')), COALESCE(B.fields->'$.showDescription', FALSE), B.fields->'$.isTemplate',
+                 COALESCE(B.fields->'$.templateVer', 0),
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
@@ -141,7 +141,7 @@ CREATE TABLE {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards_history (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')), B.fields->'$.showDescription', B.fields->'$.isTemplate',
-                 B.fields->'$.templateVer',
+                 COALESCE(B.fields->'$.templateVer', 0),
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B

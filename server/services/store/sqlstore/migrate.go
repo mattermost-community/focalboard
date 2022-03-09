@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"embed"
 	"fmt"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"path/filepath"
 	"text/template"
 
@@ -18,6 +19,8 @@ import (
 
 	mysqldriver "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq" // postgres driver
+
+	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/mattermost-plugin-api/cluster"
@@ -126,7 +129,7 @@ func (s *SQLStore) Migrate() error {
 		"plugin":   s.isPlugin,
 	}
 
-	src, err := mbindata.WithInstance(&mbindata.AssetSource{
+	migrationAssets := &mbindata.AssetSource{
 		Names: assetNamesForDriver,
 		AssetFunc: func(name string) ([]byte, error) {
 			asset, mErr := assets.ReadFile(filepath.Join("migrations", name))
@@ -147,7 +150,20 @@ func (s *SQLStore) Migrate() error {
 
 			return buffer.Bytes(), nil
 		},
-	})
+	}
+
+	// if dirty column exixts, do all this
+	// x := loadCurrentVersion()
+	// migrationAssets.Names
+	// m := Regex.FindStringSubmatch(fileName)
+	// or even better user this-
+	// src.Migrations()[0].Name
+
+	if err := s.migrateSchemaVersion(); err != nil {
+		return err
+	}
+
+	src, err := mbindata.WithInstance(migrationAssets)
 	if err != nil {
 		return err
 	}
@@ -211,6 +227,94 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	return engine.ApplyAll()
+}
+
+func (s *SQLStore) migrateSchemaVersion() error {
+	migrationNeeded, err := s.isSchemaMigrationNeeded()
+	if err != nil {
+		return err
+	}
+
+	s.logger.Error(fmt.Sprintf("#####################################: %t", migrationNeeded))
+
+	if !migrationNeeded {
+		return nil
+	}
+
+	return nil
+}
+
+func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
+	// Check if `dirty` column exists on schema version table.
+	// This column exists only for the old schema version table.
+
+	// SELECT *  FROM information_schema.COLUMNS  WHERE  TABLE_NAME = 'focalboard_schema_migrations'  AND COLUMN_NAME = 'dirty';
+
+	if s.dbType == model.SqliteDBType {
+		return s.isSchemaMigrationNeededSQLite()
+	}
+
+	query := s.getQueryBuilder(s.db).
+		Select("count(*)").
+		From("information_schema.COLUMNS").
+		Where(sq.Eq{
+			"TABLE_NAME":  s.tablePrefix + "schema_migrations",
+			"COLUMN_NAME": "dirty",
+		})
+
+	row := query.QueryRow()
+
+	var count int
+	if err := row.Scan(&count); err != nil {
+		return false, err
+	}
+
+	return count == 1, nil
+}
+
+func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
+	// the way to check presence of a column is different
+	// for SQLite. Hence, the separate function
+
+	query := fmt.Sprintf("PRAGMA table_info(\"%sschema_migrations\");", s.tablePrefix)
+	rows, err := s.db.Query(query)
+	if err != nil {
+		s.logger.Error("SQLite - failed to check for columns in schema_migrations table", mlog.Err(err))
+		return false, err
+	}
+
+	defer s.CloseRows(rows)
+
+	data := [][]*string{}
+	for rows.Next() {
+		// PRAGMA returns 6 columns
+		row := make([]*string, 6)
+
+		err := rows.Scan(
+			&row[0],
+			&row[1],
+			&row[2],
+			&row[3],
+			&row[4],
+			&row[5],
+		)
+		if err != nil {
+			s.logger.Error("error scanning rows from SQLite schema_migrations table definition", mlog.Err(err))
+			return false, err
+		}
+
+		data = append(data, row)
+	}
+
+	nameColumnFound := false
+	for _, row := range data {
+		if len(row) >= 2 && *row[1] == "dirty" {
+			nameColumnFound = true
+			break
+		}
+	}
+
+	return nameColumnFound, nil
 }
 
 func ensureMigrationsAppliedUpToVersion(engine *morph.Morph, driver drivers.Driver, version int) error {
