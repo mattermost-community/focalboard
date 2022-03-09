@@ -6,6 +6,7 @@ import {createMemoryHistory} from 'history'
 import {Router} from 'react-router-dom'
 
 import {render} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import {Provider as ReduxProvider} from 'react-redux'
 
@@ -15,18 +16,21 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import {wrapIntl} from '../../testUtils'
 
-import SidebarBoardItem from './sidebarBoardItem'
+import SidebarCategory from './sidebarCategory'
 
-describe('components/sidebarBoardItem', () => {
+describe('components/sidebarCategory', () => {
     const board = TestBlockFactory.createBoard()
 
     const view = TestBlockFactory.createBoardView(board)
     view.fields.sortOptions = []
     const history = createMemoryHistory()
 
+    const board1 = TestBlockFactory.createBoard()
+    const board2 = TestBlockFactory.createBoard()
+    const boards = [board1, board2]
     const categoryBlocks1 = TestBlockFactory.createCategoryBlocks()
     categoryBlocks1.name = 'Category 1'
-    categoryBlocks1.blockIDs = [board.id]
+    categoryBlocks1.blockIDs = [board1.id, board2.id]
 
     const categoryBlocks2 = TestBlockFactory.createCategoryBlocks()
     categoryBlocks2.name = 'Category 2'
@@ -65,26 +69,29 @@ describe('components/sidebarBoardItem', () => {
         },
     }
 
-    test('sidebar board item', () => {
+    test('sidebar call hideSidebar', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
-                    <SidebarBoardItem
+                    <SidebarCategory
+                        hideSidebar={() => {}}
                         categoryBlocks={categoryBlocks1}
-                        board={board}
+                        boards={boards}
                         allCategories={allCategoryBlocks}
-                        isActive={true}
-                        showBoard={jest.fn()}
-                        showView={jest.fn()}
-                        onDeleteRequest={jest.fn()}
                     />
                 </Router>
             </ReduxProvider>,
         )
         const {container} = render(component)
+        expect(container).toMatchSnapshot()
+
+        // testing collapsed state of category
+        const subItems = container.querySelectorAll('.category > .IconButton')
+        expect(subItems).toBeDefined()
+        userEvent.click(subItems[0] as Element)
         expect(container).toMatchSnapshot()
     })
 })
