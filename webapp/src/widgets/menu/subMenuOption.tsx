@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import SubmenuTriangleIcon from '../icons/submenuTriangle'
 
@@ -9,11 +9,12 @@ import Menu from '.'
 import './subMenuOption.scss'
 
 type SubMenuOptionProps = {
-    id: string,
-    name: string,
+    id: string
+    name: string
     position?: 'bottom' | 'top' | 'left' | 'left-bottom'
     icon?: React.ReactNode
     children: React.ReactNode
+    isHovering?: boolean
 }
 
 function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
@@ -21,15 +22,16 @@ function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
 
     const openLeftClass = props.position === 'left' || props.position === 'left-bottom' ? ' open-left' : ''
 
+    useEffect(() => {
+        if (props.isHovering !== undefined) {
+            setIsOpen(props.isHovering)
+        }
+    }, [props.isHovering])
+
     return (
         <div
             id={props.id}
-            className={`MenuOption SubMenuOption menu-option${openLeftClass}`}
-            onMouseEnter={() => {
-                setTimeout(() => {
-                    setIsOpen(true)
-                }, 50)
-            }}
+            className={`MenuOption SubMenuOption menu-option${openLeftClass}${isOpen ? ' menu-option-active' : ''}`}
             onClick={(e: React.MouseEvent) => {
                 e.preventDefault()
                 e.stopPropagation()

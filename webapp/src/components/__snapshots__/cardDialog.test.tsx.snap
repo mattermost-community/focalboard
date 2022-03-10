@@ -441,56 +441,62 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                 <div
                   class="menu-options"
                 >
-                  <div
-                    aria-label="Delete"
-                    class="MenuOption TextOption menu-option"
-                    role="button"
-                  >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                  <div>
                     <div
-                      class="menu-name"
+                      aria-label="Delete"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
                     >
-                      Delete
+                      <i
+                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Delete
+                      </div>
+                      <div
+                        class="noicon"
+                      />
                     </div>
-                    <div
-                      class="noicon"
-                    />
                   </div>
-                  <div
-                    aria-label="Copy link"
-                    class="MenuOption TextOption menu-option"
-                    role="button"
-                  >
-                    <i
-                      class="CompassIcon icon-link-variant LinkIcon"
-                    />
+                  <div>
                     <div
-                      class="menu-name"
+                      aria-label="Copy link"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
                     >
-                      Copy link
+                      <i
+                        class="CompassIcon icon-link-variant LinkIcon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        Copy link
+                      </div>
+                      <div
+                        class="noicon"
+                      />
                     </div>
-                    <div
-                      class="noicon"
-                    />
                   </div>
-                  <div
-                    aria-label="New template from card"
-                    class="MenuOption TextOption menu-option"
-                    role="button"
-                  >
+                  <div>
                     <div
-                      class="noicon"
-                    />
-                    <div
-                      class="menu-name"
+                      aria-label="New template from card"
+                      class="MenuOption TextOption menu-option"
+                      role="button"
                     >
-                      New template from card
+                      <div
+                        class="noicon"
+                      />
+                      <div
+                        class="menu-name"
+                      >
+                        New template from card
+                      </div>
+                      <div
+                        class="noicon"
+                      />
                     </div>
-                    <div
-                      class="noicon"
-                    />
                   </div>
                 </div>
                 <div

@@ -32,96 +32,104 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
               <div
                 class="menu-options"
               >
-                <div
-                  aria-label="Move up"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <svg
-                    class="SortUpIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polyline
-                      points="50,20 50,80"
-                    />
-                    <polyline
-                      points="30,40 50,20 70,40"
-                    />
-                  </svg>
+                <div>
                   <div
-                    class="menu-name"
+                    aria-label="Move up"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Move up
+                    <svg
+                      class="SortUpIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polyline
+                        points="50,20 50,80"
+                      />
+                      <polyline
+                        points="30,40 50,20 70,40"
+                      />
+                    </svg>
+                    <div
+                      class="menu-name"
+                    >
+                      Move up
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="Move down"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <svg
-                    class="SortDownIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polyline
-                      points="50,20 50,80"
-                    />
-                    <polyline
-                      points="30,60 50,80 70,60"
-                    />
-                  </svg>
+                <div>
                   <div
-                    class="menu-name"
+                    aria-label="Move down"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Move down
+                    <svg
+                      class="SortDownIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polyline
+                        points="50,20 50,80"
+                      />
+                      <polyline
+                        points="30,60 50,80 70,60"
+                      />
+                    </svg>
+                    <div
+                      class="menu-name"
+                    >
+                      Move down
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  class="MenuOption SubMenuOption menu-option"
-                  id="insertAbove"
-                >
-                  <i
-                    class="CompassIcon icon-plus AddIcon"
-                  />
+                <div>
                   <div
-                    class="menu-name"
+                    class="MenuOption SubMenuOption menu-option"
+                    id="insertAbove"
                   >
-                    Insert above
-                  </div>
-                  <svg
-                    class="SubmenuTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="50,35 75,50 50,65"
+                    <i
+                      class="CompassIcon icon-plus AddIcon"
                     />
-                  </svg>
-                </div>
-                <div
-                  aria-label="Delete"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
-                  <div
-                    class="menu-name"
-                  >
-                    Delete
+                    <div
+                      class="menu-name"
+                    >
+                      Insert above
+                    </div>
+                    <svg
+                      class="SubmenuTriangleIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polygon
+                        points="50,35 75,50 50,65"
+                      />
+                    </svg>
                   </div>
+                </div>
+                <div>
                   <div
-                    class="noicon"
-                  />
+                    aria-label="Delete"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Delete
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                 </div>
               </div>
               <div
