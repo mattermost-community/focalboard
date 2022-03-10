@@ -348,14 +348,21 @@ func (s *SQLStore) createTempSchemaTable() error {
 	// so, we need to use a plain old string
 	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (Version bigint(20) NOT NULL, Name varchar(64) NOT NULL, PRIMARY KEY (Version))", s.tablePrefix+tempSchemaMigrationTableName)
 	if _, err := s.db.Query(query); err != nil {
-		s.logger.Error("failed to create temporary schema migration table", mlog.String("table_name", s.tablePrefix+tempSchemaMigrationTableName), mlog.Err(err))
+		s.logger.Error("failed to create temporary schema migration table", mlog.Err(err))
 		return err
 	}
 
 	return nil
 }
 func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legacySchemaVersion uint32) error {
+	query := s.getQueryBuilder(s.db).
+		Insert(s.tablePrefix+tempSchemaMigrationTableName).
+		Columns("Version", "Name")
+
 	for _, migration := range migrations {
+		// migrations param contains both up and down variant for
+		// each migration. Skipping for either one (down in this case)
+		// to process a migration only a single time.
 		if migration.Direction == models.Down {
 			continue
 		}
@@ -364,12 +371,41 @@ func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legac
 			break
 		}
 
-		query := s.getQueryBuilder(s.db).
-			Insert(s.tablePrefix+tempSchemaMigrationTableName).
-			Columns("Version", "Name").
-			Values(migration.Version, migration.Name)
-
+		query = query.Values(migration.Version, migration.Name)
 	}
+
+	if _, err := query.Exec(); err != nil {
+		s.logger.Error("failed to insert migration records into temporary schema table", mlog.Err(err))
+		return err
+	}
+
+	return nil
+}
+
+func (s *SQLStore) useNewSchemaTable() error {
+	// first delete the old table, then
+	// rename the new table to old table's name
+
+	// deleting old table
+	query := "DROP TABLE " + s.tablePrefix + "schema_migrations"
+	if _, err := s.db.Query(query); err != nil {
+		s.logger.Error("failed to delete original schema migrations table", mlog.Err(err))
+		return err
+	}
+
+	// renaming new temp table to old table's name
+	if s.dbType == model.MysqlDBType {
+		query = fmt.Sprintf("RENAME TABLE `%s%s` TO `%sschema_migrations`", s.tablePrefix, tempSchemaMigrationTableName, s.tablePrefix)
+	} else {
+		query = fmt.Sprintf("ALTER TABLE %s%s RENAME TO %ssschema_migrations", s.tablePrefix, tempSchemaMigrationTableName, s.tablePrefix)
+	}
+
+	if _, err := s.db.Query(query); err != nil {
+		s.logger.Error("failed to rename temp schema table", mlog.Err(err))
+		return err
+	}
+
+	return nil
 }
 
 func ensureMigrationsAppliedUpToVersion(engine *morph.Morph, driver drivers.Driver, version int) error {
