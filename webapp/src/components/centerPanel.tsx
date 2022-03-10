@@ -70,7 +70,6 @@ type Props = {
     addTemplate: (template: Card) => void
     shownCardId?: string
     showCard: (cardId?: string) => void
-    showShared: boolean
     onboardingTourStarted: boolean
     onboardingTourCategory: string
     onboardingTourStep: string
@@ -238,7 +237,6 @@ class CenterPanel extends React.Component<Props, State> {
                         addCardTemplate={this.addCardTemplate}
                         editCardTemplate={this.editCardTemplate}
                         readonly={this.props.readonly}
-                        enableSharedBoards={this.props.clientConfig?.enablePublicSharedBoards || false}
                     />
                 </div>
 

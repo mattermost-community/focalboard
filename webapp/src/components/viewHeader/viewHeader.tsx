@@ -54,7 +54,6 @@ type Props = {
     editCardTemplate: (cardTemplateId: string) => void
     readonly: boolean
     dateDisplayProperty?: IPropertyTemplate
-    enableSharedBoards: boolean
 }
 
 const ViewHeader = (props: Props) => {
