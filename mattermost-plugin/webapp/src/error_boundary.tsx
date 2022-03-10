@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import {Utils} from '../../../webapp/src/utils'
 
@@ -10,9 +9,12 @@ type State = {
     hasError: boolean
 }
 
-export default class ErrorBoundary extends React.Component {
+type Props = {
+    children: React.ReactNode
+}
+
+export default class ErrorBoundary extends React.Component<Props, State> {
     state = {hasError: false}
-    propTypes = {children: PropTypes.node.isRequired}
     msg = 'Redirecting to error page...'
 
     handleError = (): void => {

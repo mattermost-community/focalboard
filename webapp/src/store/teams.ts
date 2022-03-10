@@ -61,11 +61,6 @@ const teamSlice = createSlice({
             }
 
             state.current = team
-
-            const suiteWindow = (window as SuiteWindow)
-            if (suiteWindow.setTeamInSidebar) {
-                suiteWindow.setTeamInSidebar(teamID)
-            }
         },
     },
     extraReducers: (builder) => {
@@ -73,11 +68,6 @@ const teamSlice = createSlice({
             state.current = action.payload.team
             state.allTeams = action.payload.teams
             state.allTeams.sort((a: Team, b: Team) => (a.title < b.title ? -1 : 1))
-
-            const windowAny = (window as any)
-            if (windowAny.setTeamInSidebar && action.payload?.team?.id) {
-                windowAny.setTeamInSidebar(action.payload.team?.id)
-            }
         })
         builder.addCase(fetchTeams.fulfilled, (state, action) => {
             state.allTeams = action.payload
