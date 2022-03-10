@@ -38,6 +38,7 @@
     }
 
     &.empty .Button {
+        min-height: 24px;
         color: rgba(var(--center-channel-color-rgb), 0.4);
         padding: 0 3px;
     }

@@ -244,7 +244,6 @@
   "calendar.week": "주",
   "default-properties.badges": "댓글과 설명",
   "default-properties.title": "제목",
-  "error.no-workspace": "세션이 만료되었거나 이 작업 공간에 접근할 수 있는 권한이 없습니다.",
   "error.relogin": "다시 로그인",
   "login.log-in-button": "로그인",
   "login.log-in-title": "로그인",

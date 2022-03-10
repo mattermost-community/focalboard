@@ -54,7 +54,12 @@ function HomeToCurrentTeam(props: {path: string, exact: boolean}) {
                     const lastBoardID = UserSettings.lastBoardId[teamID]
                     const lastViewID = UserSettings.lastViewId[lastBoardID]
 
-                    return <Redirect to={`/team/${teamID}/${lastBoardID}/${lastViewID}`}/>
+                    if (lastBoardID && lastViewID) {
+                        return <Redirect to={`/team/${teamID}/${lastBoardID}/${lastViewID}`}/>
+                    }
+                    if (lastBoardID) {
+                        return <Redirect to={`/team/${teamID}/${lastBoardID}`}/>
+                    }
                 }
 
                 return <Redirect to={`/team/${teamID}`}/>
