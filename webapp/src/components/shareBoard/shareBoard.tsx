@@ -117,7 +117,6 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         <Dialog
             onClose={props.onClose}
             className='ShareBoardDialog'
-            title={' '}
         >
             {props.enableSharedBoards && (
                 <div className='tabs-container'>

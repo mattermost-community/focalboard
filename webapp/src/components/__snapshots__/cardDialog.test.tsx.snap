@@ -3,7 +3,7 @@
 exports[`components/cardDialog already following card 1`] = `
 <div>
   <div
-    class="Dialog dialog-back undefined"
+    class="Dialog dialog-back cardDialog"
   >
     <div
       class="wrapper"
@@ -281,7 +281,7 @@ exports[`components/cardDialog already following card 1`] = `
 exports[`components/cardDialog return a cardDialog readonly 1`] = `
 <div>
   <div
-    class="Dialog dialog-back undefined"
+    class="Dialog dialog-back cardDialog"
   >
     <div
       class="wrapper"
@@ -388,7 +388,7 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
 exports[`components/cardDialog return cardDialog menu content 1`] = `
 <div>
   <div
-    class="Dialog dialog-back undefined"
+    class="Dialog dialog-back cardDialog"
   >
     <div
       class="wrapper"
@@ -753,7 +753,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
 exports[`components/cardDialog return cardDialog menu content and cancel delete confirmation do nothing 1`] = `
 <div>
   <div
-    class="Dialog dialog-back undefined"
+    class="Dialog dialog-back cardDialog"
   >
     <div
       class="wrapper"
@@ -1031,7 +1031,7 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
 exports[`components/cardDialog should match snapshot 1`] = `
 <div>
   <div
-    class="Dialog dialog-back undefined"
+    class="Dialog dialog-back cardDialog"
   >
     <div
       class="wrapper"
