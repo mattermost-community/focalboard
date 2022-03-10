@@ -353,11 +353,13 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                 setWasCopiedPublic(true)
                                 setWasCopiedInternal(false)
                             }}
+                            icon={
+                                <CompassIcon
+                                    icon='content-copy'
+                                    className='CompassIcon'
+                                />
+                            }
                         >
-                            <CompassIcon
-                                icon='content-copy'
-                                className='CompassIcon'
-                            />
                             {wasCopiedPublic &&
                                 <FormattedMessage
                                     id='ShareBoard.copiedLink'

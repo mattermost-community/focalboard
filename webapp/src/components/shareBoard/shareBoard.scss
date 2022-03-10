@@ -7,7 +7,6 @@
     }
 
     .toolbar {
-        padding: 0;
 
         button {
             position: absolute;
@@ -139,7 +138,7 @@
     }
 
     .share-input__container {
-        margin-top: -8px;
+        margin-top: 16px;
         padding: 0 24px 24px;
         border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
     }
