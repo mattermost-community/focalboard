@@ -38,7 +38,7 @@ type Props = {
 const MarkdownEditorInput = (props: Props): ReactElement => {
     const {onChange, onFocus, onBlur, initialText, id, isEditing} = props
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
-    const mentions: MentionData[] = useMemo(() => boardUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`})), [boardUsers])
+    const mentions: MentionData[] = useMemo(() => boardUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`, is_bot: user.is_bot})), [boardUsers])
     const ref = useRef<Editor>(null)
 
     const generateEditorState = (text?: string) => {

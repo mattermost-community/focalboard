@@ -83,10 +83,11 @@ func (s *MattermostAuthLayer) getUserByCondition(condition sq.Eq) (*model.User, 
 
 func (s *MattermostAuthLayer) getUsersByCondition(condition sq.Eq) (map[string]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data",
-			"props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at").
-		From("Users").
-		Where(sq.Eq{"deleteAt": 0}).
+		Select("u.id", "u.username", "u.email", "u.password", "u.MFASecret as mfa_secret", "u.AuthService as auth_service", "COALESCE(u.AuthData, '') as auth_data",
+			"u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at", "u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+		From("Users as u").
+		LeftJoin("Bots b ON ( b.UserId = u.ID )").
+		Where(sq.Eq{"u.deleteAt": 0}).
 		Where(condition)
 	row, err := query.Query()
 	if err != nil {
@@ -100,7 +101,7 @@ func (s *MattermostAuthLayer) getUsersByCondition(condition sq.Eq) (map[string]*
 
 		var propsBytes []byte
 		err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.MfaSecret, &user.AuthService,
-			&user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt)
+			&user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt, &user.IsBot)
 		if err != nil {
 			return nil, err
 		}
