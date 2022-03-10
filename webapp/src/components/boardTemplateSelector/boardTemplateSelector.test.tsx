@@ -58,6 +58,11 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             teams: {
                 current: team1,
             },
+            users: {
+                me: {
+                    id: 'user_id_1',
+                },
+            },
             boards: {
                 boards: [
                     {

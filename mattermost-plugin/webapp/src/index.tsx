@@ -224,6 +224,11 @@ export default class Plugin {
                 this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
             }
 
+            if (this.registry.registerAppBarComponent) {
+                const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
+                this.registry.registerAppBarComponent(appBarIconURL, goToFocalboard, 'Open Boards')
+            }
+
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'

@@ -156,7 +156,6 @@
   "calendar.today": "今天",
   "calendar.week": "周",
   "default-properties.title": "标题",
-  "error.no-workspace": "您的会话可能已过期，或者您可能没有权限访问此工作空间。",
   "error.relogin": "重新登录",
   "login.log-in-button": "登录",
   "login.log-in-title": "登录",
