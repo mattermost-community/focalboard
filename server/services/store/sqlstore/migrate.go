@@ -7,6 +7,8 @@ import (
 	"embed"
 	"fmt"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/morph/models"
+	"github.com/mattermost/morph/sources"
 	"path/filepath"
 	"text/template"
 
@@ -31,6 +33,8 @@ var assets embed.FS
 
 const (
 	uniqueIDsMigrationRequiredVersion = 14
+
+	tempSchemaMigrationTableName = "temp_schema_migration"
 )
 
 func appendMultipleStatementsFlag(connectionString string) (string, error) {
@@ -159,15 +163,15 @@ func (s *SQLStore) Migrate() error {
 	// or even better user this-
 	// src.Migrations()[0].Name
 
-	if err := s.migrateSchemaVersion(); err != nil {
-		return err
-	}
-
 	src, err := mbindata.WithInstance(migrationAssets)
 	if err != nil {
 		return err
 	}
 	defer src.Close()
+
+	if err := s.migrateSchemaVersion(src); err != nil {
+		return err
+	}
 
 	opts := []morph.EngineOption{
 		morph.WithLock("mm-lock-key"),
@@ -229,16 +233,23 @@ func (s *SQLStore) Migrate() error {
 	return engine.ApplyAll()
 }
 
-func (s *SQLStore) migrateSchemaVersion() error {
+func (s *SQLStore) migrateSchemaVersion(migrations sources.Source) error {
 	migrationNeeded, err := s.isSchemaMigrationNeeded()
 	if err != nil {
 		return err
 	}
 
-	s.logger.Error(fmt.Sprintf("#####################################: %t", migrationNeeded))
-
 	if !migrationNeeded {
 		return nil
+	}
+
+	legacySchemaVersion, err := s.getLegacySchemaVersion()
+	if err != nil {
+		return err
+	}
+
+	if err := s.createTempSchemaTable(); err != nil {
+		return err
 	}
 
 	return nil
@@ -248,8 +259,7 @@ func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
 	// Check if `dirty` column exists on schema version table.
 	// This column exists only for the old schema version table.
 
-	// SELECT *  FROM information_schema.COLUMNS  WHERE  TABLE_NAME = 'focalboard_schema_migrations'  AND COLUMN_NAME = 'dirty';
-
+	// SQLite needs a bit of a special handling
 	if s.dbType == model.SqliteDBType {
 		return s.isSchemaMigrationNeededSQLite()
 	}
@@ -315,6 +325,51 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 	}
 
 	return nameColumnFound, nil
+}
+
+func (s *SQLStore) getLegacySchemaVersion() (int, error) {
+	query := s.getQueryBuilder(s.db).
+		Select("version").
+		From(s.tablePrefix + "schema_migrations")
+
+	row := query.QueryRow()
+
+	var version int
+	if err := row.Scan(&version); err != nil {
+		s.logger.Error("error fetching legacy schema version", mlog.Err(err))
+		return version, err
+	}
+
+	return version, nil
+}
+
+func (s *SQLStore) createTempSchemaTable() error {
+	// squirrel doesn't support DDL query in query builder
+	// so, we need to use a plain old string
+	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (Version bigint(20) NOT NULL, Name varchar(64) NOT NULL, PRIMARY KEY (Version))", s.tablePrefix+tempSchemaMigrationTableName)
+	if _, err := s.db.Query(query); err != nil {
+		s.logger.Error("failed to create temporary schema migration table", mlog.String("table_name", s.tablePrefix+tempSchemaMigrationTableName), mlog.Err(err))
+		return err
+	}
+
+	return nil
+}
+func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legacySchemaVersion uint32) error {
+	for _, migration := range migrations {
+		if migration.Direction == models.Down {
+			continue
+		}
+
+		if migration.Version > legacySchemaVersion {
+			break
+		}
+
+		query := s.getQueryBuilder(s.db).
+			Insert(s.tablePrefix+tempSchemaMigrationTableName).
+			Columns("Version", "Name").
+			Values(migration.Version, migration.Name)
+
+	}
 }
 
 func ensureMigrationsAppliedUpToVersion(engine *morph.Morph, driver drivers.Driver, version int) error {
