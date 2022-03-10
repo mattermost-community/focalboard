@@ -10,3 +10,7 @@ func (a *App) initialize(skipTemplateInit bool) {
 		}
 	}
 }
+
+func (a *App) shutdown() {
+
+}
