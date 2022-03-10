@@ -135,7 +135,6 @@ describe('components/centerPanel', () => {
                     showCard={jest.fn()}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
-                    showShared={true}
                 />
             </ReduxProvider>,
         ))
@@ -153,7 +152,6 @@ describe('components/centerPanel', () => {
                     showCard={jest.fn()}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
-                    showShared={true}
                 />
             </ReduxProvider>,
         ))
@@ -172,7 +170,6 @@ describe('components/centerPanel', () => {
                     showCard={jest.fn()}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
-                    showShared={true}
                 />
             </ReduxProvider>,
         ))
@@ -191,7 +188,6 @@ describe('components/centerPanel', () => {
                     showCard={jest.fn()}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
-                    showShared={true}
                 />
             </ReduxProvider>,
         ))
@@ -211,7 +207,6 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ))
@@ -242,7 +237,6 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ))
@@ -265,7 +259,6 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ))
@@ -292,7 +285,6 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ))
@@ -326,7 +318,6 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ))
@@ -352,7 +343,6 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ))
@@ -379,7 +369,6 @@ describe('components/centerPanel', () => {
                         showCard={mockedShowCard}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ))
@@ -404,7 +393,6 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ))
@@ -426,7 +414,6 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ))
