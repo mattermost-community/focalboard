@@ -138,7 +138,6 @@
   "ViewTitle.untitled-board": "Tauler sense títol",
   "Workspace.editing-board-template": "Estàs editant una plantilla de tauler.",
   "default-properties.title": "Títol",
-  "error.no-workspace": "La vostra sessió pot haver caducat o pots no tenir accés a aquest espai de treball.",
   "error.relogin": "Inicia sessió de nou",
   "login.log-in-button": "Inicia sessió",
   "login.log-in-title": "Inicia sessió",

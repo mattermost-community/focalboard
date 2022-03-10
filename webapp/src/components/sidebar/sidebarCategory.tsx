@@ -201,15 +201,17 @@ const SidebarCategory = (props: Props) => {
                         defaultMessage='No boards inside'
                     />
                 </div>}
-            {!collapsed && blocks.map((blockID) => {
-                const thisBoard = props.boards.find((b) => b.id === blockID)
+            {!collapsed && props.boards.map((board: Board) => {
+                if (!blocks.includes(board.id)) {
+                    return null
+                }
                 return (
                     <SidebarBoardItem
-                        key={blockID}
-                        board={thisBoard!}
+                        key={board.id}
+                        board={board}
                         categoryBlocks={props.categoryBlocks}
                         allCategories={props.allCategories}
-                        isActive={blockID === props.activeBoardID}
+                        isActive={board.id === props.activeBoardID}
                         showBoard={showBoard}
                         showView={showView}
                         onDeleteRequest={setDeleteBoard}

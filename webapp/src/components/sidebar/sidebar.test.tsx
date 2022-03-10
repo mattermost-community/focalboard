@@ -38,7 +38,10 @@ describe('components/sidebarSidebar', () => {
                 current: {id: 'team-id'},
             },
             boards: {
-                boards: [],
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
             },
             views: {
                 views: [],
@@ -85,7 +88,10 @@ describe('components/sidebarSidebar', () => {
                 current: {id: 'team-id'},
             },
             boards: {
-                boards: [],
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
             },
             views: {
                 views: [],
