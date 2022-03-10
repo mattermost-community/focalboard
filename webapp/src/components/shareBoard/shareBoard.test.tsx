@@ -184,7 +184,6 @@ describe('src/components/shareBoard/shareBoard', () => {
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
                         <ShareBoard
-                            enableSharedBoards={true}
                             onClose={jest.fn()}
                             enableSharedBoards={true}
                         />
@@ -213,7 +212,6 @@ describe('src/components/shareBoard/shareBoard', () => {
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
                         <ShareBoard
-                            enableSharedBoards={true}
                             onClose={jest.fn()}
                             enableSharedBoards={true}
                         />
@@ -242,7 +240,6 @@ describe('src/components/shareBoard/shareBoard', () => {
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
                         <ShareBoard
-                            enableSharedBoards={true}
                             onClose={jest.fn()}
                             enableSharedBoards={true}
                         />
@@ -286,7 +283,6 @@ describe('src/components/shareBoard/shareBoard', () => {
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
                         <ShareBoard
-                            enableSharedBoards={true}
                             onClose={jest.fn()}
                             enableSharedBoards={true}
                         />
@@ -330,7 +326,6 @@ describe('src/components/shareBoard/shareBoard', () => {
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
                         <ShareBoard
-                            enableSharedBoards={true}
                             onClose={jest.fn()}
                             enableSharedBoards={true}
                         />
@@ -366,7 +361,6 @@ describe('src/components/shareBoard/shareBoard', () => {
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
                         <ShareBoard
-                            enableSharedBoards={true}
                             onClose={jest.fn()}
                             enableSharedBoards={true}
                         />
@@ -393,7 +387,6 @@ describe('src/components/shareBoard/shareBoard', () => {
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
                         <ShareBoard
-                            enableSharedBoards={true}
                             onClose={jest.fn()}
                             enableSharedBoards={true}
                         />
@@ -422,7 +415,6 @@ describe('src/components/shareBoard/shareBoard', () => {
             const result = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <ShareBoard
-                        enableSharedBoards={true}
                         onClose={jest.fn()}
                         enableSharedBoards={true}
                     />
@@ -446,7 +438,6 @@ describe('src/components/shareBoard/shareBoard', () => {
             const result = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <ShareBoard
-                        enableSharedBoards={true}
                         onClose={jest.fn()}
                         enableSharedBoards={true}
                     />
