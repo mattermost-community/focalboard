@@ -8,9 +8,7 @@ import {Board} from '../blocks/board'
 import mutator from '../mutator'
 import Button from '../widgets/buttons/button'
 import Editable from '../widgets/editable'
-import EmojiIcon from '../widgets/icons/emoji'
-import HideIcon from '../widgets/icons/hide'
-import ShowIcon from '../widgets/icons/show'
+import CompassIcon from '../widgets/icons/compassIcon'
 
 import BlockIconSelector from './blockIconSelector'
 import {MarkdownEditor} from './markdownEditor'
@@ -42,8 +40,13 @@ const ViewTitle = (props: Props) => {
             <div className='add-buttons add-visible'>
                 {!props.readonly && !board.fields.icon &&
                     <Button
+                        emphasis='default'
+                        size='small'
                         onClick={onAddRandomIcon}
-                        icon={<EmojiIcon/>}
+                        icon={
+                            <CompassIcon
+                                icon='emoticon-outline'
+                            />}
                     >
                         <FormattedMessage
                             id='TableComponent.add-icon'
@@ -53,8 +56,13 @@ const ViewTitle = (props: Props) => {
                 }
                 {!props.readonly && board.fields.showDescription &&
                     <Button
+                        emphasis='default'
+                        size='small'
                         onClick={onHideDescription}
-                        icon={<HideIcon/>}
+                        icon={
+                            <CompassIcon
+                                icon='eye-off-outline'
+                            />}
                     >
                         <FormattedMessage
                             id='ViewTitle.hide-description'
@@ -64,8 +72,13 @@ const ViewTitle = (props: Props) => {
                 }
                 {!props.readonly && !board.fields.showDescription &&
                     <Button
+                        emphasis='default'
+                        size='small'
                         onClick={onShowDescription}
-                        icon={<ShowIcon/>}
+                        icon={
+                            <CompassIcon
+                                icon='eye-outline'
+                            />}
                     >
                         <FormattedMessage
                             id='ViewTitle.show-description'
