@@ -24,25 +24,27 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
         <div
           class="menu-options"
         >
-          <div
-            aria-label="Status"
-            class="MenuOption SwitchOption menu-option"
-            role="button"
-          >
+          <div>
             <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
-            >
-              Status
-            </div>
-            <div
-              class="Switch override-main size--small on"
+              aria-label="Status"
+              class="MenuOption SwitchOption menu-option"
+              role="button"
             >
               <div
-                class="octo-switch-inner"
+                class="noicon"
               />
+              <div
+                class="menu-name"
+              >
+                Status
+              </div>
+              <div
+                class="Switch override-main size--small on"
+              >
+                <div
+                  class="octo-switch-inner"
+                />
+              </div>
             </div>
           </div>
         </div>
