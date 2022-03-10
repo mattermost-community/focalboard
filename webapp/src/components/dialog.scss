@@ -18,6 +18,13 @@
         justify-content: center;
     }
 
+    .toolbar {
+        display: flex;
+        flex-direction: row;
+        padding: 16px;
+        justify-content: space-between;
+    }
+
     .dialog {
         display: flex;
         flex-direction: column;
@@ -61,13 +68,6 @@
 
         > .banner.error {
             background-color: rgba(230, 192, 192, 0.9);
-        }
-
-        > .toolbar {
-            display: flex;
-            flex-direction: row;
-            padding: 16px;
-            justify-content: space-between;
         }
 
         > .content {

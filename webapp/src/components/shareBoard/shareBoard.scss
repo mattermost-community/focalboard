@@ -1,14 +1,26 @@
 .ShareBoardDialog {
     .dialog {
-        @media not screen and (max-width: 975px) {
-            max-width: 600px;
-            height: auto;
+        width: 600px;
+        max-width: 90%;
+        height: auto;
+        position: relative;
+    }
+
+    .toolbar {
+        padding: 0;
+
+        button {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            z-index: 5;
         }
     }
 
     .tabs-container {
         display: flex;
-        margin: -48px 24px 0;
+        padding: 24px 0 0;
+        margin: 0 24px;
         border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
 
         .tab-item {
@@ -90,7 +102,7 @@
                 margin: 4px;
                 font-size: 18px;
             }
-            
+
             .icon-content-copy {
                 margin-right: 4px;
                 font-size: 18px;
