@@ -379,263 +379,265 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
             <div
               class="menu-options"
             >
-              <div
-                class="MenuOption LabelOption menu-option"
-              >
+              <div>
                 <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  class="MenuOption LabelOption menu-option"
                 >
-                  <b>
-                    Select property type
-                  </b>
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    <b>
+                      Select property type
+                    </b>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                class="MenuOption MenuSeparator menu-separator"
-              />
-              <div
-                aria-label="Text"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
+                  class="MenuOption MenuSeparator menu-separator"
                 />
                 <div
-                  class="menu-name"
+                  aria-label="Text"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Text
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Text
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Number"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Number"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Number
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Number
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Email"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Email"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Email
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Email
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Phone"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Phone"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Phone
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Phone
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="URL"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="URL"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  URL
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    URL
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Select"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Select"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Select
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Select
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Multi Select"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Multi Select"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Multi Select
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Multi Select
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Date"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Date"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Date
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Date
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Person"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Person"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Person
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Person
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Checkbox"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Checkbox"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Checkbox
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Checkbox
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Created time"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Created time"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Created time
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Created time
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Created by"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Created by"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Created by
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Created by
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Last updated time"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Last updated time"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Last updated time
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Last updated time
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Last updated by"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Last updated by"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Last updated by
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Last updated by
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
-                <div
-                  class="noicon"
-                />
               </div>
             </div>
             <div
