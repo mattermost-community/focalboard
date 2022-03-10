@@ -36,8 +36,12 @@
     .templates {
         display: flex;
         width: 100%;
-        padding: 0 10%;
+        padding: 0 32px;
         justify-content: center;
+
+        @media (min-width: 768px) {
+            padding: 0 10%;
+        }
 
         .templates-list {
             margin-right: 32px;
@@ -63,32 +67,42 @@
                 }
             }
         }
+    }
 
-        .template-preview-box {
-            position: relative;
-            background-color: rgb(var(--center-channel-bg-rgb));
-            box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
-                rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
-            border-radius: var(--modal-rad);
-            overflow: hidden;
+    .template-preview-box {
+        position: relative;
+        background-color: rgb(var(--center-channel-bg-rgb));
+        box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
+            rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
+        border-radius: var(--modal-rad);
+        overflow: hidden;
+        width: 100%;
+        max-width: 1000px;
+
+        .buttons {
+            display: flex;
+            position: absolute;
+            bottom: 32px;
             width: 100%;
-            max-width: 1000px;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 24px;
 
-            .buttons {
-                display: flex;
-                position: absolute;
-                bottom: 32px;
-                width: 100%;
-                justify-content: center;
+            @media (min-width: 1024px) {
+                flex-direction: row;
             }
+        }
 
-            .empty-board {
-                background-color: rgb(var(--center-channel-bg-rgb));
-            }
+        .empty-board {
+            background-color: rgb(var(--center-channel-bg-rgb));
+        }
 
-            .Button {
-                &:first-child {
-                    margin-right: 16px;
+        .Button {
+            &:first-child {
+                margin-bottom: 16px;
+
+                @media (min-width: 1024px) {
+                    margin: 0 16px 0 0;
                 }
             }
         }

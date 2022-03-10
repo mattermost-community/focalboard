@@ -167,7 +167,6 @@
   "WelcomePage.Heading": "歡迎來到版面",
   "Workspace.editing-board-template": "您正在編輯版面範本。",
   "default-properties.title": "標題",
-  "error.no-workspace": "您的工作階段可能已過期，或者您可能無法存取此工作區。",
   "error.relogin": "重新登錄",
   "login.log-in-button": "登錄",
   "login.log-in-title": "登錄",
