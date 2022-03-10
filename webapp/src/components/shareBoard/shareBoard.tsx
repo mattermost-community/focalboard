@@ -33,6 +33,8 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 import IconButton from '../../widgets/buttons/iconButton'
 import SearchIcon from '../../widgets/icons/search'
 
+import BoardPermissionGate from '../permissions/boardPermissionGate'
+
 import TeamPermissionsRow from './teamPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
 
@@ -224,29 +226,31 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             className='ShareBoardDialog'
             title={' '}
         >
-            <div className='share-input__container'>
-                <div className='share-input'>
-                    <SearchIcon/>
-                    <Select
-                        styles={styles}
-                        value={selectedUser}
-                        className={'userSearchInput'}
-                        cacheOptions={true}
-                        loadOptions={(inputValue) => client.searchTeamUsers(inputValue)}
-                        components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
-                        defaultOptions={true}
-                        getOptionValue={(u) => u.id}
-                        getOptionLabel={(u) => u.username}
-                        isMulti={false}
-                        onChange={(newValue) => {
-                            if (newValue) {
-                                mutator.createBoardMember(board.id, newValue.id)
-                                setSelectedUser(null)
-                            }
-                        }}
-                    />
+            <BoardPermissionGate permissions={['manage_board_roles']}>
+                <div className='share-input__container'>
+                    <div className='share-input'>
+                        <SearchIcon/>
+                        <Select
+                            styles={styles}
+                            value={selectedUser}
+                            className={'userSearchInput'}
+                            cacheOptions={true}
+                            loadOptions={(inputValue) => client.searchTeamUsers(inputValue)}
+                            components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
+                            defaultOptions={true}
+                            getOptionValue={(u) => u.id}
+                            getOptionLabel={(u) => u.username}
+                            isMulti={false}
+                            onChange={(newValue) => {
+                                if (newValue) {
+                                    mutator.createBoardMember(board.id, newValue.id)
+                                    setSelectedUser(null)
+                                }
+                            }}
+                        />
+                    </div>
                 </div>
-            </div>
+            </BoardPermissionGate>
             <div className='user-items'>
                 <TeamPermissionsRow/>
 

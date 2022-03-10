@@ -329,6 +329,11 @@ func (s *SQLStore) GetMembersForBoard(boardID string) ([]*model.BoardMember, err
 
 }
 
+func (s *SQLStore) GetMembersForUser(userID string) ([]*model.BoardMember, error) {
+	return s.getMembersForUser(s.db, userID)
+
+}
+
 func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint, error) {
 	return s.getNextNotificationHint(s.db, remove)
 

@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {useIntl} from 'react-intl'
+import {useIntl, FormattedMessage} from 'react-intl'
 
 import MenuWrapper from '../../widgets/menuWrapper'
 import Menu from '../../widgets/menu'
@@ -12,6 +12,8 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 
 import {BoardMember} from '../../blocks/board'
 import {IUser} from '../../user'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 type Props = {
     user: IUser
@@ -41,35 +43,46 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                 </div>
             </div>
             <div>
-                <MenuWrapper>
-                    <button className='user-item__button'>
-                        {intl.formatMessage({id: `BoardMember.scheme${currentRole}`, defaultMessage: currentRole})}
-                        <CompassIcon
-                            icon='chevron-down'
-                            className='CompassIcon'
-                        />
-                    </button>
-                    <Menu position='left'>
-                        <Menu.Text
-                            id='Editor'
-                            icon={currentRole === 'Editor' ? <CheckIcon/> : null}
-                            name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
-                            onClick={() => props.onUpdateBoardMember(member, 'Editor')}
-                        />
-                        <Menu.Text
-                            id='Admin'
-                            icon={currentRole === 'Admin' ? <CheckIcon/> : null}
-                            name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
-                            onClick={() => props.onUpdateBoardMember(member, 'Admin')}
-                        />
-                        <Menu.Separator/>
-                        <Menu.Text
-                            id='Remove'
-                            name={intl.formatMessage({id: 'ShareBoard.userPermissionsRemoveMemberText', defaultMessage: 'Remove member'})}
-                            onClick={() => props.onDeleteBoardMember(member)}
-                        />
-                    </Menu>
-                </MenuWrapper>
+                <BoardPermissionGate permissions={['manage_board_roles']}>
+                    <MenuWrapper>
+                        <button className='user-item__button'>
+                            {intl.formatMessage({id: `BoardMember.scheme${currentRole}`, defaultMessage: currentRole})}
+                            <CompassIcon
+                                icon='chevron-down'
+                                className='CompassIcon'
+                            />
+                        </button>
+                        <Menu position='left'>
+                            <Menu.Text
+                                id='Editor'
+                                icon={currentRole === 'Editor' ? <CheckIcon/> : null}
+                                name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
+                                onClick={() => props.onUpdateBoardMember(member, 'Editor')}
+                            />
+                            <Menu.Text
+                                id='Admin'
+                                icon={currentRole === 'Admin' ? <CheckIcon/> : null}
+                                name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
+                                onClick={() => props.onUpdateBoardMember(member, 'Admin')}
+                            />
+                            <Menu.Separator/>
+                            <Menu.Text
+                                id='Remove'
+                                name={intl.formatMessage({id: 'ShareBoard.userPermissionsRemoveMemberText', defaultMessage: 'Remove member'})}
+                                onClick={() => props.onDeleteBoardMember(member)}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                </BoardPermissionGate>
+                <BoardPermissionGate
+                    permissions={['manage_board_roles']}
+                    invert={true}
+                >
+                    <FormattedMessage
+                        id={`BoardMember.scheme${currentRole}`}
+                        defaultMessage={currentRole}
+                    />
+                </BoardPermissionGate>
             </div>
         </div>
     )

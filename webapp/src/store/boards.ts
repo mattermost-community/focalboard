@@ -19,6 +19,7 @@ type BoardsState = {
     boards: {[key: string]: Board}
     templates: {[key: string]: Board}
     membersInBoards: {[key: string]: {[key: string]: BoardMember}}
+    myBoardMemberships: {[key: string]: BoardMember}
 }
 
 export const fetchBoardMembers = createAsyncThunk(
@@ -110,7 +111,7 @@ export const updateMembers = (state: BoardsState, action: PayloadAction<BoardMem
 
 const boardsSlice = createSlice({
     name: 'boards',
-    initialState: {loadingBoard: false, boards: {}, templates: {}, membersInBoards: {}} as BoardsState,
+    initialState: {loadingBoard: false, boards: {}, templates: {}, membersInBoards: {}, myBoardMemberships: {}} as BoardsState,
     reducers: {
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
@@ -148,6 +149,10 @@ const boardsSlice = createSlice({
             state.templates = {}
             action.payload.boardTemplates.forEach((board) => {
                 state.templates[board.id] = board
+            })
+            state.myBoardMemberships = {}
+            action.payload.boardsMemberships.forEach((boardMember) => {
+                state.myBoardMemberships[boardMember.boardId] = boardMember
             })
         })
         builder.addCase(fetchBoardMembers.fulfilled, (state, action) => {
@@ -213,3 +218,9 @@ export const getCurrentBoardMembers = createSelector(
         return membersInBoards[boardId] || {}
     },
 )
+
+export function getMyBoardMembership(boardId: string): (state: RootState) => BoardMember|null {
+    return (state: RootState): BoardMember|null => {
+        return state.boards.myBoardMemberships[boardId] || null
+    }
+}

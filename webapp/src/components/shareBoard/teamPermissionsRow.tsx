@@ -15,6 +15,8 @@ import {useAppSelector} from '../../store/hooks'
 import {getCurrentTeam} from '../../store/teams'
 import {getCurrentBoard} from '../../store/boards'
 
+import BoardPermissionGate from '../permissions/boardPermissionGate'
+
 import mutator from '../../mutator'
 
 function updateBoardType(board: Board, newType: string) {
@@ -45,29 +47,37 @@ const TeamPermissionsRow = (): JSX.Element => {
                 <div className='ml-3'><strong>{intl.formatMessage({id: 'ShareBoard.teamPermissionsText', defaultMessage: 'Everyone at {teamName} Team'}, {teamName: team?.title})}</strong></div>
             </div>
             <div>
-                <MenuWrapper>
-                    <button className='user-item__button'>
-                        {currentRole}
-                        <CompassIcon
-                            icon='chevron-down'
-                            className='CompassIcon'
-                        />
-                    </button>
-                    <Menu position='left'>
-                        <Menu.Text
-                            id='Editor'
-                            icon={currentRole === 'Editor' ? <CheckIcon/> : null}
-                            name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
-                            onClick={() => updateBoardType(board, BoardTypeOpen)}
-                        />
-                        <Menu.Text
-                            id='None'
-                            icon={currentRole === 'None' ? <CheckIcon/> : null}
-                            name={intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})}
-                            onClick={() => updateBoardType(board, BoardTypePrivate)}
-                        />
-                    </Menu>
-                </MenuWrapper>
+                <BoardPermissionGate permissions={['manage_board_type']}>
+                    <MenuWrapper>
+                        <button className='user-item__button'>
+                            {currentRole}
+                            <CompassIcon
+                                icon='chevron-down'
+                                className='CompassIcon'
+                            />
+                        </button>
+                        <Menu position='left'>
+                            <Menu.Text
+                                id='Editor'
+                                icon={currentRole === 'Editor' ? <CheckIcon/> : null}
+                                name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
+                                onClick={() => updateBoardType(board, BoardTypeOpen)}
+                            />
+                            <Menu.Text
+                                id='None'
+                                icon={currentRole === 'None' ? <CheckIcon/> : null}
+                                name={intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})}
+                                onClick={() => updateBoardType(board, BoardTypePrivate)}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                </BoardPermissionGate>
+                <BoardPermissionGate
+                    permissions={['manage_board_type']}
+                    invert={true}
+                >
+                    <span>{currentRole}</span>
+                </BoardPermissionGate>
             </div>
         </div>
     )

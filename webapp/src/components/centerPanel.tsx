@@ -47,6 +47,8 @@ import ViewHeader from './viewHeader/viewHeader'
 import ViewTitle from './viewTitle'
 import Kanban from './kanban/kanban'
 
+import BoardPermissionGate from './permissions/boardPermissionGate'
+
 import Table from './table/table'
 
 import CalendarFullView from './calendar/fullCalendar'
@@ -217,10 +219,12 @@ class CenterPanel extends React.Component<Props, State> {
                         <div className='shareButtonWrapper'>
                             {!this.props.readonly &&
                                 (
-                                    <ShareBoardButton
-                                        boardId={this.props.board.id}
-                                        enableSharedBoards={this.props.clientConfig?.enablePublicSharedBoards || false}
-                                    />
+                                    <BoardPermissionGate permissions={['share_board', 'manage_board_roles']}>
+                                        <ShareBoardButton
+                                            boardId={this.props.board.id}
+                                            enableSharedBoards={this.props.clientConfig?.enablePublicSharedBoards || false}
+                                        />
+                                    </BoardPermissionGate>
                                 )
                             }
                             <ShareBoardTourStep/>
