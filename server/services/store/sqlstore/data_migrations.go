@@ -9,6 +9,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -122,7 +123,7 @@ func (s *SQLStore) runUniqueIDsMigration() error {
 	return nil
 }
 
-func (s *SQLStore) runCategoryUuidIdMigration() error {
+func (s *SQLStore) runCategoryUUIDIDMigration() error {
 	setting, err := s.GetSystemSetting(CategoryUUIDIDMigrationKey)
 	if err != nil {
 		return fmt.Errorf("cannot get migration state: %w", err)
@@ -172,9 +173,9 @@ func (s *SQLStore) updateCategoryIDs(db sq.BaseRunner) error {
 
 	// map old category ID to new ID
 	categoryIDs := map[string]string{}
-	for _, oldId := range oldCategoryIDs {
+	for _, oldID := range oldCategoryIDs {
 		newID := utils.NewID(utils.IDTypeNone)
-		categoryIDs[oldId] = newID
+		categoryIDs[oldID] = newID
 	}
 
 	// update for each category ID.
@@ -229,7 +230,7 @@ func (s *SQLStore) updateCategoryID(db sq.BaseRunner, oldID, newID string) error
 		return err
 	}
 
-	if err := rows.Close(); err != nil {
+	if err = rows.Close(); err != nil {
 		s.logger.Error("updateCategoryID error closing rows after updating categories table IDs", mlog.Err(err))
 		return err
 	}
@@ -264,9 +265,9 @@ func (s *SQLStore) updateCategoryBlocksIDs(db sq.BaseRunner) error {
 
 	// map old category ID to new ID
 	categoryIDs := map[string]string{}
-	for _, oldId := range oldCategoryIDs {
+	for _, oldID := range oldCategoryIDs {
 		newID := utils.NewID(utils.IDTypeNone)
-		categoryIDs[oldId] = newID
+		categoryIDs[oldID] = newID
 	}
 
 	// update for each category ID.

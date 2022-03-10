@@ -49,25 +49,31 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
       <div
         class="ViewHeader"
       >
-        <input
-          class="Editable undefined"
-          placeholder="Untitled View"
-          spellcheck="true"
-          title="View"
-          value="View"
-        />
         <div
-          aria-label="View menu"
-          class="MenuWrapper"
-          role="button"
+          class="viewSelector"
         >
-          <button
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </button>
+          <input
+            class="Editable undefined"
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="View"
+            value="View"
+          />
+          <div>
+            <div
+              aria-label="View menu"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </button>
+            </div>
+          </div>
         </div>
         <button>
           Show Share Modal
@@ -357,13 +363,13 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           class="octo-board-column"
         >
           <div
-            class="KanbanCard"
+            class="KanbanCard false"
             draggable="true"
             style="opacity: 1;"
           >
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper optionsMenu"
+              class="MenuWrapper optionsMenu "
               role="button"
             >
               <button

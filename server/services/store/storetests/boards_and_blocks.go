@@ -38,8 +38,8 @@ func StoreTestBoardsAndBlocksStore(t *testing.T, setup func(t *testing.T) (store
 }
 
 func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
-	teamID := "team-id"
-	userID := "user-id"
+	teamID := testTeamID
+	userID := testUserID
 
 	boards, err := store.GetBoardsForUserAndTeam(userID, teamID)
 	require.Nil(t, err)
@@ -145,11 +145,11 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 }
 
 func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
-	teamID := "team-id"
-	userID := "user-id"
+	teamID := testTeamID
+	userID := testUserID
 
 	t.Run("on failure, nothing should be saved", func(t *testing.T) {
-		if store.DBType() == "sqlite3" {
+		if store.DBType() == model.SqliteDBType {
 			t.Skip("No transactions support int sqlite")
 		}
 
@@ -267,11 +267,11 @@ func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
 }
 
 func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
-	teamID := "team-id"
-	userID := "user-id"
+	teamID := testTeamID
+	userID := testUserID
 
 	t.Run("should not delete anything if a block doesn't belong to any of the boards", func(t *testing.T) {
-		if store.DBType() == "sqlite3" {
+		if store.DBType() == model.SqliteDBType {
 			t.Skip("No transactions support int sqlite")
 		}
 
@@ -348,7 +348,7 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 	})
 
 	t.Run("should not delete anything if a board doesn't exist", func(t *testing.T) {
-		if store.DBType() == "sqlite3" {
+		if store.DBType() == model.SqliteDBType {
 			t.Skip("No transactions support int sqlite")
 		}
 
@@ -424,7 +424,7 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 	})
 
 	t.Run("should not delete anything if a block doesn't exist", func(t *testing.T) {
-		if store.DBType() == "sqlite3" {
+		if store.DBType() == model.SqliteDBType {
 			t.Skip("No transactions support int sqlite")
 		}
 
@@ -572,8 +572,8 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 }
 
 func testDuplicateBoard(t *testing.T, store store.Store) {
-	teamID := "team-id"
-	userID := "user-id"
+	teamID := testTeamID
+	userID := testUserID
 
 	newBab := &model.BoardsAndBlocks{
 		Boards: []*model.Board{
@@ -594,7 +594,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 	require.Len(t, bab.Blocks, 2)
 
 	t.Run("duplicate existing board as no template", func(t *testing.T) {
-		bab, members, err := store.DuplicateBoard("board-id-1", userID, false)
+		bab, members, err := store.DuplicateBoard("board-id-1", userID, teamID, false)
 		require.NoError(t, err)
 		require.Len(t, members, 1)
 		require.Len(t, bab.Boards, 1)
@@ -603,7 +603,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 	})
 
 	t.Run("duplicate existing board as template", func(t *testing.T) {
-		bab, members, err := store.DuplicateBoard("board-id-1", userID, true)
+		bab, members, err := store.DuplicateBoard("board-id-1", userID, teamID, true)
 		require.NoError(t, err)
 		require.Len(t, members, 1)
 		require.Len(t, bab.Boards, 1)
@@ -612,7 +612,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 	})
 
 	t.Run("duplicate not existing board", func(t *testing.T) {
-		bab, members, err := store.DuplicateBoard("not-existing-id", userID, false)
+		bab, members, err := store.DuplicateBoard("not-existing-id", userID, teamID, false)
 		require.Error(t, err)
 		require.Nil(t, members)
 		require.Nil(t, bab)

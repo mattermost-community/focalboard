@@ -65,6 +65,11 @@ const usersSlice = createSlice({
             const oldSubscriptions = state.blockSubscriptions
             state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload.blockId)
         },
+        patchProps: (state, action: PayloadAction<Record<string, string>>) => {
+            if (state.me) {
+                state.me.props = action.payload
+            }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
@@ -90,7 +95,7 @@ const usersSlice = createSlice({
     },
 })
 
-export const {setMe, setBoardUsers, addBoardUsers, followBlock, unfollowBlock} = usersSlice.actions
+export const {setMe, setBoardUsers, addBoardUsers, followBlock, unfollowBlock, patchProps} = usersSlice.actions
 export const {reducer} = usersSlice
 
 export const getMe = (state: RootState): IUser|null => state.users.me
@@ -108,3 +113,30 @@ export const getUser = (userId: string): (state: RootState) => IUser|undefined =
         return users[userId]
     }
 }
+
+export const getOnboardingTourStarted = createSelector(
+    getMe,
+    (me): boolean => {
+        if (!me) {
+            return false
+        }
+
+        return Boolean(me.props?.focalboard_onboardingTourStarted)
+    },
+)
+
+export const getOnboardingTourStep = createSelector(
+    getMe,
+    (me): string => {
+        if (!me) {
+            return ''
+        }
+
+        return me.props?.focalboard_onboardingTourStep
+    },
+)
+
+export const getOnboardingTourCategory = createSelector(
+    getMe,
+    (me): string => (me ? me.props?.focalboard_tourCategory : ''),
+)

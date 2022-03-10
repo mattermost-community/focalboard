@@ -55,7 +55,8 @@ type API struct {
 	audit           *audit.Audit
 }
 
-func NewAPI(app *app.App, singleUserToken string, authService string, permissions permissions.PermissionsService, logger *mlog.Logger, audit *audit.Audit) *API {
+func NewAPI(app *app.App, singleUserToken string, authService string, permissions permissions.PermissionsService,
+	logger *mlog.Logger, audit *audit.Audit) *API {
 	return &API{
 		app:             app,
 		singleUserToken: singleUserToken,
@@ -115,6 +116,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
 	apiv1.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
 	apiv1.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
+	apiv1.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
 
 	// BoardsAndBlocks APIs
 	apiv1.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handleCreateBoardsAndBlocks)).Methods("POST")
@@ -144,6 +146,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
 	apiv1.HandleFunc("/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
 	apiv1.HandleFunc("/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
+
+	// onboarding tour endpoints
+	apiv1.HandleFunc("/teams/{teamID}/onboard", a.sessionRequired(a.handleOnboard)).Methods(http.MethodPost)
 
 	// archives
 	apiv1.HandleFunc("/boards/{boardID}/archive/export", a.sessionRequired(a.handleArchiveExportBoard)).Methods("GET")
@@ -482,11 +487,12 @@ func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
 
 	updatedCategory, err := a.app.UpdateCategory(&category)
 	if err != nil {
-		if errors.Is(err, app.ErrorCategoryDeleted) {
+		switch {
+		case errors.Is(err, app.ErrorCategoryDeleted):
 			a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", err)
-		} else if errors.Is(err, app.ErrorCategoryPermissionDenied) {
+		case errors.Is(err, app.ErrorCategoryPermissionDenied):
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
-		} else {
+		default:
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		}
 		return
@@ -678,10 +684,10 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
-	stampModificationMetadata(r, blocks, auditRec)
-
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	model.StampModificationMetadata(userID, blocks, auditRec)
 
 	// this query param exists when creating template from board, or board from template
 	sourceBoardID := r.URL.Query().Get("sourceBoardID")
@@ -709,6 +715,80 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, json)
 
 	auditRec.AddMeta("blockCount", len(blocks))
+	auditRec.Success()
+}
+
+func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation PATCH /api/v1/users/{userID}/config updateUserConfig
+	//
+	// Updates user config
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: userID
+	//   in: path
+	//   description: User ID
+	//   required: true
+	//   type: string
+	// - name: Body
+	//   in: body
+	//   description: User config patch to apply
+	//   required: true
+	//   schema:
+	//     "$ref": "#/definitions/UserPropPatch"
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var patch *model.UserPropPatch
+	err = json.Unmarshal(requestBody, &patch)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	vars := mux.Vars(r)
+	userID := vars["userID"]
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	auditRec := a.makeAuditRecord(r, "updateUserConfig", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	// a user can update only own config
+	if userID != session.UserID {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	updatedConfig, err := a.app.UpdateUserConfig(userID, *patch)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(updatedConfig)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
 	auditRec.Success()
 }
 
@@ -2048,7 +2128,7 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
-	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+	if teamID != "0" && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
 		return
 	}
@@ -2351,7 +2431,7 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := newBoard.IsValid(); err != nil {
+	if err = newBoard.IsValid(); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
 	}
@@ -2385,6 +2465,54 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, data)
 
 	auditRec.Success()
+}
+
+func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/team/{teamID}/onboard onboard
+	//
+	// Onboards a user on Boards.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//         "$ref": "#/definitions/OnboardingResponse"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+	teamID := mux.Vars(r)["teamID"]
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	teamID, boardID, err := a.app.PrepareOnboardingTour(session.UserID, teamID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	response := map[string]string{
+		"teamID":  teamID,
+		"boardID": boardID,
+	}
+	data, err := json.Marshal(response)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
 }
 
 func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
@@ -2523,7 +2651,7 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := patch.IsValid(); err != nil {
+	if err = patch.IsValid(); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
 	}
@@ -2646,6 +2774,12 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 	query := r.URL.Query()
 	asTemplate := query.Get("asTemplate")
+	toTeam := query.Get("toTeam")
+
+	if toTeam != "" && !a.permissions.HasPermissionToTeam(userID, toTeam, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
 
 	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
 	if userID == "" && !hasValidReadToken {
@@ -2685,7 +2819,7 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		mlog.String("boardID", boardID),
 	)
 
-	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, asTemplate == "true")
+	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, toTeam, asTemplate == "true")
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
@@ -3390,7 +3524,7 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	if err := pbab.IsValid(); err != nil {
+	if err = pbab.IsValid(); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 		return
 	}
@@ -3401,7 +3535,7 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 		boardIDMap[boardID] = true
 		patch := pbab.BoardPatches[i]
 
-		if err := patch.IsValid(); err != nil {
+		if err = patch.IsValid(); err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 			return
 		}
@@ -3418,9 +3552,9 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 			}
 		}
 
-		board, err := a.app.GetBoard(boardID)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		board, err2 := a.app.GetBoard(boardID)
+		if err2 != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err2)
 			return
 		}
 		if board == nil {
@@ -3438,9 +3572,9 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 	}
 
 	for _, blockID := range pbab.BlockIDs {
-		block, err := a.app.GetBlockByID(blockID)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		block, err2 := a.app.GetBlockByID(blockID)
+		if err2 != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err2)
 			return
 		}
 		if block == nil {
@@ -3592,27 +3726,6 @@ func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message
 	}
 	w.WriteHeader(code)
 	_, _ = w.Write(data)
-}
-
-func (a *API) errorResponseWithCode(w http.ResponseWriter, api string, statusCode int, errorCode int, message string, sourceError error) {
-	a.logger.Error("API ERROR",
-		mlog.Int("status", statusCode),
-		mlog.Int("code", errorCode),
-		mlog.Err(sourceError),
-		mlog.String("msg", message),
-		mlog.String("api", api),
-	)
-	w.Header().Set("Content-Type", "application/json")
-	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: errorCode})
-	if err != nil {
-		data = []byte("{}")
-	}
-	w.WriteHeader(statusCode)
-	_, _ = w.Write(data)
-}
-
-func (a *API) noContainerErrorResponse(w http.ResponseWriter, api string, sourceError error) {
-	a.errorResponseWithCode(w, api, http.StatusBadRequest, ErrorNoTeamCode, ErrorNoTeamMessage, sourceError)
 }
 
 func jsonStringResponse(w http.ResponseWriter, code int, message string) { //nolint:unparam

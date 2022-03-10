@@ -38,6 +38,11 @@ enum IDType {
     BlockID = 'a',
 }
 
+export const KeyCodes: Record<string, [string, number]> = {
+    ENTER: ['Enter', 13],
+    COMPOSING: ['Composing', 229],
+}
+
 class Utils {
     static createGuid(idType: IDType): string {
         const data = Utils.randomArray(16)
@@ -517,6 +522,10 @@ class Utils {
     }
 
     static buildURL(path: string, absolute?: boolean): string {
+        if (!Utils.isFocalboardPlugin()) {
+            return path
+        }
+
         const baseURL = Utils.getBaseURL()
         let finalPath = baseURL + path
         if (path.indexOf('/') !== 0) {
@@ -665,12 +674,11 @@ class Utils {
         return (window as any).URL.createObjectURL(new Blob([])).substr(-36)
     }
 
-    static isKeyPressed(event: KeyboardEvent, key: [string, number]) {
+    static isKeyPressed(event: KeyboardEvent, key: [string, number]): boolean {
         // There are two types of keyboards
         // 1. English with different layouts(Ex: Dvorak)
         // 2. Different language keyboards(Ex: Russian)
-
-        if (event.keyCode === Constants.keyCodes.COMPOSING[1]) {
+        if (event.keyCode === KeyCodes.COMPOSING[1]) {
             return false
         }
 

@@ -26,7 +26,7 @@ func (s *SQLStore) upsertSharing(db sq.BaseRunner, sharing model.Sharing) error 
 			sharing.ModifiedBy,
 			now,
 		)
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE enabled = ?, token = ?, modified_by = ?, update_at = ?",
 			sharing.Enabled, sharing.Token, sharing.ModifiedBy, now)
 	} else {

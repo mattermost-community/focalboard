@@ -1,6 +1,6 @@
 {
 	"name": "focalboard",
-	"version": "0.15.0",
+	"version": "0.16.0",
 	"private": true,
 	"description": "",
 	"scripts": {
@@ -32,6 +32,7 @@
 		"@fullcalendar/react": "^5.10.0",
 		"@mattermost/compass-icons": "^0.1.10",
 		"@reduxjs/toolkit": "^1.6.0",
+		"@tippyjs/react": "4.2.6",
 		"color": "^4.0.0",
 		"draft-js": "^0.11.7",
 		"emoji-mart": "^3.0.1",
@@ -107,6 +108,8 @@
 		"copy-webpack-plugin": "^8.1.0",
 		"cross-env": "^7.0.3",
 		"css-loader": "^5.2.0",
+		"cypress": "^9.5.0",
+		"cypress-failed-log": "^2.9.2",
 		"cypress-real-events": "^1.6.0",
 		"eslint": "^7.22.0",
 		"eslint-import-resolver-webpack": "0.13.0",

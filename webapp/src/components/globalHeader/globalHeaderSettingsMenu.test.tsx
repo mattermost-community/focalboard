@@ -3,6 +3,7 @@
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
+import {createMemoryHistory} from 'history'
 
 import {render} from '@testing-library/react'
 
@@ -22,14 +23,24 @@ const mockedTelemetry = mocked(TelemetryClient, true)
 
 describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
     const mockStore = configureStore([])
+    const history = createMemoryHistory()
     let store = mockStore({})
     beforeEach(() => {
-        store = mockStore({})
+        store = mockStore({
+            teams: {
+                current: {id: 'team_id_1'},
+            },
+            users: {
+                me: {
+                    id: 'user-id',
+                },
+            },
+        })
     })
     test('settings menu closed should match snapshot', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <GlobalHeaderSettingsMenu/>
+                <GlobalHeaderSettingsMenu history={history}/>
             </ReduxProvider>,
         )
 
@@ -40,7 +51,7 @@ describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
     test('settings menu open should match snapshot', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <GlobalHeaderSettingsMenu/>
+                <GlobalHeaderSettingsMenu history={history}/>
             </ReduxProvider>,
         )
 
@@ -52,7 +63,7 @@ describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
     test('languages menu open should match snapshot', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <GlobalHeaderSettingsMenu/>
+                <GlobalHeaderSettingsMenu history={history}/>
             </ReduxProvider>,
         )
 
@@ -66,7 +77,7 @@ describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
         window.open = jest.fn()
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <GlobalHeaderSettingsMenu/>
+                <GlobalHeaderSettingsMenu history={history}/>
             </ReduxProvider>,
         )
 

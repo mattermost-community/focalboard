@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 
-	"github.com/pkg/errors"
+	"github.com/mattermost/mattermost-server/v6/plugin"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -13,18 +13,6 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-)
-
-const (
-	sqliteDBType   = "sqlite3"
-	postgresDBType = "postgres"
-	mysqlDBType    = "mysql"
-
-	directChannelType = "D"
-)
-
-var (
-	errUnsupportedDatabaseError = errors.New("method is unsupported on current database. Supported databases are - MySQL and PostgreSQL")
 )
 
 type NotSupportedError struct {
@@ -38,18 +26,20 @@ func (pe NotSupportedError) Error() string {
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
-	dbType string
-	mmDB   *sql.DB
-	logger *mlog.Logger
+	dbType    string
+	mmDB      *sql.DB
+	logger    *mlog.Logger
+	pluginAPI plugin.API
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger) (*MattermostAuthLayer, error) {
+func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
-		Store:  store,
-		dbType: dbType,
-		mmDB:   db,
-		logger: logger,
+		Store:     store,
+		dbType:    dbType,
+		mmDB:      db,
+		logger:    logger,
+		pluginAPI: pluginAPI,
 	}
 
 	return layer, nil
@@ -154,6 +144,33 @@ func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) er
 	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
+func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
+	user, err := s.pluginAPI.GetUser(userID)
+	if err != nil {
+		s.logger.Error("failed to fetch user", mlog.String("userID", userID), mlog.Err(err))
+		return err
+	}
+
+	props := user.Props
+
+	for _, key := range patch.DeletedFields {
+		delete(props, key)
+	}
+
+	for key, value := range patch.UpdatedFields {
+		props[key] = value
+	}
+
+	user.Props = props
+
+	if _, err := s.pluginAPI.UpdateUser(user); err != nil {
+		s.logger.Error("failed to update user", mlog.String("userID", userID), mlog.Err(err))
+		return err
+	}
+
+	return nil
+}
+
 // GetActiveUserCount returns the number of users with active sessions within N seconds ago.
 func (s *MattermostAuthLayer) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 	query := s.getQueryBuilder().
@@ -256,7 +273,7 @@ func (s *MattermostAuthLayer) GetTeamsForUser(userID string) ([]*model.Team, err
 
 func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 	builder := sq.StatementBuilder
-	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
 		builder = builder.PlaceholderFormat(sq.Dollar)
 	}
 
@@ -354,4 +371,16 @@ func (s *MattermostAuthLayer) CloseRows(rows *sql.Rows) {
 	if err := rows.Close(); err != nil {
 		s.logger.Error("error closing MattermostAuthLayer row set", mlog.Err(err))
 	}
+}
+
+func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, error) {
+	// we emulate a private workspace by creating
+	// a DM channel from the user to themselves.
+	channel, err := s.pluginAPI.GetDirectChannel(userID, userID)
+	if err != nil {
+		s.logger.Error("error fetching private workspace", mlog.String("userID", userID), mlog.Err(err))
+		return "", err
+	}
+
+	return channel.Id, nil
 }

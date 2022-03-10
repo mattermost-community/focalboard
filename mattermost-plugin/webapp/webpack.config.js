@@ -111,7 +111,7 @@ module.exports = {
                 exclude: [/node_modules/],
             },
             {
-                test: /\.(png|eot|tiff|svg|woff2|woff|ttf|jpg)$/,
+                test: /\.(png|eot|tiff|svg|woff2|woff|ttf|jpg|gif)$/,
                 use: [
                     {
                         loader: 'file-loader',

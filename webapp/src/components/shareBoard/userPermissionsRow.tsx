@@ -13,49 +13,17 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 import {BoardMember} from '../../blocks/board'
 import {IUser} from '../../user'
 
-import mutator from '../../mutator'
-
-function updateBoardMember(member: BoardMember, newPermission: string) {
-    const newMember = {
-        boardId: member.boardId,
-        userId: member.userId,
-        roles: member.roles,
-    } as BoardMember
-
-    switch (newPermission) {
-    case 'Admin':
-        if (member.schemeAdmin) {
-            return
-        }
-        newMember.schemeAdmin = true
-        newMember.schemeEditor = true
-        break
-    case 'Editor':
-        if (member.schemeEditor) {
-            return
-        }
-        newMember.schemeEditor = true
-        break
-    default:
-        return
-    }
-
-    mutator.updateBoardMember(newMember, member)
-}
-
-function deleteBoardMember(member: BoardMember) {
-    mutator.deleteBoardMember(member)
-}
-
 type Props = {
     user: IUser
     member: BoardMember
     isMe: boolean
+    onDeleteBoardMember: (member: BoardMember) => void
+    onUpdateBoardMember: (member: BoardMember, permission: string) => void
 }
 
-const UserPermissionsRow = ({user, member, isMe}: Props): JSX.Element => {
+const UserPermissionsRow = (props: Props): JSX.Element => {
     const intl = useIntl()
-
+    const {user, member, isMe} = props
     const currentRole = member.schemeAdmin ? 'Admin' : 'Editor'
 
     return (
@@ -86,19 +54,19 @@ const UserPermissionsRow = ({user, member, isMe}: Props): JSX.Element => {
                             id='Editor'
                             icon={currentRole === 'Editor' ? <CheckIcon/> : null}
                             name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
-                            onClick={() => updateBoardMember(member, 'Editor')}
+                            onClick={() => props.onUpdateBoardMember(member, 'Editor')}
                         />
                         <Menu.Text
                             id='Admin'
                             icon={currentRole === 'Admin' ? <CheckIcon/> : null}
                             name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
-                            onClick={() => updateBoardMember(member, 'Admin')}
+                            onClick={() => props.onUpdateBoardMember(member, 'Admin')}
                         />
                         <Menu.Separator/>
                         <Menu.Text
                             id='Remove'
                             name={intl.formatMessage({id: 'ShareBoard.userPermissionsRemoveMemberText', defaultMessage: 'Remove member'})}
-                            onClick={() => deleteBoardMember(member)}
+                            onClick={() => props.onDeleteBoardMember(member)}
                         />
                     </Menu>
                 </MenuWrapper>

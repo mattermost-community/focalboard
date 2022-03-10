@@ -99,7 +99,7 @@ func (s *SQLStore) patchBoardsAndBlocks(db sq.BaseRunner, pbab *model.PatchBoard
 
 // deleteBoardsAndBlocks deletes all the boards and blocks entities of
 // the DeleteBoardsAndBlocks struct, making sure that all the blocks
-// belong to the boards in the struct
+// belong to the boards in the struct.
 func (s *SQLStore) deleteBoardsAndBlocks(db sq.BaseRunner, dbab *model.DeleteBoardsAndBlocks, userID string) error {
 	boardIDMap := map[string]bool{}
 	for _, boardID := range dbab.Boards {
@@ -131,7 +131,7 @@ func (s *SQLStore) deleteBoardsAndBlocks(db sq.BaseRunner, dbab *model.DeleteBoa
 	return nil
 }
 
-func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID string, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	bab := &model.BoardsAndBlocks{
 		Boards: []*model.Board{},
 		Blocks: []model.Block{},
@@ -143,6 +143,11 @@ func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID strin
 	}
 	board.IsTemplate = asTemplate
 	board.CreatedBy = userID
+
+	if toTeam != "" {
+		board.TeamID = toTeam
+	}
+
 	bab.Boards = []*model.Board{board}
 	blocks, err := s.getBlocksWithBoardID(db, boardID)
 	if err != nil {

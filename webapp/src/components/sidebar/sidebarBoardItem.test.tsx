@@ -6,7 +6,6 @@ import {createMemoryHistory} from 'history'
 import {Router} from 'react-router-dom'
 
 import {render} from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 
 import {Provider as ReduxProvider} from 'react-redux'
 
@@ -21,16 +20,13 @@ import SidebarBoardItem from './sidebarBoardItem'
 describe('components/sidebarBoardItem', () => {
     const board = TestBlockFactory.createBoard()
 
-    const view2 = TestBlockFactory.createBoardView(board)
-    view2.fields.sortOptions = []
+    const view = TestBlockFactory.createBoardView(board)
+    view.fields.sortOptions = []
     const history = createMemoryHistory()
 
-    const board1 = TestBlockFactory.createBoard()
-    const board2 = TestBlockFactory.createBoard()
-    const boards = [board1, board2]
     const categoryBlocks1 = TestBlockFactory.createCategoryBlocks()
     categoryBlocks1.name = 'Category 1'
-    categoryBlocks1.blockIDs = [board1.id, board2.id]
+    categoryBlocks1.blockIDs = [board.id]
 
     const categoryBlocks2 = TestBlockFactory.createCategoryBlocks()
     categoryBlocks2.name = 'Category 2'
@@ -50,6 +46,18 @@ describe('components/sidebarBoardItem', () => {
                 id: 'user_id_1',
             },
         },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+        },
+        views: {
+            current: view.id,
+            views: {
+                [view.id]: view,
+            },
+        },
         teams: {
             current: {
                 id: 'team-id',
@@ -57,7 +65,7 @@ describe('components/sidebarBoardItem', () => {
         },
     }
 
-    test('sidebar call hideSidebar', () => {
+    test('sidebar board item', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
@@ -65,21 +73,18 @@ describe('components/sidebarBoardItem', () => {
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarBoardItem
-                        hideSidebar={() => {}}
                         categoryBlocks={categoryBlocks1}
-                        boards={boards}
+                        board={board}
                         allCategories={allCategoryBlocks}
+                        isActive={true}
+                        showBoard={jest.fn()}
+                        showView={jest.fn()}
+                        onDeleteRequest={jest.fn()}
                     />
                 </Router>
             </ReduxProvider>,
         )
         const {container} = render(component)
-        expect(container).toMatchSnapshot()
-
-        // testing collapsed state of category
-        const subItems = container.querySelectorAll('.category > .IconButton')
-        expect(subItems).toBeDefined()
-        userEvent.click(subItems[0] as Element)
         expect(container).toMatchSnapshot()
     })
 })

@@ -20,6 +20,7 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/
 import {Category} from './store/sidebar'
 
 /* eslint-disable max-lines */
+import {UserConfigPatch} from './user'
 import store from './store'
 import {updateBoards} from './store/boards'
 import {updateViews} from './store/views'
@@ -835,29 +836,37 @@ class Mutator {
         )
     }
 
-    async hideViewColumn(boardId: string, view: BoardView, columnOptionId: string): Promise<void> {
-        if (view.fields.hiddenOptionIds.includes(columnOptionId)) {
+    async hideViewColumns(boardId: string, view: BoardView, columnOptionIds: string[]): Promise<void> {
+        if (columnOptionIds.every((o) => view.fields.hiddenOptionIds.includes(o))) {
             return
         }
 
         const newView = createBoardView(view)
-        newView.fields.visibleOptionIds = newView.fields.visibleOptionIds.filter((o) => o !== columnOptionId)
-        newView.fields.hiddenOptionIds = [...newView.fields.hiddenOptionIds, columnOptionId]
+        newView.fields.visibleOptionIds = newView.fields.visibleOptionIds.filter((o) => !columnOptionIds.includes(o))
+        newView.fields.hiddenOptionIds = [...newView.fields.hiddenOptionIds, ...columnOptionIds]
         await this.updateBlock(boardId, newView, view, 'hide column')
     }
 
-    async unhideViewColumn(boardId: string, view: BoardView, columnOptionId: string): Promise<void> {
-        if (!view.fields.hiddenOptionIds.includes(columnOptionId)) {
+    async hideViewColumn(boardId: string, view: BoardView, columnOptionId: string): Promise<void> {
+        return this.hideViewColumns(boardId, view, [columnOptionId])
+    }
+
+    async unhideViewColumns(boardId: string, view: BoardView, columnOptionIds: string[]): Promise<void> {
+        if (columnOptionIds.every((o) => view.fields.visibleOptionIds.includes(o))) {
             return
         }
 
         const newView = createBoardView(view)
-        newView.fields.hiddenOptionIds = newView.fields.hiddenOptionIds.filter((o) => o !== columnOptionId)
+        newView.fields.hiddenOptionIds = newView.fields.hiddenOptionIds.filter((o) => !columnOptionIds.includes(o))
 
-        // Put the column at the end of the visible list
-        newView.fields.visibleOptionIds = newView.fields.visibleOptionIds.filter((o) => o !== columnOptionId)
-        newView.fields.visibleOptionIds = [...newView.fields.visibleOptionIds, columnOptionId]
+        // Put the columns at the end of the visible list
+        newView.fields.visibleOptionIds = newView.fields.visibleOptionIds.filter((o) => !columnOptionIds.includes(o))
+        newView.fields.visibleOptionIds = [...newView.fields.visibleOptionIds, ...columnOptionIds]
         await this.updateBlock(boardId, newView, view, 'show column')
+    }
+
+    async unhideViewColumn(boardId: string, view: BoardView, columnOptionId: string): Promise<void> {
+        return this.unhideViewColumns(boardId, view, [columnOptionId])
     }
 
     async changeViewCardOrder(boardId: string, view: BoardView, cardOrder: string[], description = 'reorder'): Promise<void> {
@@ -906,6 +915,10 @@ class Mutator {
             'follow block',
             this.undoGroupId,
         )
+    }
+
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
+        return octoClient.patchUserConfig(userID, patch)
     }
 
     // Duplicate
@@ -973,10 +986,11 @@ class Mutator {
         asTemplate = false,
         afterRedo?: (newBoardId: string) => Promise<void>,
         beforeUndo?: () => Promise<void>,
+        toTeam?: string,
     ): Promise<[Block[], string]> {
         return undoManager.perform(
             async () => {
-                const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate)
+                const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate, toTeam)
                 if (boardsAndBlocks) {
                     updateAllBoardsAndBlocks(boardsAndBlocks.boards, boardsAndBlocks.blocks)
                     await afterRedo?.(boardsAndBlocks.boards[0]?.id)
@@ -1005,12 +1019,13 @@ class Mutator {
         afterRedo: (id: string) => Promise<void>,
         beforeUndo: () => Promise<void>,
         boardTemplateId: string,
+        toTeam?: string,
     ): Promise<[Block[], string]> {
         const asTemplate = false
         const actionDescription = intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'})
 
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId})
-        return mutator.duplicateBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo)
+        return mutator.duplicateBoard(boardTemplateId, actionDescription, asTemplate, afterRedo, beforeUndo, toTeam)
     }
 
     async addEmptyBoard(

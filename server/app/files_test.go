@@ -5,16 +5,17 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore/mocks"
-	"github.com/stretchr/testify/assert"
 )
 
 const (
 	testFileName = "temp-file-name"
-	testBoardID  = "test-root-id"
-	testFilePath = "1/test-root-id/temp-file-name"
+	testBoardID  = "test-board-id"
+	testFilePath = "1/test-board-id/temp-file-name"
 )
 
 type TestError struct{}
@@ -104,7 +105,7 @@ func TestGetFileReader(t *testing.T) {
 	})
 
 	t.Run("should move file from old filepath to new filepath, if file doesnot exists in new filepath and workspace id is 0", func(t *testing.T) {
-		filePath := "0/test-root-id/temp-file-name"
+		filePath := "0/test-board-id/temp-file-name"
 		workspaceid := "0"
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
@@ -139,7 +140,7 @@ func TestGetFileReader(t *testing.T) {
 	})
 
 	t.Run("should return file reader, if file doesnot exists in new filepath and old file path", func(t *testing.T) {
-		filePath := "0/test-root-id/temp-file-name"
+		filePath := "0/test-board-id/temp-file-name"
 		fileName := testFileName
 		workspaceid := "0"
 		mockedFileBackend := &mocks.FileBackend{}
@@ -209,7 +210,7 @@ func TestSaveFile(t *testing.T) {
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, "/")
 			assert.Equal(t, "1", paths[0])
-			assert.Equal(t, "test-root-id", paths[1])
+			assert.Equal(t, "test-board-id", paths[1])
 			assert.Equal(t, "jpg", strings.Split(paths[2], ".")[1])
 			return int64(10)
 		}
@@ -219,7 +220,7 @@ func TestSaveFile(t *testing.T) {
 		}
 
 		mockedFileBackend.On("WriteFile", mockedReadCloseSeek, mock.Anything).Return(writeFileFunc, writeFileErrorFunc)
-		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", "test-root-id", fileName)
+		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", "test-board-id", fileName)
 		assert.Nil(t, err)
 		assert.NotNil(t, actual)
 	})
@@ -233,7 +234,7 @@ func TestSaveFile(t *testing.T) {
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, "/")
 			assert.Equal(t, "1", paths[0])
-			assert.Equal(t, "test-root-id", paths[1])
+			assert.Equal(t, "test-board-id", paths[1])
 			assert.Equal(t, "jpg", strings.Split(paths[2], ".")[1])
 			return int64(10)
 		}
@@ -243,7 +244,7 @@ func TestSaveFile(t *testing.T) {
 		}
 
 		mockedFileBackend.On("WriteFile", mockedReadCloseSeek, mock.Anything).Return(writeFileFunc, writeFileErrorFunc)
-		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", "test-root-id", fileName)
+		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", "test-board-id", fileName)
 		assert.Equal(t, "", actual)
 		assert.Equal(t, "unable to store the file in the files storage: Mocked File backend error", err.Error())
 	})

@@ -33,6 +33,10 @@
         display: none;
         position: absolute;
         right: 0;
+
+        &.show {
+            display: block;
+        }
     }
 
     .octo-tooltip {

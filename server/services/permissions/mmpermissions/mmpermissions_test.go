@@ -12,18 +12,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	testTeamID  = "team-id"
+	testBoardID = "board-id"
+	testUserID  = "user-id"
+)
+
 func TestHasPermissionsToTeam(t *testing.T) {
 	th := SetupTestHelper(t)
 
 	t.Run("empty input should always unauthorize", func(t *testing.T) {
-		assert.False(t, th.permissions.HasPermissionToTeam("", "team-id", model.PermissionManageBoardCards))
-		assert.False(t, th.permissions.HasPermissionToTeam("user-id", "", model.PermissionManageBoardCards))
-		assert.False(t, th.permissions.HasPermissionToTeam("user-id", "team-id", nil))
+		assert.False(t, th.permissions.HasPermissionToTeam("", testTeamID, model.PermissionManageBoardCards))
+		assert.False(t, th.permissions.HasPermissionToTeam(testUserID, "", model.PermissionManageBoardCards))
+		assert.False(t, th.permissions.HasPermissionToTeam(testUserID, testTeamID, nil))
 	})
 
 	t.Run("should authorize if the plugin API does", func(t *testing.T) {
-		userID := "user-id"
-		teamID := "team-id"
+		userID := testUserID
+		teamID := testTeamID
 
 		th.api.EXPECT().
 			HasPermissionToTeam(userID, teamID, model.PermissionViewTeam).
@@ -35,8 +41,8 @@ func TestHasPermissionsToTeam(t *testing.T) {
 	})
 
 	t.Run("should not authorize if the plugin API doesn't", func(t *testing.T) {
-		userID := "user-id"
-		teamID := "team-id"
+		userID := testUserID
+		teamID := testTeamID
 
 		th.api.EXPECT().
 			HasPermissionToTeam(userID, teamID, model.PermissionViewTeam).
@@ -48,19 +54,19 @@ func TestHasPermissionsToTeam(t *testing.T) {
 	})
 }
 
-// test case for user removed
+// test case for user removed.
 func TestHasPermissionToBoard(t *testing.T) {
 	th := SetupTestHelper(t)
 
 	t.Run("empty input should always unauthorize", func(t *testing.T) {
-		assert.False(t, th.permissions.HasPermissionToBoard("", "board-id", model.PermissionManageBoardCards))
-		assert.False(t, th.permissions.HasPermissionToBoard("user-id", "", model.PermissionManageBoardCards))
-		assert.False(t, th.permissions.HasPermissionToBoard("user-id", "board-id", nil))
+		assert.False(t, th.permissions.HasPermissionToBoard("", testBoardID, model.PermissionManageBoardCards))
+		assert.False(t, th.permissions.HasPermissionToBoard(testUserID, "", model.PermissionManageBoardCards))
+		assert.False(t, th.permissions.HasPermissionToBoard(testUserID, testBoardID, nil))
 	})
 
-	userID := "user-id"
-	boardID := "board-id"
-	teamID := "team-id"
+	userID := testUserID
+	boardID := testBoardID
+	teamID := testTeamID
 
 	t.Run("nonexistent member", func(t *testing.T) {
 		th.store.EXPECT().
