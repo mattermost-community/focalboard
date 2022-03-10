@@ -5,7 +5,7 @@ import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
 import {getCurrentTeam} from '../store/teams'
-import {getCurrentBoard} from '../store/boards'
+import {getCurrentBoard, isLoadingBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
@@ -28,6 +28,7 @@ type Props = {
 
 function CenterContent(props: Props) {
     const team = useAppSelector(getCurrentTeam)
+    const isLoading = useAppSelector(isLoadingBoard)
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const board = useAppSelector(getCurrentBoard)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
@@ -85,6 +86,10 @@ function CenterContent(props: Props) {
                 showShared={clientConfig?.enablePublicSharedBoards || false}
             />
         )
+    }
+
+    if (board || isLoading) {
+        return null
     }
 
     return (

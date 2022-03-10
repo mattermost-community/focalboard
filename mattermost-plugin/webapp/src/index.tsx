@@ -206,7 +206,7 @@ export default class Plugin {
                 '/boards',
                 'product-boards',
                 'Boards',
-                '/boards/welcome',
+                '/boards',
                 MainApp,
                 HeaderComponent,
                 () => null,
