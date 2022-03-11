@@ -47,22 +47,24 @@ exports[`components/cardDetail/comment return comment 1`] = `
             <div
               class="menu-options"
             >
-              <div
-                aria-label="Delete"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+              <div>
                 <div
-                  class="menu-name"
+                  aria-label="Delete"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Delete
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
-                <div
-                  class="noicon"
-                />
               </div>
             </div>
             <div
@@ -151,22 +153,24 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
             <div
               class="menu-options"
             >
-              <div
-                aria-label="Delete"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+              <div>
                 <div
-                  class="menu-name"
+                  aria-label="Delete"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Delete
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
-                <div
-                  class="noicon"
-                />
               </div>
             </div>
             <div

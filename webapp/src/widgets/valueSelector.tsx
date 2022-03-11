@@ -174,6 +174,7 @@ function ValueSelector(props: Props): JSX.Element {
                 />
             )}
             className='ValueSelector'
+            classNamePrefix='ValueSelector'
             options={props.options}
             getOptionLabel={(o: IPropertyOption) => o.value}
             getOptionValue={(o: IPropertyOption) => o.id}
