@@ -22,22 +22,6 @@ import Menu from '../../widgets/menu'
 import {IDType, Utils} from '../../utils'
 import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
 
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {
-    getMe,
-    getOnboardingTourCategory,
-    getOnboardingTourStarted,
-    getOnboardingTourStep,
-    patchProps,
-} from '../../store/users'
-
-import {BaseTourSteps, CardTourSteps, TOUR_BASE, TOUR_CARD} from '../onboardingTour'
-
-import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
-import {UserSettingKey} from '../../userSettings'
-
-import {OnboardingBoardTitle} from './cardDetail'
-
 type Props = {
     board: Board
     card: Card
