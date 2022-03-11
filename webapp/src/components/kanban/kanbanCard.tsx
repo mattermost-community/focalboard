@@ -24,6 +24,8 @@ import Tooltip from '../../widgets/tooltip'
 import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
 
+import BoardPermissionGate from '../permissions/boardPermissionGate'
+
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import './kanbanCard.scss'
 import CardBadges from '../cardBadges'
@@ -112,33 +114,35 @@ const KanbanCard = (props: Props) => {
                 >
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
-                        <Menu.Text
-                            icon={<DeleteIcon/>}
-                            id='delete'
-                            name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
-                            onClick={handleDeleteButtonOnClick}
-                        />
-                        <Menu.Text
-                            icon={<DuplicateIcon/>}
-                            id='duplicate'
-                            name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
-                            onClick={() => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
-                                mutator.duplicateCard(
-                                    card.id,
-                                    board.id,
-                                    false,
-                                    'duplicate card',
-                                    false,
-                                    async (newCardId) => {
-                                        props.showCard(newCardId)
-                                    },
-                                    async () => {
-                                        props.showCard(undefined)
-                                    },
-                                )
-                            }}
-                        />
+                        <BoardPermissionGate permissions={['manage_board_cards']}>
+                            <Menu.Text
+                                icon={<DeleteIcon/>}
+                                id='delete'
+                                name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
+                                onClick={handleDeleteButtonOnClick}
+                            />
+                            <Menu.Text
+                                icon={<DuplicateIcon/>}
+                                id='duplicate'
+                                name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
+                                onClick={() => {
+                                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                                    mutator.duplicateCard(
+                                        card.id,
+                                        board.id,
+                                        false,
+                                        'duplicate card',
+                                        false,
+                                        async (newCardId) => {
+                                            props.showCard(newCardId)
+                                        },
+                                        async () => {
+                                            props.showCard(undefined)
+                                        },
+                                    )
+                                }}
+                            />
+                        </BoardPermissionGate>
                         <Menu.Text
                             icon={<LinkIcon/>}
                             id='copy'

@@ -43,5 +43,5 @@ export const useHasCurrentTeamPermissions = (boardId: string, permissions: strin
 export const useHasCurrentBoardPermissions = (permissions: string[]): boolean => {
     const currentBoard = useAppSelector(getCurrentBoard)
 
-    return useHasCurrentTeamPermissions(currentBoard.id, permissions)
+    return useHasCurrentTeamPermissions(currentBoard?.id || '', permissions)
 }

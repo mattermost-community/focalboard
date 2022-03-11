@@ -13,6 +13,9 @@ import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import {useAppDispatch} from '../../store/hooks'
 import {updateView} from '../../store/views'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './table.scss'
 
@@ -39,6 +42,8 @@ type Props = {
 const Table = (props: Props): JSX.Element => {
     const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
+    const canEditBoardProperties = useHasCurrentBoardPermissions(['manage_board_properties'])
+    const canEditCards = useHasCurrentBoardPermissions(['manage_board_cards'])
     const dispatch = useAppDispatch()
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
@@ -192,7 +197,7 @@ const Table = (props: Props): JSX.Element => {
                     offset={offset}
                     resizingColumn={resizingColumn}
                     columnRefs={columnRefs}
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardProperties}
                 />
 
                 {/* Table rows */}
@@ -206,7 +211,7 @@ const Table = (props: Props): JSX.Element => {
                                 activeView={activeView}
                                 groupByProperty={groupByProperty}
                                 group={group}
-                                readonly={props.readonly}
+                                readonly={props.readonly || !canEditCards}
                                 columnRefs={columnRefs}
                                 selectedCardIds={props.selectedCardIds}
                                 cardIdToFocusOnRender={props.cardIdToFocusOnRender}
@@ -230,7 +235,7 @@ const Table = (props: Props): JSX.Element => {
                         columnRefs={columnRefs}
                         cards={cards}
                         selectedCardIds={props.selectedCardIds}
-                        readonly={props.readonly}
+                        readonly={props.readonly || !canEditCards}
                         cardIdToFocusOnRender={props.cardIdToFocusOnRender}
                         showCard={props.showCard}
                         addCard={props.addCard}
@@ -243,17 +248,19 @@ const Table = (props: Props): JSX.Element => {
                 {/* Add New row */}
                 <div className='octo-table-footer'>
                     {!props.readonly && !activeView.fields.groupById &&
-                    <div
-                        className='octo-table-cell'
-                        onClick={() => {
-                            props.addCard('')
-                        }}
-                    >
-                        <FormattedMessage
-                            id='TableComponent.plus-new'
-                            defaultMessage='+ New'
-                        />
-                    </div>
+                    <BoardPermissionGate permissions={['manage_board_cards']}>
+                        <div
+                            className='octo-table-cell'
+                            onClick={() => {
+                                props.addCard('')
+                            }}
+                        >
+                            <FormattedMessage
+                                id='TableComponent.plus-new'
+                                defaultMessage='+ New'
+                            />
+                        </div>
+                    </BoardPermissionGate>
                     }
                 </div>
 
@@ -263,7 +270,7 @@ const Table = (props: Props): JSX.Element => {
                     activeView={activeView}
                     resizingColumn={resizingColumn}
                     offset={offset}
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardProperties}
                 />
             </div>
         </div>

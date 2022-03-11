@@ -57,7 +57,7 @@ export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
             const boardsToUpdate: Board[] = []
             /* eslint-disable no-await-in-loop */
             for (const member of myMemberships) {
-                if (!member.schemeAdmin && !member.schemeEditor) {
+                if (!member.schemeAdmin && !member.schemeEditor && !member.schemeViewer && !member.schemeCommenter) {
                     boardsToUpdate.push({id: member.boardId, deleteAt: 1} as Board)
                     continue
                 }
@@ -101,10 +101,16 @@ export const updateMembers = (state: BoardsState, action: PayloadAction<BoardMem
     const boardMembers = state.membersInBoards[boardId] || {}
 
     for (const member of action.payload) {
-        if (!member.schemeAdmin && !member.schemeEditor) {
+        if (!member.schemeAdmin && !member.schemeEditor && !member.schemeViewer && !member.schemeCommenter) {
             delete boardMembers[member.userId]
         } else {
             boardMembers[member.userId] = member
+        }
+    }
+
+    for (const member of action.payload) {
+        if (state.myBoardMemberships[member.boardId] && state.myBoardMemberships[member.boardId].userId === member.userId) {
+            state.myBoardMemberships[member.boardId] = member
         }
     }
 }

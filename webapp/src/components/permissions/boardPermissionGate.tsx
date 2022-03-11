@@ -13,14 +13,14 @@ type Props = {
     teamId?: string
     permissions: string[]
     invert?: boolean
-    children: React.ReactElement
+    children: React.ReactNode
 }
 
 const BoardPermissionGate = React.memo((props: Props): React.ReactElement|null => {
     const currentTeam = useAppSelector(getCurrentTeam)
     const currentBoard = useAppSelector(getCurrentBoard)
 
-    const boardId = props.boardId || currentBoard.id
+    const boardId = props.boardId || currentBoard?.id || ''
     const teamId = props.teamId || currentTeam?.id || ''
 
     const allowed = useHasPermissions(teamId, boardId, props.permissions)
@@ -29,7 +29,7 @@ const BoardPermissionGate = React.memo((props: Props): React.ReactElement|null =
         if (props.invert) {
             return null
         }
-        return props.children
+        return (<>{props.children}</>)
     }
     return null
 })

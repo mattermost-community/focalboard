@@ -10,6 +10,8 @@ import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 
+import BoardPermissionGate from '../permissions/boardPermissionGate'
+
 import './gallery.scss'
 import GalleryCard from './galleryCard'
 
@@ -76,17 +78,19 @@ const Gallery = (props: Props): JSX.Element => {
             {/* Add New row */}
 
             {!props.readonly &&
-                <div
-                    className='octo-gallery-new'
-                    onClick={() => {
-                        props.addCard(true)
-                    }}
-                >
-                    <FormattedMessage
-                        id='TableComponent.plus-new'
-                        defaultMessage='+ New'
-                    />
-                </div>
+                <BoardPermissionGate permissions={['manage_board_cards']}>
+                    <div
+                        className='octo-gallery-new'
+                        onClick={() => {
+                            props.addCard(true)
+                        }}
+                    >
+                        <FormattedMessage
+                            id='TableComponent.plus-new'
+                            defaultMessage='+ New'
+                        />
+                    </div>
+                </BoardPermissionGate>
             }
         </div>
     )

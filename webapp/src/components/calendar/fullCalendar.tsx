@@ -18,6 +18,7 @@ import {DateProperty, createDatePropertyFromString} from '../properties/dateRang
 import Tooltip from '../../widgets/tooltip'
 import PropertyValueElement from '../propertyValueElement'
 import {Constants} from '../../constants'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import CardBadges from '../cardBadges'
 
 import './fullcalendar.scss'
@@ -66,6 +67,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const intl = useIntl()
     const {board, cards, activeView, dateDisplayProperty, readonly} = props
     const isSelectable = !readonly
+    const canAddCards = useHasCurrentBoardPermissions(['manage_board_cards'])
 
     const visiblePropertyTemplates = useMemo(() => (
         board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
@@ -204,23 +206,19 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const dayCellContent = useCallback((args: DayCellContentArg): JSX.Element|null => {
         return (
-            <div
-                className='dateContainer'
-            >
+            <div className={'dateContainer ' + (canAddCards ? 'with-plus' : '')}>
                 <div
                     className='addEvent'
                     onClick={() => onNewEvent({start: args.date, end: args.date})}
                 >
                     {'+'}
                 </div>
-                <div
-                    className='dateDisplay'
-                >
+                <div className='dateDisplay'>
                     {args.dayNumberText}
                 </div>
             </div>
         )
-    }, [dateDisplayProperty])
+    }, [dateDisplayProperty, canAddCards])
 
     return (
         <div

@@ -69,6 +69,12 @@
             align-items: center;
             width: 100%;
 
+            &.with-plus {
+                .addEvent {
+                    display: none;
+                }
+            }
+
             .addEvent {
                 border-radius: 4px;
                 margin: 0 4px;
@@ -97,10 +103,11 @@
         }
 
         &:hover {
-            .dateContainer {
+            .dateContainer.with-plus {
                 // display: flex;
                 flex-direction: row;
                 justify-content: space-between;
+                align-items: flex-end;
 
                 .addEvent {
                     display: flex;
