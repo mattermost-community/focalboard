@@ -92,6 +92,8 @@ const GalleryCard = (props: Props) => {
                                 name={intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
                                 onClick={() => mutator.deleteBlock(card, 'delete card')}
                             />
+                        <BoardPermissionGate permissions={['manage_board_cards']}>
+                        </BoardPermissionGate>
                             <Menu.Text
                                 icon={<DuplicateIcon/>}
                                 id='duplicate'

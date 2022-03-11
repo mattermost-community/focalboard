@@ -186,6 +186,18 @@ describe('components/table/Table extended', () => {
         cards: {
             cards: {},
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: 'board_id',
+            boards: {
+                board_id: {id: 'board_id'},
+            },
+            myBoardMemberships: {
+                board_id: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
     }
 
     test('should match snapshot with CreatedBy', async () => {
@@ -220,6 +232,18 @@ describe('components/table/Table extended', () => {
                 cards: {
                     [card1.id]: card1,
                     [card2.id]: card2,
+                },
+            },
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
                 },
             },
         })

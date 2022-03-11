@@ -246,6 +246,19 @@ describe('src/components/gallery/GalleryCard', () => {
                 comments: {
                     comments: {},
                 },
+                teams: {
+                    current: {id: 'team-id'},
+                },
+                boards: {
+                    current: board.id,
+                    boards: {
+                        [board.id]: board,
+                    },
+                    templates: [],
+                    myBoardMemberships: {
+                        [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
+                },
             }
             store = mockStateStore([], state)
         })
@@ -295,6 +308,19 @@ describe('src/components/gallery/GalleryCard', () => {
                 comments: {
                     comments: {},
                 },
+                teams: {
+                    current: {id: 'team-id'},
+                },
+                boards: {
+                    current: board.id,
+                    boards: {
+                        [board.id]: board,
+                    },
+                    templates: [],
+                    myBoardMemberships: {
+                        [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
+                },
             }
             store = mockStateStore([], state)
         })
@@ -338,6 +364,19 @@ describe('src/components/gallery/GalleryCard', () => {
                 },
                 comments: {
                     comments: {},
+                },
+                teams: {
+                    current: {id: 'team-id'},
+                },
+                boards: {
+                    current: board.id,
+                    boards: {
+                        [board.id]: board,
+                    },
+                    templates: [],
+                    myBoardMemberships: {
+                        [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
                 },
             }
             store = mockStateStore([], state)
@@ -401,6 +440,19 @@ describe('src/components/gallery/GalleryCard', () => {
                 },
                 comments: {
                     comments: {},
+                },
+                teams: {
+                    current: {id: 'team-id'},
+                },
+                boards: {
+                    current: board.id,
+                    boards: {
+                        [board.id]: board,
+                    },
+                    templates: [],
+                    myBoardMemberships: {
+                        [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
                 },
             }
             store = mockStateStore([], state)
