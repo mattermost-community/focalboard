@@ -18,6 +18,8 @@ import {Constants} from '../../constants'
 
 import {dragAndDropRearrange} from '../cardDetail/cardDetailContentsUtility'
 
+import BoardPermissionGate from '../permissions/boardPermissionGate'
+
 import KanbanCard from './kanbanCard'
 import KanbanColumn from './kanbanColumn'
 import KanbanColumnHeader from './kanbanColumnHeader'
@@ -236,16 +238,18 @@ const Kanban = (props: Props) => {
                 }
 
                 {!props.readonly &&
-                    <div className='octo-board-header-cell narrow'>
-                        <Button
-                            onClick={addGroupClicked}
-                        >
-                            <FormattedMessage
-                                id='BoardComponent.add-a-group'
-                                defaultMessage='+ Add a group'
-                            />
-                        </Button>
-                    </div>
+                    <BoardPermissionGate permissions={['manage_board_properties']}>
+                        <div className='octo-board-header-cell narrow'>
+                            <Button
+                                onClick={addGroupClicked}
+                            >
+                                <FormattedMessage
+                                    id='BoardComponent.add-a-group'
+                                    defaultMessage='+ Add a group'
+                                />
+                            </Button>
+                        </div>
+                    </BoardPermissionGate>
                 }
             </div>
 
@@ -280,16 +284,18 @@ const Kanban = (props: Props) => {
                             />
                         ))}
                         {!props.readonly &&
-                        <Button
-                            onClick={() => {
-                                props.addCard(group.option.id, true)
-                            }}
-                        >
-                            <FormattedMessage
-                                id='BoardComponent.new'
-                                defaultMessage='+ New'
-                            />
-                        </Button>
+                            <BoardPermissionGate permissions={['manage_board_cards']}>
+                                <Button
+                                    onClick={() => {
+                                        props.addCard(group.option.id, true)
+                                    }}
+                                >
+                                    <FormattedMessage
+                                        id='BoardComponent.new'
+                                        defaultMessage='+ New'
+                                    />
+                                </Button>
+                            </BoardPermissionGate>
                         }
                     </KanbanColumn>
                 ))}

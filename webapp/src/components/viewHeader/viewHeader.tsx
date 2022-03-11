@@ -16,7 +16,6 @@ import Editable from '../../widgets/editable'
 
 import ModalWrapper from '../modalWrapper'
 
-import ShareBoardDialog from '../shareBoard/shareBoard'
 import {useAppSelector} from '../../store/hooks'
 import {
     getOnboardingTourCategory,
@@ -55,7 +54,6 @@ type Props = {
     editCardTemplate: (cardTemplateId: string) => void
     readonly: boolean
     dateDisplayProperty?: IPropertyTemplate
-    enableSharedBoards: boolean
 }
 
 const ViewHeader = (props: Props) => {
@@ -75,8 +73,6 @@ const ViewHeader = (props: Props) => {
     }, [activeView.title])
 
     const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
-
-    const [showShareDialog, setShowShareDialog] = useState(false)
 
     const isOnboardingBoard = props.board.title === OnboardingBoardTitle
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
@@ -143,12 +139,6 @@ const ViewHeader = (props: Props) => {
                     {showAddViewTourStep && <AddViewTourStep/>}
                 </div>
             </div>
-
-            <button
-                onClick={() => setShowShareDialog(!showShareDialog)}
-            >
-                {'Show Share Modal'}
-            </button>
 
             <div className='octo-spacer'/>
 
@@ -234,12 +224,6 @@ const ViewHeader = (props: Props) => {
                     editCardTemplate={props.editCardTemplate}
                 />
             </>}
-
-            {showShareDialog &&
-                <ShareBoardDialog
-                    onClose={() => setShowShareDialog(false)}
-                    enableSharedBoards={props.enableSharedBoards}
-                />}
         </div>
     )
 }

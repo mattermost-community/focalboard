@@ -10,6 +10,8 @@ import {IPropertyTemplate} from '../../../blocks/board'
 
 import Calculations from '../../calculations/calculations'
 
+import BoardPermissionGate from '../../permissions/boardPermissionGate'
+
 import {KanbanCalculationOptions} from './calculationOptions'
 
 type Props = {
@@ -39,16 +41,18 @@ function KanbanCalculation(props: Props): JSX.Element {
 
             {
                 !props.readonly && props.menuOpen && (
-                    <KanbanCalculationOptions
-                        value={props.value}
-                        property={props.property}
-                        menuOpen={props.menuOpen}
-                        onChange={(data: { calculation: string, propertyId: string }) => {
-                            props.onChange(data)
-                            props.onMenuClose()
-                        }}
-                        cardProperties={props.cardProperties}
-                    />
+                    <BoardPermissionGate permissions={['manage_board_properties']}>
+                        <KanbanCalculationOptions
+                            value={props.value}
+                            property={props.property}
+                            menuOpen={props.menuOpen}
+                            onChange={(data: { calculation: string, propertyId: string }) => {
+                                props.onChange(data)
+                                props.onMenuClose()
+                            }}
+                            cardProperties={props.cardProperties}
+                        />
+                    </BoardPermissionGate>
                 )
             }
         </div>
