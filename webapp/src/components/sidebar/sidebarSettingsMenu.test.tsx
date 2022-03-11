@@ -74,7 +74,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
 
         const {container} = render(component)
         userEvent.click(container.querySelector('.menu-entry') as Element)
-        userEvent.click(container.querySelector('#theme') as Element)
+        userEvent.hover(container.querySelector('#theme') as Element)
         expect(container).toMatchSnapshot()
     })
 
@@ -87,7 +87,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
 
         const {container} = render(component)
         userEvent.click(container.querySelector('.menu-entry') as Element)
-        userEvent.click(container.querySelector('#lang') as Element)
+        userEvent.hover(container.querySelector('#lang') as Element)
         expect(container).toMatchSnapshot()
     })
 
@@ -101,7 +101,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
 
         const {container} = render(component)
         userEvent.click(container.querySelector('.menu-entry') as Element)
-        userEvent.click(container.querySelector('#import') as Element)
+        userEvent.hover(container.querySelector('#import') as Element)
         expect(container).toMatchSnapshot()
 
         userEvent.click(container.querySelector('[aria-label="Asana"]') as Element)
