@@ -20,7 +20,7 @@ A clear and concise description of what you expected to happen.
 
 ## Screenshots (optional)
 
-If applicable, add screenshots to elaborate on the problem.
+If applicable, add screenshots or a screen recording to elaborate on the problem.
 
 ## Edition and Platform
 
