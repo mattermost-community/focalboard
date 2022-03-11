@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useEffect} from 'react'
 
 import {FormattedMessage} from 'react-intl'
 
@@ -10,8 +10,21 @@ import './add_properties.scss'
 import {Utils} from '../../../utils'
 import addProperty from '../../../../static/addProperty.gif'
 
-import {CardTourSteps, TOUR_CARD} from '../index'
+import {BaseTourSteps, CardTourSteps, TOUR_BASE, TOUR_CARD} from '../index'
 import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
+import {OnboardingBoardTitle, OnboardingCardTitle} from '../../cardDetail/cardDetail'
+import {useAppDispatch, useAppSelector} from '../../../store/hooks'
+import {
+    getMe,
+    getOnboardingTourCategory,
+    getOnboardingTourStarted,
+    getOnboardingTourStep,
+    patchProps,
+} from '../../../store/users'
+import {IUser, UserConfigPatch, UserPropPrefix} from '../../../user'
+import mutator from '../../../mutator'
+import {getCurrentBoard} from '../../../store/boards'
+import {getCurrentCard} from '../../../store/cards'
 
 const AddPropertiesTourStep = (): JSX.Element | null => {
     const title = (
@@ -28,6 +41,53 @@ const AddPropertiesTourStep = (): JSX.Element | null => {
     )
 
     const punchout = useMeasurePunchouts(['.octo-propertyname.add-property'], [])
+
+    const me = useAppSelector<IUser|null>(getMe)
+    const dispatch = useAppDispatch()
+
+    const board = useAppSelector(getCurrentBoard)
+    const isOnboardingBoard = board ? board.title === OnboardingBoardTitle : false
+
+    const card = useAppSelector(getCurrentCard)
+    const isOnboardingCard = card ? card.title === OnboardingCardTitle : false
+
+    const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
+    const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
+    const onboardingTourStep = useAppSelector(getOnboardingTourStep)
+
+    // start the card tour if onboarding card is opened up
+    // and the user is still on the base tour
+    useEffect(() => {
+        async function task() {
+            if (!me || !card) {
+                return
+            }
+
+            const should = card.id &&
+                isOnboardingBoard &&
+                isOnboardingCard &&
+                onboardingTourStarted &&
+                onboardingTourCategory === TOUR_BASE &&
+                onboardingTourStep === BaseTourSteps.OPEN_A_CARD.toString()
+
+            if (!should) {
+                return
+            }
+
+            const patch: UserConfigPatch = {}
+            patch.updatedFields = {}
+            patch.updatedFields[UserPropPrefix + 'tourCategory'] = TOUR_CARD
+            patch.updatedFields[UserPropPrefix + 'onboardingTourStep'] = CardTourSteps.ADD_PROPERTIES.toString()
+
+            const updatedProps = await mutator.patchUserConfig(me.id, patch)
+            if (updatedProps) {
+                dispatch(patchProps(updatedProps))
+            }
+        }
+
+        // this hack is needed to allow performing async task in useEffect
+        task()
+    }, [card])
 
     return (
         <TourTipRenderer
