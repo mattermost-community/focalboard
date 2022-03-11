@@ -10,6 +10,7 @@ import Button from '../widgets/buttons/button'
 import './errorPage.scss'
 
 import {errorDefFromId, ErrorId} from '../errors'
+import {UserSettings} from '../userSettings'
 
 const ErrorPage = () => {
     const history = useHistory()
@@ -17,23 +18,31 @@ const ErrorPage = () => {
     const errid = queryString.get('id')
     const errorDef = errorDefFromId(errid as ErrorId)
 
-    const handleButtonClick = useCallback((path: string | (()=>string)) => {
-        let url = '/dashboard'
+    const handleButtonClick = useCallback((path: string | (()=>string), clearHistory: boolean) => {
+        let url = '/'
         if (typeof path === 'function') {
             url = path()
         } else if (path) {
             url = path as string
         }
-        history.push(url)
+        if (clearHistory) {
+            UserSettings.lastBoardId = ''
+            UserSettings.lastViewId = ''
+        }
+        if (url === window.location.origin) {
+            window.location.href = url
+        } else {
+            history.push(url)
+        }
     }, [history])
 
-    const makeButton = ((path: string | (()=>string), txt: string, fill: boolean) => {
+    const makeButton = ((path: string | (()=>string), txt: string, fill: boolean, clearHistory: boolean) => {
         return (
             <Button
                 filled={fill}
                 size='large'
                 onClick={async () => {
-                    handleButtonClick(path)
+                    handleButtonClick(path, clearHistory)
                 }}
             >
                 {txt}
@@ -56,10 +65,10 @@ const ErrorPage = () => {
                 <ErrorIllustration/>
                 <br/>
                 {
-                    (errorDef.button1Enabled ? makeButton(errorDef.button1Redirect, errorDef.button1Text, errorDef.button1Fill) : null)
+                    (errorDef.button1Enabled ? makeButton(errorDef.button1Redirect, errorDef.button1Text, errorDef.button1Fill, errorDef.button1ClearHistory) : null)
                 }
                 {
-                    (errorDef.button2Enabled ? makeButton(errorDef.button2Redirect, errorDef.button2Text, errorDef.button2Fill) : null)
+                    (errorDef.button2Enabled ? makeButton(errorDef.button2Redirect, errorDef.button2Text, errorDef.button2Fill, errorDef.button2ClearHistory) : null)
                 }
             </div>
         </div>
