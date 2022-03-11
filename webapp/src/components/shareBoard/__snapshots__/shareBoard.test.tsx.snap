@@ -296,10 +296,10 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
               title="Copy public link"
               type="button"
             >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-content-copy CompassIcon"
-                />
                 Copy link
               </span>
             </button>
@@ -415,10 +415,10 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
               title="Copy public link"
               type="button"
             >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-content-copy CompassIcon"
-                />
                 Copy link
               </span>
             </button>
@@ -534,10 +534,10 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
               title="Copy public link"
               type="button"
             >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
               <span>
-                <i
-                  class="CompassIcon icon-content-copy CompassIcon"
-                />
                 Copy link
               </span>
             </button>
