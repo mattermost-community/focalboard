@@ -73,7 +73,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
 
         const {container} = render(component)
         userEvent.click(container.querySelector('.menu-entry') as Element)
-        userEvent.click(container.querySelector('#lang') as Element)
+        userEvent.hover(container.querySelector('#lang') as Element)
         expect(container).toMatchSnapshot()
     })
 
