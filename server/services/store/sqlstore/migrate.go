@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/mattermost/morph/models"
-	"github.com/mattermost/morph/sources"
 	"path/filepath"
 	"text/template"
 
@@ -169,7 +168,7 @@ func (s *SQLStore) Migrate() error {
 	}
 	defer src.Close()
 
-	if err := s.migrateSchemaVersion(src); err != nil {
+	if err := s.migrateSchemaVersion(src.Migrations()); err != nil {
 		return err
 	}
 
@@ -233,7 +232,7 @@ func (s *SQLStore) Migrate() error {
 	return engine.ApplyAll()
 }
 
-func (s *SQLStore) migrateSchemaVersion(migrations sources.Source) error {
+func (s *SQLStore) migrateSchemaVersion(migrations []*models.Migration) error {
 	migrationNeeded, err := s.isSchemaMigrationNeeded()
 	if err != nil {
 		return err
@@ -252,12 +251,22 @@ func (s *SQLStore) migrateSchemaVersion(migrations sources.Source) error {
 		return err
 	}
 
+	if err := s.populateTempSchemaTable(migrations, legacySchemaVersion); err != nil {
+		return err
+	}
+
+	if err := s.useNewSchemaTable(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
 	// Check if `dirty` column exists on schema version table.
 	// This column exists only for the old schema version table.
+
+	// handle the case of table not found, in case of a clean database
 
 	// SQLite needs a bit of a special handling
 	if s.dbType == model.SqliteDBType {
@@ -327,34 +336,41 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 	return nameColumnFound, nil
 }
 
-func (s *SQLStore) getLegacySchemaVersion() (int, error) {
+func (s *SQLStore) getLegacySchemaVersion() (uint32, error) {
+	s.logger.Error("getLegacySchemaVersion called")
 	query := s.getQueryBuilder(s.db).
 		Select("version").
 		From(s.tablePrefix + "schema_migrations")
 
 	row := query.QueryRow()
 
-	var version int
+	var version uint32
 	if err := row.Scan(&version); err != nil {
 		s.logger.Error("error fetching legacy schema version", mlog.Err(err))
+		s.logger.Error("getLegacySchemaVersion err " + err.Error())
 		return version, err
 	}
 
+	s.logger.Error("getLegacySchemaVersion returned")
 	return version, nil
 }
 
 func (s *SQLStore) createTempSchemaTable() error {
+	s.logger.Error("createTempSchemaTable called")
 	// squirrel doesn't support DDL query in query builder
 	// so, we need to use a plain old string
-	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (Version bigint(20) NOT NULL, Name varchar(64) NOT NULL, PRIMARY KEY (Version))", s.tablePrefix+tempSchemaMigrationTableName)
+	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (Version bigint NOT NULL, Name varchar(64) NOT NULL, PRIMARY KEY (Version))", s.tablePrefix+tempSchemaMigrationTableName)
 	if _, err := s.db.Query(query); err != nil {
 		s.logger.Error("failed to create temporary schema migration table", mlog.Err(err))
+		s.logger.Error("createTempSchemaTable error  " + err.Error())
 		return err
 	}
 
+	s.logger.Error("createTempSchemaTable returned")
 	return nil
 }
 func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legacySchemaVersion uint32) error {
+	s.logger.Error("populateTempSchemaTable called")
 	query := s.getQueryBuilder(s.db).
 		Insert(s.tablePrefix+tempSchemaMigrationTableName).
 		Columns("Version", "Name")
@@ -376,6 +392,7 @@ func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legac
 
 	if _, err := query.Exec(); err != nil {
 		s.logger.Error("failed to insert migration records into temporary schema table", mlog.Err(err))
+		s.logger.Error("populateTempSchemaTable error " + err.Error())
 		return err
 	}
 
@@ -397,7 +414,7 @@ func (s *SQLStore) useNewSchemaTable() error {
 	if s.dbType == model.MysqlDBType {
 		query = fmt.Sprintf("RENAME TABLE `%s%s` TO `%sschema_migrations`", s.tablePrefix, tempSchemaMigrationTableName, s.tablePrefix)
 	} else {
-		query = fmt.Sprintf("ALTER TABLE %s%s RENAME TO %ssschema_migrations", s.tablePrefix, tempSchemaMigrationTableName, s.tablePrefix)
+		query = fmt.Sprintf("ALTER TABLE %s%s RENAME TO %sschema_migrations", s.tablePrefix, tempSchemaMigrationTableName, s.tablePrefix)
 	}
 
 	if _, err := s.db.Query(query); err != nil {
