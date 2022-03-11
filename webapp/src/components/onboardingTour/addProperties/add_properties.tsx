@@ -59,7 +59,7 @@ const AddPropertiesTourStep = (): JSX.Element | null => {
     // and the user is still on the base tour
     useEffect(() => {
         async function task() {
-            if (!me) {
+            if (!me || !card) {
                 return
             }
 
@@ -87,7 +87,7 @@ const AddPropertiesTourStep = (): JSX.Element | null => {
 
         // this hack is needed to allow performing async task in useEffect
         task()
-    }, [card.id])
+    }, [card])
 
     return (
         <TourTipRenderer
