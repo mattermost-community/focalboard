@@ -17,6 +17,7 @@ import Editable from '../../widgets/editable'
 import ModalWrapper from '../modalWrapper'
 
 import {useAppSelector} from '../../store/hooks'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import {
     getOnboardingTourCategory,
     getOnboardingTourStarted,
@@ -30,6 +31,7 @@ import {
 import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
 import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
@@ -59,6 +61,7 @@ type Props = {
 const ViewHeader = (props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
     const intl = useIntl()
+    const canEditBoardProperties = useHasCurrentBoardPermissions(['manage_board_properties'])
 
     const {board, activeView, views, groupByProperty, cards, dateDisplayProperty} = props
 
@@ -122,7 +125,7 @@ const ViewHeader = (props: Props) => {
                     }}
                     onChange={setViewTitle}
                     saveOnEsc={true}
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardProperties}
                     spellCheck={true}
                     autoExpand={false}
                 />
@@ -133,7 +136,7 @@ const ViewHeader = (props: Props) => {
                             board={board}
                             activeView={activeView}
                             views={views}
-                            readonly={props.readonly}
+                            readonly={props.readonly || !canEditBoardProperties}
                         />
                     </MenuWrapper>
                     {showAddViewTourStep && <AddViewTourStep/>}
@@ -142,7 +145,7 @@ const ViewHeader = (props: Props) => {
 
             <div className='octo-spacer'/>
 
-            {!props.readonly &&
+            {!props.readonly && canEditBoardProperties &&
             <>
                 {/* Card properties */}
 
@@ -217,12 +220,14 @@ const ViewHeader = (props: Props) => {
 
                 {/* New card button */}
 
-                <NewCardButton
-                    addCard={props.addCard}
-                    addCardFromTemplate={props.addCardFromTemplate}
-                    addCardTemplate={props.addCardTemplate}
-                    editCardTemplate={props.editCardTemplate}
-                />
+                <BoardPermissionGate permissions={['manage_board_cards']}>
+                    <NewCardButton
+                        addCard={props.addCard}
+                        addCardFromTemplate={props.addCardFromTemplate}
+                        addCardTemplate={props.addCardTemplate}
+                        editCardTemplate={props.editCardTemplate}
+                    />
+                </BoardPermissionGate>
             </>}
         </div>
     )

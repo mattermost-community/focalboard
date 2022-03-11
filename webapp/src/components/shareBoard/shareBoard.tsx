@@ -165,7 +165,25 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             if (!member.schemeAdmin && member.schemeEditor) {
                 return
             }
+            newMember.schemeAdmin = false
             newMember.schemeEditor = true
+            break
+        case 'Commenter':
+            if (!member.schemeAdmin && !member.schemeEditor && member.schemeCommenter) {
+                return
+            }
+            newMember.schemeAdmin = false
+            newMember.schemeEditor = false
+            newMember.schemeCommenter = true
+            break
+        case 'Viewer':
+            if (!member.schemeAdmin && !member.schemeEditor && !member.schemeCommenter && member.schemeViewer) {
+                return
+            }
+            newMember.schemeAdmin = false
+            newMember.schemeEditor = false
+            newMember.schemeCommenter = false
+            newMember.schemeViewer = true
             break
         default:
             return

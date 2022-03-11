@@ -19,6 +19,7 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
@@ -47,6 +48,7 @@ const defaultProperty: IPropertyTemplate = {
 export default function KanbanColumnHeader(props: Props): JSX.Element {
     const {board, activeView, intl, group, groupByProperty} = props
     const [groupTitle, setGroupTitle] = useState(group.option.value)
+    const canEditBoardProperties = useHasCurrentBoardPermissions(['manage_board_properties'])
 
     const headerRef = useRef<HTMLDivElement>(null)
 
@@ -71,7 +73,10 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
         setGroupTitle(group.option.value)
     }, [group.option.value])
 
-    drop(drag(headerRef))
+    if (canEditBoardProperties) {
+        drop(drag(headerRef))
+    }
+
     let className = 'octo-board-header-cell KanbanColumnHeader'
     if (isOver) {
         className += ' dragover'
@@ -87,7 +92,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
             ref={headerRef}
             style={{opacity: isDragging ? 0.5 : 1}}
             className={className}
-            draggable={!props.readonly}
+            draggable={!props.readonly && canEditBoardProperties}
         >
             {!group.option.id &&
                 <Label
@@ -119,7 +124,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         onCancel={() => {
                             setGroupTitle(group.option.value)
                         }}
-                        readonly={props.readonly}
+                        readonly={props.readonly || !canEditBoardProperties}
                         spellCheck={true}
                     />
                 </Label>}
@@ -131,7 +136,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                 onMenuClose={props.onCalculationMenuClose}
                 onMenuOpen={props.onCalculationMenuOpen}
                 cardProperties={board.cardProperties}
-                readonly={props.readonly}
+                readonly={props.readonly || !canEditBoardProperties}
                 onChange={(data: {calculation: string, propertyId: string}) => {
                     if (data.calculation === calculationValue && data.propertyId === calculationProperty.id) {
                         return

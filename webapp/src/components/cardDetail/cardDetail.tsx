@@ -20,6 +20,7 @@ import BlockIconSelector from '../blockIconSelector'
 
 import {useAppDispatch} from '../../store/hooks'
 import {setCurrent as setCurrentCard} from '../../store/cards'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
 import CommentsList from './commentsList'
 import {CardDetailProvider} from './cardDetailContext'
@@ -54,6 +55,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
             mutator.changeBlockTitle(props.board.id, card.id, card.title, title)
         }
     }, [card.title, title])
+    const canEditBoardCards = useHasCurrentBoardPermissions(['manage_board_cards'])
 
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
@@ -100,9 +102,9 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 <BlockIconSelector
                     block={card}
                     size='l'
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardCards}
                 />
-                {!props.readonly && !card.fields.icon &&
+                {!props.readonly && canEditBoardCards && !card.fields.icon &&
                     <div className='add-buttons'>
                         <Button
                             onClick={setRandomIcon}
@@ -124,7 +126,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     saveOnEsc={true}
                     onSave={saveTitle}
                     onCancel={() => setTitle(props.card.title)}
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardCards}
                     spellCheck={true}
                 />
 
@@ -148,7 +150,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     comments={comments}
                     boardId={card.boardId}
                     cardId={card.id}
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardCards}
                 />
             </div>
 
@@ -159,9 +161,9 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     <CardDetailContents
                         card={props.card}
                         contents={props.contents}
-                        readonly={props.readonly}
+                        readonly={props.readonly || !canEditBoardCards}
                     />
-                    {!props.readonly && <CardDetailContentsMenu/>}
+                    {!props.readonly && canEditBoardCards && <CardDetailContentsMenu/>}
                 </CardDetailProvider>
             </div>
         </>

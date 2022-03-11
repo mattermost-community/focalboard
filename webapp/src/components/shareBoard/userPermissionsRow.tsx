@@ -26,7 +26,14 @@ type Props = {
 const UserPermissionsRow = (props: Props): JSX.Element => {
     const intl = useIntl()
     const {user, member, isMe} = props
-    const currentRole = member.schemeAdmin ? 'Admin' : 'Editor'
+    let currentRole = 'Viewer'
+    if (member.schemeAdmin) {
+        currentRole = 'Admin'
+    } else if (member.schemeEditor) {
+        currentRole = 'Editor'
+    } else if (member.schemeCommenter) {
+        currentRole = 'Commenter'
+    }
 
     return (
         <div className='user-item'>
@@ -53,6 +60,18 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                             />
                         </button>
                         <Menu position='left'>
+                            <Menu.Text
+                                id='Viewer'
+                                icon={currentRole === 'Viewer' ? <CheckIcon/> : null}
+                                name={intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})}
+                                onClick={() => props.onUpdateBoardMember(member, 'Viewer')}
+                            />
+                            <Menu.Text
+                                id='Commenter'
+                                icon={currentRole === 'Commenter' ? <CheckIcon/> : null}
+                                name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
+                                onClick={() => props.onUpdateBoardMember(member, 'Commenter')}
+                            />
                             <Menu.Text
                                 id='Editor'
                                 icon={currentRole === 'Editor' ? <CheckIcon/> : null}

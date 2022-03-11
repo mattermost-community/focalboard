@@ -21,6 +21,7 @@ import {sendFlashMessage} from '../flashMessages'
 import Menu from '../../widgets/menu'
 import {IDType, Utils} from '../../utils'
 import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
 type Props = {
     board: Board
@@ -36,6 +37,8 @@ type Props = {
 const CardDetailProperties = (props: Props) => {
     const {board, card, cards, views, activeView, contents, comments} = props
     const [newTemplateId, setNewTemplateId] = useState('')
+    const canEditBoardProperties = useHasCurrentBoardPermissions(['manage_board_properties'])
+    const canEditBoardCards = useHasCurrentBoardPermissions(['manage_board_cards'])
     const intl = useIntl()
 
     useEffect(() => {
@@ -141,8 +144,8 @@ const CardDetailProperties = (props: Props) => {
                         key={propertyTemplate.id + '-' + propertyTemplate.type}
                         className='octo-propertyrow'
                     >
-                        {props.readonly && <div className='octo-propertyname octo-propertyname--readonly'>{propertyTemplate.name}</div>}
-                        {!props.readonly &&
+                        {(props.readonly || !canEditBoardProperties) && <div className='octo-propertyname octo-propertyname--readonly'>{propertyTemplate.name}</div>}
+                        {!props.readonly && canEditBoardProperties &&
                             <MenuWrapper isOpen={propertyTemplate.id === newTemplateId}>
                                 <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
                                 <PropertyMenu
@@ -155,7 +158,7 @@ const CardDetailProperties = (props: Props) => {
                             </MenuWrapper>
                         }
                         <PropertyValueElement
-                            readOnly={props.readonly}
+                            readOnly={props.readonly || !canEditBoardCards}
                             card={card}
                             board={board}
                             contents={contents}
@@ -173,7 +176,7 @@ const CardDetailProperties = (props: Props) => {
                 />
             )}
 
-            {!props.readonly &&
+            {!props.readonly && canEditBoardProperties &&
                 <div className='octo-propertyname add-property'>
                     <MenuWrapper>
                         <Button>
