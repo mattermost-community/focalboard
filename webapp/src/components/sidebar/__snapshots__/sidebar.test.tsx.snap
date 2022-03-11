@@ -168,7 +168,7 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
       class="octo-sidebar-list"
     >
       <div
-        class="SidebarBoardItem"
+        class="SidebarCategory"
       >
         <div
           class="octo-sidebar-item category ' expanded "
@@ -203,16 +203,18 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
           </div>
         </div>
         <div
-          class="octo-sidebar-item subitem "
+          class="SidebarBoardItem subitem "
         >
           <div
             class="octo-sidebar-icon"
-          />
+          >
+            i
+          </div>
           <div
             class="octo-sidebar-title"
-            title="(Untitled Board)"
+            title="board title"
           >
-            board1
+            board title
           </div>
           <div
             aria-label="menuwrapper"
@@ -231,7 +233,7 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
         </div>
       </div>
       <div
-        class="SidebarBoardItem"
+        class="SidebarCategory"
       >
         <div
           class="octo-sidebar-item category ' expanded "

@@ -5,6 +5,7 @@ import {createAsyncThunk, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
 import {Subscription} from '../wsclient'
+import {ErrorId} from '../errors'
 
 import {RootState} from './index'
 
@@ -19,8 +20,8 @@ export const initialLoad = createAsyncThunk(
         ])
 
         // if no team, either bad id, or user doesn't have access
-        if (team === undefined) {
-            throw new Error('Team undefined')
+        if (!team) {
+            throw new Error(ErrorId.TeamUndefined)
         }
         return {
             team,

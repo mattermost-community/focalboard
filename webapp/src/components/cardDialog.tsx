@@ -167,6 +167,7 @@ const CardDialog = (props: Props): JSX.Element => {
     return (
         <>
             <Dialog
+                className='cardDialog'
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && menu}
                 toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar}

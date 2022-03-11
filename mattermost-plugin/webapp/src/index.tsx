@@ -20,6 +20,7 @@ windowAny.isFocalboardPlugin = true
 
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
+import {setTeam} from '../../../webapp/src/store/teams'
 import {Utils} from '../../../webapp/src/utils'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
@@ -187,9 +188,9 @@ export default class Plugin {
             const currentTeamID = mmStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
                 prevTeamID = currentTeamID
-                if (windowAny.setTeamInFocalboard) {
-                    windowAny.setTeamInFocalboard(currentTeamID)
-                }
+                store.dispatch(setTeam(currentTeamID))
+                browserHistory.push(`/team/${currentTeamID}`)
+                wsClient.subscribeToTeam(currentTeamID)
             }
         })
 
@@ -206,7 +207,7 @@ export default class Plugin {
                 '/boards',
                 'product-boards',
                 'Boards',
-                '/boards/welcome',
+                '/boards',
                 MainApp,
                 HeaderComponent,
                 () => null,
@@ -221,6 +222,11 @@ export default class Plugin {
 
             if (registry.registerChannelIntroButtonAction) {
                 this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
+            }
+
+            if (this.registry.registerAppBarComponent) {
+                const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
+                this.registry.registerAppBarComponent(appBarIconURL, goToFocalboard, 'Open Boards')
             }
 
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)

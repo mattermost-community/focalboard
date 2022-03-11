@@ -39,62 +39,68 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Set as default"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="CheckIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
+            <div>
+              <div
+                aria-label="Set as default"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                <polyline
-                  points="20,60 40,80 80,40"
+                <svg
+                  class="CheckIcon Icon"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="20,60 40,80 80,40"
+                  />
+                </svg>
+                <div
+                  class="menu-name"
+                >
+                  Set as default
+                </div>
+                <div
+                  class="noicon"
                 />
-              </svg>
-              <div
-                class="menu-name"
-              >
-                Set as default
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Edit"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-pencil-outline EditIcon"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Edit"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Edit
+                <i
+                  class="CompassIcon icon-pencil-outline EditIcon"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Edit
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Delete"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Delete"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Delete
+                <i
+                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Delete
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div
@@ -167,62 +173,68 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Set as default"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="CheckIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
+            <div>
+              <div
+                aria-label="Set as default"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                <polyline
-                  points="20,60 40,80 80,40"
+                <svg
+                  class="CheckIcon Icon"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="20,60 40,80 80,40"
+                  />
+                </svg>
+                <div
+                  class="menu-name"
+                >
+                  Set as default
+                </div>
+                <div
+                  class="noicon"
                 />
-              </svg>
-              <div
-                class="menu-name"
-              >
-                Set as default
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Edit"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-pencil-outline EditIcon"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Edit"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Edit
+                <i
+                  class="CompassIcon icon-pencil-outline EditIcon"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Edit
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Delete"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Delete"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Delete
+                <i
+                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Delete
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div
@@ -330,62 +342,68 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Set as default"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="CheckIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
+            <div>
+              <div
+                aria-label="Set as default"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                <polyline
-                  points="20,60 40,80 80,40"
+                <svg
+                  class="CheckIcon Icon"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="20,60 40,80 80,40"
+                  />
+                </svg>
+                <div
+                  class="menu-name"
+                >
+                  Set as default
+                </div>
+                <div
+                  class="noicon"
                 />
-              </svg>
-              <div
-                class="menu-name"
-              >
-                Set as default
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Edit"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-pencil-outline EditIcon"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Edit"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Edit
+                <i
+                  class="CompassIcon icon-pencil-outline EditIcon"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Edit
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Delete"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Delete"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Delete
+                <i
+                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Delete
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div
@@ -458,62 +476,68 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Set as default"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="CheckIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
+            <div>
+              <div
+                aria-label="Set as default"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                <polyline
-                  points="20,60 40,80 80,40"
+                <svg
+                  class="CheckIcon Icon"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="20,60 40,80 80,40"
+                  />
+                </svg>
+                <div
+                  class="menu-name"
+                >
+                  Set as default
+                </div>
+                <div
+                  class="noicon"
                 />
-              </svg>
-              <div
-                class="menu-name"
-              >
-                Set as default
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Edit"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-pencil-outline EditIcon"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Edit"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Edit
+                <i
+                  class="CompassIcon icon-pencil-outline EditIcon"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Edit
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Delete"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Delete"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Delete
+                <i
+                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Delete
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div

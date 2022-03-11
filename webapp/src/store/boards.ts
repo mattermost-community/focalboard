@@ -7,7 +7,7 @@ import {default as client} from '../octoClient'
 import {Board, BoardMember} from '../blocks/board'
 import {IUser} from '../user'
 
-import {initialLoad} from './initialLoad'
+import {initialLoad, loadBoardData} from './initialLoad'
 
 import {addBoardUsers} from './users'
 
@@ -15,6 +15,7 @@ import {RootState} from './index'
 
 type BoardsState = {
     current: string
+    loadingBoard: boolean,
     boards: {[key: string]: Board}
     templates: {[key: string]: Board}
     membersInBoards: {[key: string]: {[key: string]: BoardMember}}
@@ -109,7 +110,7 @@ export const updateMembers = (state: BoardsState, action: PayloadAction<BoardMem
 
 const boardsSlice = createSlice({
     name: 'boards',
-    initialState: {boards: {}, templates: {}, membersInBoards: {}} as BoardsState,
+    initialState: {loadingBoard: false, boards: {}, templates: {}, membersInBoards: {}} as BoardsState,
     reducers: {
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
@@ -130,6 +131,15 @@ const boardsSlice = createSlice({
     },
 
     extraReducers: (builder) => {
+        builder.addCase(loadBoardData.pending, (state) => {
+            state.loadingBoard = true
+        })
+        builder.addCase(loadBoardData.fulfilled, (state) => {
+            state.loadingBoard = false
+        })
+        builder.addCase(loadBoardData.rejected, (state) => {
+            state.loadingBoard = false
+        })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             state.boards = {}
             action.payload.boards.forEach((board) => {
@@ -184,6 +194,8 @@ export function getBoard(boardId: string): (state: RootState) => Board|null {
         return state.boards.boards[boardId] || state.boards.templates[boardId] || null
     }
 }
+
+export const isLoadingBoard = (state: RootState): boolean => state.boards.loadingBoard
 
 export const getCurrentBoard = createSelector(
     (state) => state.boards.current,

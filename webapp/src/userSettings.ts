@@ -80,9 +80,17 @@ export class UserSettings {
         return mapping
     }
 
-    static setLastBoardID(teamID: string, boardID: string): void {
+    static setLastTeamID(teamID: string | null): void {
+        UserSettings.set(UserSettingKey.LastTeamId, teamID)
+    }
+
+    static setLastBoardID(teamID: string, boardID: string | null): void {
         const data = this.lastBoardId
-        data[teamID] = boardID
+        if (boardID === null) {
+            delete data[teamID]
+        } else {
+            data[teamID] = boardID
+        }
         UserSettings.set(UserSettingKey.LastBoardId, JSON.stringify(data))
     }
 
@@ -100,9 +108,13 @@ export class UserSettings {
         return mapping
     }
 
-    static setLastViewId(boardID: string, viewID: string): void {
+    static setLastViewId(boardID: string, viewID: string | null): void {
         const data = this.lastViewId
-        data[boardID] = viewID
+        if (viewID === null) {
+            delete data[boardID]
+        } else {
+            data[boardID] = viewID
+        }
         UserSettings.set(UserSettingKey.LastViewId, JSON.stringify(data))
     }
 

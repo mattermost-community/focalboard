@@ -45,6 +45,14 @@
         width: 100%;
         padding-left: 32px;
 
+        a {
+            color: rgb(var(--link-color-rgb));
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
         p {
             &:first-child {
                 margin-top: 0;

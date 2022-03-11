@@ -112,7 +112,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
         class="octo-sidebar-list"
       >
         <div
-          class="SidebarBoardItem"
+          class="SidebarCategory"
         >
           <div
             class="octo-sidebar-item category ' expanded active"
@@ -145,7 +145,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
             </div>
           </div>
           <div
-            class="octo-sidebar-item subitem active"
+            class="SidebarBoardItem subitem active"
           >
             <div
               class="octo-sidebar-icon"
@@ -172,9 +172,38 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               </button>
             </div>
           </div>
+          <div
+            class="SidebarBoardItem sidebar-view-item active"
+          >
+            <svg
+              class="BoardIcon Icon"
+              fill="currentColor"
+              height="24"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                opacity="0.8"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M4 4H20V20H4V4ZM2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4ZM8 6H6V12H8V6ZM11 6H13V16H11V6ZM18 6H16V9H18V6Z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+              </g>
+            </svg>
+            <div
+              class="octo-sidebar-title"
+              title="view title"
+            >
+              view title
+            </div>
+          </div>
         </div>
         <div
-          class="SidebarBoardItem"
+          class="SidebarCategory"
         >
           <div
             class="octo-sidebar-item category ' expanded "
@@ -279,15 +308,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 <button
                   type="button"
                 >
-                  <svg
-                    class="HideIcon Icon"
-                    viewBox="0 0 640 512"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-eye-off-outline undefined"
+                  />
                   <span>
                     hide description
                   </span>
@@ -1182,81 +1205,7 @@ exports[`src/components/workspace return workspace with BoardTemplateSelector co
   >
     <div
       class="mainFrame"
-    >
-      <div
-        class="BoardTemplateSelector"
-      >
-        <div
-          class="toolbar"
-        />
-        <div
-          class="header"
-        >
-          <h1
-            class="title"
-          >
-            Create a Board in Test Team
-          </h1>
-          <p
-            class="description"
-          >
-            Add a board to the sidebar using any of the templates defined below or start from scratch.
-            <br />
-             Members of "
-            <b>
-              Test Team
-            </b>
-            " will have access to boards created here.
-          </p>
-        </div>
-        <div
-          class="templates"
-        >
-          <div
-            class="templates-list"
-          >
-            <div
-              class="new-template"
-            >
-              <span
-                class="template-icon"
-              >
-                <i
-                  class="CompassIcon icon-plus AddIcon"
-                />
-              </span>
-              <span
-                class="template-name"
-              >
-                New template
-              </span>
-            </div>
-          </div>
-          <div
-            class="template-preview-box"
-          >
-            <div
-              class="buttons"
-            >
-              <button
-                type="button"
-              >
-                <span>
-                  Use this template
-                </span>
-              </button>
-              <button
-                type="button"
-              >
-                <span>
-                  Create empty board
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -1373,7 +1322,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
         class="octo-sidebar-list"
       >
         <div
-          class="SidebarBoardItem"
+          class="SidebarCategory"
         >
           <div
             class="octo-sidebar-item category ' expanded active"
@@ -1406,7 +1355,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
             </div>
           </div>
           <div
-            class="octo-sidebar-item subitem active"
+            class="SidebarBoardItem subitem active"
           >
             <div
               class="octo-sidebar-icon"
@@ -1433,9 +1382,38 @@ exports[`src/components/workspace should match snapshot 1`] = `
               </button>
             </div>
           </div>
+          <div
+            class="SidebarBoardItem sidebar-view-item active"
+          >
+            <svg
+              class="BoardIcon Icon"
+              fill="currentColor"
+              height="24"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                opacity="0.8"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M4 4H20V20H4V4ZM2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4ZM8 6H6V12H8V6ZM11 6H13V16H11V6ZM18 6H16V9H18V6Z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                />
+              </g>
+            </svg>
+            <div
+              class="octo-sidebar-title"
+              title="view title"
+            >
+              view title
+            </div>
+          </div>
         </div>
         <div
-          class="SidebarBoardItem"
+          class="SidebarCategory"
         >
           <div
             class="octo-sidebar-item category ' expanded "
@@ -1540,15 +1518,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 <button
                   type="button"
                 >
-                  <svg
-                    class="HideIcon Icon"
-                    viewBox="0 0 640 512"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-eye-off-outline undefined"
+                  />
                   <span>
                     hide description
                   </span>
