@@ -25,7 +25,7 @@ func (a *App) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string, a
 	// all new boards should belong to the same team
 	teamID := newBab.Boards[0].TeamID
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		for _, board := range newBab.Boards {
 			a.wsAdapter.BroadcastBoardChange(teamID, board)
 		}
@@ -43,7 +43,8 @@ func (a *App) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string, a
 				a.wsAdapter.BroadcastMemberChange(teamID, member.BoardID, member)
 			}
 		}
-	}()
+		return nil
+	})
 
 	return newBab, nil
 }
@@ -63,7 +64,7 @@ func (a *App) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID stri
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		teamID := bab.Boards[0].TeamID
 
 		for _, block := range bab.Blocks {
@@ -83,7 +84,8 @@ func (a *App) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID stri
 		for _, board := range bab.Boards {
 			a.wsAdapter.BroadcastBoardChange(board.TeamID, board)
 		}
-	}()
+		return nil
+	})
 
 	return bab, nil
 }
@@ -109,7 +111,7 @@ func (a *App) DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks, userID st
 		return err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		for _, block := range blocks {
 			a.wsAdapter.BroadcastBlockDelete(firstBoard.TeamID, block.ID, block.BoardID)
 			a.metrics.IncrementBlocksDeleted(1)
@@ -119,7 +121,8 @@ func (a *App) DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks, userID st
 		for _, boardID := range dbab.Boards {
 			a.wsAdapter.BroadcastBoardDelete(firstBoard.TeamID, boardID)
 		}
-	}()
+		return nil
+	})
 
 	return nil
 }

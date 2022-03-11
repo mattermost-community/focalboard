@@ -1,6 +1,10 @@
 package app
 
-import "github.com/mattermost/mattermost-server/v6/shared/mlog"
+import (
+	"context"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+)
 
 // initialize is called when the App is first created.
 func (a *App) initialize(skipTemplateInit bool) {
@@ -11,6 +15,12 @@ func (a *App) initialize(skipTemplateInit bool) {
 	}
 }
 
-func (a *App) shutdown() {
-
+func (a *App) Shutdown() {
+	if a.blockChangeNotifier != nil {
+		ctx, cancel := context.WithTimeout(context.Background(), blockChangeNotifierShutdownTimeout)
+		defer cancel()
+		if !a.blockChangeNotifier.Shutdown(ctx) {
+			a.logger.Warn("blockChangeNotifier shutdown timed out")
+		}
+	}
 }
