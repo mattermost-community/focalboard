@@ -1,3 +1,14 @@
+.Dialog {
+    &.cardDialog {
+        .dialog {
+            @media not screen and (max-width: 975px) {
+                width: 800px;
+                max-width: 100%;
+            }
+        }
+    }
+}
+
 .cardFollowBtn {
     float: right;
     height: 100%;

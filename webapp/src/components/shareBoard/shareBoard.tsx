@@ -224,7 +224,6 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         <Dialog
             onClose={props.onClose}
             className='ShareBoardDialog'
-            title={' '}
         >
             <BoardPermissionGate permissions={['manage_board_roles']}>
                 <div className='share-input__container'>
