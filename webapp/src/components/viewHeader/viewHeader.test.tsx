@@ -40,12 +40,18 @@ describe('components/viewHeader/viewHeader', () => {
         },
         searchText: {
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
         boards: {
             current: board,
             boards: {
                 [board.id]: board,
             },
             templates: [],
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         cards: {
             templates: [card],

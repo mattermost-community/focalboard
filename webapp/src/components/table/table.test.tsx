@@ -61,6 +61,18 @@ describe('components/table/Table', () => {
                 [card.id]: card,
             },
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
     }
 
     test('should match snapshot', async () => {

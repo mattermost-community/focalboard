@@ -56,11 +56,17 @@ describe('components/cardDialog', () => {
                 [card.id]: card,
             },
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
         boards: {
             boards: {
                 [board.id]: board,
             },
             current: board.id,
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         users: {
             boardUsers: {

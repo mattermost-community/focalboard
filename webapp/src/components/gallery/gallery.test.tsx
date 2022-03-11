@@ -16,8 +16,6 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import mutator from '../../mutator'
 
-import {RootState} from '../../store'
-
 import Gallery from './gallery'
 
 jest.mock('../../mutator')
@@ -30,7 +28,7 @@ describe('src/components/gallery/Gallery', () => {
     const card = TestBlockFactory.createCard(board)
     const card2 = TestBlockFactory.createCard(board)
     const contents = [TestBlockFactory.createDivider(card), TestBlockFactory.createDivider(card), TestBlockFactory.createDivider(card2)]
-    const state: Partial<RootState> = {
+    const state = {
         contents: {
             contents: blocksById(contents),
         },
@@ -40,6 +38,18 @@ describe('src/components/gallery/Gallery', () => {
                 [card.id]: card,
             },
             templates: {},
+        },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         comments: {
             comments: {},

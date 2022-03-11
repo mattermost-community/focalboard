@@ -126,6 +126,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                 current: 'team-id',
             },
             boards: {
+                current: board.id,
                 boards: [board],
                 templates: [
                     {
@@ -139,6 +140,9 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                 ],
                 cards: [],
                 views: [],
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             globalTemplates: {
                 value: [{

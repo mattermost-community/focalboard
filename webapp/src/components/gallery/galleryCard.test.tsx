@@ -68,6 +68,19 @@ describe('src/components/gallery/GalleryCard', () => {
                         [card.id]: card,
                     },
                 },
+                teams: {
+                    current: {id: 'team-id'},
+                },
+                boards: {
+                    current: board.id,
+                    boards: {
+                        [board.id]: board,
+                    },
+                    templates: [],
+                    myBoardMemberships: {
+                        [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
+                },
                 comments: {
                     comments: {},
                 },

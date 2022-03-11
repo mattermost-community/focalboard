@@ -76,6 +76,18 @@ describe('src/component/kanban/kanban', () => {
         cards: {
             cards: [card1, card2, card3],
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: 'board_id_1',
+            boards: {
+                board_id_1: {id: 'board_id_1'},
+            },
+            myBoardMemberships: {
+                board_id_1: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
         contents: {},
         comments: {
             comments: {},
