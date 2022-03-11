@@ -222,7 +222,6 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         <Dialog
             onClose={props.onClose}
             className='ShareBoardDialog'
-            title={' '}
         >
             <div className='share-input__container'>
                 <div className='share-input'>

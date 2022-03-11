@@ -44,7 +44,7 @@
             }
         }
 
-        > .menu-option {
+        * > .menu-option {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -57,6 +57,10 @@
             cursor: pointer;
 
             &:hover {
+                background: rgba(var(--button-bg-rgb), 0.08);
+            }
+
+            &-active {
                 background: rgba(var(--button-bg-rgb), 0.08);
             }
 
@@ -89,7 +93,7 @@
             }
         }
 
-        > .menu-option.bold-menu-text {
+        * > .menu-option.bold-menu-text {
             font-weight: bold;
         }
     }
@@ -139,7 +143,7 @@
 
             flex: 0 0 auto;
 
-            > .menu-option {
+            * > .menu-option {
                 min-height: 44px;
                 width: 100%;
                 padding: 0 20px;
