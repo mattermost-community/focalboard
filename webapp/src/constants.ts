@@ -29,6 +29,8 @@ class Constants {
 
     static readonly minColumnWidth = 100
     static readonly defaultTitleColumnWidth = 280
+    static readonly tableHeaderId = '__header'
+    static readonly tableCalculationId = '__calculation'
     static readonly titleColumnId = '__title'
     static readonly badgesColumnId = '__badges'
 

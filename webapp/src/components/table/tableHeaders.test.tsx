@@ -25,9 +25,6 @@ describe('components/table/TableHeaders', () => {
                 activeView={view}
                 views={[view]}
                 readonly={false}
-                resizingColumn=''
-                offset={0}
-                columnRefs={new Map()}
             />,
         )
 

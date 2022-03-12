@@ -29,7 +29,6 @@ describe('components/calculations/Calculation', () => {
     test('should match snapshot - none', () => {
         const component = wrapIntl(
             <Calculation
-                style={{}}
                 class={'fooClass'}
                 value={'none'}
                 menuOpen={false}
@@ -55,7 +54,6 @@ describe('components/calculations/Calculation', () => {
     test('should match snapshot - count', () => {
         const component = wrapIntl(
             <Calculation
-                style={{}}
                 class={'fooClass'}
                 value={'count'}
                 menuOpen={false}
@@ -81,7 +79,6 @@ describe('components/calculations/Calculation', () => {
     test('should match snapshot - countValue', () => {
         const component = wrapIntl(
             <Calculation
-                style={{}}
                 class={'fooClass'}
                 value={'countValue'}
                 menuOpen={false}
@@ -107,7 +104,6 @@ describe('components/calculations/Calculation', () => {
     test('should match snapshot - countUniqueValue', () => {
         const component = wrapIntl(
             <Calculation
-                style={{}}
                 class={'fooClass'}
                 value={'countUniqueValue'}
                 menuOpen={false}
@@ -137,7 +133,6 @@ describe('components/calculations/Calculation', () => {
 
         const component = wrapIntl(
             <Calculation
-                style={{}}
                 class={'fooClass'}
                 value={'none'}
                 menuOpen={true}

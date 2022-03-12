@@ -64,7 +64,6 @@ describe('components/table/TableRows', () => {
                 <TableRows
                     board={board}
                     activeView={view}
-                    columnRefs={new Map()}
                     cards={[card]}
                     selectedCardIds={[]}
                     readonly={false}

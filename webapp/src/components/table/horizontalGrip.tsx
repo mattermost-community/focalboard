@@ -7,20 +7,25 @@ import './horizontalGrip.scss'
 
 type Props = {
     templateId: string
+    columnWidth: number
     onAutoSizeColumn: (columnID: string) => void;
 }
 
 const HorizontalGrip = (props: Props): JSX.Element => {
+    const {templateId, columnWidth, onAutoSizeColumn} = props
     const [, drag] = useDrag(() => ({
         type: 'horizontalGrip',
-        item: {id: props.templateId},
-    }))
+        item: {
+            id: templateId,
+            width: columnWidth,
+        },
+    }), [templateId, columnWidth])
 
     return (
         <div
             ref={drag}
             className='HorizontalGrip'
-            onDoubleClick={() => props.onAutoSizeColumn(props.templateId)}
+            onDoubleClick={() => onAutoSizeColumn(templateId)}
         />
     )
 }

@@ -60,11 +60,7 @@ describe('components/table/TableRow', () => {
                     isSelected={false}
                     focusOnMount={false}
                     showCard={jest.fn()}
-
                     readonly={false}
-                    offset={0}
-                    resizingColumn={''}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
             </ReduxProvider>,
@@ -90,11 +86,7 @@ describe('components/table/TableRow', () => {
                     isSelected={false}
                     focusOnMount={false}
                     showCard={jest.fn()}
-
                     readonly={true}
-                    offset={0}
-                    resizingColumn={''}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
             </ReduxProvider>,
@@ -120,11 +112,7 @@ describe('components/table/TableRow', () => {
                     isSelected={true}
                     focusOnMount={false}
                     showCard={jest.fn()}
-
                     readonly={false}
-                    offset={0}
-                    resizingColumn={''}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
             </ReduxProvider>,
@@ -150,11 +138,7 @@ describe('components/table/TableRow', () => {
                     isSelected={false}
                     focusOnMount={false}
                     showCard={jest.fn()}
-
                     readonly={false}
-                    offset={0}
-                    resizingColumn={''}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
             </ReduxProvider>,
@@ -182,9 +166,6 @@ describe('components/table/TableRow', () => {
                     focusOnMount={false}
                     showCard={jest.fn()}
                     readonly={false}
-                    offset={0}
-                    resizingColumn={''}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
             </ReduxProvider>,
@@ -211,9 +192,6 @@ describe('components/table/TableRow', () => {
                     focusOnMount={false}
                     showCard={jest.fn()}
                     readonly={false}
-                    offset={0}
-                    resizingColumn={'property1'}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
             </ReduxProvider>,

@@ -9,7 +9,6 @@ import {Board, IPropertyTemplate} from '../../../blocks/board'
 
 import mutator from '../../../mutator'
 import Calculation from '../../calculations/calculation'
-import {columnWidth} from '../tableRow'
 import {BoardView} from '../../../blocks/boardView'
 import {Card} from '../../../blocks/card'
 import {Options} from '../../calculations/options'
@@ -20,13 +19,11 @@ type Props = {
     board: Board
     cards: Card[]
     activeView: BoardView
-    resizingColumn: string
-    offset: number
     readonly: boolean
 }
 
 const CalculationRow = (props: Props): JSX.Element => {
-    const {board, cards, activeView, resizingColumn, offset, readonly} = props
+    const {board, cards, activeView, readonly} = props
     const toggleOptions = (templateId: string, show: boolean) => {
         const newShowOptions = new Map<string, boolean>(showOptions)
         newShowOptions.set(templateId, show)
@@ -55,14 +52,12 @@ const CalculationRow = (props: Props): JSX.Element => {
         >
             {
                 visiblePropertyTemplates.map((template) => {
-                    const style = {width: columnWidth(resizingColumn, activeView.fields.columnWidths, offset, template.id)}
                     const defaultValue = template.id === Constants.titleColumnId ? Options.count.value : Options.none.value
                     const value = selectedCalculations[template.id] || defaultValue
 
                     return (
                         <Calculation
                             key={template.id}
-                            style={style}
                             class={`octo-table-cell ${readonly ? 'disabled' : ''}`}
                             value={value}
                             menuOpen={Boolean(readonly ? false : showOptions.get(template.id))}
