@@ -31,6 +31,7 @@ type Props = {
     activeViewId?: string
     nextBoardId?: string
     hideSidebar: () => void
+    onBoardTemplateSelectorClose?:() => void
 }
 
 const SidebarBoardItem = (props: Props) => {
@@ -110,11 +111,26 @@ const SidebarBoardItem = (props: Props) => {
     const displayTitle: string = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
     const boardViews = sortBoardViewsAlphabetically(views.filter((view) => view.parentId === board.id))
 
+    const handleView = (view:BoardView) => {
+        if (view.id === props.activeViewId && props.onBoardTemplateSelectorClose) {
+            props.onBoardTemplateSelectorClose()
+        } else {
+            showView(view.id, board.id)
+        }
+    }
+
+    const handleBoard = (boardId: string) => {
+        if (boardId === props.activeBoardId && props.onBoardTemplateSelectorClose) {
+            props.onBoardTemplateSelectorClose()
+        } else {
+            showBoard(boardId)
+        }
+    }
     return (
         <div className='SidebarBoardItem'>
             <div
                 className={`octo-sidebar-item ' ${collapsed ? 'collapsed' : 'expanded'} ${board.id === props.activeBoardId ? 'active' : ''}`}
-                onClick={() => showBoard(board.id)}
+                onClick={() => handleBoard(board.id)}
             >
                 <IconButton
                     icon={<DisclosureTriangle/>}
@@ -170,7 +186,7 @@ const SidebarBoardItem = (props: Props) => {
                 <div
                     key={view.id}
                     className={`octo-sidebar-item subitem ${view.id === props.activeViewId ? 'active' : ''}`}
-                    onClick={() => showView(view.id, board.id)}
+                    onClick={() => handleView(view)}
                 >
                     {iconForViewType(view.fields.viewType)}
                     <div

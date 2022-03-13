@@ -130,6 +130,7 @@ const Workspace = (props: Props) => {
             {!props.readonly &&
                 <Sidebar
                     onBoardTemplateSelectorOpen={openBoardTemplateSelector}
+                    onBoardTemplateSelectorClose={closeBoardTemplateSelector}
                     activeBoardId={board?.id}
                     activeViewId={view?.id}
                 />

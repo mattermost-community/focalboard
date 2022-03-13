@@ -29,6 +29,7 @@ type Props = {
     activeViewId?: string
     isDashboard?: boolean
     onBoardTemplateSelectorOpen?: () => void
+    onBoardTemplateSelectorClose?: () => void
 }
 
 function getWindowDimensions() {
@@ -176,6 +177,7 @@ const Sidebar = (props: Props) => {
                             const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
                             return (
                                 <SidebarBoardItem
+                                    onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}
                                     hideSidebar={hideSidebar}
                                     key={board.id}
                                     views={views}
