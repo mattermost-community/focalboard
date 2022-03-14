@@ -108,6 +108,7 @@ describe('components/centerPanel', () => {
         cards: {
             templates: [card1, card2],
             cards: [card1, card2],
+            current: card1.id,
         },
         views: {
             views: {

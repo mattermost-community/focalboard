@@ -24,7 +24,11 @@ const ErrorPage = () => {
         } else if (path) {
             url = path as string
         }
-        history.push(url)
+        if (url === window.location.origin) {
+            window.location.href = url
+        } else {
+            history.push(url)
+        }
     }, [history])
 
     const makeButton = ((path: string | ((params: URLSearchParams)=>string), txt: string, fill: boolean) => {
