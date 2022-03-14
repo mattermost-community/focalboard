@@ -132,7 +132,7 @@ CREATE TABLE {{.prefix}}boards_history (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')),
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
-                 COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true'
+                 COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(B.fields->'$.templateVer', 0),
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
@@ -144,7 +144,7 @@ CREATE TABLE {{.prefix}}boards_history (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')),
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
-                 COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true'
+                 COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(B.fields->'$.templateVer', 0),
                  '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
                  B.update_at, B.delete_at
