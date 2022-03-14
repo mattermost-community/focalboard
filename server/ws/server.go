@@ -539,7 +539,7 @@ func (ws *Server) BroadcastBlockChange(teamID string, block model.Block) {
 	}
 
 	listeners := ws.getListenersForTeamAndBoard(teamID, block.BoardID)
-	ws.logger.Debug("listener(s) for teamID",
+	ws.logger.Trace("listener(s) for teamID",
 		mlog.Int("listener_count", len(listeners)),
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", block.BoardID),
@@ -547,7 +547,7 @@ func (ws *Server) BroadcastBlockChange(teamID string, block model.Block) {
 
 	for _, blockID := range blockIDsToNotify {
 		listeners = append(listeners, ws.getListenersForBlock(blockID)...)
-		ws.logger.Debug("listener(s) for blockID",
+		ws.logger.Trace("listener(s) for blockID",
 			mlog.Int("listener_count", len(listeners)),
 			mlog.String("blockID", blockID),
 		)
@@ -660,7 +660,7 @@ func (ws *Server) BroadcastBoardChange(teamID string, board *model.Board) {
 	}
 
 	listeners := ws.getListenersForTeamAndBoard(teamID, board.ID)
-	ws.logger.Debug("listener(s) for teamID and boardID",
+	ws.logger.Trace("listener(s) for teamID and boardID",
 		mlog.Int("listener_count", len(listeners)),
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", board.ID),
@@ -700,7 +700,7 @@ func (ws *Server) BroadcastMemberChange(teamID, boardID string, member *model.Bo
 	}
 
 	listeners := ws.getListenersForTeamAndBoard(teamID, boardID)
-	ws.logger.Debug("listener(s) for teamID and boardID",
+	ws.logger.Trace("listener(s) for teamID and boardID",
 		mlog.Int("listener_count", len(listeners)),
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", boardID),
@@ -732,7 +732,7 @@ func (ws *Server) BroadcastMemberDelete(teamID, boardID, userID string) {
 	// member deletion message, the deleted member will not be one of
 	// them, so we need to ensure they receive the message
 	listeners := ws.getListenersForTeamAndBoard(teamID, boardID, userID)
-	ws.logger.Debug("listener(s) for teamID and boardID",
+	ws.logger.Trace("listener(s) for teamID and boardID",
 		mlog.Int("listener_count", len(listeners)),
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", boardID),

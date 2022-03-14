@@ -101,7 +101,7 @@ func (cn *CallbackQueue) Enqueue(f CallbackFunc) {
 
 func (cn *CallbackQueue) loop(id int) {
 	defer func() {
-		cn.logger.Debug("CallbackQueue thread exited", mlog.String("name", cn.name), mlog.Int("id", id))
+		cn.logger.Trace("CallbackQueue thread exited", mlog.String("name", cn.name), mlog.Int("id", id))
 		cn.alive <- id
 	}()
 
