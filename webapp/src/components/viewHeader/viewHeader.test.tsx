@@ -44,7 +44,7 @@ describe('components/viewHeader/viewHeader', () => {
             current: {id: 'team-id'},
         },
         boards: {
-            current: board,
+            current: board.id,
             boards: {
                 [board.id]: board,
             },
