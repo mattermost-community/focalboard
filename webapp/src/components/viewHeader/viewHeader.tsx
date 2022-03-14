@@ -17,6 +17,7 @@ import Editable from '../../widgets/editable'
 import ModalWrapper from '../modalWrapper'
 
 import {useAppSelector} from '../../store/hooks'
+import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import {
     getOnboardingTourCategory,
@@ -61,7 +62,7 @@ type Props = {
 const ViewHeader = (props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
     const intl = useIntl()
-    const canEditBoardProperties = useHasCurrentBoardPermissions(['manage_board_properties'])
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
 
     const {board, activeView, views, groupByProperty, cards, dateDisplayProperty} = props
 
@@ -220,7 +221,7 @@ const ViewHeader = (props: Props) => {
 
                 {/* New card button */}
 
-                <BoardPermissionGate permissions={['manage_board_cards']}>
+                <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                     <NewCardButton
                         addCard={props.addCard}
                         addCardFromTemplate={props.addCardFromTemplate}

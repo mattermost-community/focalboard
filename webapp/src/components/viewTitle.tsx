@@ -9,6 +9,7 @@ import mutator from '../mutator'
 import Button from '../widgets/buttons/button'
 import Editable from '../widgets/editable'
 import CompassIcon from '../widgets/icons/compassIcon'
+import {Permission} from '../constants'
 import {useHasCurrentBoardPermissions} from '../hooks/permissions'
 
 import BoardIconSelector from './boardIconSelector'
@@ -33,7 +34,7 @@ const ViewTitle = (props: Props) => {
     }, [board.id, board.icon])
     const onShowDescription = useCallback(() => mutator.showBoardDescription(board.id, Boolean(board.showDescription), true), [board.id, board.showDescription])
     const onHideDescription = useCallback(() => mutator.showBoardDescription(board.id, Boolean(board.showDescription), false), [board.id, board.showDescription])
-    const canEditBoardProperties = useHasCurrentBoardPermissions(['manage_board_properties'])
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
 
     const readonly = props.readonly || !canEditBoardProperties
 

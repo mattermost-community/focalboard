@@ -14,7 +14,7 @@ import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils, IDType} from '../../utils'
 import Button from '../../widgets/buttons/button'
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
 
 import {dragAndDropRearrange} from '../cardDetail/cardDetailContentsUtility'
 
@@ -238,7 +238,7 @@ const Kanban = (props: Props) => {
                 }
 
                 {!props.readonly &&
-                    <BoardPermissionGate permissions={['manage_board_properties']}>
+                    <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                         <div className='octo-board-header-cell narrow'>
                             <Button
                                 onClick={addGroupClicked}
@@ -284,7 +284,7 @@ const Kanban = (props: Props) => {
                             />
                         ))}
                         {!props.readonly &&
-                            <BoardPermissionGate permissions={['manage_board_cards']}>
+                            <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                                 <Button
                                     onClick={() => {
                                         props.addCard(group.option.id, true)

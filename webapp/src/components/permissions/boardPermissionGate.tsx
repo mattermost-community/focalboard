@@ -6,12 +6,13 @@ import React from 'react'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard} from '../../store/boards'
 import {getCurrentTeam} from '../../store/teams'
+import {Permission} from '../../constants'
 import {useHasPermissions} from '../../hooks/permissions'
 
 type Props = {
     boardId?: string
     teamId?: string
-    permissions: string[]
+    permissions: Permission[]
     invert?: boolean
     children: React.ReactNode
 }

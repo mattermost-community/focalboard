@@ -21,6 +21,7 @@ import {sendFlashMessage} from '../flashMessages'
 import Menu from '../../widgets/menu'
 import {IDType, Utils} from '../../utils'
 import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
+import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
 type Props = {
@@ -37,8 +38,8 @@ type Props = {
 const CardDetailProperties = (props: Props) => {
     const {board, card, cards, views, activeView, contents, comments} = props
     const [newTemplateId, setNewTemplateId] = useState('')
-    const canEditBoardProperties = useHasCurrentBoardPermissions(['manage_board_properties'])
-    const canEditBoardCards = useHasCurrentBoardPermissions(['manage_board_cards'])
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
+    const canEditBoardCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const intl = useIntl()
 
     useEffect(() => {

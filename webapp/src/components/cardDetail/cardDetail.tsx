@@ -20,6 +20,7 @@ import BlockIconSelector from '../blockIconSelector'
 
 import {useAppDispatch} from '../../store/hooks'
 import {setCurrent as setCurrentCard} from '../../store/cards'
+import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
 import CommentsList from './commentsList'
@@ -55,7 +56,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
             mutator.changeBlockTitle(props.board.id, card.id, card.title, title)
         }
     }, [card.title, title])
-    const canEditBoardCards = useHasCurrentBoardPermissions(['manage_board_cards'])
+    const canEditBoardCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
 
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle

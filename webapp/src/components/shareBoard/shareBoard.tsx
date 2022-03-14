@@ -25,6 +25,7 @@ import {IUser} from '../../user'
 import Switch from '../../widgets/switch'
 import Button from '../../widgets/buttons/button'
 import {sendFlashMessage} from '../flashMessages'
+import {Permission} from '../../constants'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
@@ -243,7 +244,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             onClose={props.onClose}
             className='ShareBoardDialog'
         >
-            <BoardPermissionGate permissions={['manage_board_roles']}>
+            <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
                 <div className='share-input__container'>
                     <div className='share-input'>
                         <SearchIcon/>
@@ -301,7 +302,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             defaultMessage='Share'
                         />
                     </button>
-                    <BoardPermissionGate permissions={['share_board']}>
+                    <BoardPermissionGate permissions={[Permission.ShareBoard]}>
                         <button
                             onClick={() => setPublish(true)}
                             className={`tab-item ${publish && 'tab-item--active'}`}
@@ -315,7 +316,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                 </div>
             )}
             {(props.enableSharedBoards && publish) &&
-            (<BoardPermissionGate permissions={['share_board']}>
+            (<BoardPermissionGate permissions={[Permission.ShareBoard]}>
                 <div className='tabs-content'>
                     <div>
                         <div className='d-flex justify-content-between'>

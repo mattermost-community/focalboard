@@ -5,8 +5,9 @@ import {useAppSelector} from '../store/hooks'
 import {getMyBoardMembership, getCurrentBoard} from '../store/boards'
 import {getCurrentTeam} from '../store/teams'
 import {Utils} from '../utils'
+import {Permission} from '../constants'
 
-export const useHasPermissions = (teamId: string, boardId: string, permissions: string[]): boolean => {
+export const useHasPermissions = (teamId: string, boardId: string, permissions: Permission[]): boolean => {
     if (!boardId || !teamId) {
         return false
     }
@@ -21,26 +22,30 @@ export const useHasPermissions = (teamId: string, boardId: string, permissions: 
         return true
     }
 
+    const adminPermissions = [Permission.ManageBoardType, Permission.DeleteBoard, Permission.ShareBoard, Permission.ManageBoardRoles]
+    const editorPermissions = [Permission.ManageBoardCards, Permission.ManageBoardProperties]
+    const viewerPermissions = [Permission.ViewBoard]
+
     for (const permission of permissions) {
-        if (['manage_board_type', 'delete_board', 'share_board', 'manage_board_roles'].includes(permission) && member.schemeAdmin) {
+        if (adminPermissions.includes(permission) && member.schemeAdmin) {
             return true
         }
-        if (['manage_board_cards', 'manage_board_properties'].includes(permission) && (member.schemeAdmin || member.schemeEditor)) {
+        if (editorPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor)) {
             return true
         }
-        if (['view_board'].includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter || member.schemeViewer)) {
+        if (viewerPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter || member.schemeViewer)) {
             return true
         }
     }
     return false
 }
 
-export const useHasCurrentTeamPermissions = (boardId: string, permissions: string[]): boolean => {
+export const useHasCurrentTeamPermissions = (boardId: string, permissions: Permission[]): boolean => {
     const currentTeam = useAppSelector(getCurrentTeam)
     return useHasPermissions(currentTeam?.id || '', boardId, permissions)
 }
 
-export const useHasCurrentBoardPermissions = (permissions: string[]): boolean => {
+export const useHasCurrentBoardPermissions = (permissions: Permission[]): boolean => {
     const currentBoard = useAppSelector(getCurrentBoard)
 
     return useHasCurrentTeamPermissions(currentBoard?.id || '', permissions)

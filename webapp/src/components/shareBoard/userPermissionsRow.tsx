@@ -12,6 +12,7 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 
 import {BoardMember} from '../../blocks/board'
 import {IUser} from '../../user'
+import {Permission} from '../../constants'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
@@ -50,7 +51,7 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                 </div>
             </div>
             <div>
-                <BoardPermissionGate permissions={['manage_board_roles']}>
+                <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
                     <MenuWrapper>
                         <button className='user-item__button'>
                             {intl.formatMessage({id: `BoardMember.scheme${currentRole}`, defaultMessage: currentRole})}
@@ -94,7 +95,7 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                     </MenuWrapper>
                 </BoardPermissionGate>
                 <BoardPermissionGate
-                    permissions={['manage_board_roles']}
+                    permissions={[Permission.ManageBoardRoles]}
                     invert={true}
                 >
                     <FormattedMessage

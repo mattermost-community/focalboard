@@ -3,7 +3,7 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
 import {Card} from '../../blocks/card'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
@@ -78,7 +78,7 @@ const Gallery = (props: Props): JSX.Element => {
             {/* Add New row */}
 
             {!props.readonly &&
-                <BoardPermissionGate permissions={['manage_board_cards']}>
+                <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                     <div
                         className='octo-gallery-new'
                         onClick={() => {

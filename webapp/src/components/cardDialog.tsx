@@ -25,6 +25,7 @@ import {getUserBlockSubscriptionList} from '../store/initialLoad'
 
 import {IUser} from '../user'
 import {getMe} from '../store/users'
+import {Permission} from '../constants'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
 
@@ -109,7 +110,7 @@ const CardDialog = (props: Props): JSX.Element => {
 
     const menu = (
         <Menu position='left'>
-            <BoardPermissionGate permissions={['manage_board_cards']}>
+            <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                 <Menu.Text
                     id='delete'
                     icon={<DeleteIcon/>}
@@ -133,7 +134,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 }}
             />
             {!isTemplate &&
-                <BoardPermissionGate permissions={['manage_board_properties']}>
+                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                     <Menu.Text
                         id='makeTemplate'
                         name='New template from card'

@@ -26,6 +26,7 @@ import GalleryIcon from '../../widgets/icons/gallery'
 import CalendarIcon from '../../widgets/icons/calendar'
 
 import {getCurrentTeam} from '../../store/teams'
+import {Permission} from '../../constants'
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
@@ -104,7 +105,7 @@ const SidebarBoardItem = (props: Props) => {
                     <Menu position='left'>
                         <BoardPermissionGate
                             boardId={board.id}
-                            permissions={['delete_board']}
+                            permissions={[Permission.DeleteBoard]}
                         >
                             <Menu.Text
                                 key={`deleteBlock-${board.id}`}

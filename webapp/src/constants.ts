@@ -3,6 +3,16 @@
 
 import {TelemetryActions} from './telemetry/telemetryClient'
 
+enum Permission {
+    ManageBoardType = 'manage_board_type',
+    DeleteBoard = 'delete_board',
+    ShareBoard = 'share_board',
+    ManageBoardRoles = 'manage_board_roles',
+    ManageBoardCards = 'manage_board_cards',
+    ManageBoardProperties = 'manage_board_properties',
+    ViewBoard = 'view_board',
+}
+
 class Constants {
     static readonly menuColors: {[key: string]: string} = {
         propColorDefault: 'Default',
@@ -148,4 +158,4 @@ class Constants {
     ]
 }
 
-export {Constants}
+export {Constants, Permission}

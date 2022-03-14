@@ -6,7 +6,7 @@ import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board, IPropertyTemplate} from '../blocks/board'
 import {BoardView, createBoardView, IViewType} from '../blocks/boardView'
-import {Constants} from '../constants'
+import {Constants, Permission} from '../constants'
 import mutator from '../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Block} from '../blocks/block'
@@ -251,7 +251,7 @@ const ViewMenu = (props: Props) => {
                     icon={iconForViewType(view.fields.viewType)}
                     onClick={handleViewClick}
                 />))}
-            <BoardPermissionGate permissions={['manage_board_properties']}>
+            <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                 <Menu.Separator/>
                 {!props.readonly &&
                     <Menu.Text

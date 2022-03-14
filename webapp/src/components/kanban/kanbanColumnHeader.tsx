@@ -5,7 +5,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import {FormattedMessage, IntlShape} from 'react-intl'
 import {useDrop, useDrag} from 'react-dnd'
 
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
@@ -48,7 +48,7 @@ const defaultProperty: IPropertyTemplate = {
 export default function KanbanColumnHeader(props: Props): JSX.Element {
     const {board, activeView, intl, group, groupByProperty} = props
     const [groupTitle, setGroupTitle] = useState(group.option.value)
-    const canEditBoardProperties = useHasCurrentBoardPermissions(['manage_board_properties'])
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
 
     const headerRef = useRef<HTMLDivElement>(null)
 
@@ -156,7 +156,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
             <div className='octo-spacer'/>
             {!props.readonly &&
                 <>
-                    <BoardPermissionGate permissions={['manage_board_properties']}>
+                    <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                         <MenuWrapper>
                             <IconButton icon={<OptionsIcon/>}/>
                             <Menu>
@@ -187,7 +187,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                             </Menu>
                         </MenuWrapper>
                     </BoardPermissionGate>
-                    <BoardPermissionGate permissions={['manage_board_cards']}>
+                    <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                         <IconButton
                             icon={<AddIcon/>}
                             onClick={() => {

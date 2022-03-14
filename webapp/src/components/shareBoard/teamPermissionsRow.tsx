@@ -14,6 +14,7 @@ import {Board, createBoard, BoardTypeOpen, BoardTypePrivate} from '../../blocks/
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentTeam} from '../../store/teams'
 import {getCurrentBoard} from '../../store/boards'
+import {Permission} from '../../constants'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
@@ -47,7 +48,7 @@ const TeamPermissionsRow = (): JSX.Element => {
                 <div className='ml-3'><strong>{intl.formatMessage({id: 'ShareBoard.teamPermissionsText', defaultMessage: 'Everyone at {teamName} Team'}, {teamName: team?.title})}</strong></div>
             </div>
             <div>
-                <BoardPermissionGate permissions={['manage_board_type']}>
+                <BoardPermissionGate permissions={[Permission.ManageBoardType]}>
                     <MenuWrapper>
                         <button className='user-item__button'>
                             {currentRole}
@@ -73,7 +74,7 @@ const TeamPermissionsRow = (): JSX.Element => {
                     </MenuWrapper>
                 </BoardPermissionGate>
                 <BoardPermissionGate
-                    permissions={['manage_board_type']}
+                    permissions={[Permission.ManageBoardType]}
                     invert={true}
                 >
                     <span>{currentRole}</span>

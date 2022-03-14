@@ -17,7 +17,7 @@ import {Card} from '../../blocks/card'
 import {DateProperty, createDatePropertyFromString} from '../properties/dateRange/dateRange'
 import Tooltip from '../../widgets/tooltip'
 import PropertyValueElement from '../propertyValueElement'
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import CardBadges from '../cardBadges'
 
@@ -67,7 +67,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const intl = useIntl()
     const {board, cards, activeView, dateDisplayProperty, readonly} = props
     const isSelectable = !readonly
-    const canAddCards = useHasCurrentBoardPermissions(['manage_board_cards'])
+    const canAddCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
 
     const visiblePropertyTemplates = useMemo(() => (
         board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))

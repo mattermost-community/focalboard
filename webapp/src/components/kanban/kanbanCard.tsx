@@ -21,6 +21,7 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Tooltip from '../../widgets/tooltip'
+import {Permission} from '../../constants'
 import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
 
@@ -114,7 +115,7 @@ const KanbanCard = (props: Props) => {
                 >
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
-                        <BoardPermissionGate permissions={['manage_board_cards']}>
+                        <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                             <Menu.Text
                                 icon={<DeleteIcon/>}
                                 id='delete'

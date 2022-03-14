@@ -21,6 +21,7 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Tooltip from '../../widgets/tooltip'
+import {Permission} from '../../constants'
 import {CardDetailProvider} from '../cardDetail/cardDetailContext'
 import ContentElement from '../content/contentElement'
 import ImageElement from '../content/imageElement'
@@ -85,15 +86,13 @@ const GalleryCard = (props: Props) => {
                 >
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
-                        <BoardPermissionGate permissions={['manage_board_cards']}>
+                        <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                             <Menu.Text
                                 icon={<DeleteIcon/>}
                                 id='delete'
                                 name={intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
                                 onClick={() => mutator.deleteBlock(card, 'delete card')}
                             />
-                        <BoardPermissionGate permissions={['manage_board_cards']}>
-                        </BoardPermissionGate>
                             <Menu.Text
                                 icon={<DuplicateIcon/>}
                                 id='duplicate'

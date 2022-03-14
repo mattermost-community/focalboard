@@ -8,7 +8,7 @@ import {useDragLayer, useDrop} from 'react-dnd'
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
 import {createBoardView, BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import {useAppDispatch} from '../../store/hooks'
@@ -42,8 +42,8 @@ type Props = {
 const Table = (props: Props): JSX.Element => {
     const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
-    const canEditBoardProperties = useHasCurrentBoardPermissions(['manage_board_properties'])
-    const canEditCards = useHasCurrentBoardPermissions(['manage_board_cards'])
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
+    const canEditCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const dispatch = useAppDispatch()
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
@@ -248,7 +248,7 @@ const Table = (props: Props): JSX.Element => {
                 {/* Add New row */}
                 <div className='octo-table-footer'>
                     {!props.readonly && !activeView.fields.groupById &&
-                    <BoardPermissionGate permissions={['manage_board_cards']}>
+                    <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                         <div
                             className='octo-table-cell'
                             onClick={() => {
