@@ -14,130 +14,142 @@ Object {
           <div
             class="menu-options"
           >
-            <div
-              aria-label="view title"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="TableIcon Icon"
-                fill="currentColor"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
+            <div>
+              <div
+                aria-label="view title"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                <g
-                  opacity="0.8"
+                <svg
+                  class="TableIcon Icon"
+                  fill="currentColor"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    clip-rule="evenodd"
-                    d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </g>
-              </svg>
-              <div
-                class="menu-name"
-              >
-                view title
-              </div>
-              <div
-                class="noicon"
-              />
-            </div>
-            <div
-              aria-label="view title"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="TableIcon Icon"
-                fill="currentColor"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g
-                  opacity="0.8"
+                  <g
+                    opacity="0.8"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </g>
+                </svg>
+                <div
+                  class="menu-name"
                 >
-                  <path
-                    clip-rule="evenodd"
-                    d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </g>
-              </svg>
-              <div
-                class="menu-name"
-              >
-                view title
-              </div>
-              <div
-                class="noicon"
-              />
-            </div>
-            <div
-              class="MenuOption MenuSeparator menu-separator"
-            />
-            <div
-              aria-label="Duplicate view"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-content-copy content-copy"
-              />
-              <div
-                class="menu-name"
-              >
-                Duplicate view
-              </div>
-              <div
-                class="noicon"
-              />
-            </div>
-            <div
-              aria-label="Delete view"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
-              <div
-                class="menu-name"
-              >
-                Delete view
-              </div>
-              <div
-                class="noicon"
-              />
-            </div>
-            <div
-              class="MenuOption SubMenuOption menu-option"
-              id="__addView"
-            >
-              <i
-                class="CompassIcon icon-plus AddIcon"
-              />
-              <div
-                class="menu-name"
-              >
-                Add view
-              </div>
-              <svg
-                class="SubmenuTriangleIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <polygon
-                  points="50,35 75,50 50,65"
+                  view title
+                </div>
+                <div
+                  class="noicon"
                 />
-              </svg>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="view title"
+                class="MenuOption TextOption menu-option"
+                role="button"
+              >
+                <svg
+                  class="TableIcon Icon"
+                  fill="currentColor"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g
+                    opacity="0.8"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </g>
+                </svg>
+                <div
+                  class="menu-name"
+                >
+                  view title
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+            <div>
+              <div
+                class="MenuOption MenuSeparator menu-separator"
+              />
+            </div>
+            <div>
+              <div
+                aria-label="Duplicate view"
+                class="MenuOption TextOption menu-option"
+                role="button"
+              >
+                <i
+                  class="CompassIcon icon-content-copy content-copy"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Duplicate view
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="Delete view"
+                class="MenuOption TextOption menu-option"
+                role="button"
+              >
+                <i
+                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Delete view
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+            <div>
+              <div
+                class="MenuOption SubMenuOption menu-option"
+                id="__addView"
+              >
+                <i
+                  class="CompassIcon icon-plus AddIcon"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Add view
+                </div>
+                <svg
+                  class="SubmenuTriangleIcon Icon"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polygon
+                    points="50,35 75,50 50,65"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
           <div
@@ -178,130 +190,142 @@ Object {
         <div
           class="menu-options"
         >
-          <div
-            aria-label="view title"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
-            <svg
-              class="TableIcon Icon"
-              fill="currentColor"
-              height="24"
-              viewBox="0 0 24 24"
-              width="24"
-              xmlns="http://www.w3.org/2000/svg"
+          <div>
+            <div
+              aria-label="view title"
+              class="MenuOption TextOption menu-option"
+              role="button"
             >
-              <g
-                opacity="0.8"
+              <svg
+                class="TableIcon Icon"
+                fill="currentColor"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  clip-rule="evenodd"
-                  d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                />
-              </g>
-            </svg>
-            <div
-              class="menu-name"
-            >
-              view title
-            </div>
-            <div
-              class="noicon"
-            />
-          </div>
-          <div
-            aria-label="view title"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
-            <svg
-              class="TableIcon Icon"
-              fill="currentColor"
-              height="24"
-              viewBox="0 0 24 24"
-              width="24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g
-                opacity="0.8"
+                <g
+                  opacity="0.8"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </g>
+              </svg>
+              <div
+                class="menu-name"
               >
-                <path
-                  clip-rule="evenodd"
-                  d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                />
-              </g>
-            </svg>
-            <div
-              class="menu-name"
-            >
-              view title
-            </div>
-            <div
-              class="noicon"
-            />
-          </div>
-          <div
-            class="MenuOption MenuSeparator menu-separator"
-          />
-          <div
-            aria-label="Duplicate view"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
-            <i
-              class="CompassIcon icon-content-copy content-copy"
-            />
-            <div
-              class="menu-name"
-            >
-              Duplicate view
-            </div>
-            <div
-              class="noicon"
-            />
-          </div>
-          <div
-            aria-label="Delete view"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
-            <i
-              class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-            />
-            <div
-              class="menu-name"
-            >
-              Delete view
-            </div>
-            <div
-              class="noicon"
-            />
-          </div>
-          <div
-            class="MenuOption SubMenuOption menu-option"
-            id="__addView"
-          >
-            <i
-              class="CompassIcon icon-plus AddIcon"
-            />
-            <div
-              class="menu-name"
-            >
-              Add view
-            </div>
-            <svg
-              class="SubmenuTriangleIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polygon
-                points="50,35 75,50 50,65"
+                view title
+              </div>
+              <div
+                class="noicon"
               />
-            </svg>
+            </div>
+          </div>
+          <div>
+            <div
+              aria-label="view title"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <svg
+                class="TableIcon Icon"
+                fill="currentColor"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g
+                  opacity="0.8"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </g>
+              </svg>
+              <div
+                class="menu-name"
+              >
+                view title
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+          <div>
+            <div
+              class="MenuOption MenuSeparator menu-separator"
+            />
+          </div>
+          <div>
+            <div
+              aria-label="Duplicate view"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-content-copy content-copy"
+              />
+              <div
+                class="menu-name"
+              >
+                Duplicate view
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+          <div>
+            <div
+              aria-label="Delete view"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+              />
+              <div
+                class="menu-name"
+              >
+                Delete view
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+          <div>
+            <div
+              class="MenuOption SubMenuOption menu-option"
+              id="__addView"
+            >
+              <i
+                class="CompassIcon icon-plus AddIcon"
+              />
+              <div
+                class="menu-name"
+              >
+                Add view
+              </div>
+              <svg
+                class="SubmenuTriangleIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polygon
+                  points="50,35 75,50 50,65"
+                />
+              </svg>
+            </div>
           </div>
         </div>
         <div
@@ -399,75 +423,81 @@ Object {
           <div
             class="menu-options"
           >
-            <div
-              aria-label="view title"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="TableIcon Icon"
-                fill="currentColor"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
+            <div>
+              <div
+                aria-label="view title"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                <g
-                  opacity="0.8"
+                <svg
+                  class="TableIcon Icon"
+                  fill="currentColor"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    clip-rule="evenodd"
-                    d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </g>
-              </svg>
-              <div
-                class="menu-name"
-              >
-                view title
+                  <g
+                    opacity="0.8"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </g>
+                </svg>
+                <div
+                  class="menu-name"
+                >
+                  view title
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
+            </div>
+            <div>
               <div
-                class="noicon"
+                aria-label="view title"
+                class="MenuOption TextOption menu-option"
+                role="button"
+              >
+                <svg
+                  class="TableIcon Icon"
+                  fill="currentColor"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g
+                    opacity="0.8"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                  </g>
+                </svg>
+                <div
+                  class="menu-name"
+                >
+                  view title
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+            <div>
+              <div
+                class="MenuOption MenuSeparator menu-separator"
               />
             </div>
-            <div
-              aria-label="view title"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="TableIcon Icon"
-                fill="currentColor"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g
-                  opacity="0.8"
-                >
-                  <path
-                    clip-rule="evenodd"
-                    d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </g>
-              </svg>
-              <div
-                class="menu-name"
-              >
-                view title
-              </div>
-              <div
-                class="noicon"
-              />
-            </div>
-            <div
-              class="MenuOption MenuSeparator menu-separator"
-            />
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -507,75 +537,81 @@ Object {
         <div
           class="menu-options"
         >
-          <div
-            aria-label="view title"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
-            <svg
-              class="TableIcon Icon"
-              fill="currentColor"
-              height="24"
-              viewBox="0 0 24 24"
-              width="24"
-              xmlns="http://www.w3.org/2000/svg"
+          <div>
+            <div
+              aria-label="view title"
+              class="MenuOption TextOption menu-option"
+              role="button"
             >
-              <g
-                opacity="0.8"
+              <svg
+                class="TableIcon Icon"
+                fill="currentColor"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  clip-rule="evenodd"
-                  d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                />
-              </g>
-            </svg>
-            <div
-              class="menu-name"
-            >
-              view title
+                <g
+                  opacity="0.8"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </g>
+              </svg>
+              <div
+                class="menu-name"
+              >
+                view title
+              </div>
+              <div
+                class="noicon"
+              />
             </div>
+          </div>
+          <div>
             <div
-              class="noicon"
+              aria-label="view title"
+              class="MenuOption TextOption menu-option"
+              role="button"
+            >
+              <svg
+                class="TableIcon Icon"
+                fill="currentColor"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g
+                  opacity="0.8"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
+                    fill="currentColor"
+                    fill-rule="evenodd"
+                  />
+                </g>
+              </svg>
+              <div
+                class="menu-name"
+              >
+                view title
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+          <div>
+            <div
+              class="MenuOption MenuSeparator menu-separator"
             />
           </div>
-          <div
-            aria-label="view title"
-            class="MenuOption TextOption menu-option"
-            role="button"
-          >
-            <svg
-              class="TableIcon Icon"
-              fill="currentColor"
-              height="24"
-              viewBox="0 0 24 24"
-              width="24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g
-                opacity="0.8"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M20 4H10V8L20 8V4ZM8 4V8H4V4H8ZM4 14L4 10H8V14H4ZM4 16L4 20H8V16H4ZM10 16V20H20V16L10 16ZM20 14V10L10 10V14L20 14ZM4 2C2.89543 2 2 2.89543 2 4V20C2 21.1046 2.89543 22 4 22H20C21.1046 22 22 21.1046 22 20V4C22 2.89543 21.1046 2 20 2H4Z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                />
-              </g>
-            </svg>
-            <div
-              class="menu-name"
-            >
-              view title
-            </div>
-            <div
-              class="noicon"
-            />
-          </div>
-          <div
-            class="MenuOption MenuSeparator menu-separator"
-          />
         </div>
         <div
           class="menu-spacer hideOnWidescreen"

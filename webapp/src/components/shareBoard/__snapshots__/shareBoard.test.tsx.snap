@@ -15,11 +15,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-             
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -230,11 +225,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-             
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -445,11 +435,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-             
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -683,11 +668,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-             
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -921,11 +901,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-             
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -1159,11 +1134,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-             
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -1374,11 +1344,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-             
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -1589,11 +1554,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-             
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -1804,11 +1764,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-             
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"

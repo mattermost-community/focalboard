@@ -28,12 +28,64 @@
         width: 100%;
     }
 
+
+
+    .octo-propertyvalue {
+        font-size: 14px;
+        padding: 4px 8px;
+        min-height: 32px;
+        display: flex;
+
+        &:not(.URLProperty) {
+            flex-wrap: wrap;
+        }
+
+        &.octo-propertyvalue--readonly {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &:not(.readonly) {
+            min-width: 180px;
+            transition: background 100ms ease-out 0s;
+            cursor: pointer;
+            border-radius: 4px;
+
+            &:hover {
+                background-color: rgba(var(--center-channel-color-rgb), 0.08);
+            }
+        }
+
+        .MenuWrapper {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .ValueSelector {
+        padding: 4px 0;
+        background-color: rgba(var(--center-channel-color-rgb), 0.08);
+    }
+
+    .ValueSelector__menu {
+        max-width: 100%;
+
+        .value-menu-option {
+            justify-content: space-between;
+        }
+
+        .label-container {
+            max-width: 90%;
+        }
+    }
+
     .octo-propertyrow {
         max-width: 595px;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         margin: 6px 0;
-        height: 32px;
+        min-height: 32px;
 
         .Switch {
             margin-left: 8px;
@@ -51,34 +103,6 @@
                 .octo-switch-inner {
                     transform: translateX(16px) translateY(0);
                 }
-            }
-        }
-
-        .octo-propertyvalue {
-            font-size: 14px;
-            padding: 4px 8px;
-            height: 32px;
-
-            &.octo-propertyvalue--readonly {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            &:not(.readonly) {
-                min-width: 180px;
-                transition: background 100ms ease-out 0s;
-                cursor: pointer;
-                border-radius: 4px;
-
-                &:hover {
-                    background-color: rgba(var(--center-channel-color-rgb), 0.08);
-                }
-            }
-
-            .MenuWrapper {
-                display: flex;
-                align-items: center;
             }
         }
 

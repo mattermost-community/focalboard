@@ -7,8 +7,6 @@ import octoClient from '../octoClient'
 
 import {Utils} from '../utils'
 
-import {SuiteWindow} from '../types'
-
 import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
