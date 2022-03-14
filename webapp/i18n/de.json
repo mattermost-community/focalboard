@@ -268,6 +268,8 @@
   "calendar.week": "Woche",
   "default-properties.badges": "Kommentare und Beschreibung",
   "default-properties.title": "Titel",
+  "error.back-to-boards": "Zurück zu Boards",
+  "error.back-to-home": "Zurück zur Startseite",
   "error.go-login": "Anmelden",
   "error.not-logged-in": "Deine Sitzung ist möglicherweise abgelaufen oder Du bist nicht eingeloggt.",
   "error.page.title": "Entschuldigung, etwas ist schief gelaufen",
