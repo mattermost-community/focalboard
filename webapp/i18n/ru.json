@@ -268,7 +268,6 @@
   "calendar.week": "Неделя",
   "default-properties.badges": "Комментарии и описание",
   "default-properties.title": "Заголовок",
-  "error.go-dashboard": "Перейти к панели управления",
   "error.go-login": "Авторизоваться",
   "error.not-logged-in": "Возможно, срок действия Вашего сеанса истек или Вы не вошли в систему.",
   "error.page.title": "Извините, что-то пошло не так",

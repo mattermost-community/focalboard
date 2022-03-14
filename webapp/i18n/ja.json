@@ -268,7 +268,6 @@
   "calendar.week": "週",
   "default-properties.badges": "コメントと説明",
   "default-properties.title": "タイトル",
-  "error.go-dashboard": "ダッシュボードに移動する",
   "error.go-login": "ログイン",
   "error.not-logged-in": "セッションの有効期限が切れているか、ログインしていない可能性があります。",
   "error.page.title": "申し訳ありませんが、何か問題が発生しました",

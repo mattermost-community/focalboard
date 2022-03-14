@@ -268,7 +268,6 @@
   "calendar.week": "Week",
   "default-properties.badges": "Comments and Description",
   "default-properties.title": "Title",
-  "error.go-dashboard": "Go to the Dashboard",
   "error.go-login": "Log in",
   "error.not-logged-in": "Your session may have expired or you're not logged in.",
   "error.page.title": "An error occurred",
