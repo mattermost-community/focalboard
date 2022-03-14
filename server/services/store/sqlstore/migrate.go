@@ -155,13 +155,6 @@ func (s *SQLStore) Migrate() error {
 		},
 	}
 
-	// if dirty column exixts, do all this
-	// x := loadCurrentVersion()
-	// migrationAssets.Names
-	// m := Regex.FindStringSubmatch(fileName)
-	// or even better user this-
-	// src.Migrations()[0].Name
-
 	src, err := mbindata.WithInstance(migrationAssets)
 	if err != nil {
 		return err
@@ -242,6 +235,8 @@ func (s *SQLStore) migrateSchemaVersion(migrations []*models.Migration) error {
 		return nil
 	}
 
+	s.logger.Info("Migrating schema migration to new format")
+
 	legacySchemaVersion, err := s.getLegacySchemaVersion()
 	if err != nil {
 		return err
@@ -266,8 +261,6 @@ func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
 	// Check if `dirty` column exists on schema version table.
 	// This column exists only for the old schema version table.
 
-	// handle the case of table not found, in case of a clean database
-
 	// SQLite needs a bit of a special handling
 	if s.dbType == model.SqliteDBType {
 		return s.isSchemaMigrationNeededSQLite()
@@ -285,6 +278,7 @@ func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
 
 	var count int
 	if err := row.Scan(&count); err != nil {
+		s.logger.Error("failed to check for columns of schema_migrations table", mlog.Err(err))
 		return false, err
 	}
 
@@ -337,7 +331,6 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 }
 
 func (s *SQLStore) getLegacySchemaVersion() (uint32, error) {
-	s.logger.Error("getLegacySchemaVersion called")
 	query := s.getQueryBuilder(s.db).
 		Select("version").
 		From(s.tablePrefix + "schema_migrations")
@@ -351,12 +344,10 @@ func (s *SQLStore) getLegacySchemaVersion() (uint32, error) {
 		return version, err
 	}
 
-	s.logger.Error("getLegacySchemaVersion returned")
 	return version, nil
 }
 
 func (s *SQLStore) createTempSchemaTable() error {
-	s.logger.Error("createTempSchemaTable called")
 	// squirrel doesn't support DDL query in query builder
 	// so, we need to use a plain old string
 	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (Version bigint NOT NULL, Name varchar(64) NOT NULL, PRIMARY KEY (Version))", s.tablePrefix+tempSchemaMigrationTableName)
@@ -366,11 +357,9 @@ func (s *SQLStore) createTempSchemaTable() error {
 		return err
 	}
 
-	s.logger.Error("createTempSchemaTable returned")
 	return nil
 }
 func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legacySchemaVersion uint32) error {
-	s.logger.Error("populateTempSchemaTable called")
 	query := s.getQueryBuilder(s.db).
 		Insert(s.tablePrefix+tempSchemaMigrationTableName).
 		Columns("Version", "Name")
@@ -392,7 +381,6 @@ func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legac
 
 	if _, err := query.Exec(); err != nil {
 		s.logger.Error("failed to insert migration records into temporary schema table", mlog.Err(err))
-		s.logger.Error("populateTempSchemaTable error " + err.Error())
 		return err
 	}
 
