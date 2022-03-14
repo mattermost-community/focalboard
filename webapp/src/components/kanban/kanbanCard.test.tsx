@@ -50,6 +50,9 @@ describe('src/components/kanban/kanbanCard', () => {
         cards: {
             cards: [card],
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
         boards: {
             current: 'board_id_1',
             boards: {

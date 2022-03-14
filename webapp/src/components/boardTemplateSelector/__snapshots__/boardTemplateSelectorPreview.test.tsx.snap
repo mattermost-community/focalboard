@@ -23,17 +23,11 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             class="IconSelector"
           >
             <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+              class="octo-icon size-m readonly"
             >
-              <div
-                class="octo-icon size-m"
-              >
-                <span>
-                  🚴🏻‍♂️
-                </span>
-              </div>
+              <span>
+                🚴🏻‍♂️
+              </span>
             </div>
           </div>
           <input
@@ -75,9 +69,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             </div>
           </div>
         </div>
-        <button>
-          Show Share Modal
-        </button>
         <div
           class="octo-spacer"
         />

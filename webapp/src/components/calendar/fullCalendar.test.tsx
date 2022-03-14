@@ -2,10 +2,11 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 import {render} from '@testing-library/react'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import '@testing-library/jest-dom'
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl, mockStateStore} from '../../testUtils'
 import {IPropertyTemplate} from '../../blocks/board'
 
 import CalendarView from './fullCalendar'
@@ -31,18 +32,39 @@ describe('components/calendar/toolbar', () => {
     card.createAt = fifth
     const rObject = {from: twentieth}
 
+    const state = {
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
+    }
+    const store = mockStateStore([], state)
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
+
     test('return calendar, no date property', () => {
         const {container} = render(
             wrapIntl(
-                <CalendarView
-                    board={board}
-                    activeView={view}
-                    cards={[card]}
-                    readonly={false}
-                    showCard={mockShow}
-                    addCard={mockAdd}
-                    initialDate={new Date(fifth)}
-                />,
+                <ReduxProvider store={store}>
+                    <CalendarView
+                        board={board}
+                        activeView={view}
+                        cards={[card]}
+                        readonly={false}
+                        showCard={mockShow}
+                        addCard={mockAdd}
+                        initialDate={new Date(fifth)}
+                    />
+                </ReduxProvider>,
             ),
         )
         expect(container).toMatchSnapshot()
@@ -52,15 +74,17 @@ describe('components/calendar/toolbar', () => {
         card.fields.properties['12345'] = JSON.stringify(rObject)
         const {container} = render(
             wrapIntl(
-                <CalendarView
-                    board={board}
-                    activeView={view}
-                    cards={[card]}
-                    readonly={false}
-                    showCard={mockShow}
-                    addCard={mockAdd}
-                    initialDate={new Date(fifth)}
-                />,
+                <ReduxProvider store={store}>
+                    <CalendarView
+                        board={board}
+                        activeView={view}
+                        cards={[card]}
+                        readonly={false}
+                        showCard={mockShow}
+                        addCard={mockAdd}
+                        initialDate={new Date(fifth)}
+                    />
+                </ReduxProvider>,
             ),
         )
         expect(container).toMatchSnapshot()
@@ -71,16 +95,18 @@ describe('components/calendar/toolbar', () => {
         card.fields.properties['12345'] = JSON.stringify(rObject)
         const {container} = render(
             wrapIntl(
-                <CalendarView
-                    board={board}
-                    activeView={view}
-                    readonly={false}
-                    dateDisplayProperty={dateDisplayProperty}
-                    cards={[card]}
-                    showCard={mockShow}
-                    addCard={mockAdd}
-                    initialDate={new Date(fifth)}
-                />,
+                <ReduxProvider store={store}>
+                    <CalendarView
+                        board={board}
+                        activeView={view}
+                        readonly={false}
+                        dateDisplayProperty={dateDisplayProperty}
+                        cards={[card]}
+                        showCard={mockShow}
+                        addCard={mockAdd}
+                        initialDate={new Date(fifth)}
+                    />
+                </ReduxProvider>,
             ),
         )
         expect(container).toMatchSnapshot()

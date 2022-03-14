@@ -89,6 +89,28 @@ describe('components/viewHeader/viewHeader', () => {
         )
         expect(container).toMatchSnapshot()
     })
+    test('return viewHeader without permissions', () => {
+        const localStore = mockStateStore([], {...state, teams: {current: undefined}})
+        const {container} = render(
+            wrapIntl(
+                <ReduxProvider store={localStore}>
+                    <ViewHeader
+                        board={board}
+                        activeView={activeView}
+                        views={[activeView]}
+                        cards={[card]}
+                        groupByProperty={board.cardProperties[0]}
+                        addCard={jest.fn()}
+                        addCardFromTemplate={jest.fn()}
+                        addCardTemplate={jest.fn()}
+                        editCardTemplate={jest.fn()}
+                        readonly={false}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        expect(container).toMatchSnapshot()
+    })
     test('return viewHeader readonly', () => {
         const {container} = render(
             wrapIntl(

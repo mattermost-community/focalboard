@@ -151,8 +151,6 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   aria-label="Duplicate"
                   class="MenuOption TextOption menu-option"

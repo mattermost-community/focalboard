@@ -132,6 +132,40 @@ describe('src/component/kanban/kanban', () => {
         ), {wrapper: MemoryRouter})
         expect(container).toMatchSnapshot()
     })
+    test('should match snapshot without permissions', () => {
+        const localStore = mockStateStore([], {...state, teams: {current: undefined}})
+        const {container} = render(wrapDNDIntl(
+            <ReduxProvider store={localStore}>
+                <Kanban
+                    board={board}
+                    activeView={activeView}
+                    cards={[card1, card2, card3]}
+                    groupByProperty={groupProperty}
+                    visibleGroups={[
+                        {
+                            option: optionQ1,
+                            cards: [card1, card2],
+                        }, {
+                            option: optionQ2,
+                            cards: [card3],
+                        },
+                    ]}
+                    hiddenGroups={[
+                        {
+                            option: optionQ3,
+                            cards: [],
+                        },
+                    ]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    onCardClicked={jest.fn()}
+                    addCard={jest.fn()}
+                    showCard={jest.fn()}
+                />
+            </ReduxProvider>,
+        ), {wrapper: MemoryRouter})
+        expect(container).toMatchSnapshot()
+    })
     test('do not return a kanban with groupByProperty undefined', () => {
         const {container} = render(wrapDNDIntl(
             <ReduxProvider store={store}>
