@@ -12,7 +12,6 @@ import {createCommentBlock} from './blocks/commentBlock'
 import {IAppWindow} from './types'
 import {ChangeHandlerType, WSMessage} from './wsclient'
 import {BlockCategoryWebsocketData, Category} from './store/sidebar'
-import {Constants} from './constants'
 
 declare let window: IAppWindow
 
