@@ -77,12 +77,6 @@
                 padding: 0 4px 0 8px;
             }
 
-            .IconButton {
-                width: 32px;
-                height: 32px;
-                margin-right: 4px;
-            }
-
             .icon-refresh {
                 margin: 4px;
                 font-size: 18px;
@@ -138,7 +132,7 @@
     }
 
     .share-input__container {
-        margin-top: -8px;
+        margin-top: 16px;
         padding: 0 24px 24px;
         border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
     }
@@ -179,6 +173,7 @@
         padding: 16px 8px;
         max-height: 282px;
         overflow: auto;
+        border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
     }
 
     .user-item {

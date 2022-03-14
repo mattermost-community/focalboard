@@ -268,28 +268,28 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                         />
                     </div>
                 </div>
+                <div className='user-items'>
+                    <TeamPermissionsRow/>
+
+                    {Object.values(members).map((member) => {
+                        const user = boardUsers.find((u) => u.id === member.userId)
+                        if (!user) {
+                            return null
+                        }
+
+                        return (
+                            <UserPermissionsRow
+                                key={user.id}
+                                user={user}
+                                member={member}
+                                onDeleteBoardMember={onDeleteBoardMember}
+                                onUpdateBoardMember={onUpdateBoardMember}
+                                isMe={user.id === me?.id}
+                            />
+                        )
+                    })}
+                </div>
             </BoardPermissionGate>
-            <div className='user-items'>
-                <TeamPermissionsRow/>
-
-                {Object.values(members).map((member) => {
-                    const user = boardUsers.find((u) => u.id === member.userId)
-                    if (!user) {
-                        return null
-                    }
-
-                    return (
-                        <UserPermissionsRow
-                            key={user.id}
-                            user={user}
-                            member={member}
-                            onDeleteBoardMember={onDeleteBoardMember}
-                            onUpdateBoardMember={onUpdateBoardMember}
-                            isMe={user.id === me?.id}
-                        />
-                    )
-                })}
-            </div>
 
             {props.enableSharedBoards && (
                 <div className='tabs-container'>
