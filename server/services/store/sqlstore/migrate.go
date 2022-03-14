@@ -360,7 +360,7 @@ func (s *SQLStore) createTempSchemaTable() error {
 	// squirrel doesn't support DDL query in query builder
 	// so, we need to use a plain old string
 	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (Version bigint NOT NULL, Name varchar(64) NOT NULL, PRIMARY KEY (Version))", s.tablePrefix+tempSchemaMigrationTableName)
-	if _, err := s.db.Query(query); err != nil {
+	if _, err := s.db.Exec(query); err != nil {
 		s.logger.Error("failed to create temporary schema migration table", mlog.Err(err))
 		s.logger.Error("createTempSchemaTable error  " + err.Error())
 		return err
@@ -405,7 +405,7 @@ func (s *SQLStore) useNewSchemaTable() error {
 
 	// deleting old table
 	query := "DROP TABLE " + s.tablePrefix + "schema_migrations"
-	if _, err := s.db.Query(query); err != nil {
+	if _, err := s.db.Exec(query); err != nil {
 		s.logger.Error("failed to delete original schema migrations table", mlog.Err(err))
 		return err
 	}
@@ -417,7 +417,7 @@ func (s *SQLStore) useNewSchemaTable() error {
 		query = fmt.Sprintf("ALTER TABLE %s%s RENAME TO %sschema_migrations", s.tablePrefix, tempSchemaMigrationTableName, s.tablePrefix)
 	}
 
-	if _, err := s.db.Query(query); err != nil {
+	if _, err := s.db.Exec(query); err != nil {
 		s.logger.Error("failed to rename temp schema table", mlog.Err(err))
 		return err
 	}
