@@ -104,6 +104,28 @@ describe('components/cardDialog', () => {
         })
         expect(container).toMatchSnapshot()
     })
+    test('should match snapshot without permissions', async () => {
+        let container
+        const localStore = mockStateStore([], {...state, teams: {current: undefined}})
+        await act(async () => {
+            const result = render(wrapDNDIntl(
+                <ReduxProvider store={localStore}>
+                    <CardDialog
+                        board={board}
+                        activeView={boardView}
+                        views={[boardView]}
+                        cards={[card]}
+                        cardId={card.id}
+                        onClose={jest.fn()}
+                        showCard={jest.fn()}
+                        readonly={false}
+                    />
+                </ReduxProvider>,
+            ))
+            container = result.container
+        })
+        expect(container).toMatchSnapshot()
+    })
     test('return a cardDialog readonly', async () => {
         let container
         await act(async () => {

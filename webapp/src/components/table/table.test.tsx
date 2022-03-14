@@ -103,6 +103,34 @@ describe('components/table/Table', () => {
         expect(container).toMatchSnapshot()
     })
 
+    test('should match snapshot without permissions', async () => {
+        const callback = jest.fn()
+        const addCard = jest.fn()
+
+        const mockStore = configureStore([])
+        const store = mockStore({...state, teams: {current: undefined}})
+
+        const component = wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <Table
+                    board={board}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card]}
+                    views={[view, view2]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
+
     test('should match snapshot, read-only', async () => {
         const callback = jest.fn()
         const addCard = jest.fn()

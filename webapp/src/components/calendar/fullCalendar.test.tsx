@@ -69,6 +69,7 @@ describe('components/calendar/toolbar', () => {
         )
         expect(container).toMatchSnapshot()
     })
+
     test('return calendar, with date property not set', () => {
         board.cardProperties.push(dateDisplayProperty)
         card.fields.properties['12345'] = JSON.stringify(rObject)
@@ -102,6 +103,26 @@ describe('components/calendar/toolbar', () => {
                         readonly={false}
                         dateDisplayProperty={dateDisplayProperty}
                         cards={[card]}
+                        showCard={mockShow}
+                        addCard={mockAdd}
+                        initialDate={new Date(fifth)}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        expect(container).toMatchSnapshot()
+    })
+
+    test('return calendar, without permissions', () => {
+        const localStore = mockStateStore([], {...state, teams: {current: undefined}})
+        const {container} = render(
+            wrapIntl(
+                <ReduxProvider store={localStore}>
+                    <CalendarView
+                        board={board}
+                        activeView={view}
+                        cards={[card]}
+                        readonly={false}
                         showCard={mockShow}
                         addCard={mockAdd}
                         initialDate={new Date(fifth)}

@@ -77,6 +77,25 @@ describe('src/components/gallery/Gallery', () => {
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
     })
+    test('should match snapshot without permissions', () => {
+        const localStore = mockStateStore([], {...state, teams: {current: undefined}})
+        const {container} = render(wrapDNDIntl(
+            <ReduxProvider store={localStore}>
+                <Gallery
+                    board={board}
+                    cards={[card, card2]}
+                    activeView={activeView}
+                    readonly={false}
+                    addCard={jest.fn()}
+                    selectedCardIds={[card.id]}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
+        ))
+        const buttonElement = screen.getAllByRole('button', {name: 'menuwrapper'})[0]
+        userEvent.click(buttonElement)
+        expect(container).toMatchSnapshot()
+    })
     test('return Gallery and click new', () => {
         const mockAddCard = jest.fn()
         const {container} = render(wrapDNDIntl(
