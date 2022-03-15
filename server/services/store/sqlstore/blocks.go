@@ -142,7 +142,7 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string,
 		From(s.tablePrefix + "blocks").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
 		Where(sq.Eq{"board_id": boardID}).
-		OrderBy("insertAt")
+		OrderBy("insertAt, update_at")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -417,6 +417,7 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy stri
 	}
 
 	if block == nil {
+		s.logger.Warn("deleteBlock block not found", mlog.String("block_id", blockID))
 		return nil // deleting non-exiting block is not considered an error (for now)
 	}
 
@@ -478,11 +479,13 @@ func (s *SQLStore) undeleteBlock(db sq.BaseRunner, blockID string, modifiedBy st
 	}
 
 	if len(blocks) == 0 {
+		s.logger.Warn("undeleteBlock block not found", mlog.String("block_id", blockID))
 		return nil // deleting non-exiting block is not considered an error (for now)
 	}
 	block := blocks[0]
 
 	if block.DeleteAt == 0 {
+		s.logger.Warn("undeleteBlock block not deleted", mlog.String("block_id", block.ID))
 		return nil // undeleting not deleted block is not considered an error (for now)
 	}
 
@@ -608,7 +611,7 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks_history").
 		Where(sq.Eq{"id": blockID}).
-		OrderBy("insertAt" + order)
+		OrderBy("insertAt, update_at" + order)
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})

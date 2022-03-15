@@ -44,11 +44,12 @@ func (a *App) DuplicateBlock(boardID string, blockID string, userID string, asTe
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		for _, block := range blocks {
 			a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
 		}
-	}()
+		return nil
+	})
 	return blocks, err
 }
 
@@ -77,7 +78,7 @@ func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedB
 	if err != nil {
 		return nil
 	}
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		// broadcast on websocket
 		a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
 
@@ -86,7 +87,8 @@ func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedB
 
 		// send notifications
 		a.notifyBlockChanged(notify.Update, block, oldBlock, modifiedByID)
-	}()
+		return nil
+	})
 	return nil
 }
 
@@ -105,19 +107,19 @@ func (a *App) PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, mo
 		return err
 	}
 
-	a.metrics.IncrementBlocksPatched(len(oldBlocks))
-	for i, blockID := range blockPatches.BlockIDs {
-		newBlock, err := a.store.GetBlock(blockID)
-		if err != nil {
-			return nil
-		}
-		a.wsAdapter.BroadcastBlockChange(teamID, *newBlock)
-		go func(currentIndex int) {
+	a.blockChangeNotifier.Enqueue(func() error {
+		a.metrics.IncrementBlocksPatched(len(oldBlocks))
+		for i, blockID := range blockPatches.BlockIDs {
+			newBlock, err := a.store.GetBlock(blockID)
+			if err != nil {
+				return nil
+			}
+			a.wsAdapter.BroadcastBlockChange(teamID, *newBlock)
 			a.webhook.NotifyUpdate(*newBlock)
-			a.notifyBlockChanged(notify.Update, newBlock, &oldBlocks[currentIndex], modifiedByID)
-		}(i)
-	}
-
+			a.notifyBlockChanged(notify.Update, newBlock, &oldBlocks[i], modifiedByID)
+		}
+		return nil
+	})
 	return nil
 }
 
@@ -129,12 +131,13 @@ func (a *App) InsertBlock(block model.Block, modifiedByID string) error {
 
 	err := a.store.InsertBlock(&block, modifiedByID)
 	if err == nil {
-		go func() {
+		a.blockChangeNotifier.Enqueue(func() error {
 			a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
 			a.metrics.IncrementBlocksInserted(1)
 			a.webhook.NotifyUpdate(block)
 			a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
-		}()
+			return nil
+		})
 	}
 	return err
 }
@@ -169,7 +172,7 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 		a.metrics.IncrementBlocksInserted(1)
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		for _, b := range needsNotify {
 			block := b
 			a.webhook.NotifyUpdate(block)
@@ -177,7 +180,8 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 				a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
 			}
 		}
-	}()
+		return nil
+	})
 
 	return blocks, nil
 }
@@ -278,11 +282,12 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 		}
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBlockDelete(board.TeamID, blockID, block.BoardID)
 		a.metrics.IncrementBlocksDeleted(1)
 		a.notifyBlockChanged(notify.Delete, block, block, modifiedBy)
-	}()
+		return nil
+	})
 	return nil
 }
 
@@ -317,12 +322,14 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
 		return err
 	}
 
-	a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
-	a.metrics.IncrementBlocksInserted(1)
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
+		a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
+		a.metrics.IncrementBlocksInserted(1)
 		a.webhook.NotifyUpdate(*block)
 		a.notifyBlockChanged(notify.Add, block, nil, modifiedBy)
-	}()
+		return nil
+	})
+
 	return nil
 }
 

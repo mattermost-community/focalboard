@@ -342,6 +342,8 @@ func (s *Server) Shutdown() error {
 		s.logger.Warn("Error occurred when shutting down notification service", mlog.Err(err))
 	}
 
+	s.app.Shutdown()
+
 	defer s.logger.Info("Server.Shutdown")
 
 	return s.store.Shutdown()
