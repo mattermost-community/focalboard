@@ -24,12 +24,13 @@ const BoardPermissionGate = React.memo((props: Props): React.ReactElement|null =
     const boardId = props.boardId || currentBoard?.id || ''
     const teamId = props.teamId || currentTeam?.id || ''
 
-    const allowed = useHasPermissions(teamId, boardId, props.permissions)
+    let allowed = useHasPermissions(teamId, boardId, props.permissions)
+
+    if (props.invert) {
+        allowed = !allowed
+    }
 
     if (allowed) {
-        if (props.invert) {
-            return null
-        }
         return (<>{props.children}</>)
     }
     return null
