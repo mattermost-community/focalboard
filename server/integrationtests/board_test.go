@@ -468,6 +468,60 @@ func TestGetBoard(t *testing.T) {
 	})
 }
 
+func TestGetBoardMetadata(t *testing.T) {
+	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+		th.Logout(th.Client)
+
+		boardMetadata, resp := th.Client.GetBoardMetadata("boar-id", "")
+		th.CheckUnauthorized(resp)
+		require.Nil(t, boardMetadata)
+	})
+
+	t.Run("valid read token should be enough to get the board metadata", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+		th.Server.Config().EnablePublicSharedBoards = true
+
+		teamID := testTeamID
+		sharingToken := utils.NewID(utils.IDTypeToken)
+
+		board := &model.Board{
+			Title:  "public board where user1 is admin",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		rBoard, err := th.Server.App().CreateBoard(board, th.GetUser1().ID, true)
+		require.NoError(t, err)
+
+		sharing := &model.Sharing{
+			ID:       rBoard.ID,
+			Enabled:  true,
+			Token:    sharingToken,
+			UpdateAt: 1,
+		}
+
+		success, resp := th.Client.PostSharing(sharing)
+		th.CheckOK(resp)
+		require.True(t, success)
+
+		// the client logs out
+		th.Logout(th.Client)
+
+		// we make sure that the client cannot currently retrieve the
+		// board with no session
+		boardMetadata, resp := th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckUnauthorized(resp)
+		require.Nil(t, boardMetadata)
+
+		// it should be able to retrieve it with the read token
+		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, sharingToken)
+		th.CheckOK(resp)
+		require.NotNil(t, boardMetadata)
+	})
+}
+
 func TestPatchBoard(t *testing.T) {
 	teamID := testTeamID
 

@@ -216,6 +216,12 @@ func BoardMembersFromJSON(data io.Reader) []*BoardMember {
 	return boardMembers
 }
 
+func BoardMetadataFromJSON(data io.Reader) *BoardMetadata {
+	var boardMetadata *BoardMetadata
+	_ = json.NewDecoder(data).Decode(&boardMetadata)
+	return boardMetadata
+}
+
 // Patch returns an updated version of the board.
 func (p *BoardPatch) Patch(board *Board) *Board {
 	if p.Type != nil {
