@@ -220,17 +220,11 @@ exports[`components/viewTitle should match snapshot readonly 1`] = `
         class="IconSelector"
       >
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="octo-icon size-m readonly"
         >
-          <div
-            class="octo-icon size-m"
-          >
-            <span>
-              i
-            </span>
-          </div>
+          <span>
+            i
+          </span>
         </div>
       </div>
       <input

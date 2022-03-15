@@ -61,6 +61,18 @@ describe('components/table/Table', () => {
                 [card.id]: card,
             },
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
     }
 
     test('should match snapshot', async () => {
@@ -69,6 +81,34 @@ describe('components/table/Table', () => {
 
         const mockStore = configureStore([])
         const store = mockStore(state)
+
+        const component = wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <Table
+                    board={board}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card]}
+                    views={[view, view2]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('should match snapshot without permissions', async () => {
+        const callback = jest.fn()
+        const addCard = jest.fn()
+
+        const mockStore = configureStore([])
+        const store = mockStore({...state, teams: {current: undefined}})
 
         const component = wrapDNDIntl(
             <ReduxProvider store={store}>
@@ -174,6 +214,18 @@ describe('components/table/Table extended', () => {
         cards: {
             cards: {},
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: 'board_id',
+            boards: {
+                board_id: {id: 'board_id'},
+            },
+            myBoardMemberships: {
+                board_id: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
     }
 
     test('should match snapshot with CreatedBy', async () => {
@@ -208,6 +260,18 @@ describe('components/table/Table extended', () => {
                 cards: {
                     [card1.id]: card1,
                     [card2.id]: card2,
+                },
+            },
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
                 },
             },
         })

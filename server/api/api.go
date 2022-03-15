@@ -114,6 +114,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	// User APIs
 	apiv1.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
+	apiv1.HandleFunc("/users/me/memberships", a.sessionRequired(a.handleGetMyMemberships)).Methods("GET")
 	apiv1.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
 	apiv1.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
 	apiv1.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
@@ -895,6 +896,51 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, userData)
 
 	auditRec.AddMeta("userID", user.ID)
+	auditRec.Success()
+}
+
+func (a *API) handleGetMyMemberships(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v1/users/me/memberships getMyMemberships
+	//
+	// Returns the currently users board memberships
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/BoardMember"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	userID := getUserID(r)
+
+	auditRec := a.makeAuditRecord(r, "getMyBoardMemberships", audit.Fail)
+	auditRec.AddMeta("userID", userID)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+
+	members, err := a.app.GetMembersForUser(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	membersData, err := json.Marshal(members)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, membersData)
+
 	auditRec.Success()
 }
 

@@ -580,14 +580,14 @@ func testDeleteBlock(t *testing.T, store store.Store) {
 	require.NoError(t, err)
 	require.Len(t, blocks, initialCount+3)
 
-	t.Run("exiting id", func(t *testing.T) {
+	t.Run("existing id", func(t *testing.T) {
 		// Wait for not colliding the ID+insert_at key
 		time.Sleep(1 * time.Millisecond)
 		err := store.DeleteBlock("block1", userID)
 		require.NoError(t, err)
 	})
 
-	t.Run("exiting id multiple times", func(t *testing.T) {
+	t.Run("existing id multiple times", func(t *testing.T) {
 		// Wait for not colliding the ID+insert_at key
 		time.Sleep(1 * time.Millisecond)
 		err := store.DeleteBlock("block1", userID)
@@ -638,7 +638,7 @@ func testUndeleteBlock(t *testing.T, store store.Store) {
 	require.NoError(t, err)
 	require.Len(t, blocks, initialCount+3)
 
-	t.Run("exiting id", func(t *testing.T) {
+	t.Run("existing id", func(t *testing.T) {
 		// Wait for not colliding the ID+insert_at key
 		time.Sleep(1 * time.Millisecond)
 		err := store.DeleteBlock("block1", userID)
@@ -657,7 +657,7 @@ func testUndeleteBlock(t *testing.T, store store.Store) {
 		require.NotNil(t, block)
 	})
 
-	t.Run("exiting id multiple times", func(t *testing.T) {
+	t.Run("existing id multiple times", func(t *testing.T) {
 		// Wait for not colliding the ID+insert_at key
 		time.Sleep(1 * time.Millisecond)
 		err := store.DeleteBlock("block1", userID)

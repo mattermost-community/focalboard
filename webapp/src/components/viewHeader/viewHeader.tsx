@@ -16,8 +16,9 @@ import Editable from '../../widgets/editable'
 
 import ModalWrapper from '../modalWrapper'
 
-import ShareBoardDialog from '../shareBoard/shareBoard'
 import {useAppSelector} from '../../store/hooks'
+import {Permission} from '../../constants'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import {
     getOnboardingTourCategory,
     getOnboardingTourStarted,
@@ -31,6 +32,7 @@ import {
 import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
 import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
@@ -55,12 +57,12 @@ type Props = {
     editCardTemplate: (cardTemplateId: string) => void
     readonly: boolean
     dateDisplayProperty?: IPropertyTemplate
-    enableSharedBoards: boolean
 }
 
 const ViewHeader = (props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
     const intl = useIntl()
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
 
     const {board, activeView, views, groupByProperty, cards, dateDisplayProperty} = props
 
@@ -75,8 +77,6 @@ const ViewHeader = (props: Props) => {
     }, [activeView.title])
 
     const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
-
-    const [showShareDialog, setShowShareDialog] = useState(false)
 
     const isOnboardingBoard = props.board.title === OnboardingBoardTitle
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
@@ -126,7 +126,7 @@ const ViewHeader = (props: Props) => {
                     }}
                     onChange={setViewTitle}
                     saveOnEsc={true}
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardProperties}
                     spellCheck={true}
                     autoExpand={false}
                 />
@@ -137,22 +137,16 @@ const ViewHeader = (props: Props) => {
                             board={board}
                             activeView={activeView}
                             views={views}
-                            readonly={props.readonly}
+                            readonly={props.readonly || !canEditBoardProperties}
                         />
                     </MenuWrapper>
                     {showAddViewTourStep && <AddViewTourStep/>}
                 </div>
             </div>
 
-            <button
-                onClick={() => setShowShareDialog(!showShareDialog)}
-            >
-                {'Show Share Modal'}
-            </button>
-
             <div className='octo-spacer'/>
 
-            {!props.readonly &&
+            {!props.readonly && canEditBoardProperties &&
             <>
                 {/* Card properties */}
 
@@ -227,19 +221,15 @@ const ViewHeader = (props: Props) => {
 
                 {/* New card button */}
 
-                <NewCardButton
-                    addCard={props.addCard}
-                    addCardFromTemplate={props.addCardFromTemplate}
-                    addCardTemplate={props.addCardTemplate}
-                    editCardTemplate={props.editCardTemplate}
-                />
+                <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                    <NewCardButton
+                        addCard={props.addCard}
+                        addCardFromTemplate={props.addCardFromTemplate}
+                        addCardTemplate={props.addCardTemplate}
+                        editCardTemplate={props.editCardTemplate}
+                    />
+                </BoardPermissionGate>
             </>}
-
-            {showShareDialog &&
-                <ShareBoardDialog
-                    onClose={() => setShowShareDialog(false)}
-                    enableSharedBoards={props.enableSharedBoards}
-                />}
         </div>
     )
 }

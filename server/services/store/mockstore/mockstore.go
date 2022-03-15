@@ -565,6 +565,21 @@ func (mr *MockStoreMockRecorder) GetMembersForBoard(arg0 interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMembersForBoard", reflect.TypeOf((*MockStore)(nil).GetMembersForBoard), arg0)
 }
 
+// GetMembersForUser mocks base method.
+func (m *MockStore) GetMembersForUser(arg0 string) ([]*model.BoardMember, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetMembersForUser", arg0)
+	ret0, _ := ret[0].([]*model.BoardMember)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetMembersForUser indicates an expected call of GetMembersForUser.
+func (mr *MockStoreMockRecorder) GetMembersForUser(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMembersForUser", reflect.TypeOf((*MockStore)(nil).GetMembersForUser), arg0)
+}
+
 // GetNextNotificationHint mocks base method.
 func (m *MockStore) GetNextNotificationHint(arg0 bool) (*model.NotificationHint, error) {
 	m.ctrl.T.Helper()

@@ -14,9 +14,11 @@ import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils, IDType} from '../../utils'
 import Button from '../../widgets/buttons/button'
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
 
 import {dragAndDropRearrange} from '../cardDetail/cardDetailContentsUtility'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import KanbanCard from './kanbanCard'
 import KanbanColumn from './kanbanColumn'
@@ -39,6 +41,10 @@ type Props = {
     addCard: (groupByOptionId?: string, show?:boolean) => Promise<void>
     showCard: (cardId?: string) => void
 }
+
+const ScrollingComponent = withScrolling('div')
+const hStrength = createHorizontalStrength(Utils.isMobile() ? 60 : 250)
+const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
 
 const Kanban = (props: Props) => {
     const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups} = props
@@ -190,10 +196,6 @@ const Kanban = (props: Props) => {
         setShowCalculationsMenu(newShowOptions)
     }
 
-    const ScrollingComponent = withScrolling('div')
-    const hStrength = createHorizontalStrength(Utils.isMobile() ? 60 : 250)
-    const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
-
     return (
         <ScrollingComponent
             className='Kanban'
@@ -236,16 +238,18 @@ const Kanban = (props: Props) => {
                 }
 
                 {!props.readonly &&
-                    <div className='octo-board-header-cell narrow'>
-                        <Button
-                            onClick={addGroupClicked}
-                        >
-                            <FormattedMessage
-                                id='BoardComponent.add-a-group'
-                                defaultMessage='+ Add a group'
-                            />
-                        </Button>
-                    </div>
+                    <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                        <div className='octo-board-header-cell narrow'>
+                            <Button
+                                onClick={addGroupClicked}
+                            >
+                                <FormattedMessage
+                                    id='BoardComponent.add-a-group'
+                                    defaultMessage='+ Add a group'
+                                />
+                            </Button>
+                        </div>
+                    </BoardPermissionGate>
                 }
             </div>
 
@@ -280,16 +284,18 @@ const Kanban = (props: Props) => {
                             />
                         ))}
                         {!props.readonly &&
-                        <Button
-                            onClick={() => {
-                                props.addCard(group.option.id, true)
-                            }}
-                        >
-                            <FormattedMessage
-                                id='BoardComponent.new'
-                                defaultMessage='+ New'
-                            />
-                        </Button>
+                            <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                                <Button
+                                    onClick={() => {
+                                        props.addCard(group.option.id, true)
+                                    }}
+                                >
+                                    <FormattedMessage
+                                        id='BoardComponent.new'
+                                        defaultMessage='+ New'
+                                    />
+                                </Button>
+                            </BoardPermissionGate>
                         }
                     </KanbanColumn>
                 ))}

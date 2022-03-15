@@ -446,6 +446,27 @@ func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (
 	return members[0], nil
 }
 
+func (s *SQLStore) getMembersForUser(db sq.BaseRunner, userID string) ([]*model.BoardMember, error) {
+	query := s.getQueryBuilder(db).
+		Select(boardMemberFields...).
+		From(s.tablePrefix + "board_members").
+		Where(sq.Eq{"user_id": userID})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	members, err := s.boardMembersFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return members, nil
+}
+
 func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*model.BoardMember, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardMemberFields...).

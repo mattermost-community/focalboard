@@ -48,6 +48,7 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	app2 := New(&cfg, wsserver, appServices)
 
 	tearDown := func() {
+		app2.Shutdown()
 		if logger != nil {
 			_ = logger.Shutdown()
 		}

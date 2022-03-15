@@ -83,7 +83,6 @@ const BoardTemplateSelectorPreview = (props: Props) => {
                     addCardTemplate={() => null}
                     editCardTemplate={() => null}
                     readonly={false}
-                    enableSharedBoards={false}
                 />
             </div>}
 

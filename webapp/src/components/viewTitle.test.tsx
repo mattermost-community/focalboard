@@ -41,6 +41,18 @@ describe('components/viewTitle', () => {
                 5: {username: 'g'},
             },
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
     }
     const store = mockStateStore([], state)
 

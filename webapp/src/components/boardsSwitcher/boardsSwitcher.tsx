@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {useIntl} from 'react-intl'
 
@@ -10,6 +10,7 @@ import './boardsSwitcher.scss'
 import AddIcon from '../../widgets/icons/add'
 import BoardSwitcherDialog from '../boardsSwitcherDialog/boardSwitcherDialog'
 import {Utils} from '../../utils'
+import {Constants} from '../../constants'
 
 type Props = {
     onBoardTemplateSelectorOpen?: () => void,
@@ -20,26 +21,31 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
 
     const [showSwitcher, setShowSwitcher] = useState<boolean>(false)
 
-    // Disabling this for now as Cmd+K
-    // is being used by Firefox for activating
-    // Search Bar. Unable to prevent browser default right now.
-    // It doesn't work when the search input has the focus.
+    // We need this keyboard handling (copied from Mattermost webapp) instead of
+    // using react-hotkeys-hook as react-hotkeys-hook is unable to handle keyboard shortcuts that
+    // the browser uses when the user is focused in an input field.
     //
-    // useHotkeys('ctrl+k,cmd+k',
-    //     (e) => {
-    //         e.preventDefault()
-    //         setShowSwitcher((show) => !show)
-    //     },
-    //     {
-    //         filter: () => {
-    //             console.log('filter called')
-    //             return true
-    //         },
-    //         enableOnTags: ['INPUT'],
-    //         filterPreventDefault: true,
-    //     },
-    //     [showSwitcher],
-    // )
+    // For example, you press Cmd + k, then type something in the search input field. Pressing Cmd + k again
+    // is expected to close the board switcher, however, with react-hotkeys-hook it doesn't.
+    // This is because Cmd + k is a Firefox shortcut and react-hotkeys-hook is
+    // unable to override it if the user is focused on any input field.
+    const handleQuickSwitchKeyPress = (e: KeyboardEvent) => {
+        if (Utils.cmdOrCtrlPressed(e) && !e.shiftKey && Utils.isKeyPressed(e, Constants.keyCodes.K)) {
+            if (!e.altKey) {
+                e.preventDefault()
+                setShowSwitcher((show) => !show)
+            }
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleQuickSwitchKeyPress)
+
+        // cleanup function
+        return () => {
+            document.removeEventListener('keydown', handleQuickSwitchKeyPress)
+        }
+    }, [])
 
     return (
         <div className='BoardsSwitcherWrapper'>

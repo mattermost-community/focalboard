@@ -5,7 +5,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import {FormattedMessage, IntlShape} from 'react-intl'
 import {useDrop, useDrag} from 'react-dnd'
 
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
@@ -19,6 +19,9 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import {KanbanCalculation} from './calculation/calculation'
 
@@ -45,6 +48,7 @@ const defaultProperty: IPropertyTemplate = {
 export default function KanbanColumnHeader(props: Props): JSX.Element {
     const {board, activeView, intl, group, groupByProperty} = props
     const [groupTitle, setGroupTitle] = useState(group.option.value)
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
 
     const headerRef = useRef<HTMLDivElement>(null)
 
@@ -69,7 +73,10 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
         setGroupTitle(group.option.value)
     }, [group.option.value])
 
-    drop(drag(headerRef))
+    if (canEditBoardProperties) {
+        drop(drag(headerRef))
+    }
+
     let className = 'octo-board-header-cell KanbanColumnHeader'
     if (isOver) {
         className += ' dragover'
@@ -85,7 +92,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
             ref={headerRef}
             style={{opacity: isDragging ? 0.5 : 1}}
             className={className}
-            draggable={!props.readonly}
+            draggable={!props.readonly && canEditBoardProperties}
         >
             {!group.option.id &&
                 <Label
@@ -117,7 +124,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         onCancel={() => {
                             setGroupTitle(group.option.value)
                         }}
-                        readonly={props.readonly}
+                        readonly={props.readonly || !canEditBoardProperties}
                         spellCheck={true}
                     />
                 </Label>}
@@ -129,7 +136,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                 onMenuClose={props.onCalculationMenuClose}
                 onMenuOpen={props.onCalculationMenuOpen}
                 cardProperties={board.cardProperties}
-                readonly={props.readonly}
+                readonly={props.readonly || !canEditBoardProperties}
                 onChange={(data: {calculation: string, propertyId: string}) => {
                     if (data.calculation === calculationValue && data.propertyId === calculationProperty.id) {
                         return
@@ -149,41 +156,45 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
             <div className='octo-spacer'/>
             {!props.readonly &&
                 <>
-                    <MenuWrapper>
-                        <IconButton icon={<OptionsIcon/>}/>
-                        <Menu>
-                            <Menu.Text
-                                id='hide'
-                                icon={<HideIcon/>}
-                                name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
-                                onClick={() => mutator.hideViewColumn(board.id, activeView, group.option.id || '')}
-                            />
-                            {group.option.id &&
-                                <>
-                                    <Menu.Text
-                                        id='delete'
-                                        icon={<DeleteIcon/>}
-                                        name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
-                                        onClick={() => mutator.deletePropertyOption(board, groupByProperty!, group.option)}
-                                    />
-                                    <Menu.Separator/>
-                                    {Object.entries(Constants.menuColors).map(([key, color]) => (
-                                        <Menu.Color
-                                            key={key}
-                                            id={key}
-                                            name={color}
-                                            onClick={() => mutator.changePropertyOptionColor(board, groupByProperty!, group.option, key)}
+                    <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                        <MenuWrapper>
+                            <IconButton icon={<OptionsIcon/>}/>
+                            <Menu>
+                                <Menu.Text
+                                    id='hide'
+                                    icon={<HideIcon/>}
+                                    name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
+                                    onClick={() => mutator.hideViewColumn(board.id, activeView, group.option.id || '')}
+                                />
+                                {group.option.id &&
+                                    <>
+                                        <Menu.Text
+                                            id='delete'
+                                            icon={<DeleteIcon/>}
+                                            name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
+                                            onClick={() => mutator.deletePropertyOption(board, groupByProperty!, group.option)}
                                         />
-                                    ))}
-                                </>}
-                        </Menu>
-                    </MenuWrapper>
-                    <IconButton
-                        icon={<AddIcon/>}
-                        onClick={() => {
-                            props.addCard(group.option.id, true)
-                        }}
-                    />
+                                        <Menu.Separator/>
+                                        {Object.entries(Constants.menuColors).map(([key, color]) => (
+                                            <Menu.Color
+                                                key={key}
+                                                id={key}
+                                                name={color}
+                                                onClick={() => mutator.changePropertyOptionColor(board, groupByProperty!, group.option, key)}
+                                            />
+                                        ))}
+                                    </>}
+                            </Menu>
+                        </MenuWrapper>
+                    </BoardPermissionGate>
+                    <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                        <IconButton
+                            icon={<AddIcon/>}
+                            onClick={() => {
+                                props.addCard(group.option.id, true)
+                            }}
+                        />
+                    </BoardPermissionGate>
                 </>
             }
         </div>

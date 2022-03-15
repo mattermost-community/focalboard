@@ -110,6 +110,9 @@ describe('src/components/workspace', () => {
                 [board.id]: board,
             },
             templates: [],
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         globalTemplates: {
             value: [],
@@ -233,6 +236,9 @@ describe('src/components/workspace', () => {
                     [board.id]: board,
                 },
                 templates: [],
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             views: {
                 views: {},
@@ -306,6 +312,9 @@ describe('src/components/workspace', () => {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 templates: [],
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             globalTemplates: {
                 value: [],
@@ -394,6 +403,9 @@ describe('src/components/workspace', () => {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 templates: [],
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             globalTemplates: {
                 value: [],
@@ -487,6 +499,9 @@ describe('src/components/workspace', () => {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 templates: [],
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             globalTemplates: {
                 value: [],

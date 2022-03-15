@@ -9,6 +9,8 @@ import mutator from '../mutator'
 import Button from '../widgets/buttons/button'
 import Editable from '../widgets/editable'
 import CompassIcon from '../widgets/icons/compassIcon'
+import {Permission} from '../constants'
+import {useHasCurrentBoardPermissions} from '../hooks/permissions'
 
 import BoardIconSelector from './boardIconSelector'
 import {MarkdownEditor} from './markdownEditor'
@@ -32,13 +34,16 @@ const ViewTitle = (props: Props) => {
     }, [board.id, board.icon])
     const onShowDescription = useCallback(() => mutator.showBoardDescription(board.id, Boolean(board.showDescription), true), [board.id, board.showDescription])
     const onHideDescription = useCallback(() => mutator.showBoardDescription(board.id, Boolean(board.showDescription), false), [board.id, board.showDescription])
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
+
+    const readonly = props.readonly || !canEditBoardProperties
 
     const intl = useIntl()
 
     return (
         <div className='ViewTitle'>
             <div className='add-buttons add-visible'>
-                {!props.readonly && !board.icon &&
+                {!readonly && !board.icon &&
                     <Button
                         emphasis='default'
                         size='small'
@@ -54,7 +59,7 @@ const ViewTitle = (props: Props) => {
                         />
                     </Button>
                 }
-                {!props.readonly && board.showDescription &&
+                {!readonly && board.showDescription &&
                     <Button
                         emphasis='default'
                         size='small'
@@ -70,7 +75,7 @@ const ViewTitle = (props: Props) => {
                         />
                     </Button>
                 }
-                {!props.readonly && !board.showDescription &&
+                {!readonly && !board.showDescription &&
                     <Button
                         emphasis='default'
                         size='small'
@@ -89,7 +94,10 @@ const ViewTitle = (props: Props) => {
             </div>
 
             <div className='title'>
-                <BoardIconSelector board={board}/>
+                <BoardIconSelector
+                    board={board}
+                    readonly={readonly}
+                />
                 <Editable
                     className='title'
                     value={title}
@@ -98,7 +106,7 @@ const ViewTitle = (props: Props) => {
                     saveOnEsc={true}
                     onSave={onEditTitleSave}
                     onCancel={onEditTitleCancel}
-                    readonly={props.readonly}
+                    readonly={readonly}
                     spellCheck={true}
                 />
             </div>
@@ -109,7 +117,7 @@ const ViewTitle = (props: Props) => {
                         text={board.description}
                         placeholderText='Add a description...'
                         onBlur={onDescriptionBlur}
-                        readonly={props.readonly}
+                        readonly={readonly}
                     />
                 </div>
             }

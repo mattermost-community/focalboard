@@ -19,6 +19,7 @@ type BoardsState = {
     boards: {[key: string]: Board}
     templates: {[key: string]: Board}
     membersInBoards: {[key: string]: {[key: string]: BoardMember}}
+    myBoardMemberships: {[key: string]: BoardMember}
 }
 
 export const fetchBoardMembers = createAsyncThunk(
@@ -56,7 +57,7 @@ export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
             const boardsToUpdate: Board[] = []
             /* eslint-disable no-await-in-loop */
             for (const member of myMemberships) {
-                if (!member.schemeAdmin && !member.schemeEditor) {
+                if (!member.schemeAdmin && !member.schemeEditor && !member.schemeViewer && !member.schemeCommenter) {
                     boardsToUpdate.push({id: member.boardId, deleteAt: 1} as Board)
                     continue
                 }
@@ -100,17 +101,23 @@ export const updateMembers = (state: BoardsState, action: PayloadAction<BoardMem
     const boardMembers = state.membersInBoards[boardId] || {}
 
     for (const member of action.payload) {
-        if (!member.schemeAdmin && !member.schemeEditor) {
+        if (!member.schemeAdmin && !member.schemeEditor && !member.schemeViewer && !member.schemeCommenter) {
             delete boardMembers[member.userId]
         } else {
             boardMembers[member.userId] = member
+        }
+    }
+
+    for (const member of action.payload) {
+        if (state.myBoardMemberships[member.boardId] && state.myBoardMemberships[member.boardId].userId === member.userId) {
+            state.myBoardMemberships[member.boardId] = member
         }
     }
 }
 
 const boardsSlice = createSlice({
     name: 'boards',
-    initialState: {loadingBoard: false, boards: {}, templates: {}, membersInBoards: {}} as BoardsState,
+    initialState: {loadingBoard: false, boards: {}, templates: {}, membersInBoards: {}, myBoardMemberships: {}} as BoardsState,
     reducers: {
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
@@ -148,6 +155,10 @@ const boardsSlice = createSlice({
             state.templates = {}
             action.payload.boardTemplates.forEach((board) => {
                 state.templates[board.id] = board
+            })
+            state.myBoardMemberships = {}
+            action.payload.boardsMemberships.forEach((boardMember) => {
+                state.myBoardMemberships[boardMember.boardId] = boardMember
             })
         })
         builder.addCase(fetchBoardMembers.fulfilled, (state, action) => {
@@ -213,3 +224,9 @@ export const getCurrentBoardMembers = createSelector(
         return membersInBoards[boardId] || {}
     },
 )
+
+export function getMyBoardMembership(boardId: string): (state: RootState) => BoardMember|null {
+    return (state: RootState): BoardMember|null => {
+        return state.boards.myBoardMemberships[boardId] || null
+    }
+}

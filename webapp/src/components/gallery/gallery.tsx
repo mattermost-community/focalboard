@@ -3,12 +3,14 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
 import {Card} from '../../blocks/card'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './gallery.scss'
 import GalleryCard from './galleryCard'
@@ -76,17 +78,19 @@ const Gallery = (props: Props): JSX.Element => {
             {/* Add New row */}
 
             {!props.readonly &&
-                <div
-                    className='octo-gallery-new'
-                    onClick={() => {
-                        props.addCard(true)
-                    }}
-                >
-                    <FormattedMessage
-                        id='TableComponent.plus-new'
-                        defaultMessage='+ New'
-                    />
-                </div>
+                <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                    <div
+                        className='octo-gallery-new'
+                        onClick={() => {
+                            props.addCard(true)
+                        }}
+                    >
+                        <FormattedMessage
+                            id='TableComponent.plus-new'
+                            defaultMessage='+ New'
+                        />
+                    </div>
+                </BoardPermissionGate>
             }
         </div>
     )

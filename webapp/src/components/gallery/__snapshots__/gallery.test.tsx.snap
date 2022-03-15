@@ -151,8 +151,6 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                     class="noicon"
                   />
                 </div>
-              </div>
-              <div>
                 <div
                   aria-label="Duplicate"
                   class="MenuOption TextOption menu-option"
@@ -256,6 +254,124 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
       class="octo-gallery-new"
     >
       + New
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/gallery/Gallery should match snapshot without permissions 1`] = `
+<div>
+  <div
+    class="Gallery"
+  >
+    <div
+      class="GalleryCard selected"
+      draggable="true"
+      style="opacity: 1;"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper optionsMenu"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+        <div
+          class="Menu noselect left"
+        >
+          <div
+            class="menu-contents"
+          >
+            <div
+              class="menu-options"
+            >
+              <div />
+              <div>
+                <div
+                  aria-label="Copy link"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <i
+                    class="CompassIcon icon-link-variant LinkIcon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Copy link
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="menu-spacer hideOnWidescreen"
+            />
+            <div
+              class="menu-options hideOnWidescreen"
+            >
+              <div
+                aria-label="Cancel"
+                class="MenuOption TextOption menu-option menu-cancel"
+                role="button"
+              >
+                <div
+                  class="noicon"
+                />
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="gallery-item"
+      >
+        <div
+          class="DividerElement"
+        />
+        <div
+          class="DividerElement"
+        />
+      </div>
+    </div>
+    <div
+      class="GalleryCard"
+      draggable="true"
+      style="opacity: 1;"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper optionsMenu"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="gallery-item"
+      />
     </div>
   </div>
 </div>
