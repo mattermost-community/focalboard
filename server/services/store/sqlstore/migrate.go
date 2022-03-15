@@ -161,10 +161,6 @@ func (s *SQLStore) Migrate() error {
 	}
 	defer src.Close()
 
-	if err := s.migrateSchemaVersion(src.Migrations()); err != nil {
-		return err
-	}
-
 	opts := []morph.EngineOption{
 		morph.WithLock("mm-lock-key"),
 	}
@@ -193,6 +189,10 @@ func (s *SQLStore) Migrate() error {
 		mutex.Lock()
 	}
 
+	if err := s.migrateSchemaVersionTable(src.Migrations()); err != nil {
+		return err
+	}
+
 	if err := ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); err != nil {
 		return err
 	}
@@ -217,6 +217,10 @@ func (s *SQLStore) Migrate() error {
 		return fmt.Errorf("error running categoryID migration: %w", err)
 	}
 
+	if err := s.deleteOldSchemaMigrationTable(); err != nil {
+		return err
+	}
+
 	if s.isPlugin {
 		s.logger.Debug("Releasing cluster lock for Unique IDs migration")
 		mutex.Unlock()
@@ -225,7 +229,13 @@ func (s *SQLStore) Migrate() error {
 	return engine.ApplyAll()
 }
 
-func (s *SQLStore) migrateSchemaVersion(migrations []*models.Migration) error {
+// migrateSchemaVersionTable converts the schema version table from
+// the old format used by go-migrate to the new format used by
+// gomorph.
+// When running the Focalboard with go-migrate's schema version table
+// existing in the database, gomorph is unable to amke sense of it as it's
+// not in the format required by gomorph.
+func (s *SQLStore) migrateSchemaVersionTable(migrations []*models.Migration) error {
 	migrationNeeded, err := s.isSchemaMigrationNeeded()
 	if err != nil {
 		return err
@@ -391,10 +401,19 @@ func (s *SQLStore) useNewSchemaTable() error {
 	// first delete the old table, then
 	// rename the new table to old table's name
 
-	// deleting old table
-	query := "DROP TABLE " + s.tablePrefix + "schema_migrations"
+	// renaming old schema migration table. Will delete later once the migration is
+	// complete, just in case.
+	var query string
+	if s.dbType == model.MysqlDBType {
+		query = fmt.Sprintf("RENAME TABLE `%sschema_migrations` TO `%sschema_migrations_old_temp`", s.tablePrefix, s.tablePrefix)
+	} else {
+		query = fmt.Sprintf("ALTER TABLE %sschema_migrations RENAME TO %sschema_migrations_old_temp", s.tablePrefix, s.tablePrefix)
+	}
+
+	s.logger.Error(query)
+
 	if _, err := s.db.Exec(query); err != nil {
-		s.logger.Error("failed to delete original schema migrations table", mlog.Err(err))
+		s.logger.Error("failed to rename old schema migration table", mlog.Err(err))
 		return err
 	}
 
@@ -407,6 +426,16 @@ func (s *SQLStore) useNewSchemaTable() error {
 
 	if _, err := s.db.Exec(query); err != nil {
 		s.logger.Error("failed to rename temp schema table", mlog.Err(err))
+		return err
+	}
+
+	return nil
+}
+
+func (s *SQLStore) deleteOldSchemaMigrationTable() error {
+	query := "DROP TABLE " + s.tablePrefix + "schema_migrations_old_temp"
+	if _, err := s.db.Exec(query); err != nil {
+		s.logger.Error("failed to delete old temp schema migrations table", mlog.Err(err))
 		return err
 	}
 
