@@ -12,6 +12,7 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 
 import {BoardMember} from '../../blocks/board'
 import {IUser} from '../../user'
+import {Utils} from '../../utils'
 import {Permission} from '../../constants'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
@@ -39,9 +40,8 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
     return (
         <div className='user-item'>
             <div className='user-item__content'>
-                {/* ToDo: update to use Utils.getProfilePicture(user.id) after merge with main */}
                 <img
-                    src='https://randomuser.me/api/portraits/men/75.jpg'
+                    src={Utils.getProfilePicture(user.id)}
                     className='user-item__img'
                 />
                 <div className='ml-3'>
