@@ -55,6 +55,7 @@ describe('components/cardDialog', () => {
             cards: {
                 [card.id]: card,
             },
+            current: card.id,
         },
         boards: {
             boards: {
