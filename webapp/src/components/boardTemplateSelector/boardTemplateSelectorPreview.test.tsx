@@ -123,10 +123,13 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
             contents: {contents: []},
             comments: {comments: []},
             teams: {
-                current: 'team-id',
+                current: {id: 'team-id'},
             },
             boards: {
-                boards: [board],
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
                 templates: [
                     {
                         id: '1',
@@ -139,6 +142,9 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                 ],
                 cards: [],
                 views: [],
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user-id', schemeAdmin: true},
+                },
             },
             globalTemplates: {
                 value: [{

@@ -30,6 +30,15 @@ describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
             teams: {
                 current: {id: 'team_id_1'},
             },
+            boards: {
+                current: 'board_id',
+                boards: {
+                    board_id: {id: 'board_id'},
+                },
+                myBoardMemberships: {
+                    board_id: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
             users: {
                 me: {
                     id: 'user-id',

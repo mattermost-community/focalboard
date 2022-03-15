@@ -124,6 +124,9 @@ describe('src/components/shareBoard/shareBoard', () => {
             membersInBoards: {
                 [board.id]: {},
             },
+            myBoardMemberships: {
+                [board.id]: {userId: me.id, schemeAdmin: true},
+            },
         },
         globalTemplates: {
             value: [],

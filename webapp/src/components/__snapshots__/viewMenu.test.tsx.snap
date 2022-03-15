@@ -88,8 +88,6 @@ Object {
               <div
                 class="MenuOption MenuSeparator menu-separator"
               />
-            </div>
-            <div>
               <div
                 aria-label="Duplicate view"
                 class="MenuOption TextOption menu-option"
@@ -107,8 +105,6 @@ Object {
                   class="noicon"
                 />
               </div>
-            </div>
-            <div>
               <div
                 aria-label="Delete view"
                 class="MenuOption TextOption menu-option"
@@ -126,8 +122,6 @@ Object {
                   class="noicon"
                 />
               </div>
-            </div>
-            <div>
               <div
                 class="MenuOption SubMenuOption menu-option"
                 id="__addView"
@@ -264,8 +258,6 @@ Object {
             <div
               class="MenuOption MenuSeparator menu-separator"
             />
-          </div>
-          <div>
             <div
               aria-label="Duplicate view"
               class="MenuOption TextOption menu-option"
@@ -283,8 +275,6 @@ Object {
                 class="noicon"
               />
             </div>
-          </div>
-          <div>
             <div
               aria-label="Delete view"
               class="MenuOption TextOption menu-option"
@@ -302,8 +292,6 @@ Object {
                 class="noicon"
               />
             </div>
-          </div>
-          <div>
             <div
               class="MenuOption SubMenuOption menu-option"
               id="__addView"

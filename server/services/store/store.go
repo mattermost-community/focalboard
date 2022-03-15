@@ -91,6 +91,7 @@ type Store interface {
 	DeleteMember(boardID, userID string) error
 	GetMemberForBoard(boardID, userID string) (*model.BoardMember, error)
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
+	GetMembersForUser(userID string) ([]*model.BoardMember, error)
 	SearchBoardsForUserAndTeam(term, userID, teamID string) ([]*model.Board, error)
 
 	// @withTransaction

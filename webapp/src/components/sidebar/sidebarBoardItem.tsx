@@ -11,6 +11,7 @@ import DeleteIcon from '../../widgets/icons/delete'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './sidebarBoardItem.scss'
 import {CategoryBlocks} from '../../store/sidebar'
@@ -25,6 +26,7 @@ import GalleryIcon from '../../widgets/icons/gallery'
 import CalendarIcon from '../../widgets/icons/calendar'
 
 import {getCurrentTeam} from '../../store/teams'
+import {Permission} from '../../constants'
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
@@ -101,15 +103,20 @@ const SidebarBoardItem = (props: Props) => {
                 >
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
-                        <Menu.Text
-                            key={`deleteBlock-${board.id}`}
-                            id='deleteBlock'
-                            name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
-                            icon={<DeleteIcon/>}
-                            onClick={() => {
-                                props.onDeleteRequest(board)
-                            }}
-                        />
+                        <BoardPermissionGate
+                            boardId={board.id}
+                            permissions={[Permission.DeleteBoard]}
+                        >
+                            <Menu.Text
+                                key={`deleteBlock-${board.id}`}
+                                id='deleteBlock'
+                                name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
+                                icon={<DeleteIcon/>}
+                                onClick={() => {
+                                    props.onDeleteRequest(board)
+                                }}
+                            />
+                        </BoardPermissionGate>
                         <Menu.SubMenu
                             key={`moveBlock-${board.id}`}
                             id='moveBlock'

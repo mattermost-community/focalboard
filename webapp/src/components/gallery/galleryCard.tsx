@@ -21,6 +21,7 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Tooltip from '../../widgets/tooltip'
+import {Permission} from '../../constants'
 import {CardDetailProvider} from '../cardDetail/cardDetailContext'
 import ContentElement from '../content/contentElement'
 import ImageElement from '../content/imageElement'
@@ -28,6 +29,8 @@ import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
 import './galleryCard.scss'
 import CardBadges from '../cardBadges'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 type Props = {
     board: Board
@@ -83,21 +86,23 @@ const GalleryCard = (props: Props) => {
                 >
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
-                        <Menu.Text
-                            icon={<DeleteIcon/>}
-                            id='delete'
-                            name={intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deleteBlock(card, 'delete card')}
-                        />
-                        <Menu.Text
-                            icon={<DuplicateIcon/>}
-                            id='duplicate'
-                            name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
-                            onClick={() => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
-                                mutator.duplicateCard(card.id, board.id)
-                            }}
-                        />
+                        <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                            <Menu.Text
+                                icon={<DeleteIcon/>}
+                                id='delete'
+                                name={intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
+                                onClick={() => mutator.deleteBlock(card, 'delete card')}
+                            />
+                            <Menu.Text
+                                icon={<DuplicateIcon/>}
+                                id='duplicate'
+                                name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
+                                onClick={() => {
+                                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                                    mutator.duplicateCard(card.id, board.id)
+                                }}
+                            />
+                        </BoardPermissionGate>
                         <Menu.Text
                             icon={<LinkIcon/>}
                             id='copy'

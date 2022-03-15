@@ -25,6 +25,7 @@ import {IUser} from '../../user'
 import Switch from '../../widgets/switch'
 import Button from '../../widgets/buttons/button'
 import {sendFlashMessage} from '../flashMessages'
+import {Permission} from '../../constants'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
@@ -32,6 +33,8 @@ import {getSelectBaseStyle} from '../../theme'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import IconButton from '../../widgets/buttons/iconButton'
 import SearchIcon from '../../widgets/icons/search'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import TeamPermissionsRow from './teamPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
@@ -163,7 +166,25 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             if (!member.schemeAdmin && member.schemeEditor) {
                 return
             }
+            newMember.schemeAdmin = false
             newMember.schemeEditor = true
+            break
+        case 'Commenter':
+            if (!member.schemeAdmin && !member.schemeEditor && member.schemeCommenter) {
+                return
+            }
+            newMember.schemeAdmin = false
+            newMember.schemeEditor = false
+            newMember.schemeCommenter = true
+            break
+        case 'Viewer':
+            if (!member.schemeAdmin && !member.schemeEditor && !member.schemeCommenter && member.schemeViewer) {
+                return
+            }
+            newMember.schemeAdmin = false
+            newMember.schemeEditor = false
+            newMember.schemeCommenter = false
+            newMember.schemeViewer = true
             break
         default:
             return
@@ -223,29 +244,31 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             onClose={props.onClose}
             className='ShareBoardDialog'
         >
-            <div className='share-input__container'>
-                <div className='share-input'>
-                    <SearchIcon/>
-                    <Select
-                        styles={styles}
-                        value={selectedUser}
-                        className={'userSearchInput'}
-                        cacheOptions={true}
-                        loadOptions={(inputValue) => client.searchTeamUsers(inputValue)}
-                        components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
-                        defaultOptions={true}
-                        getOptionValue={(u) => u.id}
-                        getOptionLabel={(u) => u.username}
-                        isMulti={false}
-                        onChange={(newValue) => {
-                            if (newValue) {
-                                mutator.createBoardMember(board.id, newValue.id)
-                                setSelectedUser(null)
-                            }
-                        }}
-                    />
+            <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
+                <div className='share-input__container'>
+                    <div className='share-input'>
+                        <SearchIcon/>
+                        <Select
+                            styles={styles}
+                            value={selectedUser}
+                            className={'userSearchInput'}
+                            cacheOptions={true}
+                            loadOptions={(inputValue) => client.searchTeamUsers(inputValue)}
+                            components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
+                            defaultOptions={true}
+                            getOptionValue={(u) => u.id}
+                            getOptionLabel={(u) => u.username}
+                            isMulti={false}
+                            onChange={(newValue) => {
+                                if (newValue) {
+                                    mutator.createBoardMember(board.id, newValue.id)
+                                    setSelectedUser(null)
+                                }
+                            }}
+                        />
+                    </div>
                 </div>
-            </div>
+            </BoardPermissionGate>
             <div className='user-items'>
                 <TeamPermissionsRow/>
 
@@ -273,87 +296,101 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     <button
                         onClick={() => setPublish(false)}
                         className={`tab-item ${!publish && 'tab-item--active'}`}
-                    >{'Share'}</button>
-                    <button
-                        onClick={() => setPublish(true)}
-                        className={`tab-item ${publish && 'tab-item--active'}`}
-                    >{'Publish'}</button>
+                    >
+                        <FormattedMessage
+                            id='share-board.share'
+                            defaultMessage='Share'
+                        />
+                    </button>
+                    <BoardPermissionGate permissions={[Permission.ShareBoard]}>
+                        <button
+                            onClick={() => setPublish(true)}
+                            className={`tab-item ${publish && 'tab-item--active'}`}
+                        >
+                            <FormattedMessage
+                                id='share-board.publish'
+                                defaultMessage='Publish'
+                            />
+                        </button>
+                    </BoardPermissionGate>
                 </div>
             )}
             {(props.enableSharedBoards && publish) &&
-            (<div className='tabs-content'>
-                <div>
-                    <div className='d-flex justify-content-between'>
-                        <div className='d-flex flex-column'>
-                            <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.PublishTitle', defaultMessage: 'Publish to the web'})}</div>
-                            <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.PublishDescription', defaultMessage: 'Publish and share a “read only” link with everyone on the web'})}</div>
-                        </div>
-                        <div>
-                            <Switch
-                                isOn={isSharing}
-                                size='medium'
-                                onChanged={onShareChanged}
-                            />
+            (<BoardPermissionGate permissions={[Permission.ShareBoard]}>
+                <div className='tabs-content'>
+                    <div>
+                        <div className='d-flex justify-content-between'>
+                            <div className='d-flex flex-column'>
+                                <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.PublishTitle', defaultMessage: 'Publish to the web'})}</div>
+                                <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.PublishDescription', defaultMessage: 'Publish and share a “read only” link with everyone on the web'})}</div>
+                            </div>
+                            <div>
+                                <Switch
+                                    isOn={isSharing}
+                                    size='medium'
+                                    onChanged={onShareChanged}
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
-                {isSharing &&
-                        (<div className='d-flex justify-content-between tabs-inputs'>
-                            <div className='d-flex input-container'>
-                                <a
-                                    className='shareUrl'
-                                    href={shareUrl.toString()}
-                                    target='_blank'
-                                    rel='noreferrer'
-                                >
-                                    {shareUrl.toString()}
-                                </a>
-                                <Tooltip
-                                    key={'regenerateToken'}
-                                    title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
-                                >
-                                    <IconButton
-                                        size='small'
-                                        onClick={onRegenerateToken}
-                                        icon={
-                                            <CompassIcon
-                                                icon='refresh'
-                                            />}
+                    {isSharing &&
+                            (<div className='d-flex justify-content-between tabs-inputs'>
+                                <div className='d-flex input-container'>
+                                    <a
+                                        className='shareUrl'
+                                        href={shareUrl.toString()}
+                                        target='_blank'
+                                        rel='noreferrer'
+                                    >
+                                        {shareUrl.toString()}
+                                    </a>
+                                    <Tooltip
+                                        key={'regenerateToken'}
                                         title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
-                                    />
-                                </Tooltip>
-                            </div>
-                            <Button
-                                emphasis='secondary'
-                                size='medium'
-                                title='Copy public link'
-                                icon={
-                                    <CompassIcon
-                                        icon='content-copy'
-                                        className='CompassIcon'
-                                    />
-                                }
-                                onClick={() => {
-                                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: board.id})
-                                    Utils.copyTextToClipboard(shareUrl.toString())
-                                    setWasCopiedPublic(true)
-                                    setWasCopiedInternal(false)
-                                }}
-                            >
-                                {wasCopiedPublic &&
-                                    <FormattedMessage
-                                        id='ShareBoard.copiedLink'
-                                        defaultMessage='Copied!'
-                                    />}
-                                {!wasCopiedPublic &&
-                                    <FormattedMessage
-                                        id='ShareBoard.copyLink'
-                                        defaultMessage='Copy link'
-                                    />}
-                            </Button>
-                        </div>)
-                }
-            </div>
+                                    >
+                                        <IconButton
+                                            size='small'
+                                            onClick={onRegenerateToken}
+                                            icon={
+                                                <CompassIcon
+                                                    icon='refresh'
+                                                />}
+                                            title={intl.formatMessage({id: 'ShareBoard.regenerate', defaultMessage: 'Regenerate token'})}
+                                        />
+                                    </Tooltip>
+                                </div>
+                                <Button
+                                    emphasis='secondary'
+                                    size='medium'
+                                    title='Copy public link'
+                                    icon={
+                                        <CompassIcon
+                                            icon='content-copy'
+                                            className='CompassIcon'
+                                        />
+                                    }
+                                    onClick={() => {
+                                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: board.id})
+                                        Utils.copyTextToClipboard(shareUrl.toString())
+                                        setWasCopiedPublic(true)
+                                        setWasCopiedInternal(false)
+                                    }}
+                                >
+                                    {wasCopiedPublic &&
+                                        <FormattedMessage
+                                            id='ShareBoard.copiedLink'
+                                            defaultMessage='Copied!'
+                                        />}
+                                    {!wasCopiedPublic &&
+                                        <FormattedMessage
+                                            id='ShareBoard.copyLink'
+                                            defaultMessage='Copy link'
+                                        />}
+                                </Button>
+                            </div>)
+                    }
+                </div>
+            </BoardPermissionGate>
             )}
 
             {!publish && (

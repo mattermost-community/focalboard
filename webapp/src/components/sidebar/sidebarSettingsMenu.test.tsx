@@ -26,7 +26,21 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
     const mockStore = configureStore([])
     let store = mockStore({})
     beforeEach(() => {
-        store = mockStore({})
+        store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: 'board_id',
+                boards: {
+                    board_id: {id: 'board_id'},
+                },
+                templates: [],
+                myBoardMemberships: {
+                    board_id: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
+        })
     })
     test('settings menu closed should match snapshot', () => {
         const component = wrapIntl(

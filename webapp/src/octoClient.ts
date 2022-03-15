@@ -164,6 +164,16 @@ class OctoClient {
         return user
     }
 
+    async getMyBoardMemberships(): Promise<BoardMember[]> {
+        const path = '/api/v1/users/me/memberships'
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+        const members = (await this.getJson(response, [])) as BoardMember[]
+        return members
+    }
+
     async getUser(userId: string): Promise<IUser | undefined> {
         const path = `/api/v1/users/${encodeURIComponent(userId)}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})

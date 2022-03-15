@@ -72,11 +72,17 @@ describe('components/cardDetail/CardDetail', () => {
                     {username: 'username_1'},
                 ],
             },
+            teams: {
+                current: {id: 'team-id'},
+            },
             boards: {
                 boards: {
                     [board.id]: board,
                 },
                 current: board.id,
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
@@ -124,6 +130,18 @@ describe('components/cardDetail/CardDetail', () => {
     test('should show comments in readonly view', async () => {
         const mockStore = configureStore([])
         const store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                boards: {
+                    [board.id]: board,
+                },
+                current: board.id,
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
             users: {
                 boardUsers: [
                     {username: 'username_1'},
@@ -190,11 +208,17 @@ describe('components/cardDetail/CardDetail', () => {
                     {username: 'username_1'},
                 ],
             },
+            teams: {
+                current: {id: 'team-id'},
+            },
             boards: {
                 boards: {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 current: welcomeBoard.id,
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
@@ -284,11 +308,17 @@ describe('components/cardDetail/CardDetail', () => {
                     {username: 'username_1'},
                 ],
             },
+            teams: {
+                current: {id: 'team-id'},
+            },
             boards: {
                 boards: {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 current: welcomeBoard.id,
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
@@ -376,11 +406,17 @@ describe('components/cardDetail/CardDetail', () => {
                     {username: 'username_1'},
                 ],
             },
+            teams: {
+                current: {id: 'team-id'},
+            },
             boards: {
                 boards: {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 current: welcomeBoard.id,
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
