@@ -269,6 +269,11 @@ func (s *SQLStore) GetBlockHistory(blockID string, opts model.QueryBlockHistoryO
 
 }
 
+func (s *SQLStore) GetBlockHistoryDescendants(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	return s.getBlockHistoryDescendants(s.db, blockID, opts)
+
+}
+
 func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 	return s.getBlocksForBoard(s.db, boardID)
 

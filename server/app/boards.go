@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
@@ -22,6 +23,49 @@ func (a *App) GetBoard(boardID string) (*model.Board, error) {
 		return nil, err
 	}
 	return board, nil
+}
+
+func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetadata, error) {
+	board, err := a.GetBoard(boardID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	earliestBlock, err := a.getBlockHistoryDescendant(boardID, false)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	latestBlock, err := a.getBlockHistoryDescendant(boardID, false)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	boardMetadata := model.BoardMetadata{
+		BoardID:                 boardID,
+		DescendantFirstUpdateAt: earliestBlock.CreateAt,
+		DescendantLastUpdateAt:  latestBlock.UpdateAt,
+		CreatedBy:               board.CreatedBy,
+		LastModifiedBy:          latestBlock.ModifiedBy,
+	}
+	return board, &boardMetadata, nil
+}
+
+func (a *App) getBlockHistoryDescendant(boardID string, latest bool) (*model.Block, error) {
+	// use block_history to fetch blocks in case they were deleted and no longer exist in blocks table.
+	opts := model.QueryBlockHistoryOptions{
+		Limit:      1,
+		Descending: latest,
+	}
+	blocks, err := a.store.GetBlockHistoryDescendants(boardID, opts)
+	if err != nil {
+		return nil, fmt.Errorf("could not get blocks history descendants for board: %w", err)
+	}
+	if len(blocks) == 0 {
+		return nil, fmt.Errorf("blocks history descendants not found for board: %w", err)
+	}
+	block := &blocks[0]
+	return block, nil
 }
 
 func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {

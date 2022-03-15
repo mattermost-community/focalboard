@@ -634,6 +634,39 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.
 	return s.blocksFromRows(rows)
 }
 
+func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, rootID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	var order string
+	if opts.Descending {
+		order = " DESC "
+	}
+
+	query := s.getQueryBuilder(db).
+		Select(s.blockFields()...).
+		From(s.tablePrefix + "blocks_history").
+		Where(sq.Eq{"root_id": rootID}).
+		OrderBy("insertAt, update_at" + order)
+
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
+	}
+
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`GetBlockHistory ERROR`, mlog.Err(err))
+		return nil, err
+	}
+
+	return s.blocksFromRows(rows)
+}
+
 // getBoardAndCardByID returns the first parent of type `card` and first parent of type `board` for the block specified by ID.
 // `board` and/or `card` may return nil without error if the block does not belong to a board or card.
 func (s *SQLStore) getBoardAndCardByID(db sq.BaseRunner, blockID string) (board *model.Board, card *model.Block, err error) {
