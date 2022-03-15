@@ -410,8 +410,6 @@ func (s *SQLStore) useNewSchemaTable() error {
 		query = fmt.Sprintf("ALTER TABLE %sschema_migrations RENAME TO %sschema_migrations_old_temp", s.tablePrefix, s.tablePrefix)
 	}
 
-	s.logger.Error(query)
-
 	if _, err := s.db.Exec(query); err != nil {
 		s.logger.Error("failed to rename old schema migration table", mlog.Err(err))
 		return err
