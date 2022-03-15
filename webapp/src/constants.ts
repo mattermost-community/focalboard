@@ -146,6 +146,36 @@ class Constants {
             displayName: 'Svenska',
         },
     ]
+
+    static readonly keyCodes: {[key: string]: [string, number]} = {
+        COMPOSING: ['Composing', 229],
+        A: ['a', 65],
+        B: ['b', 66],
+        C: ['c', 67],
+        D: ['d', 68],
+        E: ['e', 69],
+        F: ['f', 70],
+        G: ['g', 71],
+        H: ['h', 72],
+        I: ['i', 73],
+        J: ['j', 74],
+        K: ['k', 75],
+        L: ['l', 76],
+        M: ['m', 77],
+        N: ['n', 78],
+        O: ['o', 79],
+        P: ['p', 80],
+        Q: ['q', 81],
+        R: ['r', 82],
+        S: ['s', 83],
+        T: ['t', 84],
+        U: ['u', 85],
+        V: ['v', 86],
+        W: ['w', 87],
+        X: ['x', 88],
+        Y: ['y', 89],
+        Z: ['z', 90],
+    }
 }
 
 export {Constants}

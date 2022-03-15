@@ -677,7 +677,6 @@ class Utils {
         // There are two types of keyboards
         // 1. English with different layouts(Ex: Dvorak)
         // 2. Different language keyboards(Ex: Russian)
-
         if (event.keyCode === KeyCodes.COMPOSING[1]) {
             return false
         }
@@ -692,6 +691,17 @@ class Utils {
 
         // used for different language keyboards to detect the position of keys
         return event.keyCode === key[1]
+    }
+
+    static isMac() {
+        return navigator.platform.toUpperCase().indexOf('MAC') >= 0
+    }
+
+    static cmdOrCtrlPressed(e: KeyboardEvent, allowAlt = false) {
+        if (allowAlt) {
+            return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey)
+        }
+        return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey && !e.altKey)
     }
 }
 
