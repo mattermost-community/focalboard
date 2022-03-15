@@ -6,8 +6,6 @@ import {useIntl} from 'react-intl'
 
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType} from '../blocks/board'
 import {Card} from '../blocks/card'
-import {ContentBlock} from '../blocks/contentBlock'
-import {CommentBlock} from '../blocks/commentBlock'
 import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'
 import {Utils, IDType} from '../utils'
@@ -28,8 +26,6 @@ type Props = {
     board: Board
     readOnly: boolean
     card: Card
-    contents: Array<ContentBlock|ContentBlock[]>
-    comments: CommentBlock[]
     propertyTemplate: IPropertyTemplate
     showEmptyPlaceholder: boolean
 }
@@ -38,7 +34,8 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
     const [serverValue, setServerValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
 
-    const {card, propertyTemplate, readOnly, showEmptyPlaceholder, board, contents, comments} = props
+    const {card, propertyTemplate, readOnly, showEmptyPlaceholder, board} = props
+
     const intl = useIntl()
     const propertyValue = card.fields.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
@@ -222,8 +219,6 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <LastModifiedBy
                 card={card}
                 board={board}
-                contents={contents}
-                comments={comments}
             />
         )
     } else if (propertyTemplate.type === 'createdTime') {
@@ -232,11 +227,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     } else if (propertyTemplate.type === 'updatedTime') {
         return (
-            <LastModifiedAt
-                card={card}
-                contents={contents}
-                comments={comments}
-            />
+            <LastModifiedAt card={card}/>
         )
     }
 

@@ -11,11 +11,6 @@ import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
-import {useAppSelector} from '../../store/hooks'
-
-import {getCardContents} from '../../store/contents'
-
-import {getCardComments} from '../../store/comments'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
@@ -45,8 +40,6 @@ export const columnWidth = (resizingColumn: string, columnWidths: Record<string,
 
 const TableRow = (props: Props) => {
     const {board, activeView, columnRefs, card} = props
-    const contents = useAppSelector(getCardContents(card.id || ''))
-    const comments = useAppSelector(getCardComments(card.id))
 
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
@@ -152,8 +145,6 @@ const TableRow = (props: Props) => {
                             readOnly={props.readonly}
                             card={card}
                             board={board}
-                            contents={contents}
-                            comments={comments}
                             propertyTemplate={template}
                             showEmptyPlaceholder={false}
                         />
