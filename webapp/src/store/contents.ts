@@ -57,10 +57,8 @@ export const getContents = createSelector(
 export function getCardContents(cardId: string): (state: RootState) => Array<ContentBlock|ContentBlock[]> {
     return createSelector(
         getContentsById,
-        getCards,
-        getTemplates,
-        (contents, cards, templates): Array<ContentBlock|ContentBlock[]> => {
-            const card = {...cards, ...templates}[cardId]
+        (state) => getCards(state)[cardId] || getTemplates(state)[cardId],
+        (contents, card): Array<ContentBlock|ContentBlock[]> => {
             const result: Array<ContentBlock|ContentBlock[]> = []
             if (card?.fields?.contentOrder) {
                 for (const contentId of card.fields.contentOrder) {

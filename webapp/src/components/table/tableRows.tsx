@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useCallback} from 'react'
 import {useDragLayer} from 'react-dnd'
 
 import {Card} from '../../blocks/card'
@@ -28,6 +28,16 @@ type Props = {
 const TableRows = (props: Props): JSX.Element => {
     const {board, cards, activeView} = props
 
+    const onSaveWithEnter = useCallback((card: Card) => {
+        if (cards.length > 0 && cards[cards.length - 1] === card) {
+            props.addCard(activeView.fields.groupById ? card.fields.properties[activeView.fields.groupById!] as string : '')
+        }
+    }, [cards.length > 0 && cards[cards.length - 1], props.addCard, activeView.fields.groupById])
+
+    const onClickRow = useCallback((e: React.MouseEvent<HTMLDivElement>, card: Card) => {
+        props.onCardClicked(e, card)
+    }, [props.onCardClicked])
+
     const {offset, resizingColumn} = useDragLayer((monitor) => {
         if (monitor.getItemType() === 'horizontalGrip') {
             return {
@@ -52,14 +62,8 @@ const TableRows = (props: Props): JSX.Element => {
                         card={card}
                         isSelected={props.selectedCardIds.includes(card.id)}
                         focusOnMount={props.cardIdToFocusOnRender === card.id}
-                        onSaveWithEnter={() => {
-                            if (cards.length > 0 && cards[cards.length - 1] === card) {
-                                props.addCard(activeView.fields.groupById ? card.fields.properties[activeView.fields.groupById!] as string : '')
-                            }
-                        }}
-                        onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-                            props.onCardClicked(e, card)
-                        }}
+                        onSaveWithEnter={onSaveWithEnter}
+                        onClick={onClickRow}
                         showCard={props.showCard}
                         readonly={props.readonly}
                         onDrop={props.onDrop}

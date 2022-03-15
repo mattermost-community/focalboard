@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback} from 'react'
+import React, {useCallback, useRef} from 'react'
 
 import {FormattedMessage} from 'react-intl'
 import {useDragLayer, useDrop} from 'react-dnd'
@@ -54,7 +54,7 @@ const Table = (props: Props): JSX.Element => {
         }
     })
 
-    const columnRefs: Map<string, React.RefObject<HTMLDivElement>> = new Map()
+    const columnRefs = useRef<Map<string, React.RefObject<HTMLDivElement>>>(new Map())
 
     const [, drop] = useDrop(() => ({
         accept: 'horizontalGrip',
@@ -191,7 +191,7 @@ const Table = (props: Props): JSX.Element => {
                     views={views}
                     offset={offset}
                     resizingColumn={resizingColumn}
-                    columnRefs={columnRefs}
+                    columnRefs={columnRefs.current}
                     readonly={props.readonly}
                 />
 
@@ -207,7 +207,7 @@ const Table = (props: Props): JSX.Element => {
                                 groupByProperty={groupByProperty}
                                 group={group}
                                 readonly={props.readonly}
-                                columnRefs={columnRefs}
+                                columnRefs={columnRefs.current}
                                 selectedCardIds={props.selectedCardIds}
                                 cardIdToFocusOnRender={props.cardIdToFocusOnRender}
                                 hideGroup={hideGroup}
@@ -227,7 +227,7 @@ const Table = (props: Props): JSX.Element => {
                     <TableRows
                         board={board}
                         activeView={activeView}
-                        columnRefs={columnRefs}
+                        columnRefs={columnRefs.current}
                         cards={cards}
                         selectedCardIds={props.selectedCardIds}
                         readonly={props.readonly}

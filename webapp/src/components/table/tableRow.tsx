@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useRef, useState, useMemo} from 'react'
+import React, {useEffect, useRef, useState, useMemo, useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
@@ -26,13 +26,13 @@ type Props = {
     card: Card
     isSelected: boolean
     focusOnMount: boolean
-    onSaveWithEnter: () => void
+    onSaveWithEnter: (card: Card) => void
     showCard: (cardId: string) => void
     readonly: boolean
     offset: number
     resizingColumn: string
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
-    onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+    onClick?: (e: React.MouseEvent<HTMLDivElement>, card: Card) => void
     onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
@@ -44,7 +44,7 @@ export const columnWidth = (resizingColumn: string, columnWidths: Record<string,
 }
 
 const TableRow = (props: Props) => {
-    const {board, activeView, onSaveWithEnter, columnRefs, card} = props
+    const {board, activeView, columnRefs, card} = props
     const contents = useAppSelector(getCardContents(card.id || ''))
     const comments = useAppSelector(getCardComments(card.id))
 
@@ -59,6 +59,23 @@ const TableRow = (props: Props) => {
             setTimeout(() => titleRef.current?.focus(), 10)
         }
     }, [])
+
+    const onClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        props.onClick && props.onClick(e, card)
+    }, [card])
+
+    const onSaveWithEnter = useCallback(() => {
+        props.onSaveWithEnter(card)
+    }, [card])
+
+    const onSave = useCallback((saveType) => {
+        if (card.title !== title) {
+            mutator.changeBlockTitle(props.board.id, card.id, card.title, title)
+            if (saveType === 'onEnter') {
+                onSaveWithEnter()
+            }
+        }
+    }, [card.title, title, onSaveWithEnter, board.id, card.id])
 
     const visiblePropertyTemplates = useMemo(() => (
         board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
@@ -83,7 +100,7 @@ const TableRow = (props: Props) => {
     return (
         <div
             className={className}
-            onClick={props.onClick}
+            onClick={onClick}
             ref={cardRef}
             style={{opacity: isDragging ? 0.5 : 1}}
         >
@@ -102,12 +119,7 @@ const TableRow = (props: Props) => {
                         value={title}
                         placeholderText='Untitled'
                         onChange={(newTitle: string) => setTitle(newTitle)}
-                        onSave={(saveType) => {
-                            mutator.changeBlockTitle(props.board.id, card.id, card.title, title)
-                            if (saveType === 'onEnter') {
-                                onSaveWithEnter()
-                            }
-                        }}
+                        onSave={onSave}
                         onCancel={() => setTitle(card.title || '')}
                         readonly={props.readonly}
                         spellCheck={true}
