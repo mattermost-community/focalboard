@@ -431,7 +431,7 @@ func (s *SQLStore) useNewSchemaTable() error {
 }
 
 func (s *SQLStore) deleteOldSchemaMigrationTable() error {
-	query := "DROP TABLE " + s.tablePrefix + "schema_migrations_old_temp"
+	query := "DROP TABLE IF EXISTS " + s.tablePrefix + "schema_migrations_old_temp"
 	if _, err := s.db.Exec(query); err != nil {
 		s.logger.Error("failed to delete old temp schema migrations table", mlog.Err(err))
 		return err
