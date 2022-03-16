@@ -1,8 +1,12 @@
-Welcome to Focalboard v0.11.0!
+Welcome to Focalboard v0.15!
 
-Thank you contributors! There are a number of improvements in this release, and one major new feature:
+Thank you contributors! There are a number of improvements in this release:
 
-* Calendar view. Thanks @sbishel!
+* Toggle to hide empty groups for TableView. Thanks @vish9812!
+* New error pages. Thanks @wiggin77! @asaadmahmood!
+* In-app links to import Help Docs. Thanks @justinegeffen! @sbishel!
+* Updated comment box alignment. Thanks @asaadmahmood!
+* Show "(Deleted User)" instead of UUID when user not found. Thanks @akkivasu!
 
 If you like what you see, please consider taking a moment to rate this version in the App Store. Your positive ratings make a real difference for us.
 
