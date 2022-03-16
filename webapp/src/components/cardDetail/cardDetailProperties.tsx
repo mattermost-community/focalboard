@@ -6,8 +6,6 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {Board, IPropertyTemplate, PropertyType} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
-import {ContentBlock} from '../../blocks/contentBlock'
-import {CommentBlock} from '../../blocks/commentBlock'
 
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
@@ -28,15 +26,13 @@ type Props = {
     board: Board
     card: Card
     cards: Card[]
-    contents: Array<ContentBlock|ContentBlock[]>
-    comments: CommentBlock[]
     activeView: BoardView
     views: BoardView[]
     readonly: boolean
 }
 
 const CardDetailProperties = (props: Props) => {
-    const {board, card, cards, views, activeView, contents, comments} = props
+    const {board, card, cards, views, activeView} = props
     const [newTemplateId, setNewTemplateId] = useState('')
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
     const canEditBoardCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
@@ -162,8 +158,6 @@ const CardDetailProperties = (props: Props) => {
                             readOnly={props.readonly || !canEditBoardCards}
                             card={card}
                             board={board}
-                            contents={contents}
-                            comments={comments}
                             propertyTemplate={propertyTemplate}
                             showEmptyPlaceholder={true}
                         />

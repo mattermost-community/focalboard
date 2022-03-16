@@ -48,7 +48,7 @@ const Gallery = (props: Props): JSX.Element => {
         cardOrder.splice(destIndex, 0, ...draggedCardIds)
 
         mutator.performAsUndoGroup(async () => {
-            await mutator.changeViewCardOrder(board.id, activeView, cardOrder, description)
+            await mutator.changeViewCardOrder(board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description)
         })
     }
 

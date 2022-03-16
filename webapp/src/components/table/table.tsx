@@ -174,7 +174,7 @@ const Table = (props: Props): JSX.Element => {
             }
 
             mutator.performAsUndoGroup(async () => {
-                await mutator.changeViewCardOrder(board.id, activeView, cardOrder, description)
+                await mutator.changeViewCardOrder(board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description)
             })
         }
     }, [activeView, cards, props.selectedCardIds, groupByProperty])
