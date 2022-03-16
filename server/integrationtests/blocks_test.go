@@ -168,6 +168,7 @@ func TestPatchBlock(t *testing.T) {
 	initialID := utils.NewID(utils.IDTypeBlock)
 
 	board := th.CreateBoard("team-id", model.BoardTypeOpen)
+	time.Sleep(10 * time.Millisecond)
 
 	block := model.Block{
 		ID:       initialID,
@@ -263,6 +264,7 @@ func TestDeleteBlock(t *testing.T) {
 	defer th.TearDown()
 
 	board := th.CreateBoard("team-id", model.BoardTypeOpen)
+	time.Sleep(10 * time.Millisecond)
 
 	var blockID string
 	t.Run("Create a block", func(t *testing.T) {
