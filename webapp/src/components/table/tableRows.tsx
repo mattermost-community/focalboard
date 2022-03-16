@@ -28,12 +28,6 @@ type Props = {
 const TableRows = (props: Props): JSX.Element => {
     const {board, cards, activeView} = props
 
-    const onSaveWithEnter = useCallback((card: Card) => {
-        if (cards.length > 0 && cards[cards.length - 1] === card) {
-            props.addCard(activeView.fields.groupById ? card.fields.properties[activeView.fields.groupById!] as string : '')
-        }
-    }, [cards.length > 0 && cards[cards.length - 1], props.addCard, activeView.fields.groupById])
-
     const onClickRow = useCallback((e: React.MouseEvent<HTMLDivElement>, card: Card) => {
         props.onCardClicked(e, card)
     }, [props.onCardClicked])
@@ -53,16 +47,21 @@ const TableRows = (props: Props): JSX.Element => {
 
     return (
         <>
-            {cards.map((card) => {
+            {cards.map((card, idx) => {
                 const tableRow = (
                     <TableRow
                         key={card.id + card.updateAt}
                         board={board}
-                        activeView={activeView}
+                        columnWidths={JSON.stringify(activeView.fields.columnWidths)}
+                        isManualSort={activeView.fields.sortOptions.length === 0}
+                        groupById={activeView.fields.groupById}
+                        visiblePropertyIds={activeView.fields.visiblePropertyIds.join(',')}
+                        collapsedOptionIds={activeView.fields.collapsedOptionIds.join(',')}
                         card={card}
+                        addCard={props.addCard}
                         isSelected={props.selectedCardIds.includes(card.id)}
                         focusOnMount={props.cardIdToFocusOnRender === card.id}
-                        onSaveWithEnter={onSaveWithEnter}
+                        isLastCard={idx === (cards.length - 1)}
                         onClick={onClickRow}
                         showCard={props.showCard}
                         readonly={props.readonly}

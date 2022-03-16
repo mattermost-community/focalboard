@@ -5,7 +5,6 @@ import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
@@ -17,16 +16,21 @@ import './tableRow.scss'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    columnWidths: string
+    isManualSort: boolean
+    groupById?: string
+    visiblePropertyIds: string
+    collapsedOptionIds: string
     card: Card
     isSelected: boolean
     focusOnMount: boolean
-    onSaveWithEnter: (card: Card) => void
+    isLastCard: boolean
     showCard: (cardId: string) => void
     readonly: boolean
     offset: number
     resizingColumn: string
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
+    addCard: (groupByOptionId?: string) => Promise<void>
     onClick?: (e: React.MouseEvent<HTMLDivElement>, card: Card) => void
     onDrop: (srcCard: Card, dstCard: Card) => void
 }
@@ -39,12 +43,23 @@ export const columnWidth = (resizingColumn: string, columnWidths: Record<string,
 }
 
 const TableRow = (props: Props) => {
-    const {board, activeView, columnRefs, card} = props
+    const {board, columnRefs, card, isManualSort, groupById} = props
+
+    const visiblePropertyIds = useMemo(() => {
+        return props.visiblePropertyIds.split(',')
+    }, [props.visiblePropertyIds])
+
+    const collapsedOptionIds = useMemo(() => {
+        return props.collapsedOptionIds.split(',')
+    }, [props.collapsedOptionIds])
+
+    const columnWidths = useMemo(() => {
+        return JSON.parse(props.columnWidths)
+    }, [props.columnWidths])
 
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
-    const isManualSort = activeView.fields.sortOptions.length === 0
-    const isGrouped = Boolean(activeView.fields.groupById)
+    const isGrouped = Boolean(groupById)
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
 
     useEffect(() => {
@@ -58,8 +73,10 @@ const TableRow = (props: Props) => {
     }, [card])
 
     const onSaveWithEnter = useCallback(() => {
-        props.onSaveWithEnter(card)
-    }, [card])
+        if (props.isLastCard) {
+            props.addCard(groupById ? card.fields.properties[groupById!] as string : '')
+        }
+    }, [groupById && card.fields.properties[groupById!], props.isLastCard, props.addCard])
 
     const onSave = useCallback((saveType) => {
         if (card.title !== title) {
@@ -71,17 +88,17 @@ const TableRow = (props: Props) => {
     }, [card.title, title, onSaveWithEnter, board.id, card.id])
 
     const visiblePropertyTemplates = useMemo(() => (
-        board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
-    ), [board.cardProperties, activeView.fields.visiblePropertyIds])
+        board.cardProperties.filter((template: IPropertyTemplate) => visiblePropertyIds.includes(template.id))
+    ), [board.cardProperties, visiblePropertyIds])
 
     let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
     if (isOver) {
         className += ' dragover'
     }
     if (isGrouped) {
-        const groupID = activeView.fields.groupById || ''
+        const groupID = groupById || ''
         const groupValue = card.fields.properties[groupID] as string || 'undefined'
-        if (activeView.fields.collapsedOptionIds.indexOf(groupValue) > -1) {
+        if (collapsedOptionIds.indexOf(groupValue) > -1) {
             className += ' hidden'
         }
     }
@@ -102,7 +119,7 @@ const TableRow = (props: Props) => {
             <div
                 className='octo-table-cell title-cell'
                 id='mainBoardHeader'
-                style={{width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, Constants.titleColumnId)}}
+                style={{width: columnWidth(props.resizingColumn, columnWidths, props.offset, Constants.titleColumnId)}}
                 ref={columnRefs.get(Constants.titleColumnId)}
             >
                 <div className='octo-icontitle'>
@@ -138,7 +155,7 @@ const TableRow = (props: Props) => {
                     <div
                         className='octo-table-cell'
                         key={template.id}
-                        style={{width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, template.id)}}
+                        style={{width: columnWidth(props.resizingColumn, columnWidths, props.offset, template.id)}}
                         ref={columnRefs.get(template.id)}
                     >
                         <PropertyValueElement
