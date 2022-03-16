@@ -59,7 +59,7 @@ const cardsSlice = createSlice({
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
             state.cards = {}
             state.templates = {}
-            for (const block of action.payload) {
+            for (const block of action.payload.blocks) {
                 if (block.type === 'card' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Card
                 } else if (block.type === 'card' && !block.fields.isTemplate) {

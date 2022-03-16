@@ -261,7 +261,11 @@ class OctoClient {
     }
 
     async getAllBlocks(boardID: string): Promise<Block[]> {
-        const path = `/api/v1/boards/${boardID}/blocks?all=true`
+        let path = `/api/v1/boards/${boardID}/blocks?all=true`
+        const readToken = Utils.getReadToken()
+        if (readToken) {
+            path += `&read_token=${readToken}`
+        }
         return this.getBlocksWithPath(path)
     }
 
@@ -610,7 +614,11 @@ class OctoClient {
     }
 
     async getBoard(boardID: string): Promise<Board | undefined> {
-        const path = `/api/v1/boards/${boardID}`
+        let path = `/api/v1/boards/${boardID}`
+        const readToken = Utils.getReadToken()
+        if (readToken) {
+            path += `?read_token=${readToken}`
+        }
         const response = await fetch(this.getBaseURL() + path, {
             method: 'GET',
             headers: this.headers(),
