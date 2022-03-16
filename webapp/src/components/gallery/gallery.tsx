@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useMemo, useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Constants, Permission} from '../../constants'
@@ -27,10 +27,15 @@ type Props = {
 
 const Gallery = (props: Props): JSX.Element => {
     const {activeView, board, cards} = props
-    const visiblePropertyTemplates = board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+    const visiblePropertyTemplates = useMemo(() => {
+        return board.cardProperties.filter(
+            (template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id),
+        )
+    }, [board.cardProperties, activeView.fields.visiblePropertyIds])
+
     const isManualSort = activeView.fields.sortOptions.length === 0
 
-    const onDropToCard = (srcCard: Card, dstCard: Card) => {
+    const onDropToCard = useCallback((srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
         const {selectedCardIds} = props
 
@@ -50,7 +55,7 @@ const Gallery = (props: Props): JSX.Element => {
         mutator.performAsUndoGroup(async () => {
             await mutator.changeViewCardOrder(board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description)
         })
-    }
+    }, [cards.map((o) => o.id).join(','), board.id, activeView.id, activeView.fields.cardOrder, props.selectedCardIds])
 
     const visibleTitle = activeView.fields.visiblePropertyIds.includes(Constants.titleColumnId)
     const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
