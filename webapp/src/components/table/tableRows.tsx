@@ -52,11 +52,11 @@ const TableRows = (props: Props): JSX.Element => {
                     <TableRow
                         key={card.id + card.updateAt}
                         board={board}
-                        columnWidths={JSON.stringify(activeView.fields.columnWidths)}
+                        columnWidths={activeView.fields.columnWidths}
                         isManualSort={activeView.fields.sortOptions.length === 0}
                         groupById={activeView.fields.groupById}
-                        visiblePropertyIds={activeView.fields.visiblePropertyIds.join(',')}
-                        collapsedOptionIds={activeView.fields.collapsedOptionIds.join(',')}
+                        visiblePropertyIds={activeView.fields.visiblePropertyIds}
+                        collapsedOptionIds={activeView.fields.collapsedOptionIds}
                         card={card}
                         addCard={props.addCard}
                         isSelected={props.selectedCardIds.includes(card.id)}

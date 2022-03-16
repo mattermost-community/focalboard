@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 
 import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
+import isEqual from 'lodash/isEqual'
 
 import {BoardView, createBoardView} from '../blocks/boardView'
 import {Utils} from '../utils'
@@ -16,6 +17,45 @@ type ViewsState = {
     views: {[key: string]: BoardView}
 }
 
+// This update ensure that we are not regenerating that fields all the time
+const smartViewUpdate = (oldView: BoardView, newView: BoardView) => {
+    if (!oldView) {
+        return newView
+    }
+
+    if (isEqual(newView.fields.sortOptions, oldView.fields.sortOptions)) {
+        newView.fields.sortOptions = oldView.fields.sortOptions
+    }
+    if (isEqual(newView.fields.visiblePropertyIds, oldView.fields.visiblePropertyIds)) {
+        newView.fields.visiblePropertyIds = oldView.fields.visiblePropertyIds
+    }
+    if (isEqual(newView.fields.visibleOptionIds, oldView.fields.visibleOptionIds)) {
+        newView.fields.visibleOptionIds = oldView.fields.visibleOptionIds
+    }
+    if (isEqual(newView.fields.hiddenOptionIds, oldView.fields.hiddenOptionIds)) {
+        newView.fields.hiddenOptionIds = oldView.fields.hiddenOptionIds
+    }
+    if (isEqual(newView.fields.collapsedOptionIds, oldView.fields.collapsedOptionIds)) {
+        newView.fields.collapsedOptionIds = oldView.fields.collapsedOptionIds
+    }
+    if (isEqual(newView.fields.filter, oldView.fields.filter)) {
+        newView.fields.filter = oldView.fields.filter
+    }
+    if (isEqual(newView.fields.cardOrder, oldView.fields.cardOrder)) {
+        newView.fields.cardOrder = oldView.fields.cardOrder
+    }
+    if (isEqual(newView.fields.columnWidths, oldView.fields.columnWidths)) {
+        newView.fields.columnWidths = oldView.fields.columnWidths
+    }
+    if (isEqual(newView.fields.columnCalculations, oldView.fields.columnCalculations)) {
+        newView.fields.columnCalculations = oldView.fields.columnCalculations
+    }
+    if (isEqual(newView.fields.kanbanCalculations, oldView.fields.kanbanCalculations)) {
+        newView.fields.kanbanCalculations = oldView.fields.kanbanCalculations
+    }
+    return newView
+}
+
 const viewsSlice = createSlice({
     name: 'views',
     initialState: {views: {}, current: ''} as ViewsState,
@@ -26,7 +66,7 @@ const viewsSlice = createSlice({
         updateViews: (state, action: PayloadAction<BoardView[]>) => {
             for (const view of action.payload) {
                 if (view.deleteAt === 0) {
-                    state.views[view.id] = view
+                    state.views[view.id] = smartViewUpdate(state.views[view.id], view)
                 } else {
                     delete state.views[view.id]
                 }

@@ -16,11 +16,11 @@ import './tableRow.scss'
 
 type Props = {
     board: Board
-    columnWidths: string
+    columnWidths: Record<string, number>
     isManualSort: boolean
     groupById?: string
-    visiblePropertyIds: string
-    collapsedOptionIds: string
+    visiblePropertyIds: string[]
+    collapsedOptionIds: string[]
     card: Card
     isSelected: boolean
     focusOnMount: boolean
@@ -43,19 +43,7 @@ export const columnWidth = (resizingColumn: string, columnWidths: Record<string,
 }
 
 const TableRow = (props: Props) => {
-    const {board, columnRefs, card, isManualSort, groupById} = props
-
-    const visiblePropertyIds = useMemo(() => {
-        return props.visiblePropertyIds.split(',')
-    }, [props.visiblePropertyIds])
-
-    const collapsedOptionIds = useMemo(() => {
-        return props.collapsedOptionIds.split(',')
-    }, [props.collapsedOptionIds])
-
-    const columnWidths = useMemo(() => {
-        return JSON.parse(props.columnWidths)
-    }, [props.columnWidths])
+    const {board, columnRefs, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds, columnWidths} = props
 
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
