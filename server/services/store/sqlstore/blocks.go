@@ -142,7 +142,7 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string,
 		From(s.tablePrefix + "blocks").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
 		Where(sq.Eq{"board_id": boardID}).
-		OrderBy("insertAt, update_at")
+		OrderBy("insert_at, update_at")
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
@@ -611,7 +611,7 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks_history").
 		Where(sq.Eq{"id": blockID}).
-		OrderBy("insertAt, update_at" + order)
+		OrderBy("insert_at " + order + ", update_at" + order)
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
