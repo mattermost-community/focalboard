@@ -137,9 +137,11 @@ export const getCurrentBoardViews = createSelector(
     },
 )
 
+export const getCurrentViewId = (state: RootState): string => state.views.current
+
 export const getCurrentView = createSelector(
     getViews,
-    (state) => state.views.current,
+    getCurrentViewId,
     (views, viewId) => views[viewId],
 )
 

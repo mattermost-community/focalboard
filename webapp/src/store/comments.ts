@@ -67,13 +67,13 @@ export const {reducer} = commentsSlice
 
 export function getCardComments(cardId: string): (state: RootState) => CommentBlock[] {
     return (state: RootState): CommentBlock[] => {
-        return state.comments.commentsByCard[cardId] || []
+        return (state.comments?.commentsByCard && state.comments.commentsByCard[cardId]) || []
     }
 }
 
-export function getLastComment(cardId: string): (state: RootState) => CommentBlock|undefined {
+export function getLastCardComment(cardId: string): (state: RootState) => CommentBlock|undefined {
     return (state: RootState): CommentBlock|undefined => {
-        const comments = state.comments.commentsByCard[cardId]
+        const comments = state.comments?.commentsByCard && state.comments.commentsByCard[cardId]
         return comments?.[comments?.length - 1]
     }
 }

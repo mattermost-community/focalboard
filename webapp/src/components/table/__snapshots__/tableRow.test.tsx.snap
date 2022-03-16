@@ -93,7 +93,7 @@ exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
 exports[`components/table/TableRow should match snapshot, display properties 1`] = `
 <div>
   <div
-    class="TableRow octo-table-row hidden"
+    class="TableRow octo-table-row"
     draggable="true"
     style="opacity: 1;"
   >
@@ -267,7 +267,7 @@ exports[`components/table/TableRow should match snapshot, read-only 1`] = `
 exports[`components/table/TableRow should match snapshot, resizing column 1`] = `
 <div>
   <div
-    class="TableRow octo-table-row hidden"
+    class="TableRow octo-table-row"
     draggable="true"
     style="opacity: 1;"
   >

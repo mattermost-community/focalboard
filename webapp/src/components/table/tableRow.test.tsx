@@ -4,7 +4,9 @@
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import configureStore from 'redux-mock-store'
+import {act} from 'react-dom/test-utils'
 
 import '@testing-library/jest-dom'
 import {wrapDNDIntl} from '../../testUtils'
@@ -49,11 +51,16 @@ describe('components/table/TableRow', () => {
             <ReduxProvider store={store}>
                 <TableRow
                     board={board}
-                    activeView={view}
+                    columnWidths={view.fields.columnWidths}
+                    addCard={jest.fn()}
+                    visiblePropertyIds={view.fields.visiblePropertyIds}
+                    isManualSort={view.fields.sortOptions.length === 0}
+                    groupById={view.fields.groupById}
+                    isLastCard={false}
+                    collapsedOptionIds={view.fields.collapsedOptionIds}
                     card={card}
                     isSelected={false}
                     focusOnMount={false}
-                    onSaveWithEnter={jest.fn()}
                     showCard={jest.fn()}
 
                     readonly={false}
@@ -75,10 +82,15 @@ describe('components/table/TableRow', () => {
                 <TableRow
                     board={board}
                     card={card}
-                    activeView={view}
+                    columnWidths={view.fields.columnWidths}
+                    addCard={jest.fn()}
+                    visiblePropertyIds={view.fields.visiblePropertyIds}
+                    isManualSort={view.fields.sortOptions.length === 0}
+                    groupById={view.fields.groupById}
+                    isLastCard={false}
+                    collapsedOptionIds={view.fields.collapsedOptionIds}
                     isSelected={false}
                     focusOnMount={false}
-                    onSaveWithEnter={jest.fn()}
                     showCard={jest.fn()}
 
                     readonly={true}
@@ -100,10 +112,15 @@ describe('components/table/TableRow', () => {
                 <TableRow
                     board={board}
                     card={card}
-                    activeView={view}
+                    columnWidths={view.fields.columnWidths}
+                    addCard={jest.fn()}
+                    visiblePropertyIds={view.fields.visiblePropertyIds}
+                    isManualSort={view.fields.sortOptions.length === 0}
+                    groupById={view.fields.groupById}
+                    isLastCard={false}
+                    collapsedOptionIds={view.fields.collapsedOptionIds}
                     isSelected={true}
                     focusOnMount={false}
-                    onSaveWithEnter={jest.fn()}
                     showCard={jest.fn()}
 
                     readonly={false}
@@ -119,19 +136,21 @@ describe('components/table/TableRow', () => {
     })
 
     test('should match snapshot, collapsed tree', async () => {
-        view.fields.collapsedOptionIds = ['value1']
-        view.fields.hiddenOptionIds = []
-
         const store = mockStore(state)
         const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <TableRow
                     board={board}
                     card={card}
-                    activeView={view}
+                    columnWidths={view.fields.columnWidths}
+                    addCard={jest.fn()}
+                    visiblePropertyIds={view.fields.visiblePropertyIds}
+                    isManualSort={view.fields.sortOptions.length === 0}
+                    groupById={view.fields.groupById}
+                    isLastCard={false}
+                    collapsedOptionIds={['value1']}
                     isSelected={false}
                     focusOnMount={false}
-                    onSaveWithEnter={jest.fn()}
                     showCard={jest.fn()}
 
                     readonly={false}
@@ -147,18 +166,22 @@ describe('components/table/TableRow', () => {
     })
 
     test('should match snapshot, display properties', async () => {
-        view.fields.visiblePropertyIds = ['property1', 'property2']
-
         const store = mockStore(state)
+
         const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <TableRow
                     board={board}
                     card={card}
-                    activeView={view}
+                    visiblePropertyIds={['property1', 'property2']}
+                    columnWidths={view.fields.columnWidths}
+                    addCard={jest.fn()}
+                    isManualSort={view.fields.sortOptions.length === 0}
+                    groupById={view.fields.groupById}
+                    collapsedOptionIds={view.fields.collapsedOptionIds}
+                    isLastCard={false}
                     isSelected={false}
                     focusOnMount={false}
-                    onSaveWithEnter={jest.fn()}
                     showCard={jest.fn()}
                     readonly={false}
                     offset={0}
@@ -173,18 +196,21 @@ describe('components/table/TableRow', () => {
     })
 
     test('should match snapshot, resizing column', async () => {
-        view.fields.visiblePropertyIds = ['property1', 'property2']
-
         const store = mockStore(state)
         const component = wrapDNDIntl(
             <ReduxProvider store={store}>
                 <TableRow
                     board={board}
                     card={card}
-                    activeView={view}
+                    visiblePropertyIds={['property1', 'property2']}
+                    columnWidths={view.fields.columnWidths}
+                    addCard={jest.fn()}
+                    isManualSort={view.fields.sortOptions.length === 0}
+                    groupById={view.fields.groupById}
+                    isLastCard={false}
+                    collapsedOptionIds={view.fields.collapsedOptionIds}
                     isSelected={false}
                     focusOnMount={false}
-                    onSaveWithEnter={jest.fn()}
                     showCard={jest.fn()}
                     readonly={false}
                     offset={0}

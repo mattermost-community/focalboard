@@ -75,7 +75,7 @@ export const getContents = createSelector(
 
 export function getCardContents(cardId: string): (state: RootState) => Array<ContentBlock|ContentBlock[]> {
     return createSelector(
-        (state) => state.contents.contentsByCard[cardId],
+        (state) => (state.contents?.contentsByCard && state.contents.contentsByCard[cardId]) || [],
         (state) => getCards(state)[cardId]?.fields?.contentOrder || getTemplates(state)[cardId]?.fields?.contentOrder,
         (contents, contentOrder): Array<ContentBlock|ContentBlock[]> => {
             const result: Array<ContentBlock|ContentBlock[]> = []
@@ -108,9 +108,9 @@ export function getCardContents(cardId: string): (state: RootState) => Array<Con
     )
 }
 
-export function getLastContent(cardId: string): (state: RootState) => ContentBlock|undefined {
+export function getLastCardContent(cardId: string): (state: RootState) => ContentBlock|undefined {
     return (state: RootState): ContentBlock|undefined => {
-        const contents = state.contents.contentsByCard[cardId]
+        const contents = state.contents?.contentsByCard && state.contents?.contentsByCard[cardId]
         return contents?.[contents?.length - 1]
     }
 }

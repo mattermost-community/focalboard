@@ -75,6 +75,11 @@ const TableRow = (props: Props) => {
         }
     }, [card.title, title, onSaveWithEnter, board.id, card.id])
 
+    const onTitleChange = useCallback((newTitle: string) => {
+        console.log("CHANGED (old/new)", title, newTitle)
+        setTitle(newTitle)
+    }, [title, setTitle])
+
     const visiblePropertyTemplates = useMemo(() => (
         board.cardProperties.filter((template: IPropertyTemplate) => visiblePropertyIds.includes(template.id))
     ), [board.cardProperties, visiblePropertyIds])
@@ -116,9 +121,12 @@ const TableRow = (props: Props) => {
                         ref={titleRef}
                         value={title}
                         placeholderText='Untitled'
-                        onChange={(newTitle: string) => setTitle(newTitle)}
+                        onChange={onTitleChange}
                         onSave={onSave}
-                        onCancel={() => setTitle(card.title || '')}
+                        onCancel={() => {
+                            console.log("CANCELING")
+                            setTitle(card.title || '')
+                        }}
                         readonly={props.readonly}
                         spellCheck={true}
                     />

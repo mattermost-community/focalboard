@@ -34,6 +34,14 @@ describe('components/properties/lastModifiedBy', () => {
                     'user-id-1': {username: 'username_1'} as IUser,
                 },
             },
+            comments: {
+                comments: {
+                    [comment.id]: comment,
+                },
+                commentsByCard: {
+                    [card.id]: [comment],
+                },
+            },
         })
 
         const component = (
@@ -41,8 +49,6 @@ describe('components/properties/lastModifiedBy', () => {
                 <LastModifiedBy
                     card={card}
                     board={board}
-                    contents={[]}
-                    comments={[comment]}
                 />
             </ReduxProvider>
         )
