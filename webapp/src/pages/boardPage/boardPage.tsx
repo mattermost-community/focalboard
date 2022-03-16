@@ -101,7 +101,7 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [])
 
     useEffect(() => {
-        if (match.params.boardId && me) {
+        if (match.params.boardId) {
             dispatch(loadAction(match.params.boardId))
 
             // set the active board
