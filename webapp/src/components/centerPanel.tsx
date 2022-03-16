@@ -70,7 +70,6 @@ type Props = {
     addTemplate: (template: Card) => void
     shownCardId?: string
     showCard: (cardId?: string) => void
-    showShared: boolean
     onboardingTourStarted: boolean
     onboardingTourCategory: string
     onboardingTourStep: string
