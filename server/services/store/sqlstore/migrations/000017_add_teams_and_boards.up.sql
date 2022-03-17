@@ -104,9 +104,6 @@ CREATE TABLE {{.prefix}}boards_history (
 
 
 {{- /* migrate board blocks to boards table */ -}}
-
-
-{{- /* MIGRATION FOR PLUGIN */ -}}
 {{if .plugin}}
   {{if .postgres}}
   INSERT INTO {{.prefix}}boards (
@@ -161,7 +158,6 @@ CREATE TABLE {{.prefix}}boards_history (
   );
   {{end}}
 {{else}}
-  {{- /* MIGRATION FOR PERSONAL SERVER */ -}}
   {{if .postgres}}
   INSERT INTO {{.prefix}}boards (
       SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->>'description')::text,

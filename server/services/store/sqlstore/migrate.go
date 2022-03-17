@@ -470,7 +470,6 @@ func (s *SQLStore) deleteOldSchemaMigrationTable() error {
 // of the DM are a part of. If no such team exists,
 // we use the first team to which DM creator belongs to.
 func (s *SQLStore) migrateTeamLessBoards() error {
-	s.logger.Debug("migrateTeamLessBoards called")
 	if !s.isPlugin {
 		return nil
 	}
@@ -493,8 +492,6 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 		return err
 	}
 
-	s.logger.Debug("transaction started")
-
 	boards, err := s.getDMBoards(tx)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
@@ -502,8 +499,6 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 		}
 		return err
 	}
-
-	s.logger.Debug("DM boards retrieved")
 
 	s.logger.Info(fmt.Sprintf("Migrating %d teamless boards to a team", len(boards)))
 
@@ -524,8 +519,6 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 				// the mood for others
 				continue
 			}
-
-			s.logger.Debug("fetched best team for board " + boards[i].ID)
 		}
 
 		channelToTeamCache[boards[i].ChannelID] = teamID
@@ -535,8 +528,6 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 			Update(s.tablePrefix+"boards").
 			Set("team_id", teamID).
 			Where(sq.Eq{"id": boards[i].ID})
-
-		s.logger.Debug("PPP")
 
 		if _, err := query.Exec(); err != nil {
 			s.logger.Error("failed to set team id for board", mlog.String("board_id", boards[i].ID), mlog.String("team_id", teamID), mlog.Err(err))
@@ -572,9 +563,7 @@ func (s *SQLStore) getDMBoards(tx sq.BaseRunner) ([]*model.Board, error) {
 }
 
 func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (string, error) {
-	s.logger.Error("getBestTeamForBoard called for " + board.ID)
 	userTeams, err := s.getBoardUserTeams(tx, board)
-	s.logger.Error("getBoardUserTeams returned")
 	if err != nil {
 		return "", err
 	}
@@ -588,16 +577,12 @@ func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (st
 		teams = append(teams, userTeamInterfaces)
 	}
 
-	s.logger.Debug(fmt.Sprintf("%v", teams))
-
 	commonTeams := utils.Intersection(teams...)
-	s.logger.Error(fmt.Sprintf("commonTeams: %v", commonTeams))
 	var teamID string
 	if len(commonTeams) > 0 {
 		teamID = commonTeams[0].(string)
 	} else {
 		// no common teams found. Let's try finding the best suitable team
-		s.logger.Debug("no common teams found. Let's try finding the best suitable team")
 		if board.Type == "D" {
 			// get DM's creator and pick one of their team
 			channel, appErr := (*s.pluginAPI).GetChannel(board.ChannelID)
@@ -606,18 +591,14 @@ func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (st
 				return "", appErr
 			}
 
-			s.logger.Error("AAA")
-
 			if _, ok := userTeams[channel.CreatorId]; !ok {
 				err := errors.New(fmt.Sprintf("channel creator not found in user teams. board_id: %s, channel_id: %s, creator_id: %s", board.ID, board.ChannelID, channel.CreatorId))
 				s.logger.Error(err.Error())
 				return "", err
 			}
 
-			s.logger.Error("BBB")
 			teamID = userTeams[channel.CreatorId][0]
 		} else if board.Type == "G" {
-			s.logger.Error("CCC")
 			// pick the team that has the most users as members
 			teamFrequency := map[string]int{}
 			highestFrequencyTeam := ""
@@ -634,13 +615,10 @@ func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (st
 				}
 			}
 
-			s.logger.Error("DDD")
-
 			teamID = highestFrequencyTeam
 		}
 	}
 
-	s.logger.Error("EEE")
 	return teamID, nil
 }
 

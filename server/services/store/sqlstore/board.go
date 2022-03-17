@@ -211,7 +211,6 @@ func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID stri
 }
 
 func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, error) {
-	s.logger.Debug("insertBoard called for " + board.ID)
 	propertiesBytes, err := json.Marshal(board.Properties)
 	if err != nil {
 		s.logger.Error(
@@ -222,7 +221,6 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		)
 		return nil, err
 	}
-	s.logger.Debug("board properties marshalled")
 
 	cardPropertiesBytes, err := json.Marshal(board.CardProperties)
 	if err != nil {
@@ -234,7 +232,6 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		)
 		return nil, err
 	}
-	s.logger.Debug("card properties marshalled")
 
 	columnCalculationsBytes, err := json.Marshal(board.ColumnCalculations)
 	if err != nil {
@@ -246,7 +243,6 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		)
 		return nil, err
 	}
-	s.logger.Debug("column calculations marshalled")
 
 	existingBoard, err := s.getBoard(db, board.ID)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
