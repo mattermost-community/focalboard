@@ -646,7 +646,7 @@ func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, 
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks_history").
 		Where(sq.Eq{"board_id": boardID}).
-		OrderBy("insertAt, update_at" + order)
+		OrderBy("insert_at " + order + ", update_at" + order)
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})

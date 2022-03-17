@@ -539,7 +539,7 @@ func (s *SQLStore) getBoardHistory(db sq.BaseRunner, rootID string, opts model.Q
 		Select(boardFields("")...).
 		From(s.tablePrefix + "boards_history").
 		Where(sq.Eq{"id": rootID}).
-		OrderBy("insert_at, update_at" + order)
+		OrderBy("insert_at " + order + ", update_at" + order)
 
 	if opts.BeforeUpdateAt != 0 {
 		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})

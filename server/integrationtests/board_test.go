@@ -1,7 +1,6 @@
 package integrationtests
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -481,6 +480,76 @@ func TestGetBoardMetadata(t *testing.T) {
 		require.Nil(t, boardMetadata)
 	})
 
+	t.Run("getBoardMetadata query is correct", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+		th.Server.Config().EnablePublicSharedBoards = true
+
+		teamID := testTeamID
+
+		board := &model.Board{
+			Title:  "public board where user1 is admin",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		rBoard, err := th.Server.App().CreateBoard(board, th.GetUser1().ID, true)
+		require.NoError(t, err)
+
+		// it should be able to retrieve it with the read token
+		boardMetadata, resp := th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckOK(resp)
+		require.NotNil(t, boardMetadata)
+
+		require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
+		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
+		require.Equal(t, rBoard.UpdateAt, boardMetadata.DescendantLastUpdateAt)
+		require.Equal(t, rBoard.ModifiedBy, boardMetadata.LastModifiedBy)
+
+		time.Sleep(50 * time.Millisecond)
+
+		// Insert card1
+		card1 := model.Block{
+			ID:      "card1",
+			BoardID: board.ID,
+			Title:   "Card 1",
+		}
+		require.NoError(t, th.Server.App().InsertBlock(card1, th.GetUser2().ID))
+		rCard1, err := th.Server.App().GetBlockByID(card1.ID)
+		require.NoError(t, err)
+
+		// Check updated metadata
+		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckOK(resp)
+		require.NotNil(t, boardMetadata)
+
+		require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
+		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
+		require.Equal(t, rCard1.UpdateAt, boardMetadata.DescendantLastUpdateAt)
+		require.Equal(t, rCard1.ModifiedBy, boardMetadata.LastModifiedBy)
+
+		time.Sleep(50 * time.Millisecond)
+
+		// Insert card2
+		card2 := model.Block{
+			ID:      "card2",
+			BoardID: board.ID,
+			Title:   "Card 2",
+		}
+		require.NoError(t, th.Server.App().InsertBlock(card2, th.GetUser1().ID))
+		rCard2, err := th.Server.App().GetBlockByID(card2.ID)
+		require.NoError(t, err)
+
+		// Check updated metadata
+		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckOK(resp)
+		require.NotNil(t, boardMetadata)
+
+		require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
+		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
+		require.Equal(t, rCard2.UpdateAt, boardMetadata.DescendantLastUpdateAt)
+		require.Equal(t, rCard2.ModifiedBy, boardMetadata.LastModifiedBy)
+	})
+
 	t.Run("valid read token should be enough to get the board metadata", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
@@ -527,32 +596,6 @@ func TestGetBoardMetadata(t *testing.T) {
 		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
 		require.Equal(t, rBoard.UpdateAt, boardMetadata.DescendantLastUpdateAt)
 		require.Equal(t, rBoard.ModifiedBy, boardMetadata.LastModifiedBy)
-
-		time.Sleep(100 * time.Millisecond)
-
-		// Insert cards
-		card1 := model.Block{
-			ID:      "card1",
-			BoardID: board.ID,
-			Title:   "Card1",
-		}
-		require.NoError(t, th.Server.App().InsertBlock(card1, th.GetUser2().ID))
-		rCard1, err := th.Server.App().GetBlockByID(card1.ID)
-
-		// Check updated metadata
-		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, sharingToken)
-		th.CheckOK(resp)
-		require.NotNil(t, boardMetadata)
-
-		fmt.Printf("rBoard.CreateAt: %d\n", rBoard.CreateAt)
-		fmt.Printf("rCard1.UpdateAt: %d\n", rCard1.UpdateAt)
-		fmt.Printf("boardMetadata.DescendantFirstUpdateAt: %d\n", boardMetadata.DescendantFirstUpdateAt)
-		fmt.Printf("boardMetadata.DescendantLastUpdateAt: %d\n", boardMetadata.DescendantLastUpdateAt)
-
-		require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
-		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
-		require.Equal(t, rCard1.UpdateAt, boardMetadata.DescendantLastUpdateAt)
-		require.Equal(t, rCard1.ModifiedBy, boardMetadata.LastModifiedBy)
 	})
 }
 
