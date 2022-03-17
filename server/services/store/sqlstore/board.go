@@ -232,6 +232,8 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	insertQuery := s.getQueryBuilder(db).Insert("").
 		Columns(boardFields("")...)
 
+	now := utils.GetMillis()
+
 	insertQueryValues := map[string]interface{}{
 		"id":                  board.ID,
 		"team_id":             board.TeamID,
@@ -249,11 +251,9 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		"card_properties":     cardPropertiesBytes,
 		"column_calculations": columnCalculationsBytes,
 		"create_at":           board.CreateAt,
-		"update_at":           board.UpdateAt,
+		"update_at":           now,
 		"delete_at":           board.DeleteAt,
 	}
-
-	now := utils.GetMillis()
 
 	if existingBoard != nil {
 		query := s.getQueryBuilder(db).Update(s.tablePrefix+"boards").
@@ -529,7 +529,7 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 	return s.boardsFromRows(rows)
 }
 
-func (s *SQLStore) getBoardHistory(db sq.BaseRunner, rootID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error) {
+func (s *SQLStore) getBoardHistory(db sq.BaseRunner, boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error) {
 	var order string
 	if opts.Descending {
 		order = " DESC "
@@ -538,7 +538,7 @@ func (s *SQLStore) getBoardHistory(db sq.BaseRunner, rootID string, opts model.Q
 	query := s.getQueryBuilder(db).
 		Select(boardFields("")...).
 		From(s.tablePrefix + "boards_history").
-		Where(sq.Eq{"id": rootID}).
+		Where(sq.Eq{"id": boardID}).
 		OrderBy("insert_at " + order + ", update_at" + order)
 
 	if opts.BeforeUpdateAt != 0 {
