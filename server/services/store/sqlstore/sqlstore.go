@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"github.com/mattermost/mattermost-server/v6/plugin"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -20,6 +21,7 @@ type SQLStore struct {
 	isPlugin         bool
 	logger           *mlog.Logger
 	NewMutexFn       MutexFactory
+	pluginAPI        *plugin.API
 }
 
 // MutexFactory is used by the store in plugin mode to generate
@@ -42,6 +44,7 @@ func New(params Params) (*SQLStore, error) {
 		logger:           params.Logger,
 		isPlugin:         params.IsPlugin,
 		NewMutexFn:       params.NewMutexFn,
+		pluginAPI:        params.PluginAPI,
 	}
 
 	err := store.Migrate()

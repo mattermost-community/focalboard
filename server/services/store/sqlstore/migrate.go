@@ -5,10 +5,13 @@ import (
 	"context"
 	"database/sql"
 	"embed"
+	"errors"
 	"fmt"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/mattermost/morph/models"
 	"path/filepath"
+	"strconv"
 	"text/template"
 
 	"github.com/mattermost/morph"
@@ -31,7 +34,10 @@ import (
 var assets embed.FS
 
 const (
-	uniqueIDsMigrationRequiredVersion = 14
+	uniqueIDsMigrationRequiredVersion      = 14
+	teamsAndBoardsMigrationRequiredVersion = 17
+
+	teamLessBoardsMigrationKey = "TeamLessBoardsMigrationComplete"
 
 	tempSchemaMigrationTableName = "temp_schema_migration"
 )
@@ -218,6 +224,23 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	if err := s.deleteOldSchemaMigrationTable(); err != nil {
+		if s.isPlugin {
+			mutex.Unlock()
+		}
+		return err
+	}
+
+	if err := ensureMigrationsAppliedUpToVersion(engine, driver, teamsAndBoardsMigrationRequiredVersion); err != nil {
+		if s.isPlugin {
+			mutex.Unlock()
+		}
+		return err
+	}
+
+	if err := s.migrateTeamLessBoards(); err != nil {
+		if s.isPlugin {
+			mutex.Unlock()
+		}
 		return err
 	}
 
@@ -438,6 +461,222 @@ func (s *SQLStore) deleteOldSchemaMigrationTable() error {
 	}
 
 	return nil
+}
+
+// We no longer support boards existing in DMs and private
+// group messages. This function migrates all boards
+// belonging to a DM to the best possible team.
+// The destination is selected as the first team where all members
+// of the DM are a part of. If no such team exists,
+// we use the first team to which DM creator belongs to.
+func (s *SQLStore) migrateTeamLessBoards() error {
+	s.logger.Debug("migrateTeamLessBoards called")
+	if !s.isPlugin {
+		return nil
+	}
+
+	setting, err := s.GetSystemSetting(teamLessBoardsMigrationKey)
+	if err != nil {
+		return fmt.Errorf("cannot get teamless boards migration state: %w", err)
+	}
+
+	// If the migration is already completed, do not run it again.
+	if hasAlreadyRun, _ := strconv.ParseBool(setting); hasAlreadyRun {
+		return nil
+	}
+
+	s.logger.Debug("checked for already run. Need to run.")
+
+	tx, err := s.db.BeginTx(context.Background(), nil)
+	if err != nil {
+		s.logger.Error("error starting transaction in migrateTeamLessBoards", mlog.Err(err))
+		return err
+	}
+
+	s.logger.Debug("transaction started")
+
+	boards, err := s.getDMBoards(tx)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "migrateTeamLessBoards"))
+		}
+		return err
+	}
+
+	s.logger.Debug("DM boards retrieved")
+
+	s.logger.Info(fmt.Sprintf("Migrating %d teamless boards to a team", len(boards)))
+
+	// cache for best suitable team for a DM. Since a DM can
+	// contain multiple boards, caching this avoids
+	// duplicate queries for the same DM.
+	channelToTeamCache := map[string]string{}
+
+	for i := range boards {
+		// check the cache first
+		teamID, ok := channelToTeamCache[boards[i].ChannelID]
+
+		// query DB if entry not found in cache
+		if !ok {
+			teamID, err = s.getBestTeamForBoard(tx, boards[i])
+			if err != nil {
+				// don't let one board's error spoil
+				// the mood for others
+				continue
+			}
+
+			s.logger.Debug("fetched best team for board " + boards[i].ID)
+		}
+
+		channelToTeamCache[boards[i].ChannelID] = teamID
+		boards[i].TeamID = teamID
+
+		query := s.getQueryBuilder(tx).
+			Update(s.tablePrefix+"boards").
+			Set("team_id", teamID).
+			Where(sq.Eq{"id": boards[i].ID})
+
+		s.logger.Debug("PPP")
+
+		if _, err := query.Exec(); err != nil {
+			s.logger.Error("failed to set team id for board", mlog.String("board_id", boards[i].ID), mlog.String("team_id", teamID), mlog.Err(err))
+			return err
+		}
+	}
+
+	if err := s.setSystemSetting(tx, teamLessBoardsMigrationKey, strconv.FormatBool(true)); err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "migrateTeamLessBoards"))
+		}
+		return fmt.Errorf("cannot mark migration as completed: %w", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		s.logger.Error("failed to commit migrateTeamLessBoards transaction", mlog.Err(err))
+		return err
+	}
+
+	return nil
+}
+
+func (s *SQLStore) getDMBoards(tx sq.BaseRunner) ([]*model.Board, error) {
+	conditions := sq.And{
+		sq.Eq{"team_id": ""},
+		sq.Or{
+			sq.Eq{"type": "D"},
+			sq.Eq{"type": "G"},
+		},
+	}
+
+	return s.getBoardsByCondition(tx, conditions)
+}
+
+func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (string, error) {
+	s.logger.Error("getBestTeamForBoard called for " + board.ID)
+	userTeams, err := s.getBoardUserTeams(tx, board)
+	s.logger.Error("getBoardUserTeams returned")
+	if err != nil {
+		return "", err
+	}
+
+	teams := [][]interface{}{}
+	for _, userTeam := range userTeams {
+		userTeamInterfaces := make([]interface{}, len(userTeam))
+		for i := range userTeam {
+			userTeamInterfaces[i] = userTeam[i]
+		}
+		teams = append(teams, userTeamInterfaces)
+	}
+
+	s.logger.Debug(fmt.Sprintf("%v", teams))
+
+	commonTeams := utils.Intersection(teams...)
+	s.logger.Error(fmt.Sprintf("commonTeams: %v", commonTeams))
+	var teamID string
+	if len(commonTeams) > 0 {
+		teamID = commonTeams[0].(string)
+	} else {
+		// no common teams found. Let's try finding the best suitable team
+		s.logger.Debug("no common teams found. Let's try finding the best suitable team")
+		if board.Type == "D" {
+			// get DM's creator and pick one of their team
+			channel, appErr := (*s.pluginAPI).GetChannel(board.ChannelID)
+			if appErr != nil {
+				s.logger.Error("failed to fetch DM channel for board", mlog.String("board_id", board.ID), mlog.String("channel_id", board.ChannelID), mlog.Err(appErr))
+				return "", appErr
+			}
+
+			s.logger.Error("AAA")
+
+			if _, ok := userTeams[channel.CreatorId]; !ok {
+				err := errors.New(fmt.Sprintf("channel creator not found in user teams. board_id: %s, channel_id: %s, creator_id: %s", board.ID, board.ChannelID, channel.CreatorId))
+				s.logger.Error(err.Error())
+				return "", err
+			}
+
+			s.logger.Error("BBB")
+			teamID = userTeams[channel.CreatorId][0]
+		} else if board.Type == "G" {
+			s.logger.Error("CCC")
+			// pick the team that has the most users as members
+			teamFrequency := map[string]int{}
+			highestFrequencyTeam := ""
+			highestFrequencyTeamFrequency := -1
+
+			for _, teams := range userTeams {
+				for _, teamID := range teams {
+					teamFrequency[teamID] = teamFrequency[teamID] + 1
+
+					if teamFrequency[teamID] > highestFrequencyTeamFrequency {
+						highestFrequencyTeamFrequency = teamFrequency[teamID]
+						highestFrequencyTeam = teamID
+					}
+				}
+			}
+
+			s.logger.Error("DDD")
+
+			teamID = highestFrequencyTeam
+		}
+	}
+
+	s.logger.Error("EEE")
+	return teamID, nil
+}
+
+func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[string][]string, error) {
+	query := s.getQueryBuilder(tx).
+		Select("teammembers.userid", "teammembers.teamid").
+		From("channelmembers").
+		Join("teammembers ON channelmembers.userid = teammembers.userid").
+		Where(sq.Eq{"channelid": board.ChannelID})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("failed to fetch user teams for board", mlog.String("boardID", board.ID), mlog.String("channelID", board.ChannelID), mlog.Err(err))
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	userTeams := map[string][]string{}
+
+	for rows.Next() {
+		var userID, teamID string
+		err := rows.Scan(&userID, &teamID)
+		if err != nil {
+			s.logger.Error("getBoardUserTeams failed to scan SQL query result", mlog.String("boardID", board.ID), mlog.String("channelID", board.ChannelID), mlog.Err(err))
+			return nil, err
+		}
+
+		if _, ok := userTeams[userID]; ok {
+			userTeams[userID] = append(userTeams[userID], teamID)
+		} else {
+			userTeams[userID] = []string{teamID}
+		}
+	}
+
+	return userTeams, nil
 }
 
 func ensureMigrationsAppliedUpToVersion(engine *morph.Morph, driver drivers.Driver, version int) error {
