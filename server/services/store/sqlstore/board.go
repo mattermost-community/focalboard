@@ -395,7 +395,7 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 	} else {
 		query = query.Suffix(
 			`ON CONFLICT (board_id, user_id)
-             DO UPDATE SET scheme_admin = EXCLUDED.scheme_admin, scheme_editor = EXCLUDED.scheme_editor, 
+             DO UPDATE SET scheme_admin = EXCLUDED.scheme_admin, scheme_editor = EXCLUDED.scheme_editor,
 			   scheme_commenter = EXCLUDED.scheme_commenter, scheme_viewer = EXCLUDED.scheme_viewer`,
 		)
 	}
@@ -525,6 +525,39 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 		return nil, err
 	}
 	defer s.CloseRows(rows)
+
+	return s.boardsFromRows(rows)
+}
+
+func (s *SQLStore) getBoardHistory(db sq.BaseRunner, rootID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error) {
+	var order string
+	if opts.Descending {
+		order = " DESC "
+	}
+
+	query := s.getQueryBuilder(db).
+		Select(boardFields("")...).
+		From(s.tablePrefix + "boards_history").
+		Where(sq.Eq{"id": rootID}).
+		OrderBy("insert_at, update_at" + order)
+
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
+	}
+
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getBoardHistory ERROR`, mlog.Err(err))
+		return nil, err
+	}
 
 	return s.boardsFromRows(rows)
 }

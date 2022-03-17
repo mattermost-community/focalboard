@@ -32,7 +32,8 @@ type Store interface {
 	// @withTransaction
 	PatchBlock(blockID string, blockPatch *model.BlockPatch, userID string) error
 	GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
-	GetBlockHistoryDescendants(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
+	GetBlockHistoryDescendants(rootID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
+	GetBoardHistory(boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error)
 	GetBoardAndCardByID(blockID string) (board *model.Board, card *model.Block, err error)
 	GetBoardAndCard(block *model.Block) (board *model.Board, card *model.Block, err error)
 	// @withTransaction

@@ -269,8 +269,8 @@ func (s *SQLStore) GetBlockHistory(blockID string, opts model.QueryBlockHistoryO
 
 }
 
-func (s *SQLStore) GetBlockHistoryDescendants(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
-	return s.getBlockHistoryDescendants(s.db, blockID, opts)
+func (s *SQLStore) GetBlockHistoryDescendants(rootID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	return s.getBlockHistoryDescendants(s.db, rootID, opts)
 
 }
 
@@ -311,6 +311,11 @@ func (s *SQLStore) GetBoardAndCard(block *model.Block) (*model.Board, *model.Blo
 
 func (s *SQLStore) GetBoardAndCardByID(blockID string) (*model.Board, *model.Block, error) {
 	return s.getBoardAndCardByID(s.db, blockID)
+
+}
+
+func (s *SQLStore) GetBoardHistory(boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error) {
+	return s.getBoardHistory(s.db, boardID, opts)
 
 }
 
