@@ -29,7 +29,7 @@ const NewCardButtonTemplateItem = (props: Props) => {
     const intl = useIntl()
     const displayName = cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})
     const isDefaultTemplate = currentView.fields.defaultTemplateId === cardTemplate.id
-    const boardId = useAppSelector(getCurrentBoardId) || ''
+    const boardId = useAppSelector(getCurrentBoardId)
 
     return (
         <Menu.Text

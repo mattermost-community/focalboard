@@ -34,7 +34,7 @@ type Props = {
 
 const BoardTemplateSelector = (props: Props) => {
     const globalTemplates = useAppSelector<Board[]>(getGlobalTemplates) || []
-    const currentBoardId = useAppSelector<string|undefined>(getCurrentBoardId) || null
+    const currentBoardId = useAppSelector<string>(getCurrentBoardId) || null
     const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const {title, description, onClose} = props
     const dispatch = useAppDispatch()

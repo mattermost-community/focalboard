@@ -23,7 +23,7 @@ type Props = {
 
 const EmptyCardButton = (props: Props) => {
     const currentView = useAppSelector(getCurrentView)
-    const boardId = useAppSelector(getCurrentBoardId) || ''
+    const boardId = useAppSelector(getCurrentBoardId)
     const intl = useIntl()
 
     return (

@@ -95,7 +95,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
 
     // members of the current board
     const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
-    const boardId = useAppSelector(getCurrentBoardId) || ''
+    const boardId = useAppSelector(getCurrentBoardId)
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const me = useAppSelector<IUser|null>(getMe)
 
