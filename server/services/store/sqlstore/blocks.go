@@ -369,6 +369,8 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 		return err
 	}
 
+	fmt.Printf("insertBlock history OK: %s\n", block.BoardID)
+
 	return nil
 }
 
@@ -634,7 +636,7 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.
 	return s.blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, rootID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
 	var order string
 	if opts.Descending {
 		order = " DESC "
@@ -643,7 +645,7 @@ func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, rootID string, o
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks_history").
-		Where(sq.Eq{"root_id": rootID}).
+		Where(sq.Eq{"board_id": boardID}).
 		OrderBy("insertAt, update_at" + order)
 
 	if opts.BeforeUpdateAt != 0 {

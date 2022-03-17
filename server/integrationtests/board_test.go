@@ -1,7 +1,9 @@
 package integrationtests
 
 import (
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/model"
@@ -486,13 +488,14 @@ func TestGetBoardMetadata(t *testing.T) {
 
 		teamID := testTeamID
 		sharingToken := utils.NewID(utils.IDTypeToken)
+		userID := th.GetUser1().ID
 
 		board := &model.Board{
 			Title:  "public board where user1 is admin",
 			Type:   model.BoardTypeOpen,
 			TeamID: teamID,
 		}
-		rBoard, err := th.Server.App().CreateBoard(board, th.GetUser1().ID, true)
+		rBoard, err := th.Server.App().CreateBoard(board, userID, true)
 		require.NoError(t, err)
 
 		sharing := &model.Sharing{
@@ -519,6 +522,37 @@ func TestGetBoardMetadata(t *testing.T) {
 		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, sharingToken)
 		th.CheckOK(resp)
 		require.NotNil(t, boardMetadata)
+
+		require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
+		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
+		require.Equal(t, rBoard.UpdateAt, boardMetadata.DescendantLastUpdateAt)
+		require.Equal(t, rBoard.ModifiedBy, boardMetadata.LastModifiedBy)
+
+		time.Sleep(100 * time.Millisecond)
+
+		// Insert cards
+		card1 := model.Block{
+			ID:      "card1",
+			BoardID: board.ID,
+			Title:   "Card1",
+		}
+		require.NoError(t, th.Server.App().InsertBlock(card1, th.GetUser2().ID))
+		rCard1, err := th.Server.App().GetBlockByID(card1.ID)
+
+		// Check updated metadata
+		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, sharingToken)
+		th.CheckOK(resp)
+		require.NotNil(t, boardMetadata)
+
+		fmt.Printf("rBoard.CreateAt: %d\n", rBoard.CreateAt)
+		fmt.Printf("rCard1.UpdateAt: %d\n", rCard1.UpdateAt)
+		fmt.Printf("boardMetadata.DescendantFirstUpdateAt: %d\n", boardMetadata.DescendantFirstUpdateAt)
+		fmt.Printf("boardMetadata.DescendantLastUpdateAt: %d\n", boardMetadata.DescendantLastUpdateAt)
+
+		require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
+		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
+		require.Equal(t, rCard1.UpdateAt, boardMetadata.DescendantLastUpdateAt)
+		require.Equal(t, rCard1.ModifiedBy, boardMetadata.LastModifiedBy)
 	})
 }
 
