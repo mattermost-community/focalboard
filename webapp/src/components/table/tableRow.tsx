@@ -76,7 +76,6 @@ const TableRow = (props: Props) => {
     }, [card.title, title, onSaveWithEnter, board.id, card.id])
 
     const onTitleChange = useCallback((newTitle: string) => {
-        console.log("CHANGED (old/new)", title, newTitle)
         setTitle(newTitle)
     }, [title, setTitle])
 
@@ -123,10 +122,7 @@ const TableRow = (props: Props) => {
                         placeholderText='Untitled'
                         onChange={onTitleChange}
                         onSave={onSave}
-                        onCancel={() => {
-                            console.log("CANCELING")
-                            setTitle(card.title || '')
-                        }}
+                        onCancel={() => setTitle(card.title || '')}
                         readonly={props.readonly}
                         spellCheck={true}
                     />

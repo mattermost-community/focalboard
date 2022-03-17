@@ -4,9 +4,7 @@
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import configureStore from 'redux-mock-store'
-import {act} from 'react-dom/test-utils'
 
 import '@testing-library/jest-dom'
 import {wrapDNDIntl} from '../../testUtils'
