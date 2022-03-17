@@ -484,8 +484,6 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 		return nil
 	}
 
-	s.logger.Debug("checked for already run. Need to run.")
-
 	tx, err := s.db.BeginTx(context.Background(), nil)
 	if err != nil {
 		s.logger.Error("error starting transaction in migrateTeamLessBoards", mlog.Err(err))
@@ -527,6 +525,7 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 		query := s.getQueryBuilder(tx).
 			Update(s.tablePrefix+"boards").
 			Set("team_id", teamID).
+			Set("typo", model.BoardTypeOpen).
 			Where(sq.Eq{"id": boards[i].ID})
 
 		if _, err := query.Exec(); err != nil {
