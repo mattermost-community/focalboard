@@ -7,7 +7,7 @@ import {FormattedMessage} from 'react-intl'
 import {getCurrentTeam} from '../store/teams'
 import {getCurrentBoard, isLoadingBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
-import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
+import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentViewId, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 import {getClientConfig, setClientConfig} from '../store/clientConfig'
@@ -118,7 +118,7 @@ function CenterContent(props: Props) {
 const Workspace = (props: Props) => {
     const board = useAppSelector(getCurrentBoard)
 
-    const view = useAppSelector(getCurrentView)
+    const viewId = useAppSelector(getCurrentViewId)
     const [boardTemplateSelectorOpen, setBoardTemplateSelectorOpen] = useState(false)
 
     const closeBoardTemplateSelector = useCallback(() => {
@@ -129,7 +129,7 @@ const Workspace = (props: Props) => {
     }, [])
     useEffect(() => {
         setBoardTemplateSelectorOpen(false)
-    }, [board, view])
+    }, [board, viewId])
 
     return (
         <div className='Workspace'>

@@ -11,7 +11,7 @@ import AddIcon from '../../widgets/icons/add'
 import Button from '../../widgets/buttons/button'
 import octoClient from '../../octoClient'
 import mutator from '../../mutator'
-import {getTemplates, getCurrentBoard} from '../../store/boards'
+import {getTemplates, getCurrentBoardId} from '../../store/boards'
 import {getCurrentTeam, Team} from '../../store/teams'
 import {fetchGlobalTemplates, getGlobalTemplates} from '../../store/globalTemplates'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
@@ -34,7 +34,7 @@ type Props = {
 
 const BoardTemplateSelector = (props: Props) => {
     const globalTemplates = useAppSelector<Board[]>(getGlobalTemplates) || []
-    const currentBoard = useAppSelector<Board>(getCurrentBoard) || null
+    const currentBoardId = useAppSelector<string|undefined>(getCurrentBoardId) || null
     const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const {title, description, onClose} = props
     const dispatch = useAppDispatch()
@@ -96,7 +96,7 @@ const BoardTemplateSelector = (props: Props) => {
     }
 
     const handleUseTemplate = async () => {
-        await mutator.addBoardFromTemplate(currentTeam?.id || '0', intl, showBoard, () => showBoard(currentBoard.id), activeTemplate.id, currentTeam?.id)
+        await mutator.addBoardFromTemplate(currentTeam?.id || '0', intl, showBoard, () => showBoard(currentBoardId), activeTemplate.id, currentTeam?.id)
         if (activeTemplate.title === OnboardingBoardTitle) {
             resetTour()
         }
@@ -158,7 +158,7 @@ const BoardTemplateSelector = (props: Props) => {
                     ))}
                     <div
                         className='new-template'
-                        onClick={() => mutator.addEmptyBoardTemplate(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoard.id))}
+                        onClick={() => mutator.addEmptyBoardTemplate(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))}
                     >
                         <span className='template-icon'><AddIcon/></span>
                         <span className='template-name'>
@@ -187,7 +187,7 @@ const BoardTemplateSelector = (props: Props) => {
                             filled={false}
                             emphasis={'secondary'}
                             size={'medium'}
-                            onClick={() => mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoard.id))}
+                            onClick={() => mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))}
                         >
                             <FormattedMessage
                                 id='BoardTemplateSelector.create-empty-board'

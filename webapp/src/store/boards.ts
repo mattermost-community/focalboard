@@ -208,6 +208,8 @@ export function getBoard(boardId: string): (state: RootState) => Board|null {
 
 export const isLoadingBoard = (state: RootState): boolean => state.boards.loadingBoard
 
+export const getCurrentBoardId = (state: RootState): string|undefined => state.boards.current
+
 export const getCurrentBoard = createSelector(
     (state) => state.boards.current,
     getBoards,
