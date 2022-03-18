@@ -17,7 +17,7 @@ import './sidebarBoardItem.scss'
 import {CategoryBlocks} from '../../store/sidebar'
 import CreateNewFolder from '../../widgets/icons/newFolder'
 import {useAppSelector} from '../../store/hooks'
-import {getCurrentBoardViews, getCurrentView} from '../../store/views'
+import {getCurrentBoardViews, getCurrentViewId} from '../../store/views'
 import Folder from '../../widgets/icons/folder'
 import Check from '../../widgets/icons/checkIcon'
 import BoardIcon from '../../widgets/icons/board'
@@ -55,7 +55,7 @@ const SidebarBoardItem = (props: Props) => {
 
     const team = useAppSelector(getCurrentTeam)
     const boardViews = useAppSelector(getCurrentBoardViews)
-    const currentView = useAppSelector(getCurrentView)
+    const currentViewId = useAppSelector(getCurrentViewId)
     const teamID = team?.id || ''
 
     const generateMoveToCategoryOptions = (blockID: string) => {
@@ -132,7 +132,7 @@ const SidebarBoardItem = (props: Props) => {
             {props.isActive && boardViews.map((view: BoardView) => (
                 <div
                     key={view.id}
-                    className={`SidebarBoardItem sidebar-view-item ${view.id === currentView?.id ? 'active' : ''}`}
+                    className={`SidebarBoardItem sidebar-view-item ${view.id === currentViewId ? 'active' : ''}`}
                     onClick={() => props.showView(view.id, board.id)}
                 >
                     {iconForViewType(view.fields.viewType)}

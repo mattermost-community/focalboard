@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useState, useMemo} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import withScrolling, {createHorizontalStrength, createVerticalStrength} from 'react-dnd-scrolling'
@@ -57,7 +57,11 @@ const Kanban = (props: Props) => {
     const propertyValues = groupByProperty.options || []
     Utils.log(`${propertyValues.length} propertyValues`)
 
-    const visiblePropertyTemplates = board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+    const visiblePropertyTemplates = useMemo(() => {
+        return board.cardProperties.filter(
+            (template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id),
+        )
+    }, [board.cardProperties, activeView.fields.visiblePropertyIds])
     const isManualSort = activeView.fields.sortOptions.length === 0
     const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
 
@@ -118,7 +122,7 @@ const Kanban = (props: Props) => {
                     }
                 }
                 const newOrder = orderAfterMoveToColumn(draggedCardIds, optionId)
-                awaits.push(mutator.changeViewCardOrder(props.board.id, activeView, newOrder, description))
+                awaits.push(mutator.changeViewCardOrder(props.board.id, activeView.id, activeView.fields.cardOrder, newOrder, description))
                 await Promise.all(awaits)
             })
         } else if (dstOption) {
@@ -144,7 +148,7 @@ const Kanban = (props: Props) => {
 
             await mutator.changeViewVisibleOptionIds(props.board.id, activeView.id, activeView.fields.visibleOptionIds, visibleOptionIdsRearranged)
         }
-    }, [cards, visibleGroups, activeView, groupByProperty, props.selectedCardIds])
+    }, [cards, visibleGroups, activeView.id, activeView.fields.cardOrder, groupByProperty, props.selectedCardIds])
 
     const onDropToCard = useCallback(async (srcCard: Card, dstCard: Card) => {
         if (srcCard.id === dstCard.id) {
@@ -185,9 +189,9 @@ const Kanban = (props: Props) => {
                 }
             }
             await Promise.all(awaits)
-            await mutator.changeViewCardOrder(props.board.id, activeView, cardOrder, description)
+            await mutator.changeViewCardOrder(props.board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description)
         })
-    }, [cards, activeView, groupByProperty, props.selectedCardIds])
+    }, [cards.map((o) => o.id).join(','), activeView.id, activeView.fields.cardOrder, groupByProperty, props.selectedCardIds])
 
     const [showCalculationsMenu, setShowCalculationsMenu] = useState<Map<string, boolean>>(new Map<string, boolean>())
     const toggleOptions = (templateId: string, show: boolean) => {
@@ -275,9 +279,7 @@ const Kanban = (props: Props) => {
                                 key={card.id}
                                 readonly={props.readonly}
                                 isSelected={props.selectedCardIds.includes(card.id)}
-                                onClick={(e) => {
-                                    props.onCardClicked(e, card)
-                                }}
+                                onClick={props.onCardClicked}
                                 onDrop={onDropToCard}
                                 showCard={props.showCard}
                                 isManualSort={isManualSort}

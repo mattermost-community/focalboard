@@ -52,9 +52,11 @@ describe('components/table/Table', () => {
         },
         comments: {
             comments: {},
+            commentsByCard: {},
         },
         contents: {
             contents: {},
+            contentsByCard: {},
         },
         cards: {
             cards: {
@@ -207,9 +209,11 @@ describe('components/table/Table extended', () => {
         },
         comments: {
             comments: {},
+            commentsByCard: {},
         },
         contents: {
             contents: {},
+            contentsByCard: {},
         },
         cards: {
             cards: {},
@@ -341,10 +345,16 @@ describe('components/table/Table extended', () => {
                 comments: {
                     [card2Comment.id]: card2Comment,
                 },
+                commentsByCard: {
+                    [card2.id]: [card2Comment],
+                },
             },
             contents: {
                 contents: {
                     [card2Text.id]: card2Text,
+                },
+                contentsByCard: {
+                    [card2.id]: [card2Text],
                 },
             },
             cards: {
@@ -482,10 +492,16 @@ describe('components/table/Table extended', () => {
                 comments: {
                     [card2Comment.id]: card2Comment,
                 },
+                commentsByCard: {
+                    [card2.id]: [card2Comment],
+                },
             },
             contents: {
                 contents: {
                     [card1Text.id]: card1Text,
+                },
+                contentsByCard: {
+                    [card1.id]: [card1Text],
                 },
             },
             cards: {

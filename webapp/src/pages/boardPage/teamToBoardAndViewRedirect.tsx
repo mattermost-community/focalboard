@@ -3,14 +3,14 @@
 import {useEffect} from 'react'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
-import {getCurrentBoard} from '../../store/boards'
+import {getCurrentBoardId} from '../../store/boards'
 import {setCurrent as setCurrentView, getCurrentBoardViews} from '../../store/views'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {UserSettings} from '../../userSettings'
 import {getSidebarCategories} from '../../store/sidebar'
 
 const TeamToBoardAndViewRedirect = (): null => {
-    const board = useAppSelector(getCurrentBoard)
+    const boardId = useAppSelector(getCurrentBoardId)
     const boardViews = useAppSelector(getCurrentBoardViews)
     const dispatch = useAppDispatch()
     const history = useHistory()
@@ -51,7 +51,7 @@ const TeamToBoardAndViewRedirect = (): null => {
 
         // when a view isn't open,
         // but the data is available, try opening a view
-        if ((!viewID || viewID === '0') && board && board.id === match.params.boardId && boardViews && boardViews.length > 0) {
+        if ((!viewID || viewID === '0') && boardId && boardId === match.params.boardId && boardViews && boardViews.length > 0) {
             // most recent view gets the first preference
             viewID = UserSettings.lastViewId[boardID]
             if (viewID) {
@@ -69,7 +69,7 @@ const TeamToBoardAndViewRedirect = (): null => {
                 history.replace(newPath)
             }
         }
-    }, [teamId, match.params.boardId, match.params.viewId, categories.length, boardViews.length, board])
+    }, [teamId, match.params.boardId, match.params.viewId, categories.length, boardViews.length, boardId])
 
     return null
 }
