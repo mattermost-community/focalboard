@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useMemo} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
@@ -8,7 +8,6 @@ import {Card} from '../../blocks/card'
 import {ContentBlock} from '../../blocks/contentBlock'
 import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
-import {getCardComments} from '../../store/comments'
 import {getCardContents} from '../../store/contents'
 import {useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -50,22 +49,19 @@ const GalleryCard = (props: Props) => {
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
     const contents = useAppSelector(getCardContents(card.id))
-    const comments = useAppSelector(getCardComments(card.id))
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
-    let image: ContentBlock | undefined
-    for (let i = 0; i < contents.length; ++i) {
-        if (Array.isArray(contents[i])) {
-            image = (contents[i] as ContentBlock[]).find((c) => c.type === 'image')
-        } else if ((contents[i] as ContentBlock).type === 'image') {
-            image = contents[i] as ContentBlock
+    const image: ContentBlock|undefined = useMemo(() => {
+        for (let i = 0; i < contents.length; ++i) {
+            if (Array.isArray(contents[i])) {
+                return (contents[i] as ContentBlock[]).find((c) => c.type === 'image')
+            } else if ((contents[i] as ContentBlock).type === 'image') {
+                return contents[i] as ContentBlock
+            }
         }
-
-        if (image) {
-            break
-        }
-    }
+        return undefined
+    }, [contents])
 
     let className = props.isSelected ? 'GalleryCard selected' : 'GalleryCard'
     if (isOver) {
@@ -172,8 +168,6 @@ const GalleryCard = (props: Props) => {
                             placement='top'
                         >
                             <PropertyValueElement
-                                contents={contents}
-                                comments={comments}
                                 board={board}
                                 readOnly={true}
                                 card={card}

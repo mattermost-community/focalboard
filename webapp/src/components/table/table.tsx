@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback} from 'react'
+import React, {useCallback, useRef} from 'react'
 
 import {FormattedMessage} from 'react-intl'
 import {useDragLayer, useDrop} from 'react-dnd'
@@ -59,7 +59,7 @@ const Table = (props: Props): JSX.Element => {
         }
     })
 
-    const columnRefs: Map<string, React.RefObject<HTMLDivElement>> = new Map()
+    const columnRefs = useRef<Map<string, React.RefObject<HTMLDivElement>>>(new Map())
 
     const [, drop] = useDrop(() => ({
         accept: 'horizontalGrip',
@@ -117,7 +117,7 @@ const Table = (props: Props): JSX.Element => {
     const onDropToCard = useCallback((srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
         onDropToGroup(srcCard, dstCard.fields.properties[activeView.fields.groupById!] as string, dstCard.id)
-    }, [activeView])
+    }, [activeView.fields.groupById])
 
     const onDropToGroup = useCallback((srcCard: Card, groupID: string, dstCardID: string) => {
         Utils.log(`onDropToGroup: ${srcCard.title}`)
@@ -174,7 +174,7 @@ const Table = (props: Props): JSX.Element => {
             }
 
             mutator.performAsUndoGroup(async () => {
-                await mutator.changeViewCardOrder(board.id, activeView, cardOrder, description)
+                await mutator.changeViewCardOrder(board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description)
             })
         }
     }, [activeView, cards, props.selectedCardIds, groupByProperty])
@@ -196,7 +196,7 @@ const Table = (props: Props): JSX.Element => {
                     views={views}
                     offset={offset}
                     resizingColumn={resizingColumn}
-                    columnRefs={columnRefs}
+                    columnRefs={columnRefs.current}
                     readonly={props.readonly || !canEditBoardProperties}
                 />
 
@@ -212,7 +212,7 @@ const Table = (props: Props): JSX.Element => {
                                 groupByProperty={groupByProperty}
                                 group={group}
                                 readonly={props.readonly || !canEditCards}
-                                columnRefs={columnRefs}
+                                columnRefs={columnRefs.current}
                                 selectedCardIds={props.selectedCardIds}
                                 cardIdToFocusOnRender={props.cardIdToFocusOnRender}
                                 hideGroup={hideGroup}
@@ -232,7 +232,7 @@ const Table = (props: Props): JSX.Element => {
                     <TableRows
                         board={board}
                         activeView={activeView}
-                        columnRefs={columnRefs}
+                        columnRefs={columnRefs.current}
                         cards={cards}
                         selectedCardIds={props.selectedCardIds}
                         readonly={props.readonly || !canEditCards}

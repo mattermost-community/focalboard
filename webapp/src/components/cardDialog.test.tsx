@@ -49,8 +49,12 @@ describe('components/cardDialog', () => {
         },
         comments: {
             comments: {},
+            commentsByCard: {},
         },
-        contents: {},
+        contents: {
+            contents: {},
+            contentsByCard: {},
+        },
         cards: {
             cards: {
                 [card.id]: card,

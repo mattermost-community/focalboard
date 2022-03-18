@@ -190,12 +190,12 @@ function isPropertyEqual(propA: IPropertyTemplate, propB: IPropertyTemplate): bo
 // contains the delta to update the board and another one for the undo
 // action, in case it happens
 function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[] {
-    const newDeletedProperties = difference(Object.keys(newBoard.properties), Object.keys(oldBoard.properties))
+    const newDeletedProperties = difference(Object.keys(newBoard.properties || {}), Object.keys(oldBoard.properties || {}))
     const newDeletedCardProperties = getPropertiesDifference(newBoard.cardProperties, oldBoard.cardProperties)
     const newDeletedColumnCalculations = difference(Object.keys(newBoard.columnCalculations), Object.keys(oldBoard.columnCalculations))
 
     const newUpdatedProperties: Record<string, any> = {}
-    Object.keys(newBoard.properties).forEach((val) => {
+    Object.keys(newBoard.properties || {}).forEach((val) => {
         if (oldBoard.properties[val] !== newBoard.properties[val]) {
             newUpdatedProperties[val] = newBoard.properties[val]
         }
@@ -224,12 +224,12 @@ function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[]
         }
     })
 
-    const oldDeletedProperties = difference(Object.keys(oldBoard.properties), Object.keys(newBoard.properties))
+    const oldDeletedProperties = difference(Object.keys(oldBoard.properties || {}), Object.keys(newBoard.properties || {}))
     const oldDeletedCardProperties = getPropertiesDifference(oldBoard.cardProperties, newBoard.cardProperties)
     const oldDeletedColumnCalculations = difference(Object.keys(oldBoard.columnCalculations), Object.keys(newBoard.columnCalculations))
 
     const oldUpdatedProperties: Record<string, any> = {}
-    Object.keys(oldBoard.properties).forEach((val) => {
+    Object.keys(oldBoard.properties || {}).forEach((val) => {
         if (newBoard.properties[val] !== oldBoard.properties[val]) {
             oldUpdatedProperties[val] = oldBoard.properties[val]
         }

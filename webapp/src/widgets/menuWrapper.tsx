@@ -24,9 +24,11 @@ const MenuWrapper = (props: Props) => {
     }
 
     const close = useCallback((): void => {
-        setOpen(false)
-        props.onToggle && props.onToggle(false)
-    }, [props.onToggle])
+        if (open) {
+            setOpen(false)
+            props.onToggle && props.onToggle(false)
+        }
+    }, [props.onToggle, open])
 
     const closeOnBlur = useCallback((e: Event) => {
         if (e.target && node.current?.contains(e.target as Node)) {
