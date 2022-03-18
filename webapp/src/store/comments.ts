@@ -22,16 +22,29 @@ const commentsSlice = createSlice({
             for (const comment of action.payload) {
                 if (comment.deleteAt === 0) {
                     state.comments[comment.id] = comment
+                    if (!state.commentsByCard[comment.parentId]) {
+                        state.commentsByCard[comment.parentId] = [comment]
+                        return
+                    }
                     for (let i = 0; i < state.commentsByCard[comment.parentId].length; i++) {
                         if (state.commentsByCard[comment.parentId][i].id === comment.id) {
                             state.commentsByCard[comment.parentId][i] = comment
+                            return
                         }
                     }
+                    state.commentsByCard[comment.parentId].push(comment)
                 } else {
-                    delete state.comments[comment.id]
-                    for (let i = 0; i < state.commentsByCard[comment.parentId].length; i++) {
-                        state.commentsByCard[comment.parentId].splice(i, 1)
+                    const parentId = state.comments[comment.id]?.parentId
+                    if (!state.commentsByCard[parentId]) {
+                        delete state.comments[comment.id]
+                        return
                     }
+                    for (let i = 0; i < state.commentsByCard[parentId].length; i++) {
+                        if (state.commentsByCard[parentId][i].id === comment.id) {
+                            state.commentsByCard[parentId].splice(i, 1)
+                        }
+                    }
+                    delete state.comments[comment.id]
                 }
             }
         },
@@ -39,10 +52,11 @@ const commentsSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
             state.comments = {}
+            state.commentsByCard = {}
             for (const block of action.payload) {
                 if (block.type === 'comment') {
                     state.comments[block.id] = block as CommentBlock
-                    state.commentsByCard[block.parentId] = state.commentsByCard[block.id] || []
+                    state.commentsByCard[block.parentId] = state.commentsByCard[block.parentId] || []
                     state.commentsByCard[block.parentId].push(block as CommentBlock)
                     state.commentsByCard[block.parentId].sort((a, b) => a.createAt - b.createAt)
                 }
@@ -50,10 +64,11 @@ const commentsSlice = createSlice({
         })
         builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.comments = {}
+            state.commentsByCard = {}
             for (const block of action.payload.blocks) {
                 if (block.type === 'comment') {
                     state.comments[block.id] = block as CommentBlock
-                    state.commentsByCard[block.parentId] = state.commentsByCard[block.id] || []
+                    state.commentsByCard[block.parentId] = state.commentsByCard[block.parentId] || []
                     state.commentsByCard[block.parentId].push(block as CommentBlock)
                     state.commentsByCard[block.parentId].sort((a, b) => a.createAt - b.createAt)
                 }
