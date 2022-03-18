@@ -22,9 +22,33 @@ type Props = {
 
 const selectStyles = {
     ...getSelectBaseStyle(),
-    placeholder: (provided: CSSObject): CSSObject => ({
+    option: (provided: CSSObject, state: {isFocused: boolean}): CSSObject => ({
         ...provided,
-        color: 'rgba(var(--center-channel-color-rgb), 0.4)',
+        background: state.isFocused ? 'rgba(var(--center-channel-color-rgb), 0.1)' : 'rgb(var(--center-channel-bg-rgb))',
+        color: state.isFocused ? 'rgb(var(--center-channel-color-rgb))' : 'rgb(var(--center-channel-color-rgb))',
+        padding: '8px',
+    }),
+    control: (): CSSObject => ({
+        border: 0,
+        width: '100%',
+        margin: '0',
+    }),
+    valueContainer: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        padding: 'unset',
+        overflow: 'unset',
+    }),
+    singleValue: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        position: 'static',
+        top: 'unset',
+        transform: 'unset',
+    }),
+    menu: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        width: 'unset',
+        background: 'rgb(var(--center-channel-bg-rgb))',
+        minWidth: '260px',
     }),
 }
 
@@ -50,8 +74,10 @@ const formatOptionLabel = (user: any) => {
 const UserProperty = (props: Props): JSX.Element => {
     const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
 
+    const user = boardUsersById[props.value]
+
     if (props.readonly) {
-        return (<div className='UserProperty octo-propertyvalue readonly'>{boardUsersById[props.value]?.username || props.value}</div>)
+        return (<div className='UserProperty octo-propertyvalue readonly'>{user ? formatOptionLabel(user) : props.value}</div>)
     }
 
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
@@ -62,7 +88,7 @@ const UserProperty = (props: Props): JSX.Element => {
             isSearchable={true}
             isClearable={true}
             backspaceRemovesValue={true}
-            className={'UserProperty octo-propertyvalue'}
+            className={'UserProperty'}
             classNamePrefix={'react-select'}
             formatOptionLabel={formatOptionLabel}
             styles={selectStyles}
