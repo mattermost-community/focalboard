@@ -495,7 +495,7 @@ func TestGetBoardMetadata(t *testing.T) {
 		rBoard, err := th.Server.App().CreateBoard(board, th.GetUser1().ID, true)
 		require.NoError(t, err)
 
-		// it should be able to retrieve it with the read token
+		// Check metadata
 		boardMetadata, resp := th.Client.GetBoardMetadata(rBoard.ID, "")
 		th.CheckOK(resp)
 		require.NotNil(t, boardMetadata)
@@ -505,14 +505,13 @@ func TestGetBoardMetadata(t *testing.T) {
 		require.Equal(t, rBoard.UpdateAt, boardMetadata.DescendantLastUpdateAt)
 		require.Equal(t, rBoard.ModifiedBy, boardMetadata.LastModifiedBy)
 
-		time.Sleep(50 * time.Millisecond)
-
 		// Insert card1
 		card1 := model.Block{
 			ID:      "card1",
-			BoardID: board.ID,
+			BoardID: rBoard.ID,
 			Title:   "Card 1",
 		}
+		time.Sleep(20 * time.Millisecond)
 		require.NoError(t, th.Server.App().InsertBlock(card1, th.GetUser2().ID))
 		rCard1, err := th.Server.App().GetBlockByID(card1.ID)
 		require.NoError(t, err)
@@ -527,14 +526,13 @@ func TestGetBoardMetadata(t *testing.T) {
 		require.Equal(t, rCard1.UpdateAt, boardMetadata.DescendantLastUpdateAt)
 		require.Equal(t, rCard1.ModifiedBy, boardMetadata.LastModifiedBy)
 
-		time.Sleep(50 * time.Millisecond)
-
 		// Insert card2
 		card2 := model.Block{
 			ID:      "card2",
-			BoardID: board.ID,
+			BoardID: rBoard.ID,
 			Title:   "Card 2",
 		}
+		time.Sleep(20 * time.Millisecond)
 		require.NoError(t, th.Server.App().InsertBlock(card2, th.GetUser1().ID))
 		rCard2, err := th.Server.App().GetBlockByID(card2.ID)
 		require.NoError(t, err)
@@ -548,6 +546,14 @@ func TestGetBoardMetadata(t *testing.T) {
 		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
 		require.Equal(t, rCard2.UpdateAt, boardMetadata.DescendantLastUpdateAt)
 		require.Equal(t, rCard2.ModifiedBy, boardMetadata.LastModifiedBy)
+
+		// Delete board
+		time.Sleep(20 * time.Millisecond)
+		require.NoError(t, th.Server.App().DeleteBoard(rBoard.ID, th.GetUser1().ID))
+
+		// Check updated metadata
+		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckNotFound(resp)
 	})
 
 	t.Run("valid read token should be enough to get the board metadata", func(t *testing.T) {

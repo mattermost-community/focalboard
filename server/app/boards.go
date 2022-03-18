@@ -30,6 +30,10 @@ func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetada
 	if err != nil {
 		return nil, nil, err
 	}
+	if board == nil {
+		// Not found
+		return nil, nil, nil
+	}
 
 	earliestTime, _, err := a.getBoardDescendantModifiedInfo(boardID, false)
 	if err != nil {
