@@ -834,7 +834,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 
 		newTitle2 := "Board: A new title 2"
 		patch2 := &model.BoardPatch{Title: &newTitle2}
-		_, err = store.PatchBoard(boardID, patch2, userID2)
+		patchBoard2, err := store.PatchBoard(boardID, patch2, userID2)
 		require.NoError(t, err)
 
 		// Updated history
@@ -846,6 +846,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 		require.Len(t, boards, 1)
 		require.Equal(t, boards[0].Title, newTitle2)
+		require.Equal(t, boards[0], patchBoard2)
 	})
 
 	t.Run("testGetBoardHistory: nonexisting board", func(t *testing.T) {
