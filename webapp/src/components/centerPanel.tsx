@@ -359,7 +359,7 @@ class CenterPanel extends React.Component<Props, State> {
                         this.showCard(block.id)
                     } else {
                         // Focus on this card's title inline on next render
-                        this.setState({cardIdToFocusOnRender: card.id})
+                        this.setState({cardIdToFocusOnRender: block.id})
                         setTimeout(() => this.setState({cardIdToFocusOnRender: ''}), 100)
                     }
                 },
