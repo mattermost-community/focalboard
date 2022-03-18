@@ -369,8 +369,6 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 		return err
 	}
 
-	fmt.Printf("insertBlock history OK: %s\n", block.BoardID)
-
 	return nil
 }
 

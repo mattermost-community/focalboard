@@ -134,7 +134,6 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			s.logger.Error("board properties unmarshal error", mlog.Err(err))
 			return nil, err
 		}
-
 		err = json.Unmarshal(cardPropertiesBytes, &board.CardProperties)
 		if err != nil {
 			s.logger.Error("board card properties unmarshal error", mlog.Err(err))
