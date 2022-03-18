@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strings"
 
@@ -11,10 +12,6 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-)
-
-const (
-	testDBFilename = "fb_test.db"
 )
 
 func (s *SQLStore) CloseRows(rows *sql.Rows) {
@@ -37,8 +34,12 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 	var rootUser string
 
 	if dbType == model.SqliteDBType {
-		_ = os.Remove(testDBFilename)
-		connectionString = fmt.Sprintf("file:%s", testDBFilename)
+		file, err := ioutil.TempFile("", "fbtest_*.db")
+		if err != nil {
+			return "", "", err
+		}
+		connectionString = file.Name()
+		_ = file.Close()
 	} else if port := strings.TrimSpace(os.Getenv("FB_STORE_TEST_DOCKER_PORT")); port != "" {
 		// docker unit tests take priority over any DSN env vars
 		var template string
