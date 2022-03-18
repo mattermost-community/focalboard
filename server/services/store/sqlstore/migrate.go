@@ -6,10 +6,12 @@ import (
 	"database/sql"
 	"embed"
 	"fmt"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-	"github.com/mattermost/morph/models"
 	"path/filepath"
 	"text/template"
+
+	"github.com/mattermost/morph/models"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/morph"
 	drivers "github.com/mattermost/morph/drivers"
