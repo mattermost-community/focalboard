@@ -23,16 +23,29 @@ const contentsSlice = createSlice({
             for (const content of action.payload) {
                 if (content.deleteAt === 0) {
                     state.contents[content.id] = content
+                    if (!state.contentsByCard[content.parentId]) {
+                        state.contentsByCard[content.parentId] = [content]
+                        return
+                    }
                     for (let i = 0; i < state.contentsByCard[content.parentId].length; i++) {
                         if (state.contentsByCard[content.parentId][i].id === content.id) {
                             state.contentsByCard[content.parentId][i] = content
+                            return
                         }
                     }
+                    state.contentsByCard[content.parentId].push(content)
                 } else {
-                    delete state.contents[content.id]
-                    for (let i = 0; i < state.contentsByCard[content.parentId].length; i++) {
-                        state.contentsByCard[content.parentId].splice(i, 1)
+                    const parentId = state.contents[content.id]?.parentId
+                    if (!state.contentsByCard[parentId]) {
+                        delete state.contents[content.id]
+                        return
                     }
+                    for (let i = 0; i < state.contentsByCard[parentId].length; i++) {
+                        if (state.contentsByCard[parentId][i].id === content.id) {
+                            state.contentsByCard[parentId].splice(i, 1)
+                        }
+                    }
+                    delete state.contents[content.id]
                 }
             }
         },
@@ -40,10 +53,11 @@ const contentsSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
             state.contents = {}
+            state.contentsByCard = {}
             for (const block of action.payload) {
                 if (block.type !== 'board' && block.type !== 'view' && block.type !== 'comment') {
                     state.contents[block.id] = block as ContentBlock
-                    state.contentsByCard[block.parentId] = state.contentsByCard[block.id] || []
+                    state.contentsByCard[block.parentId] = state.contentsByCard[block.parentId] || []
                     state.contentsByCard[block.parentId].push(block as ContentBlock)
                     state.contentsByCard[block.parentId].sort((a, b) => a.createAt - b.createAt)
                 }
@@ -51,10 +65,11 @@ const contentsSlice = createSlice({
         })
         builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.contents = {}
+            state.contentsByCard = {}
             for (const block of action.payload.blocks) {
                 if (block.type !== 'board' && block.type !== 'view' && block.type !== 'comment') {
                     state.contents[block.id] = block as ContentBlock
-                    state.contentsByCard[block.parentId] = state.contentsByCard[block.id] || []
+                    state.contentsByCard[block.parentId] = state.contentsByCard[block.parentId] || []
                     state.contentsByCard[block.parentId].push(block as ContentBlock)
                     state.contentsByCard[block.parentId].sort((a, b) => a.createAt - b.createAt)
                 }
