@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import {useAppSelector} from '../store/hooks'
-import {getMyBoardMembership, getCurrentBoard} from '../store/boards'
+import {getMyBoardMembership, getCurrentBoardId} from '../store/boards'
 import {getCurrentTeam} from '../store/teams'
 import {Utils} from '../utils'
 import {Permission} from '../constants'
@@ -46,7 +46,7 @@ export const useHasCurrentTeamPermissions = (boardId: string, permissions: Permi
 }
 
 export const useHasCurrentBoardPermissions = (permissions: Permission[]): boolean => {
-    const currentBoard = useAppSelector(getCurrentBoard)
+    const currentBoardId = useAppSelector(getCurrentBoardId)
 
-    return useHasCurrentTeamPermissions(currentBoard?.id || '', permissions)
+    return useHasCurrentTeamPermissions(currentBoardId || '', permissions)
 }

@@ -48,12 +48,13 @@ const formatOptionLabel = (user: any) => {
 }
 
 const UserProperty = (props: Props): JSX.Element => {
-    const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
 
     if (props.readonly) {
         return (<div className='UserProperty octo-propertyvalue readonly'>{boardUsersById[props.value]?.username || props.value}</div>)
     }
+
+    const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
 
     return (
         <Select
