@@ -13,6 +13,10 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+const (
+	testDBFilename = "fb_test.db"
+)
+
 func (s *SQLStore) CloseRows(rows *sql.Rows) {
 	if err := rows.Close(); err != nil {
 		s.logger.Error("error closing MattermostAuthLayer row set", mlog.Err(err))
@@ -33,7 +37,8 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 	var rootUser string
 
 	if dbType == model.SqliteDBType {
-		connectionString = "file::memory:?cache=shared"
+		_ = os.Remove(testDBFilename)
+		connectionString = fmt.Sprintf("file:%s", testDBFilename)
 	} else if port := strings.TrimSpace(os.Getenv("FB_STORE_TEST_DOCKER_PORT")); port != "" {
 		// docker unit tests take priority over any DSN env vars
 		var template string
