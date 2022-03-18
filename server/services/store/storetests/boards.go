@@ -847,6 +847,24 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		require.Len(t, boards, 1)
 		require.Equal(t, boards[0].Title, newTitle2)
 		require.Equal(t, boards[0], patchBoard2)
+
+		// Delete board
+		time.Sleep(10 * time.Millisecond)
+		err = store.DeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		// Updated history after delete
+		opts = model.QueryBlockHistoryOptions{
+			Limit:      0,
+			Descending: true,
+		}
+		boards, err = store.GetBoardHistory(board.ID, opts)
+		require.NoError(t, err)
+		require.Len(t, boards, 4)
+		require.NotZero(t, boards[0].UpdateAt)
+		require.Greater(t, boards[0].UpdateAt, patchBoard2.UpdateAt)
+		require.NotZero(t, boards[0].DeleteAt)
+		require.Greater(t, boards[0].DeleteAt, patchBoard2.UpdateAt)
 	})
 
 	t.Run("testGetBoardHistory: nonexisting board", func(t *testing.T) {

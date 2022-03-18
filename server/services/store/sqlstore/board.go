@@ -38,7 +38,7 @@ func boardFields(prefix string) []string {
 		"is_template",
 		"template_version",
 		"COALESCE(properties, '{}')",
-		"COALESCE(card_properties, '{}')",
+		"COALESCE(card_properties, '[]')",
 		"COALESCE(column_calculations, '{}')",
 		"create_at",
 		"update_at",
@@ -58,6 +58,31 @@ func boardFields(prefix string) []string {
 		}
 	}
 	return prefixedFields
+}
+
+func boardHistoryFields() []string {
+	fields := []string{
+		"id",
+		"team_id",
+		"COALESCE(channel_id, '')",
+		"COALESCE(created_by, '')",
+		"COALESCE(modified_by, '')",
+		"type",
+		"COALESCE(title, '')",
+		"COALESCE(description, '')",
+		"COALESCE(icon, '')",
+		"COALESCE(show_description, false)",
+		"COALESCE(is_template, false)",
+		"template_version",
+		"COALESCE(properties, '{}')",
+		"COALESCE(card_properties, '[]')",
+		"COALESCE(column_calculations, '{}')",
+		"COALESCE(create_at, 0)",
+		"COALESCE(update_at, 0)",
+		"COALESCE(delete_at, 0)",
+	}
+
+	return fields
 }
 
 var boardMemberFields = []string{
@@ -109,6 +134,7 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			s.logger.Error("board properties unmarshal error", mlog.Err(err))
 			return nil, err
 		}
+
 		err = json.Unmarshal(cardPropertiesBytes, &board.CardProperties)
 		if err != nil {
 			s.logger.Error("board card properties unmarshal error", mlog.Err(err))
@@ -536,7 +562,7 @@ func (s *SQLStore) getBoardHistory(db sq.BaseRunner, boardID string, opts model.
 	}
 
 	query := s.getQueryBuilder(db).
-		Select(boardFields("")...).
+		Select(boardHistoryFields()...).
 		From(s.tablePrefix + "boards_history").
 		Where(sq.Eq{"id": boardID}).
 		OrderBy("insert_at " + order + ", update_at" + order)
