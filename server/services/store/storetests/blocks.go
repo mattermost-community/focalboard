@@ -923,9 +923,9 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 	}
 
 	for _, v := range blocksToInsert {
-		time.Sleep(1 * time.Millisecond)
+		time.Sleep(20 * time.Millisecond)
 		blocks := []model.Block{v}
-		InsertBlocks(t, store, blocks, "user-id-1")
+		InsertBlocks(t, store, blocks, testUserID)
 	}
 	defer DeleteBlocks(t, store, blocksToInsert, "test")
 
@@ -1024,6 +1024,40 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 		require.Len(t, blocks, 2)
 		expectedBlock := blocksToInsert[1]
+		block := blocks[0]
+
+		require.Equal(t, expectedBlock.ID, block.ID)
+	})
+
+	t.Run("get full block history after delete", func(t *testing.T) {
+		time.Sleep(20 * time.Millisecond)
+		err = store.DeleteBlock(blocksToInsert[0].ID, testUserID)
+		require.NoError(t, err)
+
+		opts := model.QueryBlockHistoryOptions{
+			Descending: true,
+		}
+		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
+		require.NoError(t, err)
+		require.Len(t, blocks, 6)
+		expectedBlock := blocksToInsert[0]
+		block := blocks[0]
+
+		require.Equal(t, expectedBlock.ID, block.ID)
+	})
+
+	t.Run("get full block history after undelete", func(t *testing.T) {
+		time.Sleep(20 * time.Millisecond)
+		err = store.UndeleteBlock(blocksToInsert[0].ID, testUserID)
+		require.NoError(t, err)
+
+		opts := model.QueryBlockHistoryOptions{
+			Descending: true,
+		}
+		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
+		require.NoError(t, err)
+		require.Len(t, blocks, 7)
+		expectedBlock := blocksToInsert[0]
 		block := blocks[0]
 
 		require.Equal(t, expectedBlock.ID, block.ID)
