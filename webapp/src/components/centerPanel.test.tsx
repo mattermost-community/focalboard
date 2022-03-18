@@ -147,7 +147,6 @@ describe('components/centerPanel', () => {
                     activeView={activeView}
                     readonly={false}
                     showCard={jest.fn()}
-                    showShared={false}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
                 />
@@ -165,7 +164,6 @@ describe('components/centerPanel', () => {
                     activeView={activeView}
                     readonly={false}
                     showCard={jest.fn()}
-                    showShared={true}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
                 />
@@ -184,7 +182,6 @@ describe('components/centerPanel', () => {
                     activeView={activeView}
                     readonly={false}
                     showCard={jest.fn()}
-                    showShared={true}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
                 />
@@ -203,7 +200,6 @@ describe('components/centerPanel', () => {
                     activeView={activeView}
                     readonly={false}
                     showCard={jest.fn()}
-                    showShared={true}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
                 />
@@ -223,7 +219,6 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
                     />
@@ -254,7 +249,6 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={true}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
                     />
@@ -277,7 +271,6 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
                     />
@@ -304,7 +297,6 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
                     />
@@ -338,7 +330,6 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
                     />
@@ -364,7 +355,6 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
                     />
@@ -391,7 +381,6 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={mockedShowCard}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
                     />
@@ -416,7 +405,6 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
                     />
@@ -438,7 +426,6 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
                     />
