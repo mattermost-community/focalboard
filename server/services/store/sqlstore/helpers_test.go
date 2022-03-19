@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"os"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/services/store"
@@ -36,6 +37,9 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 		defer func() { _ = logger.Shutdown() }()
 		err = store.Shutdown()
 		require.Nil(t, err)
+		if err = os.Remove(connectionString); err == nil {
+			logger.Debug("Removed test database", mlog.String("file", connectionString))
+		}
 	}
 
 	return store, tearDown
