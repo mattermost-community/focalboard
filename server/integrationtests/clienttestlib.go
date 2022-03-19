@@ -192,7 +192,10 @@ func (th *TestHelper) TearDown() {
 	}
 
 	os.RemoveAll(th.Server.Config().FilesPath)
-	os.Remove(th.Server.Config().DBConfigString)
+
+	if err := os.Remove(th.Server.Config().DBConfigString); err == nil {
+		th.Server.Logger().Debug("Removed test database", mlog.String("file", th.Server.Config().DBConfigString))
+	}
 }
 
 func (th *TestHelper) RegisterAndLogin(client *client.Client, username, email, password, token string) {
