@@ -40,7 +40,7 @@ exports[`components/blockIconSelector return menu on click 1`] = `
         </span>
       </div>
       <div
-        class="Menu noselect ' bottom undefined"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"

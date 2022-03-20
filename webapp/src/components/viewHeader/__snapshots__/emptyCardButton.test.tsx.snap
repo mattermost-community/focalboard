@@ -84,7 +84,7 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
         />
       </button>
       <div
-        class="Menu noselect ' left undefined"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"

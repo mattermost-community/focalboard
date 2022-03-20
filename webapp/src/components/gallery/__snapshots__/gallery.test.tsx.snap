@@ -125,7 +125,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
           />
         </button>
         <div
-          class="Menu noselect ' left undefined"
+          class="Menu noselect left "
         >
           <div
             class="menu-contents"
