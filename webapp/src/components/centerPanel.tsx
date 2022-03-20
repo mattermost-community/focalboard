@@ -91,7 +91,7 @@ const CenterPanel = (props: Props) => {
             setSelectedCardIds([])
             e.stopPropagation()
         }
-    })
+    }, [selectedCardIds, props.readonly])
 
     useHotkeys('ctrl+d', (e: KeyboardEvent) => {
         if (e.target !== document.body || props.readonly) {
@@ -120,7 +120,7 @@ const CenterPanel = (props: Props) => {
             e.stopPropagation()
             e.preventDefault()
         }
-    })
+    }, [selectedCardIds, props.readonly, props.cards, props.board.id])
 
     useHotkeys('del,backspace', (e: KeyboardEvent) => {
         if (e.target !== document.body || props.readonly) {
@@ -147,7 +147,7 @@ const CenterPanel = (props: Props) => {
             setSelectedCardIds([])
             e.stopPropagation()
         }
-    })
+    }, [selectedCardIds, props.readonly, props.cards])
 
     const showCard = useCallback((cardId?: string) => {
         if (selectedCardIds.length > 0) {
@@ -304,7 +304,7 @@ const CenterPanel = (props: Props) => {
         const {activeView, cards} = props
 
         if (e.shiftKey) {
-            let newSelectedCardIds = selectedCardIds.slice()
+            let newSelectedCardIds = [...selectedCardIds]
             if (newSelectedCardIds.length > 0 && (e.metaKey || e.ctrlKey)) {
                 // Cmd+Shift+Click: Extend the selection
                 const orderedCardIds = cards.map((o) => o.id)
