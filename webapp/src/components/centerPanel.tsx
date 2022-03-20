@@ -189,7 +189,7 @@ const CenterPanel = (props: Props) => {
                         showCard(block.id)
                     } else {
                         // Focus on this card's title inline on next render
-                        setCardIdToFocusOnRender(card.id)
+                        setCardIdToFocusOnRender(block.id)
                         setTimeout(() => setCardIdToFocusOnRender(''), 100)
                     }
                 },
