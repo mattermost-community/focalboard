@@ -16,7 +16,6 @@ import PropertyValueElement from './propertyValueElement'
 describe('components/propertyValueElement', () => {
     const board = TestBlockFactory.createBoard()
     const card = TestBlockFactory.createCard(board)
-    const comments = TestBlockFactory.createComment(card)
 
     test('should match snapshot, select', async () => {
         const propertyTemplate = board.cardProperties.find((p) => p.id === 'property1')
