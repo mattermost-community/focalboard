@@ -25,8 +25,6 @@ describe('components/propertyValueElement', () => {
                 board={board}
                 readOnly={false}
                 card={card}
-                contents={[]}
-                comments={[comments]}
                 propertyTemplate={propertyTemplate || board.cardProperties[0]}
                 showEmptyPlaceholder={true}
             />,
@@ -43,8 +41,6 @@ describe('components/propertyValueElement', () => {
                 board={board}
                 readOnly={true}
                 card={card}
-                contents={[]}
-                comments={[comments]}
                 propertyTemplate={propertyTemplate || board.cardProperties[0]}
                 showEmptyPlaceholder={true}
             />,
@@ -77,8 +73,6 @@ describe('components/propertyValueElement', () => {
                 board={board}
                 readOnly={false}
                 card={card}
-                contents={[]}
-                comments={[comments]}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,
@@ -102,8 +96,6 @@ describe('components/propertyValueElement', () => {
                 board={board}
                 readOnly={false}
                 card={card}
-                contents={[]}
-                comments={[comments]}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,
@@ -127,8 +119,6 @@ describe('components/propertyValueElement', () => {
                 board={board}
                 readOnly={false}
                 card={card}
-                contents={[]}
-                comments={[comments]}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,
@@ -152,8 +142,6 @@ describe('components/propertyValueElement', () => {
                 board={board}
                 readOnly={false}
                 card={card}
-                contents={[]}
-                comments={[comments]}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,
@@ -177,8 +165,6 @@ describe('components/propertyValueElement', () => {
                 board={board}
                 readOnly={false}
                 card={card}
-                contents={[]}
-                comments={[comments]}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,
@@ -200,8 +186,6 @@ describe('components/propertyValueElement', () => {
                 board={board}
                 readOnly={false}
                 card={card}
-                contents={[]}
-                comments={[comments]}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,
@@ -228,8 +212,6 @@ describe('components/propertyValueElement', () => {
                 board={board}
                 readOnly={false}
                 card={card}
-                contents={[]}
-                comments={[comments]}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,

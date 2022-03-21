@@ -69,13 +69,13 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     }, [])
 
     const onDeleteValue = useCallback(() => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, ''), [card, propertyTemplate.id])
-    const onDeleteValueInMultiselect = useCallback((valueToDelete, currentValues) => {
+    const onDeleteValueInMultiselect = useCallback((valueToDelete: IPropertyOption, currentValues: IPropertyOption[]) => {
         const newValues = currentValues.
             filter((currentValue) => currentValue.id !== valueToDelete.id).
             map((currentValue) => currentValue.id)
         mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValues)
     }, [props.board.id, card, propertyTemplate.id])
-    const onCreateValueInMultiselect = useCallback((newValue, currentValues) => {
+    const onCreateValueInMultiselect = useCallback((newValue: string, currentValues: IPropertyOption[]) => {
         const option: IPropertyOption = {
             id: Utils.createGuid(IDType.BlockID),
             value: newValue,
@@ -83,7 +83,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         }
         currentValues.push(option)
         mutator.insertPropertyOption(board, propertyTemplate, option, 'add property option').then(() => {
-            mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, currentValues.map((v) => v.id))
+            mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, currentValues.map((v: IPropertyOption) => v.id))
         })
     }, [board, props.board.id, card, propertyTemplate])
     const onChangeUser = useCallback((newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue), [props.board.id, card, propertyTemplate.id])
