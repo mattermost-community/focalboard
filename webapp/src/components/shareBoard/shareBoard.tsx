@@ -9,7 +9,7 @@ import Select from 'react-select/async'
 import {CSSObject} from '@emotion/serialize'
 
 import {useAppSelector} from '../../store/hooks'
-import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
+import {getCurrentBoardId, getCurrentBoardMembers} from '../../store/boards'
 import {getMe, getBoardUsersList} from '../../store/users'
 
 import {Utils, IDType} from '../../utils'
@@ -95,7 +95,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
 
     // members of the current board
     const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
-    const board = useAppSelector(getCurrentBoard)
+    const boardId = useAppSelector(getCurrentBoardId)
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const me = useAppSelector<IUser|null>(getMe)
 
@@ -105,14 +105,14 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const match = useRouteMatch<{teamId?: string, boardId: string, viewId: string}>()
 
     const loadData = async () => {
-        const newSharing = await client.getSharing(board.id)
+        const newSharing = await client.getSharing(boardId)
         setSharing(newSharing)
         setWasCopiedPublic(false)
     }
 
     const createSharingInfo = () => {
         const newSharing: ISharing = {
-            id: board.id,
+            id: boardId,
             enabled: true,
             token: Utils.createGuid(IDType.Token),
         }
@@ -121,10 +121,10 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
 
     const onShareChanged = async (isOn: boolean) => {
         const newSharing: ISharing = sharing || createSharingInfo()
-        newSharing.id = board.id
+        newSharing.id = boardId
         newSharing.enabled = isOn
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: board.id, shareBoardEnabled: isOn})
-        await client.setSharing(board.id, newSharing)
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: boardId, shareBoardEnabled: isOn})
+        await client.setSharing(boardId, newSharing)
         await loadData()
     }
 
@@ -134,7 +134,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         if (accept) {
             const newSharing: ISharing = sharing || createSharingInfo()
             newSharing.token = Utils.createGuid(IDType.Token)
-            await client.setSharing(board.id, newSharing)
+            await client.setSharing(boardId, newSharing)
             await loadData()
 
             const description = intl.formatMessage({id: 'ShareBoard.tokenRegenrated', defaultMessage: 'Token regenerated'})
@@ -205,7 +205,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         loadData()
     }, [])
 
-    const isSharing = Boolean(sharing && sharing.id === board.id && sharing.enabled)
+    const isSharing = Boolean(sharing && sharing.id === boardId && sharing.enabled)
     const readToken = (sharing && isSharing) ? sharing.token : ''
     const shareUrl = new URL(window.location.toString())
     shareUrl.searchParams.set('r', readToken)
@@ -261,7 +261,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             isMulti={false}
                             onChange={(newValue) => {
                                 if (newValue) {
-                                    mutator.createBoardMember(board.id, newValue.id)
+                                    mutator.createBoardMember(boardId, newValue.id)
                                     setSelectedUser(null)
                                 }
                             }}
@@ -370,7 +370,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                         />
                                     }
                                     onClick={() => {
-                                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: board.id})
+                                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkPublicCopy, {board: boardId})
                                         Utils.copyTextToClipboard(shareUrl.toString())
                                         setWasCopiedPublic(true)
                                         setWasCopiedInternal(false)
@@ -419,7 +419,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             size='medium'
                             title='Copy internal link'
                             onClick={() => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkInternalCopy, {board: board.id})
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkInternalCopy, {board: boardId})
                                 Utils.copyTextToClipboard(boardUrl.toString())
                                 setWasCopiedPublic(false)
                                 setWasCopiedInternal(true)

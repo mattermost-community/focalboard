@@ -31,6 +31,10 @@ describe('src/components/gallery/Gallery', () => {
     const state = {
         contents: {
             contents: blocksById(contents),
+            contentsByCard: {
+                [card.id]: [contents[0], contents[1]],
+                [card2.id]: [contents[2]],
+            },
         },
         cards: {
             current: '',

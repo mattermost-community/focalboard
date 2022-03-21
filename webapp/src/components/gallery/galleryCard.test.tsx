@@ -83,6 +83,7 @@ describe('src/components/gallery/GalleryCard', () => {
                 },
                 comments: {
                     comments: {},
+                    commentsByCard: {},
                 },
             }
             store = mockStateStore([], state)
@@ -237,6 +238,9 @@ describe('src/components/gallery/GalleryCard', () => {
                     contents: {
                         [contentImage.id]: contentImage,
                     },
+                    contentsByCard: {
+                        [card.id]: [contentImage],
+                    },
                 },
                 cards: {
                     cards: {
@@ -245,6 +249,7 @@ describe('src/components/gallery/GalleryCard', () => {
                 },
                 comments: {
                     comments: {},
+                    commentsByCard: {},
                 },
                 teams: {
                     current: {id: 'team-id'},
@@ -299,6 +304,9 @@ describe('src/components/gallery/GalleryCard', () => {
                         [contentImage.id]: [contentImage],
                         [contentImage2.id]: [contentImage2],
                     },
+                    contentsByCard: {
+                        [card.id]: [contentImage, contentImage2],
+                    },
                 },
                 cards: {
                     cards: {
@@ -307,6 +315,7 @@ describe('src/components/gallery/GalleryCard', () => {
                 },
                 comments: {
                     comments: {},
+                    commentsByCard: {},
                 },
                 teams: {
                     current: {id: 'team-id'},
@@ -356,6 +365,9 @@ describe('src/components/gallery/GalleryCard', () => {
                     contents: {
                         [contentComment.id]: contentComment,
                     },
+                    contentsByCard: {
+                        [card.id]: [contentComment],
+                    },
                 },
                 cards: {
                     cards: {
@@ -364,6 +376,7 @@ describe('src/components/gallery/GalleryCard', () => {
                 },
                 comments: {
                     comments: {},
+                    commentsByCard: {},
                 },
                 teams: {
                     current: {id: 'team-id'},
@@ -432,6 +445,9 @@ describe('src/components/gallery/GalleryCard', () => {
                     contents: {
                         [contentComment.id]: [contentComment, contentDivider],
                     },
+                    contentsByCard: {
+                        [card.id]: [contentComment, contentDivider],
+                    },
                 },
                 cards: {
                     cards: {
@@ -440,6 +456,7 @@ describe('src/components/gallery/GalleryCard', () => {
                 },
                 comments: {
                     comments: {},
+                    commentsByCard: {},
                 },
                 teams: {
                     current: {id: 'team-id'},

@@ -8,8 +8,8 @@ import Workspace from '../../components/workspace'
 import octoClient from '../../octoClient'
 import {Utils} from '../../utils'
 import wsClient from '../../wsclient'
-import {getCurrentBoard, setCurrent as setCurrentBoard, fetchBoardMembers} from '../../store/boards'
-import {getCurrentView, setCurrent as setCurrentView} from '../../store/views'
+import {getCurrentBoardId, setCurrent as setCurrentBoard, fetchBoardMembers} from '../../store/boards'
+import {getCurrentViewId, setCurrent as setCurrentView} from '../../store/views'
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {setGlobalError} from '../../store/globalError'
@@ -36,8 +36,8 @@ type Props = {
 
 const BoardPage = (props: Props): JSX.Element => {
     const intl = useIntl()
-    const board = useAppSelector(getCurrentBoard)
-    const activeView = useAppSelector(getCurrentView)
+    const activeBoardId = useAppSelector(getCurrentBoardId)
+    const activeViewId = useAppSelector(getCurrentViewId)
     const dispatch = useAppDispatch()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
@@ -123,10 +123,10 @@ const BoardPage = (props: Props): JSX.Element => {
 
     if (props.readonly) {
         useEffect(() => {
-            if (board?.id && activeView?.id) {
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: board?.id, view: activeView?.id})
+            if (activeBoardId && activeViewId) {
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: activeBoardId, view: activeViewId})
             }
-        }, [board?.id, activeView?.id])
+        }, [activeBoardId, activeViewId])
     }
 
     return (
@@ -161,7 +161,7 @@ const BoardPage = (props: Props): JSX.Element => {
                     />
                 </div>}
 
-            {props.readonly && board === undefined &&
+            {props.readonly && activeBoardId === undefined &&
                 <div className='error'>
                     {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
                 </div>}
@@ -170,7 +170,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
                 // Don't display Templates page
                 // if readonly mode and no board defined.
-                (!props.readonly || board !== undefined) &&
+                (!props.readonly || activeBoardId !== undefined) &&
                 <Workspace
                     readonly={props.readonly || false}
                 />
