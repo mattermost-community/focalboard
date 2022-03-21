@@ -143,7 +143,7 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards/{boardID}/archive/import archiveImport
+	// swagger:operation POST /api/v1/teams/{teamID}/archive/import archiveImport
 	//
 	// Import an archive of boards.
 	//
@@ -153,9 +153,9 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 	// consumes:
 	// - multipart/form-data
 	// parameters:
-	// - name: boardID
+	// - name: teamID
 	//   in: path
-	//   description: Workspace ID
+	//   description: Team ID
 	//   required: true
 	//   type: string
 	// - name: file
