@@ -74,7 +74,7 @@ function errorDefFromId(id: ErrorId | null): ErrorDef {
             if (r) {
                 return `/login?r=${r}`
             }
-            return '/login/'
+            return '/login'
         }
         errDef.button1Fill = true
         break
