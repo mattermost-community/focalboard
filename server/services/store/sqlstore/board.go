@@ -27,8 +27,8 @@ func boardFields(prefix string) []string {
 	fields := []string{
 		"id",
 		"team_id",
-		"channel_id",
-		"created_by",
+		"COALESCE(channel_id, '')",
+		"COALESCE(created_by, '')",
 		"modified_by",
 		"type",
 		"title",
@@ -318,20 +318,59 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		return err
 	}
 
+	propertiesJSON, err := json.Marshal(board.Properties)
+	if err != nil {
+		return err
+	}
+
+	cardPropertiesJSON, err := json.Marshal(board.CardProperties)
+	if err != nil {
+		return err
+	}
+
+	columnCalculationsJSON, err := json.Marshal(board.ColumnCalculations)
+	if err != nil {
+		return err
+	}
+
 	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix+"boards_history").
 		Columns(
-			"team_id",
 			"id",
-			"type",
+			"team_id",
+			"channel_id",
+			"created_by",
 			"modified_by",
+			"type",
+			"title",
+			"description",
+			"icon",
+			"show_description",
+			"is_template",
+			"template_version",
+			"properties",
+			"card_properties",
+			"column_calculations",
+			"create_at",
 			"update_at",
 			"delete_at",
 		).
 		Values(
+			board.ID,
 			board.TeamID,
-			boardID,
-			board.Type,
+			"",
+			board.CreatedBy,
 			userID,
+			board.Type,
+			board.Title,
+			board.Description,
+			board.Icon,
+			board.ShowDescription,
+			board.IsTemplate,
+			board.TemplateVersion,
+			propertiesJSON,
+			cardPropertiesJSON,
+			columnCalculationsJSON,
+			board.CreateAt,
 			now,
 			now,
 		)
@@ -527,4 +566,129 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 	defer s.CloseRows(rows)
 
 	return s.boardsFromRows(rows)
+}
+
+func (s *SQLStore) getBoardHistory(db sq.BaseRunner, boardID string, opts model.QueryBoardHistoryOptions) ([]*model.Board, error) {
+	var order string
+	if opts.Descending {
+		order = " DESC "
+	}
+
+	query := s.getQueryBuilder(db).
+		Select(boardFields("")...).
+		From(s.tablePrefix + "boards_history").
+		Where(sq.Eq{"id": boardID}).
+		OrderBy("insert_at " + order + ", update_at" + order)
+
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
+	}
+
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`GetBoardHistory ERROR`, mlog.Err(err))
+		return nil, err
+	}
+
+	return s.boardsFromRows(rows)
+}
+
+func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy string) error {
+	boards, err := s.getBoardHistory(db, boardID, model.QueryBoardHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return err
+	}
+
+	if len(boards) == 0 {
+		s.logger.Warn("undeleteBlock board not found", mlog.String("board_id", boardID))
+		return nil // deleting non-exiting board is not considered an error (for now)
+	}
+	board := boards[0]
+
+	if board.DeleteAt == 0 {
+		s.logger.Warn("undeleteBlock board not deleted", mlog.String("board_id", board.ID))
+		return nil // undeleting not deleted board is not considered an error (for now)
+	}
+
+	propertiesJSON, err := json.Marshal(board.Properties)
+	if err != nil {
+		return err
+	}
+
+	cardPropertiesJSON, err := json.Marshal(board.CardProperties)
+	if err != nil {
+		return err
+	}
+
+	columnCalculationsJSON, err := json.Marshal(board.ColumnCalculations)
+	if err != nil {
+		return err
+	}
+
+	now := utils.GetMillis()
+	columns := []string{
+		"id",
+		"team_id",
+		"channel_id",
+		"created_by",
+		"modified_by",
+		"type",
+		"title",
+		"description",
+		"icon",
+		"show_description",
+		"is_template",
+		"template_version",
+		"properties",
+		"card_properties",
+		"column_calculations",
+		"create_at",
+		"update_at",
+		"delete_at",
+	}
+
+	values := []interface{}{
+		board.ID,
+		board.TeamID,
+		"",
+		board.CreatedBy,
+		modifiedBy,
+		board.Type,
+		board.Title,
+		board.Description,
+		board.Icon,
+		board.ShowDescription,
+		board.IsTemplate,
+		board.TemplateVersion,
+		propertiesJSON,
+		cardPropertiesJSON,
+		columnCalculationsJSON,
+		board.CreateAt,
+		now,
+		0,
+	}
+	insertHistoryQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "boards_history").
+		Columns(columns...).
+		Values(values...)
+	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "boards").
+		Columns(columns...).
+		Values(values...)
+
+	if _, err := insertHistoryQuery.Exec(); err != nil {
+		return err
+	}
+
+	if _, err := insertQuery.Exec(); err != nil {
+		return err
+	}
+
+	return nil
 }
