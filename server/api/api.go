@@ -3030,10 +3030,6 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("boardID", boardID)
 
-	a.logger.Debug("GetBoardMetadata",
-		mlog.String("boardID", boardID),
-	)
-
 	data, err := json.Marshal(boardMetadata)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
