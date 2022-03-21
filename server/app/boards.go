@@ -28,10 +28,7 @@ func (a *App) GetBoard(boardID string) (*model.Board, error) {
 
 func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetadata, error) {
 	license := a.store.GetLicense()
-	if license == nil {
-		return nil, nil, ErrInsufficientLicense
-	}
-	if !(*license.Features.Compliance) {
+	if license == nil || !(*license.Features.Compliance) {
 		return nil, nil, ErrInsufficientLicense
 	}
 

@@ -2968,7 +2968,7 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/boards/{boardID}/metadata getBoard
+	// swagger:operation GET /api/v1/boards/{boardID}/metadata getBoardMetadata
 	//
 	// Returns a board's metadata
 	//
@@ -2988,6 +2988,10 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 	//     description: success
 	//     schema:
 	//       "$ref": "#/definitions/BoardMetadata"
+	//   '404':
+	//     description: board not found
+	//   '501':
+	//     description: required license not found
 	//   default:
 	//     description: internal error
 	//     schema:
