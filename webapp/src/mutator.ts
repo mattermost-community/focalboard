@@ -836,6 +836,19 @@ class Mutator {
         )
     }
 
+    async changeViewCardOrder(boardId: string, viewId: string, oldCardOrder: string[], cardOrder: string[], description = 'reorder'): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(boardId, viewId, {updatedFields: {cardOrder}})
+            },
+            async () => {
+                await octoClient.patchBlock(boardId, viewId, {updatedFields: {cardOrder: oldCardOrder}})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
     async hideViewColumns(boardId: string, view: BoardView, columnOptionIds: string[]): Promise<void> {
         if (columnOptionIds.every((o) => view.fields.hiddenOptionIds.includes(o))) {
             return
@@ -867,12 +880,6 @@ class Mutator {
 
     async unhideViewColumn(boardId: string, view: BoardView, columnOptionId: string): Promise<void> {
         return this.unhideViewColumns(boardId, view, [columnOptionId])
-    }
-
-    async changeViewCardOrder(boardId: string, view: BoardView, cardOrder: string[], description = 'reorder'): Promise<void> {
-        const newView = createBoardView(view)
-        newView.fields.cardOrder = cardOrder
-        await this.updateBlock(boardId, newView, view, description)
     }
 
     async createCategory(category: Category): Promise<void> {

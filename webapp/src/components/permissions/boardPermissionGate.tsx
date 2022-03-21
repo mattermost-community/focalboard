@@ -4,7 +4,7 @@
 import React from 'react'
 
 import {useAppSelector} from '../../store/hooks'
-import {getCurrentBoard} from '../../store/boards'
+import {getCurrentBoardId} from '../../store/boards'
 import {getCurrentTeam} from '../../store/teams'
 import {Permission} from '../../constants'
 import {useHasPermissions} from '../../hooks/permissions'
@@ -19,9 +19,9 @@ type Props = {
 
 const BoardPermissionGate = React.memo((props: Props): React.ReactElement|null => {
     const currentTeam = useAppSelector(getCurrentTeam)
-    const currentBoard = useAppSelector(getCurrentBoard)
+    const currentBoardId = useAppSelector(getCurrentBoardId)
 
-    const boardId = props.boardId || currentBoard?.id || ''
+    const boardId = props.boardId || currentBoardId || ''
     const teamId = props.teamId || currentTeam?.id || ''
 
     let allowed = useHasPermissions(teamId, boardId, props.permissions)

@@ -70,7 +70,6 @@ type Props = {
     addTemplate: (template: Card) => void
     shownCardId?: string
     showCard: (cardId?: string) => void
-    showShared: boolean
     onboardingTourStarted: boolean
     onboardingTourCategory: string
     onboardingTourStep: string
@@ -323,7 +322,7 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
-            await mutator.changeViewCardOrder(this.props.board.id, activeView, [...activeView.fields.cardOrder, newCardId], 'add-card')
+            await mutator.changeViewCardOrder(this.props.board.id, activeView.id, activeView.fields.cardOrder, [...activeView.fields.cardOrder, newCardId], 'add-card')
         })
     }
 
@@ -360,7 +359,7 @@ class CenterPanel extends React.Component<Props, State> {
                         this.showCard(block.id)
                     } else {
                         // Focus on this card's title inline on next render
-                        this.setState({cardIdToFocusOnRender: card.id})
+                        this.setState({cardIdToFocusOnRender: block.id})
                         setTimeout(() => this.setState({cardIdToFocusOnRender: ''}), 100)
                     }
                 },
@@ -368,7 +367,7 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
-            await mutator.changeViewCardOrder(this.props.board.id, activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
+            await mutator.changeViewCardOrder(this.props.board.id, activeView.id, activeView.fields.cardOrder, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }
 

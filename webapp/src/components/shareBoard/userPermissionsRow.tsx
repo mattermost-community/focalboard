@@ -68,12 +68,6 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                                 onClick={() => props.onUpdateBoardMember(member, 'Viewer')}
                             />
                             <Menu.Text
-                                id='Commenter'
-                                icon={currentRole === 'Commenter' ? <CheckIcon/> : null}
-                                name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
-                                onClick={() => props.onUpdateBoardMember(member, 'Commenter')}
-                            />
-                            <Menu.Text
                                 id='Editor'
                                 icon={currentRole === 'Editor' ? <CheckIcon/> : null}
                                 name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}

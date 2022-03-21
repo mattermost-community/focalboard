@@ -34,9 +34,6 @@ const (
 	pluginName            = "focalboard"
 	sharedBoardsName      = "enablepublicsharedboards"
 
-	urlComponentBoard = "board"
-	urlComponentTeam  = "team"
-
 	notifyFreqCardSecondsKey  = "notify_freq_card_seconds"
 	notifyFreqBoardSecondsKey = "notify_freq_board_seconds"
 )
@@ -499,6 +496,5 @@ func isBoardsLink(link string) bool {
 	}
 
 	teamID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
-	fmt.Println(fmt.Sprintf("components: teamID %s, boardID %s, viewID %s, cardID %s", teamID, boardID, viewID, cardID))
 	return teamID != "" && boardID != "" && viewID != "" && cardID != ""
 }

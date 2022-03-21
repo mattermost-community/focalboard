@@ -8,11 +8,14 @@ import (
 	"errors"
 	"fmt"
 	"github.com/mattermost/focalboard/server/utils"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-	"github.com/mattermost/morph/models"
+
 	"path/filepath"
 	"strconv"
 	"text/template"
+
+	"github.com/mattermost/morph/models"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/morph"
 	drivers "github.com/mattermost/morph/drivers"
@@ -256,7 +259,7 @@ func (s *SQLStore) Migrate() error {
 // the old format used by go-migrate to the new format used by
 // gomorph.
 // When running the Focalboard with go-migrate's schema version table
-// existing in the database, gomorph is unable to amke sense of it as it's
+// existing in the database, gomorph is unable to make sense of it as it's
 // not in the format required by gomorph.
 func (s *SQLStore) migrateSchemaVersionTable(migrations []*models.Migration) error {
 	migrationNeeded, err := s.isSchemaMigrationNeeded()
