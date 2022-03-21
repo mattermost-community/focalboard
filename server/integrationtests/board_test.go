@@ -541,19 +541,25 @@ func TestGetBoardMetadata(t *testing.T) {
 		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, "")
 		th.CheckOK(resp)
 		require.NotNil(t, boardMetadata)
-
 		require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
 		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
 		require.Equal(t, rCard2.UpdateAt, boardMetadata.DescendantLastUpdateAt)
 		require.Equal(t, rCard2.ModifiedBy, boardMetadata.LastModifiedBy)
 
-		// Delete board
-		time.Sleep(20 * time.Millisecond)
-		require.NoError(t, th.Server.App().DeleteBoard(rBoard.ID, th.GetUser1().ID))
+		t.Run("After delete board", func(t *testing.T) {
+			// Delete board
+			time.Sleep(20 * time.Millisecond)
+			require.NoError(t, th.Server.App().DeleteBoard(rBoard.ID, th.GetUser1().ID))
 
-		// Check updated metadata
-		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, "")
-		th.CheckNotFound(resp)
+			// Check updated metadata
+			boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, boardMetadata)
+			require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
+			require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
+			require.Greater(t, boardMetadata.DescendantLastUpdateAt, rCard2.UpdateAt)
+			require.Equal(t, th.GetUser1().ID, boardMetadata.LastModifiedBy)
+		})
 	})
 
 	t.Run("valid read token should be enough to get the board metadata", func(t *testing.T) {

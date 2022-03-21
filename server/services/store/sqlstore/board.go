@@ -343,25 +343,46 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		return err
 	}
 
-	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix+"boards_history").
-		Columns(
-			"team_id",
-			"id",
-			"type",
-			"modified_by",
-			"update_at",
-			"delete_at",
-		).
-		Values(
-			board.TeamID,
-			boardID,
-			board.Type,
-			userID,
-			now,
-			now,
-		)
+	propertiesBytes, err := json.Marshal(board.Properties)
+	if err != nil {
+		return err
+	}
+	cardPropertiesBytes, err := json.Marshal(board.CardProperties)
+	if err != nil {
+		return err
+	}
+	columnCalculationsBytes, err := json.Marshal(board.ColumnCalculations)
+	if err != nil {
+		return err
+	}
 
-	if _, err := insertQuery.Exec(); err != nil {
+	insertQueryValues := map[string]interface{}{
+		"id":                  board.ID,
+		"team_id":             board.TeamID,
+		"channel_id":          board.ChannelID,
+		"created_by":          board.CreatedBy,
+		"modified_by":         userID,
+		"type":                board.Type,
+		"title":               board.Title,
+		"description":         board.Description,
+		"icon":                board.Icon,
+		"show_description":    board.ShowDescription,
+		"is_template":         board.IsTemplate,
+		"template_version":    board.TemplateVersion,
+		"properties":          propertiesBytes,
+		"card_properties":     cardPropertiesBytes,
+		"column_calculations": columnCalculationsBytes,
+		"create_at":           board.CreateAt,
+		"update_at":           now,
+		"delete_at":           now,
+	}
+
+	// writing board history
+	insertQuery := s.getQueryBuilder(db).Insert("").
+		Columns(boardHistoryFields()...)
+
+	query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "boards_history")
+	if _, err := query.Exec(); err != nil {
 		return err
 	}
 

@@ -31,7 +31,15 @@ func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetada
 		return nil, nil, err
 	}
 	if board == nil {
-		// Not found
+		// Board may have been deleted, retrieve most recent history instead
+		board, err = a.getBoardHistory(boardID, true)
+		if err != nil {
+			return nil, nil, err
+		}
+	}
+
+	if board == nil {
+		// Board not found
 		return nil, nil, nil
 	}
 
@@ -55,21 +63,31 @@ func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetada
 	return board, &boardMetadata, nil
 }
 
-func (a *App) getBoardDescendantModifiedInfo(boardID string, latest bool) (int64, string, error) {
-	// Returns the earliest of latest modified info for the board
+func (a *App) getBoardHistory(boardID string, latest bool) (*model.Board, error) {
 	opts := model.QueryBlockHistoryOptions{
 		Limit:      1,
 		Descending: latest,
 	}
 	boards, err := a.store.GetBoardHistory(boardID, opts)
 	if err != nil {
-		return 0, "", fmt.Errorf("could not get history for board: %w", err)
+		return nil, fmt.Errorf("could not get history for board: %w", err)
 	}
 	if len(boards) == 0 {
+		return nil, nil
+	}
+
+	return boards[0], nil
+}
+
+func (a *App) getBoardDescendantModifiedInfo(boardID string, latest bool) (int64, string, error) {
+	board, err := a.getBoardHistory(boardID, latest)
+	if err != nil {
+		return 0, "", err
+	}
+	if board == nil {
 		return 0, "", fmt.Errorf("history not found for board: %w", err)
 	}
 
-	board := boards[0]
 	var timestamp int64
 	modifiedBy := board.ModifiedBy
 	if latest {
@@ -79,6 +97,10 @@ func (a *App) getBoardDescendantModifiedInfo(boardID string, latest bool) (int64
 	}
 
 	// use block_history to fetch blocks in case they were deleted and no longer exist in blocks table.
+	opts := model.QueryBlockHistoryOptions{
+		Limit:      1,
+		Descending: latest,
+	}
 	blocks, err := a.store.GetBlockHistoryDescendants(boardID, opts)
 	if err != nil {
 		return 0, "", fmt.Errorf("could not get blocks history descendants for board: %w", err)
