@@ -239,10 +239,20 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             ))
     }
 
+    const toolbar = (
+        <span className='text-heading5'>
+            <FormattedMessage
+                id={'ShareBoard.Title'}
+                defaultMessage={'Share Board'}
+            />
+        </span>
+    )
+
     return (
         <Dialog
             onClose={props.onClose}
             className='ShareBoardDialog'
+            toolbar={toolbar}
         >
             <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
                 <div className='share-input__container'>
