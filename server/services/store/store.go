@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 // Store represents the abstraction of the data storage.
@@ -132,6 +133,8 @@ type Store interface {
 	DBType() string
 
 	IsErrNotFound(err error) bool
+
+	GetLicense() *mmModel.License
 }
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.

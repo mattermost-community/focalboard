@@ -18,6 +18,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -269,8 +270,8 @@ func (s *SQLStore) GetBlockHistory(blockID string, opts model.QueryBlockHistoryO
 
 }
 
-func (s *SQLStore) GetBlockHistoryDescendants(rootID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
-	return s.getBlockHistoryDescendants(s.db, rootID, opts)
+func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	return s.getBlockHistoryDescendants(s.db, boardID, opts)
 
 }
 
@@ -326,6 +327,11 @@ func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*mod
 
 func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
 	return s.getCategory(s.db, id)
+
+}
+
+func (s *SQLStore) GetLicense() *mmModel.License {
+	return s.getLicense(s.db)
 
 }
 

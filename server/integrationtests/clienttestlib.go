@@ -13,6 +13,7 @@ import (
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
+	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -24,6 +25,14 @@ const (
 	user1Username = "user1"
 	user2Username = "user2"
 	password      = "Pa$$word"
+)
+
+type LicenseType int
+
+const (
+	LICENSE_NONE         LicenseType = iota // 0
+	LICENSE_PROFESSIONAL                    // 1
+	LICENSE_ENTERPRISE                      // 2
 )
 
 type TestHelper struct {
@@ -77,6 +86,10 @@ func getTestConfig() (*config.Configuration, error) {
 }
 
 func newTestServer(singleUserToken string) *server.Server {
+	return newTestServerWithLicense(singleUserToken, LICENSE_NONE)
+}
+
+func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *server.Server {
 	cfg, err := getTestConfig()
 	if err != nil {
 		panic(err)
@@ -86,9 +99,20 @@ func newTestServer(singleUserToken string) *server.Server {
 	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
 		panic(err)
 	}
-	db, err := server.NewStore(cfg, logger)
+	innerStore, err := server.NewStore(cfg, logger)
 	if err != nil {
 		panic(err)
+	}
+
+	var db store.Store
+
+	switch licenseType {
+	case LICENSE_PROFESSIONAL:
+		db = NewTestProfessionalStore(innerStore)
+	case LICENSE_ENTERPRISE:
+		db = NewTestEnterpriseStore(innerStore)
+	default:
+		db = innerStore
 	}
 
 	permissionsService := localpermissions.New(db, logger)
@@ -119,8 +143,12 @@ func SetupTestHelperWithToken(t *testing.T) *TestHelper {
 }
 
 func SetupTestHelper(t *testing.T) *TestHelper {
+	return SetupTestHelperWithLicense(t, LICENSE_NONE)
+}
+
+func SetupTestHelperWithLicense(t *testing.T, licenseType LicenseType) *TestHelper {
 	th := &TestHelper{T: t}
-	th.Server = newTestServer("")
+	th.Server = newTestServerWithLicense("", licenseType)
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
 	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, "")
 	return th
@@ -283,5 +311,10 @@ func (th *TestHelper) CheckUnauthorized(r *client.Response) {
 
 func (th *TestHelper) CheckForbidden(r *client.Response) {
 	require.Equal(th.T, http.StatusForbidden, r.StatusCode)
+	require.Error(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckNotImplemented(r *client.Response) {
+	require.Equal(th.T, http.StatusNotImplemented, r.StatusCode)
 	require.Error(th.T, r.Error)
 }

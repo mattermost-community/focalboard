@@ -3003,6 +3003,10 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 	}
 
 	board, boardMetadata, err := a.app.GetBoardMetadata(boardID)
+	if err == app.ErrInsufficientLicense {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

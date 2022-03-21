@@ -10,6 +10,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	model "github.com/mattermost/focalboard/server/model"
+	model0 "github.com/mattermost/mattermost-server/v6/model"
 )
 
 // MockStore is a mock of Store interface.
@@ -563,6 +564,20 @@ func (m *MockStore) GetCategory(arg0 string) (*model.Category, error) {
 func (mr *MockStoreMockRecorder) GetCategory(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategory", reflect.TypeOf((*MockStore)(nil).GetCategory), arg0)
+}
+
+// GetLicense mocks base method.
+func (m *MockStore) GetLicense() *model0.License {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetLicense")
+	ret0, _ := ret[0].(*model0.License)
+	return ret0
+}
+
+// GetLicense indicates an expected call of GetLicense.
+func (mr *MockStoreMockRecorder) GetLicense() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLicense", reflect.TypeOf((*MockStore)(nil).GetLicense))
 }
 
 // GetMemberForBoard mocks base method.

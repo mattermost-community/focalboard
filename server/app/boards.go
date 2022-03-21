@@ -12,6 +12,7 @@ import (
 var (
 	ErrBoardMemberIsLastAdmin = errors.New("cannot leave a board with no admins")
 	ErrNewBoardCannotHaveID   = errors.New("new board cannot have an ID")
+	ErrInsufficientLicense    = errors.New("appropriate license required")
 )
 
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
@@ -26,6 +27,14 @@ func (a *App) GetBoard(boardID string) (*model.Board, error) {
 }
 
 func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetadata, error) {
+	license := a.store.GetLicense()
+	if license == nil {
+		return nil, nil, ErrInsufficientLicense
+	}
+	if !(*license.Features.Compliance) {
+		return nil, nil, ErrInsufficientLicense
+	}
+
 	board, err := a.GetBoard(boardID)
 	if err != nil {
 		return nil, nil, err

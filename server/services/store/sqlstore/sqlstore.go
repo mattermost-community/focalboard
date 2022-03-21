@@ -8,6 +8,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/mattermost-plugin-api/cluster"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -87,4 +88,8 @@ func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam
 		return "\"" + fieldName + "\""
 	}
 	return fieldName
+}
+
+func (s *SQLStore) getLicense(db sq.BaseRunner) *mmModel.License {
+	return nil
 }

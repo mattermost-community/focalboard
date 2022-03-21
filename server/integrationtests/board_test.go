@@ -471,7 +471,7 @@ func TestGetBoard(t *testing.T) {
 
 func TestGetBoardMetadata(t *testing.T) {
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelperWithLicense(t, LICENSE_ENTERPRISE).InitBasic()
 		defer th.TearDown()
 		th.Logout(th.Client)
 
@@ -481,7 +481,7 @@ func TestGetBoardMetadata(t *testing.T) {
 	})
 
 	t.Run("getBoardMetadata query is correct", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelperWithLicense(t, LICENSE_ENTERPRISE).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
 
@@ -562,8 +562,50 @@ func TestGetBoardMetadata(t *testing.T) {
 		})
 	})
 
+	t.Run("getBoardMetadata should fail with no license", func(t *testing.T) {
+		th := SetupTestHelperWithLicense(t, LICENSE_NONE).InitBasic()
+		defer th.TearDown()
+		th.Server.Config().EnablePublicSharedBoards = true
+
+		teamID := testTeamID
+
+		board := &model.Board{
+			Title:  "public board where user1 is admin",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		rBoard, err := th.Server.App().CreateBoard(board, th.GetUser1().ID, true)
+		require.NoError(t, err)
+
+		// Check metadata
+		boardMetadata, resp := th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckNotImplemented(resp)
+		require.Nil(t, boardMetadata)
+	})
+
+	t.Run("getBoardMetadata should fail on Professional license", func(t *testing.T) {
+		th := SetupTestHelperWithLicense(t, LICENSE_PROFESSIONAL).InitBasic()
+		defer th.TearDown()
+		th.Server.Config().EnablePublicSharedBoards = true
+
+		teamID := testTeamID
+
+		board := &model.Board{
+			Title:  "public board where user1 is admin",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		rBoard, err := th.Server.App().CreateBoard(board, th.GetUser1().ID, true)
+		require.NoError(t, err)
+
+		// Check metadata
+		boardMetadata, resp := th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckNotImplemented(resp)
+		require.Nil(t, boardMetadata)
+	})
+
 	t.Run("valid read token should be enough to get the board metadata", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelperWithLicense(t, LICENSE_ENTERPRISE).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
 
