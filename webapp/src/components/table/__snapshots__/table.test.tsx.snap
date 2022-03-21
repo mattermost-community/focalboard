@@ -607,7 +607,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             <div
               class="UserProperty octo-propertyvalue readonly"
             >
-              username_1
+              <div
+                class="UserProperty-item"
+              >
+                username_1
+              </div>
             </div>
           </div>
         </div>
@@ -695,7 +699,11 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             <div
               class="UserProperty octo-propertyvalue readonly"
             >
-              username_2
+              <div
+                class="UserProperty-item"
+              >
+                username_2
+              </div>
             </div>
           </div>
         </div>
