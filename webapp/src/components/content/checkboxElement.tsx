@@ -69,11 +69,13 @@ const CheckboxElement = (props: Props) => {
                     if (title === '' && block.id === lastAddedBlock.id && lastAddedBlock.autoAdded && props.onDeleteElement) {
                         props.onDeleteElement()
                     } else {
-                        const newBlock = createCheckboxBlock(block)
-                        newBlock.title = title
-                        newBlock.fields.value = active
-                        await mutator.updateBlock(block.boardId, newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
-                        if (saveType === 'onEnter' && title !== '' && props.onAddElement) {
+                        if (block.title !== title) {
+                            await mutator.changeBlockTitle(block.boardId, block.id, block.title, title, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
+                            if (saveType === 'onEnter' && title !== '' && props.onAddElement) {
+                                // Wait for the change to happen
+                                setTimeout(props.onAddElement, 100)
+                            }
+                        } else if (saveType === 'onEnter' && title !== '' && props.onAddElement) {
                             props.onAddElement()
                         }
                     }
