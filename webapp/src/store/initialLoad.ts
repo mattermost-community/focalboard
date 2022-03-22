@@ -4,38 +4,32 @@
 import {createAsyncThunk, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
-import {UserWorkspace} from '../user'
-import {Utils} from '../utils'
-
 import {Subscription} from '../wsclient'
+import {ErrorId} from '../errors'
 
 import {RootState} from './index'
-
-const fetchUserWorkspaces = async ():Promise<UserWorkspace[]> => {
-    // Concept of workspaces is only applicable when running as a plugin.
-    // There is always only one, single workspace in personal server edition.
-    return Utils.isFocalboardPlugin() ? client.getUserWorkspaces() : []
-}
 
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
-        const [workspace, workspaceUsers, blocks, userWorkspaces] = await Promise.all([
-            client.getWorkspace(),
-            client.getWorkspaceUsers(),
-            client.getAllBlocks(),
-            fetchUserWorkspaces(),
+        const [team, teams, boards, boardsMemberships, boardTemplates] = await Promise.all([
+            client.getTeam(),
+            client.getTeams(),
+            client.getBoards(),
+            client.getMyBoardMemberships(),
+            client.getTeamTemplates(),
         ])
 
-        // if no workspace, either bad id, or user doesn't have access
-        if (workspace === undefined) {
-            throw new Error('workspace-undefined')
+        // if no team, either bad id, or user doesn't have access
+        if (!team) {
+            throw new Error(ErrorId.TeamUndefined)
         }
         return {
-            workspace,
-            workspaceUsers,
-            blocks,
-            userWorkspaces,
+            team,
+            teams,
+            boards,
+            boardsMemberships,
+            boardTemplates,
         }
     },
 )
@@ -45,6 +39,16 @@ export const initialReadOnlyLoad = createAsyncThunk(
     async (boardId: string) => {
         const blocks = client.getSubtree(boardId, 3)
         return blocks
+    },
+)
+
+export const loadBoardData = createAsyncThunk(
+    'loadBoardData',
+    async (boardID: string) => {
+        const blocks = await client.getAllBlocks(boardID)
+        return {
+            blocks,
+        }
     },
 )
 

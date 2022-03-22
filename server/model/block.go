@@ -19,10 +19,6 @@ type Block struct {
 	// required: false
 	ParentID string `json:"parentId"`
 
-	// The id for this block's root block
-	// required: true
-	RootID string `json:"rootId"`
-
 	// The id for user who created this block
 	// required: true
 	CreatedBy string `json:"createdBy"`
@@ -59,9 +55,13 @@ type Block struct {
 	// required: false
 	DeleteAt int64 `json:"deleteAt"`
 
-	// The workspace id that the block belongs to
+	// Deprecated. The workspace id that the block belongs to
+	// required: false
+	WorkspaceID string `json:"-"`
+
+	// The board id that the block belongs to
 	// required: true
-	WorkspaceID string `json:"workspaceId"`
+	BoardID string `json:"boardId"`
 }
 
 // BlockPatch is a patch for modify blocks
@@ -70,10 +70,6 @@ type BlockPatch struct {
 	// The id for this block's parent block. Empty for root blocks
 	// required: false
 	ParentID *string `json:"parentId"`
-
-	// The id for this block's root block
-	// required: false
-	RootID *string `json:"rootId"`
 
 	// The schema version of this block
 	// required: false
@@ -94,6 +90,10 @@ type BlockPatch struct {
 	// The block removed fields
 	// required: false
 	DeletedFields []string `json:"deletedFields"`
+
+	// The board id that the block belongs to
+	// required: false
+	BoardID *string `json:"boardId"`
 }
 
 // BlockPatchBatch is a batch of IDs and patches for modify blocks
@@ -106,11 +106,11 @@ type BlockPatchBatch struct {
 	BlockPatches []BlockPatch `json:"block_patches"`
 }
 
-// BlockModifier is a callback that can modify each block during an import.
+// BoardModifier is a callback that can modify each board during an import.
 // A cache of arbitrary data will be passed for each call and any changes
 // to the cache will be preserved for the next call.
 // Return true to import the block or false to skip import.
-type BlockModifier func(block *Block, cache map[string]interface{}) bool
+type BoardModifier func(board *Board, cache map[string]interface{}) bool
 
 func BlocksFromJSON(data io.Reader) []Block {
 	var blocks []Block
@@ -123,12 +123,12 @@ func (b Block) LogClone() interface{} {
 	return struct {
 		ID       string
 		ParentID string
-		RootID   string
+		BoardID  string
 		Type     BlockType
 	}{
 		ID:       b.ID,
 		ParentID: b.ParentID,
-		RootID:   b.RootID,
+		BoardID:  b.BoardID,
 		Type:     b.Type,
 	}
 }
@@ -139,8 +139,8 @@ func (p *BlockPatch) Patch(block *Block) *Block {
 		block.ParentID = *p.ParentID
 	}
 
-	if p.RootID != nil {
-		block.RootID = *p.RootID
+	if p.BoardID != nil {
+		block.BoardID = *p.BoardID
 	}
 
 	if p.Schema != nil {

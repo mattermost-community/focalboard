@@ -7,8 +7,10 @@ import (
 )
 
 type ClusterMessage struct {
-	WorkspaceID string
+	TeamID      string
+	BoardID     string
 	Payload     map[string]interface{}
+	EnsureUsers []string
 }
 
 func (pa *PluginAdapter) sendMessageToCluster(id string, clusterMessage *ClusterMessage) {
@@ -46,6 +48,11 @@ func (pa *PluginAdapter) HandleClusterEvent(ev mmModel.PluginClusterEvent) {
 		return
 	}
 
+	if clusterMessage.BoardID != "" {
+		pa.sendBoardMessageSkipCluster(clusterMessage.TeamID, clusterMessage.BoardID, clusterMessage.Payload, clusterMessage.EnsureUsers...)
+		return
+	}
+
 	var action string
 	if actionRaw, ok := clusterMessage.Payload["action"]; ok {
 		if s, ok := actionRaw.(string); ok {
@@ -54,12 +61,11 @@ func (pa *PluginAdapter) HandleClusterEvent(ev mmModel.PluginClusterEvent) {
 	}
 	if action == "" {
 		// no action was specified in the event; assume block change and warn.
-		action = websocketActionUpdateBlock
 		pa.api.LogWarn("cannot determine action from cluster message data",
 			"id", ev.Id,
 			"payload", clusterMessage.Payload,
 		)
 	}
 
-	pa.sendWorkspaceMessageSkipCluster(action, clusterMessage.WorkspaceID, clusterMessage.Payload)
+	pa.sendTeamMessageSkipCluster(websocketActionUpdateBlock, clusterMessage.TeamID, clusterMessage.Payload)
 }

@@ -45,7 +45,8 @@ export const TelemetryActions = {
 }
 
 interface IEventProps {
-    workspaceID?: string,
+    channelID?: string,
+    teamID?: string,
     board?: string,
     view?: string,
     viewType?: string,

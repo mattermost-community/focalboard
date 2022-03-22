@@ -35,7 +35,7 @@ function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
             onClick={(e: React.MouseEvent) => {
                 e.preventDefault()
                 e.stopPropagation()
-                setIsOpen(true)
+                setIsOpen((open) => !open)
             }}
         >
             {(props.position === 'left' || props.position === 'left-bottom') && <SubmenuTriangleIcon/>}

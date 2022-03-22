@@ -8,7 +8,9 @@ import {mocked} from 'ts-jest/utils'
 
 import userEvent from '@testing-library/user-event'
 
-import {IUser, UserWorkspace} from '../user'
+import thunk from 'redux-thunk'
+
+import {IUser} from '../user'
 import {TestBlockFactory} from '../test/testBlockFactory'
 import {mockDOM, mockMatchMedia, mockStateStore, wrapDNDIntl} from '../testUtils'
 import {Constants} from '../constants'
@@ -21,16 +23,10 @@ jest.useFakeTimers()
 jest.mock('../utils')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
-const workspace1: UserWorkspace = {
-    id: 'workspace_1',
-    title: 'Workspace 1',
-    boardCount: 1,
-}
 const board = TestBlockFactory.createBoard()
 board.id = 'board1'
-board.rootId = 'root1'
-board.workspaceId = workspace1.id
-board.fields.cardProperties = [
+board.teamId = 'team-id'
+board.cardProperties = [
     {
         id: 'property1',
         name: 'Property 1',
@@ -61,21 +57,26 @@ activeView.id = 'view1'
 activeView.fields.hiddenOptionIds = []
 activeView.fields.visiblePropertyIds = ['property1']
 activeView.fields.visibleOptionIds = ['value1']
-activeView.workspaceId = workspace1.id
+const fakeBoard = {id: board.id}
+activeView.boardId = fakeBoard.id
 const card1 = TestBlockFactory.createCard(board)
 card1.id = 'card1'
 card1.title = 'card-1'
-card1.workspaceId = workspace1.id
+card1.boardId = fakeBoard.id
 const card2 = TestBlockFactory.createCard(board)
 card2.id = 'card2'
 card2.title = 'card-2'
-card2.workspaceId = workspace1.id
+card2.boardId = fakeBoard.id
 const card3 = TestBlockFactory.createCard(board)
 card3.id = 'card3'
 card3.title = 'card-3'
-card3.workspaceId = workspace1.id
+card3.boardId = fakeBoard.id
 
 const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, create_at: 0, update_at: 0, is_bot: false}
+
+const categoryAttribute1 = TestBlockFactory.createCategoryBlocks()
+categoryAttribute1.name = 'Category 1'
+categoryAttribute1.blockIDs = [board.id]
 
 jest.mock('react-router-dom', () => {
     const originalModule = jest.requireActual('react-router-dom')
@@ -95,12 +96,12 @@ jest.mock('react-router-dom', () => {
 
 describe('src/components/workspace', () => {
     const state = {
-        workspace: {
-            current: workspace1,
+        teams: {
+            current: {id: 'team-id', title: 'Test Team'},
         },
         users: {
             me,
-            workspaceUsers: [me],
+            boardUsers: [me],
             blockSubscriptions: [],
         },
         boards: {
@@ -109,6 +110,9 @@ describe('src/components/workspace', () => {
                 [board.id]: board,
             },
             templates: [],
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         globalTemplates: {
             value: [],
@@ -138,8 +142,13 @@ describe('src/components/workspace', () => {
         comments: {
             comments: {},
         },
+        sidebar: {
+            categoryAttributes: [
+                categoryAttribute1,
+            ],
+        },
     }
-    const store = mockStateStore([], state)
+    const store = mockStateStore([thunk], state)
     beforeAll(() => {
         mockDOM()
         mockMatchMedia({matches: true})
@@ -174,6 +183,7 @@ describe('src/components/workspace', () => {
         })
         expect(container).toMatchSnapshot()
     })
+
     test('return workspace and showcard', async () => {
         let container:Element | undefined
         await act(async () => {
@@ -191,6 +201,7 @@ describe('src/components/workspace', () => {
         })
         expect(container).toMatchSnapshot()
     })
+
     test('return workspace readonly and showcard', async () => {
         let container:Element | undefined
         await act(async () => {
@@ -209,14 +220,15 @@ describe('src/components/workspace', () => {
         expect(container).toMatchSnapshot()
         expect(mockedUtils.getReadToken).toBeCalledTimes(1)
     })
+
     test('return workspace with BoardTemplateSelector component', async () => {
         const emptyStore = mockStateStore([], {
             users: {
                 me,
-                workspaceUsers: [me],
+                boardUsers: [me],
             },
-            workspace: {
-                current: workspace1,
+            teams: {
+                current: {id: 'team-id', title: 'Test Team'},
             },
             boards: {
                 current: board.id,
@@ -224,6 +236,9 @@ describe('src/components/workspace', () => {
                     [board.id]: board,
                 },
                 templates: [],
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             views: {
                 views: {},
@@ -267,11 +282,11 @@ describe('src/components/workspace', () => {
         const onboardingCard = TestBlockFactory.createCard(welcomeBoard)
         onboardingCard.id = 'card1'
         onboardingCard.title = 'Create a new card'
-        onboardingCard.workspaceId = workspace1.id
+        onboardingCard.boardId = welcomeBoard.id
 
         const localState = {
-            workspace: {
-                current: workspace1,
+            teams: {
+                current: {id: 'team-id', title: 'Test Team'},
             },
             users: {
                 me: {
@@ -288,7 +303,7 @@ describe('src/components/workspace', () => {
                     update_at: 0,
                     is_bot: false,
                 },
-                workspaceUsers: [me],
+                boardUsers: [me],
                 blockSubscriptions: [],
             },
             boards: {
@@ -297,6 +312,9 @@ describe('src/components/workspace', () => {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 templates: [],
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             globalTemplates: {
                 value: [],
@@ -326,8 +344,13 @@ describe('src/components/workspace', () => {
             comments: {
                 comments: {},
             },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
+            },
         }
-        const localStore = mockStateStore([], localState)
+        const localStore = mockStateStore([thunk], localState)
 
         await act(async () => {
             render(wrapDNDIntl(
@@ -350,11 +373,11 @@ describe('src/components/workspace', () => {
         const onboardingCard = TestBlockFactory.createCard(welcomeBoard)
         onboardingCard.id = 'card1'
         onboardingCard.title = 'Create a new card'
-        onboardingCard.workspaceId = workspace1.id
+        onboardingCard.boardId = welcomeBoard.id
 
         const localState = {
-            workspace: {
-                current: workspace1,
+            teams: {
+                current: {id: 'team-id', title: 'Test Team'},
             },
             users: {
                 me: {
@@ -371,7 +394,7 @@ describe('src/components/workspace', () => {
                     update_at: 0,
                     is_bot: false,
                 },
-                workspaceUsers: [me],
+                boardUsers: [me],
                 blockSubscriptions: [],
             },
             boards: {
@@ -380,6 +403,9 @@ describe('src/components/workspace', () => {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 templates: [],
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             globalTemplates: {
                 value: [],
@@ -409,8 +435,13 @@ describe('src/components/workspace', () => {
             comments: {
                 comments: {},
             },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
+            },
         }
-        const localStore = mockStateStore([], localState)
+        const localStore = mockStateStore([thunk], localState)
 
         await act(async () => {
             render(wrapDNDIntl(
@@ -438,11 +469,11 @@ describe('src/components/workspace', () => {
         const onboardingCard = TestBlockFactory.createCard(welcomeBoard)
         onboardingCard.id = 'card1'
         onboardingCard.title = 'Create a new card'
-        onboardingCard.workspaceId = workspace1.id
+        onboardingCard.boardId = welcomeBoard.id
 
         const localState = {
-            workspace: {
-                current: workspace1,
+            teams: {
+                current: {id: 'team-id', title: 'Test Team'},
             },
             users: {
                 me: {
@@ -459,7 +490,7 @@ describe('src/components/workspace', () => {
                     update_at: 0,
                     is_bot: false,
                 },
-                workspaceUsers: [me],
+                boardUsers: [me],
                 blockSubscriptions: [],
             },
             boards: {
@@ -468,6 +499,9 @@ describe('src/components/workspace', () => {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 templates: [],
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             globalTemplates: {
                 value: [],
@@ -497,8 +531,13 @@ describe('src/components/workspace', () => {
             comments: {
                 comments: {},
             },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
+            },
         }
-        const localStore = mockStateStore([], localState)
+        const localStore = mockStateStore([thunk], localState)
 
         await act(async () => {
             render(wrapDNDIntl(

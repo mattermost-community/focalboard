@@ -10,9 +10,11 @@ import {Router} from 'react-router-dom'
 import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import {UserWorkspace} from '../../user'
+import thunk from 'redux-thunk'
 
 import {mockMatchMedia, wrapIntl} from '../../testUtils'
+
+import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import Sidebar from './sidebar'
 
@@ -21,67 +23,36 @@ beforeAll(() => {
 })
 
 describe('components/sidebarSidebar', () => {
-    const mockStore = configureStore([])
-    const workspace1: UserWorkspace = {
-        id: 'workspace_1',
-        title: 'Workspace 1',
-        boardCount: 1,
-    }
+    const mockStore = configureStore([thunk])
 
-    const workspace2: UserWorkspace = {
-        id: 'workspace_2',
-        title: 'Workspace 2',
-        boardCount: 2,
-    }
+    const board = TestBlockFactory.createBoard()
+    board.id = 'board1'
 
-    const workspace3: UserWorkspace = {
-        id: 'workspace_3',
-        title: 'Workspace 3',
-        boardCount: 0,
-    }
-
-    test('sidebar in dashboard page', () => {
-        const store = mockStore({
-            workspace: {
-                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
-            },
-            boards: {
-                boards: [],
-            },
-            views: {
-                views: [],
-            },
-            users: {
-                me: {},
-            },
-        })
-
-        const history = createMemoryHistory()
-
-        const component = wrapIntl(
-            <ReduxProvider store={store}>
-                <Router history={history}>
-                    <Sidebar isDashboard={true}/>
-                </Router>
-            </ReduxProvider>,
-        )
-        const {container} = render(component)
-        expect(container).toMatchSnapshot()
-    })
+    const categoryAttribute1 = TestBlockFactory.createCategoryBlocks()
+    categoryAttribute1.name = 'Category 1'
+    categoryAttribute1.blockIDs = [board.id]
 
     test('sidebar hidden', () => {
         const store = mockStore({
-            workspace: {
-                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
-                boards: [],
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
             },
             views: {
                 views: [],
             },
             users: {
                 me: {},
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
             },
         })
 
@@ -90,7 +61,7 @@ describe('components/sidebarSidebar', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
-                    <Sidebar isDashboard={true}/>
+                    <Sidebar/>
                 </Router>
             </ReduxProvider>,
         )
@@ -113,17 +84,25 @@ describe('components/sidebarSidebar', () => {
         customGlobal.innerWidth = 500
 
         const store = mockStore({
-            workspace: {
-                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
-                boards: [],
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
             },
             views: {
                 views: [],
             },
             users: {
                 me: {},
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
             },
         })
 
@@ -132,7 +111,7 @@ describe('components/sidebarSidebar', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
-                    <Sidebar isDashboard={true}/>
+                    <Sidebar/>
                 </Router>
             </ReduxProvider>,
         )
@@ -147,4 +126,60 @@ describe('components/sidebarSidebar', () => {
 
         customGlobal.innerWidth = 1024
     })
+
+    // TODO: Fix this later
+    // test('global templates', () => {
+    //     const store = mockStore({
+    //         teams: {
+    //             current: {id: 'team-id'},
+    //         },
+    //         boards: {
+    //             boards: [],
+    //             templates: [
+    //                 {id: '1', title: 'Template 1', fields: {icon: '🚴🏻‍♂️'}},
+    //                 {id: '2', title: 'Template 2', fields: {icon: '🚴🏻‍♂️'}},
+    //                 {id: '3', title: 'Template 3', fields: {icon: '🚴🏻‍♂️'}},
+    //                 {id: '4', title: 'Template 4', fields: {icon: '🚴🏻‍♂️'}},
+    //             ],
+    //         },
+    //         views: {
+    //             views: [],
+    //         },
+    //         users: {
+    //             me: {},
+    //         },
+    //         globalTemplates: {
+    //             value: [],
+    //         },
+    //         sidebar: {
+    //             categoryAttributes: [
+    //                 categoryAttribute1,
+    //             ],
+    //         },
+    //     })
+
+    //     const history = createMemoryHistory()
+
+    //     const component = wrapIntl(
+    //         <ReduxProvider store={store}>
+    //             <Router history={history}>
+    //                 <Sidebar/>
+    //             </Router>
+    //         </ReduxProvider>,
+    //     )
+    //     const {container} = render(component)
+    //     expect(container).toMatchSnapshot()
+
+    //     const addBoardButton = container.querySelector('.SidebarAddBoardMenu > .MenuWrapper')
+    //     expect(addBoardButton).toBeDefined()
+    //     userEvent.click(addBoardButton as Element)
+    //     const templates = container.querySelectorAll('.SidebarAddBoardMenu > .MenuWrapper div:not(.hideOnWidescreen).menu-options .menu-name')
+    //     expect(templates).toBeDefined()
+
+    //     console.log(templates[0].innerHTML)
+    //     console.log(templates[1].innerHTML)
+
+    //     // 4 mocked templates, one "Select a template", one "Empty Board" and one "+ New Template"
+    //     expect(templates.length).toBe(7)
+    // })
 })

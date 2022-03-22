@@ -8,14 +8,13 @@ import (
 	"sort"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 // Diff represents a difference between two versions of a block.
 type Diff struct {
-	Board   *model.Block
+	Board   *model.Board
 	Card    *model.Block
 	Authors StringMap
 
@@ -40,16 +39,15 @@ type PropDiff struct {
 }
 
 type SchemaDiff struct {
-	Board *model.Block
+	Board *model.Board
 
 	OldPropDef *model.PropDef
 	NewPropDef *model.PropDef
 }
 
 type diffGenerator struct {
-	container store.Container
-	board     *model.Block
-	card      *model.Block
+	board *model.Board
+	card  *model.Block
 
 	store        Store
 	hint         *model.NotificationHint
@@ -63,7 +61,7 @@ func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
 		Limit:      1,
 		Descending: true,
 	}
-	blocks, err := dg.store.GetBlockHistory(dg.container, dg.hint.BlockID, opts)
+	blocks, err := dg.store.GetBlockHistory(dg.hint.BlockID, opts)
 	if err != nil {
 		return nil, fmt.Errorf("could not get block for notification: %w", err)
 	}
@@ -84,7 +82,10 @@ func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
 
 	switch block.Type {
 	case model.TypeBoard:
-		return dg.generateDiffsForBoard(block, schema)
+		dg.logger.Warn("generateDiffs for board skipped", mlog.String("block_id", block.ID))
+		// TODO: Fix this
+		// return dg.generateDiffsForBoard(block, schema)
+		return nil, nil
 	case model.TypeCard:
 		diff, err := dg.generateDiffsForCard(block, schema)
 		if err != nil || diff == nil {
@@ -100,27 +101,29 @@ func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
 	}
 }
 
-func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.PropSchema) ([]*Diff, error) {
+// TODO: fix this
+/*
+func (dg *diffGenerator) generateDiffsForBoard(board *model.Board, schema model.PropSchema) ([]*Diff, error) {
 	opts := model.QuerySubtreeOptions{
 		AfterUpdateAt: dg.lastNotifyAt,
 	}
 
-	// find all child blocks of the board that updated since last notify.
-	blocks, err := dg.store.GetSubTree2(dg.container, board.ID, opts)
+	find all child blocks of the board that updated since last notify.
+	blocks, err := dg.store.GetSubTree2(board.ID, board.ID, opts)
 	if err != nil {
 		return nil, fmt.Errorf("could not get subtree for board %s: %w", board.ID, err)
 	}
 
 	var diffs []*Diff
 
-	// generate diff for board title change or description
+	generate diff for board title change or description
 	boardDiff, err := dg.generateDiffForBlock(board, schema)
 	if err != nil {
 		return nil, fmt.Errorf("could not generate diff for board %s: %w", board.ID, err)
 	}
 
 	if boardDiff != nil {
-		// TODO: phase 2 feature (generate schema diffs and add to board diff) goes here.
+		TODO: phase 2 feature (generate schema diffs and add to board diff) goes here.
 		diffs = append(diffs, boardDiff)
 	}
 
@@ -136,6 +139,7 @@ func (dg *diffGenerator) generateDiffsForBoard(board *model.Block, schema model.
 	}
 	return diffs, nil
 }
+*/
 
 func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.PropSchema) (*Diff, error) {
 	// generate diff for card title change and properties.
@@ -148,7 +152,7 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 	opts := model.QuerySubtreeOptions{
 		AfterUpdateAt: dg.lastNotifyAt,
 	}
-	blocks, err := dg.store.GetSubTree2(dg.container, card.ID, opts)
+	blocks, err := dg.store.GetSubTree2(card.BoardID, card.ID, opts)
 	if err != nil {
 		return nil, fmt.Errorf("could not get subtree for card %s: %w", card.ID, err)
 	}
@@ -214,7 +218,7 @@ func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema mode
 		Limit:          1,
 		Descending:     true,
 	}
-	history, err := dg.store.GetBlockHistory(dg.container, newBlock.ID, opts)
+	history, err := dg.store.GetBlockHistory(newBlock.ID, opts)
 	if err != nil {
 		return nil, fmt.Errorf("could not get block history for block %s: %w", newBlock.ID, err)
 	}
@@ -237,7 +241,7 @@ func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema mode
 		AfterUpdateAt: dg.lastNotifyAt,
 		Descending:    true,
 	}
-	chgBlocks, err := dg.store.GetBlockHistory(dg.container, newBlock.ID, opts)
+	chgBlocks, err := dg.store.GetBlockHistory(newBlock.ID, opts)
 	if err != nil {
 		return nil, fmt.Errorf("error getting block history for block %s: %w", newBlock.ID, err)
 	}

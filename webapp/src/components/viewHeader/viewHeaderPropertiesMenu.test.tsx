@@ -46,7 +46,7 @@ describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
                 <ReduxProvider store={store}>
                     <ViewHeaderPropertiesMenu
                         activeView={activeView}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -62,7 +62,7 @@ describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
                 <ReduxProvider store={store}>
                     <ViewHeaderPropertiesMenu
                         activeView={activeView}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -77,7 +77,7 @@ describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
                 <ReduxProvider store={store}>
                     <ViewHeaderPropertiesMenu
                         activeView={activeView}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -87,6 +87,7 @@ describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
         const badgesButton = screen.getByRole('button', {name: 'Comments and Description'})
         userEvent.click(badgesButton)
         expect(mockedMutator.changeViewVisibleProperties).toHaveBeenCalledWith(
+            activeView.boardId,
             activeView.id,
             activeView.fields.visiblePropertyIds,
             [...activeView.fields.visiblePropertyIds, Constants.badgesColumnId],

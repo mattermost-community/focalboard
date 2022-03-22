@@ -11,9 +11,9 @@ import {Utils} from '../utils'
 import {Constants} from '../constants'
 import {CardFilter} from '../cardFilter'
 
-import {initialLoad, initialReadOnlyLoad} from './initialLoad'
+import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
 import {getCurrentBoard} from './boards'
-import {getWorkspaceUsers} from './users'
+import {getBoardUsers} from './users'
 import {getCurrentView} from './views'
 import {getSearchText} from './searchText'
 
@@ -67,7 +67,7 @@ const cardsSlice = createSlice({
                 }
             }
         })
-        builder.addCase(initialLoad.fulfilled, (state, action) => {
+        builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.cards = {}
             state.templates = {}
             for (const block of action.payload.blocks) {
@@ -112,7 +112,7 @@ export const getCurrentBoardCards = createSelector(
     (state) => state.boards.current,
     getCards,
     (boardId, cards) => {
-        return Object.values(cards).filter((c) => c.parentId === boardId) as Card[]
+        return Object.values(cards).filter((c) => c.boardId === boardId) as Card[]
     },
 )
 
@@ -120,7 +120,7 @@ export const getCurrentBoardTemplates = createSelector(
     (state) => state.boards.current,
     getTemplates,
     (boardId, templates) => {
-        return Object.values(templates).filter((c) => c.parentId === boardId) as Card[]
+        return Object.values(templates).filter((c) => c.boardId === boardId) as Card[]
     },
 )
 
@@ -178,7 +178,7 @@ function sortCards(cards: Card[], board: Board, activeView: BoardView, usersById
             })
         } else {
             const sortPropertyId = sortOption.propertyId
-            const template = board.fields.cardProperties.find((o) => o.id === sortPropertyId)
+            const template = board.cardProperties.find((o) => o.id === sortPropertyId)
             if (!template) {
                 Utils.logError(`Missing template for property id: ${sortPropertyId}`)
                 return sortedCards
@@ -270,7 +270,7 @@ function searchFilterCards(cards: Card[], board: Board, searchTextRaw: string): 
 
         for (const [propertyId, propertyValue] of Object.entries(card.fields.properties)) {
             // TODO: Refactor to a shared function that returns the display value of a property
-            const propertyTemplate = board.fields.cardProperties.find((o) => o.id === propertyId)
+            const propertyTemplate = board.cardProperties.find((o) => o.id === propertyId)
             if (propertyTemplate) {
                 if (propertyTemplate.type === 'select') {
                     // Look up the value of the select option
@@ -299,14 +299,14 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
     getCurrentBoard,
     getCurrentView,
     getSearchText,
-    getWorkspaceUsers,
+    getBoardUsers,
     (cards, board, view, searchText, users) => {
         if (!view || !board || !users || !cards) {
             return []
         }
         let result = cards
         if (view.fields.filter) {
-            result = CardFilter.applyFilterGroup(view.fields.filter, board.fields.cardProperties, result)
+            result = CardFilter.applyFilterGroup(view.fields.filter, board.cardProperties, result)
         }
 
         if (searchText) {

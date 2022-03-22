@@ -30,9 +30,9 @@ beforeAll(() => {
 })
 describe('components/cardDialog', () => {
     const board = TestBlockFactory.createBoard()
-    board.fields.cardProperties = []
+    board.cardProperties = []
     board.id = 'test-id'
-    board.rootId = board.id
+    board.teamId = 'team-id'
     const boardView = TestBlockFactory.createBoardView(board)
     boardView.id = board.id
     const card = TestBlockFactory.createCard(board)
@@ -49,22 +49,32 @@ describe('components/cardDialog', () => {
         },
         comments: {
             comments: {},
+            commentsByCard: {},
         },
-        contents: {},
+        contents: {
+            contents: {},
+            contentsByCard: {},
+        },
         cards: {
             cards: {
                 [card.id]: card,
             },
             current: card.id,
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
         boards: {
             boards: {
                 [board.id]: board,
             },
             current: board.id,
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         users: {
-            workspaceUsers: {
+            boardUsers: {
                 1: {username: 'abc'},
                 2: {username: 'd'},
                 3: {username: 'e'},
@@ -83,6 +93,28 @@ describe('components/cardDialog', () => {
         await act(async () => {
             const result = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
+                    <CardDialog
+                        board={board}
+                        activeView={boardView}
+                        views={[boardView]}
+                        cards={[card]}
+                        cardId={card.id}
+                        onClose={jest.fn()}
+                        showCard={jest.fn()}
+                        readonly={false}
+                    />
+                </ReduxProvider>,
+            ))
+            container = result.container
+        })
+        expect(container).toMatchSnapshot()
+    })
+    test('should match snapshot without permissions', async () => {
+        let container
+        const localStore = mockStateStore([], {...state, teams: {current: undefined}})
+        await act(async () => {
+            const result = render(wrapDNDIntl(
+                <ReduxProvider store={localStore}>
                     <CardDialog
                         board={board}
                         activeView={boardView}

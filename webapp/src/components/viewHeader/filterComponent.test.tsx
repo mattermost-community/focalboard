@@ -41,7 +41,7 @@ const store = mockStateStore([], state)
 describe('components/viewHeader/filterComponent', () => {
     beforeEach(() => {
         jest.clearAllMocks()
-        board.fields.cardProperties[0].options = [{id: 'Status', value: 'Status', color: ''}]
+        board.cardProperties[0].options = [{id: 'Status', value: 'Status', color: ''}]
         activeView.fields.filter.filters = [filter]
     })
     test('return filterComponent', () => {

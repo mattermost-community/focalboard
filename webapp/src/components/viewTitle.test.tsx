@@ -31,15 +31,26 @@ beforeAll(() => {
 describe('components/viewTitle', () => {
     const board = TestBlockFactory.createBoard()
     board.id = 'test-id'
-    board.rootId = board.id
     const state = {
         users: {
-            workspaceUsers: {
+            boardUsers: {
                 1: {username: 'abc'},
                 2: {username: 'd'},
                 3: {username: 'e'},
                 4: {username: 'f'},
                 5: {username: 'g'},
+            },
+        },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
             },
         },
     }
@@ -82,7 +93,7 @@ describe('components/viewTitle', () => {
     })
 
     test('show description', async () => {
-        board.fields.showDescription = true
+        board.showDescription = true
         let container
         await act(async () => {
             const result = render(wrapIntl(
@@ -98,11 +109,11 @@ describe('components/viewTitle', () => {
         expect(container).toMatchSnapshot()
         const hideDescriptionButton = screen.getAllByRole('button')[0]
         userEvent.click(hideDescriptionButton)
-        expect(mockedMutator.showDescription).toBeCalledTimes(1)
+        expect(mockedMutator.showBoardDescription).toBeCalledTimes(1)
     })
 
     test('hide description', async () => {
-        board.fields.showDescription = false
+        board.showDescription = false
         let container
         await act(async () => {
             const result = render(wrapIntl(
@@ -118,11 +129,11 @@ describe('components/viewTitle', () => {
         expect(container).toMatchSnapshot()
         const showDescriptionButton = screen.getAllByRole('button')[0]
         userEvent.click(showDescriptionButton)
-        expect(mockedMutator.showDescription).toBeCalledTimes(1)
+        expect(mockedMutator.showBoardDescription).toBeCalledTimes(1)
     })
 
     test('add random icon', async () => {
-        board.fields.icon = ''
+        board.icon = ''
         let container
         await act(async () => {
             const result = render(wrapIntl(
@@ -138,7 +149,7 @@ describe('components/viewTitle', () => {
         expect(container).toMatchSnapshot()
         const randomIconButton = screen.getAllByRole('button')[0]
         userEvent.click(randomIconButton)
-        expect(mockedMutator.changeIcon).toBeCalledTimes(1)
+        expect(mockedMutator.changeBoardIcon).toBeCalledTimes(1)
     })
 
     test('change title', async () => {
@@ -155,6 +166,6 @@ describe('components/viewTitle', () => {
         const titleInput = screen.getAllByRole('textbox')[0]
         userEvent.type(titleInput, 'other title')
         fireEvent.blur(titleInput)
-        expect(mockedMutator.changeTitle).toBeCalledTimes(1)
+        expect(mockedMutator.changeBoardTitle).toBeCalledTimes(1)
     })
 })

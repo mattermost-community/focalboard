@@ -53,7 +53,7 @@ exports[`components/cardDialog already following card 1`] = `
           class="CardDetail content"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -318,7 +318,7 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
           class="CardDetail content"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               class="octo-icon size-l readonly"
@@ -531,7 +531,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
           class="CardDetail content"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -809,7 +809,7 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
           class="CardDetail content"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -1087,7 +1087,7 @@ exports[`components/cardDialog should match snapshot 1`] = `
           class="CardDetail content"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               aria-label="menuwrapper"
@@ -1303,6 +1303,126 @@ exports[`components/cardDialog should match snapshot 1`] = `
                   Add content
                 </span>
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDialog should match snapshot without permissions 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back cardDialog"
+  >
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            class="cardToolbar"
+          >
+            <button
+              type="button"
+            >
+              <span>
+                Follow
+              </span>
+            </button>
+          </div>
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="CardDetail content"
+        >
+          <div
+            class="IconSelector"
+          >
+            <div
+              class="octo-icon size-l readonly"
+            >
+              <span>
+                i
+              </span>
+            </div>
+          </div>
+          <div
+            class="EditableAreaWrap"
+          >
+            <textarea
+              class="EditableArea Editable readonly title"
+              height="0"
+              placeholder="Untitled"
+              readonly=""
+              rows="1"
+              spellcheck="true"
+              title="title"
+            >
+              title
+            </textarea>
+            <div
+              class="EditableAreaContainer"
+            >
+              <textarea
+                aria-hidden="true"
+                class="EditableAreaReference Editable readonly title"
+                dir="auto"
+                disabled=""
+                rows="1"
+              >
+                title
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="octo-propertylist CardDetailProperties"
+          />
+          <hr />
+          <div
+            class="CommentsList"
+          />
+        </div>
+        <div
+          class="CardDetail content fullwidth content-blocks"
+        >
+          <div
+            class="octo-content CardDetailContents"
+          >
+            <div
+              class="octo-block"
+            >
+              <div
+                class="octo-block-margin"
+              />
             </div>
           </div>
         </div>

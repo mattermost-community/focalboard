@@ -24,7 +24,7 @@ const mockedMutator = mocked(mutator, true)
 
 describe('components/cardDetail/CardDetailProperties', () => {
     const board = TestBlockFactory.createBoard()
-    board.fields.cardProperties = [
+    board.cardProperties = [
         {
             id: 'property_id_1',
             name: 'Owner',
@@ -81,11 +81,17 @@ describe('components/cardDetail/CardDetailProperties', () => {
                 },
             },
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
         boards: {
             boards: {
                 [board.id]: board,
             },
             current: board.id,
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         cards: {
             cards: {
@@ -109,8 +115,6 @@ describe('components/cardDetail/CardDetailProperties', () => {
                     board={board!}
                     card={card}
                     cards={[card]}
-                    contents={[]}
-                    comments={[]}
                     activeView={view}
                     views={views}
                     readonly={false}
@@ -162,7 +166,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         // rename to "Owner-Renamed"
         onPropertyRenameOpenConfirmationDialog(result.container)
 
-        const propertyTemplate = board.fields.cardProperties[0]
+        const propertyTemplate = board.cardProperties[0]
 
         const confirmButton = result.getByTitle('Change Property')
         expect(confirmButton).toBeDefined()
@@ -213,7 +217,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
         openDeleteConfirmationDialog(container)
 
-        const propertyTemplate = board.fields.cardProperties[0]
+        const propertyTemplate = board.cardProperties[0]
 
         const confirmButton = result.getByTitle('Delete')
         expect(confirmButton).toBeDefined()
@@ -267,4 +271,3 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(confirmDialog).toBeDefined()
     }
 })
-

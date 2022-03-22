@@ -16,8 +16,6 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import mutator from '../../mutator'
 
-import {RootState} from '../../store'
-
 import Gallery from './gallery'
 
 jest.mock('../../mutator')
@@ -30,9 +28,13 @@ describe('src/components/gallery/Gallery', () => {
     const card = TestBlockFactory.createCard(board)
     const card2 = TestBlockFactory.createCard(board)
     const contents = [TestBlockFactory.createDivider(card), TestBlockFactory.createDivider(card), TestBlockFactory.createDivider(card2)]
-    const state: Partial<RootState> = {
+    const state = {
         contents: {
             contents: blocksById(contents),
+            contentsByCard: {
+                [card.id]: [contents[0], contents[1]],
+                [card2.id]: [contents[2]],
+            },
         },
         cards: {
             current: '',
@@ -40,6 +42,18 @@ describe('src/components/gallery/Gallery', () => {
                 [card.id]: card,
             },
             templates: {},
+        },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         comments: {
             comments: {},
@@ -52,6 +66,25 @@ describe('src/components/gallery/Gallery', () => {
     test('should match snapshot', () => {
         const {container} = render(wrapDNDIntl(
             <ReduxProvider store={store}>
+                <Gallery
+                    board={board}
+                    cards={[card, card2]}
+                    activeView={activeView}
+                    readonly={false}
+                    addCard={jest.fn()}
+                    selectedCardIds={[card.id]}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
+        ))
+        const buttonElement = screen.getAllByRole('button', {name: 'menuwrapper'})[0]
+        userEvent.click(buttonElement)
+        expect(container).toMatchSnapshot()
+    })
+    test('should match snapshot without permissions', () => {
+        const localStore = mockStateStore([], {...state, teams: {current: undefined}})
+        const {container} = render(wrapDNDIntl(
+            <ReduxProvider store={localStore}>
                 <Gallery
                     board={board}
                     cards={[card, card2]}

@@ -70,6 +70,13 @@
             background-color: rgba(230, 192, 192, 0.9);
         }
 
+        > .toolbar {
+            display: flex;
+            flex-direction: row;
+            padding: 24px;
+            justify-content: space-between;
+        }
+
         > .content {
             display: flex;
             flex-direction: column;

@@ -4,7 +4,10 @@
 package plugindelivery
 
 import (
+	"fmt"
+
 	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/utils"
 
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
@@ -52,11 +55,32 @@ func New(botID string, serverRoot string, api PluginAPI) *PluginDelivery {
 	}
 }
 
-func (pd *PluginDelivery) getTeamID(evt notify.BlockChangeEvent) (string, error) {
-	// for now, the workspace ID is also the channel ID
-	channel, err := pd.api.GetChannelByID(evt.Workspace)
+func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt notify.BlockChangeEvent) error {
+	member, err := teamMemberFromUsername(pd.api, mentionUsername, evt.TeamID)
 	if err != nil {
-		return "", err
+		if isErrNotFound(err) {
+			// not really an error; could just be someone typed "@sometext"
+			return nil
+		} else {
+			return fmt.Errorf("cannot lookup mentioned user: %w", err)
+		}
 	}
-	return channel.TeamId, nil
+
+	author, err := pd.api.GetUserByID(evt.ModifiedByID)
+	if err != nil {
+		return fmt.Errorf("cannot find user: %w", err)
+	}
+
+	channel, err := pd.api.GetDirectChannel(member.UserId, pd.botID)
+	if err != nil {
+		return fmt.Errorf("cannot get direct channel: %w", err)
+	}
+	link := utils.MakeCardLink(pd.serverRoot, evt.TeamID, evt.Board.ID, evt.Card.ID)
+
+	post := &mm_model.Post{
+		UserId:    pd.botID,
+		ChannelId: channel.Id,
+		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),
+	}
+	return pd.api.CreatePost(post)
 }

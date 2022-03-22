@@ -21,8 +21,7 @@ type Props = {
 }
 
 const Dialog = (props: Props) => {
-    const {toolsMenu} = props
-    const {toolbar, title} = props
+    const {toolsMenu, toolbar, title} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({

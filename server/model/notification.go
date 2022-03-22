@@ -18,10 +18,6 @@ type NotificationHint struct {
 	// required: true
 	BlockID string `json:"block_id"`
 
-	// WorkspaceID is id of workspace the block belongs to
-	// required: true
-	WorkspaceID string `json:"workspace_id"`
-
 	// ModifiedByID is the id of the user who made the block change
 	ModifiedByID string `json:"modified_by_id"`
 
@@ -41,9 +37,6 @@ func (s *NotificationHint) IsValid() error {
 	if s.BlockID == "" {
 		return ErrInvalidNotificationHint{"missing block id"}
 	}
-	if s.WorkspaceID == "" {
-		return ErrInvalidNotificationHint{"missing workspace id"}
-	}
 	if s.BlockType == "" {
 		return ErrInvalidNotificationHint{"missing block type"}
 	}
@@ -57,7 +50,6 @@ func (s *NotificationHint) Copy() *NotificationHint {
 	return &NotificationHint{
 		BlockType:    s.BlockType,
 		BlockID:      s.BlockID,
-		WorkspaceID:  s.WorkspaceID,
 		ModifiedByID: s.ModifiedByID,
 		CreateAt:     s.CreateAt,
 		NotifyAt:     s.NotifyAt,
@@ -68,14 +60,12 @@ func (s *NotificationHint) LogClone() interface{} {
 	return struct {
 		BlockType    BlockType `json:"block_type"`
 		BlockID      string    `json:"block_id"`
-		WorkspaceID  string    `json:"workspace_id"`
 		ModifiedByID string    `json:"modified_by_id"`
 		CreateAt     string    `json:"create_at"`
 		NotifyAt     string    `json:"notify_at"`
 	}{
 		BlockType:    s.BlockType,
 		BlockID:      s.BlockID,
-		WorkspaceID:  s.WorkspaceID,
 		ModifiedByID: s.ModifiedByID,
 		CreateAt:     utils.TimeFromMillis(s.CreateAt).Format(time.StampMilli),
 		NotifyAt:     utils.TimeFromMillis(s.NotifyAt).Format(time.StampMilli),

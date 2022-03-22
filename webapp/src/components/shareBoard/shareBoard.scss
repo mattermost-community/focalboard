@@ -77,12 +77,6 @@
                 padding: 0 4px 0 8px;
             }
 
-            .IconButton {
-                width: 32px;
-                height: 32px;
-                margin-right: 4px;
-            }
-
             .icon-refresh {
                 margin: 4px;
                 font-size: 18px;
@@ -120,6 +114,102 @@
                 :hover {
                     background-color: rgb(var(--center-channel-color-rgb), 0.1);
                 }
+            }
+
+            input {
+                width: 100%;
+                height: 40px;
+                border-radius: 4px;
+                border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+                padding: 0 16px;
+
+                &:focus {
+                    border: 2px solid var(--button-bg);
+                    padding: 0 15px;
+                }
+            }
+        }
+    }
+
+    .share-input__container {
+        margin-top: 16px;
+        padding: 0 24px 24px;
+        border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+    }
+
+    .share-input {
+        height: 48px;
+        padding: 0 12px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: 100%;
+
+        i {
+            color: rgba(var(--center-channel-color-rgb), 0.64);
+            z-index: 5;
+            position: relative;
+            font-size: 18px;
+        }
+
+        .userSearchInput {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+            padding-left: 40px;
+
+            &:focus {
+                border: 2px solid var(--button-bg);
+                padding-left: 39px;
+            }
+        }
+    }
+
+    .user-items {
+        padding: 16px 8px;
+        max-height: 282px;
+        overflow: auto;
+        border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+    }
+
+    .user-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 56px;
+        padding: 0 16px;
+
+        .user-item__img {
+            border-radius: 50px;
+            width: 32px;
+            height: 32px;
+            font-size: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-item__title {
+            font-weight: bold;
+        }
+
+        .user-item__content {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-item__button {
+            background: transparent;
+            border: 0;
+            color: rgba(var(--link-color-rgb), 1);
+            padding: 0;
+
+            &:hover {
+                text-decoration: underline;
             }
         }
     }

@@ -3,7 +3,7 @@
 exports[`components/blockIconSelector return an icon correctly 1`] = `
 <div>
   <div
-    class="BlockIconSelector"
+    class="IconSelector"
   >
     <div
       aria-label="menuwrapper"
@@ -25,7 +25,7 @@ exports[`components/blockIconSelector return an icon correctly 1`] = `
 exports[`components/blockIconSelector return menu on click 1`] = `
 <div>
   <div
-    class="BlockIconSelector"
+    class="IconSelector"
   >
     <div
       aria-label="menuwrapper"
@@ -161,7 +161,7 @@ exports[`components/blockIconSelector return no icon after click on remove menu 
 exports[`components/blockIconSelector return no menu in readonly 1`] = `
 <div>
   <div
-    class="BlockIconSelector"
+    class="IconSelector"
   >
     <div
       class="octo-icon size-m readonly"

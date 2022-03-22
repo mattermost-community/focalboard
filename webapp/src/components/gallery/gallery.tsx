@@ -1,14 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useMemo, useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
 import {Card} from '../../blocks/card'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './gallery.scss'
 import GalleryCard from './galleryCard'
@@ -25,12 +27,15 @@ type Props = {
 
 const Gallery = (props: Props): JSX.Element => {
     const {activeView, board, cards} = props
+    const visiblePropertyTemplates = useMemo(() => {
+        return board.cardProperties.filter(
+            (template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id),
+        )
+    }, [board.cardProperties, activeView.fields.visiblePropertyIds])
 
-    const visiblePropertyTemplates =
-        activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
     const isManualSort = activeView.fields.sortOptions.length === 0
 
-    const onDropToCard = (srcCard: Card, dstCard: Card) => {
+    const onDropToCard = useCallback((srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
         const {selectedCardIds} = props
 
@@ -48,16 +53,16 @@ const Gallery = (props: Props): JSX.Element => {
         cardOrder.splice(destIndex, 0, ...draggedCardIds)
 
         mutator.performAsUndoGroup(async () => {
-            await mutator.changeViewCardOrder(activeView, cardOrder, description)
+            await mutator.changeViewCardOrder(board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description)
         })
-    }
+    }, [cards.map((o) => o.id).join(','), board.id, activeView.id, activeView.fields.cardOrder, props.selectedCardIds])
 
     const visibleTitle = activeView.fields.visiblePropertyIds.includes(Constants.titleColumnId)
     const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
 
     return (
         <div className='Gallery'>
-            {cards.filter((c) => c.parentId === board.id).map((card) => {
+            {cards.filter((c) => c.boardId === board.id).map((card) => {
                 return (
                     <GalleryCard
                         key={card.id + card.updateAt}
@@ -78,17 +83,19 @@ const Gallery = (props: Props): JSX.Element => {
             {/* Add New row */}
 
             {!props.readonly &&
-                <div
-                    className='octo-gallery-new'
-                    onClick={() => {
-                        props.addCard(true)
-                    }}
-                >
-                    <FormattedMessage
-                        id='TableComponent.plus-new'
-                        defaultMessage='+ New'
-                    />
-                </div>
+                <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                    <div
+                        className='octo-gallery-new'
+                        onClick={() => {
+                            props.addCard(true)
+                        }}
+                    >
+                        <FormattedMessage
+                            id='TableComponent.plus-new'
+                            defaultMessage='+ New'
+                        />
+                    </div>
+                </BoardPermissionGate>
             }
         </div>
     )

@@ -10,7 +10,7 @@ export interface PluginRegistry {
     registerCustomRoute(route: string, component: React.ElementType)
     registerProductRoute(route: string, component: React.ElementType)
     unregisterComponent(componentId: string)
-    registerProduct(baseURL: string, switcherIcon: string, switcherText: string, switcherLinkURL: string, mainComponent: React.ElementType, headerCompoent: React.ElementType)
+    registerProduct(baseURL: string, switcherIcon: string, switcherText: string, switcherLinkURL: string, mainComponent: React.ElementType, headerCentreComponent: React.ElementType, headerRightComponent?: React.ElementType, showTeamSidebar: boolean)
     registerPostWillRenderEmbedComponent(match: (embed: {type: string, data: any}) => void, component: any, toggleable: boolean)
     registerWebSocketEventHandler(event: string, handler: (e: any) => void)
     unregisterWebSocketEventHandler(event: string)

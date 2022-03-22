@@ -93,62 +93,42 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
         class="WorkspaceTitle"
       />
       <div
-        class="WorkspaceSwitcherWrapper"
+        class="BoardsSwitcherWrapper"
       >
         <div
-          class="WorkspaceSwitcher"
+          class="BoardsSwitcher"
         >
-          <span>
-            Workspace 1
-          </span>
           <i
-            class="CompassIcon icon-chevron-down ChevronDownIcon"
+            class="CompassIcon icon-magnify MagnifyIcon"
           />
+          <div>
+            <span>
+              Find Boards
+            </span>
+          </div>
         </div>
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-plus AddIcon"
-          />
-        </button>
       </div>
       <div
         class="octo-sidebar-list"
       >
         <div
-          class="SidebarBoardItem"
+          class="SidebarCategory"
         >
           <div
-            class="octo-sidebar-item ' expanded active"
+            class="octo-sidebar-item category ' expanded active"
           >
             <button
               type="button"
             >
-              <svg
-                class="DisclosureTriangleIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <polygon
-                  points="37,35 37,65 63,50"
-                />
-              </svg>
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
             </button>
             <div
-              class="octo-sidebar-title"
-              title="board title"
+              class="octo-sidebar-title category-title"
+              title="Category 1"
             >
-              <div
-                class="octo-icon"
-              >
-                i
-              </div>
-              <span
-                class="octo-sidebar-name"
-              >
-                board title
-              </span>
+              Category 1
             </div>
             <div
               aria-label="menuwrapper"
@@ -165,7 +145,35 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
             </div>
           </div>
           <div
-            class="octo-sidebar-item subitem active"
+            class="SidebarBoardItem subitem active"
+          >
+            <div
+              class="octo-sidebar-icon"
+            >
+              i
+            </div>
+            <div
+              class="octo-sidebar-title"
+              title="board title"
+            >
+              board title
+            </div>
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper x"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="SidebarBoardItem sidebar-view-item active"
           >
             <svg
               class="BoardIcon Icon"
@@ -192,6 +200,45 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
             >
               view title
             </div>
+          </div>
+        </div>
+        <div
+          class="SidebarCategory"
+        >
+          <div
+            class="octo-sidebar-item category ' expanded "
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
+            </button>
+            <div
+              class="octo-sidebar-title category-title"
+              title="Boards"
+            >
+              Boards
+            </div>
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-sidebar-item subitem no-views"
+          >
+            No boards inside
           </div>
         </div>
       </div>
@@ -273,7 +320,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 class="title"
               >
                 <div
-                  class="BlockIconSelector"
+                  class="IconSelector"
                 >
                   <div
                     aria-label="menuwrapper"
@@ -390,18 +437,20 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 title="view title"
                 value="view title"
               />
-              <div
-                aria-label="View menu"
-                class="MenuWrapper"
-                role="button"
-              >
-                <button
-                  type="button"
+              <div>
+                <div
+                  aria-label="View menu"
+                  class="MenuWrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-chevron-down DropdownIcon"
-                  />
-                </button>
+                  <button
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-chevron-down DropdownIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -840,20 +889,14 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 class="title"
               >
                 <div
-                  class="BlockIconSelector"
+                  class="IconSelector"
                 >
                   <div
-                    aria-label="menuwrapper"
-                    class="MenuWrapper"
-                    role="button"
+                    class="octo-icon size-m readonly"
                   >
-                    <div
-                      class="octo-icon size-m"
-                    >
-                      <span>
-                        i
-                      </span>
-                    </div>
+                    <span>
+                      i
+                    </span>
                   </div>
                 </div>
                 <input
@@ -943,18 +986,20 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 title="view title"
                 value="view title"
               />
-              <div
-                aria-label="View menu"
-                class="MenuWrapper"
-                role="button"
-              >
-                <button
-                  type="button"
+              <div>
+                <div
+                  aria-label="View menu"
+                  class="MenuWrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-chevron-down DropdownIcon"
-                  />
-                </button>
+                  <button
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-chevron-down DropdownIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -1154,81 +1199,7 @@ exports[`src/components/workspace return workspace with BoardTemplateSelector co
   >
     <div
       class="mainFrame"
-    >
-      <div
-        class="BoardTemplateSelector"
-      >
-        <div
-          class="toolbar"
-        />
-        <div
-          class="header"
-        >
-          <h1
-            class="title"
-          >
-            Create a Board in Workspace 1
-          </h1>
-          <p
-            class="description"
-          >
-            Add a board to the sidebar using any of the templates defined below or start from scratch.
-            <br />
-             Members of "
-            <b>
-              Workspace 1
-            </b>
-            " will have access to boards created here.
-          </p>
-        </div>
-        <div
-          class="templates"
-        >
-          <div
-            class="templates-list"
-          >
-            <div
-              class="new-template"
-            >
-              <span
-                class="template-icon"
-              >
-                <i
-                  class="CompassIcon icon-plus AddIcon"
-                />
-              </span>
-              <span
-                class="template-name"
-              >
-                New template
-              </span>
-            </div>
-          </div>
-          <div
-            class="template-preview-box"
-          >
-            <div
-              class="buttons"
-            >
-              <button
-                type="button"
-              >
-                <span>
-                  Use this template
-                </span>
-              </button>
-              <button
-                type="button"
-              >
-                <span>
-                  Create empty board
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -1326,62 +1297,42 @@ exports[`src/components/workspace should match snapshot 1`] = `
         class="WorkspaceTitle"
       />
       <div
-        class="WorkspaceSwitcherWrapper"
+        class="BoardsSwitcherWrapper"
       >
         <div
-          class="WorkspaceSwitcher"
+          class="BoardsSwitcher"
         >
-          <span>
-            Workspace 1
-          </span>
           <i
-            class="CompassIcon icon-chevron-down ChevronDownIcon"
+            class="CompassIcon icon-magnify MagnifyIcon"
           />
+          <div>
+            <span>
+              Find Boards
+            </span>
+          </div>
         </div>
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-plus AddIcon"
-          />
-        </button>
       </div>
       <div
         class="octo-sidebar-list"
       >
         <div
-          class="SidebarBoardItem"
+          class="SidebarCategory"
         >
           <div
-            class="octo-sidebar-item ' expanded active"
+            class="octo-sidebar-item category ' expanded active"
           >
             <button
               type="button"
             >
-              <svg
-                class="DisclosureTriangleIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <polygon
-                  points="37,35 37,65 63,50"
-                />
-              </svg>
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
             </button>
             <div
-              class="octo-sidebar-title"
-              title="board title"
+              class="octo-sidebar-title category-title"
+              title="Category 1"
             >
-              <div
-                class="octo-icon"
-              >
-                i
-              </div>
-              <span
-                class="octo-sidebar-name"
-              >
-                board title
-              </span>
+              Category 1
             </div>
             <div
               aria-label="menuwrapper"
@@ -1398,7 +1349,35 @@ exports[`src/components/workspace should match snapshot 1`] = `
             </div>
           </div>
           <div
-            class="octo-sidebar-item subitem active"
+            class="SidebarBoardItem subitem active"
+          >
+            <div
+              class="octo-sidebar-icon"
+            >
+              i
+            </div>
+            <div
+              class="octo-sidebar-title"
+              title="board title"
+            >
+              board title
+            </div>
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper x"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="SidebarBoardItem sidebar-view-item active"
           >
             <svg
               class="BoardIcon Icon"
@@ -1425,6 +1404,45 @@ exports[`src/components/workspace should match snapshot 1`] = `
             >
               view title
             </div>
+          </div>
+        </div>
+        <div
+          class="SidebarCategory"
+        >
+          <div
+            class="octo-sidebar-item category ' expanded "
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
+            </button>
+            <div
+              class="octo-sidebar-title category-title"
+              title="Boards"
+            >
+              Boards
+            </div>
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-sidebar-item subitem no-views"
+          >
+            No boards inside
           </div>
         </div>
       </div>
@@ -1506,7 +1524,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 class="title"
               >
                 <div
-                  class="BlockIconSelector"
+                  class="IconSelector"
                 >
                   <div
                     aria-label="menuwrapper"
@@ -1623,18 +1641,20 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 title="view title"
                 value="view title"
               />
-              <div
-                aria-label="View menu"
-                class="MenuWrapper"
-                role="button"
-              >
-                <button
-                  type="button"
+              <div>
+                <div
+                  aria-label="View menu"
+                  class="MenuWrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-chevron-down DropdownIcon"
-                  />
-                </button>
+                  <button
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-chevron-down DropdownIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -2073,20 +2093,14 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 class="title"
               >
                 <div
-                  class="BlockIconSelector"
+                  class="IconSelector"
                 >
                   <div
-                    aria-label="menuwrapper"
-                    class="MenuWrapper"
-                    role="button"
+                    class="octo-icon size-m readonly"
                   >
-                    <div
-                      class="octo-icon size-m"
-                    >
-                      <span>
-                        i
-                      </span>
-                    </div>
+                    <span>
+                      i
+                    </span>
                   </div>
                 </div>
                 <input
@@ -2176,18 +2190,20 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 title="view title"
                 value="view title"
               />
-              <div
-                aria-label="View menu"
-                class="MenuWrapper"
-                role="button"
-              >
-                <button
-                  type="button"
+              <div>
+                <div
+                  aria-label="View menu"
+                  class="MenuWrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-chevron-down DropdownIcon"
-                  />
-                </button>
+                  <button
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-chevron-down DropdownIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
             <div

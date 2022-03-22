@@ -29,6 +29,12 @@ describe('components/viewHeader/emptyCardButton', () => {
                 id: 'user-id-1',
                 username: 'username_1'},
         },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+        },
         views: {
             current: 0,
             views: [activeView],

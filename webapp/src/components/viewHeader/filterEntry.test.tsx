@@ -44,7 +44,7 @@ const mockedConditionClicked = jest.fn()
 describe('components/viewHeader/filterEntry', () => {
     beforeEach(() => {
         jest.clearAllMocks()
-        board.fields.cardProperties[0].options = [{id: 'Status', value: 'Status', color: ''}]
+        board.cardProperties[0].options = [{id: 'Status', value: 'Status', color: ''}]
         activeView.fields.filter.filters = [filter]
     })
     test('return filterEntry', () => {

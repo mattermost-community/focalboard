@@ -46,8 +46,6 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
                   class="noicon"
                 />
               </div>
-            </div>
-            <div>
               <div
                 aria-label="Duplicate"
                 class="MenuOption TextOption menu-option"
@@ -185,8 +183,6 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
                   class="noicon"
                 />
               </div>
-            </div>
-            <div>
               <div
                 aria-label="Duplicate"
                 class="MenuOption TextOption menu-option"
@@ -324,8 +320,6 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
                   class="noicon"
                 />
               </div>
-            </div>
-            <div>
               <div
                 aria-label="Duplicate"
                 class="MenuOption TextOption menu-option"

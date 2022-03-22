@@ -1,38 +1,37 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useRef, useState, useMemo} from 'react'
+import React, {useEffect, useRef, useState, useMemo, useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {Card} from '../../blocks/card'
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {BoardView} from '../../blocks/boardView'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
-import {useAppSelector} from '../../store/hooks'
-
-import {getCardContents} from '../../store/contents'
-
-import {getCardComments} from '../../store/comments'
 
 import PropertyValueElement from '../propertyValueElement'
 import './tableRow.scss'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    columnWidths: Record<string, number>
+    isManualSort: boolean
+    groupById?: string
+    visiblePropertyIds: string[]
+    collapsedOptionIds: string[]
     card: Card
     isSelected: boolean
     focusOnMount: boolean
-    onSaveWithEnter: () => void
+    isLastCard: boolean
     showCard: (cardId: string) => void
     readonly: boolean
     offset: number
     resizingColumn: string
     columnRefs: Map<string, React.RefObject<HTMLDivElement>>
-    onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
+    addCard: (groupByOptionId?: string) => Promise<void>
+    onClick?: (e: React.MouseEvent<HTMLDivElement>, card: Card) => void
     onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
@@ -44,14 +43,11 @@ export const columnWidth = (resizingColumn: string, columnWidths: Record<string,
 }
 
 const TableRow = (props: Props) => {
-    const {board, activeView, onSaveWithEnter, columnRefs, card} = props
-    const contents = useAppSelector(getCardContents(card.id || ''))
-    const comments = useAppSelector(getCardComments(card.id))
+    const {board, columnRefs, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds, columnWidths} = props
 
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
-    const isManualSort = activeView.fields.sortOptions.length === 0
-    const isGrouped = Boolean(activeView.fields.groupById)
+    const isGrouped = Boolean(groupById)
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
 
     useEffect(() => {
@@ -60,18 +56,41 @@ const TableRow = (props: Props) => {
         }
     }, [])
 
+    const onClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        props.onClick && props.onClick(e, card)
+    }, [card, props.onClick])
+
+    const onSaveWithEnter = useCallback(() => {
+        if (props.isLastCard) {
+            props.addCard(groupById ? card.fields.properties[groupById!] as string : '')
+        }
+    }, [groupById && card.fields.properties[groupById!], props.isLastCard, props.addCard])
+
+    const onSave = useCallback((saveType) => {
+        if (card.title !== title) {
+            mutator.changeBlockTitle(props.board.id, card.id, card.title, title)
+            if (saveType === 'onEnter') {
+                onSaveWithEnter()
+            }
+        }
+    }, [card.title, title, onSaveWithEnter, board.id, card.id])
+
+    const onTitleChange = useCallback((newTitle: string) => {
+        setTitle(newTitle)
+    }, [title, setTitle])
+
     const visiblePropertyTemplates = useMemo(() => (
-        activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
-    ), [board.fields.cardProperties, activeView.fields.visiblePropertyIds])
+        board.cardProperties.filter((template: IPropertyTemplate) => visiblePropertyIds.includes(template.id))
+    ), [board.cardProperties, visiblePropertyIds])
 
     let className = props.isSelected ? 'TableRow octo-table-row selected' : 'TableRow octo-table-row'
     if (isOver) {
         className += ' dragover'
     }
     if (isGrouped) {
-        const groupID = activeView.fields.groupById || ''
+        const groupID = groupById || ''
         const groupValue = card.fields.properties[groupID] as string || 'undefined'
-        if (activeView.fields.collapsedOptionIds.indexOf(groupValue) > -1) {
+        if (collapsedOptionIds.indexOf(groupValue) > -1) {
             className += ' hidden'
         }
     }
@@ -83,7 +102,7 @@ const TableRow = (props: Props) => {
     return (
         <div
             className={className}
-            onClick={props.onClick}
+            onClick={onClick}
             ref={cardRef}
             style={{opacity: isDragging ? 0.5 : 1}}
         >
@@ -92,7 +111,7 @@ const TableRow = (props: Props) => {
             <div
                 className='octo-table-cell title-cell'
                 id='mainBoardHeader'
-                style={{width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, Constants.titleColumnId)}}
+                style={{width: columnWidth(props.resizingColumn, columnWidths, props.offset, Constants.titleColumnId)}}
                 ref={columnRefs.get(Constants.titleColumnId)}
             >
                 <div className='octo-icontitle'>
@@ -101,13 +120,8 @@ const TableRow = (props: Props) => {
                         ref={titleRef}
                         value={title}
                         placeholderText='Untitled'
-                        onChange={(newTitle: string) => setTitle(newTitle)}
-                        onSave={(saveType) => {
-                            mutator.changeTitle(card.id, card.title, title)
-                            if (saveType === 'onEnter') {
-                                onSaveWithEnter()
-                            }
-                        }}
+                        onChange={onTitleChange}
+                        onSave={onSave}
                         onCancel={() => setTitle(card.title || '')}
                         readonly={props.readonly}
                         spellCheck={true}
@@ -133,15 +147,13 @@ const TableRow = (props: Props) => {
                     <div
                         className='octo-table-cell'
                         key={template.id}
-                        style={{width: columnWidth(props.resizingColumn, props.activeView.fields.columnWidths, props.offset, template.id)}}
+                        style={{width: columnWidth(props.resizingColumn, columnWidths, props.offset, template.id)}}
                         ref={columnRefs.get(template.id)}
                     >
                         <PropertyValueElement
                             readOnly={props.readonly}
                             card={card}
                             board={board}
-                            contents={contents}
-                            comments={comments}
                             propertyTemplate={template}
                             showEmptyPlaceholder={false}
                         />

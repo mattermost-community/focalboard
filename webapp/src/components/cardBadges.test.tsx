@@ -41,11 +41,17 @@ describe('components/cardBadges', () => {
         },
         comments: {
             comments: blocksById(comments),
+            commentsByCard: {
+                [card.id]: comments,
+            },
         },
         contents: {
             contents: {
                 ...blocksById([text]),
                 ...blocksById(checkboxes),
+            },
+            contentsByCard: {
+                [card.id]: [text, ...checkboxes],
             },
         },
     }

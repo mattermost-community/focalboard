@@ -25,6 +25,9 @@ import {getUserBlockSubscriptionList} from '../store/initialLoad'
 
 import {IUser} from '../user'
 import {getMe} from '../store/users'
+import {Permission} from '../constants'
+
+import BoardPermissionGate from './permissions/boardPermissionGate'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
@@ -62,7 +65,8 @@ const CardDialog = (props: Props): JSX.Element => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromCard, {board: props.board.id, view: activeView.id, card: props.cardId})
         await mutator.duplicateCard(
             props.cardId,
-            board,
+            board.id,
+            card.fields.isTemplate,
             intl.formatMessage({id: 'Mutator.new-template-from-card', defaultMessage: 'new template from card'}),
             true,
             async (newCardId) => {
@@ -106,12 +110,14 @@ const CardDialog = (props: Props): JSX.Element => {
 
     const menu = (
         <Menu position='left'>
-            <Menu.Text
-                id='delete'
-                icon={<DeleteIcon/>}
-                name='Delete'
-                onClick={handleDeleteButtonOnClick}
-            />
+            <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                <Menu.Text
+                    id='delete'
+                    icon={<DeleteIcon/>}
+                    name='Delete'
+                    onClick={handleDeleteButtonOnClick}
+                />
+            </BoardPermissionGate>
             <Menu.Text
                 icon={<LinkIcon/>}
                 id='copy'
@@ -128,11 +134,13 @@ const CardDialog = (props: Props): JSX.Element => {
                 }}
             />
             {!isTemplate &&
-                <Menu.Text
-                    id='makeTemplate'
-                    name='New template from card'
-                    onClick={makeTemplateClicked}
-                />
+                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                    <Menu.Text
+                        id='makeTemplate'
+                        name='New template from card'
+                        onClick={makeTemplateClicked}
+                    />
+                </BoardPermissionGate>
             }
         </Menu>
     )

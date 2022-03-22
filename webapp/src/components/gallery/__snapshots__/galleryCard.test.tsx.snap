@@ -72,8 +72,6 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                   class="noicon"
                 />
               </div>
-            </div>
-            <div>
               <div
                 aria-label="Duplicate"
                 class="MenuOption TextOption menu-option"
@@ -204,8 +202,6 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                   class="noicon"
                 />
               </div>
-            </div>
-            <div>
               <div
                 aria-label="Duplicate"
                 class="MenuOption TextOption menu-option"
@@ -372,8 +368,6 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                   class="noicon"
                 />
               </div>
-            </div>
-            <div>
               <div
                 aria-label="Duplicate"
                 class="MenuOption TextOption menu-option"
@@ -508,8 +502,6 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                   class="noicon"
                 />
               </div>
-            </div>
-            <div>
               <div
                 aria-label="Duplicate"
                 class="MenuOption TextOption menu-option"
@@ -802,8 +794,6 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                   class="noicon"
                 />
               </div>
-            </div>
-            <div>
               <div
                 aria-label="Duplicate"
                 class="MenuOption TextOption menu-option"

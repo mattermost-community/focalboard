@@ -29,11 +29,10 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	defer ctrl.Finish()
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
-
-	auth := auth.New(&cfg, store)
+	auth := auth.New(&cfg, store, nil)
 	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
 	sessionToken := "TESTTOKEN"
-	wsserver := ws.NewServer(auth, sessionToken, false, logger)
+	wsserver := ws.NewServer(auth, sessionToken, false, logger, store)
 	webhook := webhook.NewClient(&cfg, logger)
 	metricsService := metrics.NewMetrics(metrics.InstanceInfo{})
 
@@ -49,6 +48,7 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	app2 := New(&cfg, wsserver, appServices)
 
 	tearDown := func() {
+		app2.Shutdown()
 		if logger != nil {
 			_ = logger.Shutdown()
 		}

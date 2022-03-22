@@ -26,7 +26,21 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
     const mockStore = configureStore([])
     let store = mockStore({})
     beforeEach(() => {
-        store = mockStore({})
+        store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: 'board_id',
+                boards: {
+                    board_id: {id: 'board_id'},
+                },
+                templates: [],
+                myBoardMemberships: {
+                    board_id: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
+        })
     })
     test('settings menu closed should match snapshot', () => {
         const component = wrapIntl(
@@ -60,7 +74,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
 
         const {container} = render(component)
         userEvent.click(container.querySelector('.menu-entry') as Element)
-        userEvent.click(container.querySelector('#theme') as Element)
+        userEvent.hover(container.querySelector('#theme') as Element)
         expect(container).toMatchSnapshot()
     })
 
@@ -73,7 +87,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
 
         const {container} = render(component)
         userEvent.click(container.querySelector('.menu-entry') as Element)
-        userEvent.click(container.querySelector('#lang') as Element)
+        userEvent.hover(container.querySelector('#lang') as Element)
         expect(container).toMatchSnapshot()
     })
 
@@ -87,7 +101,7 @@ describe('components/sidebar/SidebarSettingsMenu', () => {
 
         const {container} = render(component)
         userEvent.click(container.querySelector('.menu-entry') as Element)
-        userEvent.click(container.querySelector('#import') as Element)
+        userEvent.hover(container.querySelector('#import') as Element)
         expect(container).toMatchSnapshot()
 
         userEvent.click(container.querySelector('[aria-label="Asana"]') as Element)

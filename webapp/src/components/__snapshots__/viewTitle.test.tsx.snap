@@ -67,7 +67,7 @@ exports[`components/viewTitle hide description 1`] = `
       class="title"
     >
       <div
-        class="BlockIconSelector"
+        class="IconSelector"
       >
         <div
           aria-label="menuwrapper"
@@ -118,7 +118,7 @@ exports[`components/viewTitle should match snapshot 1`] = `
       class="title"
     >
       <div
-        class="BlockIconSelector"
+        class="IconSelector"
       >
         <div
           aria-label="menuwrapper"
@@ -217,20 +217,14 @@ exports[`components/viewTitle should match snapshot readonly 1`] = `
       class="title"
     >
       <div
-        class="BlockIconSelector"
+        class="IconSelector"
       >
         <div
-          aria-label="menuwrapper"
-          class="MenuWrapper"
-          role="button"
+          class="octo-icon size-m readonly"
         >
-          <div
-            class="octo-icon size-m"
-          >
-            <span>
-              i
-            </span>
-          </div>
+          <span>
+            i
+          </span>
         </div>
       </div>
       <input
@@ -328,7 +322,7 @@ exports[`components/viewTitle show description 1`] = `
       class="title"
     >
       <div
-        class="BlockIconSelector"
+        class="IconSelector"
       >
         <div
           aria-label="menuwrapper"

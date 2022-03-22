@@ -43,7 +43,7 @@ beforeEach(() => {
         welcomePageViewed: '1',
     }))
     mockedOctoClient.prepareOnboarding.mockResolvedValue({
-        workspaceID: 'workspace_id_1',
+        teamID: 'team_id_1',
         boardID: 'board_id_1',
     })
 })
@@ -56,6 +56,9 @@ describe('pages/welcome', () => {
     let history = createMemoryHistory()
     const mockStore = configureStore([thunk])
     const store = mockStore({
+        teams: {
+            current: {id: 'team_id_1'},
+        },
         users: {
             me: {
                 props: {},
@@ -124,15 +127,17 @@ describe('pages/welcome', () => {
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
         await waitFor(() => {
-            expect(history.replace).toBeCalledWith('/')
+            expect(history.replace).toBeCalledWith('/team/team_id_1')
             expect(mockedMutator.patchUserConfig).toBeCalledTimes(1)
         })
     })
 
     test('Welcome Page does not render explore page the second time we visit it', async () => {
         history.replace = jest.fn()
-
         const customStore = mockStore({
+            teams: {
+                current: {id: 'team_id_1'},
+            },
             users: {
                 me: {
                     props: {
@@ -156,7 +161,7 @@ describe('pages/welcome', () => {
 
         render(component)
         await waitFor(() => {
-            expect(history.replace).toBeCalledWith('/')
+            expect(history.replace).toBeCalledWith('/team/team_id_1')
         })
     })
 
@@ -165,6 +170,9 @@ describe('pages/welcome', () => {
         history.location.search = 'r=123'
 
         const customStore = mockStore({
+            teams: {
+                current: {id: 'team_id_1'},
+            },
             users: {
                 me: {
                     props: {
@@ -196,6 +204,9 @@ describe('pages/welcome', () => {
         history.location.search = 'r=123'
 
         const localStore = mockStore({
+            teams: {
+                current: {id: 'team_id_1'},
+            },
             users: {
                 me: {
                     props: {},
@@ -251,7 +262,7 @@ describe('pages/welcome', () => {
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
         await waitFor(() => expect(mockedOctoClient.prepareOnboarding).toBeCalledTimes(1))
-        await waitFor(() => expect(history.replace).toBeCalledWith('/workspace/workspace_id_1/board_id_1'))
+        await waitFor(() => expect(history.replace).toBeCalledWith('/team/team_id_1/board_id_1'))
     })
 
     test('Welcome page skips tour on clicking no thanks option', async () => {
@@ -280,6 +291,6 @@ describe('pages/welcome', () => {
         const exploreButton = screen.getByText('No thanks, I\'ll figure it out myself')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
-        await waitFor(() => expect(history.replace).toBeCalledWith('/'))
+        await waitFor(() => expect(history.replace).toBeCalledWith('/team/team_id_1'))
     })
 })

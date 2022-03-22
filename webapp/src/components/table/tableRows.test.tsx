@@ -9,12 +9,8 @@ import '@testing-library/jest-dom'
 
 import 'isomorphic-fetch'
 
-import {act} from 'react-dom/test-utils'
-
 import {DndProvider} from 'react-dnd'
 import {HTML5Backend} from 'react-dnd-html5-backend'
-
-import userEvent from '@testing-library/user-event'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
@@ -81,19 +77,11 @@ describe('components/table/TableRows', () => {
             </ReduxProvider>,
         )
 
-        const {container, getByTitle, getByText} = render(<DndProvider backend={HTML5Backend}>{component}</DndProvider>)
+        const {container, getByText} = render(<DndProvider backend={HTML5Backend}>{component}</DndProvider>)
 
         const open = getByText(/Open/i)
         fireEvent.click(open)
         expect(callback).toBeCalled()
-
-        const input = getByTitle(/title/)
-        act(() => {
-            userEvent.click(input)
-            userEvent.keyboard('{enter}')
-        })
-
-        expect(addCard).toBeCalled()
         expect(container).toMatchSnapshot()
     })
 })

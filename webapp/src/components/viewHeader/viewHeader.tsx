@@ -17,6 +17,8 @@ import Editable from '../../widgets/editable'
 import ModalWrapper from '../modalWrapper'
 
 import {useAppSelector} from '../../store/hooks'
+import {Permission} from '../../constants'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import {
     getOnboardingTourCategory,
     getOnboardingTourStarted,
@@ -30,6 +32,7 @@ import {
 import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
 import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
@@ -59,6 +62,7 @@ type Props = {
 const ViewHeader = (props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
     const intl = useIntl()
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
 
     const {board, activeView, views, groupByProperty, cards, dateDisplayProperty} = props
 
@@ -115,57 +119,59 @@ const ViewHeader = (props: Props) => {
                     value={viewTitle}
                     placeholderText='Untitled View'
                     onSave={(): void => {
-                        mutator.changeTitle(activeView.id, activeView.title, viewTitle)
+                        mutator.changeBlockTitle(activeView.boardId, activeView.id, activeView.title, viewTitle)
                     }}
                     onCancel={(): void => {
                         setViewTitle(activeView.title)
                     }}
                     onChange={setViewTitle}
                     saveOnEsc={true}
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardProperties}
                     spellCheck={true}
                     autoExpand={false}
                 />
-                <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
-                    <IconButton icon={<DropdownIcon/>}/>
-                    <ViewMenu
-                        board={board}
-                        activeView={activeView}
-                        views={views}
-                        readonly={props.readonly}
-                    />
-                </MenuWrapper>
-                {showAddViewTourStep && <AddViewTourStep/>}
+                <div>
+                    <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
+                        <IconButton icon={<DropdownIcon/>}/>
+                        <ViewMenu
+                            board={board}
+                            activeView={activeView}
+                            views={views}
+                            readonly={props.readonly || !canEditBoardProperties}
+                        />
+                    </MenuWrapper>
+                    {showAddViewTourStep && <AddViewTourStep/>}
+                </div>
             </div>
 
             <div className='octo-spacer'/>
 
-            {!props.readonly &&
+            {!props.readonly && canEditBoardProperties &&
             <>
                 {/* Card properties */}
 
                 <ViewHeaderPropertiesMenu
-                    properties={board.fields.cardProperties}
+                    properties={board.cardProperties}
                     activeView={activeView}
                 />
 
                 {/* Group by */}
 
                 {withGroupBy &&
-                    <ViewHeaderGroupByMenu
-                        properties={board.fields.cardProperties}
-                        activeView={activeView}
-                        groupByProperty={groupByProperty}
-                    />}
+                <ViewHeaderGroupByMenu
+                    properties={board.cardProperties}
+                    activeView={activeView}
+                    groupByProperty={groupByProperty}
+                />}
 
                 {/* Display by */}
 
                 {withDisplayBy &&
-                    <ViewHeaderDisplayByMenu
-                        properties={board.fields.cardProperties}
-                        activeView={activeView}
-                        dateDisplayPropertyName={dateDisplayProperty?.name}
-                    />}
+                <ViewHeaderDisplayByMenu
+                    properties={board.cardProperties}
+                    activeView={activeView}
+                    dateDisplayPropertyName={dateDisplayProperty?.name}
+                />}
 
                 {/* Filter */}
 
@@ -190,11 +196,11 @@ const ViewHeader = (props: Props) => {
                 {/* Sort */}
 
                 {withSortBy &&
-                    <ViewHeaderSortMenu
-                        properties={board.fields.cardProperties}
-                        activeView={activeView}
-                        orderedCards={cards}
-                    />
+                <ViewHeaderSortMenu
+                    properties={board.cardProperties}
+                    activeView={activeView}
+                    orderedCards={cards}
+                />
                 }
             </>
             }
@@ -215,14 +221,15 @@ const ViewHeader = (props: Props) => {
 
                 {/* New card button */}
 
-                <NewCardButton
-                    addCard={props.addCard}
-                    addCardFromTemplate={props.addCardFromTemplate}
-                    addCardTemplate={props.addCardTemplate}
-                    editCardTemplate={props.editCardTemplate}
-                />
-            </>
-            }
+                <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                    <NewCardButton
+                        addCard={props.addCard}
+                        addCardFromTemplate={props.addCardFromTemplate}
+                        addCardTemplate={props.addCardTemplate}
+                        editCardTemplate={props.editCardTemplate}
+                    />
+                </BoardPermissionGate>
+            </>}
         </div>
     )
 }

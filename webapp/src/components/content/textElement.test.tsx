@@ -24,9 +24,8 @@ const mockedUtils = mocked(Utils, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
 const defaultBlock: TextBlock = {
     id: 'test-id',
-    workspaceId: 'test-id',
+    boardId: 'test-id',
     parentId: 'test-id',
-    rootId: 'test-id',
     modifiedBy: 'test-user-id',
     schema: 0,
     type: 'text',
@@ -44,7 +43,7 @@ describe('components/content/TextElement', () => {
 
     const state = {
         users: {
-            workspaceUsers: {
+            boardUsers: {
                 1: {username: 'abc'},
                 2: {username: 'd'},
                 3: {username: 'e'},
