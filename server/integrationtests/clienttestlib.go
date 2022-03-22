@@ -30,9 +30,9 @@ const (
 type LicenseType int
 
 const (
-	LICENSE_NONE         LicenseType = iota // 0
-	LICENSE_PROFESSIONAL                    // 1
-	LICENSE_ENTERPRISE                      // 2
+	LicenseNone         LicenseType = iota // 0
+	LicenseProfessional                    // 1
+	LicenseEnterprise                      // 2
 )
 
 type TestHelper struct {
@@ -86,7 +86,7 @@ func getTestConfig() (*config.Configuration, error) {
 }
 
 func newTestServer(singleUserToken string) *server.Server {
-	return newTestServerWithLicense(singleUserToken, LICENSE_NONE)
+	return newTestServerWithLicense(singleUserToken, LicenseNone)
 }
 
 func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *server.Server {
@@ -107,10 +107,12 @@ func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *
 	var db store.Store
 
 	switch licenseType {
-	case LICENSE_PROFESSIONAL:
+	case LicenseProfessional:
 		db = NewTestProfessionalStore(innerStore)
-	case LICENSE_ENTERPRISE:
+	case LicenseEnterprise:
 		db = NewTestEnterpriseStore(innerStore)
+	case LicenseNone:
+		fallthrough
 	default:
 		db = innerStore
 	}
@@ -143,7 +145,7 @@ func SetupTestHelperWithToken(t *testing.T) *TestHelper {
 }
 
 func SetupTestHelper(t *testing.T) *TestHelper {
-	return SetupTestHelperWithLicense(t, LICENSE_NONE)
+	return SetupTestHelperWithLicense(t, LicenseNone)
 }
 
 func SetupTestHelperWithLicense(t *testing.T, licenseType LicenseType) *TestHelper {

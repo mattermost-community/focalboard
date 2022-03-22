@@ -471,7 +471,7 @@ func TestGetBoard(t *testing.T) {
 
 func TestGetBoardMetadata(t *testing.T) {
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelperWithLicense(t, LICENSE_ENTERPRISE).InitBasic()
+		th := SetupTestHelperWithLicense(t, LicenseEnterprise).InitBasic()
 		defer th.TearDown()
 		th.Logout(th.Client)
 
@@ -481,7 +481,7 @@ func TestGetBoardMetadata(t *testing.T) {
 	})
 
 	t.Run("getBoardMetadata query is correct", func(t *testing.T) {
-		th := SetupTestHelperWithLicense(t, LICENSE_ENTERPRISE).InitBasic()
+		th := SetupTestHelperWithLicense(t, LicenseEnterprise).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
 
@@ -563,7 +563,7 @@ func TestGetBoardMetadata(t *testing.T) {
 	})
 
 	t.Run("getBoardMetadata should fail with no license", func(t *testing.T) {
-		th := SetupTestHelperWithLicense(t, LICENSE_NONE).InitBasic()
+		th := SetupTestHelperWithLicense(t, LicenseNone).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
 
@@ -584,7 +584,7 @@ func TestGetBoardMetadata(t *testing.T) {
 	})
 
 	t.Run("getBoardMetadata should fail on Professional license", func(t *testing.T) {
-		th := SetupTestHelperWithLicense(t, LICENSE_PROFESSIONAL).InitBasic()
+		th := SetupTestHelperWithLicense(t, LicenseProfessional).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
 
@@ -605,7 +605,7 @@ func TestGetBoardMetadata(t *testing.T) {
 	})
 
 	t.Run("valid read token should be enough to get the board metadata", func(t *testing.T) {
-		th := SetupTestHelperWithLicense(t, LICENSE_ENTERPRISE).InitBasic()
+		th := SetupTestHelperWithLicense(t, LicenseEnterprise).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
 

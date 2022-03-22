@@ -924,8 +924,8 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 
 	for _, v := range blocksToInsert {
 		time.Sleep(20 * time.Millisecond)
-		blocks := []model.Block{v}
-		InsertBlocks(t, store, blocks, testUserID)
+		subBlocks := []model.Block{v}
+		InsertBlocks(t, store, subBlocks, testUserID)
 	}
 	defer DeleteBlocks(t, store, blocksToInsert, "test")
 
@@ -994,8 +994,8 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 	})
 
 	t.Run("get block history after updateAt", func(t *testing.T) {
-		rBlocks, err := store.GetBlocksWithType(boardID, "test")
-		require.NoError(t, err)
+		rBlocks, err2 := store.GetBlocksWithType(boardID, "test")
+		require.NoError(t, err2)
 		require.NotZero(t, rBlocks[2].UpdateAt)
 
 		opts := model.QueryBlockHistoryOptions{
@@ -1012,8 +1012,8 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 	})
 
 	t.Run("get block history before updateAt", func(t *testing.T) {
-		rBlocks, err := store.GetBlocksWithType(boardID, "test")
-		require.NoError(t, err)
+		rBlocks, err2 := store.GetBlocksWithType(boardID, "test")
+		require.NoError(t, err2)
 		require.NotZero(t, rBlocks[2].UpdateAt)
 
 		opts := model.QueryBlockHistoryOptions{

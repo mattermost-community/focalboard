@@ -339,11 +339,6 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 
 	board, err := s.getBoard(db, boardID)
 	if err != nil {
-		fmt.Printf("error on get board: %s\n", err)
-		return err
-	}
-
-	if err != nil {
 		return err
 	}
 

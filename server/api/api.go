@@ -3007,7 +3007,7 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 	}
 
 	board, boardMetadata, err := a.app.GetBoardMetadata(boardID)
-	if err == app.ErrInsufficientLicense {
+	if errors.Is(err, app.ErrInsufficientLicense) {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", err)
 		return
 	}

@@ -18,6 +18,7 @@ import (
 
 const (
 	maxSearchDepth = 50
+	descClause     = " DESC "
 )
 
 type BoardIDNilError struct{}
@@ -604,7 +605,7 @@ func (s *SQLStore) getBlock(db sq.BaseRunner, blockID string) (*model.Block, err
 func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
 	var order string
 	if opts.Descending {
-		order = " DESC "
+		order = descClause
 	}
 
 	query := s.getQueryBuilder(db).
@@ -637,7 +638,7 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.
 func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
 	var order string
 	if opts.Descending {
-		order = " DESC "
+		order = descClause
 	}
 
 	query := s.getQueryBuilder(db).
