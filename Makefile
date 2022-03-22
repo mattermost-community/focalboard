@@ -115,7 +115,11 @@ watch-server-test: modd-precheck ## Run server tests watching for changes
 
 server-test: server-test-sqlite server-test-mysql server-test-postgres ## Run server tests
 
+<<<<<<< HEAD
 server-test-sqlite: templates-archive ## Run server tests using sqlite
+=======
+server-test-sqlite: ## Run server tests using sqlite
+>>>>>>> upstream/main
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
 
 server-test-mysql: export FB_UNIT_TESTING=1
