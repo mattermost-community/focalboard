@@ -384,6 +384,8 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 		"scheme_viewer":    bm.SchemeViewer,
 	}
 
+	oldMember, _ := s.getMemberForBoard(db, bm.BoardID, bm.UserID)
+
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix + "board_members").
 		SetMap(queryValues)
@@ -404,6 +406,17 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 		return nil, err
 	}
 
+	if oldMember == nil {
+		addToMembersHistory := s.getQueryBuilder(db).
+			Insert(s.tablePrefix+"board_members_history").
+			Columns("board_id", "user_id", "action").
+			Values(bm.BoardID, bm.UserID, "created")
+
+		if _, err := addToMembersHistory.Exec(); err != nil {
+			return nil, err
+		}
+	}
+
 	return bm, nil
 }
 
@@ -414,6 +427,15 @@ func (s *SQLStore) deleteMember(db sq.BaseRunner, boardID, userID string) error 
 		Where(sq.Eq{"user_id": userID})
 
 	if _, err := deleteQuery.Exec(); err != nil {
+		return err
+	}
+
+	addToMembersHistory := s.getQueryBuilder(db).
+		Insert(s.tablePrefix+"board_members_history").
+		Columns("board_id", "user_id", "action").
+		Values(boardID, userID, "delete")
+
+	if _, err := addToMembersHistory.Exec(); err != nil {
 		return err
 	}
 
