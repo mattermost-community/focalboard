@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	_ "embed"
-
+	"github.com/mattermost/focalboard/server/assets"
 	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -16,9 +15,6 @@ const (
 	defaultTemplateVersion = 2
 	globalTeamID           = "0"
 )
-
-//go:embed templates.boardarchive
-var defTemplates []byte
 
 func (a *App) InitTemplates() error {
 	return a.initializeTemplates()
@@ -46,7 +42,7 @@ func (a *App) initializeTemplates() error {
 		return fmt.Errorf("cannot remove old template boards: %w", err)
 	}
 
-	r := bytes.NewReader(defTemplates)
+	r := bytes.NewReader(assets.DefaultTemplatesArchive)
 
 	opt := model.ImportArchiveOptions{
 		TeamID:        globalTeamID,
