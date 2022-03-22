@@ -58,7 +58,7 @@ const TableRow = (props: Props) => {
 
     const onClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         props.onClick && props.onClick(e, card)
-    }, [card])
+    }, [card, props.onClick])
 
     const onSaveWithEnter = useCallback(() => {
         if (props.isLastCard) {

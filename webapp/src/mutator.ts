@@ -412,11 +412,16 @@ class Mutator {
         const newBoard = createBoard(board)
 
         const startIndex = (index >= 0) ? index : board.cardProperties.length
-        newBoard.cardProperties.splice(startIndex, 0, newTemplate)
-        const changedBlocks: Block[] = []
-        const changedBlockIDs: string[] = []
+        if (index >= 0) {
+            newBoard.cardProperties.splice(startIndex, 0, newTemplate)
+        } else {
+            newBoard.cardProperties.push(newTemplate)
+        }
 
         if (activeView.fields.viewType === 'table') {
+            const changedBlocks: Block[] = []
+            const changedBlockIDs: string[] = []
+
             oldBlocks.push(activeView)
 
             const newActiveView = createBoardView(activeView)
