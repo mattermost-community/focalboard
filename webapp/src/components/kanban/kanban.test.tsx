@@ -450,7 +450,7 @@ describe('src/component/kanban/kanban', () => {
         fireEvent.blur(inputTitle)
 
         await waitFor(async () => {
-            expect(mockedchangePropertyOptionValue).toBeCalledWith(board, groupProperty, optionQ1, 'New Q1')
+            expect(mockedchangePropertyOptionValue).toBeCalledWith(board.id, board.cardProperties, groupProperty, optionQ1, 'New Q1')
         })
 
         expect(container).toMatchSnapshot()
