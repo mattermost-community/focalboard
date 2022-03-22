@@ -4,9 +4,13 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
+	"github.com/pkg/errors"
 
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq" // postgres driver
@@ -759,6 +763,102 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 	}
 
 	return nil
+}
+
+func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, limit int64) (int64, error) {
+	mlog.Info("Start Boards Data Retention",
+		mlog.String("Global Retention Date", time.Unix(globalRetentionDate/1000, 0).String()),
+		mlog.Int64("Raw Date", globalRetentionDate))
+	deleteTables := map[string]string{"blocks": "board_id", "blocks_history": "board_id", "boards": "id", "boards_history": "id"}
+
+	subBuilder := s.getQueryBuilder(db).
+		Select("board_id, MAX(update_at) AS maxDate").
+		From(s.tablePrefix + "blocks").
+		Where("board_id <> '0'").
+		GroupBy("board_id")
+
+	subQuery, _, _ := subBuilder.ToSql()
+
+	builder := s.getQueryBuilder(db).
+		Select("board_id").
+		From("( " + subQuery + " ) As subquery")
+
+	totalAffected := 0
+	deleteIds, err := s.globalOnlySubQuery(builder, globalRetentionDate, limit)
+	if err != nil {
+		return 0, err
+	}
+
+	if len(deleteIds) > 0 {
+		mlog.Debug("Data Retention DeleteIDs " + strings.Join(deleteIds, ", "))
+		for table, field := range deleteTables {
+			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds)
+			if err != nil {
+				return int64(totalAffected), err
+			}
+			totalAffected += int(affected)
+		}
+	}
+	mlog.Info("Complete Boards Data Retention", mlog.Int("total deletion ids", len(deleteIds)), mlog.Int("TotalAffected", totalAffected))
+	return int64(totalAffected), nil
+}
+
+func (s *SQLStore) globalOnlySubQuery(baseBuilder sq.SelectBuilder, globalPolicyEndTime int64, limit int64) ([]string, error) {
+	query := baseBuilder.
+		Where(sq.Lt{"maxDate": globalPolicyEndTime}).
+		Limit(uint64(limit))
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`dataRetention subquery ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+	return idsFromRows(rows)
+}
+
+func idsFromRows(rows *sql.Rows) ([]string, error) {
+	deleteIds := []string{}
+	for rows.Next() {
+		var boardId string
+		err := rows.Scan(
+			&boardId,
+		)
+		if err != nil {
+			return nil, err
+		}
+		deleteIds = append(deleteIds, boardId)
+	}
+	return deleteIds, nil
+}
+
+// genericRetentionPoliciesDeletion actually executes the DELETE query using a sq.SelectBuilder
+// which selects the rows to delete.
+func (s *SQLStore) genericRetentionPoliciesDeletion(
+	db sq.BaseRunner,
+	table string,
+	deleteColumn string,
+	deleteIds []string,
+) (int64, error) {
+	whereClause := deleteColumn + ` IN ('` + strings.Join(deleteIds, `','`) + `')`
+	deleteQuery := s.getQueryBuilder(db).
+		Delete(s.tablePrefix + table).
+		Where(whereClause)
+		// .Limit(uint64(limit))
+
+	s1, _, _ := deleteQuery.ToSql()
+	mlog.Debug(s1)
+	result, err := deleteQuery.Exec()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to delete "+table)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to get rows affected for "+table)
+	}
+	mlog.Debug("Rows Affected" + strconv.FormatInt(rowsAffected, 10))
+	return rowsAffected, nil
 }
 
 func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
