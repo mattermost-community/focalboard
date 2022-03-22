@@ -4,7 +4,6 @@ go 1.16
 
 require (
 	github.com/Masterminds/squirrel v1.5.0
-	github.com/go-ldap/ldap v3.0.3+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/mock v1.5.0
 	github.com/gorilla/mux v1.8.0
@@ -13,12 +12,10 @@ require (
 	github.com/lib/pq v1.10.2
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mattermost/mattermost-plugin-api v0.0.21
-	github.com/mattermost/mattermost-server v5.11.1+incompatible
 	github.com/mattermost/mattermost-server/v6 v6.0.0-20210913141218-bb659d03fde0
 	github.com/mattermost/morph v0.0.0-20220222074146-cff3f12ff131
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
-	github.com/nicksnyder/go-i18n v1.10.1 // indirect
 	github.com/oklog/run v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.11.0
@@ -31,6 +28,5 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/wiggin77/merror v1.0.3
 	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e
-	gopkg.in/asn1-ber.v1 v1.0.0-20181015200546-f715ec2f112d // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
