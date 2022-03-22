@@ -4,19 +4,30 @@ import (
 	"errors"
 	"net/http"
 	"os"
+	"testing"
 	"time"
 
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/client"
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
-	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+
+	"github.com/stretchr/testify/require"
+)
+
+const (
+	user1Username = "user1"
+	user2Username = "user2"
+	password      = "Pa$$word"
 )
 
 type TestHelper struct {
+	T       *testing.T
 	Server  *server.Server
 	Client  *client.Client
 	Client2 *client.Client
@@ -80,11 +91,14 @@ func newTestServer(singleUserToken string) *server.Server {
 		panic(err)
 	}
 
+	permissionsService := localpermissions.New(db, logger)
+
 	params := server.Params{
-		Cfg:             cfg,
-		SingleUserToken: singleUserToken,
-		DBStore:         db,
-		Logger:          logger,
+		Cfg:                cfg,
+		SingleUserToken:    singleUserToken,
+		DBStore:            db,
+		Logger:             logger,
+		PermissionsService: permissionsService,
 	}
 
 	srv, err := server.New(params)
@@ -95,23 +109,26 @@ func newTestServer(singleUserToken string) *server.Server {
 	return srv
 }
 
-func SetupTestHelper() *TestHelper {
+func SetupTestHelperWithToken(t *testing.T) *TestHelper {
 	sessionToken := "TESTTOKEN"
-	th := &TestHelper{}
+	th := &TestHelper{T: t}
 	th.Server = newTestServer(sessionToken)
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
+	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
 	return th
 }
 
-func SetupTestHelperWithoutToken() *TestHelper {
-	th := &TestHelper{}
+func SetupTestHelper(t *testing.T) *TestHelper {
+	th := &TestHelper{T: t}
 	th.Server = newTestServer("")
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
 	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, "")
 	return th
 }
 
-func (th *TestHelper) InitBasic() *TestHelper {
+// Start starts the test server and ensures that it's correctly
+// responding to requests before returning.
+func (th *TestHelper) Start() *TestHelper {
 	go func() {
 		if err := th.Server.Start(); err != nil {
 			panic(err)
@@ -144,50 +161,27 @@ func (th *TestHelper) InitBasic() *TestHelper {
 	return th
 }
 
-var ErrRegisterFail = errors.New("register failed")
+// InitBasic starts the test server and initializes the clients of the
+// helper, registering them and logging them into the system.
+func (th *TestHelper) InitBasic() *TestHelper {
+	th.Start()
 
-func (th *TestHelper) InitUsers(username1 string, username2 string) error {
-	workspace, err := th.Server.App().GetRootWorkspace()
-	if err != nil {
-		return err
-	}
+	// user1
+	th.RegisterAndLogin(th.Client, user1Username, "user1@sample.com", password, "")
 
-	clients := []*client.Client{th.Client, th.Client2}
-	usernames := []string{username1, username2}
+	// get token
+	team, resp := th.Client.GetTeam("0")
+	th.CheckOK(resp)
+	require.NotNil(th.T, team)
+	require.NotNil(th.T, team.SignupToken)
 
-	for i, client := range clients {
-		// register a new user
-		password := utils.NewID(utils.IDTypeNone)
-		registerRequest := &api.RegisterRequest{
-			Username: usernames[i],
-			Email:    usernames[i] + "@example.com",
-			Password: password,
-			Token:    workspace.SignupToken,
-		}
-		success, resp := client.Register(registerRequest)
-		if resp.Error != nil {
-			return resp.Error
-		}
-		if !success {
-			return ErrRegisterFail
-		}
+	// user2
+	th.RegisterAndLogin(th.Client2, user2Username, "user2@sample.com", password, team.SignupToken)
 
-		// login
-		loginRequest := &api.LoginRequest{
-			Type:     "normal",
-			Username: registerRequest.Username,
-			Email:    registerRequest.Email,
-			Password: registerRequest.Password,
-		}
-		data, resp := client.Login(loginRequest)
-		if resp.Error != nil {
-			return resp.Error
-		}
-
-		client.Token = data.Token
-	}
-	return nil
+	return th
 }
+
+var ErrRegisterFail = errors.New("register failed")
 
 func (th *TestHelper) TearDown() {
 	defer func() { _ = th.Server.Logger().Shutdown() }()
@@ -198,4 +192,96 @@ func (th *TestHelper) TearDown() {
 	}
 
 	os.RemoveAll(th.Server.Config().FilesPath)
+
+	if err := os.Remove(th.Server.Config().DBConfigString); err == nil {
+		th.Server.Logger().Debug("Removed test database", mlog.String("file", th.Server.Config().DBConfigString))
+	}
+}
+
+func (th *TestHelper) RegisterAndLogin(client *client.Client, username, email, password, token string) {
+	req := &api.RegisterRequest{
+		Username: username,
+		Email:    email,
+		Password: password,
+		Token:    token,
+	}
+
+	success, resp := th.Client.Register(req)
+	th.CheckOK(resp)
+	require.True(th.T, success)
+
+	th.Login(client, username, password)
+}
+
+func (th *TestHelper) Login(client *client.Client, username, password string) {
+	req := &api.LoginRequest{
+		Type:     "normal",
+		Username: username,
+		Password: password,
+	}
+	data, resp := client.Login(req)
+	th.CheckOK(resp)
+	require.NotNil(th.T, data)
+}
+
+func (th *TestHelper) Login1() {
+	th.Login(th.Client, user1Username, password)
+}
+
+func (th *TestHelper) Login2() {
+	th.Login(th.Client2, user2Username, password)
+}
+
+func (th *TestHelper) Logout(client *client.Client) {
+	client.Token = ""
+}
+
+func (th *TestHelper) Me(client *client.Client) *model.User {
+	user, resp := client.GetMe()
+	th.CheckOK(resp)
+	require.NotNil(th.T, user)
+	return user
+}
+
+func (th *TestHelper) CreateBoard(teamID string, boardType model.BoardType) *model.Board {
+	newBoard := &model.Board{
+		TeamID: teamID,
+		Type:   boardType,
+	}
+	board, resp := th.Client.CreateBoard(newBoard)
+	th.CheckOK(resp)
+	return board
+}
+
+func (th *TestHelper) GetUser1() *model.User {
+	return th.Me(th.Client)
+}
+
+func (th *TestHelper) GetUser2() *model.User {
+	return th.Me(th.Client2)
+}
+
+func (th *TestHelper) CheckOK(r *client.Response) {
+	require.Equal(th.T, http.StatusOK, r.StatusCode)
+	require.NoError(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckBadRequest(r *client.Response) {
+	require.Equal(th.T, http.StatusBadRequest, r.StatusCode)
+	require.Error(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckNotFound(r *client.Response) {
+	require.Equal(th.T, http.StatusNotFound, r.StatusCode)
+	require.Error(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckUnauthorized(r *client.Response) {
+	require.Equal(th.T, http.StatusUnauthorized, r.StatusCode)
+	require.Error(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckForbidden(r *client.Response) {
+	require.Equal(th.T, http.StatusForbidden, r.StatusCode)
+	require.Error(th.T, r.Error)
 }

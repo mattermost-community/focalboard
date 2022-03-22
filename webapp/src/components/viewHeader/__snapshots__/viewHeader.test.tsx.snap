@@ -15,19 +15,21 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
         title="view title"
         value="view title"
       />
-      <div
-        aria-label="View menu"
-        class="MenuWrapper"
-        role="button"
-      >
-        <button
-          class="IconButton"
-          type="button"
+      <div>
+        <div
+          aria-label="View menu"
+          class="MenuWrapper"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-chevron-down DropdownIcon"
-          />
-        </button>
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-chevron-down DropdownIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -160,19 +162,21 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
         title="view title"
         value="view title"
       />
-      <div
-        aria-label="View menu"
-        class="MenuWrapper"
-        role="button"
-      >
-        <button
-          class="IconButton"
-          type="button"
+      <div>
+        <div
+          aria-label="View menu"
+          class="MenuWrapper"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-chevron-down DropdownIcon"
-          />
-        </button>
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-chevron-down DropdownIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -186,6 +190,72 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
         Search
       </span>
     </button>
+  </div>
+</div>
+`;
+
+exports[`components/viewHeader/viewHeader return viewHeader without permissions 1`] = `
+<div>
+  <div
+    class="ViewHeader"
+  >
+    <div
+      class="viewSelector"
+    >
+      <input
+        class="Editable readonly undefined"
+        placeholder="Untitled View"
+        readonly=""
+        spellcheck="true"
+        title="view title"
+        value="view title"
+      />
+      <div>
+        <div
+          aria-label="View menu"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-chevron-down DropdownIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="octo-spacer"
+    />
+    <button
+      class="Button"
+      type="button"
+    >
+      <span>
+        Search
+      </span>
+    </button>
+    <div
+      class="ModalWrapper"
+    >
+      <div
+        aria-label="View header menu"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 `;

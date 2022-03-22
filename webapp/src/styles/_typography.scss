@@ -62,6 +62,10 @@ h3,
     font-size: 16px;
 }
 
+.text-danger {
+    color: var(--error-text);
+}
+
 // Metropolis font definitions
 @font-face {
     font-family: 'Metropolis';

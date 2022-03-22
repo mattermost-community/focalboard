@@ -90,25 +90,25 @@ function convert(items: any[]) {
     board.title = 'Jira import'
 
     // Compile standard properties
-    board.fields.cardProperties = []
+    board.cardProperties = []
 
     const priorityProperty = buildCardPropertyFromValues('Priority', items.map(o => o.priority?._))
-    board.fields.cardProperties.push(priorityProperty)
+    board.cardProperties.push(priorityProperty)
 
     const statusProperty = buildCardPropertyFromValues('Status', items.map(o => o.status?._))
-    board.fields.cardProperties.push(statusProperty)
+    board.cardProperties.push(statusProperty)
 
     const resolutionProperty = buildCardPropertyFromValues('Resolution', items.map(o => o.resolution?._))
-    board.fields.cardProperties.push(resolutionProperty)
+    board.cardProperties.push(resolutionProperty)
 
     const typeProperty = buildCardPropertyFromValues('Type', items.map(o => o.type?._))
-    board.fields.cardProperties.push(typeProperty)
+    board.cardProperties.push(typeProperty)
 
     const assigneeProperty = buildCardPropertyFromValues('Assignee', items.map(o => o.assignee?._))
-    board.fields.cardProperties.push(assigneeProperty)
+    board.cardProperties.push(assigneeProperty)
 
     const reporterProperty = buildCardPropertyFromValues('Reporter', items.map(o => o.reporter?._))
-    board.fields.cardProperties.push(reporterProperty)
+    board.cardProperties.push(reporterProperty)
 
     const originalUrlProperty: IPropertyTemplate = {
         id: Utils.createGuid(),
@@ -116,7 +116,7 @@ function convert(items: any[]) {
         type: 'url',
         options: []
     }
-    board.fields.cardProperties.push(originalUrlProperty)
+    board.cardProperties.push(originalUrlProperty)
 
     const createdDateProperty: IPropertyTemplate = {
         id: Utils.createGuid(),
@@ -124,7 +124,7 @@ function convert(items: any[]) {
         type: 'date',
         options: []
     }
-    board.fields.cardProperties.push(createdDateProperty)
+    board.cardProperties.push(createdDateProperty)
 
     blocks.push(board)
 

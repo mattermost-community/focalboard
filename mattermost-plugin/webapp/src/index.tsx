@@ -9,18 +9,22 @@ import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/r
 
 import {GlobalState} from 'mattermost-redux/types/store'
 
-const windowAny = (window as any)
+import {selectTeam} from 'mattermost-redux/actions/teams'
+
+import {SuiteWindow} from '../../../webapp/src/types/index'
+
+const windowAny = (window as SuiteWindow)
 windowAny.baseURL = '/plugins/focalboard'
 windowAny.frontendBaseURL = '/boards'
 windowAny.isFocalboardPlugin = true
 
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
+import {setTeam} from '../../../webapp/src/store/teams'
 import {Utils} from '../../../webapp/src/utils'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
-import {UserSettings} from '../../../webapp/src/userSettings'
 
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
@@ -30,7 +34,13 @@ import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
-import wsClient, {MMWebSocketClient, ACTION_UPDATE_BLOCK, ACTION_UPDATE_CLIENT_CONFIG, ACTION_UPDATE_SUBSCRIPTION} from './../../../webapp/src/wsclient'
+import wsClient, {
+    MMWebSocketClient,
+    ACTION_UPDATE_BLOCK,
+    ACTION_UPDATE_CLIENT_CONFIG,
+    ACTION_UPDATE_SUBSCRIPTION,
+    ACTION_UPDATE_CATEGORY, ACTION_UPDATE_BLOCK_CATEGORY, ACTION_UPDATE_BOARD,
+} from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
@@ -164,6 +174,7 @@ export default class Plugin {
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
+        let prevTeamID: string
         mmStore.subscribe(() => {
             const currentUserId = mmStore.getState().entities.users.currentUserId
             const currentChannel = mmStore.getState().entities.channels.currentChannelId
@@ -171,22 +182,41 @@ export default class Plugin {
                 localStorage.setItem('focalboardLastViewedChannel:' + currentUserId, currentChannel)
                 lastViewedChannel = currentChannel
             }
+
+            // Watch for change in active team.
+            // This handles the user selecting a team from the team sidebar.
+            const currentTeamID = mmStore.getState().entities.teams.currentTeamId
+            if (currentTeamID && currentTeamID !== prevTeamID) {
+                prevTeamID = currentTeamID
+                store.dispatch(setTeam(currentTeamID))
+                browserHistory.push(`/team/${currentTeamID}`)
+                wsClient.subscribeToTeam(currentTeamID)
+            }
         })
 
         if (this.registry.registerProduct) {
             windowAny.frontendBaseURL = subpath + '/boards'
-            const goToFocalboardWorkspace = () => {
-                const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelHeader, {workspaceID: currentChannel})
-                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
+            const goToFocalboard = () => {
+                const currentTeam = mmStore.getState().entities.teams.currentTeamId
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelHeader, {teamID: currentTeam})
+                window.open(`${windowAny.frontendBaseURL}/team/${currentTeam}`, '_blank', 'noopener')
             }
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, 'Boards', 'Boards')
+
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboard, 'Boards', 'Boards')
+            this.registry.registerProduct(
+                '/boards',
+                'product-boards',
+                'Boards',
+                '/boards',
+                MainApp,
+                HeaderComponent,
+                () => null,
+                true,
+            )
 
             const goToFocalboardTemplate = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelIntro, {workspaceID: currentChannel})
-                UserSettings.lastBoardId = null
-                UserSettings.lastViewId = null
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelIntro, {channelID: currentChannel})
                 window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
             }
 
@@ -194,11 +224,9 @@ export default class Plugin {
                 this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
             }
 
-            this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
-
             if (this.registry.registerAppBarComponent) {
                 const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
-                this.registry.registerAppBarComponent(appBarIconURL, goToFocalboardWorkspace, 'Open Boards Workspace')
+                this.registry.registerAppBarComponent(appBarIconURL, goToFocalboard, 'Open Boards')
             }
 
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
@@ -247,7 +275,9 @@ export default class Plugin {
         }
 
         // register websocket handlers
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
         this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
@@ -267,6 +297,16 @@ export default class Plugin {
                 }
             }
         })
+        windowAny.setTeamInSidebar = (teamID: string) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            mmStore.dispatch(selectTeam(teamID))
+        }
+        windowAny.getCurrentTeamId = (): string => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            return mmStore.getState().entities.teams.currentTeamId
+        }
     }
 
     uninitialize(): void {

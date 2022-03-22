@@ -22,9 +22,8 @@ const board = TestBlockFactory.createBoard()
 const card = TestBlockFactory.createCard(board)
 const checkboxBlock: ContentBlock = {
     id: 'test-id',
-    workspaceId: '',
+    boardId: board.id,
     parentId: card.id,
-    rootId: card.rootId,
     modifiedBy: 'test-user-id',
     schema: 1,
     type: 'checkbox',
@@ -92,10 +91,12 @@ describe('components/content/checkboxElement', () => {
         userEvent.type(input, newTitle)
         fireEvent.blur(input)
         expect(container).toMatchSnapshot()
-        expect(mockedMutator.updateBlock).toHaveBeenCalledTimes(1)
-        expect(mockedMutator.updateBlock).toHaveBeenCalledWith(
-            expect.objectContaining({title: newTitle}),
-            checkboxBlock,
+        expect(mockedMutator.changeBlockTitle).toHaveBeenCalledTimes(1)
+        expect(mockedMutator.changeBlockTitle).toHaveBeenCalledWith(
+            checkboxBlock.boardId,
+            checkboxBlock.id,
+            checkboxBlock.title,
+            newTitle,
             expect.anything())
     })
 
@@ -111,6 +112,7 @@ describe('components/content/checkboxElement', () => {
         expect(container).toMatchSnapshot()
         expect(mockedMutator.updateBlock).toHaveBeenCalledTimes(1)
         expect(mockedMutator.updateBlock).toHaveBeenCalledWith(
+            checkboxBlock.boardId,
             expect.objectContaining({fields: {value: true}}),
             checkboxBlock,
             expect.anything())

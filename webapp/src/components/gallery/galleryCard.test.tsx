@@ -68,8 +68,22 @@ describe('src/components/gallery/GalleryCard', () => {
                         [card.id]: card,
                     },
                 },
+                teams: {
+                    current: {id: 'team-id'},
+                },
+                boards: {
+                    current: board.id,
+                    boards: {
+                        [board.id]: board,
+                    },
+                    templates: [],
+                    myBoardMemberships: {
+                        [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
+                },
                 comments: {
                     comments: {},
+                    commentsByCard: {},
                 },
             }
             store = mockStateStore([], state)
@@ -166,7 +180,7 @@ describe('src/components/gallery/GalleryCard', () => {
             userEvent.click(buttonDuplicate)
             expect(container).toMatchSnapshot()
             expect(mockedMutator.duplicateCard).toBeCalledTimes(1)
-            expect(mockedMutator.duplicateCard).toBeCalledWith(card.id, board)
+            expect(mockedMutator.duplicateCard).toBeCalledWith(card.id, board.id)
         })
         test('return GalleryCard and copy link', () => {
             const {container} = render(wrapDNDIntl(
@@ -224,6 +238,9 @@ describe('src/components/gallery/GalleryCard', () => {
                     contents: {
                         [contentImage.id]: contentImage,
                     },
+                    contentsByCard: {
+                        [card.id]: [contentImage],
+                    },
                 },
                 cards: {
                     cards: {
@@ -232,6 +249,20 @@ describe('src/components/gallery/GalleryCard', () => {
                 },
                 comments: {
                     comments: {},
+                    commentsByCard: {},
+                },
+                teams: {
+                    current: {id: 'team-id'},
+                },
+                boards: {
+                    current: board.id,
+                    boards: {
+                        [board.id]: board,
+                    },
+                    templates: [],
+                    myBoardMemberships: {
+                        [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
                 },
             }
             store = mockStateStore([], state)
@@ -273,6 +304,9 @@ describe('src/components/gallery/GalleryCard', () => {
                         [contentImage.id]: [contentImage],
                         [contentImage2.id]: [contentImage2],
                     },
+                    contentsByCard: {
+                        [card.id]: [contentImage, contentImage2],
+                    },
                 },
                 cards: {
                     cards: {
@@ -281,6 +315,20 @@ describe('src/components/gallery/GalleryCard', () => {
                 },
                 comments: {
                     comments: {},
+                    commentsByCard: {},
+                },
+                teams: {
+                    current: {id: 'team-id'},
+                },
+                boards: {
+                    current: board.id,
+                    boards: {
+                        [board.id]: board,
+                    },
+                    templates: [],
+                    myBoardMemberships: {
+                        [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
                 },
             }
             store = mockStateStore([], state)
@@ -317,6 +365,9 @@ describe('src/components/gallery/GalleryCard', () => {
                     contents: {
                         [contentComment.id]: contentComment,
                     },
+                    contentsByCard: {
+                        [card.id]: [contentComment],
+                    },
                 },
                 cards: {
                     cards: {
@@ -325,6 +376,20 @@ describe('src/components/gallery/GalleryCard', () => {
                 },
                 comments: {
                     comments: {},
+                    commentsByCard: {},
+                },
+                teams: {
+                    current: {id: 'team-id'},
+                },
+                boards: {
+                    current: board.id,
+                    boards: {
+                        [board.id]: board,
+                    },
+                    templates: [],
+                    myBoardMemberships: {
+                        [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
                 },
             }
             store = mockStateStore([], state)
@@ -380,6 +445,9 @@ describe('src/components/gallery/GalleryCard', () => {
                     contents: {
                         [contentComment.id]: [contentComment, contentDivider],
                     },
+                    contentsByCard: {
+                        [card.id]: [contentComment, contentDivider],
+                    },
                 },
                 cards: {
                     cards: {
@@ -388,6 +456,20 @@ describe('src/components/gallery/GalleryCard', () => {
                 },
                 comments: {
                     comments: {},
+                    commentsByCard: {},
+                },
+                teams: {
+                    current: {id: 'team-id'},
+                },
+                boards: {
+                    current: board.id,
+                    boards: {
+                        [board.id]: board,
+                    },
+                    templates: [],
+                    myBoardMemberships: {
+                        [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
                 },
             }
             store = mockStateStore([], state)

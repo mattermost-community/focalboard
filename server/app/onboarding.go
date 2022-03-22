@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 )
 
 const (
@@ -21,17 +20,12 @@ const (
 
 var (
 	errUnableToFindWelcomeBoard = errors.New("unable to find welcome board in newly created blocks")
+	errCannotCreateBoard        = errors.New("new board wasn't created")
 )
 
-func (a *App) PrepareOnboardingTour(userID string) (string, string, error) {
-	// create a private workspace for the user
-	workspaceID, err := a.store.CreatePrivateWorkspace(userID)
-	if err != nil {
-		return "", "", err
-	}
-
+func (a *App) PrepareOnboardingTour(userID string, teamID string) (string, string, error) {
 	// copy the welcome board into this workspace
-	boardID, err := a.createWelcomeBoard(userID, workspaceID)
+	boardID, err := a.createWelcomeBoard(userID, teamID)
 	if err != nil {
 		return "", "", err
 	}
@@ -48,18 +42,18 @@ func (a *App) PrepareOnboardingTour(userID string) (string, string, error) {
 		return "", "", err
 	}
 
-	return workspaceID, boardID, nil
+	return teamID, boardID, nil
 }
 
 func (a *App) getOnboardingBoardID() (string, error) {
-	blocks, err := a.store.GetDefaultTemplateBlocks()
+	boards, err := a.store.GetTemplateBoards(globalTeamID)
 	if err != nil {
 		return "", err
 	}
 
 	var onboardingBoardID string
-	for _, block := range blocks {
-		if block.Type == model.TypeBoard && block.Title == WelcomeBoardTitle {
+	for _, block := range boards {
+		if block.Title == WelcomeBoardTitle {
 			onboardingBoardID = block.ID
 			break
 		}
@@ -72,42 +66,20 @@ func (a *App) getOnboardingBoardID() (string, error) {
 	return onboardingBoardID, nil
 }
 
-func (a *App) createWelcomeBoard(userID, workspaceID string) (string, error) {
+func (a *App) createWelcomeBoard(userID, teamID string) (string, error) {
 	onboardingBoardID, err := a.getOnboardingBoardID()
 	if err != nil {
 		return "", err
 	}
 
-	blocks, err := a.GetSubTree(store.Container{WorkspaceID: "0"}, onboardingBoardID, 3)
+	bab, _, err := a.DuplicateBoard(onboardingBoardID, userID, teamID, false)
 	if err != nil {
 		return "", err
 	}
 
-	blocks = model.GenerateBlockIDs(blocks, a.logger)
-
-	if errUpdateFileIDs := a.CopyCardFiles(onboardingBoardID, workspaceID, blocks); errUpdateFileIDs != nil {
-		return "", errUpdateFileIDs
+	if len(bab.Boards) != 1 {
+		return "", errCannotCreateBoard
 	}
 
-	// we're copying from a global template, so we need to set the
-	// `isTemplate` flag to false on the board
-	var welcomeBoardID string
-	for i := range blocks {
-		if blocks[i].Type == model.TypeBoard {
-			blocks[i].Fields["isTemplate"] = false
-
-			if blocks[i].Title == WelcomeBoardTitle {
-				welcomeBoardID = blocks[i].ID
-				break
-			}
-		}
-	}
-
-	model.StampModificationMetadata(userID, blocks, nil)
-	_, err = a.InsertBlocks(store.Container{WorkspaceID: workspaceID}, blocks, userID, false)
-	if err != nil {
-		return "", err
-	}
-
-	return welcomeBoardID, nil
+	return bab.Boards[0].ID, nil
 }

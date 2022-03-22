@@ -20,20 +20,14 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+              class="octo-icon size-m readonly"
             >
-              <div
-                class="octo-icon size-m"
-              >
-                <span>
-                  🚴🏻‍♂️
-                </span>
-              </div>
+              <span>
+                🚴🏻‍♂️
+              </span>
             </div>
           </div>
           <input
@@ -59,18 +53,20 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             title="View"
             value="View"
           />
-          <div
-            aria-label="View menu"
-            class="MenuWrapper"
-            role="button"
-          >
-            <button
-              type="button"
+          <div>
+            <div
+              aria-label="View menu"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div

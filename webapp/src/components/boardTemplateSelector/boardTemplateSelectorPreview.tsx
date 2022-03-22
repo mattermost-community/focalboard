@@ -31,7 +31,7 @@ const BoardTemplateSelectorPreview = (props: Props) => {
             setActiveTemplateCards([])
             setActiveView(null)
             setActiveTemplateCards([])
-            octoClient.getSubtree(activeTemplate.id, activeView?.fields.viewType === 'gallery' ? 3 : 2, activeTemplate.workspaceId).then((blocks) => {
+            octoClient.getAllBlocks(activeTemplate.id).then((blocks) => {
                 const cards = blocks.filter((b) => b.type === 'card')
                 const views = blocks.filter((b) => b.type === 'view').sort((a, b) => a.title.localeCompare(b.title))
                 if (views.length > 0) {
@@ -45,11 +45,11 @@ const BoardTemplateSelectorPreview = (props: Props) => {
     }, [activeTemplate])
 
     const dateDisplayProperty = useMemo(() => {
-        return activeTemplate?.fields.cardProperties.find((o) => o.id === activeView?.fields.dateDisplayPropertyId)
+        return activeTemplate?.cardProperties.find((o) => o.id === activeView?.fields.dateDisplayPropertyId)
     }, [activeView, activeTemplate])
 
     const groupByProperty = useMemo(() => {
-        return activeTemplate?.fields.cardProperties.find((o) => o.id === activeView?.fields.groupById) || activeTemplate?.fields.cardProperties[0]
+        return activeTemplate?.cardProperties.find((o) => o.id === activeView?.fields.groupById) || activeTemplate?.cardProperties[0]
     }, [activeView, activeTemplate])
 
     const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(() => {

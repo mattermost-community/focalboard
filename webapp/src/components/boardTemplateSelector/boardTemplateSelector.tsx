@@ -11,7 +11,8 @@ import AddIcon from '../../widgets/icons/add'
 import Button from '../../widgets/buttons/button'
 import octoClient from '../../octoClient'
 import mutator from '../../mutator'
-import {getTemplates, getCurrentBoard} from '../../store/boards'
+import {getTemplates, getCurrentBoardId} from '../../store/boards'
+import {getCurrentTeam, Team} from '../../store/teams'
 import {fetchGlobalTemplates, getGlobalTemplates} from '../../store/globalTemplates'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -33,7 +34,8 @@ type Props = {
 
 const BoardTemplateSelector = (props: Props) => {
     const globalTemplates = useAppSelector<Board[]>(getGlobalTemplates) || []
-    const currentBoard = useAppSelector<Board>(getCurrentBoard) || null
+    const currentBoardId = useAppSelector<string>(getCurrentBoardId) || null
+    const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const {title, description, onClose} = props
     const dispatch = useAppDispatch()
     const intl = useIntl()
@@ -52,18 +54,17 @@ const BoardTemplateSelector = (props: Props) => {
     }, [match, history, onClose])
 
     useEffect(() => {
-        if (octoClient.workspaceId !== '0' && globalTemplates.length === 0) {
+        if (octoClient.teamId !== '0' && globalTemplates.length === 0) {
             dispatch(fetchGlobalTemplates())
         }
-    }, [octoClient.workspaceId])
+    }, [octoClient.teamId])
 
     const onBoardTemplateDelete = useCallback((template: Board) => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardTemplate, {board: template.id})
-        mutator.deleteBlock(
+        mutator.deleteBoard(
             template,
             intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete template'}),
-            async () => {
-            },
+            async () => {},
             async () => {
                 showBoard(template.id)
             },
@@ -95,7 +96,7 @@ const BoardTemplateSelector = (props: Props) => {
     }
 
     const handleUseTemplate = async () => {
-        await mutator.addBoardFromTemplate(intl, showBoard, () => showBoard(currentBoard.id), activeTemplate.id, activeTemplate.workspaceId === '0')
+        await mutator.addBoardFromTemplate(currentTeam?.id || '0', intl, showBoard, () => showBoard(currentBoardId), activeTemplate.id, currentTeam?.id)
         if (activeTemplate.title === OnboardingBoardTitle) {
             resetTour()
         }
@@ -157,7 +158,7 @@ const BoardTemplateSelector = (props: Props) => {
                     ))}
                     <div
                         className='new-template'
-                        onClick={() => mutator.addEmptyBoardTemplate(intl, showBoard, () => showBoard(currentBoard.id))}
+                        onClick={() => mutator.addEmptyBoardTemplate(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))}
                     >
                         <span className='template-icon'><AddIcon/></span>
                         <span className='template-name'>
@@ -186,7 +187,7 @@ const BoardTemplateSelector = (props: Props) => {
                             filled={false}
                             emphasis={'secondary'}
                             size={'medium'}
-                            onClick={() => mutator.addEmptyBoard(intl, showBoard, () => showBoard(currentBoard.id))}
+                            onClick={() => mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))}
                         >
                             <FormattedMessage
                                 id='BoardTemplateSelector.create-empty-board'

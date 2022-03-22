@@ -13,16 +13,18 @@ import (
 )
 
 type TestHelper struct {
-	api  *wsMocks.MockAPI
-	auth *authMocks.MockAuthInterface
-	ctrl *gomock.Controller
-	pa   *PluginAdapter
+	api   *wsMocks.MockAPI
+	auth  *authMocks.MockAuthInterface
+	store *wsMocks.MockStore
+	ctrl  *gomock.Controller
+	pa    *PluginAdapter
 }
 
 func SetupTestHelper(t *testing.T) *TestHelper {
 	ctrl := gomock.NewController(t)
 	mockAPI := wsMocks.NewMockAPI(ctrl)
 	mockAuth := authMocks.NewMockAuthInterface(ctrl)
+	mockStore := wsMocks.NewMockStore(ctrl)
 
 	mockAPI.EXPECT().LogDebug(gomock.Any(), gomock.Any()).AnyTimes()
 	mockAPI.EXPECT().LogInfo(gomock.Any(), gomock.Any()).AnyTimes()
@@ -30,10 +32,11 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 	mockAPI.EXPECT().LogWarn(gomock.Any(), gomock.Any()).AnyTimes()
 
 	return &TestHelper{
-		api:  mockAPI,
-		auth: mockAuth,
-		ctrl: ctrl,
-		pa:   NewPluginAdapter(mockAPI, mockAuth, mlog.CreateConsoleTestLogger(true, mlog.LvlDebug)),
+		api:   mockAPI,
+		auth:  mockAuth,
+		store: mockStore,
+		ctrl:  ctrl,
+		pa:    NewPluginAdapter(mockAPI, mockAuth, mockStore, mlog.CreateConsoleTestLogger(true, mlog.LvlDebug)),
 	}
 }
 
@@ -43,16 +46,16 @@ func (th *TestHelper) ReceiveWebSocketMessage(webConnID, userID, action string, 
 	th.pa.WebSocketMessageHasBeenPosted(webConnID, userID, req)
 }
 
-func (th *TestHelper) SubscribeWebConnToWorkspace(webConnID, userID, workspaceID string) {
+func (th *TestHelper) SubscribeWebConnToTeam(webConnID, userID, teamID string) {
 	th.auth.EXPECT().
-		DoesUserHaveWorkspaceAccess(userID, workspaceID).
+		DoesUserHaveTeamAccess(userID, teamID).
 		Return(true)
 
-	msgData := map[string]interface{}{"workspaceId": workspaceID}
-	th.ReceiveWebSocketMessage(webConnID, userID, websocketActionSubscribeWorkspace, msgData)
+	msgData := map[string]interface{}{"teamId": teamID}
+	th.ReceiveWebSocketMessage(webConnID, userID, websocketActionSubscribeTeam, msgData)
 }
 
-func (th *TestHelper) UnsubscribeWebConnFromWorkspace(webConnID, userID, workspaceID string) {
-	msgData := map[string]interface{}{"workspaceId": workspaceID}
-	th.ReceiveWebSocketMessage(webConnID, userID, websocketActionUnsubscribeWorkspace, msgData)
+func (th *TestHelper) UnsubscribeWebConnFromTeam(webConnID, userID, teamID string) {
+	msgData := map[string]interface{}{"teamId": teamID}
+	th.ReceiveWebSocketMessage(webConnID, userID, websocketActionUnsubscribeTeam, msgData)
 }

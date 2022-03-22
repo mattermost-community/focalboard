@@ -26,7 +26,7 @@ const TextElement = (props: Props): JSX.Element => {
             placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
             onBlur={(text) => {
                 if (text !== block.title) {
-                    mutator.changeTitle(block.id, block.title, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
+                    mutator.changeBlockTitle(block.boardId, block.id, block.title, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
                 }
             }}
             readonly={readonly}

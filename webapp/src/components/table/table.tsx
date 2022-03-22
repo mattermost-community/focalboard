@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback} from 'react'
+import React, {useCallback, useRef} from 'react'
 
 import {FormattedMessage} from 'react-intl'
 import {useDragLayer, useDrop} from 'react-dnd'
@@ -8,11 +8,14 @@ import {useDragLayer, useDrop} from 'react-dnd'
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
 import {createBoardView, BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import {useAppDispatch} from '../../store/hooks'
 import {updateView} from '../../store/views'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './table.scss'
 
@@ -39,6 +42,8 @@ type Props = {
 const Table = (props: Props): JSX.Element => {
     const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
+    const canEditCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const dispatch = useAppDispatch()
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
@@ -54,7 +59,7 @@ const Table = (props: Props): JSX.Element => {
         }
     })
 
-    const columnRefs: Map<string, React.RefObject<HTMLDivElement>> = new Map()
+    const columnRefs = useRef<Map<string, React.RefObject<HTMLDivElement>>>(new Map())
 
     const [, drop] = useDrop(() => ({
         accept: 'horizontalGrip',
@@ -69,7 +74,7 @@ const Table = (props: Props): JSX.Element => {
                 newView.fields.columnWidths = columnWidths
                 try {
                     dispatch(updateView(newView))
-                    await mutator.updateBlock(newView, activeView, 'resize column')
+                    await mutator.updateBlock(board.id, newView, activeView, 'resize column')
                 } catch {
                     dispatch(updateView(activeView))
                 }
@@ -89,7 +94,7 @@ const Table = (props: Props): JSX.Element => {
         const newView = createBoardView(activeView)
         newView.fields.collapsedOptionIds = newValue
         mutator.performAsUndoGroup(async () => {
-            await mutator.updateBlock(newView, activeView, 'hide group')
+            await mutator.updateBlock(board.id, newView, activeView, 'hide group')
         })
     }, [activeView])
 
@@ -105,14 +110,14 @@ const Table = (props: Props): JSX.Element => {
             visibleOptionIds.splice(srcIndex, 0, visibleOptionIds.splice(destIndex, 1)[0])
             Utils.log(`ondrop. updated visibleoptionids: ${visibleOptionIds}`)
 
-            await mutator.changeViewVisibleOptionIds(activeView.id, activeView.fields.visibleOptionIds, visibleOptionIds)
+            await mutator.changeViewVisibleOptionIds(board.id, activeView.id, activeView.fields.visibleOptionIds, visibleOptionIds)
         }
     }, [activeView, visibleGroups])
 
     const onDropToCard = useCallback((srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
         onDropToGroup(srcCard, dstCard.fields.properties[activeView.fields.groupById!] as string, dstCard.id)
-    }, [activeView])
+    }, [activeView.fields.groupById])
 
     const onDropToGroup = useCallback((srcCard: Card, groupID: string, dstCardID: string) => {
         Utils.log(`onDropToGroup: ${srcCard.title}`)
@@ -138,7 +143,7 @@ const Table = (props: Props): JSX.Element => {
                     Utils.log(`ondrop. oldValue: ${oldOptionId}`)
 
                     if (groupID !== oldOptionId) {
-                        awaits.push(mutator.changePropertyValue(draggedCard, groupByProperty!.id, groupID, description))
+                        awaits.push(mutator.changePropertyValue(board.id, draggedCard, groupByProperty!.id, groupID, description))
                     }
                 }
                 await Promise.all(awaits)
@@ -169,7 +174,7 @@ const Table = (props: Props): JSX.Element => {
             }
 
             mutator.performAsUndoGroup(async () => {
-                await mutator.changeViewCardOrder(activeView, cardOrder, description)
+                await mutator.changeViewCardOrder(board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description)
             })
         }
     }, [activeView, cards, props.selectedCardIds, groupByProperty])
@@ -191,8 +196,8 @@ const Table = (props: Props): JSX.Element => {
                     views={views}
                     offset={offset}
                     resizingColumn={resizingColumn}
-                    columnRefs={columnRefs}
-                    readonly={props.readonly}
+                    columnRefs={columnRefs.current}
+                    readonly={props.readonly || !canEditBoardProperties}
                 />
 
                 {/* Table rows */}
@@ -206,8 +211,8 @@ const Table = (props: Props): JSX.Element => {
                                 activeView={activeView}
                                 groupByProperty={groupByProperty}
                                 group={group}
-                                readonly={props.readonly}
-                                columnRefs={columnRefs}
+                                readonly={props.readonly || !canEditCards}
+                                columnRefs={columnRefs.current}
                                 selectedCardIds={props.selectedCardIds}
                                 cardIdToFocusOnRender={props.cardIdToFocusOnRender}
                                 hideGroup={hideGroup}
@@ -227,10 +232,10 @@ const Table = (props: Props): JSX.Element => {
                     <TableRows
                         board={board}
                         activeView={activeView}
-                        columnRefs={columnRefs}
+                        columnRefs={columnRefs.current}
                         cards={cards}
                         selectedCardIds={props.selectedCardIds}
-                        readonly={props.readonly}
+                        readonly={props.readonly || !canEditCards}
                         cardIdToFocusOnRender={props.cardIdToFocusOnRender}
                         showCard={props.showCard}
                         addCard={props.addCard}
@@ -243,17 +248,19 @@ const Table = (props: Props): JSX.Element => {
                 {/* Add New row */}
                 <div className='octo-table-footer'>
                     {!props.readonly && !activeView.fields.groupById &&
-                    <div
-                        className='octo-table-cell'
-                        onClick={() => {
-                            props.addCard('')
-                        }}
-                    >
-                        <FormattedMessage
-                            id='TableComponent.plus-new'
-                            defaultMessage='+ New'
-                        />
-                    </div>
+                    <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                        <div
+                            className='octo-table-cell'
+                            onClick={() => {
+                                props.addCard('')
+                            }}
+                        >
+                            <FormattedMessage
+                                id='TableComponent.plus-new'
+                                defaultMessage='+ New'
+                            />
+                        </div>
+                    </BoardPermissionGate>
                     }
                 </div>
 
@@ -263,7 +270,7 @@ const Table = (props: Props): JSX.Element => {
                     activeView={activeView}
                     resizingColumn={resizingColumn}
                     offset={offset}
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardProperties}
                 />
             </div>
         </div>

@@ -7,7 +7,6 @@ import (
 	"io"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -18,10 +17,7 @@ var (
 )
 
 func (a *App) ExportArchive(w io.Writer, opt model.ExportArchiveOptions) (errs error) {
-	container := store.Container{
-		WorkspaceID: opt.WorkspaceID,
-	}
-	boards, err := a.getBoardsForArchive(container, opt.BoardIDs)
+	boards, err := a.getBoardsForArchive(opt.BoardIDs)
 	if err != nil {
 		return err
 	}
@@ -71,7 +67,7 @@ func (a *App) writeArchiveVersion(zw *zip.Writer) error {
 }
 
 // writeArchiveBoard writes a single board to the archive in a zip directory.
-func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Block, opt model.ExportArchiveOptions) error {
+func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Board, opt model.ExportArchiveOptions) error {
 	// create a directory per board
 	w, err := zw.Create(board.ID + "/board.jsonl")
 	if err != nil {
@@ -79,18 +75,14 @@ func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Block, opt model.Exp
 	}
 
 	// write the board block first
-	if err = a.writeArchiveBlockLine(w, board); err != nil {
+	if err = a.writeArchiveBoardLine(w, board); err != nil {
 		return err
 	}
 
 	var files []string
-	container := store.Container{
-		WorkspaceID: opt.WorkspaceID,
-	}
-
 	// write the board's blocks
 	// TODO: paginate this
-	blocks, err := a.GetBlocksWithRootID(container, board.ID)
+	blocks, err := a.GetBlocksWithBoardID(board.ID)
 	if err != nil {
 		return err
 	}
@@ -143,6 +135,32 @@ func (a *App) writeArchiveBlockLine(w io.Writer, block model.Block) error {
 	return err
 }
 
+// writeArchiveBlockLine writes a single block to the archive.
+func (a *App) writeArchiveBoardLine(w io.Writer, board model.Board) error {
+	b, err := json.Marshal(&board)
+	if err != nil {
+		return err
+	}
+	line := model.ArchiveLine{
+		Type: "board",
+		Data: b,
+	}
+
+	b, err = json.Marshal(&line)
+	if err != nil {
+		return err
+	}
+
+	_, err = w.Write(b)
+	if err != nil {
+		return err
+	}
+
+	// jsonl files need a newline
+	_, err = w.Write(newline)
+	return err
+}
+
 // writeArchiveFile writes a single file to the archive.
 func (a *App) writeArchiveFile(zw *zip.Writer, filename string, boardID string, opt model.ExportArchiveOptions) error {
 	dest, err := zw.Create(boardID + "/" + filename)
@@ -150,12 +168,12 @@ func (a *App) writeArchiveFile(zw *zip.Writer, filename string, boardID string, 
 		return err
 	}
 
-	src, err := a.GetFileReader(opt.WorkspaceID, boardID, filename)
+	src, err := a.GetFileReader(opt.TeamID, boardID, filename)
 	if err != nil {
 		// just log this; image file is missing but we'll still export an equivalent board
 		a.logger.Error("image file missing for export",
 			mlog.String("filename", filename),
-			mlog.String("workspace_id", opt.WorkspaceID),
+			mlog.String("team_id", opt.TeamID),
 			mlog.String("board_id", boardID),
 		)
 		return nil
@@ -168,25 +186,23 @@ func (a *App) writeArchiveFile(zw *zip.Writer, filename string, boardID string, 
 
 // getBoardsForArchive fetches all the specified boards, or all boards in the workspace/team
 // if `boardIDs` is empty.
-func (a *App) getBoardsForArchive(container store.Container, boardIDs []string) ([]model.Block, error) {
+func (a *App) getBoardsForArchive(boardIDs []string) ([]model.Board, error) {
 	if len(boardIDs) == 0 {
-		boards, err := a.GetBlocks(container, "", model.TypeBoard)
-		if err != nil {
-			return nil, fmt.Errorf("could not fetch all boards: %w", err)
-		}
-		return boards, nil
+		// TODO: implement this
+		// boards, err := a.GetAllBoards("", "board")
+		// if err != nil {
+		// 	return nil, fmt.Errorf("could not fetch all boards: %w", err)
+		// }
+		// return boards, nil
+		return []model.Board{}, nil
 	}
 
-	boards := make([]model.Block, 0, len(boardIDs))
+	boards := make([]model.Board, 0, len(boardIDs))
 
 	for _, id := range boardIDs {
-		b, err := a.GetBlockByID(container, id)
+		b, err := a.GetBoard(id)
 		if err != nil {
 			return nil, fmt.Errorf("could not fetch board %s: %w", id, err)
-		}
-
-		if b.Type != model.TypeBoard {
-			return nil, fmt.Errorf("block %s is not a board: %w", b.ID, model.ErrInvalidBoardBlock)
 		}
 
 		boards = append(boards, *b)

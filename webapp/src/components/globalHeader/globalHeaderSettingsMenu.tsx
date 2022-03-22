@@ -10,6 +10,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {storeLanguage} from '../../store/language'
 import {patchProps, getMe} from '../../store/users'
+import {getCurrentTeam, Team} from '../../store/teams'
 import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
 import octoClient from '../../octoClient'
 import {UserSettings} from '../../userSettings'
@@ -28,6 +29,7 @@ type Props = {
 const GlobalHeaderSettingsMenu = (props: Props) => {
     const intl = useIntl()
     const me = useAppSelector<IUser|null>(getMe)
+    const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const dispatch = useAppDispatch()
 
     const [randomIcons, setRandomIcons] = useState(UserSettings.prefillRandomIcons)
@@ -110,6 +112,9 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                             if (!me) {
                                 return
                             }
+                            if (!currentTeam) {
+                                return
+                            }
 
                             const patch: UserConfigPatch = {
                                 updatedFields: {
@@ -123,9 +128,9 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                                 await dispatch(patchProps(patchedProps))
                             }
 
-                            const onboardingData = await octoClient.prepareOnboarding()
+                            const onboardingData = await octoClient.prepareOnboarding(currentTeam.id)
 
-                            const newPath = `/workspace/${onboardingData?.workspaceID}/${onboardingData?.boardID}`
+                            const newPath = `/team/${onboardingData?.teamID}/${onboardingData?.boardID}`
 
                             props.history.push(newPath)
                         }}

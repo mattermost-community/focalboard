@@ -117,7 +117,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                                 id='hide'
                                 icon={<HideIcon/>}
                                 name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
-                                onClick={() => mutator.hideViewColumn(activeView, group.option.id || '')}
+                                onClick={() => mutator.hideViewColumn(board.id, activeView, group.option.id || '')}
                             />
                             {group.option.id &&
                                 <>

@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useCallback} from 'react'
+import React, {ReactNode, useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import Button from '../widgets/buttons/button'
@@ -11,7 +11,7 @@ import './confirmationDialogBox.scss'
 
 type ConfirmationDialogBoxProps = {
     heading: string
-    subText?: string
+    subText?: string | ReactNode
     confirmButtonText?: string
     onConfirm: () => void
     onClose: () => void
@@ -53,8 +53,9 @@ export const ConfirmationDialogBox = (props: Props) => {
                         title={props.dialogBox.confirmButtonText || 'Confirm'}
                         size='medium'
                         submit={true}
-                        emphasis='danger'
+                        danger={true}
                         onClick={handleOnConfirm}
+                        filled={true}
                     >
                         { props.dialogBox.confirmButtonText ||
                         <FormattedMessage

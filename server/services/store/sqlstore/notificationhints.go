@@ -19,7 +19,6 @@ import (
 var notificationHintFields = []string{
 	"block_type",
 	"block_id",
-	"workspace_id",
 	"modified_by_id",
 	"create_at",
 	"notify_at",
@@ -29,7 +28,6 @@ func valuesForNotificationHint(hint *model.NotificationHint) []interface{} {
 	return []interface{}{
 		hint.BlockType,
 		hint.BlockID,
-		hint.WorkspaceID,
 		hint.ModifiedByID,
 		hint.CreateAt,
 		hint.NotifyAt,
@@ -44,7 +42,6 @@ func (s *SQLStore) notificationHintFromRows(rows *sql.Rows) ([]*model.Notificati
 		err := rows.Scan(
 			&hint.BlockType,
 			&hint.BlockID,
-			&hint.WorkspaceID,
 			&hint.ModifiedByID,
 			&hint.CreateAt,
 			&hint.NotifyAt,
@@ -73,7 +70,7 @@ func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.Notifica
 		Columns(notificationHintFields...).
 		Values(valuesForNotificationHint(hint)...)
 
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE notify_at = ?", notifyAt)
 	} else {
 		query = query.Suffix("ON CONFLICT (block_id) DO UPDATE SET notify_at = ?", notifyAt)
@@ -82,7 +79,6 @@ func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.Notifica
 	if _, err := query.Exec(); err != nil {
 		s.logger.Error("Cannot upsert notification hint",
 			mlog.String("block_id", hint.BlockID),
-			mlog.String("workspace_id", hint.WorkspaceID),
 			mlog.Err(err),
 		)
 		return nil, err
@@ -91,11 +87,10 @@ func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.Notifica
 }
 
 // deleteNotificationHint deletes the notification hint for the specified block.
-func (s *SQLStore) deleteNotificationHint(db sq.BaseRunner, c store.Container, blockID string) error {
+func (s *SQLStore) deleteNotificationHint(db sq.BaseRunner, blockID string) error {
 	query := s.getQueryBuilder(db).
 		Delete(s.tablePrefix + "notification_hints").
-		Where(sq.Eq{"block_id": blockID}).
-		Where(sq.Eq{"workspace_id": c.WorkspaceID})
+		Where(sq.Eq{"block_id": blockID})
 
 	result, err := query.Exec()
 	if err != nil {
@@ -115,18 +110,16 @@ func (s *SQLStore) deleteNotificationHint(db sq.BaseRunner, c store.Container, b
 }
 
 // getNotificationHint fetches the notification hint for the specified block.
-func (s *SQLStore) getNotificationHint(db sq.BaseRunner, c store.Container, blockID string) (*model.NotificationHint, error) {
+func (s *SQLStore) getNotificationHint(db sq.BaseRunner, blockID string) (*model.NotificationHint, error) {
 	query := s.getQueryBuilder(db).
 		Select(notificationHintFields...).
 		From(s.tablePrefix + "notification_hints").
-		Where(sq.Eq{"block_id": blockID}).
-		Where(sq.Eq{"workspace_id": c.WorkspaceID})
+		Where(sq.Eq{"block_id": blockID})
 
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error("Cannot fetch notification hint",
 			mlog.String("block_id", blockID),
-			mlog.String("workspace_id", c.WorkspaceID),
 			mlog.Err(err),
 		)
 		return nil, err
@@ -137,7 +130,6 @@ func (s *SQLStore) getNotificationHint(db sq.BaseRunner, c store.Container, bloc
 	if err != nil {
 		s.logger.Error("Cannot get notification hint",
 			mlog.String("block_id", blockID),
-			mlog.String("workspace_id", c.WorkspaceID),
 			mlog.Err(err),
 		)
 		return nil, err

@@ -6,7 +6,7 @@ import {IntlShape} from 'react-intl'
 import {DateUtils} from 'react-day-picker'
 
 import {Block, createBlock} from './blocks/block'
-import {IPropertyTemplate, createBoard} from './blocks/board'
+import {IPropertyTemplate} from './blocks/board'
 import {BoardView, createBoardView} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
@@ -81,7 +81,6 @@ class OctoUtils {
 
     static hydrateBlock(block: Block): Block {
         switch (block.type) {
-        case 'board': { return createBoard(block) }
         case 'view': { return createBoardView(block) }
         case 'card': { return createCard(block) }
         case 'text': { return createTextBlock(block) }
@@ -123,13 +122,13 @@ class OctoUtils {
 
         const newSourceBlockId = idMap[sourceBlockId]
 
-        // Determine the new rootId if needed
-        let newRootId: string
+        // Determine the new boardId if needed
+        let newBoardId: string
         const sourceBlock = blocks.find((block) => block.id === sourceBlockId)!
-        if (sourceBlock.rootId === sourceBlock.id) {
-            // Special case: when duplicating a tree from root, remap all the descendant rootIds
+        if (sourceBlock.boardId === sourceBlock.id) {
+            // Special case: when duplicating a tree from root, remap all the descendant boardIds
             const newSourceRootBlock = newBlocks.find((block) => block.id === newSourceBlockId)!
-            newRootId = newSourceRootBlock.id
+            newBoardId = newSourceRootBlock.id
         }
 
         newBlocks.forEach((newBlock) => {
@@ -139,9 +138,9 @@ class OctoUtils {
                 Utils.assert(newBlock.parentId, `Block ${newBlock.id} (${newBlock.type} ${newBlock.title}) has no parent`)
             }
 
-            // Remap the rootIds if we are duplicating a tree from root
-            if (newRootId) {
-                newBlock.rootId = newRootId
+            // Remap the boardIds if we are duplicating a tree from root
+            if (newBoardId) {
+                newBlock.boardId = newBoardId
             }
 
             // Remap manual card order

@@ -2,14 +2,17 @@
 // See LICENSE.txt for license information.
 import {act, render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import {Provider as ReduxProvider} from 'react-redux'
+import thunk from 'redux-thunk'
 
 import React from 'react'
 import {MemoryRouter} from 'react-router'
 import {mocked} from 'ts-jest/utils'
 
+import {IUser} from '../../user'
 import {ISharing} from '../../blocks/sharing'
 import {TestBlockFactory} from '../../test/testBlockFactory'
-import {wrapDNDIntl} from '../../testUtils'
+import {mockStateStore, wrapDNDIntl} from '../../testUtils'
 import client from '../../octoClient'
 import {Utils} from '../../utils'
 
@@ -43,13 +46,124 @@ jest.mock('react-router', () => {
         }),
     }
 })
+
 const board = TestBlockFactory.createBoard()
 board.id = boardId
+board.teamId = 'team-id'
+board.cardProperties = [
+    {
+        id: 'property1',
+        name: 'Property 1',
+        type: 'text',
+        options: [
+            {
+                id: 'value1',
+                value: 'value 1',
+                color: 'propColorBrown',
+            },
+        ],
+    },
+    {
+        id: 'property2',
+        name: 'Property 2',
+        type: 'select',
+        options: [
+            {
+                id: 'value2',
+                value: 'value 2',
+                color: 'propColorBlue',
+            },
+        ],
+    },
+]
+const activeView = TestBlockFactory.createBoardView(board)
+activeView.id = 'view1'
+activeView.fields.hiddenOptionIds = []
+activeView.fields.visiblePropertyIds = ['property1']
+activeView.fields.visibleOptionIds = ['value1']
+const fakeBoard = {id: board.id}
+activeView.boardId = fakeBoard.id
+const card1 = TestBlockFactory.createCard(board)
+card1.id = 'card1'
+card1.title = 'card-1'
+card1.boardId = fakeBoard.id
+const card2 = TestBlockFactory.createCard(board)
+card2.id = 'card2'
+card2.title = 'card-2'
+card2.boardId = fakeBoard.id
+const card3 = TestBlockFactory.createCard(board)
+card3.id = 'card3'
+card3.title = 'card-3'
+card3.boardId = fakeBoard.id
+
+const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, create_at: 0, update_at: 0, is_bot: false}
+
+const categoryAttribute1 = TestBlockFactory.createCategoryBlocks()
+categoryAttribute1.name = 'Category 1'
+categoryAttribute1.blockIDs = [board.id]
 
 describe('src/components/shareBoard/shareBoard', () => {
     const w = (window as any)
     const oldBaseURL = w.baseURL
 
+    const state = {
+        teams: {
+            current: {id: 'team-id', title: 'Test Team'},
+        },
+        users: {
+            me,
+            boardUsers: [me],
+            blockSubscriptions: [],
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            templates: [],
+            membersInBoards: {
+                [board.id]: {},
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: me.id, schemeAdmin: true},
+            },
+        },
+        globalTemplates: {
+            value: [],
+        },
+        views: {
+            views: {
+                [activeView.id]: activeView,
+            },
+            current: activeView.id,
+        },
+        cards: {
+            templates: [],
+            cards: [card1, card2, card3],
+        },
+        searchText: {},
+        clientConfig: {
+            value: {
+                telemetry: true,
+                telemetryid: 'telemetry',
+                enablePublicSharedBoards: true,
+                featureFlags: {},
+            },
+        },
+        contents: {
+            contents: {},
+        },
+        comments: {
+            comments: {},
+        },
+        sidebar: {
+            categoryAttributes: [
+                categoryAttribute1,
+            ],
+        },
+    }
+
+    const store = mockStateStore([thunk], state)
     beforeEach(() => {
         jest.clearAllMocks()
         mockedUtils.buildURL.mockImplementation((path) => (w.baseURL || '') + path)
@@ -71,11 +185,12 @@ describe('src/components/shareBoard/shareBoard', () => {
         await act(async () => {
             const result = render(
                 wrapDNDIntl(
-                    <ShareBoard
-                        boardId={board.id}
-                        onClose={jest.fn()}
-                        enableSharedBoards={true}
-                    />),
+                    <ReduxProvider store={store}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={true}
+                        />
+                    </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
             container = result.container
@@ -98,11 +213,12 @@ describe('src/components/shareBoard/shareBoard', () => {
         await act(async () => {
             const result = render(
                 wrapDNDIntl(
-                    <ShareBoard
-                        boardId={board.id}
-                        onClose={jest.fn()}
-                        enableSharedBoards={true}
-                    />),
+                    <ReduxProvider store={store}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={true}
+                        />
+                    </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
             container = result.container
@@ -125,11 +241,12 @@ describe('src/components/shareBoard/shareBoard', () => {
         await act(async () => {
             const result = render(
                 wrapDNDIntl(
-                    <ShareBoard
-                        boardId={board.id}
-                        onClose={jest.fn()}
-                        enableSharedBoards={true}
-                    />),
+                    <ReduxProvider store={store}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={true}
+                        />
+                    </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
             container = result.container
@@ -167,11 +284,12 @@ describe('src/components/shareBoard/shareBoard', () => {
         await act(async () => {
             const result = render(
                 wrapDNDIntl(
-                    <ShareBoard
-                        boardId={board.id}
-                        onClose={jest.fn()}
-                        enableSharedBoards={true}
-                    />),
+                    <ReduxProvider store={store}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={true}
+                        />
+                    </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
             container = result.container
@@ -209,11 +327,12 @@ describe('src/components/shareBoard/shareBoard', () => {
         await act(async () => {
             const result = render(
                 wrapDNDIntl(
-                    <ShareBoard
-                        boardId={board.id}
-                        onClose={jest.fn()}
-                        enableSharedBoards={true}
-                    />),
+                    <ReduxProvider store={store}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={true}
+                        />
+                    </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
             container = result.container
@@ -243,11 +362,12 @@ describe('src/components/shareBoard/shareBoard', () => {
         await act(async () => {
             const result = render(
                 wrapDNDIntl(
-                    <ShareBoard
-                        boardId={board.id}
-                        onClose={jest.fn()}
-                        enableSharedBoards={true}
-                    />),
+                    <ReduxProvider store={store}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={true}
+                        />
+                    </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
             container = result.container
@@ -268,11 +388,12 @@ describe('src/components/shareBoard/shareBoard', () => {
             jest.runOnlyPendingTimers()
             result.rerender(
                 wrapDNDIntl(
-                    <ShareBoard
-                        boardId={board.id}
-                        onClose={jest.fn()}
-                        enableSharedBoards={true}
-                    />))
+                    <ReduxProvider store={store}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={true}
+                        />
+                    </ReduxProvider>))
         })
 
         expect(mockedOctoClient.setSharing).toBeCalledTimes(1)
@@ -295,11 +416,13 @@ describe('src/components/shareBoard/shareBoard', () => {
         let container
         await act(async () => {
             const result = render(wrapDNDIntl(
-                <ShareBoard
-                    boardId={board.id}
-                    onClose={jest.fn()}
-                    enableSharedBoards={true}
-                />), {wrapper: MemoryRouter})
+                <ReduxProvider store={store}>
+                    <ShareBoard
+                        onClose={jest.fn()}
+                        enableSharedBoards={true}
+                    />
+                </ReduxProvider>),
+            {wrapper: MemoryRouter})
             container = result.container
         })
         expect(container).toMatchSnapshot()
@@ -316,11 +439,13 @@ describe('src/components/shareBoard/shareBoard', () => {
         let container
         await act(async () => {
             const result = render(wrapDNDIntl(
-                <ShareBoard
-                    boardId={board.id}
-                    onClose={jest.fn()}
-                    enableSharedBoards={true}
-                />), {wrapper: MemoryRouter})
+                <ReduxProvider store={store}>
+                    <ShareBoard
+                        onClose={jest.fn()}
+                        enableSharedBoards={true}
+                    />
+                </ReduxProvider>),
+            {wrapper: MemoryRouter})
             container = result.container
         })
         expect(container).toMatchSnapshot()

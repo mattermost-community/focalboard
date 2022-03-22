@@ -1,86 +1,135 @@
 .SidebarBoardItem {
-    .octo-sidebar-item {
+    display: flex;
+    flex-direction: row;
+    font-weight: 500;
+    padding: 0 16px 0 8px;
+    height: 36px;
+    align-items: center;
+    gap: 8px;
+
+    &.category {
+        padding-left: 0;
+    }
+
+    &:hover {
+        background-color: rgba(var(--sidebar-text-rgb), 0.08);
         display: flex;
-        flex-direction: row;
-        font-weight: 500;
-        padding: 0 16px 0 8px;
-        height: 36px;
-        align-items: center;
+    }
+
+    .subitem {
+        padding-left: 20px;
+        color: rgba(var(--sidebar-text-rgb), 0.64);
+        font-weight: 400;
+    }
+
+    &.sidebar-view-item {
+        padding-left: 40px;
+        color: rgba(var(--sidebar-text-rgb), 0.64);
+        font-weight: 400;
+    }
+
+    &.active {
+        background: rgba(var(--sidebar-text-rgb), 0.1);
+        position: relative;
+        color: rgb(var(--sidebar-text-rgb));
+
+        &:not(.subitem) {
+            &::before {
+                content: '';
+                background: rgb(var(--sidebar-text-active-border-rgb));
+                width: 2px;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+    }
+
+    &.no-views {
+        color: rgba(var(--sidebar-text-rgb), 0.4);
 
         &:hover {
-            background-color: rgba(var(--sidebar-text-rgb), 0.08);
-            display: flex;
+            background-color: rgba(var(--sidebar-bg-rgb));
         }
+    }
 
-        &.subitem {
-            padding-left: 20px;
-            color: rgba(var(--sidebar-text-rgb), 0.64);
-            font-weight: 400;
+    &:not(.no-views) {
+        cursor: pointer;
+    }
+
+    > .Icon {
+        height: 18px;
+        width: 18px;
+        margin-right: 8px;
+        flex-shrink: 0;
+
+        &.GalleryIcon {
+            fill: rgba(var(--sidebar-text-rgb), 0.3);
+            stroke: unset;
         }
+    }
 
-        &.active {
-            background: rgba(var(--sidebar-text-rgb), 0.1);
-            position: relative;
-            color: rgb(var(--sidebar-text-rgb));
+    > .IconButton {
+        background-color: var(--sidebar-bg-rgb);
+        color: rgb(var(--sidebar-text-rgb));
+        margin-left: 4px;
 
-            &:not(.subitem) {
-                &::before {
-                    content: '';
-                    background: rgb(var(--sidebar-text-active-border-rgb));
-                    width: 2px;
-                    height: 100%;
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                }
-            }
+        &:hover {
+            background-color: rgba(var(--sidebar-text-rgb), 0.1);
         }
+    }
 
-        &.no-views {
-            color: rgba(var(--sidebar-text-rgb), 0.4);
+    .Menu.left {
+        right: -11px;
+    }
 
-            &:hover {
-                background-color: rgba(var(--sidebar-bg-rgb));
-            }
-        }
-
-        &:not(.no-views) {
-            cursor: pointer;
-        }
-
-        > .Icon {
-            height: 18px;
-            width: 18px;
-            margin-right: 8px;
-            flex-shrink: 0;
-
-            &.GalleryIcon {
-                fill: rgba(var(--sidebar-text-rgb), 0.3);
-                stroke: unset;
-            }
-        }
-
-        > .IconButton {
-            background-color: var(--sidebar-bg-rgb);
-
-            &:hover {
-                background-color: rgba(var(--sidebar-text-rgb), 0.1);
-            }
-        }
-
-        .Menu.left {
-            right: -16px;
-        }
-
-        &.expanded {
-            .DisclosureTriangleIcon {
-                transform: rotate(90deg);
-            }
-        }
-
+    &.expanded {
         .DisclosureTriangleIcon {
-            transition: 200ms ease-in-out;
-            transform: rotate(0deg);
+            transform: rotate(90deg);
+        }
+    }
+
+    .DisclosureTriangleIcon {
+        transition: 200ms ease-in-out;
+        transform: rotate(0deg);
+    }
+
+    &.category {
+        .MenuWrapper {
+            display: none;
+
+            &.menuOpen {
+                display: block;
+            }
+        }
+
+        &:hover {
+            .MenuWrapper {
+                display: block;
+            }
+        }
+    }
+
+    &.subitem {
+        .MenuWrapper {
+            display: none;
+
+            &.menuOpen {
+                display: block;
+            }
+        }
+
+        &:hover {
+            .MenuWrapper {
+                display: block;
+            }
+        }
+    }
+
+    .MenuWrapper {
+        &:hover {
+            background: rgba(var(--sidebar-text-rgb), 0.08);
         }
     }
 
@@ -103,5 +152,11 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+    }
+
+    .Menu.noselect.left {
+        position: fixed;
+        right: calc(100% - 480px + 50px);
+        left: calc(240px - 50px);
     }
 }

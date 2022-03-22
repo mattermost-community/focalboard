@@ -37,9 +37,8 @@ describe('components/contentBlock', () => {
     mockedOcto.getFileAsDataUrl.mockResolvedValue('test.jpg')
 
     const board = TestBlockFactory.createBoard()
-    board.fields.cardProperties = []
+    board.cardProperties = []
     board.id = 'board-id'
-    board.rootId = board.id
     const boardView = TestBlockFactory.createBoardView(board)
     boardView.id = board.id
     const card = TestBlockFactory.createCard(board)
@@ -68,7 +67,7 @@ describe('components/contentBlock', () => {
 
     const state = {
         users: {
-            workspaceUsers: {
+            boardUsers: {
                 1: {username: 'abc'},
                 2: {username: 'd'},
                 3: {username: 'e'},

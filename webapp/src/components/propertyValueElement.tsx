@@ -6,8 +6,6 @@ import {useIntl} from 'react-intl'
 
 import {Board, IPropertyOption, IPropertyTemplate, PropertyType} from '../blocks/board'
 import {Card} from '../blocks/card'
-import {ContentBlock} from '../blocks/contentBlock'
-import {CommentBlock} from '../blocks/commentBlock'
 import mutator from '../mutator'
 import {OctoUtils} from '../octoUtils'
 import {Utils, IDType} from '../utils'
@@ -28,8 +26,6 @@ type Props = {
     board: Board
     readOnly: boolean
     card: Card
-    contents: Array<ContentBlock|ContentBlock[]>
-    comments: CommentBlock[]
     propertyTemplate: IPropertyTemplate
     showEmptyPlaceholder: boolean
 }
@@ -38,7 +34,8 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
     const [serverValue, setServerValue] = useState(props.card.fields.properties[props.propertyTemplate.id] || '')
 
-    const {card, propertyTemplate, readOnly, showEmptyPlaceholder, board, contents, comments} = props
+    const {card, propertyTemplate, readOnly, showEmptyPlaceholder, board} = props
+
     const intl = useIntl()
     const propertyValue = card.fields.properties[propertyTemplate.id]
     const displayValue = OctoUtils.propertyDisplayValue(card, propertyValue, propertyTemplate, intl)
@@ -50,7 +47,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const saveTextProperty = useCallback(() => {
         if (editableFields.includes(props.propertyTemplate.type)) {
             if (value !== (props.card.fields.properties[props.propertyTemplate.id] || '')) {
-                mutator.changePropertyValue(card, propertyTemplate.id, value)
+                mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, value)
             }
         }
     }, [props.card, props.propertyTemplate, value])
@@ -71,13 +68,56 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         }
     }, [])
 
-    const onDeleteValue = useCallback(() => mutator.changePropertyValue(card, propertyTemplate.id, ''), [card, propertyTemplate.id])
+    const onDeleteValue = useCallback(() => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, ''), [card, propertyTemplate.id])
+    const onDeleteValueInMultiselect = useCallback((valueToDelete: IPropertyOption, currentValues: IPropertyOption[]) => {
+        const newValues = currentValues.
+            filter((currentValue) => currentValue.id !== valueToDelete.id).
+            map((currentValue) => currentValue.id)
+        mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValues)
+    }, [props.board.id, card, propertyTemplate.id])
+    const onCreateValueInMultiselect = useCallback((newValue: string, currentValues: IPropertyOption[]) => {
+        const option: IPropertyOption = {
+            id: Utils.createGuid(IDType.BlockID),
+            value: newValue,
+            color: 'propColorDefault',
+        }
+        currentValues.push(option)
+        mutator.insertPropertyOption(board, propertyTemplate, option, 'add property option').then(() => {
+            mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, currentValues.map((v: IPropertyOption) => v.id))
+        })
+    }, [board, props.board.id, card, propertyTemplate])
+    const onChangeUser = useCallback((newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue), [props.board.id, card, propertyTemplate.id])
+    const onCancelEditable = useCallback(() => setValue(propertyValue || ''), [propertyValue])
+    const onChangeDateRange = useCallback((newValue) => {
+        if (value !== newValue) {
+            setValue(newValue)
+            mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue)
+        }
+    }, [value, props.board.id, card, propertyTemplate.id])
+    const onChangeInMultiselect = useCallback((newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue), [props.board.id, card, propertyTemplate])
+    const onChangeColorInMultiselect = useCallback((option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board, propertyTemplate, option, colorId), [board, propertyTemplate])
+    const onDeleteOptionInMultiselect = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board, propertyTemplate, option), [board, propertyTemplate])
 
-    const validateProp = (propType: string, val: string): boolean => {
+    const onCreateInSelect = useCallback((newValue) => {
+        const option: IPropertyOption = {
+            id: Utils.createGuid(IDType.BlockID),
+            value: newValue,
+            color: 'propColorDefault',
+        }
+        mutator.insertPropertyOption(board, propertyTemplate, option, 'add property option').then(() => {
+            mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, option.id)
+        })
+    }, [board, props.board.id, card, propertyTemplate.id])
+
+    const onChangeInSelect = useCallback((newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue), [])
+    const onChangeColorInSelect = useCallback((option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board, propertyTemplate, option, colorId), [board, propertyTemplate])
+    const onDeleteOptionInSelect = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board, propertyTemplate, option), [board, propertyTemplate])
+
+    const validateProp = useCallback((val: string): boolean => {
         if (val === '') {
             return true
         }
-        switch (propType) {
+        switch (propertyTemplate.type) {
         case 'number':
             return !isNaN(parseInt(val, 10))
         case 'email': {
@@ -95,7 +135,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         default:
             return false
         }
-    }
+    }, [propertyTemplate.type])
 
     if (propertyTemplate.type === 'multiSelect') {
         return (
@@ -104,22 +144,11 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 emptyValue={emptyDisplayValue}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
-                onChangeColor={(option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board, propertyTemplate, option, colorId)}
-                onDeleteOption={(option: IPropertyOption) => mutator.deletePropertyOption(board, propertyTemplate, option)}
-                onCreate={
-                    async (newValue, currentValues) => {
-                        const option: IPropertyOption = {
-                            id: Utils.createGuid(IDType.BlockID),
-                            value: newValue,
-                            color: 'propColorDefault',
-                        }
-                        currentValues.push(option)
-                        await mutator.insertPropertyOption(board, propertyTemplate, option, 'add property option')
-                        mutator.changePropertyValue(card, propertyTemplate.id, currentValues.map((v) => v.id))
-                    }
-                }
-                onDeleteValue={(valueToDelete, currentValues) => mutator.changePropertyValue(card, propertyTemplate.id, currentValues.filter((currentValue) => currentValue.id !== valueToDelete.id).map((currentValue) => currentValue.id))}
+                onChange={onChangeInMultiselect}
+                onChangeColor={onChangeColorInMultiselect}
+                onDeleteOption={onDeleteOptionInMultiselect}
+                onCreate={onCreateValueInMultiselect}
+                onDeleteValue={onDeleteValueInMultiselect}
             />
         )
     }
@@ -131,26 +160,10 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 emptyValue={emptyDisplayValue}
                 propertyValue={propertyValue as string}
                 propertyTemplate={propertyTemplate}
-                onCreate={
-                    async (newValue) => {
-                        const option: IPropertyOption = {
-                            id: Utils.createGuid(IDType.BlockID),
-                            value: newValue,
-                            color: 'propColorDefault',
-                        }
-                        await mutator.insertPropertyOption(board, propertyTemplate, option, 'add property option')
-                        mutator.changePropertyValue(card, propertyTemplate.id, option.id)
-                    }
-                }
-                onChange={(newValue) => {
-                    mutator.changePropertyValue(card, propertyTemplate.id, newValue)
-                }}
-                onChangeColor={(option: IPropertyOption, colorId: string): void => {
-                    mutator.changePropertyOptionColor(board, propertyTemplate, option, colorId)
-                }}
-                onDeleteOption={(option: IPropertyOption): void => {
-                    mutator.deletePropertyOption(board, propertyTemplate, option)
-                }}
+                onCreate={onCreateInSelect}
+                onChange={onChangeInSelect}
+                onChangeColor={onChangeColorInSelect}
+                onDeleteOption={onDeleteOptionInSelect}
                 onDeleteValue={onDeleteValue}
             />
         )
@@ -159,7 +172,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <UserProperty
                 value={propertyValue?.toString()}
                 readonly={readOnly}
-                onChange={(newValue) => mutator.changePropertyValue(card, propertyTemplate.id, newValue)}
+                onChange={onChangeUser}
             />
         )
     } else if (propertyTemplate.type === 'date') {
@@ -171,12 +184,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 className='octo-propertyvalue'
                 value={value.toString()}
                 showEmptyPlaceholder={showEmptyPlaceholder}
-                onChange={(newValue) => {
-                    if (value !== newValue) {
-                        setValue(newValue)
-                        mutator.changePropertyValue(card, propertyTemplate.id, newValue)
-                    }
-                }}
+                onChange={onChangeDateRange}
             />
         )
     } else if (propertyTemplate.type === 'url') {
@@ -188,7 +196,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 onChange={setValue}
                 onSave={saveTextProperty}
                 onCancel={() => setValue(propertyValue || '')}
-                validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
+                validator={validateProp}
             />
         )
     } else if (propertyTemplate.type === 'checkbox') {
@@ -197,7 +205,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 isOn={Boolean(propertyValue)}
                 onChanged={(newBool) => {
                     const newValue = newBool ? 'true' : ''
-                    mutator.changePropertyValue(card, propertyTemplate.id, newValue)
+                    mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue)
                 }}
                 readOnly={readOnly}
             />
@@ -211,8 +219,6 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             <LastModifiedBy
                 card={card}
                 board={board}
-                contents={contents}
-                comments={comments}
             />
         )
     } else if (propertyTemplate.type === 'createdTime') {
@@ -221,11 +227,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     } else if (propertyTemplate.type === 'updatedTime') {
         return (
-            <LastModifiedAt
-                card={card}
-                contents={contents}
-                comments={comments}
-            />
+            <LastModifiedAt card={card}/>
         )
     }
 
@@ -241,8 +243,8 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                     autoExpand={true}
                     onChange={setValue}
                     onSave={saveTextProperty}
-                    onCancel={() => setValue(propertyValue || '')}
-                    validator={(newValue) => validateProp(propertyTemplate.type, newValue)}
+                    onCancel={onCancelEditable}
+                    validator={validateProp}
                     spellCheck={propertyTemplate.type === 'text'}
                 />
             )

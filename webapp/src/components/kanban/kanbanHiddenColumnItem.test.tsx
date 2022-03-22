@@ -97,6 +97,6 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
         expect(container).toMatchSnapshot()
         const buttonShow = within(buttonMenuWrapper).getByRole('button', {name: 'Show'})
         userEvent.click(buttonShow)
-        expect(mockedMutator.unhideViewColumn).toBeCalledWith(activeView, option.id)
+        expect(mockedMutator.unhideViewColumn).toBeCalledWith(activeView.boardId, activeView, option.id)
     })
 })

@@ -32,12 +32,12 @@ type Props = {
 //         for (let i = 0; i < count; i++) {
 //             const card = new Card()
 //             card.parentId = board.id
-//             card.rootId = board.rootId
-//             card.fields.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.fields.cardProperties)
+//             card.boardId = board.boardId
+//             card.fields.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.cardProperties)
 //             card.title = `Test Card ${startCount + i + 1}`
 //             card.fields.icon = BlockIcons.shared.randomIcon()
 
-//             const groupByProperty = board.fields.cardProperties.find((o) => o.id === activeView.fields.groupById)
+//             const groupByProperty = board.cardProperties.find((o) => o.id === activeView.fields.groupById)
 //             if (groupByProperty && groupByProperty.options.length > 0) {
 //                 // Cycle through options
 //                 const option = groupByProperty.options[optionIndex]

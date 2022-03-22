@@ -47,73 +47,81 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
               <div
                 class="menu-options"
               >
-                <div
-                  aria-label="Status"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Status"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Status
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Status
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="Property 1"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Property 1"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Property 1
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Property 1
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="Property 2"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Property 2"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Property 2
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Property 2
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="Property 3"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Property 3"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Property 3
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Property 3
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
               </div>
               <div
@@ -230,73 +238,81 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
               <div
                 class="menu-options"
               >
-                <div
-                  aria-label="Status"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Status"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Status
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Status
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="Property 1"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Property 1"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Property 1
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Property 1
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="Property 2"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Property 2"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Property 2
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Property 2
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="Property 3"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Property 3"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Property 3
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Property 3
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
               </div>
               <div
@@ -427,73 +443,81 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
               <div
                 class="menu-options"
               >
-                <div
-                  aria-label="includes"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="includes"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    includes
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      includes
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="doesn't include"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="doesn't include"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    doesn't include
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      doesn't include
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="is empty"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="is empty"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    is empty
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      is empty
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="is not empty"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="is not empty"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    is not empty
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      is not empty
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
               </div>
               <div
@@ -596,73 +620,81 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
               <div
                 class="menu-options"
               >
-                <div
-                  aria-label="Status"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Status"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Status
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Status
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="Property 1"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Property 1"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Property 1
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Property 1
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="Property 2"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Property 2"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Property 2
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Property 2
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
-                <div
-                  aria-label="Property 3"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
+                <div>
                   <div
-                    class="noicon"
-                  />
-                  <div
-                    class="menu-name"
+                    aria-label="Property 3"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
                   >
-                    Property 3
+                    <div
+                      class="noicon"
+                    />
+                    <div
+                      class="menu-name"
+                    >
+                      Property 3
+                    </div>
+                    <div
+                      class="noicon"
+                    />
                   </div>
-                  <div
-                    class="noicon"
-                  />
                 </div>
               </div>
               <div

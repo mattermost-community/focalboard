@@ -20,8 +20,8 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 			blockIDs[block.ID] = block.Type
 		}
 
-		if _, ok := referenceIDs[block.RootID]; !ok {
-			referenceIDs[block.RootID] = true
+		if _, ok := referenceIDs[block.BoardID]; !ok {
+			referenceIDs[block.BoardID] = true
 		}
 		if _, ok := referenceIDs[block.ParentID]; !ok {
 			referenceIDs[block.ParentID] = true
@@ -81,7 +81,7 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 	newBlocks := make([]Block, len(blocks))
 	for i, block := range blocks {
 		block.ID = getExistingOrNewID(block.ID)
-		block.RootID = getExistingOrOldID(block.RootID)
+		block.BoardID = getExistingOrOldID(block.BoardID)
 		block.ParentID = getExistingOrOldID(block.ParentID)
 
 		blockMod := block

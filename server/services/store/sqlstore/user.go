@@ -4,12 +4,13 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"log"
+
+	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 
-	sq "github.com/Masterminds/squirrel"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type UserNotFoundError struct {
@@ -37,7 +38,7 @@ func (s *SQLStore) getRegisteredUserCount(db sq.BaseRunner) (int, error) {
 }
 
 func (s *SQLStore) getUserByCondition(db sq.BaseRunner, condition sq.Eq) (*model.User, error) {
-	users, err := s.getUsersByCondition(db, condition)
+	users, err := s.getUsersByCondition(db, condition, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +50,7 @@ func (s *SQLStore) getUserByCondition(db sq.BaseRunner, condition sq.Eq) (*model
 	return users[0], nil
 }
 
-func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition sq.Eq) ([]*model.User, error) {
+func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition interface{}, limit uint64) ([]*model.User, error) {
 	query := s.getQueryBuilder(db).
 		Select(
 			"id",
@@ -67,9 +68,14 @@ func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition sq.Eq) ([]*mo
 		From(s.tablePrefix + "users").
 		Where(sq.Eq{"delete_at": 0}).
 		Where(condition)
+
+	if limit != 0 {
+		query = query.Limit(limit)
+	}
+
 	rows, err := query.Query()
 	if err != nil {
-		log.Printf("getUsersByCondition ERROR: %v", err)
+		s.logger.Error(`getUsersByCondition ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
@@ -196,8 +202,12 @@ func (s *SQLStore) updateUserPasswordByID(db sq.BaseRunner, userID, password str
 	return nil
 }
 
-func (s *SQLStore) getUsersByWorkspace(db sq.BaseRunner, _ string) ([]*model.User, error) {
-	return s.getUsersByCondition(db, nil)
+func (s *SQLStore) getUsersByTeam(db sq.BaseRunner, _ string) ([]*model.User, error) {
+	return s.getUsersByCondition(db, nil, 0)
+}
+
+func (s *SQLStore) searchUsersByTeam(db sq.BaseRunner, _ string, searchQuery string) ([]*model.User, error) {
+	return s.getUsersByCondition(db, &sq.Like{"username": "%" + searchQuery + "%"}, 10)
 }
 
 func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {

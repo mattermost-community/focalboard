@@ -36,9 +36,9 @@ const BoardTemplateSelectorItem = (props: Props) => {
             className={isActive ? 'BoardTemplateSelectorItem active' : 'BoardTemplateSelectorItem'}
             onClick={onClickHandler}
         >
-            <span className='template-icon'>{template.fields.icon}</span>
+            <span className='template-icon'>{template.icon}</span>
             <span className='template-name'>{template.title}</span>
-            {!template.fields.templateVer &&
+            {!template.templateVersion &&
                 <div className='actions'>
                     <IconButton
                         icon={<DeleteIcon/>}

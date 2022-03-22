@@ -6,8 +6,6 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {Board, IPropertyTemplate, PropertyType} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
-import {ContentBlock} from '../../blocks/contentBlock'
-import {CommentBlock} from '../../blocks/commentBlock'
 
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
@@ -21,29 +19,31 @@ import {sendFlashMessage} from '../flashMessages'
 import Menu from '../../widgets/menu'
 import {IDType, Utils} from '../../utils'
 import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
+import {Permission} from '../../constants'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
 type Props = {
     board: Board
     card: Card
     cards: Card[]
-    contents: Array<ContentBlock|ContentBlock[]>
-    comments: CommentBlock[]
     activeView: BoardView
     views: BoardView[]
     readonly: boolean
 }
 
 const CardDetailProperties = (props: Props) => {
-    const {board, card, cards, views, activeView, contents, comments} = props
+    const {board, card, cards, views, activeView} = props
     const [newTemplateId, setNewTemplateId] = useState('')
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
+    const canEditBoardCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const intl = useIntl()
 
     useEffect(() => {
-        const newProperty = board.fields.cardProperties.find((property) => property.id === newTemplateId)
+        const newProperty = board.cardProperties.find((property) => property.id === newTemplateId)
         if (newProperty) {
             setNewTemplateId('')
         }
-    }, [newTemplateId, board.fields.cardProperties])
+    }, [newTemplateId, board.cardProperties])
 
     const [confirmationDialogBox, setConfirmationDialogBox] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
     const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
@@ -135,14 +135,14 @@ const CardDetailProperties = (props: Props) => {
 
     return (
         <div className='octo-propertylist CardDetailProperties'>
-            {board.fields.cardProperties.map((propertyTemplate: IPropertyTemplate) => {
+            {board.cardProperties.map((propertyTemplate: IPropertyTemplate) => {
                 return (
                     <div
                         key={propertyTemplate.id + '-' + propertyTemplate.type}
                         className='octo-propertyrow'
                     >
-                        {props.readonly && <div className='octo-propertyname octo-propertyname--readonly'>{propertyTemplate.name}</div>}
-                        {!props.readonly &&
+                        {(props.readonly || !canEditBoardProperties) && <div className='octo-propertyname octo-propertyname--readonly'>{propertyTemplate.name}</div>}
+                        {!props.readonly && canEditBoardProperties &&
                             <MenuWrapper isOpen={propertyTemplate.id === newTemplateId}>
                                 <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
                                 <PropertyMenu
@@ -155,11 +155,9 @@ const CardDetailProperties = (props: Props) => {
                             </MenuWrapper>
                         }
                         <PropertyValueElement
-                            readOnly={props.readonly}
+                            readOnly={props.readonly || !canEditBoardCards}
                             card={card}
                             board={board}
-                            contents={contents}
-                            comments={comments}
                             propertyTemplate={propertyTemplate}
                             showEmptyPlaceholder={true}
                         />
@@ -173,7 +171,7 @@ const CardDetailProperties = (props: Props) => {
                 />
             )}
 
-            {!props.readonly &&
+            {!props.readonly && canEditBoardProperties &&
                 <div className='octo-propertyname add-property'>
                     <MenuWrapper>
                         <Button>

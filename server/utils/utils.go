@@ -10,15 +10,15 @@ import (
 type IDType byte
 
 const (
-	IDTypeNone      IDType = '7'
-	IDTypeWorkspace IDType = 'w'
-	IDTypeBoard     IDType = 'b'
-	IDTypeCard      IDType = 'c'
-	IDTypeView      IDType = 'v'
-	IDTypeSession   IDType = 's'
-	IDTypeUser      IDType = 'u'
-	IDTypeToken     IDType = 'k'
-	IDTypeBlock     IDType = 'a'
+	IDTypeNone    IDType = '7'
+	IDTypeTeam    IDType = 't'
+	IDTypeBoard   IDType = 'b'
+	IDTypeCard    IDType = 'c'
+	IDTypeView    IDType = 'v'
+	IDTypeSession IDType = 's'
+	IDTypeUser    IDType = 'u'
+	IDTypeToken   IDType = 'k'
+	IDTypeBlock   IDType = 'a'
 )
 
 // NewId is a globally unique identifier.  It is a [A-Z0-9] string 27

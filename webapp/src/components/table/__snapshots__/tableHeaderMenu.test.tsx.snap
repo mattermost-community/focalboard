@@ -11,124 +11,134 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
       <div
         class="menu-options"
       >
-        <div
-          aria-label="Sort ascending"
-          class="MenuOption TextOption menu-option"
-          role="button"
-        >
+        <div>
           <div
-            class="noicon"
-          />
-          <div
-            class="menu-name"
+            aria-label="Sort ascending"
+            class="MenuOption TextOption menu-option"
+            role="button"
           >
-            Sort ascending
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Sort ascending
+            </div>
+            <div
+              class="noicon"
+            />
           </div>
-          <div
-            class="noicon"
-          />
         </div>
-        <div
-          aria-label="Sort descending"
-          class="MenuOption TextOption menu-option"
-          role="button"
-        >
+        <div>
           <div
-            class="noicon"
-          />
-          <div
-            class="menu-name"
+            aria-label="Sort descending"
+            class="MenuOption TextOption menu-option"
+            role="button"
           >
-            Sort descending
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Sort descending
+            </div>
+            <div
+              class="noicon"
+            />
           </div>
-          <div
-            class="noicon"
-          />
         </div>
-        <div
-          aria-label="Insert left"
-          class="MenuOption TextOption menu-option"
-          role="button"
-        >
+        <div>
           <div
-            class="noicon"
-          />
-          <div
-            class="menu-name"
+            aria-label="Insert left"
+            class="MenuOption TextOption menu-option"
+            role="button"
           >
-            Insert left
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Insert left
+            </div>
+            <div
+              class="noicon"
+            />
           </div>
-          <div
-            class="noicon"
-          />
         </div>
-        <div
-          aria-label="Insert right"
-          class="MenuOption TextOption menu-option"
-          role="button"
-        >
+        <div>
           <div
-            class="noicon"
-          />
-          <div
-            class="menu-name"
+            aria-label="Insert right"
+            class="MenuOption TextOption menu-option"
+            role="button"
           >
-            Insert right
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Insert right
+            </div>
+            <div
+              class="noicon"
+            />
           </div>
-          <div
-            class="noicon"
-          />
         </div>
-        <div
-          aria-label="Hide"
-          class="MenuOption TextOption menu-option"
-          role="button"
-        >
+        <div>
           <div
-            class="noicon"
-          />
-          <div
-            class="menu-name"
+            aria-label="Hide"
+            class="MenuOption TextOption menu-option"
+            role="button"
           >
-            Hide
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Hide
+            </div>
+            <div
+              class="noicon"
+            />
           </div>
           <div
-            class="noicon"
-          />
-        </div>
-        <div
-          aria-label="Duplicate"
-          class="MenuOption TextOption menu-option"
-          role="button"
-        >
-          <div
-            class="noicon"
-          />
-          <div
-            class="menu-name"
+            aria-label="Duplicate"
+            class="MenuOption TextOption menu-option"
+            role="button"
           >
-            Duplicate
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Duplicate
+            </div>
+            <div
+              class="noicon"
+            />
           </div>
           <div
-            class="noicon"
-          />
-        </div>
-        <div
-          aria-label="Delete"
-          class="MenuOption TextOption menu-option"
-          role="button"
-        >
-          <div
-            class="noicon"
-          />
-          <div
-            class="menu-name"
+            aria-label="Delete"
+            class="MenuOption TextOption menu-option"
+            role="button"
           >
-            Delete
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Delete
+            </div>
+            <div
+              class="noicon"
+            />
           </div>
-          <div
-            class="noicon"
-          />
         </div>
       </div>
       <div
@@ -171,73 +181,81 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
       <div
         class="menu-options"
       >
-        <div
-          aria-label="Sort ascending"
-          class="MenuOption TextOption menu-option"
-          role="button"
-        >
+        <div>
           <div
-            class="noicon"
-          />
-          <div
-            class="menu-name"
+            aria-label="Sort ascending"
+            class="MenuOption TextOption menu-option"
+            role="button"
           >
-            Sort ascending
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Sort ascending
+            </div>
+            <div
+              class="noicon"
+            />
           </div>
-          <div
-            class="noicon"
-          />
         </div>
-        <div
-          aria-label="Sort descending"
-          class="MenuOption TextOption menu-option"
-          role="button"
-        >
+        <div>
           <div
-            class="noicon"
-          />
-          <div
-            class="menu-name"
+            aria-label="Sort descending"
+            class="MenuOption TextOption menu-option"
+            role="button"
           >
-            Sort descending
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Sort descending
+            </div>
+            <div
+              class="noicon"
+            />
           </div>
-          <div
-            class="noicon"
-          />
         </div>
-        <div
-          aria-label="Insert left"
-          class="MenuOption TextOption menu-option"
-          role="button"
-        >
+        <div>
           <div
-            class="noicon"
-          />
-          <div
-            class="menu-name"
+            aria-label="Insert left"
+            class="MenuOption TextOption menu-option"
+            role="button"
           >
-            Insert left
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Insert left
+            </div>
+            <div
+              class="noicon"
+            />
           </div>
-          <div
-            class="noicon"
-          />
         </div>
-        <div
-          aria-label="Insert right"
-          class="MenuOption TextOption menu-option"
-          role="button"
-        >
+        <div>
           <div
-            class="noicon"
-          />
-          <div
-            class="menu-name"
+            aria-label="Insert right"
+            class="MenuOption TextOption menu-option"
+            role="button"
           >
-            Insert right
+            <div
+              class="noicon"
+            />
+            <div
+              class="menu-name"
+            >
+              Insert right
+            </div>
+            <div
+              class="noicon"
+            />
           </div>
-          <div
-            class="noicon"
-          />
         </div>
       </div>
       <div

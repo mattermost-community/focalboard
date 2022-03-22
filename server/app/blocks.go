@@ -1,137 +1,192 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([]model.Block, error) {
+var ErrBlocksFromMultipleBoards = errors.New("the block set contain blocks from multiple boards")
+
+func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Block, error) {
+	if boardID == "" {
+		return []model.Block{}, nil
+	}
+
 	if blockType != "" && parentID != "" {
-		return a.store.GetBlocksWithParentAndType(c, parentID, blockType)
+		return a.store.GetBlocksWithParentAndType(boardID, parentID, blockType)
 	}
 
 	if blockType != "" {
-		return a.store.GetBlocksWithType(c, blockType)
+		return a.store.GetBlocksWithType(boardID, blockType)
 	}
 
-	return a.store.GetBlocksWithParent(c, parentID)
+	return a.store.GetBlocksWithParent(boardID, parentID)
 }
 
-func (a *App) GetBlocksWithRootID(c store.Container, rootID string) ([]model.Block, error) {
-	return a.store.GetBlocksWithRootID(c, rootID)
+func (a *App) DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
+	board, err := a.GetBoard(boardID)
+	if err != nil {
+		return nil, err
+	}
+	if board == nil {
+		return nil, fmt.Errorf("cannot fetch board %s for DuplicateBlock: %w", boardID, err)
+	}
+
+	blocks, err := a.store.DuplicateBlock(boardID, blockID, userID, asTemplate)
+	if err != nil {
+		return nil, err
+	}
+
+	a.blockChangeNotifier.Enqueue(func() error {
+		for _, block := range blocks {
+			a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
+		}
+		return nil
+	})
+	return blocks, err
 }
 
-func (a *App) GetRootID(c store.Container, blockID string) (string, error) {
-	return a.store.GetRootID(c, blockID)
+func (a *App) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
+	return a.store.GetBlocksWithBoardID(boardID)
 }
 
-func (a *App) GetParentID(c store.Container, blockID string) (string, error) {
-	return a.store.GetParentID(c, blockID)
-}
-
-func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
-	oldBlock, err := a.store.GetBlock(c, blockID)
+func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
+	oldBlock, err := a.store.GetBlock(blockID)
 	if err != nil {
 		return nil
 	}
 
-	err = a.store.PatchBlock(c, blockID, blockPatch, modifiedByID)
+	board, err := a.store.GetBoard(oldBlock.BoardID)
+	if err != nil {
+		return err
+	}
+
+	err = a.store.PatchBlock(blockID, blockPatch, modifiedByID)
 	if err != nil {
 		return err
 	}
 
 	a.metrics.IncrementBlocksPatched(1)
-	block, err := a.store.GetBlock(c, blockID)
+	block, err := a.store.GetBlock(blockID)
 	if err != nil {
 		return nil
 	}
-	a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *block)
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
+		// broadcast on websocket
+		a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
+
+		// broadcast on webhooks
 		a.webhook.NotifyUpdate(*block)
-		a.notifyBlockChanged(notify.Update, c, block, oldBlock, modifiedByID)
-	}()
+
+		// send notifications
+		a.notifyBlockChanged(notify.Update, block, oldBlock, modifiedByID)
+		return nil
+	})
 	return nil
 }
 
-func (a *App) PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch, modifiedByID string) error {
+func (a *App) PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, modifiedByID string) error {
 	oldBlocks := make([]model.Block, 0, len(blockPatches.BlockIDs))
 	for _, blockID := range blockPatches.BlockIDs {
-		oldBlock, err := a.store.GetBlock(c, blockID)
+		oldBlock, err := a.store.GetBlock(blockID)
 		if err != nil {
 			return nil
 		}
 		oldBlocks = append(oldBlocks, *oldBlock)
 	}
 
-	err := a.store.PatchBlocks(c, blockPatches, modifiedByID)
+	err := a.store.PatchBlocks(blockPatches, modifiedByID)
 	if err != nil {
 		return err
 	}
 
-	a.metrics.IncrementBlocksPatched(len(oldBlocks))
-	for i, blockID := range blockPatches.BlockIDs {
-		newBlock, err := a.store.GetBlock(c, blockID)
-		if err != nil {
-			return nil
-		}
-		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *newBlock)
-		go func(currentIndex int) {
+	a.blockChangeNotifier.Enqueue(func() error {
+		a.metrics.IncrementBlocksPatched(len(oldBlocks))
+		for i, blockID := range blockPatches.BlockIDs {
+			newBlock, err := a.store.GetBlock(blockID)
+			if err != nil {
+				return nil
+			}
+			a.wsAdapter.BroadcastBlockChange(teamID, *newBlock)
 			a.webhook.NotifyUpdate(*newBlock)
-			a.notifyBlockChanged(notify.Update, c, newBlock, &oldBlocks[currentIndex], modifiedByID)
-		}(i)
-	}
-
+			a.notifyBlockChanged(notify.Update, newBlock, &oldBlocks[i], modifiedByID)
+		}
+		return nil
+	})
 	return nil
 }
 
-func (a *App) InsertBlock(c store.Container, block model.Block, modifiedByID string) error {
-	err := a.store.InsertBlock(c, &block, modifiedByID)
+func (a *App) InsertBlock(block model.Block, modifiedByID string) error {
+	board, bErr := a.store.GetBoard(block.BoardID)
+	if bErr != nil {
+		return bErr
+	}
+
+	err := a.store.InsertBlock(&block, modifiedByID)
 	if err == nil {
-		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, block)
-		a.metrics.IncrementBlocksInserted(1)
-		go func() {
+		a.blockChangeNotifier.Enqueue(func() error {
+			a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
+			a.metrics.IncrementBlocksInserted(1)
 			a.webhook.NotifyUpdate(block)
-			a.notifyBlockChanged(notify.Add, c, &block, nil, modifiedByID)
-		}()
+			a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
+			return nil
+		})
 	}
 	return err
 }
 
-func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID string, allowNotifications bool) ([]model.Block, error) {
+func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotifications bool) ([]model.Block, error) {
+	if len(blocks) == 0 {
+		return []model.Block{}, nil
+	}
+
+	// all blocks must belong to the same board
+	boardID := blocks[0].BoardID
+	for _, block := range blocks {
+		if block.BoardID != boardID {
+			return nil, ErrBlocksFromMultipleBoards
+		}
+	}
+
+	board, err := a.store.GetBoard(boardID)
+	if err != nil {
+		return nil, err
+	}
+
 	needsNotify := make([]model.Block, 0, len(blocks))
 	for i := range blocks {
-		err := a.store.InsertBlock(c, &blocks[i], modifiedByID)
+		err := a.store.InsertBlock(&blocks[i], modifiedByID)
 		if err != nil {
 			return nil, err
 		}
-		blocks[i].WorkspaceID = c.WorkspaceID
 		needsNotify = append(needsNotify, blocks[i])
 
-		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, blocks[i])
+		a.wsAdapter.BroadcastBlockChange(board.TeamID, blocks[i])
 		a.metrics.IncrementBlocksInserted(1)
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		for _, b := range needsNotify {
 			block := b
 			a.webhook.NotifyUpdate(block)
 			if allowNotifications {
-				a.notifyBlockChanged(notify.Add, c, &block, nil, modifiedByID)
+				a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
 			}
 		}
-	}()
+		return nil
+	})
 
 	return blocks, nil
 }
 
-func (a *App) CopyCardFiles(sourceBoardID string, destWorkspaceID string, blocks []model.Block) error {
+func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
 	// Images attached in cards have a path comprising the card's board ID.
 	// When we create a template from this board, we need to copy the files
 	// with the new board ID in path.
@@ -139,7 +194,7 @@ func (a *App) CopyCardFiles(sourceBoardID string, destWorkspaceID string, blocks
 	// template) to fail to load.
 
 	// look up ID of source board, which may be different than the blocks.
-	board, err := a.GetBlockByID(store.Container{}, sourceBoardID)
+	board, err := a.GetBlockByID(sourceBoardID)
 	if err != nil || board == nil {
 		return fmt.Errorf("cannot fetch board %s for CopyCardFiles: %w", sourceBoardID, err)
 	}
@@ -153,8 +208,8 @@ func (a *App) CopyCardFiles(sourceBoardID string, destWorkspaceID string, blocks
 			ext := filepath.Ext(fileName.(string))
 			destFilename := utils.NewID(utils.IDTypeNone) + ext
 
-			sourceFilePath := filepath.Join(board.WorkspaceID, sourceBoardID, fileName.(string))
-			destinationFilePath := filepath.Join(destWorkspaceID, block.RootID, destFilename)
+			sourceFilePath := filepath.Join(sourceBoardID, fileName.(string))
+			destinationFilePath := filepath.Join(block.BoardID, destFilename)
 
 			a.logger.Debug(
 				"Copying card file",
@@ -179,24 +234,26 @@ func (a *App) CopyCardFiles(sourceBoardID string, destWorkspaceID string, blocks
 	return nil
 }
 
-func (a *App) GetSubTree(c store.Container, blockID string, levels int) ([]model.Block, error) {
+func (a *App) GetSubTree(boardID, blockID string, levels int, opts model.QuerySubtreeOptions) ([]model.Block, error) {
 	// Only 2 or 3 levels are supported for now
 	if levels >= 3 {
-		return a.store.GetSubTree3(c, blockID, model.QuerySubtreeOptions{})
+		return a.store.GetSubTree3(boardID, blockID, opts)
 	}
-	return a.store.GetSubTree2(c, blockID, model.QuerySubtreeOptions{})
+
+	return a.store.GetSubTree2(boardID, blockID, opts)
 }
 
-func (a *App) GetAllBlocks(c store.Container) ([]model.Block, error) {
-	return a.store.GetAllBlocks(c)
+func (a *App) GetBlockByID(blockID string) (*model.Block, error) {
+	return a.store.GetBlock(blockID)
 }
 
-func (a *App) GetBlockByID(c store.Container, blockID string) (*model.Block, error) {
-	return a.store.GetBlock(c, blockID)
-}
+func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
+	block, err := a.store.GetBlock(blockID)
+	if err != nil {
+		return err
+	}
 
-func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) error {
-	block, err := a.store.GetBlock(c, blockID)
+	board, err := a.store.GetBoard(block.BoardID)
 	if err != nil {
 		return err
 	}
@@ -206,7 +263,7 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 		return nil
 	}
 
-	err = a.store.DeleteBlock(c, blockID, modifiedBy)
+	err = a.store.DeleteBlock(blockID, modifiedBy)
 	if err != nil {
 		return err
 	}
@@ -214,7 +271,7 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 	if block.Type == model.TypeImage {
 		fileName, fileIDExists := block.Fields["fileId"]
 		if fileName, fileIDIsString := fileName.(string); fileIDExists && fileIDIsString {
-			filePath := filepath.Join(block.WorkspaceID, block.RootID, fileName)
+			filePath := filepath.Join(block.BoardID, fileName)
 			err = a.filesBackend.RemoveFile(filePath)
 
 			if err != nil {
@@ -225,31 +282,32 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 		}
 	}
 
-	a.wsAdapter.BroadcastBlockDelete(c.WorkspaceID, blockID, block.ParentID)
-	a.metrics.IncrementBlocksDeleted(1)
-	go func() {
-		a.notifyBlockChanged(notify.Delete, c, block, block, modifiedBy)
-	}()
+	a.blockChangeNotifier.Enqueue(func() error {
+		a.wsAdapter.BroadcastBlockDelete(board.TeamID, blockID, block.BoardID)
+		a.metrics.IncrementBlocksDeleted(1)
+		a.notifyBlockChanged(notify.Delete, block, block, modifiedBy)
+		return nil
+	})
 	return nil
 }
 
-func (a *App) UndeleteBlock(c store.Container, blockID string, modifiedBy string) error {
-	blocks, err := a.store.GetBlockHistory(c, blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
+func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
+	blocks, err := a.store.GetBlockHistory(blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
 	if err != nil {
 		return err
 	}
 
 	if len(blocks) == 0 {
-		// deleting non-existing block not considered an error
+		// undeleting non-existing block not considered an error
 		return nil
 	}
 
-	err = a.store.UndeleteBlock(c, blockID, modifiedBy)
+	err = a.store.UndeleteBlock(blockID, modifiedBy)
 	if err != nil {
 		return err
 	}
 
-	block, err := a.store.GetBlock(c, blockID)
+	block, err := a.store.GetBlock(blockID)
 	if err != nil {
 		return err
 	}
@@ -259,12 +317,19 @@ func (a *App) UndeleteBlock(c store.Container, blockID string, modifiedBy string
 		return nil
 	}
 
-	a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *block)
-	a.metrics.IncrementBlocksInserted(1)
-	go func() {
+	board, err := a.store.GetBoard(block.BoardID)
+	if err != nil {
+		return err
+	}
+
+	a.blockChangeNotifier.Enqueue(func() error {
+		a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
+		a.metrics.IncrementBlocksInserted(1)
 		a.webhook.NotifyUpdate(*block)
-		a.notifyBlockChanged(notify.Add, c, block, nil, modifiedBy)
-	}()
+		a.notifyBlockChanged(notify.Add, block, nil, modifiedBy)
+		return nil
+	})
+
 	return nil
 }
 
@@ -272,13 +337,17 @@ func (a *App) GetBlockCountsByType() (map[string]int64, error) {
 	return a.store.GetBlockCountsByType()
 }
 
-func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block *model.Block, oldBlock *model.Block, modifiedByID string) {
+func (a *App) GetBlocksForBoard(boardID string) ([]model.Block, error) {
+	return a.store.GetBlocksForBoard(boardID)
+}
+
+func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBlock *model.Block, modifiedByID string) {
 	if a.notifications == nil {
 		return
 	}
 
 	// find card and board for the changed block.
-	board, card, err := a.store.GetBoardAndCard(c, block)
+	board, card, err := a.getBoardAndCard(block)
 	if err != nil {
 		a.logger.Error("Error notifying for block change; cannot determine board or card", mlog.Err(err))
 		return
@@ -286,7 +355,7 @@ func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block 
 
 	evt := notify.BlockChangeEvent{
 		Action:       action,
-		Workspace:    c.WorkspaceID,
+		TeamID:       board.TeamID,
 		Board:        board,
 		Card:         card,
 		BlockChanged: block,
@@ -294,4 +363,36 @@ func (a *App) notifyBlockChanged(action notify.Action, c store.Container, block 
 		ModifiedByID: modifiedByID,
 	}
 	a.notifications.BlockChanged(evt)
+}
+
+const (
+	maxSearchDepth = 50
+)
+
+// getBoardAndCard returns the first parent of type `card` its board for the specified block.
+// `board` and/or `card` may return nil without error if the block does not belong to a board or card.
+func (a *App) getBoardAndCard(block *model.Block) (board *model.Board, card *model.Block, err error) {
+	board, err = a.store.GetBoard(block.BoardID)
+	if err != nil {
+		return board, card, err
+	}
+
+	var count int // don't let invalid blocks hierarchy cause infinite loop.
+	iter := block
+	for {
+		count++
+		if card == nil && iter.Type == model.TypeCard {
+			card = iter
+		}
+
+		if iter.ParentID == "" || (board != nil && card != nil) || count > maxSearchDepth {
+			break
+		}
+
+		iter, err = a.store.GetBlock(iter.ParentID)
+		if err != nil || iter == nil {
+			return board, card, err
+		}
+	}
+	return board, card, nil
 }
