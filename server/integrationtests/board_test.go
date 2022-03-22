@@ -654,6 +654,9 @@ func TestGetBoardMetadata(t *testing.T) {
 }
 
 func TestPatchBoard(t *testing.T) {
+func TestPatchBoard(t *testing.T) {
+	teamID := testTeamID
+
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()

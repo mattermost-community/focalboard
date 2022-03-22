@@ -238,6 +238,30 @@ func (c *Client) DuplicateBlock(boardID, blockID string, asTemplate bool) (bool,
 		queryParams = "?asTemplate=true"
 	}
 	r, err := c.DoAPIPost(c.GetBlockRoute(boardID, blockID)+"/duplicate"+queryParams, "")
+func (c *Client) DuplicateBoard(boardID string, asTemplate bool, teamID string) (bool, *Response) {
+	queryParams := "?asTemplate=false&"
+	if asTemplate {
+		queryParams = "?asTemplate=true"
+	}
+	r, err := c.DoAPIPost(c.GetBoardRoute(boardID)+"/duplicate"+queryParams, "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
+func (c *Client) UndeleteBlock(boardID, blockID string) (bool, *Response) {
+	r, err := c.DoAPIPost(c.GetBlockRoute(boardID, blockID)+"/undelete", "")
+}
+
+func (c *Client) DuplicateBlock(boardID, blockID string, asTemplate bool) (bool, *Response) {
+	queryParams := "?asTemplate=false"
+	if asTemplate {
+		queryParams = "?asTemplate=true"
+	}
+	r, err := c.DoAPIPost(c.GetBlockRoute(boardID, blockID)+"/duplicate"+queryParams, "")
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}

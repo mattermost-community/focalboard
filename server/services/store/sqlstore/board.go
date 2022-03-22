@@ -343,7 +343,6 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		return err
 	}
 
-	propertiesBytes, err := json.Marshal(board.Properties)
 	if err != nil {
 		return err
 	}
@@ -384,27 +383,6 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 	query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "boards_history")
 	if _, err := query.Exec(); err != nil {
 		return err
-	}
-
-	deleteQuery := s.getQueryBuilder(db).
-		Delete(s.tablePrefix + "boards").
-		Where(sq.Eq{"id": boardID}).
-		Where(sq.Eq{"COALESCE(team_id, '0')": board.TeamID})
-
-	if _, err := deleteQuery.Exec(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (s *SQLStore) insertBoardWithAdmin(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, *model.BoardMember, error) {
-	newBoard, err := s.insertBoard(db, board, userID)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	bm := &model.BoardMember{
 		BoardID:      newBoard.ID,
 		UserID:       newBoard.CreatedBy,
 		SchemeAdmin:  true,
