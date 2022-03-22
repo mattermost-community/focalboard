@@ -91,11 +91,12 @@ describe('components/content/checkboxElement', () => {
         userEvent.type(input, newTitle)
         fireEvent.blur(input)
         expect(container).toMatchSnapshot()
-        expect(mockedMutator.updateBlock).toHaveBeenCalledTimes(1)
-        expect(mockedMutator.updateBlock).toHaveBeenCalledWith(
+        expect(mockedMutator.changeBlockTitle).toHaveBeenCalledTimes(1)
+        expect(mockedMutator.changeBlockTitle).toHaveBeenCalledWith(
             checkboxBlock.boardId,
-            expect.objectContaining({title: newTitle}),
-            checkboxBlock,
+            checkboxBlock.id,
+            checkboxBlock.title,
+            newTitle,
             expect.anything())
     })
 

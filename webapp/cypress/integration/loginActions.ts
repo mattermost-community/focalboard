@@ -29,8 +29,6 @@ describe('Login actions', () => {
         cy.get('#login-username').type(username)
         cy.get('#login-password').type(password)
         cy.get('button').contains('Register').click()
-        cy.location('pathname', {timeout: 10000}).should('include', '/welcome')
-        cy.get('a').contains('No thanks').click()
         workspaceIsAvailable()
 
         // Can log out user
@@ -98,8 +96,6 @@ describe('Login actions', () => {
             cy.get('#login-username').type('new-user')
             cy.get('#login-password').type('new-password')
             cy.get('button').contains('Register').click()
-            cy.location('pathname', {timeout: 10000}).should('include', '/welcome')
-            cy.get('a').contains('No thanks').click()
             workspaceIsAvailable()
         })
     })

@@ -25,26 +25,24 @@ func (a *App) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string, a
 	// all new boards should belong to the same team
 	teamID := newBab.Boards[0].TeamID
 
-	a.blockChangeNotifier.Enqueue(func() error {
-		for _, board := range newBab.Boards {
-			a.wsAdapter.BroadcastBoardChange(teamID, board)
-		}
+	// This can be synchronous because this action is not common
+	for _, board := range newBab.Boards {
+		a.wsAdapter.BroadcastBoardChange(teamID, board)
+	}
 
-		for _, block := range newBab.Blocks {
-			b := block
-			a.wsAdapter.BroadcastBlockChange(teamID, b)
-			a.metrics.IncrementBlocksInserted(1)
-			a.webhook.NotifyUpdate(b)
-			a.notifyBlockChanged(notify.Add, &b, nil, userID)
-		}
+	for _, block := range newBab.Blocks {
+		b := block
+		a.wsAdapter.BroadcastBlockChange(teamID, b)
+		a.metrics.IncrementBlocksInserted(1)
+		a.webhook.NotifyUpdate(b)
+		a.notifyBlockChanged(notify.Add, &b, nil, userID)
+	}
 
-		if addMember {
-			for _, member := range members {
-				a.wsAdapter.BroadcastMemberChange(teamID, member.BoardID, member)
-			}
+	if addMember {
+		for _, member := range members {
+			a.wsAdapter.BroadcastMemberChange(teamID, member.BoardID, member)
 		}
-		return nil
-	})
+	}
 
 	return newBab, nil
 }
