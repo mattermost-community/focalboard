@@ -159,9 +159,13 @@ const FocalboardRouter = (props: Props): JSX.Element => {
                         <ChangePasswordPage/>
                     </FBRoute>}
 
-                <FBRoute path='/shared/:boardId?/:viewId?/:cardId?'>
+                <FBRoute path='/workspace/:workspaceId/shared/:boardId?/:viewId?/:cardId?'>
                     <BoardPage readonly={true}/>
                 </FBRoute>
+                <FBRoute path='/team/:teamId/shared/:boardId?/:viewId?/:cardId?'>
+                    <BoardPage readonly={true}/>
+                </FBRoute>
+
                 <FBRoute
                     loginRequired={true}
                     path='/board/:boardId?/:viewId?/:cardId?'
