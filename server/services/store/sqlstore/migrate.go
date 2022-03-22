@@ -469,9 +469,6 @@ func (s *SQLStore) deleteOldSchemaMigrationTable() error {
 // We no longer support boards existing in DMs and private
 // group messages. This function migrates all boards
 // belonging to a DM to the best possible team.
-// The destination is selected as the first team where all members
-// of the DM are a part of. If no such team exists,
-// we use the first team to which DM creator belongs to.
 func (s *SQLStore) migrateTeamLessBoards() error {
 	if !s.isPlugin {
 		return nil
@@ -487,17 +484,8 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 		return nil
 	}
 
-	tx, err := s.db.BeginTx(context.Background(), nil)
+	boards, err := s.getDMBoards(s.db)
 	if err != nil {
-		s.logger.Error("error starting transaction in migrateTeamLessBoards", mlog.Err(err))
-		return err
-	}
-
-	boards, err := s.getDMBoards(tx)
-	if err != nil {
-		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "migrateTeamLessBoards"))
-		}
 		return err
 	}
 
@@ -508,13 +496,19 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 	// duplicate queries for the same DM.
 	channelToTeamCache := map[string]string{}
 
+	tx, err := s.db.BeginTx(context.Background(), nil)
+	if err != nil {
+		s.logger.Error("error starting transaction in migrateTeamLessBoards", mlog.Err(err))
+		return err
+	}
+
 	for i := range boards {
 		// check the cache first
 		teamID, ok := channelToTeamCache[boards[i].ChannelID]
 
 		// query DB if entry not found in cache
 		if !ok {
-			teamID, err = s.getBestTeamForBoard(tx, boards[i])
+			teamID, err = s.getBestTeamForBoard(s.db, boards[i])
 			if err != nil {
 				// don't let one board's error spoil
 				// the mood for others
@@ -528,7 +522,7 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 		query := s.getQueryBuilder(tx).
 			Update(s.tablePrefix+"boards").
 			Set("team_id", teamID).
-			Set("typo", model.BoardTypeOpen).
+			Set("type", model.BoardTypePrivate).
 			Where(sq.Eq{"id": boards[i].ID})
 
 		if _, err := query.Exec(); err != nil {
@@ -564,6 +558,9 @@ func (s *SQLStore) getDMBoards(tx sq.BaseRunner) ([]*model.Board, error) {
 	return s.getBoardsByCondition(tx, conditions)
 }
 
+// The destination is selected as the first team where all members
+// of the DM are a part of. If no such team exists,
+// we use the first team to which DM creator belongs to.
 func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (string, error) {
 	userTeams, err := s.getBoardUserTeams(tx, board)
 	if err != nil {

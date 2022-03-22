@@ -86,9 +86,8 @@ func Intersection(x ...[]interface{}) []interface{} {
 		return x[0]
 	}
 
-	result := intersection(x[0], x[1])
-
-	i := 2
+	result := x[0]
+	i := 1
 	for i < len(x) {
 		result = intersection(result, x[i])
 		i++
