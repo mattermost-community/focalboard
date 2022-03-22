@@ -119,7 +119,7 @@ const BoardPage = (props: Props): JSX.Element => {
                 loadOrJoinBoard(me.id, teamId, match.params.boardId)
             }
         }
-    }, [teamId, match.params.boardId, match.params.viewId, me])
+    }, [teamId, match.params.boardId, match.params.viewId, me?.id])
 
     if (props.readonly) {
         useEffect(() => {
