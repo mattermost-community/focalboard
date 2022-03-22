@@ -115,14 +115,14 @@ watch-server-test: modd-precheck ## Run server tests watching for changes
 
 server-test: server-test-sqlite server-test-mysql server-test-postgres ## Run server tests
 
-server-test-sqlite: ## Run server tests using sqlite
+server-test-sqlite: templates-archive ## Run server tests using sqlite
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
 
 server-test-mysql: export FB_UNIT_TESTING=1
 server-test-mysql: export FB_STORE_TEST_DB_TYPE=mysql
 server-test-mysql: export FB_STORE_TEST_DOCKER_PORT=44445
 
-server-test-mysql: ## Run server tests using mysql
+server-test-mysql: templates-archive ## Run server tests using mysql
 	@echo Starting docker container for mysql
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml run start_dependencies
@@ -133,7 +133,7 @@ server-test-postgres: export FB_UNIT_TESTING=1
 server-test-postgres: export FB_STORE_TEST_DB_TYPE=postgres
 server-test-postgres: export FB_STORE_TEST_DOCKER_PORT=44446
 
-server-test-postgres: ## Run server tests using postgres
+server-test-postgres: templates-archive ## Run server tests using postgres
 	@echo Starting docker container for postgres
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml run start_dependencies

@@ -164,24 +164,12 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 		lineNum++
 	}
 
-	modInfoCache := make(map[string]interface{})
-	modBoards := make([]*model.Board, 0, len(boardsAndBlocks.Boards))
-	for _, board := range boardsAndBlocks.Boards {
-		b := *board
-		if opt.BoardModifier != nil && !opt.BoardModifier(&b, modInfoCache) {
-			a.logger.Debug("skipping insert block per block modifier",
-				mlog.String("blockID", board.ID),
-			)
-			continue
-		}
-		modBoards = append(modBoards, &b)
-	}
-	boardsAndBlocks.Boards = modBoards
+	a.fixBoardsandBlocks(boardsAndBlocks, opt)
 
 	var err error
 	boardsAndBlocks, err = model.GenerateBoardsAndBlocksIDs(boardsAndBlocks, a.logger)
 	if err != nil {
-		return "", fmt.Errorf("error inserting archive blocks: %w", err)
+		return "", fmt.Errorf("error generating archive block IDs: %w", err)
 	}
 
 	boardsAndBlocks, err = a.CreateBoardsAndBlocks(boardsAndBlocks, opt.ModifiedBy, false)
@@ -194,6 +182,43 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 		return board.ID, nil
 	}
 	return "", fmt.Errorf("missing board in archive: %w", model.ErrInvalidBoardBlock)
+}
+
+// fixBoardsandBlocks allows the caller of `ImportArchive` to modify or filters boards and blocks being
+// imported via callbacks.
+func (a *App) fixBoardsandBlocks(boardsAndBlocks *model.BoardsAndBlocks, opt model.ImportArchiveOptions) {
+	if opt.BlockModifier == nil && opt.BoardModifier == nil {
+		return
+	}
+
+	modInfoCache := make(map[string]interface{})
+	modBoards := make([]*model.Board, 0, len(boardsAndBlocks.Boards))
+	modBlocks := make([]model.Block, 0, len(boardsAndBlocks.Blocks))
+
+	for _, board := range boardsAndBlocks.Boards {
+		b := *board
+		if opt.BoardModifier != nil && !opt.BoardModifier(&b, modInfoCache) {
+			a.logger.Debug("skipping insert board per board modifier",
+				mlog.String("boardID", board.ID),
+			)
+			continue
+		}
+		modBoards = append(modBoards, &b)
+	}
+
+	for _, block := range boardsAndBlocks.Blocks {
+		b := block
+		if opt.BlockModifier != nil && !opt.BlockModifier(&b, modInfoCache) {
+			a.logger.Debug("skipping insert block per block modifier",
+				mlog.String("blockID", block.ID),
+			)
+			continue
+		}
+		modBlocks = append(modBlocks, b)
+	}
+
+	boardsAndBlocks.Boards = modBoards
+	boardsAndBlocks.Blocks = modBlocks
 }
 
 func parseVersionFile(r io.Reader) (int, error) {
