@@ -820,14 +820,14 @@ func (s *SQLStore) globalOnlySubQuery(baseBuilder sq.SelectBuilder, globalPolicy
 func idsFromRows(rows *sql.Rows) ([]string, error) {
 	deleteIds := []string{}
 	for rows.Next() {
-		var boardId string
+		var boardID string
 		err := rows.Scan(
-			&boardId,
+			&boardID,
 		)
 		if err != nil {
 			return nil, err
 		}
-		deleteIds = append(deleteIds, boardId)
+		deleteIds = append(deleteIds, boardID)
 	}
 	return deleteIds, nil
 }
