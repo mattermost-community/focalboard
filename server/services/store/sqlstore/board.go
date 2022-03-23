@@ -431,8 +431,8 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 	if oldMember == nil {
 		addToMembersHistory := s.getQueryBuilder(db).
 			Insert(s.tablePrefix+"board_members_history").
-			Columns("board_id", "user_id", "action").
-			Values(bm.BoardID, bm.UserID, "created")
+			Columns("board_id", "user_id", "action", "insert_at").
+			Values(bm.BoardID, bm.UserID, "created", model.GetMillis())
 
 		if _, err := addToMembersHistory.Exec(); err != nil {
 			return nil, err
@@ -461,8 +461,8 @@ func (s *SQLStore) deleteMember(db sq.BaseRunner, boardID, userID string) error 
 	if rowsAffected > 0 {
 		addToMembersHistory := s.getQueryBuilder(db).
 			Insert(s.tablePrefix+"board_members_history").
-			Columns("board_id", "user_id", "action").
-			Values(boardID, userID, "delete")
+			Columns("board_id", "user_id", "action", "insert_at").
+			Values(boardID, userID, "delete", model.GetMillis())
 
 		if _, err := addToMembersHistory.Exec(); err != nil {
 			return err
