@@ -38,12 +38,6 @@ jobs:
     - name: Copy server binary for Cypress
       run: cp bin/linux/focalboard-server bin/
 
-    - name: Upload server package
-      uses: actions/upload-artifact@v1
-      with:
-        name: focalboard-server-linux-amd64.tar.gz
-        path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
-
     - name: "Test server: ${{matrix['db']}}"
       run: make server-test-${{matrix['db']}}
 
