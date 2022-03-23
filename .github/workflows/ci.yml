@@ -46,7 +46,7 @@ jobs:
         name: focalboard-server-linux-amd64.tar.gz
         path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
 
-    - name: Test server: ${{matrix['db']}}
+    - name: "Test server: ${{matrix['db']}}"
       run: make server-test-${{matrix['db']}}
 
     - name: "Test webapp: Jest"
