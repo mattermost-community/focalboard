@@ -1,4 +1,4 @@
-.PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app-wpf linux-app modd-precheck
+.PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app-wpf linux-app modd-precheck templates-archive
 
 PACKAGE_FOLDER = focalboard
 
@@ -90,7 +90,7 @@ generate: ## Install and run code generators.
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
 	cd server; go generate ./...
 
-server-lint: ## Run linters on server code.
+server-lint: templates-archive ## Run linters on server code.
 	@if ! [ -x "$$(command -v golangci-lint)" ]; then \
 		echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
 		exit 1; \
