@@ -1,12 +1,12 @@
 name: Check-in tests
 
 on:
-  - push:
+  push:
     branches:
       - 'main'
       - 'releases-**'
-  - pull_request
-  - workflow_dispatch
+  pull_request:
+  workflow_dispatch:
 
 jobs:
 
