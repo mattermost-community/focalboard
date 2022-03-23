@@ -603,6 +603,7 @@ func (s *SQLStore) getBoardHistory(db sq.BaseRunner, boardID string, opts model.
 		s.logger.Error(`getBoardHistory ERROR`, mlog.Err(err))
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	return s.boardsFromRows(rows)
 }

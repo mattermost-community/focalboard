@@ -589,6 +589,7 @@ func (s *SQLStore) getBlock(db sq.BaseRunner, blockID string) (*model.Block, err
 		s.logger.Error(`GetBlock ERROR`, mlog.Err(err))
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	blocks, err := s.blocksFromRows(rows)
 	if err != nil {
@@ -631,6 +632,7 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.
 		s.logger.Error(`GetBlockHistory ERROR`, mlog.Err(err))
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
 }
@@ -664,6 +666,7 @@ func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, 
 		s.logger.Error(`GetBlockHistory ERROR`, mlog.Err(err))
 		return nil, err
 	}
+	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
 }
