@@ -186,25 +186,50 @@ function isPropertyEqual(propA: IPropertyTemplate, propB: IPropertyTemplate): bo
     return true
 }
 
+// createCardPropertiesPatches creates two BoardPatch instances, one that
+// contains the delta to update the board cardProperties and another one for
+// the undo action, in case it happens
+function createCardPropertiesPatches(newCardProperties: IPropertyTemplate[], oldCardProperties: IPropertyTemplate[]): BoardPatch[] {
+    const newDeletedCardProperties = getPropertiesDifference(newCardProperties, oldCardProperties)
+    const oldDeletedCardProperties = getPropertiesDifference(oldCardProperties, newCardProperties)
+    const newUpdatedCardProperties: IPropertyTemplate[] = []
+    newCardProperties.forEach((val) => {
+        const oldCardProperty = oldCardProperties.find((o) => o.id === val.id)
+        if (!oldCardProperty || !isPropertyEqual(val, oldCardProperty)) {
+            newUpdatedCardProperties.push(val)
+        }
+    })
+    const oldUpdatedCardProperties: IPropertyTemplate[] = []
+    oldCardProperties.forEach((val) => {
+        const newCardProperty = newCardProperties.find((o) => o.id === val.id)
+        if (!newCardProperty || !isPropertyEqual(val, newCardProperty)) {
+            oldUpdatedCardProperties.push(val)
+        }
+    })
+
+    return [
+        {
+            updatedCardProperties: newUpdatedCardProperties,
+            deletedCardProperties: oldDeletedCardProperties,
+        },
+        {
+            updatedCardProperties: oldUpdatedCardProperties,
+            deletedCardProperties: newDeletedCardProperties,
+        },
+    ]
+}
+
 // createPatchesFromBoards creates two BoardPatch instances, one that
 // contains the delta to update the board and another one for the undo
 // action, in case it happens
 function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[] {
     const newDeletedProperties = difference(Object.keys(newBoard.properties || {}), Object.keys(oldBoard.properties || {}))
-    const newDeletedCardProperties = getPropertiesDifference(newBoard.cardProperties, oldBoard.cardProperties)
     const newDeletedColumnCalculations = difference(Object.keys(newBoard.columnCalculations), Object.keys(oldBoard.columnCalculations))
 
     const newUpdatedProperties: Record<string, any> = {}
     Object.keys(newBoard.properties || {}).forEach((val) => {
         if (oldBoard.properties[val] !== newBoard.properties[val]) {
             newUpdatedProperties[val] = newBoard.properties[val]
-        }
-    })
-    const newUpdatedCardProperties: IPropertyTemplate[] = []
-    newBoard.cardProperties.forEach((val) => {
-        const oldCardProperty = oldBoard.cardProperties.find((o) => o.id === val.id)
-        if (!oldCardProperty || !isPropertyEqual(val, oldCardProperty)) {
-            newUpdatedCardProperties.push(val)
         }
     })
     const newUpdatedColumnCalculations: Record<string, any> = {}
@@ -225,20 +250,12 @@ function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[]
     })
 
     const oldDeletedProperties = difference(Object.keys(oldBoard.properties || {}), Object.keys(newBoard.properties || {}))
-    const oldDeletedCardProperties = getPropertiesDifference(oldBoard.cardProperties, newBoard.cardProperties)
     const oldDeletedColumnCalculations = difference(Object.keys(oldBoard.columnCalculations), Object.keys(newBoard.columnCalculations))
 
     const oldUpdatedProperties: Record<string, any> = {}
     Object.keys(oldBoard.properties || {}).forEach((val) => {
         if (newBoard.properties[val] !== oldBoard.properties[val]) {
             oldUpdatedProperties[val] = oldBoard.properties[val]
-        }
-    })
-    const oldUpdatedCardProperties: IPropertyTemplate[] = []
-    oldBoard.cardProperties.forEach((val) => {
-        const newCardProperty = newBoard.cardProperties.find((o) => o.id === val.id)
-        if (!newCardProperty || !isPropertyEqual(val, newCardProperty)) {
-            oldUpdatedCardProperties.push(val)
         }
     })
     const oldUpdatedColumnCalculations: Record<string, any> = {}
@@ -258,22 +275,22 @@ function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[]
         }
     })
 
+    const [cardPropertiesPatch, cardPropertiesUndoPatch] = createCardPropertiesPatches(newBoard.cardProperties, oldBoard.cardProperties)
+
     return [
         {
             ...newData,
+            ...cardPropertiesPatch,
             updatedProperties: newUpdatedProperties,
             deletedProperties: oldDeletedProperties,
-            updatedCardProperties: newUpdatedCardProperties,
-            deletedCardProperties: oldDeletedCardProperties,
             updatedColumnCalculations: newUpdatedColumnCalculations,
             deletedColumnCalculations: oldDeletedColumnCalculations,
         },
         {
             ...oldData,
+            ...cardPropertiesUndoPatch,
             updatedProperties: oldUpdatedProperties,
             deletedProperties: newDeletedProperties,
-            updatedCardProperties: oldUpdatedCardProperties,
-            deletedCardProperties: newDeletedCardProperties,
             updatedColumnCalculations: oldUpdatedColumnCalculations,
             deletedColumnCalculations: newDeletedColumnCalculations,
         },
@@ -324,4 +341,5 @@ export {
     BoardTypePrivate,
     createPatchesFromBoards,
     createPatchesFromBoardsAndBlocks,
+    createCardPropertiesPatches,
 }
