@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+
 	"github.com/mattermost/mattermost-server/v6/plugin"
 
 	sq "github.com/Masterminds/squirrel"

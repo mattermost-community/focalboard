@@ -7,6 +7,7 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+
 	"github.com/mattermost/focalboard/server/utils"
 
 	"path/filepath"
@@ -44,6 +45,8 @@ const (
 
 	tempSchemaMigrationTableName = "temp_schema_migration"
 )
+
+var errChannelCreatorNotInTeam = errors.New("channel creator not found in user teams")
 
 func appendMultipleStatementsFlag(connectionString string) (string, error) {
 	config, err := mysqldriver.ParseDSN(connectionString)
@@ -591,7 +594,7 @@ func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (st
 			}
 
 			if _, ok := userTeams[channel.CreatorId]; !ok {
-				err := errors.New(fmt.Sprintf("channel creator not found in user teams. board_id: %s, channel_id: %s, creator_id: %s", board.ID, board.ChannelID, channel.CreatorId))
+				err := fmt.Errorf("%w board_id: %s, channel_id: %s, creator_id: %s", errChannelCreatorNotInTeam, board.ID, board.ChannelID, channel.CreatorId)
 				s.logger.Error(err.Error())
 				return "", err
 			}
@@ -605,7 +608,7 @@ func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (st
 
 			for _, teams := range userTeams {
 				for _, teamID := range teams {
-					teamFrequency[teamID] = teamFrequency[teamID] + 1
+					teamFrequency[teamID]++
 
 					if teamFrequency[teamID] > highestFrequencyTeamFrequency {
 						highestFrequencyTeamFrequency = teamFrequency[teamID]
@@ -646,11 +649,7 @@ func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[
 			return nil, err
 		}
 
-		if _, ok := userTeams[userID]; ok {
-			userTeams[userID] = append(userTeams[userID], teamID)
-		} else {
-			userTeams[userID] = []string{teamID}
-		}
+		userTeams[userID] = append(userTeams[userID], teamID)
 	}
 
 	return userTeams, nil
