@@ -18,6 +18,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: npm ci
+      run: cd webapp; npm ci
+
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
