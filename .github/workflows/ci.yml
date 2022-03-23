@@ -40,7 +40,7 @@ jobs:
         path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
 
     - name: "Test server: sqlite"
-      run: make server-test
+      run: make server-test-sqlite
 
     - name: "Test server: mysql"
       run: make server-test-mysql
