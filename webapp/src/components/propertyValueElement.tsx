@@ -82,7 +82,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             color: 'propColorDefault',
         }
         currentValues.push(option)
-        mutator.insertPropertyOption(board, propertyTemplate, option, 'add property option').then(() => {
+        mutator.insertPropertyOption(board.id, board.cardProperties, propertyTemplate, option, 'add property option').then(() => {
             mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, currentValues.map((v: IPropertyOption) => v.id))
         })
     }, [board, props.board.id, card, propertyTemplate])
@@ -95,8 +95,8 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         }
     }, [value, props.board.id, card, propertyTemplate.id])
     const onChangeInMultiselect = useCallback((newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue), [props.board.id, card, propertyTemplate])
-    const onChangeColorInMultiselect = useCallback((option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board, propertyTemplate, option, colorId), [board, propertyTemplate])
-    const onDeleteOptionInMultiselect = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board, propertyTemplate, option), [board, propertyTemplate])
+    const onChangeColorInMultiselect = useCallback((option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board.id, board.cardProperties, propertyTemplate, option, colorId), [board, propertyTemplate])
+    const onDeleteOptionInMultiselect = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board.id, board.cardProperties, propertyTemplate, option), [board, propertyTemplate])
 
     const onCreateInSelect = useCallback((newValue) => {
         const option: IPropertyOption = {
@@ -104,14 +104,14 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             value: newValue,
             color: 'propColorDefault',
         }
-        mutator.insertPropertyOption(board, propertyTemplate, option, 'add property option').then(() => {
+        mutator.insertPropertyOption(board.id, board.cardProperties, propertyTemplate, option, 'add property option').then(() => {
             mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, option.id)
         })
     }, [board, props.board.id, card, propertyTemplate.id])
 
     const onChangeInSelect = useCallback((newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue), [])
-    const onChangeColorInSelect = useCallback((option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board, propertyTemplate, option, colorId), [board, propertyTemplate])
-    const onDeleteOptionInSelect = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board, propertyTemplate, option), [board, propertyTemplate])
+    const onChangeColorInSelect = useCallback((option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board.id, board.cardProperties, propertyTemplate, option, colorId), [board, propertyTemplate])
+    const onDeleteOptionInSelect = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board.id, board.cardProperties, propertyTemplate, option), [board, propertyTemplate])
 
     const validateProp = useCallback((val: string): boolean => {
         if (val === '') {
