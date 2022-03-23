@@ -13,4 +13,4 @@ CREATE TABLE {{.prefix}}board_members_history (
 CREATE INDEX idx_boardmembershistory_user_id ON {{.prefix}}board_members_history(user_id);
 CREATE INDEX idx_boardmembershistory_board_id_userid ON {{.prefix}}board_members_history(board_id, user_id);
 
-INSERT INTO {{.prefix}}board_members_history (board_id, user_id, action) SELECT board_id, user_id, 'created' from board_members;
+INSERT INTO {{.prefix}}board_members_history (board_id, user_id, action) SELECT board_id, user_id, 'created' from {{.prefix}}board_members;

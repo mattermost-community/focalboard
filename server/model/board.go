@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"io"
+	"time"
 )
 
 type BoardType string
@@ -301,4 +302,24 @@ func (b *Board) IsValid() error {
 		return InvalidBoardErr{"invalid-board-type"}
 	}
 	return nil
+}
+
+// BoardMemberHistoryEntry stores the information of the membership of a user on a board
+// swagger:model
+type BoardMemberHistoryEntry struct {
+	// The ID of the board
+	// required: true
+	BoardID string `json:"boardId"`
+
+	// The ID of the user
+	// required: true
+	UserID string `json:"userId"`
+
+	// The action that added this history entry (created or deleted)
+	// required: false
+	Action string `json:"action"`
+
+	// The insertion time
+	// required: true
+	InsertAt time.Time `json:"insertAt"`
 }
