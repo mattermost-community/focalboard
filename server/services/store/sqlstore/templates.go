@@ -55,11 +55,11 @@ func (s *SQLStore) removeDefaultTemplates(db sq.BaseRunner, boards []*model.Boar
 }
 
 // getDefaultTemplateBoards fetches all template blocks .
-func (s *SQLStore) getTemplateBoards(db sq.BaseRunner, teamID string) ([]*model.Board, error) {
+func (s *SQLStore) getDefaultTemplates(db sq.BaseRunner) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("")...).
 		From(s.tablePrefix + "boards").
-		Where(sq.Eq{"coalesce(team_id, '0')": teamID}).
+		Where(sq.Eq{"team_id": "0"}).
 		Where(sq.Eq{"is_template": true})
 
 	rows, err := query.Query()
@@ -70,4 +70,28 @@ func (s *SQLStore) getTemplateBoards(db sq.BaseRunner, teamID string) ([]*model.
 	defer s.CloseRows(rows)
 
 	return s.boardsFromRows(rows)
+}
+
+// getDefaultTemplateBoards fetches all template blocks .
+func (s *SQLStore) getTemplateBoards(db sq.BaseRunner, teamID, userID string) ([]*model.Board, error) {
+	query := s.getQueryBuilder(db).
+		Select(boardFields("")...).
+		From(s.tablePrefix+"boards as b").
+		Join(s.tablePrefix+"board_members as bm on b.id = bm.board_id and b.team_id = ? and bm.user_id = ?", teamID, userID).
+		Where(sq.Eq{"is_template": true})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getTemplateBoards ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	userTemplates, err := s.boardsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return userTemplates, nil
+
 }

@@ -319,6 +319,11 @@ func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
 
 }
 
+func (s *SQLStore) GetDefaultTemplates() ([]*model.Board, error) {
+	return s.getDefaultTemplates(s.db)
+
+}
+
 func (s *SQLStore) GetMemberForBoard(boardID string, userID string) (*model.BoardMember, error) {
 	return s.getMemberForBoard(s.db, boardID, userID)
 
@@ -414,8 +419,8 @@ func (s *SQLStore) GetTeamsForUser(userID string) ([]*model.Team, error) {
 
 }
 
-func (s *SQLStore) GetTemplateBoards(teamID string) ([]*model.Board, error) {
-	return s.getTemplateBoards(s.db, teamID)
+func (s *SQLStore) GetTemplateBoards(teamID string, userID string) ([]*model.Board, error) {
+	return s.getTemplateBoards(s.db, teamID, userID)
 
 }
 

@@ -596,6 +596,15 @@ class OctoClient {
         return this.getBoardsWithPath(path)
     }
 
+    async getDefaultTemplates(): Promise<Board[]> {
+        const path = '/api/v1/templates'
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return []
+        }
+        return (await this.getJson(response, [])) as Board[]
+    }
+
     // Boards
     // ToDo: .
     // - goal? make the interface show boards & blocks for boards

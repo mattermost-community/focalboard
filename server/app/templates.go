@@ -26,7 +26,7 @@ func (a *App) InitTemplates() error {
 
 // initializeTemplates imports default templates if the boards table is empty.
 func (a *App) initializeTemplates() error {
-	boards, err := a.store.GetTemplateBoards(globalTeamID)
+	boards, err := a.store.GetDefaultTemplates()
 	if err != nil {
 		return fmt.Errorf("cannot initialize templates: %w", err)
 	}
