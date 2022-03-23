@@ -604,7 +604,7 @@ func TestGetBoardMetadata(t *testing.T) {
 		require.Nil(t, boardMetadata)
 	})
 
-	t.Run("valid read token should be enough to get the board metadata", func(t *testing.T) {
+	t.Run("valid read token should not get the board metadata", func(t *testing.T) {
 		th := SetupTestHelperWithLicense(t, LicenseEnterprise).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
@@ -641,15 +641,10 @@ func TestGetBoardMetadata(t *testing.T) {
 		th.CheckUnauthorized(resp)
 		require.Nil(t, boardMetadata)
 
-		// it should be able to retrieve it with the read token
+		// it should not be able to retrieve it with the read token either
 		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, sharingToken)
-		th.CheckOK(resp)
-		require.NotNil(t, boardMetadata)
-
-		require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
-		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
-		require.Equal(t, rBoard.UpdateAt, boardMetadata.DescendantLastUpdateAt)
-		require.Equal(t, rBoard.ModifiedBy, boardMetadata.LastModifiedBy)
+		th.CheckUnauthorized(resp)
+		require.Nil(t, boardMetadata)
 	})
 }
 

@@ -89,7 +89,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/undelete", a.sessionRequired(a.handleUndeleteBlock)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.attachSession(a.handleDuplicateBlock, false)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/metadata", a.attachSession(a.handleGetBoardMetadata, false)).Methods("GET")
+	apiv1.HandleFunc("/boards/{boardID}/metadata", a.sessionRequired(a.handleGetBoardMetadata)).Methods("GET")
 
 	// Import&Export APIs
 	apiv1.HandleFunc("/boards/{boardID}/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
@@ -3000,12 +3000,6 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 	boardID := mux.Vars(r)["boardID"]
 	userID := getUserID(r)
 
-	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
-	if userID == "" && !hasValidReadToken {
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
-		return
-	}
-
 	board, boardMetadata, err := a.app.GetBoardMetadata(boardID)
 	if errors.Is(err, app.ErrInsufficientLicense) {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", err)
@@ -3020,17 +3014,15 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !hasValidReadToken {
-		if board.Type == model.BoardTypePrivate {
-			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
-				return
-			}
-		} else {
-			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
-				return
-			}
+	if board.Type == model.BoardTypePrivate {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			return
+		}
+	} else {
+		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			return
 		}
 	}
 
