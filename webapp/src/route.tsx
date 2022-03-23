@@ -4,7 +4,6 @@ import React from 'react'
 import {
     Redirect,
     Route,
-    useRouteMatch,
 } from 'react-router-dom'
 
 import {Utils} from './utils'
