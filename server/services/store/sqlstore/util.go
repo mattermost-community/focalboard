@@ -3,7 +3,6 @@ package sqlstore
 import (
 	"database/sql"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -34,12 +33,7 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 	var rootUser string
 
 	if dbType == model.SqliteDBType {
-		file, err := ioutil.TempFile("", "fbtest_*.db")
-		if err != nil {
-			return "", "", err
-		}
-		connectionString = file.Name()
-		_ = file.Close()
+		connectionString = "file::memory:?cache=shared&_busy_timeout=5000"
 	} else if port := strings.TrimSpace(os.Getenv("FB_STORE_TEST_DOCKER_PORT")); port != "" {
 		// docker unit tests take priority over any DSN env vars
 		var template string

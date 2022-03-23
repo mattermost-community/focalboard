@@ -3,10 +3,11 @@
 
 import {IntlShape} from 'react-intl'
 import {batch} from 'react-redux'
+import cloneDeep from 'lodash/cloneDeep'
 
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
-import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyType, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks} from './blocks/board'
+import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyType, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {ContentBlock} from './blocks/contentBlock'
@@ -559,52 +560,66 @@ class Mutator {
 
     // Properties
 
-    async insertPropertyOption(board: Board, template: IPropertyTemplate, option: IPropertyOption, description = 'add option') {
-        Utils.assert(board.cardProperties.includes(template))
+    async updateBoardCardProperties(boardId: string, oldProperties: IPropertyTemplate[], newProperties: IPropertyTemplate[], description = 'update card properties') {
+        const [updatePatch, undoPatch] = createCardPropertiesPatches(newProperties, oldProperties)
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBoard(boardId, updatePatch)
+            },
+            async () => {
+                await octoClient.patchBoard(boardId, undoPatch)
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
 
-        const newBoard = createBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
+    async insertPropertyOption(boardId: string, oldCardProperties: IPropertyTemplate[], template: IPropertyTemplate, option: IPropertyOption, description = 'add option') {
+        Utils.assert(oldCardProperties.includes(template))
+
+        const newCardProperties: IPropertyTemplate[] = cloneDeep(oldCardProperties)
+        const newTemplate = newCardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         newTemplate.options.push(option)
 
-        await this.updateBoard(newBoard, board, description)
+        await this.updateBoardCardProperties(boardId, oldCardProperties, newCardProperties, description)
     }
 
-    async deletePropertyOption(board: Board, template: IPropertyTemplate, option: IPropertyOption) {
-        const newBoard = createBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
+    async deletePropertyOption(boardId: string, oldCardProperties: IPropertyTemplate[], template: IPropertyTemplate, option: IPropertyOption) {
+        const newCardProperties: IPropertyTemplate[] = cloneDeep(oldCardProperties)
+        const newTemplate = newCardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         newTemplate.options = newTemplate.options.filter((o) => o.id !== option.id)
 
-        await this.updateBoard(newBoard, board, 'delete option')
+        await this.updateBoardCardProperties(boardId, oldCardProperties, newCardProperties, 'delete option')
     }
 
-    async changePropertyOptionOrder(board: Board, template: IPropertyTemplate, option: IPropertyOption, destIndex: number) {
+    async changePropertyOptionOrder(boardId: string, oldCardProperties: IPropertyTemplate[], template: IPropertyTemplate, option: IPropertyOption, destIndex: number) {
         const srcIndex = template.options.indexOf(option)
         Utils.log(`srcIndex: ${srcIndex}, destIndex: ${destIndex}`)
 
-        const newBoard = createBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
+        const newCardProperties: IPropertyTemplate[] = cloneDeep(oldCardProperties)
+        const newTemplate = newCardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         newTemplate.options.splice(destIndex, 0, newTemplate.options.splice(srcIndex, 1)[0])
 
-        await this.updateBoard(newBoard, board, 'reorder options')
+        await this.updateBoardCardProperties(boardId, oldCardProperties, newCardProperties, 'reorder option')
     }
 
-    async changePropertyOptionValue(board: Board, propertyTemplate: IPropertyTemplate, option: IPropertyOption, value: string) {
-        const newBoard = createBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o: IPropertyTemplate) => o.id === propertyTemplate.id)!
+    async changePropertyOptionValue(boardId: string, oldCardProperties: IPropertyTemplate[], propertyTemplate: IPropertyTemplate, option: IPropertyOption, value: string) {
+        const newCardProperties: IPropertyTemplate[] = cloneDeep(oldCardProperties)
+        const newTemplate = newCardProperties.find((o: IPropertyTemplate) => o.id === propertyTemplate.id)!
         const newOption = newTemplate.options.find((o) => o.id === option.id)!
         newOption.value = value
 
-        await this.updateBoard(newBoard, board, 'rename option')
+        await this.updateBoardCardProperties(boardId, oldCardProperties, newCardProperties, 'rename option')
 
-        return newBoard
+        return newCardProperties
     }
 
-    async changePropertyOptionColor(board: Board, template: IPropertyTemplate, option: IPropertyOption, color: string) {
-        const newBoard = createBoard(board)
-        const newTemplate = newBoard.cardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
+    async changePropertyOptionColor(boardId: string, oldCardProperties: IPropertyTemplate[], template: IPropertyTemplate, option: IPropertyOption, color: string) {
+        const newCardProperties: IPropertyTemplate[] = cloneDeep(oldCardProperties)
+        const newTemplate = newCardProperties.find((o: IPropertyTemplate) => o.id === template.id)!
         const newOption = newTemplate.options.find((o) => o.id === option.id)!
         newOption.color = color
-        await this.updateBoard(newBoard, board, 'change option color')
+        await this.updateBoardCardProperties(boardId, oldCardProperties, newCardProperties, 'rename option')
     }
 
     async changePropertyValue(boardId: string, card: Card, propertyId: string, value?: string | string[], description = 'change property') {
