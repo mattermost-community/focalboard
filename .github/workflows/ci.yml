@@ -1,6 +1,12 @@
 name: Check-in tests
 
-on: [push, pull_request]
+on:
+  - push:
+    branches:
+      - 'main'
+      - 'releases-**'
+  - pull_request
+  - workflow_dispatch
 
 jobs:
 
