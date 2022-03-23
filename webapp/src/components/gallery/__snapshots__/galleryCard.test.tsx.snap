@@ -18,7 +18,9 @@ exports[`src/components/gallery/GalleryCard with a comment content return Galler
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -148,7 +150,9 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -284,7 +288,9 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -314,7 +320,9 @@ exports[`src/components/gallery/GalleryCard with many contents return GalleryCar
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -448,7 +456,9 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -584,7 +594,9 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -623,7 +635,9 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -662,7 +676,9 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -701,7 +717,9 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -740,7 +758,9 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>
@@ -870,7 +890,9 @@ exports[`src/components/gallery/GalleryCard without block content should match s
       >
         i
       </div>
-      <div>
+      <div
+        class="octo-titletext"
+      >
         title
       </div>
     </div>

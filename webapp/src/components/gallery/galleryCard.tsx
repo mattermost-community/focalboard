@@ -151,7 +151,10 @@ const GalleryCard = (props: Props) => {
             {props.visibleTitle &&
                 <div className='gallery-title'>
                     { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
-                    <div key='__title'>
+                    <div
+                        key='__title'
+                        className='octo-titletext'
+                    >
                         {card.title ||
                             <FormattedMessage
                                 id='KanbanCard.untitled'
