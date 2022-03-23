@@ -1,10 +1,53 @@
 name: Check-in tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - 'main'
+      - 'releases-**'
+  pull_request:
+  workflow_dispatch:
 
 jobs:
 
-  ci-ubuntu:
+  ci-ubuntu-server:
+    runs-on: ubuntu-18.04
+
+    strategy:
+      matrix:
+        db:
+          - sqlite
+          - mysql
+          - postgres
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: npm ci
+      run: cd webapp; npm ci
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.16
+
+    - name: Build Linux server
+      run: make server-linux-package
+
+    - name: Copy server binary for Cypress
+      run: cp bin/linux/focalboard-server bin/
+
+    - name: Upload server package
+      uses: actions/upload-artifact@v1
+      with:
+        name: focalboard-server-linux-amd64.tar.gz
+        path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
+
+    - name: "Test server: ${{matrix['db']}}"
+      run: make server-test-${{matrix['db']}}
+
+  ci-ubuntu-webapp:
     runs-on: ubuntu-18.04
 
     steps:
@@ -38,15 +81,6 @@ jobs:
       with:
         name: focalboard-server-linux-amd64.tar.gz
         path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
-
-    - name: "Test server: sqlite"
-      run: make server-test-sqlite
-
-    - name: "Test server: mysql"
-      run: make server-test-mysql
-
-    - name: "Test server: postgres"
-      run: make server-test-postgres
 
     - name: "Test webapp: Jest"
       run: cd webapp; npm run test
