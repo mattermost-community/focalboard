@@ -375,6 +375,22 @@ func TestUndeleteBlock(t *testing.T) {
 		require.NoError(t, resp.Error)
 		require.Len(t, blocks, initialCount+1)
 	})
+
+	t.Run("Try to undelete a block without permissions", func(t *testing.T) {
+		// this avoids triggering uniqueness constraint of
+		// id,insert_at on block history
+		time.Sleep(10 * time.Millisecond)
+
+		_, resp := th.Client.DeleteBlock(board.ID, blockID)
+		require.NoError(t, resp.Error)
+
+		_, resp = th.Client2.UndeleteBlock(board.ID, blockID)
+		th.CheckForbidden(resp)
+
+		blocks, resp := th.Client.GetBlocksForBoard(board.ID)
+		require.NoError(t, resp.Error)
+		require.Len(t, blocks, initialCount)
+	})
 }
 
 func TestGetSubtree(t *testing.T) {

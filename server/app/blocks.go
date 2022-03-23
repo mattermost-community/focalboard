@@ -291,6 +291,20 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 	return nil
 }
 
+func (a *App) GetBlockHistoryHeap(blockID string) (*model.Block, error) {
+	blocks, err := a.store.GetBlockHistory(blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(blocks) == 0 {
+		// undeleting non-existing board not considered an error
+		return nil, nil
+	}
+
+	return &blocks[0], nil
+}
+
 func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
 	blocks, err := a.store.GetBlockHistory(blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
 	if err != nil {

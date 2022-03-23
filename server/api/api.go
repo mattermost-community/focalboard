@@ -1051,7 +1051,17 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("blockID", blockID)
 
-	err := a.app.UndeleteBlock(blockID, userID)
+	block, err := a.app.GetBlockHistoryHeap(blockID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+	}
+
+	if !a.permissions.HasPermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+		return
+	}
+
+	err = a.app.UndeleteBlock(blockID, userID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -1097,6 +1107,11 @@ func (a *API) handleUndeleteBoard(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "undeleteBoard", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("boardID", boardID)
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create public boards"})
+		return
+	}
 
 	err := a.app.UndeleteBoard(boardID, userID)
 	if err != nil {
