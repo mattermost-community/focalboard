@@ -25,31 +25,46 @@ type RouteProps = {
 
 function FBRoute(props: RouteProps) {
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
-    const match = useRouteMatch<any>()
     const me = useAppSelector<IUser|null>(getMe)
 
-    let originalPath
-    if (props.getOriginalPath) {
-        originalPath = props.getOriginalPath(match)
-    }
+    let redirect: React.ReactNode = null
 
     if (Utils.isFocalboardPlugin() && (me?.id !== 'single-user') && props.path !== '/welcome' && loggedIn === true && !me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
-        if (originalPath) {
-            return <Redirect to={`/welcome?r=${originalPath}`}/>
+        if (props.getOriginalPath) {
+            redirect = ({match}: any) => {
+                return <Redirect to={`/welcome?r=${props.getOriginalPath!(match)}`}/>
+            }
+        } else {
+            redirect = <Redirect to='/welcome'/>
         }
-        return <Redirect to='/welcome'/>
     }
 
-    if (loggedIn === false && props.loginRequired) {
-        if (originalPath) {
-            let redirectUrl = '/' + Utils.buildURL(originalPath)
-            if (redirectUrl.indexOf('//') === 0) {
-                redirectUrl = redirectUrl.slice(1)
+    if (redirect === null && loggedIn === false && props.loginRequired) {
+        if (props.getOriginalPath) {
+            redirect = ({match}: any) => {
+                let redirectUrl = '/' + Utils.buildURL(props.getOriginalPath!(match))
+                if (redirectUrl.indexOf('//') === 0) {
+                    redirectUrl = redirectUrl.slice(1)
+                }
+                const loginUrl = `/error?id=not-logged-in&r=${encodeURIComponent(redirectUrl)}`
+                return <Redirect to={loginUrl}/>
             }
-            const loginUrl = `/error?id=not-logged-in&r=${encodeURIComponent(redirectUrl)}`
-            return <Redirect to={loginUrl}/>
+        } else {
+            redirect = <Redirect to='/error?id=not-logged-in'/>
         }
-        return <Redirect to='/error?id=not-logged-in'/>
+    }
+
+    if (redirect !== null) {
+        return (
+            <Route
+                path={props.path}
+                render={props.render}
+                component={props.component}
+                exact={props.exact}
+            >
+                {redirect}
+            </Route>
+        )
     }
 
     if (loggedIn === true || !props.loginRequired) {
