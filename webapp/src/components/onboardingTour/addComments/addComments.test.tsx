@@ -38,6 +38,11 @@ describe('components/onboardingTour/addComments/AddCommentTourStep', () => {
             },
             current: 'card_id_1',
         },
+        clientConfig: {
+            value: {
+                featureFlags: {},
+            },
+        },
     }
     let store = mockStore(state)
 
