@@ -2465,15 +2465,17 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if newBoard.Type == model.BoardTypeOpen {
-		if !a.permissions.HasPermissionToTeam(userID, newBoard.TeamID, model.PermissionCreatePublicChannel) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create public boards"})
-			return
-		}
-	} else {
-		if !a.permissions.HasPermissionToTeam(userID, newBoard.TeamID, model.PermissionCreatePrivateChannel) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create private boards"})
-			return
+	if newBoard.TeamID != "" && newBoard.TeamID != "0" {
+		if newBoard.Type == model.BoardTypeOpen {
+			if !a.permissions.HasPermissionToTeam(userID, newBoard.TeamID, model.PermissionCreatePublicChannel) {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create public boards"})
+				return
+			}
+		} else {
+			if !a.permissions.HasPermissionToTeam(userID, newBoard.TeamID, model.PermissionCreatePrivateChannel) {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create private boards"})
+				return
+			}
 		}
 	}
 
@@ -2702,15 +2704,17 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardProperties) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board properties"})
-		return
-	}
-
-	if patch.Type != nil {
-		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board type"})
+	if board.TeamID != "" && board.TeamID != "0" {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardProperties) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board properties"})
 			return
+		}
+
+		if patch.Type != nil {
+			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board type"})
+				return
+			}
 		}
 	}
 
@@ -3486,14 +3490,16 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	if createsPublicBoards && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionCreatePublicChannel) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create public boards"})
-		return
-	}
+	if teamID != "" && teamID != "0" {
+		if createsPublicBoards && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionCreatePublicChannel) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create public boards"})
+			return
+		}
 
-	if createsPrivateBoards && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionCreatePrivateChannel) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create private boards"})
-		return
+		if createsPrivateBoards && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionCreatePrivateChannel) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create private boards"})
+			return
+		}
 	}
 
 	auditRec := a.makeAuditRecord(r, "createBoardsAndBlocks", audit.Fail)
@@ -3586,18 +3592,6 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardProperties) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board properties"})
-			return
-		}
-
-		if patch.Type != nil {
-			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board type"})
-				return
-			}
-		}
-
 		board, err2 := a.app.GetBoard(boardID)
 		if err2 != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err2)
@@ -3614,6 +3608,20 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 		if teamID != board.TeamID {
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
 			return
+		}
+
+		if teamID != "" && teamID != "0" {
+			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardProperties) {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board properties"})
+				return
+			}
+
+			if patch.Type != nil {
+				if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
+					a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board type"})
+					return
+				}
+			}
 		}
 	}
 
@@ -3724,9 +3732,11 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		}
 
 		// permission check
-		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to delete board"})
-			return
+		if teamID != "" && teamID != "0" {
+			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to delete board"})
+				return
+			}
 		}
 	}
 

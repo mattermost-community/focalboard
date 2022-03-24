@@ -1,6 +1,6 @@
 {
     "chromeWebSecurity": false,
-    "baseUrl": "http://localhost:8088",
+    "baseUrl": "http://localhost:8000",
     "testFiles": [
         "**/login*.ts",
         "**/create*.ts",

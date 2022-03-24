@@ -118,9 +118,10 @@ Cypress.Commands.add('apiChangePassword', (userId: string, oldPassword: string, 
 Cypress.Commands.add('uiCreateNewBoard', (title?: string) => {
     cy.log('**Create new empty board**')
     cy.findByText('+ Add board').click()
-    cy.get('.empty-board').first().click({force: true})
-    cy.findByPlaceholderText('Untitled board').should('exist')
     cy.wait(10)
+    cy.get('.empty-board').first().click({force: true})
+    cy.wait(10)
+    cy.findByPlaceholderText('Untitled board').should('exist')
     if (title) {
         cy.log('**Rename board**')
         cy.findByPlaceholderText('Untitled board').type(`${title}{enter}`)
