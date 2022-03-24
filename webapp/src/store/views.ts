@@ -129,7 +129,7 @@ export function getView(viewId: string): (state: RootState) => BoardView|null {
 }
 
 export const getCurrentBoardViews = createSelector(
-    (state) => state.boards.current,
+    (state: RootState) => state.boards.current,
     getViews,
     (boardId, views) => {
         Utils.log(`getCurrentBoardViews boardId: ${boardId} views: ${views.length}`)
