@@ -77,8 +77,22 @@ func (s *SQLStore) getTemplateBoards(db sq.BaseRunner, teamID, userID string) ([
 	query := s.getQueryBuilder(db).
 		Select(boardFields("")...).
 		From(s.tablePrefix+"boards as b").
-		Join(s.tablePrefix+"board_members as bm on b.id = bm.board_id and b.team_id = ? and bm.user_id = ?", teamID, userID).
-		Where(sq.Eq{"is_template": true})
+		LeftJoin(s.tablePrefix+"board_members as bm on b.id = bm.board_id and and bm.user_id = ?", userID).
+		Where(sq.Eq{"is_template": true}).
+		Where(sq.Eq{"b.team_id": teamID}).
+		Where(sq.Or{
+			sq.And{
+				sq.Eq{"bm.board_id": nil},
+				sq.Eq{"b.type": model.BoardTypeOpen},
+			},
+			sq.And{
+				sq.NotEq{"bm.board_id": nil},
+			},
+		})
+
+	ss, pp, _ := query.ToSql()
+	s.logger.Error(ss)
+	s.logger.Error(fmt.Sprintf("%v", pp))
 
 	rows, err := query.Query()
 	if err != nil {
