@@ -229,8 +229,6 @@ func TestCreateBoard(t *testing.T) {
 				Title: title,
 			}
 			board, resp := th.Client.CreateBoard(newBoard)
-			// the request is unauthorized because the permission
-			// check fails on an empty teamID
 			th.CheckBadRequest(resp)
 			require.Nil(t, board)
 
