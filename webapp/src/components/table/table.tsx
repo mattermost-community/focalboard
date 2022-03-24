@@ -180,7 +180,7 @@ const Table = (props: Props): JSX.Element => {
     }, [activeView, cards, props.selectedCardIds, groupByProperty])
 
     const propertyNameChanged = useCallback(async (option: IPropertyOption, text: string): Promise<void> => {
-        await mutator.changePropertyOptionValue(board, groupByProperty!, option, text)
+        await mutator.changePropertyOptionValue(board.id, board.cardProperties, groupByProperty!, option, text)
     }, [board, groupByProperty])
 
     return (

@@ -76,7 +76,7 @@ Cypress.Commands.add('apiResetBoards', () => {
     }).then((response) => {
         if (Array.isArray(response.body)) {
             const boards = response.body as Board[]
-            const toDelete = boards.filter((b) => !b.fields.isTemplate).map((b) => b.id)
+            const toDelete = boards.filter((b) => !b.isTemplate).map((b) => b.id)
             deleteBlocks(toDelete)
         }
     })
@@ -117,8 +117,8 @@ Cypress.Commands.add('apiChangePassword', (userId: string, oldPassword: string, 
 
 Cypress.Commands.add('uiCreateNewBoard', (title?: string) => {
     cy.log('**Create new empty board**')
-    cy.findByText('+ Add board').click()
-    cy.get('.empty-board').first().click({force: true})
+    cy.uiCreateEmptyBoard()
+
     cy.findByPlaceholderText('Untitled board').should('exist')
     cy.wait(10)
     if (title) {
