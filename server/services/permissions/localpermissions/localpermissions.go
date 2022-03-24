@@ -27,7 +27,9 @@ func New(store permissions.Store, logger *mlog.Logger) *Service {
 }
 
 func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel.Permission) bool {
-	// Locally there is no team, so return true
+	if userID == "" || teamID == "" || permission == nil {
+		return false
+	}
 	return true
 }
 
