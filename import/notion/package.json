@@ -23,6 +23,6 @@
   },
   "dependencies": {
     "csvtojson": "^2.0.10",
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.6"
   }
 }
