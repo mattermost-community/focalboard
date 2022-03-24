@@ -38,7 +38,7 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 		if err != nil {
 			return "", "", err
 		}
-		connectionString = file.Name()
+		connectionString = file.Name() + "?_busy_timeout=5000"
 		_ = file.Close()
 	} else if port := strings.TrimSpace(os.Getenv("FB_STORE_TEST_DOCKER_PORT")); port != "" {
 		// docker unit tests take priority over any DSN env vars
