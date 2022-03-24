@@ -76,7 +76,7 @@ Cypress.Commands.add('apiResetBoards', () => {
     }).then((response) => {
         if (Array.isArray(response.body)) {
             const boards = response.body as Board[]
-            const toDelete = boards.filter((b) => !b.fields.isTemplate).map((b) => b.id)
+            const toDelete = boards.filter((b) => !b.isTemplate).map((b) => b.id)
             deleteBlocks(toDelete)
         }
     })
