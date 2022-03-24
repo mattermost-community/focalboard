@@ -186,10 +186,6 @@ function sortCards(cards: Card[], board: Board, activeView: BoardView, usersById
             Utils.log(`Sort by property: ${template?.name}`)
             sortedCards = sortedCards.sort((a, b) => {
                 // Always put cards with no titles at the bottom, regardless of sort
-                if (!a.title || !b.title) {
-                    return titleOrCreatedOrder(a, b)
-                }
-
                 let aValue = a.fields.properties[sortPropertyId] || ''
                 let bValue = b.fields.properties[sortPropertyId] || ''
 
