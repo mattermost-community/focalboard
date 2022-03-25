@@ -14,7 +14,7 @@ import userEvent from '@testing-library/user-event'
 
 import configureStore from 'redux-mock-store'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import thunk from 'redux-thunk'
 

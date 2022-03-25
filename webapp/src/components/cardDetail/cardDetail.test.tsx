@@ -10,7 +10,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {FetchMock} from '../../test/fetchMock'
 import {TestBlockFactory} from '../../test/testBlockFactory'
