@@ -75,8 +75,9 @@
 			}
 		},
 		"transform": {
-			"^.+\\.tsx?$": "ts-jest"
+			"^.+\\.tsx?$": "@swc/jest"
 		},
+		"maxWorkers": "50%",
 		"testEnvironment": "jsdom",
 		"collectCoverage": true,
 		"collectCoverageFrom": [
@@ -87,6 +88,7 @@
 	"devDependencies": {
 		"@formatjs/cli": "^4.8.2",
 		"@formatjs/ts-transformer": "^3.9.2",
+		"@swc/jest": "^0.2.20",
 		"@testing-library/cypress": "^8.0.2",
 		"@testing-library/dom": "^8.11.4",
 		"@testing-library/jest-dom": "^5.16.2",
