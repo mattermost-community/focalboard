@@ -108,5 +108,4 @@ func (s *SQLStore) getTemplateBoards(db sq.BaseRunner, teamID, userID string) ([
 	}
 
 	return userTemplates, nil
-
 }
