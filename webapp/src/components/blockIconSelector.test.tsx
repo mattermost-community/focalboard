@@ -82,15 +82,15 @@ describe('components/blockIconSelector', () => {
         expect(mockedMutator.changeBlockIcon).toBeCalledTimes(1)
     })
 
-    test('return a new icon after click on EmojiPicker', async () => {
-        const {container} = render(wrapIntl(
+    test('return a new icon after click on EmojiPicker', () => {
+        const {container, getByRole, getAllByRole} = render(wrapIntl(
             <BlockIconSelector
                 block={card}
                 size='l'
             />,
         ))
         act(() => {
-            userEvent.click(screen.getByRole('button', {name: 'menuwrapper'}))
+            userEvent.click(getByRole('button', {name: 'menuwrapper'}))
         })
         const menuPicker = container.querySelector('div#pick')
         expect(menuPicker).not.toBeNull()
@@ -99,7 +99,7 @@ describe('components/blockIconSelector', () => {
             fireEvent.mouseEnter(menuPicker!)
         })
 
-        const allButtonThumbUp = await screen.findAllByRole('button', {name: /thumbsup/i})
+        const allButtonThumbUp = getAllByRole('button', {name: /thumbsup/i})
         userEvent.click(allButtonThumbUp[0])
         expect(mockedMutator.changeBlockIcon).toBeCalledTimes(1)
         expect(mockedMutator.changeBlockIcon).toBeCalledWith(card.boardId, card.id, card.fields.icon, '👍')
