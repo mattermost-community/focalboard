@@ -6,7 +6,7 @@ replace github.com/mattermost/focalboard/server => ../server
 
 require (
 	github.com/google/uuid v1.3.0
-	github.com/mattermost/focalboard/server v0.0.0-20210422230105-f5ae0b265a8d
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20210913141218-bb659d03fde0
-	github.com/webview/webview v0.0.0-20200724072439-e0c01595b361
+	github.com/mattermost/focalboard/server v0.0.0-20220325164658-33557093b00d
+	github.com/mattermost/mattermost-server/v6 v6.5.0
+	github.com/webview/webview v0.0.0-20220314230258-a2b7746141c3
 )
