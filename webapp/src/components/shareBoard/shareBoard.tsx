@@ -273,17 +273,15 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             <div className='user-items'>
                 <TeamPermissionsRow/>
 
-                {Object.values(members).map((member) => {
-                    const user = boardUsers.find((u) => u.id === member.userId)
-                    if (!user) {
+                {boardUsers.map((user) => {
+                    if (!members[user.id]) {
                         return null
                     }
-
                     return (
                         <UserPermissionsRow
                             key={user.id}
                             user={user}
-                            member={member}
+                            member={members[user.id]}
                             onDeleteBoardMember={onDeleteBoardMember}
                             onUpdateBoardMember={onUpdateBoardMember}
                             isMe={user.id === me?.id}
