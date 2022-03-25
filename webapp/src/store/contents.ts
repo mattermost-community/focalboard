@@ -54,7 +54,7 @@ const contentsSlice = createSlice({
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
             state.contents = {}
             state.contentsByCard = {}
-            for (const block of action.payload) {
+            for (const block of action.payload.blocks) {
                 if (block.type !== 'board' && block.type !== 'view' && block.type !== 'comment') {
                     state.contents[block.id] = block as ContentBlock
                     state.contentsByCard[block.parentId] = state.contentsByCard[block.parentId] || []
