@@ -366,13 +366,11 @@ CREATE INDEX idx_boardmembers_user_id ON {{.prefix}}board_members(user_id);
 INSERT INTO {{.prefix}}board_members (
     SELECT B.Id, CM.UserId, CM.Roles, (CM.UserId=B.created_by) OR CM.SchemeAdmin, CM.SchemeUser, FALSE, CM.SchemeGuest
     FROM {{.prefix}}boards AS B
-    INNER JOIN ChannelMembers as CM ON CM.ChannelId=B.channel_id
-    WHERE NOT B.is_template
+    INNER JOIN ChannelMembers as CM ON CM.ChannelId=B.channel_id;
 );
 {{else}}
 {{- /* if we're in personal server or desktop, create memberships for everyone */ -}}
 INSERT INTO {{.prefix}}board_members
      SELECT B.id, U.id, '', B.created_by=U.id, TRUE, FALSE, FALSE
-       FROM {{.prefix}}boards AS B, {{.prefix}}users AS U
-       WHERE NOT B.is_template;
+       FROM {{.prefix}}boards AS B, {{.prefix}}users AS U;
 {{end}}
