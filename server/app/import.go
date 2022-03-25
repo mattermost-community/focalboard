@@ -113,6 +113,7 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 		userID = ""
 	}
 	now := utils.GetMillis()
+	var boardID string
 
 	lineNum := 1
 	for {
@@ -131,6 +132,12 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 				if err := json.Unmarshal(line, &archiveLine); err != nil {
 					return "", fmt.Errorf("error parsing archive line %d: %w", lineNum, err)
 				}
+
+				// first line must be a board
+				if lineNum == 1 {
+					archiveLine.Type = "board"
+				}
+
 				switch archiveLine.Type {
 				case "block":
 					var block model.Block
@@ -139,16 +146,18 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					}
 					block.ModifiedBy = userID
 					block.UpdateAt = now
+					block.BoardID = boardID
 					boardsAndBlocks.Blocks = append(boardsAndBlocks.Blocks, block)
 				case "board":
 					var board model.Board
 					if err2 := json.Unmarshal(archiveLine.Data, &board); err2 != nil {
-						return "", fmt.Errorf("invalid block in archive line %d: %w", lineNum, err2)
+						return "", fmt.Errorf("invalid board in archive line %d: %w", lineNum, err2)
 					}
 					board.ModifiedBy = userID
 					board.UpdateAt = now
 					board.TeamID = opt.TeamID
 					boardsAndBlocks.Boards = append(boardsAndBlocks.Boards, &board)
+					boardID = board.ID
 				default:
 					return "", model.NewErrUnsupportedArchiveLineType(lineNum, archiveLine.Type)
 				}
