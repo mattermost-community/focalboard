@@ -18,7 +18,7 @@ import (
 	mysql "github.com/mattermost/morph/drivers/mysql"
 	postgres "github.com/mattermost/morph/drivers/postgres"
 	sqlite "github.com/mattermost/morph/drivers/sqlite"
-	mbindata "github.com/mattermost/morph/sources/go_bindata"
+	embedded "github.com/mattermost/morph/sources/embedded"
 
 	mysqldriver "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq" // postgres driver
@@ -134,7 +134,7 @@ func (s *SQLStore) Migrate() error {
 		"plugin":   s.isPlugin,
 	}
 
-	migrationAssets := &mbindata.AssetSource{
+	migrationAssets := &embedded.AssetSource{
 		Names: assetNamesForDriver,
 		AssetFunc: func(name string) ([]byte, error) {
 			asset, mErr := assets.ReadFile(filepath.Join("migrations", name))
@@ -157,11 +157,10 @@ func (s *SQLStore) Migrate() error {
 		},
 	}
 
-	src, err := mbindata.WithInstance(migrationAssets)
+	src, err := embedded.WithInstance(migrationAssets)
 	if err != nil {
 		return err
 	}
-	defer src.Close()
 
 	opts := []morph.EngineOption{
 		morph.WithLock("mm-lock-key"),
