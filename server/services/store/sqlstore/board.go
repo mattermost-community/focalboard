@@ -462,7 +462,7 @@ func (s *SQLStore) deleteMember(db sq.BaseRunner, boardID, userID string) error 
 		addToMembersHistory := s.getQueryBuilder(db).
 			Insert(s.tablePrefix+"board_members_history").
 			Columns("board_id", "user_id", "action", "insert_at").
-			Values(boardID, userID, "delete", model.GetMillis())
+			Values(boardID, userID, "deleted", model.GetMillis())
 
 		if _, err := addToMembersHistory.Exec(); err != nil {
 			return err
