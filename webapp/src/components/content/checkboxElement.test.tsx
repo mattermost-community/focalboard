@@ -4,7 +4,7 @@
 import React, {ReactElement, ReactNode} from 'react'
 import {fireEvent, render, screen, waitFor} from '@testing-library/react'
 import '@testing-library/jest-dom'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import userEvent from '@testing-library/user-event'
 
 import {wrapIntl} from '../../testUtils'

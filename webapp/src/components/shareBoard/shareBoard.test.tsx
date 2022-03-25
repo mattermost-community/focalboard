@@ -7,7 +7,7 @@ import thunk from 'redux-thunk'
 
 import React from 'react'
 import {MemoryRouter} from 'react-router'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {IUser} from '../../user'
 import {ISharing} from '../../blocks/sharing'

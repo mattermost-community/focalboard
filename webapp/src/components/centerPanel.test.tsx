@@ -3,7 +3,7 @@
 import {fireEvent, render, screen, within} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import {Provider as ReduxProvider} from 'react-redux'
 
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../testUtils'

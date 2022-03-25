@@ -8,7 +8,7 @@ import userEvent from '@testing-library/user-event'
 
 import '@testing-library/jest-dom'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import mutator from '../mutator'
 
