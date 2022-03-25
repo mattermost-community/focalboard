@@ -49,7 +49,7 @@ const WelcomePage = () => {
             return
         }
 
-        history.replace(`/team/${currentTeam?.id}`)
+        history.replace('/')
     }
 
     const skipTour = async () => {

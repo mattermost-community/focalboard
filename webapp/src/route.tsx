@@ -27,7 +27,7 @@ type RouteProps = {
 
 function FBRoute(props: RouteProps) {
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
-    const match = useRouteMatch<any>()
+    const match = useRouteMatch<any>({path: props.path})
     const me = useAppSelector<IUser|null>(getMe)
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
