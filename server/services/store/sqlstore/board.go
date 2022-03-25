@@ -406,7 +406,10 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 		"scheme_viewer":    bm.SchemeViewer,
 	}
 
-	oldMember, _ := s.getMemberForBoard(db, bm.BoardID, bm.UserID)
+	oldMember, err := s.getMemberForBoard(db, bm.BoardID, bm.UserID)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
 
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix + "board_members").
