@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {fireEvent, render, screen} from '@testing-library/react'
+import {fireEvent, render, screen, act} from '@testing-library/react'
 
 import userEvent from '@testing-library/user-event'
 
@@ -89,10 +89,15 @@ describe('components/blockIconSelector', () => {
                 size='l'
             />,
         ))
-        userEvent.click(screen.getByRole('button', {name: 'menuwrapper'}))
+        act(() => {
+            userEvent.click(screen.getByRole('button', {name: 'menuwrapper'}))
+        })
         const menuPicker = container.querySelector('div#pick')
         expect(menuPicker).not.toBeNull()
-        fireEvent.mouseEnter(menuPicker!)
+
+        act(() => {
+            fireEvent.mouseEnter(menuPicker!)
+        })
 
         const allButtonThumbUp = await screen.findAllByRole('button', {name: /thumbsup/i})
         userEvent.click(allButtonThumbUp[0])
