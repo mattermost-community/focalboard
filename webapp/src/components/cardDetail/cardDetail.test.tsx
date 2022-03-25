@@ -90,6 +90,11 @@ describe('components/cardDetail/CardDetail', () => {
                 },
                 current: card.id,
             },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
+            },
         })
 
         const component = (
@@ -226,6 +231,11 @@ describe('components/cardDetail/CardDetail', () => {
                 },
                 current: welcomeCard.id,
             },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
+            },
         })
 
         const onboardingBoard = TestBlockFactory.createBoard()
@@ -326,6 +336,11 @@ describe('components/cardDetail/CardDetail', () => {
                 },
                 current: welcomeCard.id,
             },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
+            },
         })
 
         const onboardingBoard = TestBlockFactory.createBoard()
@@ -423,6 +438,11 @@ describe('components/cardDetail/CardDetail', () => {
                     [welcomeCard.id]: welcomeCard,
                 },
                 current: welcomeCard.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         }
         const store = mockStore(state)

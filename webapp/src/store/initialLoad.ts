@@ -37,8 +37,12 @@ export const initialLoad = createAsyncThunk(
 export const initialReadOnlyLoad = createAsyncThunk(
     'initialReadOnlyLoad',
     async (boardId: string) => {
-        const blocks = client.getSubtree(boardId, 3)
-        return blocks
+        const [board, blocks] = await Promise.all([
+            client.getBoard(boardId),
+            client.getAllBlocks(boardId),
+        ])
+
+        return {board, blocks}
     },
 )
 
