@@ -53,7 +53,7 @@ const commentsSlice = createSlice({
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
             state.comments = {}
             state.commentsByCard = {}
-            for (const block of action.payload) {
+            for (const block of action.payload.blocks) {
                 if (block.type === 'comment') {
                     state.comments[block.id] = block as CommentBlock
                     state.commentsByCard[block.parentId] = state.commentsByCard[block.parentId] || []
