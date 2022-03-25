@@ -32,6 +32,11 @@ describe('components/onboardingTour/addComments/AddViewTourStep', () => {
             },
             current: 'board_id_1',
         },
+        clientConfig: {
+            value: {
+                featureFlags: {},
+            },
+        },
     }
     let store = mockStore(state)
 
