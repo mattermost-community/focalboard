@@ -10,7 +10,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {FetchMock} from '../../test/fetchMock'
 import {TestBlockFactory} from '../../test/testBlockFactory'
@@ -89,6 +89,11 @@ describe('components/cardDetail/CardDetail', () => {
                     [card.id]: card,
                 },
                 current: card.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         })
 
@@ -226,6 +231,11 @@ describe('components/cardDetail/CardDetail', () => {
                 },
                 current: welcomeCard.id,
             },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
+            },
         })
 
         const onboardingBoard = TestBlockFactory.createBoard()
@@ -326,6 +336,11 @@ describe('components/cardDetail/CardDetail', () => {
                 },
                 current: welcomeCard.id,
             },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
+            },
         })
 
         const onboardingBoard = TestBlockFactory.createBoard()
@@ -423,6 +438,11 @@ describe('components/cardDetail/CardDetail', () => {
                     [welcomeCard.id]: welcomeCard,
                 },
                 current: welcomeCard.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         }
         const store = mockStore(state)

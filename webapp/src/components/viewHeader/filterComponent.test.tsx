@@ -5,7 +5,7 @@ import React from 'react'
 import {render, screen} from '@testing-library/react'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import '@testing-library/jest-dom'
 
 import userEvent from '@testing-library/user-event'

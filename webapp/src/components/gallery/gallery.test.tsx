@@ -8,7 +8,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {wrapDNDIntl, mockStateStore, blocksById} from '../../testUtils'
 
