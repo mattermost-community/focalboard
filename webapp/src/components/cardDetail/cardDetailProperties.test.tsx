@@ -99,6 +99,11 @@ describe('components/cardDetail/CardDetailProperties', () => {
             },
             current: card.id,
         },
+        clientConfig: {
+            value: {
+                featureFlags: {},
+            },
+        },
     }
 
     const mockStore = configureStore([])
