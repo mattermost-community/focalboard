@@ -1,5 +1,5 @@
 CREATE TABLE {{.prefix}}board_members_history (
-    {{if .postgres}}id SERIAL PRIMARY KEY,){{end}}
+    {{if .postgres}}id SERIAL PRIMARY KEY,{{end}}
 	{{if .sqlite}}id INTEGER PRIMARY KEY AUTOINCREMENT,{{end}}
 	{{if .mysql}}id INT PRIMARY KEY AUTO_INCREMENT,{{end}}
     board_id VARCHAR(36) NOT NULL,
