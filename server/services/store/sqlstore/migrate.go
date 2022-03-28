@@ -557,7 +557,12 @@ func (s *SQLStore) getDMBoards(tx sq.BaseRunner) ([]*model.Board, error) {
 		},
 	}
 
-	return s.getBoardsByCondition(tx, conditions)
+	boards, err := s.getBoardsByCondition(tx, conditions)
+	if err != nil && errors.Is(err, sql.ErrNoRows) {
+		return []*model.Board{}, nil
+	}
+
+	return boards, err
 }
 
 // The destination is selected as the first team where all members
