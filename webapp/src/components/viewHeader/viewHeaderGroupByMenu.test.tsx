@@ -6,7 +6,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {MockStoreEnhanced} from 'redux-mock-store'
 

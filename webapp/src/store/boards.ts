@@ -7,7 +7,7 @@ import {default as client} from '../octoClient'
 import {Board, BoardMember} from '../blocks/board'
 import {IUser} from '../user'
 
-import {initialLoad, loadBoardData} from './initialLoad'
+import {initialLoad, initialReadOnlyLoad, loadBoardData} from './initialLoad'
 
 import {addBoardUsers} from './users'
 
@@ -146,6 +146,17 @@ const boardsSlice = createSlice({
         })
         builder.addCase(loadBoardData.rejected, (state) => {
             state.loadingBoard = false
+        })
+        builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
+            state.boards = {}
+            state.templates = {}
+            if (action.payload.board) {
+                if (action.payload.board.isTemplate) {
+                    state.templates[action.payload.board.id] = action.payload.board
+                } else {
+                    state.boards[action.payload.board.id] = action.payload.board
+                }
+            }
         })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             state.boards = {}

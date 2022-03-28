@@ -80,13 +80,10 @@ const BoardPage = (props: Props): JSX.Element => {
         return initialLoad
     }, [props.readonly])
 
-    const loadOrJoinBoard = useCallback(async (userId: string, boardTeamId: string, boardId: string, viewId: string) => {
-        // set the active board if we're able to pick one
-        dispatch(setCurrentBoard(boardId))
-
+    const loadOrJoinBoard = useCallback(async (userId: string, boardTeamId: string, boardId: string) => {
         // and fetch its data
         const result: any = await dispatch(loadBoardData(boardId))
-        if (result.payload.blocks.length === 0) {
+        if (result.payload.blocks.length === 0 && userId) {
             const member = await octoClient.createBoardMember({userId, boardId})
             if (!member) {
                 UserSettings.setLastBoardID(boardTeamId, null)
@@ -101,23 +98,28 @@ const BoardPage = (props: Props): JSX.Element => {
             teamId: boardTeamId,
             boardId,
         }))
-
-        // and set it as most recently viewed board
-        UserSettings.setLastBoardID(boardTeamId, boardId)
-
-        if (viewId && viewId !== '0') {
-            dispatch(setCurrentView(viewId))
-            UserSettings.setLastViewId(boardId, viewId)
-        }
     }, [])
 
     useEffect(() => {
         dispatch(loadAction(match.params.boardId))
 
-        if (match.params.boardId && me) {
-            loadOrJoinBoard(me.id, teamId, match.params.boardId, match.params.viewId)
+        if (match.params.boardId) {
+            // set the active board
+            dispatch(setCurrentBoard(match.params.boardId))
+
+            // and set it as most recently viewed board
+            UserSettings.setLastBoardID(teamId, match.params.boardId)
+
+            if (match.params.viewId && match.params.viewId !== '0') {
+                dispatch(setCurrentView(match.params.viewId))
+                UserSettings.setLastViewId(match.params.boardId, match.params.viewId)
+            }
+
+            if (!props.readonly && me) {
+                loadOrJoinBoard(me.id, teamId, match.params.boardId)
+            }
         }
-    }, [teamId, match.params.boardId, match.params.viewId])
+    }, [teamId, match.params.boardId, match.params.viewId, me?.id])
 
     if (props.readonly) {
         useEffect(() => {
