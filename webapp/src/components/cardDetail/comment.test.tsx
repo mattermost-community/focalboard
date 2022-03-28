@@ -6,7 +6,7 @@ import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import moment from 'moment'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {wrapIntl, mockStateStore} from '../../testUtils'
 

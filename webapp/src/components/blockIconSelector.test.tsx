@@ -2,13 +2,13 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {fireEvent, render, screen} from '@testing-library/react'
+import {fireEvent, render, screen, act} from '@testing-library/react'
 
 import userEvent from '@testing-library/user-event'
 
 import '@testing-library/jest-dom'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import mutator from '../mutator'
 
@@ -82,19 +82,24 @@ describe('components/blockIconSelector', () => {
         expect(mockedMutator.changeBlockIcon).toBeCalledTimes(1)
     })
 
-    test('return a new icon after click on EmojiPicker', async () => {
-        const {container} = render(wrapIntl(
+    test('return a new icon after click on EmojiPicker', () => {
+        const {container, getByRole, getAllByRole} = render(wrapIntl(
             <BlockIconSelector
                 block={card}
                 size='l'
             />,
         ))
-        userEvent.click(screen.getByRole('button', {name: 'menuwrapper'}))
+        act(() => {
+            userEvent.click(getByRole('button', {name: 'menuwrapper'}))
+        })
         const menuPicker = container.querySelector('div#pick')
         expect(menuPicker).not.toBeNull()
-        fireEvent.mouseEnter(menuPicker!)
 
-        const allButtonThumbUp = await screen.findAllByRole('button', {name: /thumbsup/i})
+        act(() => {
+            fireEvent.mouseEnter(menuPicker!)
+        })
+
+        const allButtonThumbUp = getAllByRole('button', {name: /thumbsup/i})
         userEvent.click(allButtonThumbUp[0])
         expect(mockedMutator.changeBlockIcon).toBeCalledTimes(1)
         expect(mockedMutator.changeBlockIcon).toBeCalledWith(card.boardId, card.id, card.fields.icon, '👍')

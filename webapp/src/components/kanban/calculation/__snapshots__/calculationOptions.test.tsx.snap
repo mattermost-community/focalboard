@@ -373,6 +373,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
           </span>
           <div
             class="dropdown-submenu"
+            style="top: -10px; left: 0px;"
           >
             <div
               class="drops "
