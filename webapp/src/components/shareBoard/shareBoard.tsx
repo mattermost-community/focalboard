@@ -240,7 +240,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             ))
     }
 
-    const toolbar = (
+    const shareBoardTitle = (
         <span className='text-heading5'>
             <FormattedMessage
                 id={'ShareBoard.Title'}
@@ -248,6 +248,17 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             />
         </span>
     )
+
+    const shareTemplateTitle = (
+        <span className='text-heading5'>
+            <FormattedMessage
+                id={'ShareTemplate.Title'}
+                defaultMessage={'Share Template'}
+            />
+        </span>
+    )
+
+    const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
 
     return (
         <Dialog
