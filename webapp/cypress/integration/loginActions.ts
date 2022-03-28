@@ -11,7 +11,7 @@ describe('Login actions', () => {
         cy.log('**Redirects to error then login page**')
         cy.visit('/')
         cy.location('pathname').should('eq', '/error')
-        cy.get('button').contains('Log in').click()
+        cy.get('button').contains('Login').click()
         cy.location('pathname').should('eq', '/login')
         cy.get('.LoginPage').contains('Log in')
         cy.get('#login-username').should('exist')
