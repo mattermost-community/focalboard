@@ -1,7 +1,6 @@
 package integrationtests
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/client"
@@ -1281,9 +1280,9 @@ func TestGetTemplates(t *testing.T) {
 		require.NotNil(t, rBoards)
 		require.GreaterOrEqual(t, len(rBoards), 6)
 
-		fmt.Printf("\n\n")
+		t.Log("\n\n")
 		for _, board := range rBoards {
-			fmt.Printf("Test get template: %s - %s\n", board.Title, board.ID)
+			t.Logf("Test get template: %s - %s\n", board.Title, board.ID)
 			rBoard, resp := th.Client.GetBoard(board.ID, "")
 			th.CheckOK(resp)
 			require.NotNil(t, rBoard)
@@ -1293,7 +1292,7 @@ func TestGetTemplates(t *testing.T) {
 			th.CheckOK(resp)
 			require.NotNil(t, rBlocks)
 			require.Greater(t, len(rBlocks), 0)
-			fmt.Printf("Got %d block(s)\n", len(rBlocks))
+			t.Logf("Got %d block(s)\n", len(rBlocks))
 
 			rBoardsAndBlock, resp := th.Client.DuplicateBoard(board.ID, false, teamID)
 			th.CheckOK(resp)
@@ -1305,7 +1304,7 @@ func TestGetTemplates(t *testing.T) {
 			require.Contains(t, board.Title, rBoard2.Title)
 			require.False(t, rBoard2.IsTemplate)
 
-			fmt.Printf("Duplicate template: %s - %s, %d block(s)\n", rBoard2.Title, rBoard2.ID, len(rBoardsAndBlock.Blocks))
+			t.Logf("Duplicate template: %s - %s, %d block(s)\n", rBoard2.Title, rBoard2.ID, len(rBoardsAndBlock.Blocks))
 			rBoard3, resp := th.Client.GetBoard(rBoard2.ID, "")
 			th.CheckOK(resp)
 			require.NotNil(t, rBoard3)
@@ -1316,6 +1315,6 @@ func TestGetTemplates(t *testing.T) {
 			require.NotNil(t, rBlocks2)
 			require.Equal(t, len(rBoardsAndBlock.Blocks), len(rBlocks2))
 		}
-		fmt.Printf("\n\n")
+		t.Log("\n\n")
 	})
 }
