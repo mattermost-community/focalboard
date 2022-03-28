@@ -5,8 +5,8 @@ go 1.16
 replace github.com/mattermost/focalboard/server => ../server
 
 require (
-	github.com/mattermost/focalboard/server v0.0.0-20210525112228-f43e4028dbdc
-	github.com/mattermost/mattermost-plugin-api v0.0.21
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20211022142730-a6cca93ba3c3
-	github.com/stretchr/testify v1.7.0
+	github.com/mattermost/focalboard/server v0.0.0-20220325164658-33557093b00d
+	github.com/mattermost/mattermost-plugin-api v0.0.27
+	github.com/mattermost/mattermost-server/v6 v6.5.0
+	github.com/stretchr/testify v1.7.1
 )

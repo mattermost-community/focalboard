@@ -8,6 +8,7 @@ import {
     useRouteMatch,
     useHistory,
     generatePath,
+    useLocation,
 } from 'react-router-dom'
 import {createBrowserHistory, History} from 'history'
 
@@ -70,16 +71,21 @@ function HomeToCurrentTeam(props: {path: string, exact: boolean}) {
 
 function WorkspaceToTeamRedirect() {
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
+    const queryParams = new URLSearchParams(useLocation().search)
     const history = useHistory()
     useEffect(() => {
         octoClient.getBoard(match.params.boardId).then((board) => {
             if (board) {
-                history.replace(generatePath('/team/:teamId/:boardId?/:viewId?/:cardId?', {
+                let newPath = generatePath(match.path.replace('/workspace/:workspaceId', '/team/:teamId'), {
                     teamId: board?.teamId,
                     boardId: board?.id,
                     viewId: match.params.viewId,
                     cardId: match.params.cardId,
-                }))
+                })
+                if (queryParams) {
+                    newPath += '?' + queryParams
+                }
+                history.replace(newPath)
             }
         })
     }, [])
@@ -159,9 +165,10 @@ const FocalboardRouter = (props: Props): JSX.Element => {
                         <ChangePasswordPage/>
                     </FBRoute>}
 
-                <FBRoute path='/shared/:boardId?/:viewId?/:cardId?'>
+                <FBRoute path={['/team/:teamId/shared/:boardId?/:viewId?/:cardId?', '/shared/:boardId?/:viewId?/:cardId?']}>
                     <BoardPage readonly={true}/>
                 </FBRoute>
+
                 <FBRoute
                     loginRequired={true}
                     path='/board/:boardId?/:viewId?/:cardId?'
@@ -171,7 +178,7 @@ const FocalboardRouter = (props: Props): JSX.Element => {
                 >
                     <BoardPage/>
                 </FBRoute>
-                <FBRoute path={['/workspace/:workspaceId/:boardId?/:viewId?/:cardId?', '/workspace/:workspaceId/shared/:boardId?/:viewId?/:cardId?']}>
+                <FBRoute path={['/workspace/:workspaceId/shared/:boardId?/:viewId?/:cardId?', '/workspace/:workspaceId/:boardId?/:viewId?/:cardId?']}>
                     <WorkspaceToTeamRedirect/>
                 </FBRoute>
                 <FBRoute
