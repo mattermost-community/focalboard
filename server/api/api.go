@@ -82,7 +82,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handlePatchBoard)).Methods("PATCH")
 	apiv1.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handleDeleteBoard)).Methods("DELETE")
 	apiv1.HandleFunc("/boards/{boardID}/duplicate", a.sessionRequired(a.handleDuplicateBoard)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
+	apiv1.HandleFunc("/boards/{boardID}/blocks", a.attachSession(a.handleGetBlocks, false)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePatchBlocks)).Methods("PATCH")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
@@ -289,15 +289,17 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if board.IsTemplate {
-		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
-			return
-		}
-	} else {
-		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
-			return
+	if !a.hasValidReadTokenForBoard(r, boardID) {
+		if board.IsTemplate {
+			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
+				return
+			}
+		} else {
+			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+				return
+			}
 		}
 	}
 
@@ -3552,7 +3554,6 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create private boards"})
 		return
 	}
-
 	auditRec := a.makeAuditRecord(r, "createBoardsAndBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("teamID", teamID)

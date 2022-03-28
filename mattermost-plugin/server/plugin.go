@@ -99,6 +99,7 @@ func (p *Plugin) OnActivate() error {
 		NewMutexFn: func(name string) (*cluster.Mutex, error) {
 			return cluster.NewMutex(p.API, name)
 		},
+		PluginAPI: &p.API,
 	}
 
 	var db store.Store
