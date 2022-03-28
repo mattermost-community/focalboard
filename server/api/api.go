@@ -87,7 +87,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/undelete", a.sessionRequired(a.handleUndeleteBlock)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.attachSession(a.handleDuplicateBlock, false)).Methods("POST")
 
 	// Import&Export APIs
@@ -1214,97 +1213,6 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	a.logger.Debug("PATCH Blocks", mlog.String("patches", strconv.Itoa(len(patches.BlockIDs))))
 	jsonStringResponse(w, http.StatusOK, "{}")
 
-	auditRec.Success()
-}
-
-func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/boards/{boardID}/blocks/{blockID}/subtree getSubTree
-	//
-	// Returns the blocks of a subtree
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: boardID
-	//   in: path
-	//   description: Board ID
-	//   required: true
-	//   type: string
-	// - name: blockID
-	//   in: path
-	//   description: The ID of the root block of the subtree
-	//   required: true
-	//   type: string
-	// - name: l
-	//   in: query
-	//   description: The number of levels to return. 2 or 3. Defaults to 2.
-	//   required: false
-	//   type: integer
-	//   minimum: 2
-	//   maximum: 3
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       type: array
-	//       items:
-	//         "$ref": "#/definitions/Block"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	userID := getUserID(r)
-	vars := mux.Vars(r)
-	boardID := vars["boardID"]
-	blockID := vars["blockID"]
-
-	if !a.hasValidReadTokenForBoard(r, boardID) && !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
-		return
-	}
-
-	query := r.URL.Query()
-	levels, err := strconv.ParseInt(query.Get("l"), 10, 32)
-	if err != nil {
-		levels = 2
-	}
-
-	if levels != 2 && levels != 3 {
-		a.logger.Error("Invalid levels", mlog.Int64("levels", levels))
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid levels", nil)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "getSubTree", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	auditRec.AddMeta("boardID", boardID)
-	auditRec.AddMeta("blockID", blockID)
-
-	blocks, err := a.app.GetSubTree(boardID, blockID, int(levels), model.QuerySubtreeOptions{})
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("GetSubTree",
-		mlog.Int64("levels", levels),
-		mlog.String("boardID", boardID),
-		mlog.String("blockID", blockID),
-		mlog.Int("block_count", len(blocks)),
-	)
-	json, err := json.Marshal(blocks)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, json)
-
-	auditRec.AddMeta("blockCount", len(blocks))
 	auditRec.Success()
 }
 
