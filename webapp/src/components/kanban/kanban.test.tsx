@@ -6,7 +6,7 @@ import '@testing-library/jest-dom'
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {MemoryRouter} from 'react-router-dom'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import userEvent from '@testing-library/user-event'
 
 import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'

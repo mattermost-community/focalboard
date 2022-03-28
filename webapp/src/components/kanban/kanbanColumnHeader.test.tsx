@@ -4,7 +4,7 @@ import React from 'react'
 import {fireEvent, render, screen, within} from '@testing-library/react'
 import {createIntl} from 'react-intl'
 import userEvent from '@testing-library/user-event'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import {Provider as ReduxProvider} from 'react-redux'
 
 import Mutator from '../../mutator'
