@@ -253,7 +253,8 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 	}
 
 	if len(p.UpdatedCardProperties) != 0 || len(p.DeletedCardProperties) != 0 {
-		// first we accumulate all properties indexed by ID
+		// first we accumulate all properties indexed by, and maintain their order
+		keyOrder := []string{}
 		cardPropertyMap := map[string]map[string]interface{}{}
 		for _, prop := range board.CardProperties {
 			id, ok := prop["id"].(string)
@@ -263,6 +264,7 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 			}
 
 			cardPropertyMap[id] = prop
+			keyOrder = append(keyOrder, id)
 		}
 
 		// if there are properties marked for removal, we delete them
@@ -279,13 +281,20 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 				continue
 			}
 
+			_, exists := cardPropertyMap[id]
+			if !exists {
+				keyOrder = append(keyOrder, id)
+			}
 			cardPropertyMap[id] = newprop
 		}
 
 		// and finally we flatten and save the updated properties
 		newCardProperties := []map[string]interface{}{}
-		for _, p := range cardPropertyMap {
-			newCardProperties = append(newCardProperties, p)
+		for _, key := range keyOrder {
+			p, exists := cardPropertyMap[key]
+			if exists {
+				newCardProperties = append(newCardProperties, p)
+			}
 		}
 
 		board.CardProperties = newCardProperties
