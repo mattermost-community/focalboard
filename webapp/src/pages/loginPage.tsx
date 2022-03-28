@@ -1,7 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {useHistory, Link} from 'react-router-dom'
+
+import {useHistory, Link, useLocation, Redirect} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
 import {useAppDispatch} from '../store/hooks'
@@ -9,6 +10,7 @@ import {fetchMe} from '../store/users'
 
 import Button from '../widgets/buttons/button'
 import client from '../octoClient'
+
 import './loginPage.scss'
 
 const LoginPage = () => {
@@ -17,12 +19,19 @@ const LoginPage = () => {
     const [errorMessage, setErrorMessage] = useState('')
     const history = useHistory()
     const dispatch = useAppDispatch()
+    const queryParams = new URLSearchParams(useLocation().search)
 
     const handleLogin = async (): Promise<void> => {
         const logged = await client.login(username, password)
         if (logged) {
             await dispatch(fetchMe())
-            history.push('/')
+
+            if (queryParams) {
+                <Redirect to={queryParams.get('r') || '/'}/>
+            } else {
+                // history.push('/')
+                <Redirect to={'/'}/>
+            }
         } else {
             setErrorMessage('Login failed')
         }
