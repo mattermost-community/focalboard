@@ -213,14 +213,34 @@ func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID stri
 func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, error) {
 	propertiesBytes, err := json.Marshal(board.Properties)
 	if err != nil {
+		s.logger.Error(
+			"failed to marshal board.Properties",
+			mlog.String("board_id", board.ID),
+			mlog.String("board.Properties", fmt.Sprintf("%v", board.Properties)),
+			mlog.Err(err),
+		)
 		return nil, err
 	}
+
 	cardPropertiesBytes, err := json.Marshal(board.CardProperties)
 	if err != nil {
+		s.logger.Error(
+			"failed to marshal board.CardProperties",
+			mlog.String("board_id", board.ID),
+			mlog.String("board.CardProperties", fmt.Sprintf("%v", board.CardProperties)),
+			mlog.Err(err),
+		)
 		return nil, err
 	}
+
 	columnCalculationsBytes, err := json.Marshal(board.ColumnCalculations)
 	if err != nil {
+		s.logger.Error(
+			"failed to marshal board.ColumnCalculations",
+			mlog.String("board_id", board.ID),
+			mlog.String("board.ColumnCalculations", fmt.Sprintf("%v", board.ColumnCalculations)),
+			mlog.Err(err),
+		)
 		return nil, err
 	}
 
@@ -290,6 +310,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	// writing board history
 	query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "boards_history")
 	if _, err := query.Exec(); err != nil {
+		s.logger.Error("failed to insert board history", mlog.String("board_id", board.ID), mlog.Err(err))
 		return nil, err
 	}
 
@@ -395,7 +416,7 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 	} else {
 		query = query.Suffix(
 			`ON CONFLICT (board_id, user_id)
-             DO UPDATE SET scheme_admin = EXCLUDED.scheme_admin, scheme_editor = EXCLUDED.scheme_editor, 
+             DO UPDATE SET scheme_admin = EXCLUDED.scheme_admin, scheme_editor = EXCLUDED.scheme_editor,
 			   scheme_commenter = EXCLUDED.scheme_commenter, scheme_viewer = EXCLUDED.scheme_viewer`,
 		)
 	}
