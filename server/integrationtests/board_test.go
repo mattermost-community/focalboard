@@ -162,15 +162,14 @@ func TestCreateBoard(t *testing.T) {
 			require.NotNil(t, rBlocks)
 		})
 
-		t.Run("another user should be able to access the public board and its blocks", func(t *testing.T) {
+		t.Run("A non-member user should not be able to access the public board and its blocks", func(t *testing.T) {
 			rbBoard, resp := th.Client2.GetBoard(board.ID, "")
-			th.CheckOK(resp)
-			require.NotNil(t, rbBoard)
-			require.Equal(t, board, rbBoard)
+			th.CheckForbidden(resp)
+			require.Nil(t, rbBoard)
 
 			rBlocks, resp := th.Client2.GetBlocksForBoard(board.ID)
-			th.CheckOK(resp)
-			require.NotNil(t, rBlocks)
+			th.CheckForbidden(resp)
+			require.Nil(t, rBlocks)
 		})
 	})
 
