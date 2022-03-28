@@ -3,7 +3,7 @@
 
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
-import {generatePath, useHistory, useRouteMatch, Redirect} from 'react-router-dom'
+import {generatePath, useRouteMatch, Redirect} from 'react-router-dom'
 
 import Button from '../../widgets/buttons/button'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -12,7 +12,6 @@ import {Utils} from '../../utils'
 import './shareBoardLoginButton.scss'
 
 const ShareBoardLoginButton = () => {
-    const history = useHistory()
     const match = useRouteMatch<{teamId: string, boardId: string, viewId?: string, cardId?: string}>()
 
     let redirectQueryParam = 'r=' + encodeURIComponent(generatePath('/:boardId?/:viewId?/:cardId?', match.params))
@@ -31,9 +30,7 @@ const ShareBoardLoginButton = () => {
                     TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardLogin)
                     if (Utils.isFocalboardLegacy()) {
                         <Redirect to={Utils.getFrontendBaseURL(true).replace('/plugins/focalboard', '') + loginPath}/>
-                        // window.location.href = Utils.getFrontendBaseURL(true).replace('/plugins/focalboard', '') + loginPath
                     } else {
-                        // history.push(loginPath)
                         <Redirect to={loginPath}/>
                     }
                 }}

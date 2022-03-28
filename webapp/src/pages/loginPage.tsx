@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
 
-import {useHistory, Link, useLocation, Redirect} from 'react-router-dom'
+import {Link, useLocation, Redirect} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
 import {useAppDispatch} from '../store/hooks'
@@ -17,7 +17,6 @@ const LoginPage = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
-    const history = useHistory()
     const dispatch = useAppDispatch()
     const queryParams = new URLSearchParams(useLocation().search)
 
@@ -29,7 +28,6 @@ const LoginPage = () => {
             if (queryParams) {
                 <Redirect to={queryParams.get('r') || '/'}/>
             } else {
-                // history.push('/')
                 <Redirect to={'/'}/>
             }
         } else {
