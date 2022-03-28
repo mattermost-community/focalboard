@@ -13,7 +13,7 @@ import {RootState} from './index'
 export const fetchGlobalTemplates = createAsyncThunk(
     'globalTemplates/fetch',
     async () => {
-        const templates = await client.getDefaultTemplates()
+        const templates = await client.getTeamTemplates('0')
         return templates.sort((a, b) => a.title.localeCompare(b.title))
     },
 )
