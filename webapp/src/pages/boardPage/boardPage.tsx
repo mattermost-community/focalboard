@@ -84,7 +84,7 @@ const BoardPage = (props: Props): JSX.Element => {
         // and fetch its data
         const result: any = await dispatch(loadBoardData(boardId))
         if (result.payload.blocks.length === 0 && userId) {
-            const member = await octoClient.createBoardMember({userId, boardId})
+            const member = await octoClient.joinBoard(boardId)
             if (!member) {
                 UserSettings.setLastBoardID(boardTeamId, null)
                 UserSettings.setLastViewId(boardId, null)
