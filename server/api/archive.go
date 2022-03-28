@@ -49,6 +49,8 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("BoardID", boardID)
 
+	// TODO: Check the permissions here
+
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -186,6 +188,8 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer file.Close()
+
+	// TODO: It should check the permissions for import the archive
 
 	auditRec := a.makeAuditRecord(r, "import", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)

@@ -288,7 +288,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !a.hasValidReadTokenForBoard(r, boardID) {
-		if board.IsTemplate {
+		if board.IsTemplate && board.Type == model.BoardTypeOpen {
 			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
 				return
@@ -1012,7 +1012,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks/{blockID}/undelete undeleteBlock
+	// swagger:operation POST /api/v1/board/{boardID}/blocks/{blockID}/undelete undeleteBlock
 	//
 	// Undeletes a block
 	//
@@ -1046,6 +1046,14 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
+	boardID := vars["boardID"]
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+		return
+	}
+
+	// TODO: IMPORTANT, check if the undeleted block belongs to the specified board
 
 	auditRec := a.makeAuditRecord(r, "undeleteBlock", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
@@ -1203,6 +1211,10 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	for i := range patches.BlockIDs {
 		auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), patches.BlockIDs[i])
 	}
+
+	// TODO: Check the permissions for all the patches to be applied (or even
+	// better, verify that the patches only gets applied inside the specified
+	// board and then check the permission for the board
 
 	err = a.app.PatchBlocks(teamID, patches, userID)
 	if err != nil {
@@ -1705,6 +1717,8 @@ func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+
+	// TODO: Verify if this needs any permission
 
 	team, err := a.app.GetRootTeam()
 	if err != nil {
@@ -3358,6 +3372,9 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		}
 	}
 
+	// TODO: Check if the blocks belongs to the boards, if not, it should fail.
+	// TODO: Or maybe check if the user has permission to manage cards in the board that the card belongs to
+
 	// permission check
 	createsPublicBoards := false
 	createsPrivateBoards := false
@@ -3541,6 +3558,8 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
 			return
 		}
+
+		// TODO: We should be able to check if we have the correct permissions for the modified blocks
 	}
 
 	auditRec := a.makeAuditRecord(r, "patchBoardsAndBlocks", audit.Fail)
@@ -3638,6 +3657,8 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 			return
 		}
 	}
+
+	// TODO: We should be able to check if we have the correct permissions for the deleted blocks
 
 	if err := dbab.IsValid(); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
