@@ -24,7 +24,6 @@ const ShareBoardLoginButton = () => {
     const onLoginClick = useCallback(() => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardLogin)
         if (Utils.isFocalboardLegacy()) {
-            // location.assign(Utils.getFrontendBaseURL(true).replace('/plugins/focalboard', '') + loginPath)
             location.assign(loginPath)
         } else {
             history.push(loginPath)
