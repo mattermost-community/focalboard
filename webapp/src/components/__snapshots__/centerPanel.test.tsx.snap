@@ -697,7 +697,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
           class="shareButtonWrapper"
         >
           <div
-            class="ShareBoardButton"
+            class="ShareBoardLoginButton"
           >
             <button
               title="Login"

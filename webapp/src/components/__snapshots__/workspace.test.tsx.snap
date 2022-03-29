@@ -972,7 +972,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               class="shareButtonWrapper"
             >
               <div
-                class="ShareBoardButton"
+                class="ShareBoardLoginButton"
               >
                 <button
                   title="Login"
@@ -2189,7 +2189,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               class="shareButtonWrapper"
             >
               <div
-                class="ShareBoardButton"
+                class="ShareBoardLoginButton"
               >
                 <button
                   title="Login"

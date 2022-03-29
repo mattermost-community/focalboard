@@ -3,7 +3,7 @@
 exports[`src/components/shareBoard/shareBoardLoginButton should match snapshot 1`] = `
 <div>
   <div
-    class="ShareBoardButton"
+    class="ShareBoardLoginButton"
   >
     <button
       class="Button emphasis--primary size--medium"
