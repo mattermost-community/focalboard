@@ -263,7 +263,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             value={selectedUser}
                             className={'userSearchInput'}
                             cacheOptions={true}
-                            loadOptions={(inputValue) => client.searchTeamUsers(inputValue)}
+                            loadOptions={(inputValue: string) => client.searchTeamUsers(inputValue)}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
                             getOptionValue={(u) => u.id}

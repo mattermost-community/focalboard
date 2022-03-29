@@ -1840,6 +1840,25 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
+  /api/v1/users/me/memberships:
+    get:
+      description: Returns the currently users board memberships
+      operationId: getMyMemberships
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            items:
+              $ref: '#/definitions/BoardMember'
+            type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
   /api/v1/workspaces/{workspaceID}/blocks/{blockID}/undelete:
     post:
       description: Undeletes a block
@@ -1894,6 +1913,33 @@ paths:
       responses:
         "200":
           description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /boards/{boardID}/join:
+    post:
+      description: Become a member of a board
+      operationId: joinBoard
+      parameters:
+      - description: Board ID
+        in: path
+        name: boardID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/BoardMember'
+        "404":
+          description: board not found
+        "503":
+          description: access denied
         default:
           description: internal error
           schema:
