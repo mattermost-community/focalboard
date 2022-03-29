@@ -54,25 +54,7 @@ func (s *SQLStore) removeDefaultTemplates(db sq.BaseRunner, boards []*model.Boar
 	return nil
 }
 
-// getDefaultTemplateBoards fetches all template blocks .
-func (s *SQLStore) getDefaultTemplates(db sq.BaseRunner) ([]*model.Board, error) {
-	query := s.getQueryBuilder(db).
-		Select(boardFields("")...).
-		From(s.tablePrefix + "boards").
-		Where(sq.Eq{"team_id": "0"}).
-		Where(sq.Eq{"is_template": true})
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`getTemplateBoards ERROR`, mlog.Err(err))
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-
-	return s.boardsFromRows(rows)
-}
-
-// getDefaultTemplateBoards fetches all template blocks .
+// getTemplateBoards fetches all template boards .
 func (s *SQLStore) getTemplateBoards(db sq.BaseRunner, teamID, userID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("")...).
@@ -90,10 +72,6 @@ func (s *SQLStore) getTemplateBoards(db sq.BaseRunner, teamID, userID string) ([
 				sq.NotEq{"bm.board_id": nil},
 			},
 		})
-
-	ss, pp, _ := query.ToSql()
-	s.logger.Error(ss)
-	s.logger.Error(fmt.Sprintf("%v", pp))
 
 	rows, err := query.Query()
 	if err != nil {

@@ -535,21 +535,6 @@ func (mr *MockStoreMockRecorder) GetCategory(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategory", reflect.TypeOf((*MockStore)(nil).GetCategory), arg0)
 }
 
-// GetDefaultTemplates mocks base method.
-func (m *MockStore) GetDefaultTemplates() ([]*model.Board, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDefaultTemplates")
-	ret0, _ := ret[0].([]*model.Board)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetDefaultTemplates indicates an expected call of GetDefaultTemplates.
-func (mr *MockStoreMockRecorder) GetDefaultTemplates() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultTemplates", reflect.TypeOf((*MockStore)(nil).GetDefaultTemplates))
-}
-
 // GetMemberForBoard mocks base method.
 func (m *MockStore) GetMemberForBoard(arg0, arg1 string) (*model.BoardMember, error) {
 	m.ctrl.T.Helper()

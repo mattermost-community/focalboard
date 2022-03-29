@@ -46,14 +46,14 @@ func (a *App) PrepareOnboardingTour(userID string, teamID string) (string, strin
 }
 
 func (a *App) getOnboardingBoardID() (string, error) {
-	boards, err := a.store.GetDefaultTemplates()
+	boards, err := a.store.GetTemplateBoards("0", "")
 	if err != nil {
 		return "", err
 	}
 
 	var onboardingBoardID string
 	for _, block := range boards {
-		if block.Title == WelcomeBoardTitle {
+		if block.Title == WelcomeBoardTitle && block.TeamID == "0" {
 			onboardingBoardID = block.ID
 			break
 		}

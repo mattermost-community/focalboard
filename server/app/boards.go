@@ -53,10 +53,6 @@ func (a *App) GetTemplateBoards(teamID, userID string) ([]*model.Board, error) {
 	return a.store.GetTemplateBoards(teamID, userID)
 }
 
-func (a *App) GetDefaultTemplates() ([]*model.Board, error) {
-	return a.store.GetDefaultTemplates()
-}
-
 func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*model.Board, error) {
 	if board.ID != "" {
 		return nil, ErrNewBoardCannotHaveID
