@@ -61,7 +61,7 @@
 		"react-intl": "^5.24.7",
 		"react-redux": "^7.2.6",
 		"react-router-dom": "^5.2.1",
-		"react-select": "^4.3.0",
+		"react-select": "^5.2.2",
 		"trim-newlines": "^4.0.2"
 	},
 	"jest": {
@@ -108,7 +108,7 @@
 		"@types/react-intl": "^3.0.0",
 		"@types/react-redux": "^7.1.23",
 		"@types/react-router-dom": "^5.3.3",
-		"@types/react-select": "^4.0.13",
+		"@types/react-select": "^5.0.0",
 		"@types/redux-mock-store": "^1.0.3",
 		"@typescript-eslint/eslint-plugin": "^5.16.0",
 		"@typescript-eslint/parser": "^5.16.0",
