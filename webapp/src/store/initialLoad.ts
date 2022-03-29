@@ -12,13 +12,19 @@ import {RootState} from './index'
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
-        const [team, teams, boards, boardsMemberships, boardTemplates] = await Promise.all([
+        const [me, team, teams, boards, boardsMemberships, boardTemplates] = await Promise.all([
+            client.getMe(),
             client.getTeam(),
             client.getTeams(),
             client.getBoards(),
             client.getMyBoardMemberships(),
             client.getTeamTemplates(),
         ])
+
+        // if no me, normally user not logged in
+        if (!me) {
+            throw new Error(ErrorId.NotLoggedIn)
+        }
 
         // if no team, either bad id, or user doesn't have access
         if (!team) {

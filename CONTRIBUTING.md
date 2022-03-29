@@ -1,24 +1,24 @@
 # Code Contribution Guidelines
 
-Thank you for your interest in contributing! Please see the [Focalboard Contribution Guide](https://mattermost.github.io/focalboard/) which describes the process for making code contributions, and [join our Focalboard community channel](https://community.mattermost.com/core/channels/focalboard) to ask questions from community members and the core team.
+Thank you for your interest in contributing! Please read the [Focalboard Contribution Guide](https://developers.mattermost.com/contribute/focalboard/) to learn the process for making code contributions, and [join our Focalboard community channel](https://community.mattermost.com/core/channels/focalboard) to get help from community members and the core team.
 
-When you submit a pull request, it goes through a [code review process outlined here](https://mattermost.github.io/focalboard/code-review).
+When you submit a pull request, it goes through a code review process outlined [here](https://developers.mattermost.com/contribute/getting-started/code-review/).
 
-# Updating Changelog
+## Updating Changelog
 
-After a noteable bug fix or an improvement you've submitted is merged, please consider making a pull request to the [CHANGELOG.md](https://github.com/mattermost/focalboard/blob/main/CHANGELOG.md) under the next release section.
+After a noteable bug fix or improvement is merged, submit a pull request to the [CHANGELOG.md](https://github.com/mattermost/focalboard/blob/main/CHANGELOG.md) under the next release section.
 
-# Bug reports
+## Bug Reports
 
 Please file a [GitHub issue](https://github.com/mattermost/focalboard/issues) if anything isn't working the way you expect.
 
-# Documentation
+## Documentation
 
-You can contribute to our documentation in the [Mattermost Boards documentation](https://docs.mattermost.com/guides/boards.html). Read more about how the contribution process works in the repo [README](https://github.com/mattermost/docs/blob/master/README.md). Visit the [Documentation Working Group channel](https://community.mattermost.com/core/channels/dwg-documentation-working-group) on our Community server if you have any questions!
+You can contribute to the [Mattermost Boards documentation](https://docs.mattermost.com/guides/boards.html). Read more about how the contribution process works in the repository's [README](https://github.com/mattermost/docs/blob/master/README.md). Visit the [Documentation Working Group channel](https://community.mattermost.com/core/channels/dwg-documentation-working-group) on our community server if you have any questions!
 
-# Contributors
+## Contributors
 
-**Core Committers**: A core committer is a maintainer on the Focalboard project who has merge access to the repositories. They are responsible for reviewing pull requests, cultivating the developer community, and guiding the technical vision of Focalboard. If you have a question or need some help, these are the people to ask.
+**Core Committers**: Maintains the Focalboard project and has merge access to the repositories. They are responsible for reviewing pull requests, cultivating the developer community, and guiding the technical vision of Focalboard. If you have a question or need some help, these are the people to ask.
 
 - **<a name="scott.bishel">Scott Bishel</a>**
     - @scott.bishel on [community.mattermost.com](https://community.mattermost.com/core/messages/@scott.bishel) and [@sbishel](https://github.com/sbishel) on GitHub
@@ -38,12 +38,12 @@ You can contribute to our documentation in the [Mattermost Boards documentation]
 - **<a name="ogi.marusic">Ogi Marušić</a>**
     - @ogi.marusic on [community.mattermost.com](https://community.mattermost.com/core/messages/@ogi.marusic) and [@ogi-m](https://github.com/ogi-m) on GitHub
 
-**Community Organizers**: Responds with comments to Bug Reports, Issues, and Pull Requests with tags, edits and mentions to Core Committers and contributors.
+**Community Organizers**: Responds with comments to bug reports, issues, and pull requests with tags, edits and mentions to core committers and contributors.
 
 - **<a name="winson.wu">Winson Wu</a>**
     - @winson.wu on [community.mattermost.com](https://community.mattermost.com/core/messages/@winson.wu) and [@wuwinson](https://github.com/wuwinson) on GitHub
 
-**Documentation**: Verifies documentation changes, and updates documentation for new features.
+**Documentation**: Verifies documentation changes and updates documentation for new features.
 
 - **<a name="justine.geffen">Justine Geffen</a>**
     - @justine.geffen on [community.mattermost.com](https://community.mattermost.com/core/messages/@justine.geffen) and [@justinegeffen ](https://github.com/justinegeffen) on GitHub

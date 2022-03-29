@@ -1,6 +1,7 @@
 package integrationtests
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/client"
@@ -1266,5 +1267,80 @@ func TestDeleteMember(t *testing.T) {
 		require.NoError(t, err)
 		require.Len(t, members, 1)
 		require.True(t, members[0].SchemeAdmin)
+	})
+}
+
+func TestJoinBoard(t *testing.T) {
+	t.Run("create and join public board", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "Public board"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:  title,
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypeOpen, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+
+		member, resp := th.Client2.JoinBoard(board.ID)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, member)
+		require.Equal(t, board.ID, member.BoardID)
+		require.Equal(t, th.GetUser2().ID, member.UserID)
+
+		s, _ := json.MarshalIndent(member, "", "\t")
+		t.Log(string(s))
+	})
+
+	t.Run("create and join private board (should not succeed)", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "Private board"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:  title,
+			Type:   model.BoardTypePrivate,
+			TeamID: teamID,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypePrivate, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+
+		member, resp := th.Client2.JoinBoard(board.ID)
+		th.CheckForbidden(resp)
+		require.Nil(t, member)
+	})
+
+	t.Run("join invalid board", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		member, resp := th.Client2.JoinBoard("nonexistent-board-ID")
+		th.CheckNotFound(resp)
+		require.Nil(t, member)
 	})
 }
