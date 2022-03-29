@@ -98,7 +98,7 @@ describe('Create and delete board / card', () => {
         // Create table view
         cy.log('**Create table view**')
         cy.get('.ViewHeader').get('.DropdownIcon').first().parent().click()
-        cy.findByText('Add view').realHover()
+        cy.get('Add view').realHover()
         cy.get('.ViewHeader').
             contains('Add view').
             parent().
