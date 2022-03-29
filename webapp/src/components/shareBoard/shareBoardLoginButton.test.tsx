@@ -42,7 +42,6 @@ describe('src/components/shareBoard/shareBoardLoginButton', () => {
         window.location = Object.assign(new URL('https://example.org/mattermost'))
         const result = render(
             wrapDNDIntl(
-
                 <ShareBoardLoginButton/>,
             ))
         const renderer = result.container

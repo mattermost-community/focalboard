@@ -10,7 +10,6 @@ import {fetchMe} from '../store/users'
 
 import Button from '../widgets/buttons/button'
 import client from '../octoClient'
-
 import './loginPage.scss'
 
 const LoginPage = () => {
@@ -25,7 +24,6 @@ const LoginPage = () => {
         const logged = await client.login(username, password)
         if (logged) {
             await dispatch(fetchMe())
-
             if (queryParams) {
                 history.push(queryParams.get('r') || '/')
             } else {
