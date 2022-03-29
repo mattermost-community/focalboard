@@ -1981,9 +1981,13 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if a.app.GetConfig().MaxFileSize > 0 {
+		r.Body = http.MaxBytesReader(w, r.Body, a.app.GetConfig().MaxFileSize)
+	}
+
 	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
-		fmt.Fprintf(w, "%v", err)
+		a.errorResponse(w, r.URL.Path, http.StatusRequestEntityTooLarge, "", err)
 		return
 	}
 	defer file.Close()

@@ -4,6 +4,7 @@
 import {useEffect, useCallback} from 'react'
 
 import {ImageBlock, createImageBlock} from '../../blocks/imageBlock'
+import {sendFlashMessage} from '../flashMessages'
 import octoClient from '../../octoClient'
 import mutator from '../../mutator'
 
@@ -25,8 +26,10 @@ export default function useImagePaste(boardId: string, cardId: string, contentOr
 
         const uploaded = await Promise.all(uploads)
         const blocksToInsert: ImageBlock[] = []
+        let someFilesNotUploaded = false
         for (const fileId of uploaded) {
             if (!fileId) {
+                someFilesNotUploaded = true
                 continue
             }
             const block = createImageBlock()
@@ -34,6 +37,10 @@ export default function useImagePaste(boardId: string, cardId: string, contentOr
             block.boardId = boardId
             block.fields.fileId = fileId || ''
             blocksToInsert.push(block)
+        }
+
+        if (someFilesNotUploaded) {
+            sendFlashMessage({content: "Some files not uploaded. File size limit reached", severity: 'normal'})
         }
 
         mutator.performAsUndoGroup(async () => {

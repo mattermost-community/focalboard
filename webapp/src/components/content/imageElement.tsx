@@ -7,6 +7,7 @@ import {ImageBlock, createImageBlock} from '../../blocks/imageBlock'
 import octoClient from '../../octoClient'
 import {Utils} from '../../utils'
 import ImageIcon from '../../widgets/icons/image'
+import {sendFlashMessage} from '../../components/flashMessages'
 
 import {contentRegistry} from './contentRegistry'
 
@@ -52,9 +53,13 @@ contentRegistry.registerContentType({
                 Utils.selectLocalFile(async (file) => {
                     const fileId = await octoClient.uploadFile(boardId, file)
 
-                    const block = createImageBlock()
-                    block.fields.fileId = fileId || ''
-                    resolve(block)
+                    if (fileId) {
+                        const block = createImageBlock()
+                        block.fields.fileId = fileId || ''
+                        resolve(block)
+                    } else {
+                        sendFlashMessage({content: 'Unable to upload the file. File size limit reached.', severity: 'normal'})
+                    }
                 },
                 '.jpg,.jpeg,.png,.gif')
             },
