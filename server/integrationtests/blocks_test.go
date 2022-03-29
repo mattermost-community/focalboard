@@ -429,18 +429,4 @@ func TestGetSubtree(t *testing.T) {
 		}
 		require.Contains(t, blockIDs, parentBlockID)
 	})
-
-	t.Run("Get subtree for parent ID", func(t *testing.T) {
-		blocks, resp := th.Client.GetSubtree(board.ID, parentBlockID)
-		require.NoError(t, resp.Error)
-		require.Len(t, blocks, 3)
-
-		blockIDs := make([]string, len(blocks))
-		for i, b := range blocks {
-			blockIDs[i] = b.ID
-		}
-		require.Contains(t, blockIDs, parentBlockID)
-		require.Contains(t, blockIDs, childBlockID1)
-		require.Contains(t, blockIDs, childBlockID2)
-	})
 }

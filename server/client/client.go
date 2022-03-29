@@ -272,16 +272,6 @@ func (c *Client) DeleteBlock(boardID, blockID string) (bool, *Response) {
 	return true, BuildResponse(r)
 }
 
-func (c *Client) GetSubtree(boardID, blockID string) ([]model.Block, *Response) {
-	r, err := c.DoAPIGet(c.GetSubtreeRoute(boardID, blockID), "")
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-	defer closeBody(r)
-
-	return model.BlocksFromJSON(r.Body), BuildResponse(r)
-}
-
 // Boards and blocks.
 func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
 	r, err := c.DoAPIPost(c.GetBoardsAndBlocksRoute(), toJSON(bab))
