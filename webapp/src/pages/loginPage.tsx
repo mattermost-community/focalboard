@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
 
-import {Link, useLocation, Redirect} from 'react-router-dom'
+import {Link, useLocation, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
 import {useAppDispatch} from '../store/hooks'
@@ -19,6 +19,7 @@ const LoginPage = () => {
     const [errorMessage, setErrorMessage] = useState('')
     const dispatch = useAppDispatch()
     const queryParams = new URLSearchParams(useLocation().search)
+    const history = useHistory()
 
     const handleLogin = async (): Promise<void> => {
         const logged = await client.login(username, password)
@@ -26,9 +27,9 @@ const LoginPage = () => {
             await dispatch(fetchMe())
 
             if (queryParams) {
-                <Redirect to={queryParams.get('r') || '/'}/>
+                history.push(queryParams.get('r') || '/')
             } else {
-                <Redirect to={'/'}/>
+                history.push('/')
             }
         } else {
             setErrorMessage('Login failed')
