@@ -176,6 +176,10 @@ func (c *Client) GetBoardRoute(boardID string) string {
 	return fmt.Sprintf("%s/%s", c.GetBoardsRoute(), boardID)
 }
 
+func (c *Client) GetBoardMetadataRoute(boardID string) string {
+	return fmt.Sprintf("%s/%s/metadata", c.GetBoardsRoute(), boardID)
+}
+
 func (c *Client) GetJoinBoardRoute(boardID string) string {
 	return fmt.Sprintf("%s/%s/join", c.GetBoardsRoute(), boardID)
 }
@@ -474,6 +478,21 @@ func (c *Client) GetBoard(boardID, readToken string) (*model.Board, *Response) {
 	defer closeBody(r)
 
 	return model.BoardFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) GetBoardMetadata(boardID, readToken string) (*model.BoardMetadata, *Response) {
+	url := c.GetBoardMetadataRoute(boardID)
+	if readToken != "" {
+		url += fmt.Sprintf("?read_token=%s", readToken)
+	}
+
+	r, err := c.DoAPIGet(url, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardMetadataFromJSON(r.Body), BuildResponse(r)
 }
 
 func (c *Client) GetBoardsForTeam(teamID string) ([]*model.Board, *Response) {

@@ -12,6 +12,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -384,4 +385,8 @@ func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, err
 	}
 
 	return channel.Id, nil
+}
+
+func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
+	return s.pluginAPI.GetLicense()
 }
