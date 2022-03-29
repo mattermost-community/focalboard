@@ -188,6 +188,10 @@ func (c *Client) GetBlocksRoute(boardID string) string {
 	return fmt.Sprintf("%s/blocks", c.GetBoardRoute(boardID))
 }
 
+func (c *Client) GetAllBlocksRoute(boardID string) string {
+	return fmt.Sprintf("%s/blocks?all=true", c.GetBoardRoute(boardID))
+}
+
 func (c *Client) GetBoardsAndBlocksRoute() string {
 	return "/boards-and-blocks"
 }
@@ -212,6 +216,16 @@ func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) GetAllBlocksForBoard(boardID string) ([]model.Block, *Response) {
+	r, err := c.DoAPIGet(c.GetAllBlocksRoute(boardID), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BlocksFromJSON(r.Body), BuildResponse(r)
+}
+
 func (c *Client) PatchBlock(boardID, blockID string, blockPatch *model.BlockPatch) (bool, *Response) {
 	r, err := c.DoAPIPatch(c.GetBlockRoute(boardID, blockID), toJSON(blockPatch))
 	if err != nil {
@@ -222,18 +236,21 @@ func (c *Client) PatchBlock(boardID, blockID string, blockPatch *model.BlockPatc
 	return true, BuildResponse(r)
 }
 
-func (c *Client) DuplicateBoard(boardID string, asTemplate bool, teamID string) (bool, *Response) {
+func (c *Client) DuplicateBoard(boardID string, asTemplate bool, teamID string) (*model.BoardsAndBlocks, *Response) {
 	queryParams := "?asTemplate=false&"
 	if asTemplate {
 		queryParams = "?asTemplate=true"
 	}
+	if len(teamID) > 0 {
+		queryParams = queryParams + "&toTeam=" + teamID
+	}
 	r, err := c.DoAPIPost(c.GetBoardRoute(boardID)+"/duplicate"+queryParams, "")
 	if err != nil {
-		return false, BuildErrorResponse(r, err)
+		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
-	return true, BuildResponse(r)
+	return model.BoardsAndBlocksFromJSON(r.Body), BuildResponse(r)
 }
 
 func (c *Client) DuplicateBlock(boardID, blockID string, asTemplate bool) (bool, *Response) {
@@ -645,4 +662,14 @@ func (c *Client) GetSubscriptions(subscriberID string) ([]*model.Subscription, *
 	}
 
 	return subs, BuildResponse(r)
+}
+
+func (c *Client) GetTemplatesForTeam(teamID string) ([]*model.Board, *Response) {
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/templates", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardsFromJSON(r.Body), BuildResponse(r)
 }

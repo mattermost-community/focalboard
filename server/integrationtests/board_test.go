@@ -1450,6 +1450,56 @@ func TestDeleteMember(t *testing.T) {
 	})
 }
 
+func TestGetTemplates(t *testing.T) {
+	t.Run("should be able to retrieve built-in templates", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		teamID := "my-team-id"
+		rBoards, resp := th.Client.GetTemplatesForTeam("0")
+		th.CheckOK(resp)
+		require.NotNil(t, rBoards)
+		require.GreaterOrEqual(t, len(rBoards), 6)
+
+		t.Log("\n\n")
+		for _, board := range rBoards {
+			t.Logf("Test get template: %s - %s\n", board.Title, board.ID)
+			rBoard, resp := th.Client.GetBoard(board.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, rBoard)
+			require.Equal(t, board, rBoard)
+
+			rBlocks, resp := th.Client.GetAllBlocksForBoard(board.ID)
+			th.CheckOK(resp)
+			require.NotNil(t, rBlocks)
+			require.Greater(t, len(rBlocks), 0)
+			t.Logf("Got %d block(s)\n", len(rBlocks))
+
+			rBoardsAndBlock, resp := th.Client.DuplicateBoard(board.ID, false, teamID)
+			th.CheckOK(resp)
+			require.NotNil(t, rBoardsAndBlock)
+			require.Greater(t, len(rBoardsAndBlock.Boards), 0)
+			require.Greater(t, len(rBoardsAndBlock.Blocks), 0)
+
+			rBoard2 := rBoardsAndBlock.Boards[0]
+			require.Contains(t, board.Title, rBoard2.Title)
+			require.False(t, rBoard2.IsTemplate)
+
+			t.Logf("Duplicate template: %s - %s, %d block(s)\n", rBoard2.Title, rBoard2.ID, len(rBoardsAndBlock.Blocks))
+			rBoard3, resp := th.Client.GetBoard(rBoard2.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, rBoard3)
+			require.Equal(t, rBoard2, rBoard3)
+
+			rBlocks2, resp := th.Client.GetAllBlocksForBoard(rBoard2.ID)
+			th.CheckOK(resp)
+			require.NotNil(t, rBlocks2)
+			require.Equal(t, len(rBoardsAndBlock.Blocks), len(rBlocks2))
+		}
+		t.Log("\n\n")
+	})
+}
+
 func TestJoinBoard(t *testing.T) {
 	t.Run("create and join public board", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
