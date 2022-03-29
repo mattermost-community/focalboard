@@ -2830,8 +2830,7 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
-	if userID == "" && !hasValidReadToken {
+	if userID == "" {
 		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
 		return
 	}
@@ -2846,17 +2845,15 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !hasValidReadToken {
-		if board.Type == model.BoardTypePrivate {
-			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
-				return
-			}
-		} else {
-			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
-				return
-			}
+	if board.Type == model.BoardTypePrivate {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			return
+		}
+	} else {
+		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			return
 		}
 	}
 
@@ -2925,8 +2922,7 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	asTemplate := query.Get("asTemplate")
 
-	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
-	if userID == "" && !hasValidReadToken {
+	if userID == "" {
 		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
 		return
 	}
