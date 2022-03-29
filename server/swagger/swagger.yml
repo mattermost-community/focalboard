@@ -260,6 +260,39 @@ definitions:
     - schemeViewer
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
+  BoardMetadata:
+    description: BoardMetadata contains metadata for a Board
+    properties:
+      boardId:
+        description: The ID for the board
+        type: string
+        x-go-name: BoardID
+      createdBy:
+        description: The ID of the user that created the board
+        type: string
+        x-go-name: CreatedBy
+      descendantFirstUpdateAt:
+        description: The earliest time a descendant of this board was added, modified, or deleted
+        format: int64
+        type: integer
+        x-go-name: DescendantFirstUpdateAt
+      descendantLastUpdateAt:
+        description: The most recent time a descendant of this board was added, modified, or deleted
+        format: int64
+        type: integer
+        x-go-name: DescendantLastUpdateAt
+      lastModifiedBy:
+        description: The ID of the user that last modified the most recently modified descendant
+        type: string
+        x-go-name: LastModifiedBy
+    required:
+    - boardId
+    - descendantLastUpdateAt
+    - descendantFirstUpdateAt
+    - createdBy
+    - lastModifiedBy
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
   BoardPatch:
     description: BoardPatch is a patch for modify boards
     properties:
@@ -1300,6 +1333,33 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
+  /api/v1/boards/{boardID}/metadata:
+    get:
+      description: Returns a board's metadata
+      operationId: getBoardMetadata
+      parameters:
+      - description: Board ID
+        in: path
+        name: boardID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/BoardMetadata'
+        "404":
+          description: board not found
+        "501":
+          description: required license not found
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
   /api/v1/boards/{boardID}/sharing:
     get:
       description: Returns sharing information for a board
@@ -1840,6 +1900,25 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
+  /api/v1/users/me/memberships:
+    get:
+      description: Returns the currently users board memberships
+      operationId: getMyMemberships
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            items:
+              $ref: '#/definitions/BoardMember'
+            type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
   /api/v1/workspaces/{workspaceID}/blocks/{blockID}/undelete:
     post:
       description: Undeletes a block
@@ -1894,6 +1973,33 @@ paths:
       responses:
         "200":
           description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /boards/{boardID}/join:
+    post:
+      description: Become a member of a board
+      operationId: joinBoard
+      parameters:
+      - description: Board ID
+        in: path
+        name: boardID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/BoardMember'
+        "404":
+          description: board not found
+        "503":
+          description: access denied
         default:
           description: internal error
           schema:

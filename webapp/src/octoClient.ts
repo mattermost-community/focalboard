@@ -261,7 +261,11 @@ class OctoClient {
     }
 
     async getAllBlocks(boardID: string): Promise<Block[]> {
-        const path = `/api/v1/boards/${boardID}/blocks?all=true`
+        let path = `/api/v1/boards/${boardID}/blocks?all=true`
+        const readToken = Utils.getReadToken()
+        if (readToken) {
+            path += `&read_token=${readToken}`
+        }
         return this.getBlocksWithPath(path)
     }
 
@@ -422,6 +426,21 @@ class OctoClient {
             method: 'POST',
             headers: this.headers(),
             body,
+        })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return this.getJson<BoardMember>(response, {} as BoardMember)
+    }
+
+    async joinBoard(boardId: string): Promise<BoardMember|undefined> {
+        Utils.log(`joinBoard: board ${boardId}`)
+
+        const response = await fetch(this.getBaseURL() + `/api/v1/boards/${boardId}/join`, {
+            method: 'POST',
+            headers: this.headers()
         })
 
         if (response.status !== 200) {
@@ -610,7 +629,11 @@ class OctoClient {
     }
 
     async getBoard(boardID: string): Promise<Board | undefined> {
-        const path = `/api/v1/boards/${boardID}`
+        let path = `/api/v1/boards/${boardID}`
+        const readToken = Utils.getReadToken()
+        if (readToken) {
+            path += `?read_token=${readToken}`
+        }
         const response = await fetch(this.getBaseURL() + path, {
             method: 'GET',
             headers: this.headers(),

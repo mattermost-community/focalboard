@@ -176,6 +176,14 @@ func (c *Client) GetBoardRoute(boardID string) string {
 	return fmt.Sprintf("%s/%s", c.GetBoardsRoute(), boardID)
 }
 
+func (c *Client) GetBoardMetadataRoute(boardID string) string {
+	return fmt.Sprintf("%s/%s/metadata", c.GetBoardsRoute(), boardID)
+}
+
+func (c *Client) GetJoinBoardRoute(boardID string) string {
+	return fmt.Sprintf("%s/%s/join", c.GetBoardsRoute(), boardID)
+}
+
 func (c *Client) GetBlocksRoute(boardID string) string {
 	return fmt.Sprintf("%s/blocks", c.GetBoardRoute(boardID))
 }
@@ -489,6 +497,21 @@ func (c *Client) GetBoard(boardID, readToken string) (*model.Board, *Response) {
 	return model.BoardFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) GetBoardMetadata(boardID, readToken string) (*model.BoardMetadata, *Response) {
+	url := c.GetBoardMetadataRoute(boardID)
+	if readToken != "" {
+		url += fmt.Sprintf("?read_token=%s", readToken)
+	}
+
+	r, err := c.DoAPIGet(url, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardMetadataFromJSON(r.Body), BuildResponse(r)
+}
+
 func (c *Client) GetBoardsForTeam(teamID string) ([]*model.Board, *Response) {
 	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards", "")
 	if err != nil {
@@ -521,6 +544,16 @@ func (c *Client) GetMembersForBoard(boardID string) ([]*model.BoardMember, *Resp
 
 func (c *Client) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, *Response) {
 	r, err := c.DoAPIPost(c.GetBoardRoute(member.BoardID)+"/members", toJSON(member))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardMemberFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) JoinBoard(boardID string) (*model.BoardMember, *Response) {
+	r, err := c.DoAPIPost(c.GetJoinBoardRoute(boardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}

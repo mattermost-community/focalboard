@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import Select, {components, IndicatorProps} from 'react-select'
+import Select, {components, DropdownIndicatorProps} from 'react-select'
 
 import {CSSObject} from '@emotion/serialize'
 
@@ -151,7 +151,7 @@ const styles = {
     }),
 }
 
-const DropdownIndicator = (props: IndicatorProps<Option, false>) => {
+const DropdownIndicator = (props: DropdownIndicatorProps<Option, false>) => {
     return (
         <components.DropdownIndicator {...props}>
             <ChevronUp/>
