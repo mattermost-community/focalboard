@@ -253,23 +253,29 @@ const ViewMenu = (props: Props) => {
                 />))}
             <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                 <Menu.Separator/>
-                {!props.readonly &&
+            </BoardPermissionGate>
+            {!props.readonly &&
+                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                     <Menu.Text
                         id='__duplicateView'
                         name={duplicateViewText}
                         icon={<DuplicateIcon/>}
                         onClick={handleDuplicateView}
                     />
-                }
-                {!props.readonly && views.length > 1 &&
+                </BoardPermissionGate>
+            }
+            {!props.readonly && views.length > 1 &&
+                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                     <Menu.Text
                         id='__deleteView'
                         name={deleteViewText}
                         icon={<DeleteIcon/>}
                         onClick={handleDeleteView}
                     />
-                }
-                {!props.readonly &&
+                </BoardPermissionGate>
+            }
+            {!props.readonly &&
+                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                     <Menu.SubMenu
                         id='__addView'
                         name={addViewText}
@@ -300,8 +306,8 @@ const ViewMenu = (props: Props) => {
                             onClick={handleAddViewCalendar}
                         />
                     </Menu.SubMenu>
-                }
-            </BoardPermissionGate>
+                </BoardPermissionGate>
+            }
         </Menu>
     )
 }
