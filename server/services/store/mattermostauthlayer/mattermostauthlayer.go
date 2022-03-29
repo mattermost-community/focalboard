@@ -54,7 +54,8 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
 		From("Users").
-		Where(sq.Eq{"deleteAt": 0})
+		Where(sq.Eq{"deleteAt": 0}).
+		Where(sq.NotEq{"u.roles": "system_guest"})
 	row := query.QueryRow()
 
 	var count int
@@ -84,10 +85,11 @@ func (s *MattermostAuthLayer) getUserByCondition(condition sq.Eq) (*model.User, 
 func (s *MattermostAuthLayer) getUsersByCondition(condition sq.Eq) (map[string]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("u.id", "u.username", "u.email", "u.password", "u.MFASecret as mfa_secret", "u.AuthService as auth_service", "COALESCE(u.AuthData, '') as auth_data",
-			"u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at", "u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+			"u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at", "u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot'").
 		From("Users as u").
 		LeftJoin("Bots b ON ( b.UserId = u.ID )").
 		Where(sq.Eq{"u.deleteAt": 0}).
+		Where(sq.NotEq{"u.roles": "system_guest"}).
 		Where(condition)
 	row, err := query.Query()
 	if err != nil {
@@ -289,6 +291,7 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 		Join("TeamMembers as tm ON tm.UserID = u.ID").
 		LeftJoin("Bots b ON ( b.UserId = Users.ID )").
 		Where(sq.Eq{"u.deleteAt": 0}).
+		Where(sq.NotEq{"u.roles": "system_guest"}).
 		Where(sq.Eq{"tm.TeamId": teamID})
 
 	rows, err := query.Query()
@@ -320,6 +323,7 @@ func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery strin
 			sq.Like{"u.lastname": "%" + searchQuery + "%"},
 		}).
 		Where(sq.Eq{"tm.TeamId": teamID}).
+		Where(sq.NotEq{"u.roles": "system_guest"}).
 		OrderBy("u.username").
 		Limit(10)
 

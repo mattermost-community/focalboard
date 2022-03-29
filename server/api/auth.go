@@ -458,6 +458,13 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				CreateAt:    now,
 				UpdateAt:    now,
 			}
+
+			_, err := a.app.GetUser(userID)
+			if err != nil {
+				a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", err)
+				return
+			}
+
 			ctx := context.WithValue(r.Context(), sessionContextKey, session)
 			handler(w, r.WithContext(ctx))
 			return
