@@ -164,10 +164,6 @@ func (c *Client) GetBlockRoute(boardID, blockID string) string {
 	return fmt.Sprintf("%s/%s", c.GetBlocksRoute(boardID), blockID)
 }
 
-func (c *Client) GetSubtreeRoute(boardID, blockID string) string {
-	return fmt.Sprintf("%s/subtree", c.GetBlockRoute(boardID, blockID))
-}
-
 func (c *Client) GetBoardsRoute() string {
 	return "/boards"
 }
