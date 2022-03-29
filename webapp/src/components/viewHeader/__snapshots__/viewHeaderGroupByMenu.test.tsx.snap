@@ -403,6 +403,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
         <div
           class="menu-options"
         >
+          <div />
           <div>
             <div
               aria-label="Status"
