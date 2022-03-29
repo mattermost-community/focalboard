@@ -48,8 +48,11 @@ const WelcomePage = () => {
             history.replace(queryString.get('r')!)
             return
         }
-
-        history.replace(`/team/${currentTeam?.id}`)
+        if (currentTeam) {
+            history.replace(`/team/${currentTeam?.id}`)
+        } else {
+            history.replace('/')
+        }
     }
 
     const skipTour = async () => {

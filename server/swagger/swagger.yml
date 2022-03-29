@@ -1979,6 +1979,33 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
+  /boards/{boardID}/join:
+    post:
+      description: Become a member of a board
+      operationId: joinBoard
+      parameters:
+      - description: Board ID
+        in: path
+        name: boardID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/BoardMember'
+        "404":
+          description: board not found
+        "503":
+          description: access denied
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
   /boards/{boardID}/members:
     post:
       description: Adds a new member to a board

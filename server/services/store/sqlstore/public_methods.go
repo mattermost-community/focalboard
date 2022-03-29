@@ -320,6 +320,11 @@ func (s *SQLStore) GetBoardHistory(boardID string, opts model.QueryBlockHistoryO
 
 }
 
+func (s *SQLStore) GetBoardMemberHistory(boardID string, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error) {
+	return s.getBoardMemberHistory(s.db, boardID, userID, limit)
+
+}
+
 func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*model.Board, error) {
 	return s.getBoardsForUserAndTeam(s.db, userID, teamID)
 

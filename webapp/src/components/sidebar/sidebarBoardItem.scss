@@ -160,3 +160,12 @@
         left: calc(240px - 50px);
     }
 }
+
+.team-sidebar + .product-wrapper {
+    .SidebarBoardItem {
+        .Menu.noselect.left {
+            right: calc(100% - 480px - 64px + 50px);
+            left: calc(64px + 240px - 50px);
+        }
+    }
+}

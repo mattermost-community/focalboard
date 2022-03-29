@@ -522,12 +522,20 @@ func testSaveMember(t *testing.T, store store.Store) {
 			SchemeAdmin: true,
 		}
 
+		memberHistory, err := store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		initialMemberHistory := len(memberHistory)
+
 		nbm, err := store.SaveMember(bm)
 		require.NoError(t, err)
 		require.Equal(t, userID, nbm.UserID)
 		require.Equal(t, boardID, nbm.BoardID)
 
 		require.True(t, nbm.SchemeAdmin)
+
+		memberHistory, err = store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		require.Len(t, memberHistory, initialMemberHistory+1)
 	})
 
 	t.Run("should correctly update a member", func(t *testing.T) {
@@ -538,6 +546,10 @@ func testSaveMember(t *testing.T, store store.Store) {
 			SchemeViewer: true,
 		}
 
+		memberHistory, err := store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		initialMemberHistory := len(memberHistory)
+
 		nbm, err := store.SaveMember(bm)
 		require.NoError(t, err)
 		require.Equal(t, userID, nbm.UserID)
@@ -546,6 +558,10 @@ func testSaveMember(t *testing.T, store store.Store) {
 		require.False(t, nbm.SchemeAdmin)
 		require.True(t, nbm.SchemeEditor)
 		require.True(t, nbm.SchemeViewer)
+
+		memberHistory, err = store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		require.Len(t, memberHistory, initialMemberHistory)
 	})
 }
 
@@ -631,7 +647,15 @@ func testDeleteMember(t *testing.T, store store.Store) {
 	boardID := testBoardID
 
 	t.Run("should return nil if deleting a nonexistent member", func(t *testing.T) {
+		memberHistory, err := store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		initialMemberHistory := len(memberHistory)
+
 		require.NoError(t, store.DeleteMember(boardID, userID))
+
+		memberHistory, err = store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		require.Len(t, memberHistory, initialMemberHistory)
 	})
 
 	t.Run("should correctly delete a member", func(t *testing.T) {
@@ -645,11 +669,19 @@ func testDeleteMember(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 		require.NotNil(t, nbm)
 
+		memberHistory, err := store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		initialMemberHistory := len(memberHistory)
+
 		require.NoError(t, store.DeleteMember(boardID, userID))
 
 		rbm, err := store.GetMemberForBoard(boardID, userID)
 		require.ErrorIs(t, err, sql.ErrNoRows)
 		require.Nil(t, rbm)
+
+		memberHistory, err = store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		require.Len(t, memberHistory, initialMemberHistory+1)
 	})
 }
 
