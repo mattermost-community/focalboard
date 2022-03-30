@@ -13,6 +13,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -378,4 +379,8 @@ func mmUserToFbUser(mmUser *mmModel.User) model.User {
 		IsBot:       mmUser.IsBot,
 		IsGuest:     mmUser.IsGuest(),
 	}
+}
+
+func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
+  return s.pluginAPI.GetLicense()
 }

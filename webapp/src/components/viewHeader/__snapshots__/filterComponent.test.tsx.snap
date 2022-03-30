@@ -39,7 +39,7 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
             </span>
           </button>
           <div
-            class="Menu noselect bottom"
+            class="Menu noselect bottom "
           >
             <div
               class="menu-contents"
@@ -230,7 +230,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
             </span>
           </button>
           <div
-            class="Menu noselect bottom"
+            class="Menu noselect bottom "
           >
             <div
               class="menu-contents"
@@ -435,7 +435,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
             </span>
           </button>
           <div
-            class="Menu noselect bottom"
+            class="Menu noselect bottom "
           >
             <div
               class="menu-contents"
@@ -612,7 +612,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
             </span>
           </button>
           <div
-            class="Menu noselect bottom"
+            class="Menu noselect bottom "
           >
             <div
               class="menu-contents"

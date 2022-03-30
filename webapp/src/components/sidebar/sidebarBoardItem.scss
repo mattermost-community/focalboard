@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: row;
     font-weight: 500;
-    padding: 0 16px 0 8px;
+    padding: 0 20px;
     height: 36px;
     align-items: center;
     gap: 8px;
@@ -23,7 +23,7 @@
     }
 
     &.sidebar-view-item {
-        padding-left: 40px;
+        padding-left: 32px;
         color: rgba(var(--sidebar-text-rgb), 0.64);
         font-weight: 400;
     }
@@ -61,7 +61,6 @@
     > .Icon {
         height: 18px;
         width: 18px;
-        margin-right: 8px;
         flex-shrink: 0;
 
         &.GalleryIcon {

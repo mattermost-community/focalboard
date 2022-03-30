@@ -38,7 +38,7 @@ func boardFields(prefix string) []string {
 		"is_template",
 		"template_version",
 		"COALESCE(properties, '{}')",
-		"COALESCE(card_properties, '{}')",
+		"COALESCE(card_properties, '[]')",
 		"COALESCE(column_calculations, '{}')",
 		"create_at",
 		"update_at",
@@ -58,6 +58,31 @@ func boardFields(prefix string) []string {
 		}
 	}
 	return prefixedFields
+}
+
+func boardHistoryFields() []string {
+	fields := []string{
+		"id",
+		"team_id",
+		"COALESCE(channel_id, '')",
+		"COALESCE(created_by, '')",
+		"COALESCE(modified_by, '')",
+		"type",
+		"COALESCE(title, '')",
+		"COALESCE(description, '')",
+		"COALESCE(icon, '')",
+		"COALESCE(show_description, false)",
+		"COALESCE(is_template, false)",
+		"template_version",
+		"COALESCE(properties, '{}')",
+		"COALESCE(card_properties, '[]')",
+		"COALESCE(column_calculations, '{}')",
+		"COALESCE(create_at, 0)",
+		"COALESCE(update_at, 0)",
+		"COALESCE(delete_at, 0)",
+	}
+
+	return fields
 }
 
 var boardMemberFields = []string{
@@ -274,6 +299,8 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	insertQuery := s.getQueryBuilder(db).Insert("").
 		Columns(boardFields("")...)
 
+	now := utils.GetMillis()
+
 	insertQueryValues := map[string]interface{}{
 		"id":                  board.ID,
 		"team_id":             board.TeamID,
@@ -291,11 +318,9 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		"card_properties":     cardPropertiesBytes,
 		"column_calculations": columnCalculationsBytes,
 		"create_at":           board.CreateAt,
-		"update_at":           board.UpdateAt,
+		"update_at":           now,
 		"delete_at":           board.DeleteAt,
 	}
-
-	now := utils.GetMillis()
 
 	if existingBoard != nil {
 		query := s.getQueryBuilder(db).Update(s.tablePrefix+"boards").
@@ -357,29 +382,49 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 
 	board, err := s.getBoard(db, boardID)
 	if err != nil {
-		fmt.Printf("error on get board: %s\n", err)
 		return err
 	}
 
-	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix+"boards_history").
-		Columns(
-			"team_id",
-			"id",
-			"type",
-			"modified_by",
-			"update_at",
-			"delete_at",
-		).
-		Values(
-			board.TeamID,
-			boardID,
-			board.Type,
-			userID,
-			now,
-			now,
-		)
+	propertiesBytes, err := json.Marshal(board.Properties)
+	if err != nil {
+		return err
+	}
+	cardPropertiesBytes, err := json.Marshal(board.CardProperties)
+	if err != nil {
+		return err
+	}
+	columnCalculationsBytes, err := json.Marshal(board.ColumnCalculations)
+	if err != nil {
+		return err
+	}
 
-	if _, err := insertQuery.Exec(); err != nil {
+	insertQueryValues := map[string]interface{}{
+		"id":                  board.ID,
+		"team_id":             board.TeamID,
+		"channel_id":          board.ChannelID,
+		"created_by":          board.CreatedBy,
+		"modified_by":         userID,
+		"type":                board.Type,
+		"title":               board.Title,
+		"description":         board.Description,
+		"icon":                board.Icon,
+		"show_description":    board.ShowDescription,
+		"is_template":         board.IsTemplate,
+		"template_version":    board.TemplateVersion,
+		"properties":          propertiesBytes,
+		"card_properties":     cardPropertiesBytes,
+		"column_calculations": columnCalculationsBytes,
+		"create_at":           board.CreateAt,
+		"update_at":           now,
+		"delete_at":           now,
+	}
+
+	// writing board history
+	insertQuery := s.getQueryBuilder(db).Insert("").
+		Columns(boardHistoryFields()...)
+
+	query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "boards_history")
+	if _, err := query.Exec(); err != nil {
 		return err
 	}
 
@@ -598,6 +643,40 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error(`searchBoardsForUserAndTeam ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.boardsFromRows(rows)
+}
+
+func (s *SQLStore) getBoardHistory(db sq.BaseRunner, boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error) {
+	var order string
+	if opts.Descending {
+		order = " DESC "
+	}
+
+	query := s.getQueryBuilder(db).
+		Select(boardHistoryFields()...).
+		From(s.tablePrefix + "boards_history").
+		Where(sq.Eq{"id": boardID}).
+		OrderBy("insert_at " + order + ", update_at" + order)
+
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
+	}
+
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getBoardHistory ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
