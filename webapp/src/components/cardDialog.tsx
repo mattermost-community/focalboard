@@ -13,6 +13,7 @@ import {getCardContents} from '../store/contents'
 import {useAppSelector} from '../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
+import CompassIcon from '../widgets/icons/compassIcon'
 import DeleteIcon from '../widgets/icons/delete'
 import LinkIcon from '../widgets/icons/Link'
 import Menu from '../widgets/menu'
@@ -137,6 +138,10 @@ const CardDialog = (props: Props): JSX.Element => {
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                     <Menu.Text
                         id='makeTemplate'
+                        icon={
+                            <CompassIcon
+                                icon='plus'
+                            />}
                         name='New template from card'
                         onClick={makeTemplateClicked}
                     />

@@ -1,7 +1,9 @@
 package integrationtests
 
 import (
+	"encoding/json"
 	"testing"
+	"time"
 
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/model"
@@ -465,6 +467,185 @@ func TestGetBoard(t *testing.T) {
 		rBoard, resp := th.Client.GetBoard(board.ID, "")
 		th.CheckOK(resp)
 		require.NotNil(t, rBoard)
+	})
+}
+
+func TestGetBoardMetadata(t *testing.T) {
+	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
+		th := SetupTestHelperWithLicense(t, LicenseEnterprise).InitBasic()
+		defer th.TearDown()
+		th.Logout(th.Client)
+
+		boardMetadata, resp := th.Client.GetBoardMetadata("boar-id", "")
+		th.CheckUnauthorized(resp)
+		require.Nil(t, boardMetadata)
+	})
+
+	t.Run("getBoardMetadata query is correct", func(t *testing.T) {
+		th := SetupTestHelperWithLicense(t, LicenseEnterprise).InitBasic()
+		defer th.TearDown()
+		th.Server.Config().EnablePublicSharedBoards = true
+
+		teamID := testTeamID
+
+		board := &model.Board{
+			Title:  "public board where user1 is admin",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		rBoard, err := th.Server.App().CreateBoard(board, th.GetUser1().ID, true)
+		require.NoError(t, err)
+
+		// Check metadata
+		boardMetadata, resp := th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckOK(resp)
+		require.NotNil(t, boardMetadata)
+
+		require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
+		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
+		require.Equal(t, rBoard.UpdateAt, boardMetadata.DescendantLastUpdateAt)
+		require.Equal(t, rBoard.ModifiedBy, boardMetadata.LastModifiedBy)
+
+		// Insert card1
+		card1 := model.Block{
+			ID:      "card1",
+			BoardID: rBoard.ID,
+			Title:   "Card 1",
+		}
+		time.Sleep(20 * time.Millisecond)
+		require.NoError(t, th.Server.App().InsertBlock(card1, th.GetUser2().ID))
+		rCard1, err := th.Server.App().GetBlockByID(card1.ID)
+		require.NoError(t, err)
+
+		// Check updated metadata
+		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckOK(resp)
+		require.NotNil(t, boardMetadata)
+
+		require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
+		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
+		require.Equal(t, rCard1.UpdateAt, boardMetadata.DescendantLastUpdateAt)
+		require.Equal(t, rCard1.ModifiedBy, boardMetadata.LastModifiedBy)
+
+		// Insert card2
+		card2 := model.Block{
+			ID:      "card2",
+			BoardID: rBoard.ID,
+			Title:   "Card 2",
+		}
+		time.Sleep(20 * time.Millisecond)
+		require.NoError(t, th.Server.App().InsertBlock(card2, th.GetUser1().ID))
+		rCard2, err := th.Server.App().GetBlockByID(card2.ID)
+		require.NoError(t, err)
+
+		// Check updated metadata
+		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckOK(resp)
+		require.NotNil(t, boardMetadata)
+		require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
+		require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
+		require.Equal(t, rCard2.UpdateAt, boardMetadata.DescendantLastUpdateAt)
+		require.Equal(t, rCard2.ModifiedBy, boardMetadata.LastModifiedBy)
+
+		t.Run("After delete board", func(t *testing.T) {
+			// Delete board
+			time.Sleep(20 * time.Millisecond)
+			require.NoError(t, th.Server.App().DeleteBoard(rBoard.ID, th.GetUser1().ID))
+
+			// Check updated metadata
+			boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, boardMetadata)
+			require.Equal(t, rBoard.CreatedBy, boardMetadata.CreatedBy)
+			require.Equal(t, rBoard.CreateAt, boardMetadata.DescendantFirstUpdateAt)
+			require.Greater(t, boardMetadata.DescendantLastUpdateAt, rCard2.UpdateAt)
+			require.Equal(t, th.GetUser1().ID, boardMetadata.LastModifiedBy)
+		})
+	})
+
+	t.Run("getBoardMetadata should fail with no license", func(t *testing.T) {
+		th := SetupTestHelperWithLicense(t, LicenseNone).InitBasic()
+		defer th.TearDown()
+		th.Server.Config().EnablePublicSharedBoards = true
+
+		teamID := testTeamID
+
+		board := &model.Board{
+			Title:  "public board where user1 is admin",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		rBoard, err := th.Server.App().CreateBoard(board, th.GetUser1().ID, true)
+		require.NoError(t, err)
+
+		// Check metadata
+		boardMetadata, resp := th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckNotImplemented(resp)
+		require.Nil(t, boardMetadata)
+	})
+
+	t.Run("getBoardMetadata should fail on Professional license", func(t *testing.T) {
+		th := SetupTestHelperWithLicense(t, LicenseProfessional).InitBasic()
+		defer th.TearDown()
+		th.Server.Config().EnablePublicSharedBoards = true
+
+		teamID := testTeamID
+
+		board := &model.Board{
+			Title:  "public board where user1 is admin",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		rBoard, err := th.Server.App().CreateBoard(board, th.GetUser1().ID, true)
+		require.NoError(t, err)
+
+		// Check metadata
+		boardMetadata, resp := th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckNotImplemented(resp)
+		require.Nil(t, boardMetadata)
+	})
+
+	t.Run("valid read token should not get the board metadata", func(t *testing.T) {
+		th := SetupTestHelperWithLicense(t, LicenseEnterprise).InitBasic()
+		defer th.TearDown()
+		th.Server.Config().EnablePublicSharedBoards = true
+
+		teamID := testTeamID
+		sharingToken := utils.NewID(utils.IDTypeToken)
+		userID := th.GetUser1().ID
+
+		board := &model.Board{
+			Title:  "public board where user1 is admin",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		rBoard, err := th.Server.App().CreateBoard(board, userID, true)
+		require.NoError(t, err)
+
+		sharing := &model.Sharing{
+			ID:       rBoard.ID,
+			Enabled:  true,
+			Token:    sharingToken,
+			UpdateAt: 1,
+		}
+
+		success, resp := th.Client.PostSharing(sharing)
+		th.CheckOK(resp)
+		require.True(t, success)
+
+		// the client logs out
+		th.Logout(th.Client)
+
+		// we make sure that the client cannot currently retrieve the
+		// board with no session
+		boardMetadata, resp := th.Client.GetBoardMetadata(rBoard.ID, "")
+		th.CheckUnauthorized(resp)
+		require.Nil(t, boardMetadata)
+
+		// it should not be able to retrieve it with the read token either
+		boardMetadata, resp = th.Client.GetBoardMetadata(rBoard.ID, sharingToken)
+		th.CheckUnauthorized(resp)
+		require.Nil(t, boardMetadata)
 	})
 }
 
@@ -1266,5 +1447,130 @@ func TestDeleteMember(t *testing.T) {
 		require.NoError(t, err)
 		require.Len(t, members, 1)
 		require.True(t, members[0].SchemeAdmin)
+	})
+}
+
+func TestGetTemplates(t *testing.T) {
+	t.Run("should be able to retrieve built-in templates", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		teamID := "my-team-id"
+		rBoards, resp := th.Client.GetTemplatesForTeam("0")
+		th.CheckOK(resp)
+		require.NotNil(t, rBoards)
+		require.GreaterOrEqual(t, len(rBoards), 6)
+
+		t.Log("\n\n")
+		for _, board := range rBoards {
+			t.Logf("Test get template: %s - %s\n", board.Title, board.ID)
+			rBoard, resp := th.Client.GetBoard(board.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, rBoard)
+			require.Equal(t, board, rBoard)
+
+			rBlocks, resp := th.Client.GetAllBlocksForBoard(board.ID)
+			th.CheckOK(resp)
+			require.NotNil(t, rBlocks)
+			require.Greater(t, len(rBlocks), 0)
+			t.Logf("Got %d block(s)\n", len(rBlocks))
+
+			rBoardsAndBlock, resp := th.Client.DuplicateBoard(board.ID, false, teamID)
+			th.CheckOK(resp)
+			require.NotNil(t, rBoardsAndBlock)
+			require.Greater(t, len(rBoardsAndBlock.Boards), 0)
+			require.Greater(t, len(rBoardsAndBlock.Blocks), 0)
+
+			rBoard2 := rBoardsAndBlock.Boards[0]
+			require.Contains(t, board.Title, rBoard2.Title)
+			require.False(t, rBoard2.IsTemplate)
+
+			t.Logf("Duplicate template: %s - %s, %d block(s)\n", rBoard2.Title, rBoard2.ID, len(rBoardsAndBlock.Blocks))
+			rBoard3, resp := th.Client.GetBoard(rBoard2.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, rBoard3)
+			require.Equal(t, rBoard2, rBoard3)
+
+			rBlocks2, resp := th.Client.GetAllBlocksForBoard(rBoard2.ID)
+			th.CheckOK(resp)
+			require.NotNil(t, rBlocks2)
+			require.Equal(t, len(rBoardsAndBlock.Blocks), len(rBlocks2))
+		}
+		t.Log("\n\n")
+	})
+}
+
+func TestJoinBoard(t *testing.T) {
+	t.Run("create and join public board", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "Public board"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:  title,
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypeOpen, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+
+		member, resp := th.Client2.JoinBoard(board.ID)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, member)
+		require.Equal(t, board.ID, member.BoardID)
+		require.Equal(t, th.GetUser2().ID, member.UserID)
+
+		s, _ := json.MarshalIndent(member, "", "\t")
+		t.Log(string(s))
+	})
+
+	t.Run("create and join private board (should not succeed)", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "Private board"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:  title,
+			Type:   model.BoardTypePrivate,
+			TeamID: teamID,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypePrivate, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+
+		member, resp := th.Client2.JoinBoard(board.ID)
+		th.CheckForbidden(resp)
+		require.Nil(t, member)
+	})
+
+	t.Run("join invalid board", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		member, resp := th.Client2.JoinBoard("nonexistent-board-ID")
+		th.CheckNotFound(resp)
+		require.Nil(t, member)
 	})
 }

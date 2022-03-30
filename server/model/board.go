@@ -168,6 +168,30 @@ type BoardMember struct {
 	SchemeViewer bool `json:"schemeViewer"`
 }
 
+// BoardMetadata contains metadata for a Board
+// swagger:model
+type BoardMetadata struct {
+	// The ID for the board
+	// required: true
+	BoardID string `json:"boardId"`
+
+	// The most recent time a descendant of this board was added, modified, or deleted
+	// required: true
+	DescendantLastUpdateAt int64 `json:"descendantLastUpdateAt"`
+
+	// The earliest time a descendant of this board was added, modified, or deleted
+	// required: true
+	DescendantFirstUpdateAt int64 `json:"descendantFirstUpdateAt"`
+
+	// The ID of the user that created the board
+	// required: true
+	CreatedBy string `json:"createdBy"`
+
+	// The ID of the user that last modified the most recently modified descendant
+	// required: true
+	LastModifiedBy string `json:"lastModifiedBy"`
+}
+
 func BoardFromJSON(data io.Reader) *Board {
 	var board *Board
 	_ = json.NewDecoder(data).Decode(&board)
@@ -190,6 +214,12 @@ func BoardMembersFromJSON(data io.Reader) []*BoardMember {
 	var boardMembers []*BoardMember
 	_ = json.NewDecoder(data).Decode(&boardMembers)
 	return boardMembers
+}
+
+func BoardMetadataFromJSON(data io.Reader) *BoardMetadata {
+	var boardMetadata *BoardMetadata
+	_ = json.NewDecoder(data).Decode(&boardMetadata)
+	return boardMetadata
 }
 
 // Patch returns an updated version of the board.
@@ -310,4 +340,24 @@ func (b *Board) IsValid() error {
 		return InvalidBoardErr{"invalid-board-type"}
 	}
 	return nil
+}
+
+// BoardMemberHistoryEntry stores the information of the membership of a user on a board
+// swagger:model
+type BoardMemberHistoryEntry struct {
+	// The ID of the board
+	// required: true
+	BoardID string `json:"boardId"`
+
+	// The ID of the user
+	// required: true
+	UserID string `json:"userId"`
+
+	// The action that added this history entry (created or deleted)
+	// required: false
+	Action string `json:"action"`
+
+	// The insertion time
+	// required: true
+	InsertAt int64 `json:"insertAt"`
 }

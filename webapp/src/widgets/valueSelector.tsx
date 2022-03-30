@@ -2,7 +2,8 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 import {useIntl} from 'react-intl'
-import {ActionMeta, FormatOptionLabelMeta, ValueType} from 'react-select'
+import {ActionMeta, OnChangeValue} from 'react-select'
+import {FormatOptionLabelMeta} from 'react-select/base'
 import CreatableSelect from 'react-select/creatable'
 
 import {CSSObject} from '@emotion/serialize'
@@ -37,7 +38,7 @@ type Props = {
 
 type LabelProps = {
     option: IPropertyOption
-    meta: FormatOptionLabelMeta<IPropertyOption, true | false>
+    meta: FormatOptionLabelMeta<IPropertyOption>
     onChangeColor: (option: IPropertyOption, color: string) => void
     onDeleteOption: (option: IPropertyOption) => void
     onDeleteValue?: (value: IPropertyOption) => void
@@ -163,7 +164,7 @@ function ValueSelector(props: Props): JSX.Element {
             isMulti={props.isMulti}
             isClearable={true}
             styles={valueSelectorStyle}
-            formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption, true | false>) => (
+            formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption>) => (
                 <ValueSelectorLabel
                     option={option}
                     meta={meta}
@@ -178,7 +179,7 @@ function ValueSelector(props: Props): JSX.Element {
             options={props.options}
             getOptionLabel={(o: IPropertyOption) => o.value}
             getOptionValue={(o: IPropertyOption) => o.id}
-            onChange={(value: ValueType<IPropertyOption, true | false>, action: ActionMeta<IPropertyOption>): void => {
+            onChange={(value: OnChangeValue<IPropertyOption, true | false>, action: ActionMeta<IPropertyOption>): void => {
                 if (action.action === 'select-option') {
                     if (Array.isArray(value)) {
                         props.onChange((value as IPropertyOption[]).map((option) => option.id))

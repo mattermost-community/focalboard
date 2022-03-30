@@ -18,7 +18,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
         />
       </div>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -323,7 +323,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
         />
       </div>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -843,7 +843,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
         />
       </div>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"

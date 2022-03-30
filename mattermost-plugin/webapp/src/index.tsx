@@ -189,8 +189,11 @@ export default class Plugin {
             if (currentTeamID && currentTeamID !== prevTeamID) {
                 prevTeamID = currentTeamID
                 store.dispatch(setTeam(currentTeamID))
-                browserHistory.push(`/team/${currentTeamID}`)
-                wsClient.subscribeToTeam(currentTeamID)
+                if (window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
+                    console.log("REDIRECTING HERE")
+                    browserHistory.push(`/team/${currentTeamID}`)
+                    wsClient.subscribeToTeam(currentTeamID)
+                }
             }
         })
 
