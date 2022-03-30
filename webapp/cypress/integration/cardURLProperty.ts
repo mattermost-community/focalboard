@@ -97,7 +97,7 @@ describe('Card URL Property', () => {
     const addView = (type: ViewType) => {
         cy.log(`**Add ${type} view**`)
         cy.findByRole('button', {name: 'View menu'}).click()
-        cy.findByText('Add view').click()
+        cy.findByText('Add view').realHover()
         cy.findByRole('button', {name: type}).click()
         cy.findByRole('textbox', {name: `${type} view`}).should('exist')
     }

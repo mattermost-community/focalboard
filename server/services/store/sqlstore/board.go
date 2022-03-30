@@ -38,7 +38,7 @@ func boardFields(prefix string) []string {
 		"is_template",
 		"template_version",
 		"COALESCE(properties, '{}')",
-		"COALESCE(card_properties, '{}')",
+		"COALESCE(card_properties, '[]')",
 		"COALESCE(column_calculations, '{}')",
 		"create_at",
 		"update_at",
@@ -58,6 +58,31 @@ func boardFields(prefix string) []string {
 		}
 	}
 	return prefixedFields
+}
+
+func boardHistoryFields() []string {
+	fields := []string{
+		"id",
+		"team_id",
+		"COALESCE(channel_id, '')",
+		"COALESCE(created_by, '')",
+		"COALESCE(modified_by, '')",
+		"type",
+		"COALESCE(title, '')",
+		"COALESCE(description, '')",
+		"COALESCE(icon, '')",
+		"COALESCE(show_description, false)",
+		"COALESCE(is_template, false)",
+		"template_version",
+		"COALESCE(properties, '{}')",
+		"COALESCE(card_properties, '[]')",
+		"COALESCE(column_calculations, '{}')",
+		"COALESCE(create_at, 0)",
+		"COALESCE(update_at, 0)",
+		"COALESCE(delete_at, 0)",
+	}
+
+	return fields
 }
 
 var boardMemberFields = []string{
@@ -149,6 +174,28 @@ func (s *SQLStore) boardMembersFromRows(rows *sql.Rows) ([]*model.BoardMember, e
 	}
 
 	return boardMembers, nil
+}
+
+func (s *SQLStore) boardMemberHistoryEntriesFromRows(rows *sql.Rows) ([]*model.BoardMemberHistoryEntry, error) {
+	boardMemberHistoryEntries := []*model.BoardMemberHistoryEntry{}
+
+	for rows.Next() {
+		var boardMemberHistoryEntry model.BoardMemberHistoryEntry
+
+		err := rows.Scan(
+			&boardMemberHistoryEntry.BoardID,
+			&boardMemberHistoryEntry.UserID,
+			&boardMemberHistoryEntry.Action,
+			&boardMemberHistoryEntry.InsertAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		boardMemberHistoryEntries = append(boardMemberHistoryEntries, &boardMemberHistoryEntry)
+	}
+
+	return boardMemberHistoryEntries, nil
 }
 
 func (s *SQLStore) getBoardByCondition(db sq.BaseRunner, conditions ...interface{}) (*model.Board, error) {
@@ -252,6 +299,8 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	insertQuery := s.getQueryBuilder(db).Insert("").
 		Columns(boardFields("")...)
 
+	now := utils.GetMillis()
+
 	insertQueryValues := map[string]interface{}{
 		"id":                  board.ID,
 		"team_id":             board.TeamID,
@@ -269,11 +318,9 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		"card_properties":     cardPropertiesBytes,
 		"column_calculations": columnCalculationsBytes,
 		"create_at":           board.CreateAt,
-		"update_at":           board.UpdateAt,
+		"update_at":           now,
 		"delete_at":           board.DeleteAt,
 	}
-
-	now := utils.GetMillis()
 
 	if existingBoard != nil {
 		query := s.getQueryBuilder(db).Update(s.tablePrefix+"boards").
@@ -335,29 +382,49 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 
 	board, err := s.getBoard(db, boardID)
 	if err != nil {
-		fmt.Printf("error on get board: %s\n", err)
 		return err
 	}
 
-	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix+"boards_history").
-		Columns(
-			"team_id",
-			"id",
-			"type",
-			"modified_by",
-			"update_at",
-			"delete_at",
-		).
-		Values(
-			board.TeamID,
-			boardID,
-			board.Type,
-			userID,
-			now,
-			now,
-		)
+	propertiesBytes, err := json.Marshal(board.Properties)
+	if err != nil {
+		return err
+	}
+	cardPropertiesBytes, err := json.Marshal(board.CardProperties)
+	if err != nil {
+		return err
+	}
+	columnCalculationsBytes, err := json.Marshal(board.ColumnCalculations)
+	if err != nil {
+		return err
+	}
 
-	if _, err := insertQuery.Exec(); err != nil {
+	insertQueryValues := map[string]interface{}{
+		"id":                  board.ID,
+		"team_id":             board.TeamID,
+		"channel_id":          board.ChannelID,
+		"created_by":          board.CreatedBy,
+		"modified_by":         userID,
+		"type":                board.Type,
+		"title":               board.Title,
+		"description":         board.Description,
+		"icon":                board.Icon,
+		"show_description":    board.ShowDescription,
+		"is_template":         board.IsTemplate,
+		"template_version":    board.TemplateVersion,
+		"properties":          propertiesBytes,
+		"card_properties":     cardPropertiesBytes,
+		"column_calculations": columnCalculationsBytes,
+		"create_at":           board.CreateAt,
+		"update_at":           now,
+		"delete_at":           now,
+	}
+
+	// writing board history
+	insertQuery := s.getQueryBuilder(db).Insert("").
+		Columns(boardHistoryFields()...)
+
+	query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "boards_history")
+	if _, err := query.Exec(); err != nil {
 		return err
 	}
 
@@ -405,6 +472,11 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 		"scheme_viewer":    bm.SchemeViewer,
 	}
 
+	oldMember, err := s.getMemberForBoard(db, bm.BoardID, bm.UserID)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
+
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix + "board_members").
 		SetMap(queryValues)
@@ -425,6 +497,17 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 		return nil, err
 	}
 
+	if oldMember == nil {
+		addToMembersHistory := s.getQueryBuilder(db).
+			Insert(s.tablePrefix+"board_members_history").
+			Columns("board_id", "user_id", "action", "insert_at").
+			Values(bm.BoardID, bm.UserID, "created", model.GetMillis())
+
+		if _, err := addToMembersHistory.Exec(); err != nil {
+			return nil, err
+		}
+	}
+
 	return bm, nil
 }
 
@@ -434,8 +517,25 @@ func (s *SQLStore) deleteMember(db sq.BaseRunner, boardID, userID string) error 
 		Where(sq.Eq{"board_id": boardID}).
 		Where(sq.Eq{"user_id": userID})
 
-	if _, err := deleteQuery.Exec(); err != nil {
+	result, err := deleteQuery.Exec()
+	if err != nil {
 		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected > 0 {
+		addToMembersHistory := s.getQueryBuilder(db).
+			Insert(s.tablePrefix+"board_members_history").
+			Columns("board_id", "user_id", "action", "insert_at").
+			Values(boardID, userID, "deleted", model.GetMillis())
+
+		if _, err := addToMembersHistory.Exec(); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -548,4 +648,65 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 	defer s.CloseRows(rows)
 
 	return s.boardsFromRows(rows)
+}
+
+func (s *SQLStore) getBoardHistory(db sq.BaseRunner, boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error) {
+	var order string
+	if opts.Descending {
+		order = " DESC "
+	}
+
+	query := s.getQueryBuilder(db).
+		Select(boardHistoryFields()...).
+		From(s.tablePrefix + "boards_history").
+		Where(sq.Eq{"id": boardID}).
+		OrderBy("insert_at " + order + ", update_at" + order)
+
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
+	}
+
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getBoardHistory ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.boardsFromRows(rows)
+}
+
+func (s *SQLStore) getBoardMemberHistory(db sq.BaseRunner, boardID, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error) {
+	query := s.getQueryBuilder(db).
+		Select("board_id", "user_id", "action", "insert_at").
+		From(s.tablePrefix + "board_members_history").
+		Where(sq.Eq{"board_id": boardID}).
+		Where(sq.Eq{"user_id": userID}).
+		OrderBy("insert_at DESC")
+
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getBoardMemberHistory ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	memberHistory, err := s.boardMemberHistoryEntriesFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return memberHistory, nil
 }
