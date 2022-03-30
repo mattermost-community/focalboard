@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {useHistory, Link} from 'react-router-dom'
+import {useHistory, Link, Redirect} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
 import {useAppDispatch, useAppSelector} from '../store/hooks'
@@ -39,8 +39,7 @@ const RegisterPage = () => {
     }
 
     if (loggedIn) {
-        history.replace('/')
-        return null
+        return <Redirect to={'/'}/>
     }
 
     return (
