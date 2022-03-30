@@ -265,9 +265,9 @@ func (a *App) blockToBoard(block *model.Block, opt model.ImportArchiveOptions) (
 		CreateAt:           block.CreateAt,
 		UpdateAt:           block.UpdateAt,
 		DeleteAt:           block.DeleteAt,
-		Properties:         make(map[string]interface{}, 0),
+		Properties:         make(map[string]interface{}),
 		CardProperties:     make([]map[string]interface{}, 0),
-		ColumnCalculations: make(map[string]interface{}, 0),
+		ColumnCalculations: make(map[string]interface{}),
 	}
 
 	if icon, ok := stringValue(block.Fields, "icon"); ok {
