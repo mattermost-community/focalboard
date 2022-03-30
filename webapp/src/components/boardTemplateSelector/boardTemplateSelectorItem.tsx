@@ -31,6 +31,8 @@ const BoardTemplateSelectorItem = (props: Props) => {
         onEdit(template.id)
     }, [onEdit, template])
 
+    console.log(`Template Metadata: name: ${template.title} template version: ${template.templateVersion}`)
+
     return (
         <div
             className={isActive ? 'BoardTemplateSelectorItem active' : 'BoardTemplateSelectorItem'}

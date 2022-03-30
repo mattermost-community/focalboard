@@ -60,15 +60,6 @@ const SidebarCategory = (props: Props) => {
     const teamID = team?.id || ''
 
     const showBoard = useCallback((boardId) => {
-        // // if the same board, reuse the match params
-        // // otherwise remove viewId and cardId, results in first view being selected
-        // const params = {...match.params, boardId: boardId || ''}
-        // if (boardId !== match.params.boardId) {
-        //     params.viewId = undefined
-        //     params.cardId = undefined
-        // }
-        // const newPath = generatePath(match.path, params)
-        // history.push(newPath)
         Utils.showBoard(boardId, match, history)
         props.hideSidebar()
     }, [match, history])

@@ -1014,7 +1014,7 @@ class Mutator {
         afterRedo?: (newBoardId: string) => Promise<void>,
         beforeUndo?: () => Promise<void>,
         toTeam?: string,
-    ): Promise<[Block[], string]> {
+    ): Promise<BoardsAndBlocks> {
         return undoManager.perform(
             async () => {
                 const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate, toTeam)

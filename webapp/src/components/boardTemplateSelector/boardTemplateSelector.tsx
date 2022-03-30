@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState, useCallback, useMemo} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+import {useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -22,6 +22,8 @@ import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
 import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
 import {getMe, patchProps} from '../../store/users'
 import {BaseTourSteps, TOUR_BASE} from '../onboardingTour'
+
+import {Utils} from "../../utils"
 
 import BoardTemplateSelectorPreview from './boardTemplateSelectorPreview'
 import BoardTemplateSelectorItem from './boardTemplateSelectorItem'
@@ -44,10 +46,7 @@ const BoardTemplateSelector = (props: Props) => {
     const me = useAppSelector<IUser|null>(getMe)
 
     const showBoard = useCallback(async (boardId) => {
-        const params = {...match.params, boardId: boardId || ''}
-        delete params.viewId
-        const newPath = generatePath(match.path, params)
-        history.push(newPath)
+        Utils.showBoard(boardId, match, history)
         if (onClose) {
             onClose()
         }
