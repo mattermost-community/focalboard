@@ -15,6 +15,7 @@ import textInputOption from './textInputOption'
 type Props = {
     children: React.ReactNode
     position?: 'top' | 'bottom' | 'left' | 'right'
+    fixed?: boolean
 }
 
 export default class Menu extends React.PureComponent<Props> {
@@ -31,9 +32,9 @@ export default class Menu extends React.PureComponent<Props> {
     }
 
     public render(): JSX.Element {
-        const {position, children} = this.props
+        const {position, fixed, children} = this.props
         return (
-            <div className={'Menu noselect ' + (position || 'bottom')}>
+            <div className={`Menu noselect ${position || 'bottom'} ${fixed ? ' fixed' : ''}`}>
                 <div className='menu-contents'>
                     <div className='menu-options'>
                         {React.Children.map(children, (child) => (

@@ -19,7 +19,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
         </span>
       </button>
       <div
-        class="Menu noselect top"
+        class="Menu noselect top "
       >
         <div
           class="menu-contents"
@@ -178,7 +178,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
         </span>
       </button>
       <div
-        class="Menu noselect top"
+        class="Menu noselect top "
       >
         <div
           class="menu-contents"
