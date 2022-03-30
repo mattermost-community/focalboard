@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 
 import SubmenuTriangleIcon from '../icons/submenuTriangle'
 
@@ -8,25 +8,27 @@ import Menu from '.'
 
 import './subMenuOption.scss'
 
+export const HoveringContext = React.createContext(false)
+
 type SubMenuOptionProps = {
     id: string
     name: string
     position?: 'bottom' | 'top' | 'left' | 'left-bottom'
     icon?: React.ReactNode
     children: React.ReactNode
-    isHovering?: boolean
 }
 
 function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
     const [isOpen, setIsOpen] = useState(false)
+    const isHovering = useContext(HoveringContext)
 
     const openLeftClass = props.position === 'left' || props.position === 'left-bottom' ? ' open-left' : ''
 
     useEffect(() => {
-        if (props.isHovering !== undefined) {
-            setIsOpen(props.isHovering)
+        if (isHovering !== undefined) {
+            setIsOpen(isHovering)
         }
-    }, [props.isHovering])
+    }, [isHovering])
 
     return (
         <div

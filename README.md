@@ -63,7 +63,7 @@ To run the server:
  ./bin/focalboard-server
 ```
 
-Then navigate your browser to `[http://localhost:8000](http://localhost:8000)` to access your Focalboard server. The port is configured in `config.json`.
+Then navigate your browser to [`http://localhost:8000`](http://localhost:8000) to access your Focalboard server. The port is configured in `config.json`.
 
 Once the server is running, you can rebuild just the web app via `make webapp` in a separate terminal window. Reload your browser to see the changes.
 
@@ -115,7 +115,7 @@ Help translate Focalboard! The app is already translated into several languages.
 
 Are you interested in influencing the future of the Focalboard open source project? Here's how you can get involved:
 
-* **Changelog**: See [CHANGELOG.md](CHANGELOG.md) for the latest updates
+* **Changes**: See the [CHANGELOG](CHANGELOG.md) for the latest updates
 * **GitHub Discussions**: Join the [Developer Discussion](https://github.com/mattermost/focalboard/discussions) board
 * **Bug Reports**: [File a bug report](https://github.com/mattermost/focalboard/issues/new?assignees=&labels=bug&template=bug_report.md&title=)
 * **Chat**: Join the [Focalboard community channel](https://community.mattermost.com/core/channels/focalboard)

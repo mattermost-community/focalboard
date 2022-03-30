@@ -89,6 +89,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/undelete", a.sessionRequired(a.handleUndeleteBlock)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.attachSession(a.handleDuplicateBlock, false)).Methods("POST")
+	apiv1.HandleFunc("/boards/{boardID}/metadata", a.sessionRequired(a.handleGetBoardMetadata)).Methods("GET")
 
 	// Import&Export APIs
 	apiv1.HandleFunc("/boards/{boardID}/blocks/export", a.sessionRequired(a.handleExport)).Methods("GET")
@@ -2962,6 +2963,81 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data, err := json.Marshal(blocks)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.Success()
+}
+
+func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v1/boards/{boardID}/metadata getBoardMetadata
+	//
+	// Returns a board's metadata
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: boardID
+	//   in: path
+	//   description: Board ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/BoardMetadata"
+	//   '404':
+	//     description: board not found
+	//   '501':
+	//     description: required license not found
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	boardID := mux.Vars(r)["boardID"]
+	userID := getUserID(r)
+
+	board, boardMetadata, err := a.app.GetBoardMetadata(boardID)
+	if errors.Is(err, app.ErrInsufficientLicense) {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", err)
+		return
+	}
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if board == nil || boardMetadata == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if board.Type == model.BoardTypePrivate {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			return
+		}
+	} else {
+		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			return
+		}
+	}
+
+	auditRec := a.makeAuditRecord(r, "getBoardMetadata", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+
+	data, err := json.Marshal(boardMetadata)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

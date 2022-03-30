@@ -4,9 +4,7 @@ Thank you for your interest in contributing! Please read the [Focalboard Contrib
 
 When you submit a pull request, it goes through a code review process outlined [here](https://developers.mattermost.com/contribute/getting-started/code-review/).
 
-## Updating Changelog
-
-After a noteable bug fix or improvement is merged, submit a pull request to the [CHANGELOG.md](https://github.com/mattermost/focalboard/blob/main/CHANGELOG.md) under the next release section.
+After a noteable bug fix or improvement is merged, submit a pull request to the [CHANGELOG](CHANGELOG.md) under the next release section.
 
 ## Bug Reports
 
