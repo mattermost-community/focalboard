@@ -18,6 +18,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -269,6 +270,11 @@ func (s *SQLStore) GetBlockHistory(blockID string, opts model.QueryBlockHistoryO
 
 }
 
+func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	return s.getBlockHistoryDescendants(s.db, boardID, opts)
+
+}
+
 func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 	return s.getBlocksForBoard(s.db, boardID)
 
@@ -309,6 +315,11 @@ func (s *SQLStore) GetBoardAndCardByID(blockID string) (*model.Board, *model.Blo
 
 }
 
+func (s *SQLStore) GetBoardHistory(boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error) {
+	return s.getBoardHistory(s.db, boardID, opts)
+
+}
+
 func (s *SQLStore) GetBoardMemberHistory(boardID string, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error) {
 	return s.getBoardMemberHistory(s.db, boardID, userID, limit)
 
@@ -321,6 +332,11 @@ func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*mod
 
 func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
 	return s.getCategory(s.db, id)
+
+}
+
+func (s *SQLStore) GetLicense() *mmModel.License {
+	return s.getLicense(s.db)
 
 }
 
