@@ -8,7 +8,7 @@ import {Utils} from './utils'
 export enum UserSettingKey {
     Language = 'language',
     Theme = 'theme',
-    LastWorkspaceId = 'lastWorkspaceId',
+    LastTeamId = 'lastTeamId',
     LastBoardId = 'lastBoardId',
     LastViewId = 'lastViewId',
     EmojiMartSkin = 'emoji-mart.skin',
@@ -17,7 +17,6 @@ export enum UserSettingKey {
     RandomIcons = 'randomIcons',
     MobileWarningClosed = 'mobileWarningClosed',
     WelcomePageViewed = 'welcomePageViewed',
-    DashboardShowEmpty = 'dashboardShowEmpty'
 }
 
 export class UserSettings {
@@ -53,28 +52,70 @@ export class UserSettings {
         UserSettings.set(UserSettingKey.Theme, newValue)
     }
 
-    static get lastWorkspaceId(): string | null {
-        return UserSettings.get(UserSettingKey.LastWorkspaceId)
+    static get lastTeamId(): string | null {
+        return UserSettings.get(UserSettingKey.LastTeamId)
     }
 
-    static set lastWorkspaceId(newValue: string | null) {
-        UserSettings.set(UserSettingKey.LastWorkspaceId, newValue)
+    static set lastTeamId(newValue: string | null) {
+        UserSettings.set(UserSettingKey.LastTeamId, newValue)
     }
 
-    static get lastBoardId(): string | null {
-        return UserSettings.get(UserSettingKey.LastBoardId)
+    // maps last board ID for each team
+    // maps teamID -> board ID
+    static get lastBoardId(): {[key: string]: string} {
+        let rawData = UserSettings.get(UserSettingKey.LastBoardId) || '{}'
+        if (rawData[0] !== '{') {
+            rawData = '{}'
+        }
+
+        let mapping: {[key: string]: string}
+        try {
+            mapping = JSON.parse(rawData)
+        } catch {
+            // revert to empty data if JSON conversion fails.
+            // This will happen when users run the new code for the first time
+            mapping = {}
+        }
+
+        return mapping
     }
 
-    static set lastBoardId(newValue: string | null) {
-        UserSettings.set(UserSettingKey.LastBoardId, newValue)
+    static setLastTeamID(teamID: string | null): void {
+        UserSettings.set(UserSettingKey.LastTeamId, teamID)
     }
 
-    static get lastViewId(): string | null {
-        return UserSettings.get(UserSettingKey.LastViewId)
+    static setLastBoardID(teamID: string, boardID: string | null): void {
+        const data = this.lastBoardId
+        if (boardID === null) {
+            delete data[teamID]
+        } else {
+            data[teamID] = boardID
+        }
+        UserSettings.set(UserSettingKey.LastBoardId, JSON.stringify(data))
     }
 
-    static set lastViewId(newValue: string | null) {
-        UserSettings.set(UserSettingKey.LastViewId, newValue)
+    static get lastViewId(): {[key: string]: string} {
+        const rawData = UserSettings.get(UserSettingKey.LastViewId) || '{}'
+        let mapping: {[key: string]: string}
+        try {
+            mapping = JSON.parse(rawData)
+        } catch {
+            // revert to empty data if JSON conversion fails.
+            // This will happen when users run the new code for the first time
+            mapping = {}
+        }
+
+        return mapping
+    }
+
+    static setLastViewId(boardID: string, viewID: string | null): void {
+        const data = this.lastViewId
+        if (viewID === null) {
+            delete data[boardID]
+        } else {
+            data[boardID] = viewID
+        }
+        UserSettings.set(UserSettingKey.LastViewId, JSON.stringify(data))
     }
 
     static get prefillRandomIcons(): boolean {
@@ -83,14 +124,6 @@ export class UserSettings {
 
     static set prefillRandomIcons(newValue: boolean) {
         UserSettings.set(UserSettingKey.RandomIcons, JSON.stringify(newValue))
-    }
-
-    static get dashboardShowEmpty(): boolean {
-        return localStorage.getItem(UserSettingKey.DashboardShowEmpty) !== 'false'
-    }
-
-    static set dashboardShowEmpty(newValue: boolean) {
-        localStorage.setItem(UserSettingKey.DashboardShowEmpty, JSON.stringify(newValue))
     }
 
     static getEmojiMartSetting(key: string): any {

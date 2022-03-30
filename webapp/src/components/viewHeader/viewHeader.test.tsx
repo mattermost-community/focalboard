@@ -40,12 +40,18 @@ describe('components/viewHeader/viewHeader', () => {
         },
         searchText: {
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
         boards: {
-            current: board,
+            current: board.id,
             boards: {
                 [board.id]: board,
             },
             templates: [],
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         cards: {
             templates: [card],
@@ -71,7 +77,29 @@ describe('components/viewHeader/viewHeader', () => {
                         activeView={activeView}
                         views={[activeView]}
                         cards={[card]}
-                        groupByProperty={board.fields.cardProperties[0]}
+                        groupByProperty={board.cardProperties[0]}
+                        addCard={jest.fn()}
+                        addCardFromTemplate={jest.fn()}
+                        addCardTemplate={jest.fn()}
+                        editCardTemplate={jest.fn()}
+                        readonly={false}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        expect(container).toMatchSnapshot()
+    })
+    test('return viewHeader without permissions', () => {
+        const localStore = mockStateStore([], {...state, teams: {current: undefined}})
+        const {container} = render(
+            wrapIntl(
+                <ReduxProvider store={localStore}>
+                    <ViewHeader
+                        board={board}
+                        activeView={activeView}
+                        views={[activeView]}
+                        cards={[card]}
+                        groupByProperty={board.cardProperties[0]}
                         addCard={jest.fn()}
                         addCardFromTemplate={jest.fn()}
                         addCardTemplate={jest.fn()}
@@ -92,7 +120,7 @@ describe('components/viewHeader/viewHeader', () => {
                         activeView={activeView}
                         views={[activeView]}
                         cards={[card]}
-                        groupByProperty={board.fields.cardProperties[0]}
+                        groupByProperty={board.cardProperties[0]}
                         addCard={jest.fn()}
                         addCardFromTemplate={jest.fn()}
                         addCardTemplate={jest.fn()}

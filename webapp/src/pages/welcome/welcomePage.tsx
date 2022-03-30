@@ -17,6 +17,7 @@ import mutator from '../../mutator'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
 import {fetchMe, getMe, patchProps} from '../../store/users'
+import {getCurrentTeam, Team} from '../../store/teams'
 import octoClient from '../../octoClient'
 import {FINISHED, TOUR_ORDER} from '../../components/onboardingTour'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -26,6 +27,7 @@ const WelcomePage = () => {
     const history = useHistory()
     const queryString = new URLSearchParams(useLocation().search)
     const me = useAppSelector<IUser|null>(getMe)
+    const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const dispatch = useAppDispatch()
 
     const setWelcomePageViewed = async (userID: string):Promise<any> => {
@@ -46,9 +48,11 @@ const WelcomePage = () => {
             history.replace(queryString.get('r')!)
             return
         }
-
-        const nextURL = Utils.isFocalboardPlugin() ? '/dashboard' : '/'
-        history.replace(nextURL)
+        if (currentTeam) {
+            history.replace(`/team/${currentTeam?.id}`)
+        } else {
+            history.replace('/')
+        }
     }
 
     const skipTour = async () => {
@@ -78,11 +82,14 @@ const WelcomePage = () => {
         if (!me) {
             return
         }
+        if (!currentTeam) {
+            return
+        }
 
         await setWelcomePageViewed(me.id)
-        const onboardingData = await octoClient.prepareOnboarding()
+        const onboardingData = await octoClient.prepareOnboarding(currentTeam.id)
         await dispatch(fetchMe())
-        const newPath = `/workspace/${onboardingData?.workspaceID}/${onboardingData?.boardID}`
+        const newPath = `/team/${onboardingData?.teamID}/${onboardingData?.boardID}`
         history.replace(newPath)
     }
 

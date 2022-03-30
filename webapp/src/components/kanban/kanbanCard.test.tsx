@@ -9,7 +9,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import Mutator from '../../mutator'
 import {Utils} from '../../utils'
@@ -49,6 +49,18 @@ describe('src/components/kanban/kanbanCard', () => {
     const state = {
         cards: {
             cards: [card],
+        },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: 'board_id_1',
+            boards: {
+                board_id_1: {id: 'board_id_1'},
+            },
+            myBoardMemberships: {
+                board_id_1: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         contents: {},
         comments: {

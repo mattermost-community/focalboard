@@ -15,25 +15,36 @@ var (
 )
 
 // removeDefaultTemplates deletes all the default templates and their children.
-func (s *SQLStore) removeDefaultTemplates(db sq.BaseRunner, blocks []model.Block) error {
+func (s *SQLStore) removeDefaultTemplates(db sq.BaseRunner, boards []*model.Board) error {
 	count := 0
-	for _, block := range blocks {
+	for _, board := range boards {
+		if board.CreatedBy != "system" {
+			continue
+		}
 		// default template deletion does not need to go to blocks_history
 		deleteQuery := s.getQueryBuilder(db).
+			Delete(s.tablePrefix + "boards").
+			Where(sq.Eq{"id": board.ID}).
+			Where(sq.Eq{"is_template": true})
+
+		if _, err := deleteQuery.Exec(); err != nil {
+			return fmt.Errorf("cannot delete default template %s: %w", board.ID, err)
+		}
+
+		deleteQuery = s.getQueryBuilder(db).
 			Delete(s.tablePrefix + "blocks").
 			Where(sq.Or{
-				sq.Eq{"id": block.ID},
-				sq.Eq{"parent_id": block.ID},
-				sq.Eq{"root_id": block.ID},
+				sq.Eq{"parent_id": board.ID},
+				sq.Eq{"root_id": board.ID},
+				sq.Eq{"board_id": board.ID},
 			})
 
 		if _, err := deleteQuery.Exec(); err != nil {
-			return fmt.Errorf("cannot delete default template %s: %w", block.ID, err)
+			return fmt.Errorf("cannot delete default template %s: %w", board.ID, err)
 		}
 
 		s.logger.Trace("removed default template block",
-			mlog.String("block_id", block.ID),
-			mlog.String("block_type", string(block.Type)),
+			mlog.String("board_id", board.ID),
 		)
 		count++
 	}
@@ -43,31 +54,20 @@ func (s *SQLStore) removeDefaultTemplates(db sq.BaseRunner, blocks []model.Block
 	return nil
 }
 
-// getDefaultTemplateBlocks fetches all template blocks .
-func (s *SQLStore) getDefaultTemplateBlocks(db sq.BaseRunner) ([]model.Block, error) {
+// getDefaultTemplateBoards fetches all template blocks .
+func (s *SQLStore) getTemplateBoards(db sq.BaseRunner, teamID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"coalesce(workspace_id, '0')": "0"}).
-		Where(sq.Eq{"created_by": "system"})
-
-	switch s.dbType {
-	case sqliteDBType:
-		query = query.Where(s.tablePrefix + "blocks.fields LIKE '%\"isTemplate\":true%'")
-	case mysqlDBType:
-		query = query.Where(s.tablePrefix + "blocks.fields LIKE '%\"isTemplate\":true%'")
-	case postgresDBType:
-		query = query.Where(s.tablePrefix + "blocks.fields ->> 'isTemplate' = 'true'")
-	default:
-		return nil, fmt.Errorf("cannot get default template blocks for database type %s: %w", s.dbType, ErrUnsupportedDatabaseType)
-	}
+		Select(boardFields("")...).
+		From(s.tablePrefix + "boards").
+		Where(sq.Eq{"coalesce(team_id, '0')": teamID}).
+		Where(sq.Eq{"is_template": true})
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`isInitializationNeeded ERROR`, mlog.Err(err))
+		s.logger.Error(`getTemplateBoards ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
 
-	return s.blocksFromRows(rows)
+	return s.boardsFromRows(rows)
 }

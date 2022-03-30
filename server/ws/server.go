@@ -9,7 +9,6 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -17,23 +16,16 @@ import (
 
 const singleUserID = "single-user-id"
 
-type wsClient struct {
-	*websocket.Conn
-	mu         sync.Mutex
-	workspaces []string
-	blocks     []string
-}
-
-func (c *wsClient) WriteJSON(v interface{}) error {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	err := c.Conn.WriteJSON(v)
+func (wss *websocketSession) WriteJSON(v interface{}) error {
+	wss.mu.Lock()
+	defer wss.mu.Unlock()
+	err := wss.conn.WriteJSON(v)
 	return err
 }
 
-func (c *wsClient) isSubscribedToWorkspace(workspaceID string) bool {
-	for _, id := range c.workspaces {
-		if id == workspaceID {
+func (wss *websocketSession) isSubscribedToTeam(teamID string) bool {
+	for _, id := range wss.teams {
+		if id == teamID {
 			return true
 		}
 	}
@@ -41,8 +33,8 @@ func (c *wsClient) isSubscribedToWorkspace(workspaceID string) bool {
 	return false
 }
 
-func (c *wsClient) isSubscribedToBlock(blockID string) bool {
-	for _, id := range c.blocks {
+func (wss *websocketSession) isSubscribedToBlock(blockID string) bool {
+	for _, id := range wss.blocks {
 		if id == blockID {
 			return true
 		}
@@ -53,15 +45,16 @@ func (c *wsClient) isSubscribedToBlock(blockID string) bool {
 
 // Server is a WebSocket server.
 type Server struct {
-	upgrader             websocket.Upgrader
-	listeners            map[*wsClient]bool
-	listenersByWorkspace map[string][]*wsClient
-	listenersByBlock     map[string][]*wsClient
-	mu                   sync.RWMutex
-	auth                 *auth.Auth
-	singleUserToken      string
-	isMattermostAuth     bool
-	logger               *mlog.Logger
+	upgrader         websocket.Upgrader
+	listeners        map[*websocketSession]bool
+	listenersByTeam  map[string][]*websocketSession
+	listenersByBlock map[string][]*websocketSession
+	mu               sync.RWMutex
+	auth             *auth.Auth
+	singleUserToken  string
+	isMattermostAuth bool
+	logger           *mlog.Logger
+	store            Store
 }
 
 // UpdateClientConfig is sent on block updates.
@@ -71,8 +64,11 @@ type UpdateClientConfig struct {
 }
 
 type websocketSession struct {
-	client *wsClient
+	conn   *websocket.Conn
 	userID string
+	mu     sync.Mutex
+	teams  []string
+	blocks []string
 }
 
 func (wss *websocketSession) isAuthenticated() bool {
@@ -80,11 +76,11 @@ func (wss *websocketSession) isAuthenticated() bool {
 }
 
 // NewServer creates a new Server.
-func NewServer(auth *auth.Auth, singleUserToken string, isMattermostAuth bool, logger *mlog.Logger) *Server {
+func NewServer(auth *auth.Auth, singleUserToken string, isMattermostAuth bool, logger *mlog.Logger, store Store) *Server {
 	return &Server{
-		listeners:            make(map[*wsClient]bool),
-		listenersByWorkspace: make(map[string][]*wsClient),
-		listenersByBlock:     make(map[string][]*wsClient),
+		listeners:        make(map[*websocketSession]bool),
+		listenersByTeam:  make(map[string][]*websocketSession),
+		listenersByBlock: make(map[string][]*websocketSession),
 		upgrader: websocket.Upgrader{
 			CheckOrigin: func(r *http.Request) bool {
 				return true
@@ -94,6 +90,7 @@ func NewServer(auth *auth.Auth, singleUserToken string, isMattermostAuth bool, l
 		singleUserToken:  singleUserToken,
 		isMattermostAuth: isMattermostAuth,
 		logger:           logger,
+		store:            store,
 	}
 }
 
@@ -111,35 +108,38 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// create an empty session with websocket client
-	wsSession := websocketSession{
-		client: &wsClient{client, sync.Mutex{}, []string{}, []string{}},
+	wsSession := &websocketSession{
+		conn:   client,
 		userID: "",
+		mu:     sync.Mutex{},
+		teams:  []string{},
+		blocks: []string{},
 	}
 
 	if ws.isMattermostAuth {
 		wsSession.userID = r.Header.Get("Mattermost-User-Id")
 	}
 
-	ws.addListener(wsSession.client)
+	ws.addListener(wsSession)
 
 	// Make sure we close the connection when the function returns
 	defer func() {
-		ws.logger.Debug("DISCONNECT WebSocket", mlog.Stringer("client", wsSession.client.RemoteAddr()))
+		ws.logger.Debug("DISCONNECT WebSocket", mlog.Stringer("client", wsSession.conn.RemoteAddr()))
 
-		// Remove client from listeners
-		ws.removeListener(wsSession.client)
-		wsSession.client.Close()
+		// Remove session from listeners
+		ws.removeListener(wsSession)
+		wsSession.conn.Close()
 	}()
 
 	// Simple message handling loop
 	for {
-		_, p, err := wsSession.client.ReadMessage()
+		_, p, err := wsSession.conn.ReadMessage()
 		if err != nil {
 			ws.logger.Error("ERROR WebSocket",
-				mlog.Stringer("client", wsSession.client.RemoteAddr()),
+				mlog.Stringer("client", wsSession.conn.RemoteAddr()),
 				mlog.Err(err),
 			)
-			ws.removeListener(wsSession.client)
+			ws.removeListener(wsSession)
 			break
 		}
 
@@ -154,8 +154,8 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if command.Action == websocketActionAuth {
-			ws.logger.Debug(`Command: AUTH`, mlog.Stringer("client", wsSession.client.RemoteAddr()))
-			ws.authenticateListener(&wsSession, command.Token)
+			ws.logger.Debug(`Command: AUTH`, mlog.Stringer("client", wsSession.conn.RemoteAddr()))
+			ws.authenticateListener(wsSession, command.Token)
 
 			continue
 		}
@@ -165,13 +165,13 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		// authentication
 		if command.Action == websocketActionSubscribeBlocks {
 			ws.logger.Debug(`Command: SUBSCRIBE_BLOCKS`,
-				mlog.String("workspaceID", command.WorkspaceID),
-				mlog.Stringer("client", wsSession.client.RemoteAddr()),
+				mlog.String("teamID", command.TeamID),
+				mlog.Stringer("client", wsSession.conn.RemoteAddr()),
 			)
 
 			if !ws.isCommandReadTokenValid(command) {
 				ws.logger.Error(`Rejected invalid read token`,
-					mlog.Stringer("client", wsSession.client.RemoteAddr()),
+					mlog.Stringer("client", wsSession.conn.RemoteAddr()),
 					mlog.String("action", command.Action),
 					mlog.String("readToken", command.ReadToken),
 				)
@@ -179,19 +179,19 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 
-			ws.subscribeListenerToBlocks(wsSession.client, command.BlockIDs)
+			ws.subscribeListenerToBlocks(wsSession, command.BlockIDs)
 			continue
 		}
 
 		if command.Action == websocketActionUnsubscribeBlocks {
 			ws.logger.Debug(`Command: UNSUBSCRIBE_BLOCKS`,
-				mlog.String("workspaceID", command.WorkspaceID),
-				mlog.Stringer("client", wsSession.client.RemoteAddr()),
+				mlog.String("teamID", command.TeamID),
+				mlog.Stringer("client", wsSession.conn.RemoteAddr()),
 			)
 
 			if !ws.isCommandReadTokenValid(command) {
 				ws.logger.Error(`Rejected invalid read token`,
-					mlog.Stringer("client", wsSession.client.RemoteAddr()),
+					mlog.Stringer("client", wsSession.conn.RemoteAddr()),
 					mlog.String("action", command.Action),
 					mlog.String("readToken", command.ReadToken),
 				)
@@ -199,7 +199,7 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				continue
 			}
 
-			ws.unsubscribeListenerFromBlocks(wsSession.client, command.BlockIDs)
+			ws.unsubscribeListenerFromBlocks(wsSession, command.BlockIDs)
 			continue
 		}
 
@@ -207,7 +207,7 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		// not be processed
 		if !wsSession.isAuthenticated() {
 			ws.logger.Error(`Rejected unauthenticated message`,
-				mlog.Stringer("client", wsSession.client.RemoteAddr()),
+				mlog.Stringer("client", wsSession.conn.RemoteAddr()),
 				mlog.String("action", command.Action),
 			)
 
@@ -215,10 +215,10 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		}
 
 		switch command.Action {
-		case websocketActionSubscribeWorkspace:
-			ws.logger.Debug(`Command: SUBSCRIBE_WORKSPACE`,
-				mlog.String("workspaceID", command.WorkspaceID),
-				mlog.Stringer("client", wsSession.client.RemoteAddr()),
+		case websocketActionSubscribeTeam:
+			ws.logger.Debug(`Command: SUBSCRIBE_TEAM`,
+				mlog.String("teamID", command.TeamID),
+				mlog.Stringer("client", wsSession.conn.RemoteAddr()),
 			)
 
 			// if single user mode, check that the userID is valid and
@@ -229,21 +229,23 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 				}
 
 				// if not in single user mode validate that the session
-				// has permissions to the workspace
+				// has permissions to the team
 			} else {
-				if !ws.auth.DoesUserHaveWorkspaceAccess(wsSession.userID, command.WorkspaceID) {
+				ws.logger.Debug("Not single user mode")
+				if !ws.auth.DoesUserHaveTeamAccess(wsSession.userID, command.TeamID) {
+					ws.logger.Error("WS user doesn't have team access", mlog.String("teamID", command.TeamID), mlog.String("userID", wsSession.userID))
 					continue
 				}
 			}
 
-			ws.subscribeListenerToWorkspace(wsSession.client, command.WorkspaceID)
-		case websocketActionUnsubscribeWorkspace:
-			ws.logger.Debug(`Command: UNSUBSCRIBE_WORKSPACE`,
-				mlog.String("workspaceID", command.WorkspaceID),
-				mlog.Stringer("client", wsSession.client.RemoteAddr()),
+			ws.subscribeListenerToTeam(wsSession, command.TeamID)
+		case websocketActionUnsubscribeTeam:
+			ws.logger.Debug(`Command: UNSUBSCRIBE_TEAM`,
+				mlog.String("teamID", command.TeamID),
+				mlog.Stringer("client", wsSession.conn.RemoteAddr()),
 			)
 
-			ws.unsubscribeListenerFromWorkspace(wsSession.client, command.WorkspaceID)
+			ws.unsubscribeListenerFromTeam(wsSession, command.TeamID)
 		default:
 			ws.logger.Error(`ERROR webSocket command, invalid action`, mlog.String("action", command.Action))
 		}
@@ -253,157 +255,172 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 // isCommandReadTokenValid ensures that a command contains a read
 // token and a set of block ids that said token is valid for.
 func (ws *Server) isCommandReadTokenValid(command WebsocketCommand) bool {
-	if len(command.WorkspaceID) == 0 {
+	if len(command.TeamID) == 0 {
 		return false
 	}
 
-	container := store.Container{WorkspaceID: command.WorkspaceID}
-
-	if len(command.ReadToken) != 0 && len(command.BlockIDs) != 0 {
-		// Read token must be valid for all block IDs
-		for _, blockID := range command.BlockIDs {
-			isValid, _ := ws.auth.IsValidReadToken(container, blockID, command.ReadToken)
-			if !isValid {
-				return false
-			}
+	boardID := ""
+	// all the blocks must be part of the same board
+	for _, blockID := range command.BlockIDs {
+		block, err := ws.store.GetBlock(blockID)
+		if err != nil {
+			return false
 		}
-		return true
+
+		if boardID == "" {
+			boardID = block.BoardID
+			continue
+		}
+
+		if boardID != block.BoardID {
+			return false
+		}
 	}
 
-	return false
+	// the read token must be valid for the board
+	isValid, err := ws.auth.IsValidReadToken(boardID, command.ReadToken)
+	if err != nil {
+		ws.logger.Error(`ERROR when checking token validity`,
+			mlog.String("teamID", command.TeamID),
+			mlog.Err(err),
+		)
+		return false
+	}
+
+	return isValid
 }
 
 // addListener adds a listener to the websocket server. The listener
 // should not receive any update from the server until it subscribes
 // itself to some entity changes. Adding a listener to the server
 // doesn't mean that it's authenticated in any way.
-func (ws *Server) addListener(client *wsClient) {
+func (ws *Server) addListener(listener *websocketSession) {
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
-	ws.listeners[client] = true
+	ws.listeners[listener] = true
 }
 
 // removeListener removes a listener and all its subscriptions, if
 // any, from the websockets server.
-func (ws *Server) removeListener(client *wsClient) {
+func (ws *Server) removeListener(listener *websocketSession) {
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
 
 	// remove the listener from its subscriptions, if any
 
-	// workspace subscriptions
-	for _, workspace := range client.workspaces {
-		ws.removeListenerFromWorkspace(client, workspace)
+	// team subscriptions
+	for _, team := range listener.teams {
+		ws.removeListenerFromTeam(listener, team)
 	}
 
 	// block subscriptions
-	for _, block := range client.blocks {
-		ws.removeListenerFromBlock(client, block)
+	for _, block := range listener.blocks {
+		ws.removeListenerFromBlock(listener, block)
 	}
 
-	delete(ws.listeners, client)
+	delete(ws.listeners, listener)
 }
 
-// subscribeListenerToWorkspace safely modifies the listener and the
-// server to subscribe the listener to a given workspace updates.
-func (ws *Server) subscribeListenerToWorkspace(client *wsClient, workspaceID string) {
-	if client.isSubscribedToWorkspace(workspaceID) {
+// subscribeListenerToTeam safely modifies the listener and the
+// server to subscribe the listener to a given team updates.
+func (ws *Server) subscribeListenerToTeam(listener *websocketSession, teamID string) {
+	if listener.isSubscribedToTeam(teamID) {
 		return
 	}
 
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
 
-	ws.listenersByWorkspace[workspaceID] = append(ws.listenersByWorkspace[workspaceID], client)
-	client.workspaces = append(client.workspaces, workspaceID)
+	ws.listenersByTeam[teamID] = append(ws.listenersByTeam[teamID], listener)
+	listener.teams = append(listener.teams, teamID)
 }
 
-// unsubscribeListenerFromWorkspace safely modifies the listener and
+// unsubscribeListenerFromTeam safely modifies the listener and
 // the server data structures to remove the link between the listener
-// and a given workspace ID.
-func (ws *Server) unsubscribeListenerFromWorkspace(client *wsClient, workspaceID string) {
-	if !client.isSubscribedToWorkspace(workspaceID) {
+// and a given team ID.
+func (ws *Server) unsubscribeListenerFromTeam(listener *websocketSession, teamID string) {
+	if !listener.isSubscribedToTeam(teamID) {
 		return
 	}
 
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
 
-	ws.removeListenerFromWorkspace(client, workspaceID)
+	ws.removeListenerFromTeam(listener, teamID)
 }
 
 // subscribeListenerToBlocks safely modifies the listener and the
 // server to subscribe the listener to a given set of block updates.
-func (ws *Server) subscribeListenerToBlocks(client *wsClient, blockIDs []string) {
+func (ws *Server) subscribeListenerToBlocks(listener *websocketSession, blockIDs []string) {
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
 
 	for _, blockID := range blockIDs {
-		if client.isSubscribedToBlock(blockID) {
+		if listener.isSubscribedToBlock(blockID) {
 			continue
 		}
 
-		ws.listenersByBlock[blockID] = append(ws.listenersByBlock[blockID], client)
-		client.blocks = append(client.blocks, blockID)
+		ws.listenersByBlock[blockID] = append(ws.listenersByBlock[blockID], listener)
+		listener.blocks = append(listener.blocks, blockID)
 	}
 }
 
 // unsubscribeListenerFromBlocks safely modifies the listener and the
 // server data structures to remove the link between the listener and
 // a given set of block IDs.
-func (ws *Server) unsubscribeListenerFromBlocks(client *wsClient, blockIDs []string) {
+func (ws *Server) unsubscribeListenerFromBlocks(listener *websocketSession, blockIDs []string) {
 	ws.mu.Lock()
 	defer ws.mu.Unlock()
 
 	for _, blockID := range blockIDs {
-		if client.isSubscribedToBlock(blockID) {
-			ws.removeListenerFromBlock(client, blockID)
+		if listener.isSubscribedToBlock(blockID) {
+			ws.removeListenerFromBlock(listener, blockID)
 		}
 	}
 }
 
-// removeListenerFromWorkspace removes the listener from both its own
-// block subscribed list and the server listeners by workspace map.
-func (ws *Server) removeListenerFromWorkspace(client *wsClient, workspaceID string) {
-	// we remove the listener from the workspace index
-	newWorkspaceListeners := []*wsClient{}
-	for _, listener := range ws.listenersByWorkspace[workspaceID] {
-		if listener != client {
-			newWorkspaceListeners = append(newWorkspaceListeners, listener)
+// removeListenerFromTeam removes the listener from both its own
+// block subscribed list and the server listeners by team map.
+func (ws *Server) removeListenerFromTeam(listener *websocketSession, teamID string) {
+	// we remove the listener from the team index
+	newTeamListeners := []*websocketSession{}
+	for _, l := range ws.listenersByTeam[teamID] {
+		if l != listener {
+			newTeamListeners = append(newTeamListeners, l)
 		}
 	}
-	ws.listenersByWorkspace[workspaceID] = newWorkspaceListeners
+	ws.listenersByTeam[teamID] = newTeamListeners
 
-	// we remove the workspace from the listener subscription list
-	newClientWorkspaces := []string{}
-	for _, id := range client.workspaces {
-		if id != workspaceID {
-			newClientWorkspaces = append(newClientWorkspaces, id)
+	// we remove the team from the listener subscription list
+	newListenerTeams := []string{}
+	for _, id := range listener.teams {
+		if id != teamID {
+			newListenerTeams = append(newListenerTeams, id)
 		}
 	}
-	client.workspaces = newClientWorkspaces
+	listener.teams = newListenerTeams
 }
 
 // removeListenerFromBlock removes the listener from both its own
 // block subscribed list and the server listeners by block map.
-func (ws *Server) removeListenerFromBlock(client *wsClient, blockID string) {
+func (ws *Server) removeListenerFromBlock(listener *websocketSession, blockID string) {
 	// we remove the listener from the block index
-	newBlockListeners := []*wsClient{}
-	for _, listener := range ws.listenersByBlock[blockID] {
-		if listener != client {
-			newBlockListeners = append(newBlockListeners, listener)
+	newBlockListeners := []*websocketSession{}
+	for _, l := range ws.listenersByBlock[blockID] {
+		if l != listener {
+			newBlockListeners = append(newBlockListeners, l)
 		}
 	}
 	ws.listenersByBlock[blockID] = newBlockListeners
 
 	// we remove the block from the listener subscription list
-	newClientBlocks := []string{}
-	for _, id := range client.blocks {
+	newListenerBlocks := []string{}
+	for _, id := range listener.blocks {
 		if id != blockID {
-			newClientBlocks = append(newClientBlocks, id)
+			newListenerBlocks = append(newListenerBlocks, id)
 		}
 	}
-	client.blocks = newClientBlocks
+	listener.blocks = newListenerBlocks
 }
 
 func (ws *Server) getUserIDForToken(token string) string {
@@ -433,7 +450,7 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, token string
 		ws.logger.Debug(
 			"authenticateListener: Ignoring already authenticated session",
 			mlog.String("userID", wsSession.userID),
-			mlog.Stringer("client", wsSession.client.RemoteAddr()),
+			mlog.Stringer("client", wsSession.conn.RemoteAddr()),
 		)
 		return
 	}
@@ -441,74 +458,172 @@ func (ws *Server) authenticateListener(wsSession *websocketSession, token string
 	// Authenticate session
 	userID := ws.getUserIDForToken(token)
 	if userID == "" {
-		wsSession.client.Close()
+		wsSession.conn.Close()
 		return
 	}
 
 	// Authenticated
 	wsSession.userID = userID
-	ws.logger.Debug("authenticateListener: Authenticated", mlog.String("userID", userID), mlog.Stringer("client", wsSession.client.RemoteAddr()))
+	ws.logger.Debug("authenticateListener: Authenticated", mlog.String("userID", userID), mlog.Stringer("client", wsSession.conn.RemoteAddr()))
 }
 
 // getListenersForBlock returns the listeners subscribed to a
 // block changes.
-func (ws *Server) getListenersForBlock(blockID string) []*wsClient {
+func (ws *Server) getListenersForBlock(blockID string) []*websocketSession {
 	return ws.listenersByBlock[blockID]
 }
 
-// getListenersForWorkspace returns the listeners subscribed to a
-// workspace changes.
-func (ws *Server) getListenersForWorkspace(workspaceID string) []*wsClient {
-	return ws.listenersByWorkspace[workspaceID]
+// getListenersForTeam returns the listeners subscribed to a
+// team changes.
+func (ws *Server) getListenersForTeam(teamID string) []*websocketSession {
+	return ws.listenersByTeam[teamID]
+}
+
+// getListenersForTeamAndBoard returns the listeners subscribed to a
+// team changes and members of a given board.
+func (ws *Server) getListenersForTeamAndBoard(teamID, boardID string, ensureUsers ...string) []*websocketSession {
+	members, err := ws.store.GetMembersForBoard(boardID)
+	if err != nil {
+		ws.logger.Error("error getting members for board",
+			mlog.String("method", "getListenersForTeamAndBoard"),
+			mlog.String("teamID", teamID),
+			mlog.String("boardID", boardID),
+		)
+		return nil
+	}
+
+	memberMap := map[string]bool{}
+	for _, member := range members {
+		memberMap[member.UserID] = true
+	}
+	for _, id := range ensureUsers {
+		memberMap[id] = true
+	}
+
+	memberIDs := []string{}
+	for id := range memberMap {
+		memberIDs = append(memberIDs, id)
+	}
+
+	listeners := []*websocketSession{}
+	for _, memberID := range memberIDs {
+		for _, listener := range ws.listenersByTeam[teamID] {
+			if listener.userID == memberID {
+				listeners = append(listeners, listener)
+			}
+		}
+	}
+	return listeners
 }
 
 // BroadcastBlockDelete broadcasts delete messages to clients.
-func (ws *Server) BroadcastBlockDelete(workspaceID, blockID, parentID string) {
+func (ws *Server) BroadcastBlockDelete(teamID, blockID, boardID string) {
 	now := utils.GetMillis()
 	block := model.Block{}
 	block.ID = blockID
-	block.ParentID = parentID
+	block.BoardID = boardID
 	block.UpdateAt = now
 	block.DeleteAt = now
-	block.WorkspaceID = workspaceID
 
-	ws.BroadcastBlockChange(workspaceID, block)
+	ws.BroadcastBlockChange(teamID, block)
 }
 
 // BroadcastBlockChange broadcasts update messages to clients.
-func (ws *Server) BroadcastBlockChange(workspaceID string, block model.Block) {
+func (ws *Server) BroadcastBlockChange(teamID string, block model.Block) {
 	blockIDsToNotify := []string{block.ID, block.ParentID}
 
-	message := UpdateMsg{
+	message := UpdateBlockMsg{
 		Action: websocketActionUpdateBlock,
+		TeamID: teamID,
 		Block:  block,
 	}
 
-	listeners := ws.getListenersForWorkspace(workspaceID)
-	ws.logger.Debug("listener(s) for workspaceID",
+	listeners := ws.getListenersForTeamAndBoard(teamID, block.BoardID)
+	ws.logger.Trace("listener(s) for teamID",
 		mlog.Int("listener_count", len(listeners)),
-		mlog.String("workspaceID", workspaceID),
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", block.BoardID),
 	)
 
 	for _, blockID := range blockIDsToNotify {
 		listeners = append(listeners, ws.getListenersForBlock(blockID)...)
-		ws.logger.Debug("listener(s) for blockID",
+		ws.logger.Trace("listener(s) for blockID",
 			mlog.Int("listener_count", len(listeners)),
 			mlog.String("blockID", blockID),
 		)
 	}
 
 	for _, listener := range listeners {
-		ws.logger.Debug("Broadcast change",
-			mlog.String("workspaceID", workspaceID),
+		ws.logger.Debug("Broadcast block change",
+			mlog.String("teamID", teamID),
 			mlog.String("blockID", block.ID),
-			mlog.Stringer("remoteAddr", listener.RemoteAddr()),
+			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
 		)
 
 		err := listener.WriteJSON(message)
 		if err != nil {
 			ws.logger.Error("broadcast error", mlog.Err(err))
-			listener.Close()
+			listener.conn.Close()
+		}
+	}
+}
+
+func (ws *Server) BroadcastCategoryChange(category model.Category) {
+	message := UpdateCategoryMessage{
+		Action:   websocketActionUpdateCategory,
+		TeamID:   category.TeamID,
+		Category: &category,
+	}
+
+	listeners := ws.getListenersForTeam(category.TeamID)
+	ws.logger.Debug("listener(s) for teamID",
+		mlog.Int("listener_count", len(listeners)),
+		mlog.String("teamID", category.TeamID),
+		mlog.String("categoryID", category.ID),
+	)
+
+	for _, listener := range listeners {
+		ws.logger.Debug("Broadcast block change",
+			mlog.Int("listener_count", len(listeners)),
+			mlog.String("teamID", category.TeamID),
+			mlog.String("categoryID", category.ID),
+			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
+		)
+
+		if err := listener.WriteJSON(message); err != nil {
+			ws.logger.Error("broadcast category change error", mlog.Err(err))
+			listener.conn.Close()
+		}
+	}
+}
+
+func (ws *Server) BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData) {
+	message := UpdateCategoryMessage{
+		Action:          websocketActionUpdateCategoryBlock,
+		TeamID:          teamID,
+		BlockCategories: &blockCategory,
+	}
+
+	listeners := ws.getListenersForTeam(teamID)
+	ws.logger.Debug("listener(s) for teamID",
+		mlog.Int("listener_count", len(listeners)),
+		mlog.String("teamID", teamID),
+		mlog.String("categoryID", blockCategory.CategoryID),
+		mlog.String("blockID", blockCategory.BlockID),
+	)
+
+	for _, listener := range listeners {
+		ws.logger.Debug("Broadcast block change",
+			mlog.Int("listener_count", len(listeners)),
+			mlog.String("teamID", teamID),
+			mlog.String("categoryID", blockCategory.CategoryID),
+			mlog.String("blockID", blockCategory.BlockID),
+			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
+		)
+
+		if err := listener.WriteJSON(message); err != nil {
+			ws.logger.Error("broadcast category change error", mlog.Err(err))
+			listener.conn.Close()
 		}
 	}
 }
@@ -527,12 +642,113 @@ func (ws *Server) BroadcastConfigChange(clientConfig model.ClientConfig) {
 
 	for listener := range listeners {
 		ws.logger.Debug("Broadcast Config change",
-			mlog.Stringer("remoteAddr", listener.RemoteAddr()),
+			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
 		)
 		err := listener.WriteJSON(message)
 		if err != nil {
 			ws.logger.Error("broadcast error", mlog.Err(err))
-			listener.Close()
+			listener.conn.Close()
+		}
+	}
+}
+
+func (ws *Server) BroadcastBoardChange(teamID string, board *model.Board) {
+	message := UpdateBoardMsg{
+		Action: websocketActionUpdateBoard,
+		TeamID: teamID,
+		Board:  board,
+	}
+
+	listeners := ws.getListenersForTeamAndBoard(teamID, board.ID)
+	ws.logger.Trace("listener(s) for teamID and boardID",
+		mlog.Int("listener_count", len(listeners)),
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", board.ID),
+	)
+
+	for _, listener := range listeners {
+		ws.logger.Debug("Broadcast board change",
+			mlog.String("teamID", teamID),
+			mlog.String("boardID", board.ID),
+			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
+		)
+
+		err := listener.WriteJSON(message)
+		if err != nil {
+			ws.logger.Error("broadcast error", mlog.Err(err))
+			listener.conn.Close()
+		}
+	}
+}
+
+func (ws *Server) BroadcastBoardDelete(teamID, boardID string) {
+	now := utils.GetMillis()
+	board := &model.Board{}
+	board.ID = boardID
+	board.TeamID = teamID
+	board.UpdateAt = now
+	board.DeleteAt = now
+
+	ws.BroadcastBoardChange(teamID, board)
+}
+
+func (ws *Server) BroadcastMemberChange(teamID, boardID string, member *model.BoardMember) {
+	message := UpdateMemberMsg{
+		Action: websocketActionUpdateMember,
+		TeamID: teamID,
+		Member: member,
+	}
+
+	listeners := ws.getListenersForTeamAndBoard(teamID, boardID)
+	ws.logger.Trace("listener(s) for teamID and boardID",
+		mlog.Int("listener_count", len(listeners)),
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", boardID),
+	)
+
+	for _, listener := range listeners {
+		ws.logger.Debug("Broadcast member change",
+			mlog.String("teamID", teamID),
+			mlog.String("boardID", boardID),
+			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
+		)
+
+		err := listener.WriteJSON(message)
+		if err != nil {
+			ws.logger.Error("broadcast error", mlog.Err(err))
+			listener.conn.Close()
+		}
+	}
+}
+
+func (ws *Server) BroadcastMemberDelete(teamID, boardID, userID string) {
+	message := UpdateMemberMsg{
+		Action: websocketActionDeleteMember,
+		TeamID: teamID,
+		Member: &model.BoardMember{UserID: userID, BoardID: boardID},
+	}
+
+	// when fetching the members of the board that should receive the
+	// member deletion message, the deleted member will not be one of
+	// them, so we need to ensure they receive the message
+	listeners := ws.getListenersForTeamAndBoard(teamID, boardID, userID)
+	ws.logger.Trace("listener(s) for teamID and boardID",
+		mlog.Int("listener_count", len(listeners)),
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", boardID),
+	)
+
+	for _, listener := range listeners {
+		ws.logger.Debug("Broadcast member removal",
+			mlog.String("teamID", teamID),
+			mlog.String("boardID", boardID),
+			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
+		)
+
+		err := listener.WriteJSON(message)
+		if err != nil {
+			ws.logger.Error("broadcast error", mlog.Err(err))
+			listener.conn.Close()
 		}
 	}
 }

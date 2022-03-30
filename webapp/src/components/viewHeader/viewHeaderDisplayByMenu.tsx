@@ -58,7 +58,7 @@ const ViewHeaderDisplayByMenu = (props: Props) => {
                             if (activeView.fields.dateDisplayPropertyId === id) {
                                 return
                             }
-                            mutator.changeViewDateDisplayPropertyId(activeView.id, activeView.fields.dateDisplayPropertyId, id)
+                            mutator.changeViewDateDisplayPropertyId(activeView.boardId, activeView.id, activeView.fields.dateDisplayPropertyId, id)
                         }}
                     />
                 ))}

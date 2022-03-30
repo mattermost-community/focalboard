@@ -34,7 +34,7 @@ const TableHeaders = (props: Props): JSX.Element => {
 
     const onAutoSizeColumn = useCallback((columnID: string, headerWidth: number) => {
         let longestSize = headerWidth
-        const visibleProperties = board.fields.cardProperties.filter(() => activeView.fields.visiblePropertyIds.includes(columnID)) || []
+        const visibleProperties = board.cardProperties.filter(() => activeView.fields.visiblePropertyIds.includes(columnID)) || []
         const columnRef = columnRefs.get(columnID)
         if (!columnRef?.current) {
             return
@@ -105,20 +105,20 @@ const TableHeaders = (props: Props): JSX.Element => {
         columnWidths[columnID] = longestSize
         const newView = createBoardView(activeView)
         newView.fields.columnWidths = columnWidths
-        mutator.updateBlock(newView, activeView, 'autosize column')
+        mutator.updateBlock(board.id, newView, activeView, 'autosize column')
     }, [activeView, board, cards])
 
     const visiblePropertyTemplates = useMemo(() => (
-        activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
-    ), [board.fields.cardProperties, activeView.fields.visiblePropertyIds])
+        activeView.fields.visiblePropertyIds.map((id) => board.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
+    ), [board.cardProperties, activeView.fields.visiblePropertyIds])
 
     const onDropToColumn = useCallback(async (template: IPropertyTemplate, container: IPropertyTemplate) => {
         Utils.log(`ondrop. Source column: ${template.name}, dest column: ${container.name}`)
 
         // Move template to new index
         const destIndex = container ? activeView.fields.visiblePropertyIds.indexOf(container.id) : 0
-        await mutator.changeViewVisiblePropertiesOrder(activeView, template, destIndex >= 0 ? destIndex : 0)
-    }, [activeView.fields.visiblePropertyIds])
+        await mutator.changeViewVisiblePropertiesOrder(board.id, activeView, template, destIndex >= 0 ? destIndex : 0)
+    }, [board.id, activeView.fields.visiblePropertyIds])
 
     const titleSortOption = activeView.fields.sortOptions?.find((o) => o.propertyId === Constants.titleColumnId)
     let titleSorted: 'up' | 'down' | 'none' = 'none'

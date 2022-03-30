@@ -2,41 +2,40 @@ package app
 
 import (
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 )
 
-func (a *App) CreateSubscription(c store.Container, sub *model.Subscription) (*model.Subscription, error) {
-	sub, err := a.store.CreateSubscription(c, sub)
+func (a *App) CreateSubscription(sub *model.Subscription) (*model.Subscription, error) {
+	sub, err := a.store.CreateSubscription(sub)
 	if err != nil {
 		return nil, err
 	}
-	a.notifySubscriptionChanged(c, sub)
+	a.notifySubscriptionChanged(sub)
 
 	return sub, nil
 }
 
-func (a *App) DeleteSubscription(c store.Container, blockID string, subscriberID string) (*model.Subscription, error) {
-	sub, err := a.store.GetSubscription(c, blockID, subscriberID)
+func (a *App) DeleteSubscription(blockID string, subscriberID string) (*model.Subscription, error) {
+	sub, err := a.store.GetSubscription(blockID, subscriberID)
 	if err != nil {
 		return nil, err
 	}
-	if err := a.store.DeleteSubscription(c, blockID, subscriberID); err != nil {
+	if err := a.store.DeleteSubscription(blockID, subscriberID); err != nil {
 		return nil, err
 	}
 	sub.DeleteAt = utils.GetMillis()
-	a.notifySubscriptionChanged(c, sub)
+	a.notifySubscriptionChanged(sub)
 
 	return sub, nil
 }
 
-func (a *App) GetSubscriptions(c store.Container, subscriberID string) ([]*model.Subscription, error) {
-	return a.store.GetSubscriptions(c, subscriberID)
+func (a *App) GetSubscriptions(subscriberID string) ([]*model.Subscription, error) {
+	return a.store.GetSubscriptions(subscriberID)
 }
 
-func (a *App) notifySubscriptionChanged(c store.Container, subscription *model.Subscription) {
+func (a *App) notifySubscriptionChanged(subscription *model.Subscription) {
 	if a.notifications == nil {
 		return
 	}
-	a.notifications.BroadcastSubscriptionChange(c.WorkspaceID, subscription)
+	a.notifications.BroadcastSubscriptionChange(subscription)
 }

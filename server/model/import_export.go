@@ -33,7 +33,7 @@ type ArchiveLine struct {
 // ExportArchiveOptions provides options when exporting one or more boards
 // to an archive.
 type ExportArchiveOptions struct {
-	WorkspaceID string
+	TeamID string
 
 	// BoardIDs is the list of boards to include in the archive.
 	// Empty slice means export all boards from workspace/team.
@@ -42,9 +42,9 @@ type ExportArchiveOptions struct {
 
 // ImportArchiveOptions provides options when importing an archive.
 type ImportArchiveOptions struct {
-	WorkspaceID   string
+	TeamID        string
 	ModifiedBy    string
-	BlockModifier BlockModifier
+	BoardModifier BoardModifier
 }
 
 // ErrUnsupportedArchiveVersion is an error returned when trying to import an

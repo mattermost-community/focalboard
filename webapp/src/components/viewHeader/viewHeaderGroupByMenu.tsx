@@ -39,10 +39,10 @@ const ViewHeaderGroupByMenu = (props: Props) => {
 
         if (show) {
             const columnsToShow = getColumnIds(hiddenGroups)
-            mutator.unhideViewColumns(activeView, columnsToShow)
+            mutator.unhideViewColumns(activeView.boardId, activeView, columnsToShow)
         } else {
             const columnsToHide = getColumnIds(emptyVisibleGroups)
-            mutator.hideViewColumns(activeView, columnsToHide)
+            mutator.hideViewColumns(activeView.boardId, activeView, columnsToHide)
         }
     }
 
@@ -92,7 +92,7 @@ const ViewHeaderGroupByMenu = (props: Props) => {
                                 if (activeView.fields.groupById === id) {
                                     return
                                 }
-                                mutator.changeViewGroupById(activeView.id, activeView.fields.groupById, id)
+                                mutator.changeViewGroupById(activeView.boardId, activeView.id, activeView.fields.groupById, id)
                             }}
                         />
                         <Menu.Separator/>
@@ -108,7 +108,7 @@ const ViewHeaderGroupByMenu = (props: Props) => {
                                 return
                             }
 
-                            mutator.changeViewGroupById(activeView.id, activeView.fields.groupById, id)
+                            mutator.changeViewGroupById(activeView.boardId, activeView.id, activeView.fields.groupById, id)
                         }}
                     />
                 ))}

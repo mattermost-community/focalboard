@@ -20,6 +20,8 @@ import BlockIconSelector from '../blockIconSelector'
 
 import {useAppDispatch} from '../../store/hooks'
 import {setCurrent as setCurrentCard} from '../../store/cards'
+import {Permission} from '../../constants'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
 import CommentsList from './commentsList'
 import {CardDetailProvider} from './cardDetailContext'
@@ -51,14 +53,15 @@ const CardDetail = (props: Props): JSX.Element|null => {
     const titleRef = useRef<Focusable>(null)
     const saveTitle = useCallback(() => {
         if (title !== card.title) {
-            mutator.changeTitle(card.id, card.title, title)
+            mutator.changeBlockTitle(props.board.id, card.id, card.title, title)
         }
     }, [card.title, title])
+    const canEditBoardCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
 
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
 
-    useImagePaste(card.id, card.fields.contentOrder, card.rootId)
+    useImagePaste(props.board.id, card.id, card.fields.contentOrder)
 
     useEffect(() => {
         if (!title) {
@@ -82,7 +85,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
     const setRandomIcon = useCallback(() => {
         const newIcon = BlockIcons.shared.randomIcon()
-        mutator.changeIcon(card.id, card.fields.icon, newIcon)
+        mutator.changeBlockIcon(props.board.id, card.id, card.fields.icon, newIcon)
     }, [card.id, card.fields.icon])
 
     const dispatch = useAppDispatch()
@@ -100,9 +103,9 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 <BlockIconSelector
                     block={card}
                     size='l'
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardCards}
                 />
-                {!props.readonly && !card.fields.icon &&
+                {!props.readonly && canEditBoardCards && !card.fields.icon &&
                     <div className='add-buttons'>
                         <Button
                             onClick={setRandomIcon}
@@ -124,7 +127,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     saveOnEsc={true}
                     onSave={saveTitle}
                     onCancel={() => setTitle(props.card.title)}
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardCards}
                     spellCheck={true}
                 />
 
@@ -133,8 +136,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 <CardDetailProperties
                     board={props.board}
                     card={props.card}
-                    contents={props.contents}
-                    comments={props.comments}
                     cards={props.cards}
                     activeView={props.activeView}
                     views={props.views}
@@ -146,9 +147,9 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 <hr/>
                 <CommentsList
                     comments={comments}
-                    rootId={card.rootId}
+                    boardId={card.boardId}
                     cardId={card.id}
-                    readonly={props.readonly}
+                    readonly={props.readonly || !canEditBoardCards}
                 />
             </div>
 
@@ -159,9 +160,9 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     <CardDetailContents
                         card={props.card}
                         contents={props.contents}
-                        readonly={props.readonly}
+                        readonly={props.readonly || !canEditBoardCards}
                     />
-                    {!props.readonly && <CardDetailContentsMenu/>}
+                    {!props.readonly && canEditBoardCards && <CardDetailContentsMenu/>}
                 </CardDetailProvider>
             </div>
         </>

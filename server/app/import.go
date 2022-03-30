@@ -14,7 +14,6 @@ import (
 	"github.com/krolaw/zipstream"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -84,7 +83,7 @@ func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 				continue
 			}
 			// save file with original filename so it matches name in image block.
-			filePath := filepath.Join(opt.WorkspaceID, boardID, filename)
+			filePath := filepath.Join(opt.TeamID, boardID, filename)
 			_, err := a.filesBackend.WriteFile(zr, filePath)
 			if err != nil {
 				return fmt.Errorf("cannot import file %s for board %s: %w", filename, dir, err)
@@ -103,7 +102,10 @@ func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (string, error) {
 	// TODO: Stream this once `model.GenerateBlockIDs` can take a stream of blocks.
 	//       We don't want to load the whole file in memory, even though it's a single board.
-	blocks := make([]model.Block, 0, 10)
+	boardsAndBlocks := &model.BoardsAndBlocks{
+		Blocks: make([]model.Block, 0, 10),
+		Boards: make([]*model.Board, 0, 10),
+	}
 	lineReader := bufio.NewReader(r)
 
 	userID := opt.ModifiedBy
@@ -137,7 +139,16 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					}
 					block.ModifiedBy = userID
 					block.UpdateAt = now
-					blocks = append(blocks, block)
+					boardsAndBlocks.Blocks = append(boardsAndBlocks.Blocks, block)
+				case "board":
+					var board model.Board
+					if err2 := json.Unmarshal(archiveLine.Data, &board); err2 != nil {
+						return "", fmt.Errorf("invalid block in archive line %d: %w", lineNum, err2)
+					}
+					board.ModifiedBy = userID
+					board.UpdateAt = now
+					board.TeamID = opt.TeamID
+					boardsAndBlocks.Boards = append(boardsAndBlocks.Boards, &board)
 				default:
 					return "", model.NewErrUnsupportedArchiveLineType(lineNum, archiveLine.Type)
 				}
@@ -154,36 +165,33 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 	}
 
 	modInfoCache := make(map[string]interface{})
-	modBlocks := make([]model.Block, 0, len(blocks))
-	for _, block := range blocks {
-		b := block
-		if opt.BlockModifier != nil && !opt.BlockModifier(&b, modInfoCache) {
+	modBoards := make([]*model.Board, 0, len(boardsAndBlocks.Boards))
+	for _, board := range boardsAndBlocks.Boards {
+		b := *board
+		if opt.BoardModifier != nil && !opt.BoardModifier(&b, modInfoCache) {
 			a.logger.Debug("skipping insert block per block modifier",
-				mlog.String("blockID", block.ID),
-				mlog.String("block_type", block.Type.String()),
+				mlog.String("blockID", board.ID),
 			)
 			continue
 		}
-		modBlocks = append(modBlocks, b)
+		modBoards = append(modBoards, &b)
 	}
-
-	blocks = model.GenerateBlockIDs(modBlocks, a.logger)
-
-	container := store.Container{
-		WorkspaceID: opt.WorkspaceID,
-	}
+	boardsAndBlocks.Boards = modBoards
 
 	var err error
-	blocks, err = a.InsertBlocks(container, blocks, opt.ModifiedBy, false)
+	boardsAndBlocks, err = model.GenerateBoardsAndBlocksIDs(boardsAndBlocks, a.logger)
+	if err != nil {
+		return "", fmt.Errorf("error inserting archive blocks: %w", err)
+	}
+
+	boardsAndBlocks, err = a.CreateBoardsAndBlocks(boardsAndBlocks, opt.ModifiedBy, false)
 	if err != nil {
 		return "", fmt.Errorf("error inserting archive blocks: %w", err)
 	}
 
 	// find new board id
-	for _, block := range blocks {
-		if block.Type == model.TypeBoard {
-			return block.ID, nil
-		}
+	for _, board := range boardsAndBlocks.Boards {
+		return board.ID, nil
 	}
 	return "", fmt.Errorf("missing board in archive: %w", model.ErrInvalidBoardBlock)
 }

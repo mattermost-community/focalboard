@@ -7,7 +7,7 @@ import {ImageBlock, createImageBlock} from '../../blocks/imageBlock'
 import octoClient from '../../octoClient'
 import mutator from '../../mutator'
 
-export default function useImagePaste(cardId: string, contentOrder: Array<string | string[]>, rootId: string): void {
+export default function useImagePaste(boardId: string, cardId: string, contentOrder: Array<string | string[]>): void {
     const uploadItems = useCallback(async (items: FileList) => {
         let newImage: File|null = null
         const uploads: Promise<string|undefined>[] = []
@@ -19,7 +19,7 @@ export default function useImagePaste(cardId: string, contentOrder: Array<string
         for (const item of items) {
             newImage = item
             if (newImage?.type.indexOf('image/') === 0) {
-                uploads.push(octoClient.uploadFile(rootId, newImage))
+                uploads.push(octoClient.uploadFile(boardId, newImage))
             }
         }
 
@@ -31,19 +31,19 @@ export default function useImagePaste(cardId: string, contentOrder: Array<string
             }
             const block = createImageBlock()
             block.parentId = cardId
-            block.rootId = rootId
+            block.boardId = boardId
             block.fields.fileId = fileId || ''
             blocksToInsert.push(block)
         }
 
         mutator.performAsUndoGroup(async () => {
-            const newContentBlocks = await mutator.insertBlocks(blocksToInsert, 'pasted images')
+            const newContentBlocks = await mutator.insertBlocks(boardId, blocksToInsert, 'pasted images')
             const newContentOrder = JSON.parse(JSON.stringify(contentOrder))
             newContentOrder.push(...newContentBlocks.map((b: ImageBlock) => b.id))
 
-            await mutator.changeCardContentOrder(cardId, contentOrder, newContentOrder, 'paste image')
+            await mutator.changeCardContentOrder(boardId, cardId, contentOrder, newContentOrder, 'paste image')
         })
-    }, [cardId, contentOrder, rootId])
+    }, [cardId, contentOrder, boardId])
 
     const onDrop = useCallback((event: DragEvent): void => {
         if (event.dataTransfer) {
@@ -66,5 +66,5 @@ export default function useImagePaste(cardId: string, contentOrder: Array<string
             document.removeEventListener('paste', onPaste)
             document.removeEventListener('drop', onDrop)
         }
-    }, [uploadItems])
+    }, [uploadItems, onPaste, onDrop])
 }

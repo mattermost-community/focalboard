@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useState, useCallback, useMemo} from 'react'
 import {useRouteMatch} from 'react-router-dom'
 import {useIntl} from 'react-intl'
 
@@ -8,9 +8,6 @@ import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
-import {getCardComments} from '../../store/comments'
-import {getCardContents} from '../../store/contents'
-import {useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -21,8 +18,11 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Tooltip from '../../widgets/tooltip'
+import {Permission} from '../../constants'
 import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import './kanbanCard.scss'
@@ -38,7 +38,7 @@ type Props = {
     visiblePropertyTemplates: IPropertyTemplate[]
     isSelected: boolean
     visibleBadges: boolean
-    onClick?: (e: React.MouseEvent) => void
+    onClick?: (e: React.MouseEvent, card: Card) => void
     readonly: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
     showCard: (cardId?: string) => void
@@ -56,45 +56,46 @@ const KanbanCard = (props: Props) => {
         className += ' dragover'
     }
 
-    const contents = useAppSelector(getCardContents(card.id))
-    const comments = useAppSelector(getCardComments(card.id))
-
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
-    const handleDeleteCard = async () => {
+    const handleDeleteCard = useCallback(() => {
         if (!card) {
             Utils.assertFailure()
             return
         }
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: board.id, card: card.id})
-        await mutator.deleteBlock(card, 'delete card')
-    }
-    const confirmDialogProps: ConfirmationDialogBoxProps = {
-        heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
-        confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
-        onConfirm: handleDeleteCard,
-        onClose: () => {
-            setShowConfirmationDialogBox(false)
-        },
-    }
-    const handleDeleteButtonOnClick = () => {
+        mutator.deleteBlock(card, 'delete card')
+    }, [card, board.id])
+
+    const confirmDialogProps: ConfirmationDialogBoxProps = useMemo(() => {
+        return {
+            heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+            confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+            onConfirm: handleDeleteCard,
+            onClose: () => {
+                setShowConfirmationDialogBox(false)
+            },
+        }
+    }, [handleDeleteCard])
+
+    const handleDeleteButtonOnClick = useCallback(() => {
         // user trying to delete a card with blank name
         // but content present cannot be deleted without
         // confirmation dialog
-        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
+        if (card?.title === '' && card?.fields?.contentOrder?.length === 0) {
             handleDeleteCard()
             return
         }
         setShowConfirmationDialogBox(true)
-    }
+    }, [handleDeleteCard, card.title, card?.fields?.contentOrder?.length])
+
+    const handleOnClick = useCallback((e: React.MouseEvent) => {
+        if (props.onClick) {
+            props.onClick(e, card)
+        }
+    }, [props.onClick, card])
 
     const isOnboardingCard = card.title === 'Create a new card'
-    const showOnboarding = isOnboardingCard && !match.params.cardId && !board.fields.isTemplate && Utils.isFocalboardPlugin()
-
-    const handleOnClick = async (e: React.MouseEvent) => {
-        if (props.onClick) {
-            props.onClick(e)
-        }
-    }
+    const showOnboarding = isOnboardingCard && !match.params.cardId && !board.isTemplate && Utils.isFocalboardPlugin()
 
     return (
         <>
@@ -112,32 +113,35 @@ const KanbanCard = (props: Props) => {
                 >
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
-                        <Menu.Text
-                            icon={<DeleteIcon/>}
-                            id='delete'
-                            name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
-                            onClick={handleDeleteButtonOnClick}
-                        />
-                        <Menu.Text
-                            icon={<DuplicateIcon/>}
-                            id='duplicate'
-                            name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
-                            onClick={() => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
-                                mutator.duplicateCard(
-                                    card.id,
-                                    board,
-                                    'duplicate card',
-                                    false,
-                                    async (newCardId) => {
-                                        props.showCard(newCardId)
-                                    },
-                                    async () => {
-                                        props.showCard(undefined)
-                                    },
-                                )
-                            }}
-                        />
+                        <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                            <Menu.Text
+                                icon={<DeleteIcon/>}
+                                id='delete'
+                                name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
+                                onClick={handleDeleteButtonOnClick}
+                            />
+                            <Menu.Text
+                                icon={<DuplicateIcon/>}
+                                id='duplicate'
+                                name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
+                                onClick={() => {
+                                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                                    mutator.duplicateCard(
+                                        card.id,
+                                        board.id,
+                                        false,
+                                        'duplicate card',
+                                        false,
+                                        async (newCardId) => {
+                                            props.showCard(newCardId)
+                                        },
+                                        async () => {
+                                            props.showCard(undefined)
+                                        },
+                                    )
+                                }}
+                            />
+                        </BoardPermissionGate>
                         <Menu.Text
                             icon={<LinkIcon/>}
                             id='copy'
@@ -175,8 +179,6 @@ const KanbanCard = (props: Props) => {
                             board={board}
                             readOnly={true}
                             card={card}
-                            contents={contents}
-                            comments={comments}
                             propertyTemplate={template}
                             showEmptyPlaceholder={false}
                         />

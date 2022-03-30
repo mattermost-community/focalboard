@@ -4,10 +4,10 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import {getCurrentWorkspace} from '../store/workspace'
-import {getCurrentBoard} from '../store/boards'
+import {getCurrentTeam} from '../store/teams'
+import {getCurrentBoard, isLoadingBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
-import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
+import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentViewId, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 import {getClientConfig, setClientConfig} from '../store/clientConfig'
@@ -27,7 +27,8 @@ type Props = {
 }
 
 function CenterContent(props: Props) {
-    const workspace = useAppSelector(getCurrentWorkspace)
+    const team = useAppSelector(getCurrentTeam)
+    const isLoading = useAppSelector(isLoadingBoard)
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const board = useAppSelector(getCurrentBoard)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
@@ -62,12 +63,12 @@ function CenterContent(props: Props) {
     if (board && activeView) {
         let property = groupByProperty
         if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
-            property = board?.fields.cardProperties.find((o) => o.type === 'select')
+            property = board?.cardProperties.find((o) => o.type === 'select')
         }
 
         let displayProperty = dateDisplayProperty
         if (!displayProperty && activeView.fields.viewType === 'calendar') {
-            displayProperty = board.fields.cardProperties.find((o) => o.type === 'date')
+            displayProperty = board.cardProperties.find((o) => o.type === 'date')
         }
 
         return (
@@ -82,9 +83,12 @@ function CenterContent(props: Props) {
                 groupByProperty={property}
                 dateDisplayProperty={displayProperty}
                 views={views}
-                showShared={clientConfig?.enablePublicSharedBoards || false}
             />
         )
+    }
+
+    if (board || isLoading) {
+        return null
     }
 
     return (
@@ -92,16 +96,16 @@ function CenterContent(props: Props) {
             title={
                 <FormattedMessage
                     id='BoardTemplateSelector.plugin.no-content-title'
-                    defaultMessage='Create a Board in {workspaceName}'
-                    values={{workspaceName: workspace?.title}}
+                    defaultMessage='Create a Board in {teamName}'
+                    values={{teamName: team?.title}}
                 />
             }
             description={
                 <FormattedMessage
                     id='BoardTemplateSelector.plugin.no-content-description'
-                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of "{workspaceName}" will have access to boards created here.'
+                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of "{teamName}" will have access to boards created here.'
                     values={{
-                        workspaceName: <b>{workspace?.title}</b>,
+                        teamName: <b>{team?.title}</b>,
                         lineBreak: <br/>,
                     }}
                 />
@@ -112,7 +116,8 @@ function CenterContent(props: Props) {
 
 const Workspace = (props: Props) => {
     const board = useAppSelector(getCurrentBoard)
-    const view = useAppSelector(getCurrentView)
+
+    const viewId = useAppSelector(getCurrentViewId)
     const [boardTemplateSelectorOpen, setBoardTemplateSelectorOpen] = useState(false)
 
     const closeBoardTemplateSelector = useCallback(() => {
@@ -123,7 +128,7 @@ const Workspace = (props: Props) => {
     }, [])
     useEffect(() => {
         setBoardTemplateSelectorOpen(false)
-    }, [board, view])
+    }, [board, viewId])
 
     return (
         <div className='Workspace'>
@@ -131,13 +136,12 @@ const Workspace = (props: Props) => {
                 <Sidebar
                     onBoardTemplateSelectorOpen={openBoardTemplateSelector}
                     activeBoardId={board?.id}
-                    activeViewId={view?.id}
                 />
             }
             <div className='mainFrame'>
                 {boardTemplateSelectorOpen &&
                     <BoardTemplateSelector onClose={closeBoardTemplateSelector}/>}
-                {(board?.fields.isTemplate) &&
+                {(board?.isTemplate) &&
                 <div className='banner'>
                     <FormattedMessage
                         id='Workspace.editing-board-template'

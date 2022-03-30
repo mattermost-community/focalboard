@@ -22,7 +22,7 @@ const ImageElement = (props: Props): JSX.Element|null => {
     useEffect(() => {
         if (!imageDataUrl) {
             const loadImage = async () => {
-                const url = await octoClient.getFileAsDataUrl(block.rootId, props.block.fields.fileId)
+                const url = await octoClient.getFileAsDataUrl(block.boardId, props.block.fields.fileId)
                 setImageDataUrl(url)
             }
             loadImage()
@@ -46,11 +46,11 @@ contentRegistry.registerContentType({
     type: 'image',
     getDisplayText: (intl) => intl.formatMessage({id: 'ContentBlock.image', defaultMessage: 'image'}),
     getIcon: () => <ImageIcon/>,
-    createBlock: async (rootId: string) => {
+    createBlock: async (boardId: string) => {
         return new Promise<ImageBlock>(
             (resolve) => {
                 Utils.selectLocalFile(async (file) => {
-                    const fileId = await octoClient.uploadFile(rootId, file)
+                    const fileId = await octoClient.uploadFile(boardId, file)
 
                     const block = createImageBlock()
                     block.fields.fileId = fileId || ''

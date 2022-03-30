@@ -28,7 +28,7 @@ const ViewHeaderPropertiesMenu = (props: Props) => {
         } else {
             newVisiblePropertyIds = [...visiblePropertyIds, propertyId]
         }
-        mutator.changeViewVisibleProperties(activeView.id, visiblePropertyIds, newVisiblePropertyIds)
+        mutator.changeViewVisibleProperties(activeView.boardId, activeView.id, visiblePropertyIds, newVisiblePropertyIds)
     }
 
     return (

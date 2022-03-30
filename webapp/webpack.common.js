@@ -68,19 +68,10 @@ function makeCommonConfig() {
                 },
                 {
                     test: /\.(eot|tiff|svg|woff2|woff|ttf|png|jpg|jpeg|gif)$/,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: '[name].[ext]',
-                                outputPath: 'static',
-                            },
-                        },
-                        {
-                            loader: 'image-webpack-loader',
-                            options: {},
-                        },
-                    ],
+                    type: 'asset/resource',
+                    generator: {
+                        filename: 'static/[name].[ext]',
+                    }
                 },
             ],
         },

@@ -1,3 +1,4 @@
+//go:generate mockgen --build_flags=--mod=mod -destination=mocks/mockstore.go -package mocks . Store
 package ws
 
 import (
@@ -5,19 +6,35 @@ import (
 )
 
 const (
-	websocketActionAuth                 = "AUTH"
-	websocketActionSubscribeWorkspace   = "SUBSCRIBE_WORKSPACE"
-	websocketActionUnsubscribeWorkspace = "UNSUBSCRIBE_WORKSPACE"
-	websocketActionSubscribeBlocks      = "SUBSCRIBE_BLOCKS"
-	websocketActionUnsubscribeBlocks    = "UNSUBSCRIBE_BLOCKS"
-	websocketActionUpdateBlock          = "UPDATE_BLOCK"
-	websocketActionUpdateConfig         = "UPDATE_CLIENT_CONFIG"
-	websocketActionUpdateSubscription   = "UPDATE_SUBSCRIPTION"
+	websocketActionAuth                = "AUTH"
+	websocketActionSubscribeTeam       = "SUBSCRIBE_TEAM"
+	websocketActionUnsubscribeTeam     = "UNSUBSCRIBE_TEAM"
+	websocketActionSubscribeBlocks     = "SUBSCRIBE_BLOCKS"
+	websocketActionUnsubscribeBlocks   = "UNSUBSCRIBE_BLOCKS"
+	websocketActionUpdateBoard         = "UPDATE_BOARD"
+	websocketActionUpdateMember        = "UPDATE_MEMBER"
+	websocketActionDeleteMember        = "DELETE_MEMBER"
+	websocketActionUpdateBlock         = "UPDATE_BLOCK"
+	websocketActionUpdateConfig        = "UPDATE_CLIENT_CONFIG"
+	websocketActionUpdateCategory      = "UPDATE_CATEGORY"
+	websocketActionUpdateCategoryBlock = "UPDATE_BLOCK_CATEGORY"
+	websocketActionUpdateSubscription  = "UPDATE_SUBSCRIPTION"
 )
 
+type Store interface {
+	GetBlock(blockID string) (*model.Block, error)
+	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
+}
+
 type Adapter interface {
-	BroadcastBlockChange(workspaceID string, block model.Block)
-	BroadcastBlockDelete(workspaceID, blockID, parentID string)
+	BroadcastBlockChange(teamID string, block model.Block)
+	BroadcastBlockDelete(teamID, blockID, boardID string)
+	BroadcastBoardChange(teamID string, board *model.Board)
+	BroadcastBoardDelete(teamID, boardID string)
+	BroadcastMemberChange(teamID, boardID string, member *model.BoardMember)
+	BroadcastMemberDelete(teamID, boardID, userID string)
 	BroadcastConfigChange(clientConfig model.ClientConfig)
-	BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription)
+	BroadcastCategoryChange(category model.Category)
+	BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData)
+	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
 }
