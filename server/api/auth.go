@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -459,9 +460,14 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				UpdateAt:    now,
 			}
 
-			_, err := a.app.GetUser(userID)
+			user, err := a.app.GetUser(userID)
 			if err != nil {
 				a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", err)
+				return
+			}
+
+			if user.IsGuest {
+				a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", errors.New("Guests not supported"))
 				return
 			}
 
