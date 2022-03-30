@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Board} from '../../blocks/board'
@@ -27,6 +27,10 @@ import CalendarIcon from '../../widgets/icons/calendar'
 
 import {getCurrentTeam} from '../../store/teams'
 import {Permission} from '../../constants'
+import DuplicateIcon from "../../widgets/icons/duplicate"
+import {Utils} from "../../utils"
+
+import {useHistory, useRouteMatch} from "react-router-dom"
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
@@ -58,6 +62,9 @@ const SidebarBoardItem = (props: Props) => {
     const currentViewId = useAppSelector(getCurrentViewId)
     const teamID = team?.id || ''
 
+    const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
+    const history = useHistory()
+
     const generateMoveToCategoryOptions = (blockID: string) => {
         return props.allCategories.map((category) => (
             <Menu.Text
@@ -74,6 +81,20 @@ const SidebarBoardItem = (props: Props) => {
     }
 
     const board = props.board
+
+    const handleDuplicateBoard = useCallback(() => {
+        return mutator.duplicateBoard(
+            board.id,
+            undefined,
+            board.isTemplate,
+            undefined,
+            () => {
+                Utils.showBoard(board.id, match, history)
+                return Promise.resolve()
+            }
+        )
+    }, [board.id])
+
     const title = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
     return (
         <>
@@ -126,6 +147,12 @@ const SidebarBoardItem = (props: Props) => {
                         >
                             {generateMoveToCategoryOptions(board.id)}
                         </Menu.SubMenu>
+                        <Menu.Text
+                            id='duplicateBoard'
+                            name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
+                            icon={<DuplicateIcon/>}
+                            onClick={handleDuplicateBoard}
+                        />
                     </Menu>
                 </MenuWrapper>
             </div>
