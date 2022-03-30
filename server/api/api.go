@@ -2110,6 +2110,8 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	a.logger.Info("Hello, World!")
+
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
