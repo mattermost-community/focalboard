@@ -45,6 +45,7 @@ type ImportArchiveOptions struct {
 	TeamID        string
 	ModifiedBy    string
 	BoardModifier BoardModifier
+	BlockModifier BlockModifier
 }
 
 // ErrUnsupportedArchiveVersion is an error returned when trying to import an
