@@ -81,6 +81,8 @@ func (a *App) createWelcomeBoard(userID, teamID string) (string, error) {
 		return "", errCannotCreateBoard
 	}
 
+	// need variable for this to
+	// get reference for board patch
 	newType := model.BoardTypePrivate
 
 	patch := &model.BoardPatch{
