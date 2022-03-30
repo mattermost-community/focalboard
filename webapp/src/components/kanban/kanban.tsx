@@ -66,7 +66,7 @@ const Kanban = (props: Props) => {
     const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
 
     const propertyNameChanged = useCallback(async (option: IPropertyOption, text: string): Promise<void> => {
-        await mutator.changePropertyOptionValue(board, groupByProperty!, option, text)
+        await mutator.changePropertyOptionValue(board.id, board.cardProperties, groupByProperty!, option, text)
     }, [board, groupByProperty])
 
     const addGroupClicked = useCallback(async () => {
@@ -78,7 +78,7 @@ const Kanban = (props: Props) => {
             color: 'propColorDefault',
         }
 
-        await mutator.insertPropertyOption(board, groupByProperty!, option, 'add group')
+        await mutator.insertPropertyOption(board.id, board.cardProperties, groupByProperty!, option, 'add group')
     }, [board, groupByProperty])
 
     const orderAfterMoveToColumn = useCallback((cardIds: string[], columnId?: string): string[] => {

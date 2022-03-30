@@ -1,9 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {fireEvent, render, screen, within} from '@testing-library/react'
+import {fireEvent, render, screen, within, act} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import {Provider as ReduxProvider} from 'react-redux'
 
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../testUtils'
@@ -277,9 +277,11 @@ describe('components/centerPanel', () => {
                 </ReduxProvider>,
             ))
 
-            const cardElement = screen.getByRole('textbox', {name: 'card1'})
-            expect(cardElement).not.toBeNull()
-            userEvent.click(cardElement, {shiftKey: true})
+            act(() => {
+                const cardElement = screen.getByRole('textbox', {name: 'card1'})
+                expect(cardElement.parentNode).not.toBeNull()
+                userEvent.click(cardElement as HTMLElement, {shiftKey: true})
+            })
             expect(container).toMatchSnapshot()
 
             //escape
@@ -303,16 +305,20 @@ describe('components/centerPanel', () => {
                 </ReduxProvider>,
             ))
 
-            //select card1
-            const card1Element = screen.getByRole('textbox', {name: 'card1'})
-            expect(card1Element).not.toBeNull()
-            userEvent.click(card1Element, {shiftKey: true})
+            act(() => {
+                //select card1
+                const card1Element = screen.getByRole('textbox', {name: 'card1'})
+                expect(card1Element).not.toBeNull()
+                userEvent.click(card1Element, {shiftKey: true})
+            })
             expect(container).toMatchSnapshot()
 
-            //select card2
-            const card2Element = screen.getByRole('textbox', {name: 'card2'})
-            expect(card2Element).not.toBeNull()
-            userEvent.click(card2Element, {shiftKey: true, ctrlKey: true})
+            act(() => {
+                //select card2
+                const card2Element = screen.getByRole('textbox', {name: 'card2'})
+                expect(card2Element).not.toBeNull()
+                userEvent.click(card2Element, {shiftKey: true, ctrlKey: true})
+            })
             expect(container).toMatchSnapshot()
 
             //escape
@@ -335,9 +341,11 @@ describe('components/centerPanel', () => {
                     />
                 </ReduxProvider>,
             ))
-            const cardElement = screen.getByRole('textbox', {name: 'card1'})
-            expect(cardElement).not.toBeNull()
-            userEvent.click(cardElement, {shiftKey: true})
+            act(() => {
+                const cardElement = screen.getByRole('textbox', {name: 'card1'})
+                expect(cardElement).not.toBeNull()
+                userEvent.click(cardElement, {shiftKey: true})
+            })
             expect(container).toMatchSnapshot()
 
             //delete
@@ -360,9 +368,11 @@ describe('components/centerPanel', () => {
                     />
                 </ReduxProvider>,
             ))
-            const cardElement = screen.getByRole('textbox', {name: 'card1'})
-            expect(cardElement).not.toBeNull()
-            userEvent.click(cardElement, {shiftKey: true})
+            act(() => {
+                const cardElement = screen.getByRole('textbox', {name: 'card1'})
+                expect(cardElement).not.toBeNull()
+                userEvent.click(cardElement, {shiftKey: true})
+            })
             expect(container).toMatchSnapshot()
 
             //ctrl+d

@@ -223,7 +223,8 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 	}
 
 	if len(p.UpdatedCardProperties) != 0 || len(p.DeletedCardProperties) != 0 {
-		// first we accumulate all properties indexed by ID
+		// first we accumulate all properties indexed by, and maintain their order
+		keyOrder := []string{}
 		cardPropertyMap := map[string]map[string]interface{}{}
 		for _, prop := range board.CardProperties {
 			id, ok := prop["id"].(string)
@@ -233,6 +234,7 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 			}
 
 			cardPropertyMap[id] = prop
+			keyOrder = append(keyOrder, id)
 		}
 
 		// if there are properties marked for removal, we delete them
@@ -249,13 +251,20 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 				continue
 			}
 
+			_, exists := cardPropertyMap[id]
+			if !exists {
+				keyOrder = append(keyOrder, id)
+			}
 			cardPropertyMap[id] = newprop
 		}
 
 		// and finally we flatten and save the updated properties
 		newCardProperties := []map[string]interface{}{}
-		for _, p := range cardPropertyMap {
-			newCardProperties = append(newCardProperties, p)
+		for _, key := range keyOrder {
+			p, exists := cardPropertyMap[key]
+			if exists {
+				newCardProperties = append(newCardProperties, p)
+			}
 		}
 
 		board.CardProperties = newCardProperties
@@ -301,4 +310,24 @@ func (b *Board) IsValid() error {
 		return InvalidBoardErr{"invalid-board-type"}
 	}
 	return nil
+}
+
+// BoardMemberHistoryEntry stores the information of the membership of a user on a board
+// swagger:model
+type BoardMemberHistoryEntry struct {
+	// The ID of the board
+	// required: true
+	BoardID string `json:"boardId"`
+
+	// The ID of the user
+	// required: true
+	UserID string `json:"userId"`
+
+	// The action that added this history entry (created or deleted)
+	// required: false
+	Action string `json:"action"`
+
+	// The insertion time
+	// required: true
+	InsertAt int64 `json:"insertAt"`
 }

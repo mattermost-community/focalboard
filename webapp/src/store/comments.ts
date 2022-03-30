@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {CommentBlock} from '../blocks/commentBlock'
 
@@ -53,7 +53,7 @@ const commentsSlice = createSlice({
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
             state.comments = {}
             state.commentsByCard = {}
-            for (const block of action.payload) {
+            for (const block of action.payload.blocks) {
                 if (block.type === 'comment') {
                     state.comments[block.id] = block as CommentBlock
                     state.commentsByCard[block.parentId] = state.commentsByCard[block.parentId] || []
@@ -92,3 +92,17 @@ export function getLastCardComment(cardId: string): (state: RootState) => Commen
         return comments?.[comments?.length - 1]
     }
 }
+
+export const getLastCommentByCard = createSelector(
+    (state: RootState) => state.comments?.commentsByCard || null,
+    (commentsByCard: {[key: string]: CommentBlock[]}|null): {[key: string]: CommentBlock} => {
+        const lastCommentByCard: {[key: string]: CommentBlock} = {}
+        Object.keys(commentsByCard || {}).forEach((cardId) => {
+            if (commentsByCard && commentsByCard[cardId]) {
+                const comments = commentsByCard[cardId]
+                lastCommentByCard[cardId] = comments?.[comments?.length - 1]
+            }
+        })
+        return lastCommentByCard
+    },
+)

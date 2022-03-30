@@ -6,7 +6,7 @@ import '@testing-library/jest-dom'
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {MemoryRouter} from 'react-router-dom'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import userEvent from '@testing-library/user-event'
 
 import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
@@ -450,7 +450,7 @@ describe('src/component/kanban/kanban', () => {
         fireEvent.blur(inputTitle)
 
         await waitFor(async () => {
-            expect(mockedchangePropertyOptionValue).toBeCalledWith(board, groupProperty, optionQ1, 'New Q1')
+            expect(mockedchangePropertyOptionValue).toBeCalledWith(board.id, board.cardProperties, groupProperty, optionQ1, 'New Q1')
         })
 
         expect(container).toMatchSnapshot()

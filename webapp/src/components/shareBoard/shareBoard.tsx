@@ -239,10 +239,20 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             ))
     }
 
+    const toolbar = (
+        <span className='text-heading5'>
+            <FormattedMessage
+                id={'ShareBoard.Title'}
+                defaultMessage={'Share Board'}
+            />
+        </span>
+    )
+
     return (
         <Dialog
             onClose={props.onClose}
             className='ShareBoardDialog'
+            toolbar={toolbar}
         >
             <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
                 <div className='share-input__container'>
@@ -253,7 +263,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             value={selectedUser}
                             className={'userSearchInput'}
                             cacheOptions={true}
-                            loadOptions={(inputValue) => client.searchTeamUsers(inputValue)}
+                            loadOptions={(inputValue: string) => client.searchTeamUsers(inputValue)}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
                             getOptionValue={(u) => u.id}
@@ -272,17 +282,15 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             <div className='user-items'>
                 <TeamPermissionsRow/>
 
-                {Object.values(members).map((member) => {
-                    const user = boardUsers.find((u) => u.id === member.userId)
-                    if (!user) {
+                {boardUsers.map((user) => {
+                    if (!members[user.id]) {
                         return null
                     }
-
                     return (
                         <UserPermissionsRow
                             key={user.id}
                             user={user}
-                            member={member}
+                            member={members[user.id]}
                             onDeleteBoardMember={onDeleteBoardMember}
                             onUpdateBoardMember={onUpdateBoardMember}
                             isMe={user.id === me?.id}

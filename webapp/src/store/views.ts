@@ -79,7 +79,7 @@ const viewsSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
             state.views = {}
-            for (const block of action.payload) {
+            for (const block of action.payload.blocks) {
                 if (block.type === 'view') {
                     state.views[block.id] = block as BoardView
                 }
@@ -129,7 +129,7 @@ export function getView(viewId: string): (state: RootState) => BoardView|null {
 }
 
 export const getCurrentBoardViews = createSelector(
-    (state) => state.boards.current,
+    (state: RootState) => state.boards.current,
     getViews,
     (boardId, views) => {
         Utils.log(`getCurrentBoardViews boardId: ${boardId} views: ${views.length}`)

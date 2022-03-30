@@ -12,6 +12,7 @@ import (
 	"github.com/mattermost/focalboard/server/ws"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
+	apierrors "github.com/mattermost/mattermost-plugin-api/errors"
 
 	"github.com/mattermost/mattermost-server/v6/model"
 
@@ -113,5 +114,5 @@ func (da *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*
 }
 
 func (da *pluginAPIAdapter) IsErrNotFound(err error) bool {
-	return errors.Is(err, pluginapi.ErrNotFound)
+	return errors.Is(err, apierrors.ErrNotFound)
 }

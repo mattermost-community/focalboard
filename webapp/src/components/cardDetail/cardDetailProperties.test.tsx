@@ -4,7 +4,7 @@
 import React from 'react'
 import {render, screen, act} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import '@testing-library/jest-dom'
 import {createIntl} from 'react-intl'
 
@@ -98,6 +98,11 @@ describe('components/cardDetail/CardDetailProperties', () => {
                 [card.id]: card,
             },
             current: card.id,
+        },
+        clientConfig: {
+            value: {
+                featureFlags: {},
+            },
         },
     }
 
