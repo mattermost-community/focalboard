@@ -31,7 +31,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
         />
       </button>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -165,7 +165,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
         />
       </button>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -334,7 +334,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
         />
       </button>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -468,7 +468,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
         />
       </button>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
