@@ -10,7 +10,7 @@ import {Board, createBoard, IPropertyTemplate} from '../../../blocks/board'
 import mutator from '../../../mutator'
 import Calculation from '../../calculations/calculation'
 import {columnWidth} from '../tableRow'
-import {BoardView} from '../../../blocks/boardView'
+import {BoardView, createBoardView} from '../../../blocks/boardView'
 import {Card} from '../../../blocks/card'
 import {Options} from '../../calculations/options'
 
@@ -42,7 +42,7 @@ const CalculationRow = (props: Props): JSX.Element => {
         ...props.board.cardProperties.filter((template) => props.activeView.fields.visiblePropertyIds.includes(template.id)),
     ]
 
-    const selectedCalculations = props.board.columnCalculations || []
+    const selectedCalculations = props.activeView.fields.columnCalculations || []
 
     const [hovered, setHovered] = useState(false)
 
@@ -70,9 +70,15 @@ const CalculationRow = (props: Props): JSX.Element => {
                             onChange={(v: string) => {
                                 const calculations = {...selectedCalculations}
                                 calculations[template.id] = v
-                                const newBoard = createBoard(props.board)
-                                newBoard.columnCalculations = calculations
-                                mutator.updateBoard(newBoard, props.board, 'update_calculation')
+
+                                // const newBoard = createBoard(props.board)
+                                // newBoard.columnCalculations = calculations
+                                // mutator.updateBoard(newBoard, props.board, 'update_calculation')
+                                // setHovered(false)
+
+                                const newView = createBoardView(props.activeView)
+                                newView.fields.columnCalculations = calculations
+                                mutator.updateBlock(props.board.id, newView, props.activeView, 'updated view column calculation')
                                 setHovered(false)
                             }}
                             cards={props.cards}
