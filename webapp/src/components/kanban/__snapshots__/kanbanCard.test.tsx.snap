@@ -20,7 +20,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
         />
       </button>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -157,7 +157,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
         />
       </button>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -294,7 +294,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
         />
       </button>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
