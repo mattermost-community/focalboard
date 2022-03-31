@@ -43,10 +43,10 @@ func TestApp_ImportArchive(t *testing.T) {
 			ModifiedBy: "user",
 		}
 
-		// CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, error)
 		th.Store.EXPECT().CreateBoardsAndBlocks(gomock.AssignableToTypeOf(&model.BoardsAndBlocks{}), "user").Return(babs, nil)
-		// GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
 		th.Store.EXPECT().GetMembersForBoard(board.ID).AnyTimes().Return([]*model.BoardMember{boardMember}, nil)
+		th.Store.EXPECT().GetBoard(board.ID).Return(board, nil)
+		th.Store.EXPECT().GetMemberForBoard(board.ID, "user").Return(boardMember, nil)
 
 		err := th.App.ImportArchive(r, opts)
 		require.NoError(t, err, "import archive should not fail")
