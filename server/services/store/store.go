@@ -129,7 +129,7 @@ type Store interface {
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
 
 	RemoveDefaultTemplates(boards []*model.Board) error
-	GetTemplateBoards(teamID string) ([]*model.Board, error)
+	GetTemplateBoards(teamID, userID string) ([]*model.Board, error)
 
 	// @withTransaction
 	RunDataRetention(globalRetentionDate int64, batchSize int64) (int64, error)
