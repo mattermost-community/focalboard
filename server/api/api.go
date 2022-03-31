@@ -2194,12 +2194,21 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	results := []*model.Board{}
+	for _, board := range boards {
+		if board.Type == model.BoardTypeOpen {
+			results = append(results, board)
+		} else if a.permissions.HasPermissionToBoard(userID, board.ID, model.PermissionViewBoard) {
+			results = append(results, board)
+		}
+	}
+
 	a.logger.Debug("GetTemplates",
 		mlog.String("teamID", teamID),
-		mlog.Int("boardsCount", len(boards)),
+		mlog.Int("boardsCount", len(results)),
 	)
 
-	data, err := json.Marshal(boards)
+	data, err := json.Marshal(results)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -2208,7 +2217,7 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 	// response
 	jsonBytesResponse(w, http.StatusOK, data)
 
-	auditRec.AddMeta("templatesCount", len(boards))
+	auditRec.AddMeta("templatesCount", len(results))
 	auditRec.Success()
 }
 
@@ -3054,11 +3063,6 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
-	// - name: boardID
-	//   in: path
-	//   description: Board ID
-	//   required: true
-	//   type: string
 	// - name: teamID
 	//   in: path
 	//   description: Team ID
