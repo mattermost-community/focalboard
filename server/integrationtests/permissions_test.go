@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/client"
@@ -70,7 +71,20 @@ func setupClients(th *TestHelper) Clients {
 	return clients
 }
 
-func setupData(t *testing.T, th *TestHelper) {
+func toJSON(t *testing.T, obj interface{}) string {
+	result, err := json.Marshal(obj)
+	require.NoError(t, err)
+	return string(result)
+}
+
+type TestData struct {
+	publicBoard     *model.Board
+	privateBoard    *model.Board
+	publicTemplate  *model.Board
+	privateTemplate *model.Board
+}
+
+func setupData(t *testing.T, th *TestHelper) TestData {
 	customTemplate1, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 1", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypeOpen}, "admin", true)
 	require.NoError(t, err)
 	customTemplate2, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate}, "admin", true)
@@ -98,12 +112,19 @@ func setupData(t *testing.T, th *TestHelper) {
 	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: "editor", SchemeEditor: true})
 	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: "admin", SchemeAdmin: true})
 	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: "admin", SchemeAdmin: true})
+
+	return TestData{
+		publicBoard:     board1,
+		privateBoard:    board2,
+		publicTemplate:  customTemplate1,
+		privateTemplate: customTemplate2,
+	}
 }
 
 func runTestCases(t *testing.T, ttCases []TestCase) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	setupData(t, th)
+	testData := setupData(t, th)
 
 	clients := setupClients(th)
 
@@ -128,22 +149,31 @@ func runTestCases(t *testing.T, ttCases []TestCase) {
 			}
 
 			if tc.method == methodGet {
-				response, err := reqClient.DoAPIGet(tc.url, "")
+				url := strings.ReplaceAll(tc.url, "{PRIVATE_BOARD_ID}", testData.privateBoard.ID)
+				url = strings.ReplaceAll(url, "{PUBLIC_BOARD_ID}", testData.publicBoard.ID)
+				url = strings.ReplaceAll(url, "{PUBLIC_TEMPLATE_ID}", testData.publicTemplate.ID)
+				url = strings.ReplaceAll(url, "{PRIVATE_TEMPLATE_ID}", testData.privateTemplate.ID)
+				response, err := reqClient.DoAPIGet(url, "")
 				if tc.expectedStatusCode >= 200 && tc.expectedStatusCode < 300 {
 					require.NoError(t, err)
 				}
 				require.Equal(t, tc.expectedStatusCode, response.StatusCode)
 				if tc.expectedStatusCode >= 200 && tc.expectedStatusCode < 300 {
-					var data []interface{}
 					body, err := ioutil.ReadAll(response.Body)
 					if err != nil {
 						require.Fail(t, err.Error())
 					}
-					err = json.Unmarshal(body, &data)
-					if err != nil {
-						require.Fail(t, err.Error())
+					if strings.HasPrefix(string(body), "[") {
+						var data []interface{}
+						err = json.Unmarshal(body, &data)
+						if err != nil {
+							require.Fail(t, err.Error())
+						}
+						require.Len(t, data, tc.totalResults)
+					} else {
+						require.Equal(t, 1, tc.totalResults)
+						require.Greater(t, len(string(body)), 2)
 					}
-					require.Len(t, data, tc.totalResults)
 				}
 			}
 		})
@@ -194,6 +224,61 @@ func TestPermissionsGetTeamTemplates(t *testing.T) {
 		{"/teams/0/templates", methodGet, "", userCommenter, http.StatusOK, 7},
 		{"/teams/0/templates", methodGet, "", userEditor, http.StatusOK, 7},
 		{"/teams/0/templates", methodGet, "", userAdmin, http.StatusOK, 7},
+	}
+	runTestCases(t, ttCases)
+}
+
+func TestPermissionsCreateBoard(t *testing.T) {
+	publicBoard := toJSON(t, model.Board{Title: "Board To Create", TeamID: "test-team", Type: model.BoardTypeOpen})
+	privateBoard := toJSON(t, model.Board{Title: "Board To Create", TeamID: "test-team", Type: model.BoardTypeOpen})
+
+	ttCases := []TestCase{
+		// Create Public boards
+		{"/boards", methodPost, publicBoard, userAnon, http.StatusUnauthorized, 0},
+		{"/boards", methodPost, publicBoard, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards", methodPost, publicBoard, userTeamMember, http.StatusOK, 1},
+
+		// Create private boards
+		{"/boards", methodPost, privateBoard, userAnon, http.StatusUnauthorized, 0},
+		{"/boards", methodPost, privateBoard, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards", methodPost, privateBoard, userTeamMember, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases)
+}
+
+func TestPermissionsGetBoard(t *testing.T) {
+	ttCases := []TestCase{
+		{"/boards/{PRIVATE_BOARD_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/boards/{PRIVATE_BOARD_ID}", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PRIVATE_BOARD_ID}", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PRIVATE_BOARD_ID}", methodGet, "", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_BOARD_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}", methodGet, "", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodGet, "", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodGet, "", userAdmin, http.StatusOK, 1},
 	}
 	runTestCases(t, ttCases)
 }
