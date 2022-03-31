@@ -109,12 +109,12 @@ const WebsocketConnection = (props: Props) => {
         wsClient.addOnReconnect(() => dispatch(props.loadAction(props.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
         wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
-            if (subscription.subscriberId === me?.id && subscription.teamId === props.teamId) {
+            if (subscription.subscriberId === me?.id) {
                 dispatch(followBlock(subscription))
             }
         })
         wsClient.setOnUnfollowBlock((_: WSClient, subscription: Subscription): void => {
-            if (subscription.subscriberId === me?.id && subscription.teamId === props.teamId) {
+            if (subscription.subscriberId === me?.id) {
                 dispatch(unfollowBlock(subscription))
             }
         })
