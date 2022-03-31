@@ -9,7 +9,7 @@ import Select from 'react-select/async'
 import {CSSObject} from '@emotion/serialize'
 
 import {useAppSelector} from '../../store/hooks'
-import {getCurrentBoardId, getCurrentBoardMembers} from '../../store/boards'
+import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
 import {getMe, getBoardUsersList} from '../../store/users'
 
 import {Utils, IDType} from '../../utils'
@@ -95,7 +95,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
 
     // members of the current board
     const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
-    const boardId = useAppSelector(getCurrentBoardId)
+    const board = useAppSelector(getCurrentBoard)
+    const boardId = board.id
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const me = useAppSelector<IUser|null>(getMe)
 
@@ -239,7 +240,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             ))
     }
 
-    const toolbar = (
+    const shareBoardTitle = (
         <span className='text-heading5'>
             <FormattedMessage
                 id={'ShareBoard.Title'}
@@ -247,6 +248,17 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             />
         </span>
     )
+
+    const shareTemplateTitle = (
+        <span className='text-heading5'>
+            <FormattedMessage
+                id={'ShareTemplate.Title'}
+                defaultMessage={'Share Template'}
+            />
+        </span>
+    )
+
+    const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
 
     return (
         <Dialog
@@ -299,7 +311,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                 })}
             </div>
 
-            {props.enableSharedBoards && (
+            {props.enableSharedBoards && !board.isTemplate && (
                 <div className='tabs-container'>
                     <button
                         onClick={() => setPublish(false)}
@@ -323,7 +335,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     </BoardPermissionGate>
                 </div>
             )}
-            {(props.enableSharedBoards && publish) &&
+            {(props.enableSharedBoards && publish && !board.isTemplate) &&
             (<BoardPermissionGate permissions={[Permission.ShareBoard]}>
                 <div className='tabs-content'>
                     <div>
@@ -401,7 +413,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             </BoardPermissionGate>
             )}
 
-            {!publish && (
+            {!publish && !board.isTemplate && (
                 <div className='tabs-content'>
                     <div>
                         <div className='d-flex justify-content-between'>
