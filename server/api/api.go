@@ -155,7 +155,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	// archives
 	apiv1.HandleFunc("/boards/{boardID}/archive/export", a.sessionRequired(a.handleArchiveExportBoard)).Methods("GET")
-	apiv1.HandleFunc("/boards/{boardID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
+	apiv1.HandleFunc("/teams/{teamID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
