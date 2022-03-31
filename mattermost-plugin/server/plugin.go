@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math"
 	"net/http"
@@ -38,6 +39,8 @@ const (
 	notifyFreqCardSecondsKey  = "notify_freq_card_seconds"
 	notifyFreqBoardSecondsKey = "notify_freq_board_seconds"
 )
+
+var ErrInsufficientLicense = errors.New("appropriate license required")
 
 type BoardsEmbed struct {
 	OriginalPath string `json:"originalPath"`
@@ -504,6 +507,11 @@ func isBoardsLink(link string) bool {
 
 func (p *Plugin) RunDataRetention(nowTime, batchSize int64) (int64, error) {
 	p.server.Logger().Debug("Boards RunDataRetention")
+	license := p.server.Store().GetLicense()
+	if license == nil || !(*license.Features.DataRetention) {
+		return 0, ErrInsufficientLicense
+	}
+
 	if p.server.Config().EnableDataRetention {
 		boardsRetentionDays := p.server.Config().DataRetentionDays
 		endTimeBoards := convertDaysToCutoff(boardsRetentionDays, time.Unix(nowTime/1000, 0))

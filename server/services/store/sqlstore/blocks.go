@@ -806,7 +806,14 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 	mlog.Info("Start Boards Data Retention",
 		mlog.String("Global Retention Date", time.Unix(globalRetentionDate/1000, 0).String()),
 		mlog.Int64("Raw Date", globalRetentionDate))
-	deleteTables := map[string]string{"blocks": "board_id", "blocks_history": "board_id", "boards": "id", "boards_history": "id"}
+	deleteTables := map[string]string{
+		"blocks":         "board_id",
+		"blocks_history": "board_id",
+		"boards":         "id",
+		"boards_history": "id",
+		"board_memebers": "board_id",
+		"sharing":        "id",
+	}
 
 	subBuilder := s.getQueryBuilder(db).
 		Select("board_id, MAX(update_at) AS maxDate").
@@ -818,14 +825,25 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 
 	builder := s.getQueryBuilder(db).
 		Select("board_id").
-		From("( " + subQuery + " ) As subquery")
+		From(s.tablePrefix + "boards").
+		LeftJoin("( " + subQuery + " ) As subquery ON ( subquery.board_id = " + s.tablePrefix + "boards)").
+		Where(sq.Lt{"maxDate": globalRetentionDate}).
+		Where(sq.NotEq{"team_id": "0"}).
+		Where(sq.Eq{"is_template": false}).
+		Limit(uint64(limit))
 
-	totalAffected := 0
-	deleteIds, err := s.globalOnlySubQuery(builder, globalRetentionDate, limit)
+	rows, err := builder.Query()
+	if err != nil {
+		s.logger.Error(`dataRetention subquery ERROR`, mlog.Err(err))
+		return 0, err
+	}
+	defer s.CloseRows(rows)
+	deleteIds, err := idsFromRows(rows)
 	if err != nil {
 		return 0, err
 	}
 
+	totalAffected := 0
 	if len(deleteIds) > 0 {
 		mlog.Debug("Data Retention DeleteIDs " + strings.Join(deleteIds, ", "))
 		for table, field := range deleteTables {
@@ -838,20 +856,6 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 	}
 	mlog.Info("Complete Boards Data Retention", mlog.Int("total deletion ids", len(deleteIds)), mlog.Int("TotalAffected", totalAffected))
 	return int64(totalAffected), nil
-}
-
-func (s *SQLStore) globalOnlySubQuery(baseBuilder sq.SelectBuilder, globalPolicyEndTime int64, limit int64) ([]string, error) {
-	query := baseBuilder.
-		Where(sq.Lt{"maxDate": globalPolicyEndTime}).
-		Limit(uint64(limit))
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`dataRetention subquery ERROR`, mlog.Err(err))
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-	return idsFromRows(rows)
 }
 
 func idsFromRows(rows *sql.Rows) ([]string, error) {
@@ -882,6 +886,37 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 		Delete(s.tablePrefix + table).
 		Where(whereClause)
 		// .Limit(uint64(limit))
+
+	s1, _, _ := deleteQuery.ToSql()
+	mlog.Debug(s1)
+	result, err := deleteQuery.Exec()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to delete "+table)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return 0, errors.Wrap(err, "failed to get rows affected for "+table)
+	}
+	mlog.Debug("Rows Affected" + strconv.FormatInt(rowsAffected, 10))
+	return rowsAffected, nil
+}
+
+func (s *SQLStore) cleanupOrphans(
+	db sq.BaseRunner,
+	table string,
+	deleteColumn string,
+) (int64, error) {
+
+	orphanQuery := s.getQueryBuilder(db).
+		Select(deleteColumn).
+		From(s.tablePrefix + table + "a").
+		LeftJoin(s.tablePrefix + "boards b on a.board_id = b.id").
+		Where(sq.Eq{"b.id": nil})
+
+	deleteQuery := s.getQueryBuilder(db).
+		Delete(s.tablePrefix + table).
+		Where(sq.Eq{"b.id": orphanQuery})
 
 	s1, _, _ := deleteQuery.ToSql()
 	mlog.Debug(s1)
