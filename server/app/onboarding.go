@@ -53,7 +53,7 @@ func (a *App) getOnboardingBoardID() (string, error) {
 
 	var onboardingBoardID string
 	for _, block := range boards {
-		if block.Title == WelcomeBoardTitle && block.TeamID == "0" {
+		if block.Title == WelcomeBoardTitle && block.TeamID == globalTeamID {
 			onboardingBoardID = block.ID
 			break
 		}
