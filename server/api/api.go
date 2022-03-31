@@ -280,6 +280,12 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 
+	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
+	if userID == "" && !hasValidReadToken {
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		return
+	}
+
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -290,8 +296,8 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !a.hasValidReadTokenForBoard(r, boardID) {
-		if board.IsTemplate {
+	if !hasValidReadToken {
+		if board.IsTemplate && board.Type == model.BoardTypeOpen {
 			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
 				return
@@ -1205,6 +1211,18 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	for i := range patches.BlockIDs {
 		auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), patches.BlockIDs[i])
+	}
+
+	for _, blockID := range patches.BlockIDs {
+		block, err := a.app.GetBlockByID(blockID)
+		if err != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+			return
+		}
+		if !a.permissions.HasPermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+			return
+		}
 	}
 
 	err = a.app.PatchBlocks(teamID, patches, userID)
