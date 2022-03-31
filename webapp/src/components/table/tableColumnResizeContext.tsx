@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 import React, {createContext, ReactElement, ReactNode, useCallback, useContext, useMemo} from 'react'
 import {DragLayerMonitor, useDragLayer} from 'react-dnd'
-import {throttle} from 'lodash'
 
 import {Constants} from '../../constants'
 
@@ -44,7 +43,7 @@ export const ColumnResizeProvider = (props: ColumnResizeProviderProps): ReactEle
         }
     }, [columnWidths])
 
-    const collect = useMemo(() => throttle((monitor: DragLayerMonitor) => {
+    const collect = useCallback((monitor: DragLayerMonitor<{id: string, width: number}>) => {
         if (monitor.getItemType() === 'horizontalGrip') {
             const difference = monitor.getDifferenceFromInitialOffset()
             if (difference) {
@@ -59,7 +58,7 @@ export const ColumnResizeProvider = (props: ColumnResizeProviderProps): ReactEle
             }
         }
         return 0
-    }, 15), [updateWidth, columnWidths])
+    }, [updateWidth, columnWidths])
 
     useDragLayer(collect)
 
