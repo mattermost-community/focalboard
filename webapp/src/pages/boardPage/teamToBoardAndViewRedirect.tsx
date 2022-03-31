@@ -8,6 +8,7 @@ import {setCurrent as setCurrentView, getCurrentBoardViews} from '../../store/vi
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {UserSettings} from '../../userSettings'
 import {getSidebarCategories} from '../../store/sidebar'
+import {Constants} from "../../constants"
 
 const TeamToBoardAndViewRedirect = (): null => {
     const boardId = useAppSelector(getCurrentBoardId)
@@ -16,7 +17,7 @@ const TeamToBoardAndViewRedirect = (): null => {
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const categories = useAppSelector(getSidebarCategories)
-    const teamId = match.params.teamId || UserSettings.lastTeamId || '0'
+    const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
 
     useEffect(() => {
         let boardID = match.params.boardId

@@ -10,6 +10,7 @@ import EditIcon from '../../widgets/icons/edit'
 import DeleteBoardDialog from '../sidebar/deleteBoardDialog'
 
 import './boardTemplateSelectorItem.scss'
+import {Constants} from "../../constants"
 
 type Props = {
     isActive: boolean
@@ -31,8 +32,6 @@ const BoardTemplateSelectorItem = (props: Props) => {
         onEdit(template.id)
     }, [onEdit, template])
 
-    console.log(`Template Metadata: name: ${template.title} template version: ${template.templateVersion}`)
-
     return (
         <div
             className={isActive ? 'BoardTemplateSelectorItem active' : 'BoardTemplateSelectorItem'}
@@ -40,7 +39,9 @@ const BoardTemplateSelectorItem = (props: Props) => {
         >
             <span className='template-icon'>{template.icon}</span>
             <span className='template-name'>{template.title}</span>
-            {!template.templateVersion &&
+
+            {/* don't show template menu options for default templates */}
+            {template.teamId !== Constants.globalTeamId &&
                 <div className='actions'>
                     <IconButton
                         icon={<DeleteIcon/>}

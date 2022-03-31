@@ -25,6 +25,8 @@ import {BaseTourSteps, TOUR_BASE} from '../onboardingTour'
 
 import {Utils} from "../../utils"
 
+import {Constants} from "../../constants"
+
 import BoardTemplateSelectorPreview from './boardTemplateSelectorPreview'
 import BoardTemplateSelectorItem from './boardTemplateSelectorItem'
 
@@ -53,7 +55,7 @@ const BoardTemplateSelector = (props: Props) => {
     }, [match, history, onClose])
 
     useEffect(() => {
-        if (octoClient.teamId !== '0' && globalTemplates.length === 0) {
+        if (octoClient.teamId !== Constants.globalTeamId && globalTemplates.length === 0) {
             dispatch(fetchGlobalTemplates())
         }
     }, [octoClient.teamId])
@@ -95,7 +97,7 @@ const BoardTemplateSelector = (props: Props) => {
     }
 
     const handleUseTemplate = async () => {
-        await mutator.addBoardFromTemplate(currentTeam?.id || '0', intl, showBoard, () => showBoard(currentBoardId), activeTemplate.id, currentTeam?.id)
+        await mutator.addBoardFromTemplate(currentTeam?.id || Constants.globalTeamId, intl, showBoard, () => showBoard(currentBoardId), activeTemplate.id, currentTeam?.id)
         if (activeTemplate.title === OnboardingBoardTitle) {
             resetTour()
         }
