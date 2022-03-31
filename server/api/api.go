@@ -88,7 +88,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/undelete", a.sessionRequired(a.handleUndeleteBlock)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
-	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.attachSession(a.handleDuplicateBlock, false)).Methods("POST")
+	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.sessionRequired(a.handleDuplicateBlock)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/metadata", a.sessionRequired(a.handleGetBoardMetadata)).Methods("GET")
 
 	// Import&Export APIs
@@ -1021,7 +1021,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks/{blockID}/undelete undeleteBlock
+	// swagger:operation POST /api/v1/boards/{boardID}/blocks/{blockID}/undelete undeleteBlock
 	//
 	// Undeletes a block
 	//
@@ -1044,6 +1044,8 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 	// responses:
 	//   '200':
 	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/BlockPatch"
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -1055,19 +1057,56 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
+	boardID := vars["boardID"]
+
+	board, err := a.app.GetBoard(boardID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if board == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	block, err := a.app.GetLastBlockHistoryEntry(blockID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if block == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if board.ID != block.BoardID {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
+		return
+	}
 
 	auditRec := a.makeAuditRecord(r, "undeleteBlock", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("blockID", blockID)
 
-	err := a.app.UndeleteBlock(blockID, userID)
+	undeletedBlock, err := a.app.UndeleteBlock(blockID, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	undeletedBlockData, err := json.Marshal(undeletedBlock)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	a.logger.Debug("UNDELETE Block", mlog.String("blockID", blockID))
-	jsonStringResponse(w, http.StatusOK, "{}")
+	jsonBytesResponse(w, http.StatusOK, undeletedBlockData)
 
 	auditRec.Success()
 }
@@ -2950,19 +2989,33 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	asTemplate := query.Get("asTemplate")
 
-	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
-	if userID == "" && !hasValidReadToken {
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
-		return
-	}
-
-	board, err := a.app.GetBlockByID(blockID)
+	board, err := a.app.GetBoard(boardID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 	if board == nil {
 		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	block, err := a.app.GetBlockByID(blockID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if block == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if board.ID != block.BoardID {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
 		return
 	}
 
