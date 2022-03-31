@@ -1824,7 +1824,7 @@ func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http
 // File upload
 
 func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /boards/{boardID}/{rootID}/{fileID} getFile
+	// swagger:operation GET "api/v1/files/teams/{teamID}/{boardID}/{filename} getFile
 	//
 	// Returns the contents of an uploaded file
 	//
@@ -1835,19 +1835,19 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	// - image/png
 	// - image/gif
 	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
 	// - name: boardID
 	//   in: path
 	//   description: Board ID
 	//   required: true
 	//   type: string
-	// - name: rootID
+	// - name: filename
 	//   in: path
-	//   description: ID of the root block
-	//   required: true
-	//   type: string
-	// - name: fileID
-	//   in: path
-	//   description: ID of the file
+	//   description: name of the file
 	//   required: true
 	//   type: string
 	// security:
@@ -1865,7 +1865,8 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	filename := vars["filename"]
 	userID := getUserID(r)
 
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
+	if !hasValidReadToken && !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 		return
 	}
