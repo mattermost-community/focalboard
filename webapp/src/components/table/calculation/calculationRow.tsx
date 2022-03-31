@@ -42,8 +42,8 @@ const CalculationRow = (props: Props): JSX.Element => {
         ...props.board.cardProperties.filter((template) => props.activeView.fields.visiblePropertyIds.includes(template.id)),
     ]
 
-    const selectedCalculations = props.board.columnCalculations || []
-
+    const selectedCalculations = props.activeView.fields.columnCalculations || []
+    
     const [hovered, setHovered] = useState(false)
 
     return (
@@ -70,9 +70,7 @@ const CalculationRow = (props: Props): JSX.Element => {
                             onChange={(v: string) => {
                                 const calculations = {...selectedCalculations}
                                 calculations[template.id] = v
-                                const newBoard = createBoard(props.board)
-                                newBoard.columnCalculations = calculations
-                                mutator.updateBoard(newBoard, props.board, 'update_calculation')
+                                mutator.changeViewColumnCalculations(props.board.id, props.activeView.id, selectedCalculations, calculations, "change column calculation")
                                 setHovered(false)
                             }}
                             cards={props.cards}
