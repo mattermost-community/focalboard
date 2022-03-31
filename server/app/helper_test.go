@@ -19,9 +19,10 @@ import (
 )
 
 type TestHelper struct {
-	App    *App
-	Store  *mockstore.MockStore
-	logger *mlog.Logger
+	App          *App
+	Store        *mockstore.MockStore
+	FilesBackend *mocks.FileBackend
+	logger       *mlog.Logger
 }
 
 func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
@@ -29,6 +30,7 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	defer ctrl.Finish()
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
+	filesBackend := &mocks.FileBackend{}
 	auth := auth.New(&cfg, store, nil)
 	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
 	sessionToken := "TESTTOKEN"
@@ -39,7 +41,7 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	appServices := Services{
 		Auth:             auth,
 		Store:            store,
-		FilesBackend:     &mocks.FileBackend{},
+		FilesBackend:     filesBackend,
 		Webhook:          webhook,
 		Metrics:          metricsService,
 		Logger:           logger,
@@ -55,8 +57,9 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	}
 
 	return &TestHelper{
-		App:    app2,
-		Store:  store,
-		logger: logger,
+		App:          app2,
+		Store:        store,
+		FilesBackend: filesBackend,
+		logger:       logger,
 	}, tearDown
 }

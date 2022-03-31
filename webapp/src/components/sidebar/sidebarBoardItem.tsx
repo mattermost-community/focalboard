@@ -132,7 +132,10 @@ const SidebarBoardItem = (props: Props) => {
                     }}
                 >
                     <IconButton icon={<OptionsIcon/>}/>
-                    <Menu position='left'>
+                    <Menu
+                        fixed={true}
+                        position='left'
+                    >
                         <BoardPermissionGate
                             boardId={board.id}
                             permissions={[Permission.DeleteBoard]}
