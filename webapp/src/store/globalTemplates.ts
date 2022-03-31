@@ -6,6 +6,8 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import {default as client} from '../octoClient'
 import {Board} from '../blocks/board'
 
+import {Constants} from "../constants"
+
 import {RootState} from './index'
 
 // ToDo: move this to team templates or simply templates
@@ -13,7 +15,7 @@ import {RootState} from './index'
 export const fetchGlobalTemplates = createAsyncThunk(
     'globalTemplates/fetch',
     async () => {
-        const templates = await client.getTeamTemplates('0')
+        const templates = await client.getTeamTemplates(Constants.globalTeamId)
         return templates.sort((a, b) => a.title.localeCompare(b.title))
     },
 )

@@ -185,6 +185,8 @@
   "Sidebar.add-board": "+ Add board",
   "Sidebar.changePassword": "Change password",
   "Sidebar.delete-board": "Delete board",
+  "Sidebar.duplicate-board": "Duplicate board",
+  "Sidebar.template-from-board": "New template from board",
   "Sidebar.export-archive": "Export archive",
   "Sidebar.import": "Import",
   "Sidebar.import-archive": "Import archive",
