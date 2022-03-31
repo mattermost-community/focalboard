@@ -46,7 +46,7 @@ func (a *App) PrepareOnboardingTour(userID string, teamID string) (string, strin
 }
 
 func (a *App) getOnboardingBoardID() (string, error) {
-	boards, err := a.store.GetTemplateBoards("0", "")
+	boards, err := a.store.GetTemplateBoards(globalTeamID, "")
 	if err != nil {
 		return "", err
 	}
