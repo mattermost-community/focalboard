@@ -1905,17 +1905,22 @@ func TestPermissionsGetFile(t *testing.T) {
 	testData := setupData(t, th)
 	clients := setupClients(th)
 
-	newFileID, err := th.Server.App().SaveFile(bytes.NewBuffer([]byte("test")), "test-team", testData.publicBoard.ID, "test.png")
+	newFileID, err := th.Server.App().SaveFile(bytes.NewBuffer([]byte("test")), "test-team", testData.privateBoard.ID, "test.png")
 	require.NoError(t, err)
 
 	ttCases := []TestCase{
-		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
-		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userTeamMember, http.StatusForbidden, 0},
-		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userViewer, http.StatusOK, 1},
-		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userCommenter, http.StatusOK, 1},
-		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userEditor, http.StatusOK, 1},
-		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userAdmin, http.StatusOK, 1},
+		{"/files/teams/test-team/{PRIVATE_BOARD_ID}/" + newFileID, methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/files/teams/test-team/{PRIVATE_BOARD_ID}/" + newFileID, methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/files/teams/test-team/{PRIVATE_BOARD_ID}/" + newFileID, methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/files/teams/test-team/{PRIVATE_BOARD_ID}/" + newFileID, methodGet, "", userViewer, http.StatusOK, 1},
+		{"/files/teams/test-team/{PRIVATE_BOARD_ID}/" + newFileID, methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/files/teams/test-team/{PRIVATE_BOARD_ID}/" + newFileID, methodGet, "", userEditor, http.StatusOK, 1},
+		{"/files/teams/test-team/{PRIVATE_BOARD_ID}/" + newFileID, methodGet, "", userAdmin, http.StatusOK, 1},
+
+		{"/files/teams/test-team/{PRIVATE_BOARD_ID}/" + newFileID + "?read_token=invalid", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/files/teams/test-team/{PRIVATE_BOARD_ID}/" + newFileID + "?read_token=valid", methodGet, "", userAnon, http.StatusOK, 1},
+		{"/files/teams/test-team/{PRIVATE_BOARD_ID}/" + newFileID + "?read_token=invalid", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/files/teams/test-team/{PRIVATE_BOARD_ID}/" + newFileID + "?read_token=valid", methodGet, "", userTeamMember, http.StatusOK, 1},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }

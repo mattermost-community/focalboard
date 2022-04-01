@@ -1936,6 +1936,11 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
+	if userID == "" && !hasValidReadToken {
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", nil)
+		return
+	}
+
 	if !hasValidReadToken && !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 		return
