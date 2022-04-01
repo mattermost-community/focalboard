@@ -212,5 +212,16 @@
                 text-decoration: underline;
             }
         }
+
+        .Menu {
+            position: fixed;
+            left: 55%;
+            right: calc(45% - 240px);
+
+            .menu-contents {
+                min-width: 240px;
+                max-width: 240px;
+            }
+        }
     }
 }

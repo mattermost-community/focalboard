@@ -16,7 +16,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
       </span>
     </button>
     <div
-      class="Menu noselect bottom"
+      class="Menu noselect bottom "
     >
       <div
         class="menu-contents"
@@ -187,7 +187,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
       </span>
     </button>
     <div
-      class="Menu noselect bottom"
+      class="Menu noselect bottom "
     >
       <div
         class="menu-contents"

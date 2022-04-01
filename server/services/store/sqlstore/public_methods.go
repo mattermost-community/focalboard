@@ -435,8 +435,8 @@ func (s *SQLStore) GetTeamsForUser(userID string) ([]*model.Team, error) {
 
 }
 
-func (s *SQLStore) GetTemplateBoards(teamID string) ([]*model.Board, error) {
-	return s.getTemplateBoards(s.db, teamID)
+func (s *SQLStore) GetTemplateBoards(teamID string, userID string) ([]*model.Board, error) {
+	return s.getTemplateBoards(s.db, teamID, userID)
 
 }
 

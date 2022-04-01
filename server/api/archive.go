@@ -8,6 +8,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -214,6 +216,10 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := a.app.ImportArchive(file, opt); err != nil {
+		a.logger.Debug("Error importing archive",
+			mlog.String("team_id", teamID),
+			mlog.Err(err),
+		)
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}

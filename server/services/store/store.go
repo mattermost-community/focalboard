@@ -129,7 +129,7 @@ type Store interface {
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
 
 	RemoveDefaultTemplates(boards []*model.Board) error
-	GetTemplateBoards(teamID string) ([]*model.Board, error)
+	GetTemplateBoards(teamID, userID string) ([]*model.Board, error)
 
 	DBType() string
 
