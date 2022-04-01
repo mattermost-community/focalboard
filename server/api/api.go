@@ -143,8 +143,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}/blocks/{blockID}", a.sessionRequired(a.handleUpdateCategoryBlock)).Methods(http.MethodPost)
 
 	// Get Files API
-	files := r.PathPrefix("/files").Subrouter()
-	files.HandleFunc("/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
+	apiv1.HandleFunc("/files/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
 
 	// Subscriptions
 	apiv1.HandleFunc("/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
@@ -156,7 +155,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	// archives
 	apiv1.HandleFunc("/boards/{boardID}/archive/export", a.sessionRequired(a.handleArchiveExportBoard)).Methods("GET")
-	apiv1.HandleFunc("/boards/{boardID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
+	apiv1.HandleFunc("/teams/{teamID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -1936,7 +1935,14 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	filename := vars["filename"]
 	userID := getUserID(r)
 
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
+
+	if userID == "" && !hasValidReadToken {
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		return
+	}
+
+	if !hasValidReadToken && !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 		return
 	}
@@ -2623,10 +2629,14 @@ func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 	teamID := mux.Vars(r)["teamID"]
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := getUserID(r)
 
-	teamID, boardID, err := a.app.PrepareOnboardingTour(session.UserID, teamID)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		return
+	}
+
+	teamID, boardID, err := a.app.PrepareOnboardingTour(userID, teamID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -3787,8 +3797,6 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
 		return
 	}
-
-	fmt.Println(boardIDs)
 
 	for _, block := range newBab.Blocks {
 		// Error checking

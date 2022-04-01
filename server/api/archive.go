@@ -44,6 +44,12 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	boardID := vars["boardID"]
+	userID := getUserID(r)
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+		return
+	}
 
 	auditRec := a.makeAuditRecord(r, "archiveExportBoard", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
@@ -148,7 +154,7 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards/{boardID}/archive/import archiveImport
+	// swagger:operation POST /api/v1/teams/{teamID}/archive/import archiveImport
 	//
 	// Import an archive of boards.
 	//
@@ -158,9 +164,9 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 	// consumes:
 	// - multipart/form-data
 	// parameters:
-	// - name: boardID
+	// - name: teamID
 	//   in: path
-	//   description: Workspace ID
+	//   description: Team ID
 	//   required: true
 	//   type: string
 	// - name: file
@@ -184,6 +190,11 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		return
+	}
 
 	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {

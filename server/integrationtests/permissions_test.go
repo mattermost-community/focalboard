@@ -1,6 +1,7 @@
 package integrationtests
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -1899,7 +1900,24 @@ func TestPermissionsUpdateCategoryBlock(t *testing.T) {
 }
 
 func TestPermissionsGetFile(t *testing.T) {
-	require.Fail(t, "Not implemented yet")
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	newFileID, err := th.Server.App().SaveFile(bytes.NewBuffer([]byte("test")), "test-team", testData.publicBoard.ID, "test.png")
+	require.NoError(t, err)
+
+	ttCases := []TestCase{
+		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userViewer, http.StatusOK, 1},
+		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userEditor, http.StatusOK, 1},
+		{"/files/teams/test-team/{PUBLIC_BOARD_ID}/" + newFileID, methodGet, "", userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
 }
 
 func TestPermissionsCreateSubscription(t *testing.T) {
@@ -1994,14 +2012,80 @@ func TestPermissionsDeleteSubscription(t *testing.T) {
 	runTestCases(t, ttCases, testData, clients)
 }
 
-func TestPermissionsOnboardSubscription(t *testing.T) {
-	require.Fail(t, "Not implemented yet")
+func TestPermissionsOnboard(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/teams/test-team/onboard", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/onboard", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/teams/test-team/onboard", methodPost, "", userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/onboard", methodPost, "", userViewer, http.StatusOK, 1},
+		{"/teams/test-team/onboard", methodPost, "", userCommenter, http.StatusOK, 1},
+		{"/teams/test-team/onboard", methodPost, "", userEditor, http.StatusOK, 1},
+		{"/teams/test-team/onboard", methodPost, "", userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
 }
 
 func TestPermissionsBoardArchiveExport(t *testing.T) {
-	require.Fail(t, "Not implemented yet")
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/boards/{PUBLIC_BOARD_ID}/archive/export", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/archive/export", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/archive/export", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/archive/export", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}/archive/export", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}/archive/export", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}/archive/export", methodGet, "", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PRIVATE_BOARD_ID}/archive/export", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/archive/export", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/archive/export", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/archive/export", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/boards/{PRIVATE_BOARD_ID}/archive/export", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PRIVATE_BOARD_ID}/archive/export", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PRIVATE_BOARD_ID}/archive/export", methodGet, "", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_TEMPLATE_ID}/archive/export", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/archive/export", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/archive/export", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/archive/export", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/archive/export", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/archive/export", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/archive/export", methodGet, "", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PRIVATE_TEMPLATE_ID}/archive/export", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/archive/export", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/archive/export", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/archive/export", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/archive/export", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/archive/export", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/archive/export", methodGet, "", userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
 }
 
 func TestPermissionsBoardArchiveImport(t *testing.T) {
-	require.Fail(t, "Not implemented yet")
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/teams/test-team/archive/import", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/archive/import", methodPost, "", userNoTeamMember, http.StatusForbidden, 1},
+		{"/teams/test-team/archive/import", methodPost, "", userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/archive/import", methodPost, "", userViewer, http.StatusOK, 1},
+		{"/teams/test-team/archive/import", methodPost, "", userCommenter, http.StatusOK, 1},
+		{"/teams/test-team/archive/import", methodPost, "", userEditor, http.StatusOK, 1},
+		{"/teams/test-team/archive/import", methodPost, "", userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
 }
