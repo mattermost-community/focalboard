@@ -21,12 +21,12 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 	return &PluginTestStore{
 		Store: innerStore,
 		users: map[string]*model.User{
-			"no-team-member": {ID: "no-team-member", Username: "no-team-member", Email: "no-team-member@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
-			"team-member":    {ID: "team-member", Username: "team-member", Email: "team-member@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
-			"viewer":         {ID: "viewer", Username: "viewer", Email: "viewer@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
-			"commenter":      {ID: "commenter", Username: "commenter", Email: "commenter@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
-			"editor":         {ID: "editor", Username: "editor", Email: "editor@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
-			"admin":          {ID: "admin", Username: "admin", Email: "admin@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+			"no-team-member": {ID: "no-team-member", Props: map[string]interface{}{}, Username: "no-team-member", Email: "no-team-member@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+			"team-member":    {ID: "team-member", Props: map[string]interface{}{}, Username: "team-member", Email: "team-member@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+			"viewer":         {ID: "viewer", Props: map[string]interface{}{}, Username: "viewer", Email: "viewer@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+			"commenter":      {ID: "commenter", Props: map[string]interface{}{}, Username: "commenter", Email: "commenter@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+			"editor":         {ID: "editor", Props: map[string]interface{}{}, Username: "editor", Email: "editor@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+			"admin":          {ID: "admin", Props: map[string]interface{}{}, Username: "admin", Email: "admin@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 		},
 		testTeam:  &model.Team{ID: "test-team", Title: "Test Team"},
 		otherTeam: &model.Team{ID: "other-team", Title: "Other Team"},

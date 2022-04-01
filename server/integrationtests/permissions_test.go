@@ -1458,3 +1458,106 @@ func TestPermissionsUploadFile(t *testing.T) {
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
+
+func TestPermissionsGetMe(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/users/me", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/me", methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/users/me", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/users/me", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/users/me", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/users/me", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/users/me", methodGet, "", userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsGetMyMemberships(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/users/me/memberships", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/me/memberships", methodGet, "", userNoTeamMember, http.StatusOK, 0},
+		{"/users/me/memberships", methodGet, "", userTeamMember, http.StatusOK, 0},
+		{"/users/me/memberships", methodGet, "", userViewer, http.StatusOK, 4},
+		{"/users/me/memberships", methodGet, "", userCommenter, http.StatusOK, 4},
+		{"/users/me/memberships", methodGet, "", userEditor, http.StatusOK, 4},
+		{"/users/me/memberships", methodGet, "", userAdmin, http.StatusOK, 4},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsGetUser(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/users/no-team-member", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/no-team-member", methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/users/no-team-member", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/users/no-team-member", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/users/no-team-member", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/users/no-team-member", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/users/no-team-member", methodGet, "", userAdmin, http.StatusOK, 1},
+
+		{"/users/team-member", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/team-member", methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/users/team-member", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/users/team-member", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/users/team-member", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/users/team-member", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/users/team-member", methodGet, "", userAdmin, http.StatusOK, 1},
+
+		{"/users/viewer", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/viewer", methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/users/viewer", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/users/viewer", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/users/viewer", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/users/viewer", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/users/viewer", methodGet, "", userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsUserChangePasswordPluginMode(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/users/admin/changepassword", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/admin/changepassword", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsUpdateUserConfig(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	patch := toJSON(t, model.UserPropPatch{UpdatedFields: map[string]string{"test": "test"}})
+
+	ttCases := []TestCase{
+		{"/users/team-member/config", methodPut, patch, userAnon, http.StatusUnauthorized, 0},
+		{"/users/team-member/config", methodPut, patch, userNoTeamMember, http.StatusForbidden, 0},
+		{"/users/team-member/config", methodPut, patch, userTeamMember, http.StatusOK, 1},
+		{"/users/team-member/config", methodPut, patch, userViewer, http.StatusForbidden, 0},
+		{"/users/team-member/config", methodPut, patch, userCommenter, http.StatusForbidden, 0},
+		{"/users/team-member/config", methodPut, patch, userEditor, http.StatusForbidden, 0},
+		{"/users/team-member/config", methodPut, patch, userAdmin, http.StatusForbidden, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}

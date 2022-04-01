@@ -784,7 +784,7 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 
 	// a user can update only own config
 	if userID != session.UserID {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", nil)
 		return
 	}
 
