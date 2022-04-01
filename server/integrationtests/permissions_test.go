@@ -1707,3 +1707,66 @@ func TestPermissionsClientConfig(t *testing.T) {
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
+
+func TestPermissionsGetCategories(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/teams/test-team/categories", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/categories", methodGet, "", userNoTeamMember, http.StatusOK, 0},
+		{"/teams/test-team/categories", methodGet, "", userTeamMember, http.StatusOK, 0},
+		{"/teams/test-team/categories", methodGet, "", userViewer, http.StatusOK, 0},
+		{"/teams/test-team/categories", methodGet, "", userCommenter, http.StatusOK, 0},
+		{"/teams/test-team/categories", methodGet, "", userEditor, http.StatusOK, 0},
+		{"/teams/test-team/categories", methodGet, "", userAdmin, http.StatusOK, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsCreateCategory(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	category := func(userID string) string {
+		return toJSON(t, model.Category{
+			ID:       "test-id",
+			Name:     "Test category",
+			TeamID:   "test-team",
+			UserID:   userID,
+			CreateAt: model.GetMillis(),
+			UpdateAt: model.GetMillis(),
+		})
+	}
+
+	ttCases := []TestCase{
+		{"/teams/test-team/categories", methodPost, category(""), userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/categories", methodPost, category("no-team-member"), userNoTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category("team-member"), userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category("viewer"), userViewer, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category("commenter"), userCommenter, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category("editor"), userEditor, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category("admin"), userAdmin, http.StatusOK, 1},
+
+		{"/teams/test-team/categories", methodPost, category("other"), userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/categories", methodPost, category("other"), userNoTeamMember, http.StatusBadRequest, 0},
+		{"/teams/test-team/categories", methodPost, category("other"), userTeamMember, http.StatusBadRequest, 0},
+		{"/teams/test-team/categories", methodPost, category("other"), userViewer, http.StatusBadRequest, 0},
+		{"/teams/test-team/categories", methodPost, category("other"), userCommenter, http.StatusBadRequest, 0},
+		{"/teams/test-team/categories", methodPost, category("other"), userEditor, http.StatusBadRequest, 0},
+		{"/teams/test-team/categories", methodPost, category("other"), userAdmin, http.StatusBadRequest, 0},
+
+		{"/teams/other-team/categories", methodPost, category(""), userAnon, http.StatusUnauthorized, 0},
+		{"/teams/other-team/categories", methodPost, category("no-team-member"), userNoTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category("team-member"), userTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category("viewer"), userViewer, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category("commenter"), userCommenter, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category("editor"), userEditor, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category("admin"), userAdmin, http.StatusBadRequest, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
