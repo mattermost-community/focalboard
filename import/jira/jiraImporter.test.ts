@@ -3,7 +3,7 @@
 
 import {run} from './jiraImporter'
 import * as fs from 'fs'
-import {ArchiveUtils} from '../../webapp/src/blocks/archive'
+import {ArchiveUtils} from '../util/archive'
 
 const inputFile = './test/jira-export.xml'
 const outputFile = './test/jira.focalboard'
@@ -27,10 +27,6 @@ describe('import from Jira', () => {
 
         expect(blocks).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({
-                    title: 'Jira import',
-                    type: 'board'
-                }),
                 expect.objectContaining({
                     title: 'Board View',
                     type: 'view'
