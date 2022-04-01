@@ -2047,7 +2047,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 
 	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
-		fmt.Fprintf(w, "%v", err)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 		return
 	}
 	defer file.Close()

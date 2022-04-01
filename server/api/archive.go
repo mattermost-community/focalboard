@@ -104,6 +104,11 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
+	}
+
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 
