@@ -1734,7 +1734,6 @@ func TestPermissionsCreateCategory(t *testing.T) {
 
 	category := func(userID string) string {
 		return toJSON(t, model.Category{
-			ID:       "test-id",
 			Name:     "Test category",
 			TeamID:   "test-team",
 			UserID:   userID,
@@ -1769,4 +1768,240 @@ func TestPermissionsCreateCategory(t *testing.T) {
 		{"/teams/other-team/categories", methodPost, category("admin"), userAdmin, http.StatusBadRequest, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsUpdateCategory(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	categoryNoTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "no-team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryViewer, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "viewer", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryCommenter, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "commenter", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryEditor, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "editor", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryAdmin, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "admin", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+
+	category := func(userID string, categoryID string) string {
+		return toJSON(t, model.Category{
+			ID:       categoryID,
+			Name:     "Test category",
+			TeamID:   "test-team",
+			UserID:   userID,
+			CreateAt: model.GetMillis(),
+			UpdateAt: model.GetMillis(),
+		})
+	}
+
+	ttCases := []TestCase{
+		{"/teams/test-team/categories/any", methodPut, category("", "any"), userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/categories/" + categoryNoTeamMember.ID, methodPut, category("no-team-member", categoryNoTeamMember.ID), userNoTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryTeamMember.ID, methodPut, category("team-member", categoryTeamMember.ID), userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryViewer.ID, methodPut, category("viewer", categoryViewer.ID), userViewer, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryCommenter.ID, methodPut, category("commenter", categoryCommenter.ID), userCommenter, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryEditor.ID, methodPut, category("editor", categoryEditor.ID), userEditor, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryAdmin.ID, methodPut, category("admin", categoryAdmin.ID), userAdmin, http.StatusOK, 1},
+
+		{"/teams/test-team/categories/any", methodPut, category("other", "any"), userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/categories/" + categoryNoTeamMember.ID, methodPut, category("other", categoryNoTeamMember.ID), userNoTeamMember, http.StatusBadRequest, 0},
+		{"/teams/test-team/categories/" + categoryTeamMember.ID, methodPut, category("other", categoryTeamMember.ID), userTeamMember, http.StatusBadRequest, 0},
+		{"/teams/test-team/categories/" + categoryViewer.ID, methodPut, category("other", categoryViewer.ID), userViewer, http.StatusBadRequest, 0},
+		{"/teams/test-team/categories/" + categoryCommenter.ID, methodPut, category("other", categoryCommenter.ID), userCommenter, http.StatusBadRequest, 0},
+		{"/teams/test-team/categories/" + categoryEditor.ID, methodPut, category("other", categoryEditor.ID), userEditor, http.StatusBadRequest, 0},
+		{"/teams/test-team/categories/" + categoryAdmin.ID, methodPut, category("other", categoryAdmin.ID), userAdmin, http.StatusBadRequest, 0},
+
+		{"/teams/other-team/categories/any", methodPut, category("", "any"), userAnon, http.StatusUnauthorized, 0},
+		{"/teams/other-team/categories/" + categoryNoTeamMember.ID, methodPut, category("no-team-member", categoryNoTeamMember.ID), userNoTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryTeamMember.ID, methodPut, category("team-member", categoryTeamMember.ID), userTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryViewer.ID, methodPut, category("viewer", categoryViewer.ID), userViewer, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryCommenter.ID, methodPut, category("commenter", categoryCommenter.ID), userCommenter, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryEditor.ID, methodPut, category("editor", categoryEditor.ID), userEditor, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryAdmin.ID, methodPut, category("admin", categoryAdmin.ID), userAdmin, http.StatusBadRequest, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsDeleteCategory(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	categoryNoTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "no-team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryViewer, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "viewer", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryCommenter, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "commenter", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryEditor, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "editor", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryAdmin, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "admin", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+
+	ttCases := []TestCase{
+		{"/teams/other-team/categories/any", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/other-team/categories/" + categoryNoTeamMember.ID, methodDelete, "", userNoTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryTeamMember.ID, methodDelete, "", userTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryViewer.ID, methodDelete, "", userViewer, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryCommenter.ID, methodDelete, "", userCommenter, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryEditor.ID, methodDelete, "", userEditor, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryAdmin.ID, methodDelete, "", userAdmin, http.StatusBadRequest, 0},
+
+		{"/teams/test-team/categories/any", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/categories/" + categoryNoTeamMember.ID, methodDelete, "", userNoTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryTeamMember.ID, methodDelete, "", userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryViewer.ID, methodDelete, "", userViewer, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryCommenter.ID, methodDelete, "", userCommenter, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryEditor.ID, methodDelete, "", userEditor, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryAdmin.ID, methodDelete, "", userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsUpdateCategoryBlock(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	categoryNoTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "no-team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryViewer, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "viewer", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryCommenter, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "commenter", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryEditor, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "editor", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+	categoryAdmin, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "admin", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	require.NoError(t, err)
+
+	ttCases := []TestCase{
+		{"/teams/test-team/categories/any/blocks/any", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/categories/" + categoryNoTeamMember.ID + "/blocks/" + testData.publicBoard.ID, methodPost, "", userNoTeamMember, http.StatusOK, 0},
+		{"/teams/test-team/categories/" + categoryTeamMember.ID + "/blocks/" + testData.publicBoard.ID, methodPost, "", userTeamMember, http.StatusOK, 0},
+		{"/teams/test-team/categories/" + categoryViewer.ID + "/blocks/" + testData.publicBoard.ID, methodPost, "", userViewer, http.StatusOK, 0},
+		{"/teams/test-team/categories/" + categoryCommenter.ID + "/blocks/" + testData.publicBoard.ID, methodPost, "", userCommenter, http.StatusOK, 0},
+		{"/teams/test-team/categories/" + categoryEditor.ID + "/blocks/" + testData.publicBoard.ID, methodPost, "", userEditor, http.StatusOK, 0},
+		{"/teams/test-team/categories/" + categoryAdmin.ID + "/blocks/" + testData.publicBoard.ID, methodPost, "", userAdmin, http.StatusOK, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsGetFile(t *testing.T) {
+	require.Fail(t, "Not implemented yet")
+}
+
+func TestPermissionsCreateSubscription(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	subscription := func(userID string) string {
+		return toJSON(t, model.Subscription{
+			BlockType:      "card",
+			BlockID:        "block-3",
+			SubscriberType: "user",
+			SubscriberID:   userID,
+			CreateAt:       model.GetMillis(),
+		})
+	}
+	ttCases := []TestCase{
+		{"/subscriptions", methodPost, subscription(""), userAnon, http.StatusUnauthorized, 0},
+		{"/subscriptions", methodPost, subscription("no-team-member"), userNoTeamMember, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription("team-member"), userTeamMember, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription("viewer"), userViewer, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription("commenter"), userCommenter, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription("editor"), userEditor, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription("admin"), userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsGetSubscriptions(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/subscriptions/anon", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/subscriptions/no-team-member", methodGet, "", userNoTeamMember, http.StatusOK, 0},
+		{"/subscriptions/team-member", methodGet, "", userTeamMember, http.StatusOK, 0},
+		{"/subscriptions/viewer", methodGet, "", userViewer, http.StatusOK, 0},
+		{"/subscriptions/commenter", methodGet, "", userCommenter, http.StatusOK, 0},
+		{"/subscriptions/editor", methodGet, "", userEditor, http.StatusOK, 0},
+		{"/subscriptions/admin", methodGet, "", userAdmin, http.StatusOK, 0},
+
+		{"/subscriptions/other", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/subscriptions/other", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/subscriptions/other", methodGet, "", userViewer, http.StatusForbidden, 0},
+		{"/subscriptions/other", methodGet, "", userCommenter, http.StatusForbidden, 0},
+		{"/subscriptions/other", methodGet, "", userEditor, http.StatusForbidden, 0},
+		{"/subscriptions/other", methodGet, "", userAdmin, http.StatusForbidden, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsDeleteSubscription(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	_, err := th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "no-team-member", CreateAt: model.GetMillis()})
+	require.NoError(t, err)
+	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "team-member", CreateAt: model.GetMillis()})
+	require.NoError(t, err)
+	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "viewer", CreateAt: model.GetMillis()})
+	require.NoError(t, err)
+	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "commenter", CreateAt: model.GetMillis()})
+	require.NoError(t, err)
+	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "editor", CreateAt: model.GetMillis()})
+	require.NoError(t, err)
+	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "admin", CreateAt: model.GetMillis()})
+	require.NoError(t, err)
+	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "other", CreateAt: model.GetMillis()})
+	require.NoError(t, err)
+
+	ttCases := []TestCase{
+		{"/subscriptions/block-3/anon", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
+		{"/subscriptions/block-3/no-team-member", methodDelete, "", userNoTeamMember, http.StatusOK, 0},
+		{"/subscriptions/block-3/team-member", methodDelete, "", userTeamMember, http.StatusOK, 0},
+		{"/subscriptions/block-3/viewer", methodDelete, "", userViewer, http.StatusOK, 0},
+		{"/subscriptions/block-3/commenter", methodDelete, "", userCommenter, http.StatusOK, 0},
+		{"/subscriptions/block-3/editor", methodDelete, "", userEditor, http.StatusOK, 0},
+		{"/subscriptions/block-3/admin", methodDelete, "", userAdmin, http.StatusOK, 0},
+
+		{"/subscriptions/block-3/other", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/subscriptions/block-3/other", methodDelete, "", userTeamMember, http.StatusForbidden, 0},
+		{"/subscriptions/block-3/other", methodDelete, "", userViewer, http.StatusForbidden, 0},
+		{"/subscriptions/block-3/other", methodDelete, "", userCommenter, http.StatusForbidden, 0},
+		{"/subscriptions/block-3/other", methodDelete, "", userEditor, http.StatusForbidden, 0},
+		{"/subscriptions/block-3/other", methodDelete, "", userAdmin, http.StatusForbidden, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsOnboardSubscription(t *testing.T) {
+	require.Fail(t, "Not implemented yet")
+}
+
+func TestPermissionsBoardArchiveExport(t *testing.T) {
+	require.Fail(t, "Not implemented yet")
+}
+
+func TestPermissionsBoardArchiveImport(t *testing.T) {
+	require.Fail(t, "Not implemented yet")
 }

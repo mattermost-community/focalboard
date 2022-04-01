@@ -503,6 +503,8 @@ func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
 		case errors.Is(err, app.ErrorCategoryDeleted):
 			a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", err)
 		case errors.Is(err, app.ErrorCategoryPermissionDenied):
+			// TODO: The permissions should be handled as much as possible at
+			// the API level, this needs to be changed
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
 		default:
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -534,9 +536,14 @@ func (a *API) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
 
 	deletedCategory, err := a.app.DeleteCategory(categoryID, userID, teamID)
 	if err != nil {
-		if errors.Is(err, app.ErrorCategoryPermissionDenied) {
+		switch {
+		case errors.Is(err, app.ErrorInvalidCategory):
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		case errors.Is(err, app.ErrorCategoryPermissionDenied):
+			// TODO: The permissions should be handled as much as possible at
+			// the API level, this needs to be changed
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
-		} else {
+		default:
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		}
 		return
@@ -592,6 +599,7 @@ func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) 
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
 
+	// TODO: Check the category and the team matches
 	err := a.app.AddUpdateUserCategoryBlock(teamID, userID, categoryID, blockID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -2416,7 +2424,7 @@ func (a *API) handleDeleteSubscription(w http.ResponseWriter, r *http.Request) {
 
 	// User can only delete subscriptions for themselves
 	if session.UserID != subscriberID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "userID and subscriberID mismatch", nil)
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "access denied", nil)
 		return
 	}
 
@@ -2474,7 +2482,7 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 
 	// User can only get subscriptions for themselves (for now)
 	if session.UserID != subscriberID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "userID and subscriberID mismatch", nil)
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "access denied", nil)
 		return
 	}
 
