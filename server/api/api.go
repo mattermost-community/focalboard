@@ -1590,7 +1590,7 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 	boardID := vars["boardID"]
 
 	userID := getUserID(r)
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionShareBoard) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to sharing the board"})
 		return
 	}

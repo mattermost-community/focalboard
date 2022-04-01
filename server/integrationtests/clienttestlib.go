@@ -153,6 +153,7 @@ func newTestServerPluginMode() *server.Server {
 		panic(err)
 	}
 	cfg.AuthMode = "mattermost"
+	cfg.EnablePublicSharedBoards = true
 
 	logger, _ := mlog.NewLogger()
 	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
