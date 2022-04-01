@@ -189,10 +189,10 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 				response, err = reqClient.DoAPIDelete(url, tc.body)
 			}
 
+			require.Equal(t, tc.expectedStatusCode, response.StatusCode)
 			if tc.expectedStatusCode >= 200 && tc.expectedStatusCode < 300 {
 				require.NoError(t, err)
 			}
-			require.Equal(t, tc.expectedStatusCode, response.StatusCode)
 			if tc.expectedStatusCode >= 200 && tc.expectedStatusCode < 300 {
 				body, err := ioutil.ReadAll(response.Body)
 				if err != nil {
@@ -1558,6 +1558,152 @@ func TestPermissionsUpdateUserConfig(t *testing.T) {
 		{"/users/team-member/config", methodPut, patch, userCommenter, http.StatusForbidden, 0},
 		{"/users/team-member/config", methodPut, patch, userEditor, http.StatusForbidden, 0},
 		{"/users/team-member/config", methodPut, patch, userAdmin, http.StatusForbidden, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsCreateBoardsAndBlocks(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	bab := toJSON(t, model.BoardsAndBlocks{
+		Boards: []*model.Board{{ID: "test", Title: "Test Board", TeamID: "test-team"}},
+		Blocks: []model.Block{
+			{ID: "test-block", BoardID: "test", Type: "card", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		},
+	})
+
+	ttCases := []TestCase{
+		{"/boards-and-blocks", methodPost, bab, userAnon, http.StatusUnauthorized, 0},
+		{"/boards-and-blocks", methodPost, bab, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodPost, bab, userTeamMember, http.StatusOK, 1},
+		{"/boards-and-blocks", methodPost, bab, userViewer, http.StatusOK, 1},
+		{"/boards-and-blocks", methodPost, bab, userCommenter, http.StatusOK, 1},
+		{"/boards-and-blocks", methodPost, bab, userEditor, http.StatusOK, 1},
+		{"/boards-and-blocks", methodPost, bab, userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsUpdateBoardsAndBlocks(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	newTitle := "new title"
+	bab := toJSON(t, model.PatchBoardsAndBlocks{
+		BoardIDs:     []string{testData.publicBoard.ID},
+		BoardPatches: []*model.BoardPatch{{Title: &newTitle}},
+		BlockIDs:     []string{"block-3"},
+		BlockPatches: []*model.BlockPatch{{Title: &newTitle}},
+	})
+
+	ttCases := []TestCase{
+		{"/boards-and-blocks", methodPatch, bab, userAnon, http.StatusUnauthorized, 0},
+		{"/boards-and-blocks", methodPatch, bab, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodPatch, bab, userTeamMember, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodPatch, bab, userViewer, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodPatch, bab, userCommenter, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodPatch, bab, userEditor, http.StatusOK, 1},
+		{"/boards-and-blocks", methodPatch, bab, userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
+
+	newType := model.BoardTypePrivate
+	// With type change
+	bab = toJSON(t, model.PatchBoardsAndBlocks{
+		BoardIDs:     []string{testData.publicBoard.ID},
+		BoardPatches: []*model.BoardPatch{{Type: &newType}},
+		BlockIDs:     []string{"block-3"},
+		BlockPatches: []*model.BlockPatch{{Title: &newTitle}},
+	})
+
+	ttCases = []TestCase{
+		{"/boards-and-blocks", methodPatch, bab, userAnon, http.StatusUnauthorized, 0},
+		{"/boards-and-blocks", methodPatch, bab, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodPatch, bab, userTeamMember, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodPatch, bab, userViewer, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodPatch, bab, userCommenter, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodPatch, bab, userEditor, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodPatch, bab, userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsDeleteBoardsAndBlocks(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	bab := toJSON(t, model.DeleteBoardsAndBlocks{
+		Boards: []string{testData.publicBoard.ID},
+		Blocks: []string{"block-3"},
+	})
+
+	ttCases := []TestCase{
+		{"/boards-and-blocks", methodDelete, bab, userAnon, http.StatusUnauthorized, 0},
+		{"/boards-and-blocks", methodDelete, bab, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodDelete, bab, userTeamMember, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodDelete, bab, userViewer, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodDelete, bab, userCommenter, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodDelete, bab, userEditor, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodDelete, bab, userAdmin, http.StatusOK, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsLoginPluginMode(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/login", methodPost, "", userAnon, http.StatusNotImplemented, 0},
+		{"/login", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsLogoutPluginMode(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/logout", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/logout", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsRegisterPluginMode(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/register", methodPost, "", userAnon, http.StatusNotImplemented, 0},
+		{"/register", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsClientConfig(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/clientConfig", methodGet, "", userAnon, http.StatusOK, 1},
+		{"/clientConfig", methodGet, "", userAdmin, http.StatusOK, 1},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }

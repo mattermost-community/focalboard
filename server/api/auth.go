@@ -167,6 +167,11 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
+	}
+
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
 		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
@@ -229,6 +234,11 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
+	}
+
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
 		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
@@ -278,6 +288,11 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
+	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
