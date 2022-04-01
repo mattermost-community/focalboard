@@ -350,7 +350,6 @@ class OctoClient {
 
     async followBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
         const body: Subscription = {
-            teamId: this.teamId,
             blockType,
             blockId,
             subscriberType: 'user',
