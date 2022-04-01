@@ -120,10 +120,11 @@ func (p *Plugin) OnActivate() error {
 	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db, permissionsService), db, logger)
 
 	backendParams := notifyBackendParams{
-		cfg:        cfg,
-		client:     client,
-		serverRoot: baseURL + "/boards",
-		logger:     logger,
+		cfg:         cfg,
+		client:      client,
+		permissions: permissionsService,
+		serverRoot:  baseURL + "/boards",
+		logger:      logger,
 	}
 
 	var notifyBackends []notify.Backend
