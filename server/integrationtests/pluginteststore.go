@@ -13,6 +13,8 @@ type PluginTestStore struct {
 	users     map[string]*model.User
 	testTeam  *model.Team
 	otherTeam *model.Team
+	emptyTeam *model.Team
+	baseTeam  *model.Team
 }
 
 func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
@@ -26,18 +28,22 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 			"editor":         {ID: "editor", Username: "editor", Email: "editor@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 			"admin":          {ID: "admin", Username: "admin", Email: "admin@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 		},
-		testTeam:  &model.Team{ID: "other-team", Title: "Other Team"},
-		otherTeam: &model.Team{ID: "test-team", Title: "Test Team"},
+		testTeam:  &model.Team{ID: "test-team", Title: "Test Team"},
+		otherTeam: &model.Team{ID: "other-team", Title: "Other Team"},
+		emptyTeam: &model.Team{ID: "empty-team", Title: "Empty Team"},
+		baseTeam:  &model.Team{ID: "0", Title: "Base Team"},
 	}
 }
 
 func (s *PluginTestStore) GetTeam(id string) (*model.Team, error) {
 	if id == "0" {
-		return &model.Team{ID: "0", Title: "Base Team"}, nil
+		return s.baseTeam, nil
 	} else if id == "other-team" {
-		return &model.Team{ID: "other-team", Title: "Other Team"}, nil
+		return s.otherTeam, nil
 	} else if id == "test-team" {
-		return &model.Team{ID: "test-team", Title: "Test Team"}, nil
+		return s.testTeam, nil
+	} else if id == "empty-team" {
+		return s.emptyTeam, nil
 	}
 	return nil, fmt.Errorf("Team id %s not found", id)
 }
@@ -45,17 +51,17 @@ func (s *PluginTestStore) GetTeam(id string) (*model.Team, error) {
 func (s *PluginTestStore) GetTeamsForUser(userID string) ([]*model.Team, error) {
 	switch userID {
 	case "no-team-member":
-		return []*model.Team{s.otherTeam}, nil
+		return []*model.Team{}, nil
 	case "team-member":
-		return []*model.Team{s.testTeam}, nil
+		return []*model.Team{s.testTeam, s.otherTeam}, nil
 	case "viewer":
-		return []*model.Team{s.testTeam}, nil
+		return []*model.Team{s.testTeam, s.otherTeam}, nil
 	case "commenter":
-		return []*model.Team{s.testTeam}, nil
+		return []*model.Team{s.testTeam, s.otherTeam}, nil
 	case "editor":
-		return []*model.Team{s.testTeam}, nil
+		return []*model.Team{s.testTeam, s.otherTeam}, nil
 	case "admin":
-		return []*model.Team{s.testTeam}, nil
+		return []*model.Team{s.testTeam, s.otherTeam}, nil
 	}
 	return nil, fmt.Errorf("UserID %s not found", userID)
 }
@@ -118,15 +124,26 @@ func (s *PluginTestStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 		}, nil
 	} else if teamID == s.otherTeam.ID {
 		return []*model.User{
-			s.users["no-team-member"],
+			s.users["team-member"],
+			s.users["viewer"],
+			s.users["commenter"],
+			s.users["editor"],
+			s.users["admin"],
 		}, nil
+	} else if teamID == s.emptyTeam.ID {
+		return []*model.User{}, nil
 	}
 	return nil, fmt.Errorf("TeamID %s not found", teamID)
 }
 
 func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
 	users := []*model.User{}
-	for _, user := range s.users {
+	teamUsers, err := s.GetUsersByTeam(teamID)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range teamUsers {
 		if strings.Contains(user.Username, searchQuery) {
 			users = append(users, user)
 		}

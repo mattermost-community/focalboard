@@ -1314,3 +1314,89 @@ func TestPermissionsGetSharedBoardInfo(t *testing.T) {
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
+
+func TestPermissionsListTeams(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/teams", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams", methodGet, "", userNoTeamMember, http.StatusOK, 0},
+		{"/teams", methodGet, "", userTeamMember, http.StatusOK, 2},
+		{"/teams", methodGet, "", userViewer, http.StatusOK, 2},
+		{"/teams", methodGet, "", userCommenter, http.StatusOK, 2},
+		{"/teams", methodGet, "", userEditor, http.StatusOK, 2},
+		{"/teams", methodGet, "", userAdmin, http.StatusOK, 2},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsGetTeam(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/teams/test-team", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/teams/test-team", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/teams/test-team", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/teams/test-team", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/teams/test-team", methodGet, "", userAdmin, http.StatusOK, 1},
+
+		{"/teams/empty-team", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/empty-team", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/teams/empty-team", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/teams/empty-team", methodGet, "", userViewer, http.StatusForbidden, 0},
+		{"/teams/empty-team", methodGet, "", userCommenter, http.StatusForbidden, 0},
+		{"/teams/empty-team", methodGet, "", userEditor, http.StatusForbidden, 0},
+		{"/teams/empty-team", methodGet, "", userAdmin, http.StatusForbidden, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsRegenerateSignupTokenPluginMode(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/teams/test-team/regenerate_signup_token", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/regenerate_signup_token", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+
+		{"/teams/empty-team/regenerate_signup_token", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/empty-team/regenerate_signup_token", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsGetTeamUsers(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	testData := setupData(t, th)
+	clients := setupClients(th)
+
+	ttCases := []TestCase{
+		{"/teams/test-team/users", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/users", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/teams/test-team/users", methodGet, "", userTeamMember, http.StatusOK, 5},
+		{"/teams/test-team/users", methodGet, "", userViewer, http.StatusOK, 5},
+		{"/teams/test-team/users", methodGet, "", userCommenter, http.StatusOK, 5},
+		{"/teams/test-team/users", methodGet, "", userEditor, http.StatusOK, 5},
+		{"/teams/test-team/users", methodGet, "", userAdmin, http.StatusOK, 5},
+
+		{"/teams/empty-team/users", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/teams/empty-team/users", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/teams/empty-team/users", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/teams/empty-team/users", methodGet, "", userViewer, http.StatusForbidden, 0},
+		{"/teams/empty-team/users", methodGet, "", userCommenter, http.StatusForbidden, 0},
+		{"/teams/empty-team/users", methodGet, "", userEditor, http.StatusForbidden, 0},
+		{"/teams/empty-team/users", methodGet, "", userAdmin, http.StatusForbidden, 0},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}

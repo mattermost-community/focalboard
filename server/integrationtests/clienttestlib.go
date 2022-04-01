@@ -51,6 +51,9 @@ func (_ *FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID stri
 	if userID == "no-team-member" {
 		return false
 	}
+	if teamID == "empty-team" {
+		return false
+	}
 	return true
 }
 
