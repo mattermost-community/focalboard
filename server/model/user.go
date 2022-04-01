@@ -6,7 +6,8 @@ import (
 )
 
 const (
-	SingleUser = "single-user"
+	SingleUser   = "single-user"
+	GlobalTeamID = "0"
 )
 
 // User is a user
