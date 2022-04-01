@@ -5,6 +5,7 @@ import path from 'path'
 import {exit} from 'process'
 import {ArchiveUtils} from '../util/archive'
 import {Block} from '../../webapp/src/blocks/block'
+import {Board} from '../../webapp/src/blocks/board'
 import {IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
 import {createBoardView} from '../../webapp/src/blocks/boardView'
 import {createCard} from '../../webapp/src/blocks/card'
@@ -70,11 +71,11 @@ async function main() {
     markdownFolder = path.join(inputFolder, basename)
 
     // Convert
-    const blocks = convert(input, title)
+    const [boards, blocks] = convert(input, title)
 
     // Save output
     // TODO: Stream output
-    const outputData = ArchiveUtils.buildBlockArchive(blocks)
+    const outputData = ArchiveUtils.buildBlockArchive(boards, blocks)
     fs.writeFileSync(outputFile, outputData)
 
     console.log(`Exported to ${outputFile}`)
@@ -117,13 +118,13 @@ function getColumns(input: any[]) {
     return keys.slice(1)
 }
 
-function convert(input: any[], title: string): Block[] {
+function convert(input: any[], title: string): [Board[], Block[]] {
+    const boards: Board[] = []
     const blocks: Block[] = []
 
     // Board
     const board = createBoard()
     console.log(`Board: ${title}`)
-    board.rootId = board.id
     board.title = title
 
     // Each column is a card property
@@ -140,13 +141,13 @@ function convert(input: any[], title: string): Block[] {
 
     // Set all column types to select
     // TODO: Detect column type
-    blocks.push(board)
+    boards.push(board)
 
     // Board view
     const view = createBoardView()
     view.title = 'Board View'
     view.fields.viewType = 'board'
-    view.rootId = board.id
+    view.boardId = board.id
     view.parentId = board.id
     blocks.push(view)
 
@@ -166,7 +167,7 @@ function convert(input: any[], title: string): Block[] {
 
         const outCard = createCard()
         outCard.title = title
-        outCard.rootId = board.id
+        outCard.boardId = board.id
         outCard.parentId = board.id
 
         // Card properties, skip first key which is the title
@@ -201,7 +202,7 @@ function convert(input: any[], title: string): Block[] {
             console.log(`Markdown: ${markdown.length} bytes`)
             const text = createTextBlock()
             text.title = markdown
-            text.rootId = board.id
+            text.boardId = board.id
             text.parentId = outCard.id
             blocks.push(text)
 
@@ -212,7 +213,7 @@ function convert(input: any[], title: string): Block[] {
     console.log('')
     console.log(`Found ${input.length} card(s).`)
 
-    return blocks
+    return [boards, blocks]
 }
 
 function showHelp() {
