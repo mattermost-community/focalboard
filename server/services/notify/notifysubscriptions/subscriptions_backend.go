@@ -184,7 +184,7 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 	}
 
 	// TODO: Automatically add user to board?  Fail and show UI?  Waiting for PM decision.
-	//       Currently The subscription created below will only notify if the user is already
+	//       Currently the subscription created below will only notify if the user is already
 	//       a member of the board.
 
 	sub := &model.Subscription{

@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	ErrMentionPermission = errors.New("not permitted")
+	ErrMentionPermission = errors.New("mention not permitted")
 )
 
 // MentionDeliver notifies a user they have been mentioned in a block.
