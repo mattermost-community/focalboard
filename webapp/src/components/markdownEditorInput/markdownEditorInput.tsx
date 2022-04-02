@@ -16,9 +16,10 @@ import React, {
 } from 'react'
 
 import {useAppSelector} from '../../store/hooks'
-import {getWorkspaceUsersList} from '../../store/users'
 import {IUser} from '../../user'
+import {getBoardUsersList} from '../../store/users'
 import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin'
+
 import './markdownEditorInput.scss'
 
 import Entry from './entryComponent/entryComponent'
@@ -36,15 +37,8 @@ type Props = {
 
 const MarkdownEditorInput = (props: Props): ReactElement => {
     const {onChange, onFocus, onBlur, initialText, id, isEditing} = props
-    const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
-    const mentions: MentionData[] = useMemo(() =>
-        workspaceUsers.map((user) =>
-            ({
-                name: user.username,
-                avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`,
-                isBot: user.is_bot,
-            }))
-    , [workspaceUsers])
+    const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
+    const mentions: MentionData[] = useMemo(() => boardUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`, is_bot: user.is_bot})), [boardUsers])
     const ref = useRef<Editor>(null)
 
     const generateEditorState = (text?: string) => {

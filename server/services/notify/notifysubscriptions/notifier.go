@@ -144,12 +144,8 @@ func (n *notifier) notify() {
 }
 
 func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
-	c := store.Container{
-		WorkspaceID: hint.WorkspaceID,
-	}
-
 	// 	get the subscriber list
-	subs, err := n.store.GetSubscribersForBlock(c, hint.BlockID)
+	subs, err := n.store.GetSubscribersForBlock(hint.BlockID)
 	if err != nil {
 		return err
 	}
@@ -162,7 +158,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	oldestNotifiedAt := subs[0].NotifiedAt
 
 	// need the block's board and card.
-	board, card, err := n.store.GetBoardAndCardByID(c, hint.BlockID)
+	board, card, err := n.store.GetBoardAndCardByID(hint.BlockID)
 	if err != nil || board == nil || card == nil {
 		return fmt.Errorf("could not get board & card for block %s: %w", hint.BlockID, err)
 	}
@@ -175,7 +171,6 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	)
 
 	dg := &diffGenerator{
-		container:    c,
 		board:        board,
 		card:         card,
 		store:        n.store,
@@ -204,8 +199,8 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 
 	opts := DiffConvOpts{
 		Language: "en", // TODO: use correct language with i18n available on server.
-		MakeCardLink: func(block *model.Block, board *model.Block, card *model.Block) string {
-			return fmt.Sprintf("[%s](%s)", block.Title, utils.MakeCardLink(n.serverRoot, board.WorkspaceID, board.ID, card.ID))
+		MakeCardLink: func(block *model.Block, board *model.Board, card *model.Block) string {
+			return fmt.Sprintf("[%s](%s)", block.Title, utils.MakeCardLink(n.serverRoot, board.TeamID, board.ID, card.ID))
 		},
 		Logger: n.logger,
 	}
@@ -236,7 +231,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 				mlog.String("subscriber_type", string(sub.SubscriberType)),
 			)
 
-			if err = n.delivery.SubscriptionDeliverSlackAttachments(hint.WorkspaceID, sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
+			if err = n.delivery.SubscriptionDeliverSlackAttachments(sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
 				merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
 					sub.SubscriberID, sub.SubscriberType, err))
 			}
@@ -262,7 +257,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 	}
 
 	// update the last notified_at for all subscribers since we at least attempted to notify all of them.
-	err = dg.store.UpdateSubscribersNotifiedAt(dg.container, dg.hint.BlockID, notifiedAt)
+	err = dg.store.UpdateSubscribersNotifiedAt(dg.hint.BlockID, notifiedAt)
 	if err != nil {
 		merr.Append(fmt.Errorf("could not update subscribers notified_at for block %s: %w", dg.hint.BlockID, err))
 	}

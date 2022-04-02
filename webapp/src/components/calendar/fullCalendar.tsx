@@ -17,7 +17,8 @@ import {Card} from '../../blocks/card'
 import {DateProperty, createDatePropertyFromString} from '../properties/dateRange/dateRange'
 import Tooltip from '../../widgets/tooltip'
 import PropertyValueElement from '../propertyValueElement'
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import CardBadges from '../cardBadges'
 
 import './fullcalendar.scss'
@@ -66,10 +67,11 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const intl = useIntl()
     const {board, cards, activeView, dateDisplayProperty, readonly} = props
     const isSelectable = !readonly
+    const canAddCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
 
     const visiblePropertyTemplates = useMemo(() => (
-        activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
-    ), [board.fields.cardProperties, activeView.fields.visiblePropertyIds])
+        board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
+    ), [board.cardProperties, activeView.fields.visiblePropertyIds])
 
     let {initialDate} = props
     if (!initialDate) {
@@ -140,8 +142,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                             board={board}
                             readOnly={true}
                             card={cards.find((o) => o.id === event.id) || cards[0]}
-                            contents={[]}
-                            comments={[]}
                             propertyTemplate={template}
                             showEmptyPlaceholder={false}
                         />
@@ -167,7 +167,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         const dateProperty = createDatePropertyFromCalendarDates(startDate, endDate)
         const card = cards.find((o) => o.id === event.id)
         if (card && dateDisplayProperty) {
-            mutator.changePropertyValue(card, dateDisplayProperty.id, JSON.stringify(dateProperty))
+            mutator.changePropertyValue(board.id, card, dateDisplayProperty.id, JSON.stringify(dateProperty))
         }
     }, [cards, dateDisplayProperty])
 
@@ -204,23 +204,19 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const dayCellContent = useCallback((args: DayCellContentArg): JSX.Element|null => {
         return (
-            <div
-                className='dateContainer'
-            >
+            <div className={'dateContainer ' + (canAddCards ? 'with-plus' : '')}>
                 <div
                     className='addEvent'
                     onClick={() => onNewEvent({start: args.date, end: args.date})}
                 >
                     {'+'}
                 </div>
-                <div
-                    className='dateDisplay'
-                >
+                <div className='dateDisplay'>
                     {args.dayNumberText}
                 </div>
             </div>
         )
-    }, [dateDisplayProperty])
+    }, [dateDisplayProperty, canAddCards])
 
     return (
         <div

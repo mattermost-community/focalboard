@@ -5,12 +5,12 @@ import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {createMemoryHistory} from 'history'
 
-import {render} from '@testing-library/react'
+import {render, act} from '@testing-library/react'
 
 import userEvent from '@testing-library/user-event'
 import configureStore from 'redux-mock-store'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {wrapIntl} from '../../testUtils'
 
@@ -27,6 +27,18 @@ describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
     let store = mockStore({})
     beforeEach(() => {
         store = mockStore({
+            teams: {
+                current: {id: 'team_id_1'},
+            },
+            boards: {
+                current: 'board_id',
+                boards: {
+                    board_id: {id: 'board_id'},
+                },
+                myBoardMemberships: {
+                    board_id: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
             users: {
                 me: {
                     id: 'user-id',
@@ -65,8 +77,12 @@ describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
         )
 
         const {container} = render(component)
-        userEvent.click(container.querySelector('.menu-entry') as Element)
-        userEvent.click(container.querySelector('#lang') as Element)
+        act(() => {
+            userEvent.click(container.querySelector('.menu-entry') as Element)
+        })
+        act(() => {
+            userEvent.hover(container.querySelector('#lang') as Element)
+        })
         expect(container).toMatchSnapshot()
     })
 
@@ -79,8 +95,12 @@ describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
         )
 
         const {container} = render(component)
-        userEvent.click(container.querySelector('.menu-entry') as Element)
-        userEvent.click(container.querySelector('#import') as Element)
+        act(() => {
+            userEvent.click(container.querySelector('.menu-entry') as Element)
+        })
+        act(() => {
+            userEvent.hover(container.querySelector('#import') as Element)
+        })
         expect(container).toMatchSnapshot()
 
         userEvent.click(container.querySelector('[aria-label="Asana"]') as Element)

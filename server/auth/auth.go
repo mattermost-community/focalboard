@@ -6,6 +6,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/pkg/errors"
@@ -13,19 +14,20 @@ import (
 
 type AuthInterface interface {
 	GetSession(token string) (*model.Session, error)
-	IsValidReadToken(c store.Container, blockID string, readToken string) (bool, error)
-	DoesUserHaveWorkspaceAccess(userID string, workspaceID string) bool
+	IsValidReadToken(boardID string, readToken string) (bool, error)
+	DoesUserHaveTeamAccess(userID string, teamID string) bool
 }
 
 // Auth authenticates sessions.
 type Auth struct {
-	config *config.Configuration
-	store  store.Store
+	config      *config.Configuration
+	store       store.Store
+	permissions permissions.PermissionsService
 }
 
 // New returns a new Auth.
-func New(config *config.Configuration, store store.Store) *Auth {
-	return &Auth{config: config, store: store}
+func New(config *config.Configuration, store store.Store, permissions permissions.PermissionsService) *Auth {
+	return &Auth{config: config, store: store, permissions: permissions}
 }
 
 // GetSession Get a user active session and refresh the session if needed.
@@ -44,14 +46,9 @@ func (a *Auth) GetSession(token string) (*model.Session, error) {
 	return session, nil
 }
 
-// IsValidReadToken validates the read token for a block.
-func (a *Auth) IsValidReadToken(c store.Container, blockID string, readToken string) (bool, error) {
-	rootID, err := a.store.GetRootID(c, blockID)
-	if err != nil {
-		return false, err
-	}
-
-	sharing, err := a.store.GetSharing(c, rootID)
+// IsValidReadToken validates the read token for a board.
+func (a *Auth) IsValidReadToken(boardID string, readToken string) (bool, error) {
+	sharing, err := a.store.GetSharing(boardID)
 	if errors.Is(err, sql.ErrNoRows) {
 		return false, nil
 	}
@@ -59,17 +56,13 @@ func (a *Auth) IsValidReadToken(c store.Container, blockID string, readToken str
 		return false, err
 	}
 
-	if sharing != nil && (sharing.ID == rootID && sharing.Enabled && sharing.Token == readToken) {
+	if sharing != nil && (sharing.ID == boardID && sharing.Enabled && sharing.Token == readToken) {
 		return true, nil
 	}
 
 	return false, nil
 }
 
-func (a *Auth) DoesUserHaveWorkspaceAccess(userID string, workspaceID string) bool {
-	hasAccess, err := a.store.HasWorkspaceAccess(userID, workspaceID)
-	if err != nil {
-		return false
-	}
-	return hasAccess
+func (a *Auth) DoesUserHaveTeamAccess(userID string, teamID string) bool {
+	return a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam)
 }

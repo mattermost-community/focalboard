@@ -5,6 +5,7 @@ import minimist from 'minimist'
 import {exit} from 'process'
 import {ArchiveUtils} from '../util/archive'
 import {Block} from '../../webapp/src/blocks/block'
+import {Board} from '../../webapp/src/blocks/board'
 import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
 import {createBoardView} from '../../webapp/src/blocks/boardView'
 import {createCard} from '../../webapp/src/blocks/card'
@@ -50,25 +51,25 @@ function main() {
     const input = JSON.parse(inputData) as Trello
 
     // Convert
-    const blocks = convert(input)
+    const [boards, blocks] = convert(input)
 
     // Save output
     // TODO: Stream output
-    const outputData = ArchiveUtils.buildBlockArchive(blocks)
+    const outputData = ArchiveUtils.buildBlockArchive(boards, blocks)
     fs.writeFileSync(outputFile, outputData)
 
     console.log(`Exported to ${outputFile}`)
 }
 
-function convert(input: Trello): Block[] {
+function convert(input: Trello): [Board[], Block[]] {
+    const boards: Board[] = []
     const blocks: Block[] = []
 
     // Board
     const board = createBoard()
     console.log(`Board: ${input.name}`)
-    board.rootId = board.id
     board.title = input.name
-    board.fields.description = input.desc
+    board.description = input.desc
 
     // Convert lists (columns) to a Select property
     const optionIdMap = new Map<string, string>()
@@ -92,14 +93,14 @@ function convert(input: Trello): Block[] {
         type: 'select',
         options
     }
-    board.fields.cardProperties = [cardProperty]
-    blocks.push(board)
+    board.cardProperties = [cardProperty]
+    boards.push(board)
 
     // Board view
     const view = createBoardView()
     view.title = 'Board View'
     view.fields.viewType = 'board'
-    view.rootId = board.id
+    view.boardId = board.id
     view.parentId = board.id
     blocks.push(view)
 
@@ -109,7 +110,7 @@ function convert(input: Trello): Block[] {
 
         const outCard = createCard()
         outCard.title = card.name
-        outCard.rootId = board.id
+        outCard.boardId = board.id
         outCard.parentId = board.id
 
         // Map lists to Select property options
@@ -130,7 +131,7 @@ function convert(input: Trello): Block[] {
             // console.log(`\t${card.desc}`)
             const text = createTextBlock()
             text.title = card.desc
-            text.rootId = board.id
+            text.boardId = board.id
             text.parentId = outCard.id
             blocks.push(text)
 
@@ -150,7 +151,7 @@ function convert(input: Trello): Block[] {
                         } else {
                             checkBlock.fields.value = false
                         }
-                        checkBlock.rootId = outCard.rootId
+                        checkBlock.boardId = board.id
                         checkBlock.parentId = outCard.id
                         blocks.push(checkBlock)
 
@@ -164,7 +165,7 @@ function convert(input: Trello): Block[] {
     console.log('')
     console.log(`Found ${input.cards.length} card(s).`)
 
-    return blocks
+    return [boards, blocks]
 }
 
 function showHelp() {

@@ -43,18 +43,15 @@ jest.mock('../../octoClient', () => {
         getSubtree: jest.fn(() => Promise.resolve([
             {
                 id: '1',
-                workspaceId: 'workspace',
+                teamId: 'team',
                 title: 'Template',
-                type: 'board',
-                fields: {
-                    icon: '🚴🏻‍♂️',
-                    cardProperties: [groupProperty],
-                    dateDisplayPropertyId: 'id-5',
-                },
+                icon: '🚴🏻‍♂️',
+                cardProperties: [groupProperty],
+                dateDisplayPropertyId: 'id-5',
             },
             {
                 id: '2',
-                workspaceId: 'workspace',
+                boardId: '1',
                 title: 'View',
                 type: 'view',
                 fields: {
@@ -69,7 +66,7 @@ jest.mock('../../octoClient', () => {
             },
             {
                 id: '3',
-                workspaceId: 'workspace',
+                boardId: '1',
                 title: 'Card',
                 type: 'card',
                 fields: {
@@ -88,48 +85,42 @@ jest.mock('../../mutator')
 describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
     const template: Board = {
         id: '1',
-        workspaceId: 'workspace_1',
+        teamId: 'team-1',
         title: 'Template 1',
         createdBy: 'user-1',
         modifiedBy: 'user-1',
         createAt: 10,
         updateAt: 20,
         deleteAt: 0,
+        description: 'test',
+        showDescription: false,
         type: 'board',
-        parentId: '123',
-        rootId: '123',
-        schema: 1,
-        fields: {
-            description: 'test',
-            icon: '🚴🏻‍♂️',
-            cardProperties: [groupProperty],
-            dateDisplayPropertyId: 'id-5',
-            columnCalculations: {},
-        },
+        isTemplate: true,
+        templateVersion: 0,
+        icon: '🚴🏻‍♂️',
+        cardProperties: [groupProperty],
+        columnCalculations: {},
+        properties: {},
     }
 
     const globalTemplate: Board = {
         id: 'global-1',
         title: 'Template global',
-        workspaceId: '0',
+        teamId: '0',
         createdBy: 'user-1',
         modifiedBy: 'user-1',
         createAt: 10,
         updateAt: 20,
         deleteAt: 0,
         type: 'board',
-        parentId: '123',
-        rootId: '123',
-        schema: 1,
-        fields: {
-            icon: '🚴🏻‍♂️',
-            description: 'test',
-            cardProperties: [groupProperty],
-            dateDisplayPropertyId: 'global-id-5',
-            columnCalculations: {},
-            isTemplate: true,
-            templateVer: 2,
-        },
+        icon: '🚴🏻‍♂️',
+        description: 'test',
+        showDescription: false,
+        cardProperties: [groupProperty],
+        columnCalculations: {},
+        isTemplate: true,
+        templateVersion: 2,
+        properties: {},
     }
 
     beforeEach(() => {

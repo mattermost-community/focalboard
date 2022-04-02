@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 
 import SubmenuTriangleIcon from '../icons/submenuTriangle'
 
@@ -8,9 +8,11 @@ import Menu from '.'
 
 import './subMenuOption.scss'
 
+export const HoveringContext = React.createContext(false)
+
 type SubMenuOptionProps = {
-    id: string,
-    name: string,
+    id: string
+    name: string
     position?: 'bottom' | 'top' | 'left' | 'left-bottom'
     icon?: React.ReactNode
     children: React.ReactNode
@@ -18,22 +20,24 @@ type SubMenuOptionProps = {
 
 function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
     const [isOpen, setIsOpen] = useState(false)
+    const isHovering = useContext(HoveringContext)
 
     const openLeftClass = props.position === 'left' || props.position === 'left-bottom' ? ' open-left' : ''
+
+    useEffect(() => {
+        if (isHovering !== undefined) {
+            setIsOpen(isHovering)
+        }
+    }, [isHovering])
 
     return (
         <div
             id={props.id}
-            className={`MenuOption SubMenuOption menu-option${openLeftClass}`}
-            onMouseEnter={() => {
-                setTimeout(() => {
-                    setIsOpen(true)
-                }, 50)
-            }}
+            className={`MenuOption SubMenuOption menu-option${openLeftClass}${isOpen ? ' menu-option-active' : ''}`}
             onClick={(e: React.MouseEvent) => {
                 e.preventDefault()
                 e.stopPropagation()
-                setIsOpen(true)
+                setIsOpen((open) => !open)
             }}
         >
             {(props.position === 'left' || props.position === 'left-bottom') && <SubmenuTriangleIcon/>}

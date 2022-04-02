@@ -4,22 +4,24 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/mattermost/focalboard/server/model"
+
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/stretchr/testify/require"
 )
 
-func TestPluginAdapterWorkspaceSubscription(t *testing.T) {
+func TestPluginAdapterTeamSubscription(t *testing.T) {
 	th := SetupTestHelper(t)
 
 	webConnID := mmModel.NewId()
 	userID := mmModel.NewId()
-	workspaceID := mmModel.NewId()
+	teamID := mmModel.NewId()
 
 	var pac *PluginAdapterClient
 	t.Run("Should correctly add a connection", func(t *testing.T) {
 		require.Empty(t, th.pa.listeners)
-		require.Empty(t, th.pa.listenersByWorkspace)
+		require.Empty(t, th.pa.listenersByTeam)
 		th.pa.OnWebSocketConnect(webConnID, userID)
 		require.Len(t, th.pa.listeners, 1)
 
@@ -28,55 +30,55 @@ func TestPluginAdapterWorkspaceSubscription(t *testing.T) {
 		require.True(t, ok)
 		require.NotNil(t, pac)
 		require.Equal(t, userID, pac.userID)
-		require.Empty(t, th.pa.listenersByWorkspace)
+		require.Empty(t, th.pa.listenersByTeam)
 	})
 
-	t.Run("Should correctly subscribe to a workspace", func(t *testing.T) {
-		require.False(t, pac.isSubscribedToWorkspace(workspaceID))
+	t.Run("Should correctly subscribe to a team", func(t *testing.T) {
+		require.False(t, pac.isSubscribedToTeam(teamID))
 
-		th.SubscribeWebConnToWorkspace(pac.webConnID, pac.userID, workspaceID)
+		th.SubscribeWebConnToTeam(pac.webConnID, pac.userID, teamID)
 
-		require.Len(t, th.pa.listenersByWorkspace[workspaceID], 1)
-		require.Contains(t, th.pa.listenersByWorkspace[workspaceID], pac)
-		require.Len(t, pac.workspaces, 1)
-		require.Contains(t, pac.workspaces, workspaceID)
+		require.Len(t, th.pa.listenersByTeam[teamID], 1)
+		require.Contains(t, th.pa.listenersByTeam[teamID], pac)
+		require.Len(t, pac.teams, 1)
+		require.Contains(t, pac.teams, teamID)
 
-		require.True(t, pac.isSubscribedToWorkspace(workspaceID))
+		require.True(t, pac.isSubscribedToTeam(teamID))
 	})
 
-	t.Run("Subscribing again to a subscribed workspace would have no effect", func(t *testing.T) {
-		require.True(t, pac.isSubscribedToWorkspace(workspaceID))
+	t.Run("Subscribing again to a subscribed team would have no effect", func(t *testing.T) {
+		require.True(t, pac.isSubscribedToTeam(teamID))
 
-		th.SubscribeWebConnToWorkspace(pac.webConnID, pac.userID, workspaceID)
+		th.SubscribeWebConnToTeam(pac.webConnID, pac.userID, teamID)
 
-		require.Len(t, th.pa.listenersByWorkspace[workspaceID], 1)
-		require.Contains(t, th.pa.listenersByWorkspace[workspaceID], pac)
-		require.Len(t, pac.workspaces, 1)
-		require.Contains(t, pac.workspaces, workspaceID)
+		require.Len(t, th.pa.listenersByTeam[teamID], 1)
+		require.Contains(t, th.pa.listenersByTeam[teamID], pac)
+		require.Len(t, pac.teams, 1)
+		require.Contains(t, pac.teams, teamID)
 
-		require.True(t, pac.isSubscribedToWorkspace(workspaceID))
+		require.True(t, pac.isSubscribedToTeam(teamID))
 	})
 
-	t.Run("Should correctly unsubscribe to a workspace", func(t *testing.T) {
-		require.True(t, pac.isSubscribedToWorkspace(workspaceID))
+	t.Run("Should correctly unsubscribe to a team", func(t *testing.T) {
+		require.True(t, pac.isSubscribedToTeam(teamID))
 
-		th.UnsubscribeWebConnFromWorkspace(pac.webConnID, pac.userID, workspaceID)
+		th.UnsubscribeWebConnFromTeam(pac.webConnID, pac.userID, teamID)
 
-		require.Empty(t, th.pa.listenersByWorkspace[workspaceID])
-		require.Empty(t, pac.workspaces)
+		require.Empty(t, th.pa.listenersByTeam[teamID])
+		require.Empty(t, pac.teams)
 
-		require.False(t, pac.isSubscribedToWorkspace(workspaceID))
+		require.False(t, pac.isSubscribedToTeam(teamID))
 	})
 
-	t.Run("Unsubscribing again to an unsubscribed workspace would have no effect", func(t *testing.T) {
-		require.False(t, pac.isSubscribedToWorkspace(workspaceID))
+	t.Run("Unsubscribing again to an unsubscribed team would have no effect", func(t *testing.T) {
+		require.False(t, pac.isSubscribedToTeam(teamID))
 
-		th.UnsubscribeWebConnFromWorkspace(pac.webConnID, pac.userID, workspaceID)
+		th.UnsubscribeWebConnFromTeam(pac.webConnID, pac.userID, teamID)
 
-		require.Empty(t, th.pa.listenersByWorkspace[workspaceID])
-		require.Empty(t, pac.workspaces)
+		require.Empty(t, th.pa.listenersByTeam[teamID])
+		require.Empty(t, pac.teams)
 
-		require.False(t, pac.isSubscribedToWorkspace(workspaceID))
+		require.False(t, pac.isSubscribedToTeam(teamID))
 	})
 
 	t.Run("Should correctly be marked as inactive if disconnected", func(t *testing.T) {
@@ -105,7 +107,7 @@ func TestPluginAdapterClientReconnect(t *testing.T) {
 
 	webConnID := mmModel.NewId()
 	userID := mmModel.NewId()
-	workspaceID := mmModel.NewId()
+	teamID := mmModel.NewId()
 
 	var pac *PluginAdapterClient
 	t.Run("A user should be able to reconnect within the accepted threshold and keep their subscriptions", func(t *testing.T) {
@@ -120,8 +122,8 @@ func TestPluginAdapterClientReconnect(t *testing.T) {
 		require.True(t, ok)
 		require.NotNil(t, pac)
 
-		th.SubscribeWebConnToWorkspace(pac.webConnID, pac.userID, workspaceID)
-		require.True(t, pac.isSubscribedToWorkspace(workspaceID))
+		th.SubscribeWebConnToTeam(pac.webConnID, pac.userID, teamID)
+		require.True(t, pac.isSubscribedToTeam(teamID))
 
 		// disconnect
 		th.pa.OnWebSocketDisconnect(webConnID, userID)
@@ -134,7 +136,7 @@ func TestPluginAdapterClientReconnect(t *testing.T) {
 		require.Len(t, th.pa.listeners, 1)
 		require.Len(t, th.pa.listenersByUserID[userID], 1)
 		require.True(t, pac.isActive())
-		require.True(t, pac.isSubscribedToWorkspace(workspaceID))
+		require.True(t, pac.isSubscribedToTeam(teamID))
 	})
 
 	t.Run("Should remove old inactive connection when user connects with a different ID", func(t *testing.T) {
@@ -162,7 +164,7 @@ func TestPluginAdapterClientReconnect(t *testing.T) {
 		require.Len(t, th.pa.listenersByUserID[userID], 2)
 		reconnectedPAC, ok := th.pa.listeners[webConnID]
 		require.True(t, ok)
-		require.False(t, reconnectedPAC.isSubscribedToWorkspace(workspaceID))
+		require.False(t, reconnectedPAC.isSubscribedToTeam(teamID))
 	})
 
 	t.Run("Should not remove active connections when user connects with a different ID", func(t *testing.T) {
@@ -186,12 +188,12 @@ func TestPluginAdapterClientReconnect(t *testing.T) {
 	})
 }
 
-func TestGetUserIDsForWorkspace(t *testing.T) {
+func TestGetUserIDsForTeam(t *testing.T) {
 	th := SetupTestHelper(t)
 
-	// we have two workspaces
-	workspaceID1 := mmModel.NewId()
-	workspaceID2 := mmModel.NewId()
+	// we have two teams
+	teamID1 := mmModel.NewId()
+	teamID2 := mmModel.NewId()
 
 	// user 1 has two connections
 	userID1 := mmModel.NewId()
@@ -207,61 +209,162 @@ func TestGetUserIDsForWorkspace(t *testing.T) {
 
 	go func(wg *sync.WaitGroup) {
 		th.pa.OnWebSocketConnect(webConnID1, userID1)
-		th.SubscribeWebConnToWorkspace(webConnID1, userID1, workspaceID1)
+		th.SubscribeWebConnToTeam(webConnID1, userID1, teamID1)
 		wg.Done()
 	}(wg)
 
 	go func(wg *sync.WaitGroup) {
 		th.pa.OnWebSocketConnect(webConnID2, userID1)
-		th.SubscribeWebConnToWorkspace(webConnID2, userID1, workspaceID2)
+		th.SubscribeWebConnToTeam(webConnID2, userID1, teamID2)
 		wg.Done()
 	}(wg)
 
 	go func(wg *sync.WaitGroup) {
 		th.pa.OnWebSocketConnect(webConnID3, userID2)
-		th.SubscribeWebConnToWorkspace(webConnID3, userID2, workspaceID2)
+		th.SubscribeWebConnToTeam(webConnID3, userID2, teamID2)
 		wg.Done()
 	}(wg)
 
 	wg.Wait()
 
-	t.Run("should find that only user1 is connected to workspace 1", func(t *testing.T) {
-		userIDs := th.pa.getUserIDsForWorkspace(workspaceID1)
+	t.Run("should find that only user1 is connected to team 1", func(t *testing.T) {
+		userIDs := th.pa.getUserIDsForTeam(teamID1)
 		require.ElementsMatch(t, []string{userID1}, userIDs)
 	})
 
-	t.Run("should find that both users are connected to workspace 2", func(t *testing.T) {
-		userIDs := th.pa.getUserIDsForWorkspace(workspaceID2)
+	t.Run("should find that both users are connected to team 2", func(t *testing.T) {
+		userIDs := th.pa.getUserIDsForTeam(teamID2)
 		require.ElementsMatch(t, []string{userID1, userID2}, userIDs)
 	})
 
-	t.Run("should ignore user1 if webConn 2 inactive when getting workspace 2 user ids", func(t *testing.T) {
+	t.Run("should ignore user1 if webConn 2 inactive when getting team 2 user ids", func(t *testing.T) {
 		th.pa.OnWebSocketDisconnect(webConnID2, userID1)
 
-		userIDs := th.pa.getUserIDsForWorkspace(workspaceID2)
+		userIDs := th.pa.getUserIDsForTeam(teamID2)
 		require.ElementsMatch(t, []string{userID2}, userIDs)
 	})
 
-	t.Run("should still find user 1 in workspace 1 after the webConn 2 disconnection", func(t *testing.T) {
-		userIDs := th.pa.getUserIDsForWorkspace(workspaceID1)
+	t.Run("should still find user 1 in team 1 after the webConn 2 disconnection", func(t *testing.T) {
+		userIDs := th.pa.getUserIDsForTeam(teamID1)
 		require.ElementsMatch(t, []string{userID1}, userIDs)
 	})
 
 	t.Run("should find again both users if the webConn 2 comes back", func(t *testing.T) {
 		th.pa.OnWebSocketConnect(webConnID2, userID1)
 
-		userIDs := th.pa.getUserIDsForWorkspace(workspaceID2)
+		userIDs := th.pa.getUserIDsForTeam(teamID2)
 		require.ElementsMatch(t, []string{userID1, userID2}, userIDs)
+	})
+}
+
+func TestGetUserIDsForTeamAndBoard(t *testing.T) {
+	th := SetupTestHelper(t)
+
+	// we have two teams
+	teamID1 := mmModel.NewId()
+	boardID1 := mmModel.NewId()
+	teamID2 := mmModel.NewId()
+	boardID2 := mmModel.NewId()
+
+	// user 1 has two connections
+	userID1 := mmModel.NewId()
+	webConnID1 := mmModel.NewId()
+	webConnID2 := mmModel.NewId()
+
+	// user 2 has one connection
+	userID2 := mmModel.NewId()
+	webConnID3 := mmModel.NewId()
+
+	wg := new(sync.WaitGroup)
+	wg.Add(3)
+
+	go func(wg *sync.WaitGroup) {
+		th.pa.OnWebSocketConnect(webConnID1, userID1)
+		th.SubscribeWebConnToTeam(webConnID1, userID1, teamID1)
+		wg.Done()
+	}(wg)
+
+	go func(wg *sync.WaitGroup) {
+		th.pa.OnWebSocketConnect(webConnID2, userID1)
+		th.SubscribeWebConnToTeam(webConnID2, userID1, teamID2)
+		wg.Done()
+	}(wg)
+
+	go func(wg *sync.WaitGroup) {
+		th.pa.OnWebSocketConnect(webConnID3, userID2)
+		th.SubscribeWebConnToTeam(webConnID3, userID2, teamID2)
+		wg.Done()
+	}(wg)
+
+	wg.Wait()
+
+	t.Run("should find that only user1 is connected to team 1 and board 1", func(t *testing.T) {
+		mockedMembers := []*model.BoardMember{{UserID: userID1}}
+		th.store.EXPECT().
+			GetMembersForBoard(boardID1).
+			Return(mockedMembers, nil).
+			Times(1)
+
+		userIDs := th.pa.getUserIDsForTeamAndBoard(teamID1, boardID1)
+		require.ElementsMatch(t, []string{userID1}, userIDs)
+	})
+
+	t.Run("should find that both users are connected to team 2 and board 2", func(t *testing.T) {
+		mockedMembers := []*model.BoardMember{{UserID: userID1}, {UserID: userID2}}
+		th.store.EXPECT().
+			GetMembersForBoard(boardID2).
+			Return(mockedMembers, nil).
+			Times(1)
+
+		userIDs := th.pa.getUserIDsForTeamAndBoard(teamID2, boardID2)
+		require.ElementsMatch(t, []string{userID1, userID2}, userIDs)
+	})
+
+	t.Run("should find that only one user is connected to team 2 and board 2 if there is only one membership with both connected", func(t *testing.T) {
+		mockedMembers := []*model.BoardMember{{UserID: userID1}}
+		th.store.EXPECT().
+			GetMembersForBoard(boardID2).
+			Return(mockedMembers, nil).
+			Times(1)
+
+		userIDs := th.pa.getUserIDsForTeamAndBoard(teamID2, boardID2)
+		require.ElementsMatch(t, []string{userID1}, userIDs)
+	})
+
+	t.Run("should find only one if the other is inactive", func(t *testing.T) {
+		th.pa.OnWebSocketDisconnect(webConnID3, userID2)
+		defer th.pa.OnWebSocketConnect(webConnID3, userID2)
+
+		mockedMembers := []*model.BoardMember{{UserID: userID1}, {UserID: userID2}}
+		th.store.EXPECT().
+			GetMembersForBoard(boardID2).
+			Return(mockedMembers, nil).
+			Times(1)
+
+		userIDs := th.pa.getUserIDsForTeamAndBoard(teamID2, boardID2)
+		require.ElementsMatch(t, []string{userID1}, userIDs)
+	})
+
+	t.Run("should include a user that is not present if it's ensured", func(t *testing.T) {
+		userID3 := mmModel.NewId()
+		mockedMembers := []*model.BoardMember{{UserID: userID1}, {UserID: userID2}}
+		th.store.EXPECT().
+			GetMembersForBoard(boardID2).
+			Return(mockedMembers, nil).
+			Times(1)
+
+		userIDs := th.pa.getUserIDsForTeamAndBoard(teamID2, boardID2, userID3)
+		require.ElementsMatch(t, []string{userID1, userID2, userID3}, userIDs)
 	})
 }
 
 func TestParallelSubscriptionsOnMultipleConnections(t *testing.T) {
 	th := SetupTestHelper(t)
 
-	workspaceID1 := mmModel.NewId()
-	workspaceID2 := mmModel.NewId()
-	workspaceID3 := mmModel.NewId()
-	workspaceID4 := mmModel.NewId()
+	teamID1 := mmModel.NewId()
+	teamID2 := mmModel.NewId()
+	teamID3 := mmModel.NewId()
+	teamID4 := mmModel.NewId()
 
 	userID := mmModel.NewId()
 	webConnID1 := mmModel.NewId()
@@ -279,65 +382,65 @@ func TestParallelSubscriptionsOnMultipleConnections(t *testing.T) {
 	wg.Add(4)
 
 	go func(wg *sync.WaitGroup) {
-		th.SubscribeWebConnToWorkspace(webConnID1, userID, workspaceID1)
-		require.True(t, pac1.isSubscribedToWorkspace(workspaceID1))
+		th.SubscribeWebConnToTeam(webConnID1, userID, teamID1)
+		require.True(t, pac1.isSubscribedToTeam(teamID1))
 
-		th.SubscribeWebConnToWorkspace(webConnID2, userID, workspaceID1)
-		require.True(t, pac2.isSubscribedToWorkspace(workspaceID1))
+		th.SubscribeWebConnToTeam(webConnID2, userID, teamID1)
+		require.True(t, pac2.isSubscribedToTeam(teamID1))
 
-		th.UnsubscribeWebConnFromWorkspace(webConnID1, userID, workspaceID1)
-		require.False(t, pac1.isSubscribedToWorkspace(workspaceID1))
+		th.UnsubscribeWebConnFromTeam(webConnID1, userID, teamID1)
+		require.False(t, pac1.isSubscribedToTeam(teamID1))
 
-		th.UnsubscribeWebConnFromWorkspace(webConnID2, userID, workspaceID1)
-		require.False(t, pac2.isSubscribedToWorkspace(workspaceID1))
-
-		wg.Done()
-	}(wg)
-
-	go func(wg *sync.WaitGroup) {
-		th.SubscribeWebConnToWorkspace(webConnID1, userID, workspaceID2)
-		require.True(t, pac1.isSubscribedToWorkspace(workspaceID2))
-
-		th.SubscribeWebConnToWorkspace(webConnID2, userID, workspaceID2)
-		require.True(t, pac2.isSubscribedToWorkspace(workspaceID2))
-
-		th.UnsubscribeWebConnFromWorkspace(webConnID1, userID, workspaceID2)
-		require.False(t, pac1.isSubscribedToWorkspace(workspaceID2))
-
-		th.UnsubscribeWebConnFromWorkspace(webConnID2, userID, workspaceID2)
-		require.False(t, pac2.isSubscribedToWorkspace(workspaceID2))
+		th.UnsubscribeWebConnFromTeam(webConnID2, userID, teamID1)
+		require.False(t, pac2.isSubscribedToTeam(teamID1))
 
 		wg.Done()
 	}(wg)
 
 	go func(wg *sync.WaitGroup) {
-		th.SubscribeWebConnToWorkspace(webConnID1, userID, workspaceID3)
-		require.True(t, pac1.isSubscribedToWorkspace(workspaceID3))
+		th.SubscribeWebConnToTeam(webConnID1, userID, teamID2)
+		require.True(t, pac1.isSubscribedToTeam(teamID2))
 
-		th.SubscribeWebConnToWorkspace(webConnID2, userID, workspaceID3)
-		require.True(t, pac2.isSubscribedToWorkspace(workspaceID3))
+		th.SubscribeWebConnToTeam(webConnID2, userID, teamID2)
+		require.True(t, pac2.isSubscribedToTeam(teamID2))
 
-		th.UnsubscribeWebConnFromWorkspace(webConnID1, userID, workspaceID3)
-		require.False(t, pac1.isSubscribedToWorkspace(workspaceID3))
+		th.UnsubscribeWebConnFromTeam(webConnID1, userID, teamID2)
+		require.False(t, pac1.isSubscribedToTeam(teamID2))
 
-		th.UnsubscribeWebConnFromWorkspace(webConnID2, userID, workspaceID3)
-		require.False(t, pac2.isSubscribedToWorkspace(workspaceID3))
+		th.UnsubscribeWebConnFromTeam(webConnID2, userID, teamID2)
+		require.False(t, pac2.isSubscribedToTeam(teamID2))
 
 		wg.Done()
 	}(wg)
 
 	go func(wg *sync.WaitGroup) {
-		th.SubscribeWebConnToWorkspace(webConnID1, userID, workspaceID4)
-		require.True(t, pac1.isSubscribedToWorkspace(workspaceID4))
+		th.SubscribeWebConnToTeam(webConnID1, userID, teamID3)
+		require.True(t, pac1.isSubscribedToTeam(teamID3))
 
-		th.SubscribeWebConnToWorkspace(webConnID2, userID, workspaceID4)
-		require.True(t, pac2.isSubscribedToWorkspace(workspaceID4))
+		th.SubscribeWebConnToTeam(webConnID2, userID, teamID3)
+		require.True(t, pac2.isSubscribedToTeam(teamID3))
 
-		th.UnsubscribeWebConnFromWorkspace(webConnID1, userID, workspaceID4)
-		require.False(t, pac1.isSubscribedToWorkspace(workspaceID4))
+		th.UnsubscribeWebConnFromTeam(webConnID1, userID, teamID3)
+		require.False(t, pac1.isSubscribedToTeam(teamID3))
 
-		th.UnsubscribeWebConnFromWorkspace(webConnID2, userID, workspaceID4)
-		require.False(t, pac2.isSubscribedToWorkspace(workspaceID4))
+		th.UnsubscribeWebConnFromTeam(webConnID2, userID, teamID3)
+		require.False(t, pac2.isSubscribedToTeam(teamID3))
+
+		wg.Done()
+	}(wg)
+
+	go func(wg *sync.WaitGroup) {
+		th.SubscribeWebConnToTeam(webConnID1, userID, teamID4)
+		require.True(t, pac1.isSubscribedToTeam(teamID4))
+
+		th.SubscribeWebConnToTeam(webConnID2, userID, teamID4)
+		require.True(t, pac2.isSubscribedToTeam(teamID4))
+
+		th.UnsubscribeWebConnFromTeam(webConnID1, userID, teamID4)
+		require.False(t, pac1.isSubscribedToTeam(teamID4))
+
+		th.UnsubscribeWebConnFromTeam(webConnID2, userID, teamID4)
+		require.False(t, pac2.isSubscribedToTeam(teamID4))
 
 		wg.Done()
 	}(wg)

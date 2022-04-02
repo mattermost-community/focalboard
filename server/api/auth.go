@@ -302,13 +302,13 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 	// Validate token
 	if len(registerData.Token) > 0 {
-		workspace, err2 := a.app.GetRootWorkspace()
+		team, err2 := a.app.GetRootTeam()
 		if err2 != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err2)
 			return
 		}
 
-		if registerData.Token != workspace.SignupToken {
+		if registerData.Token != team.SignupToken {
 			a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "invalid token", nil)
 			return
 		}

@@ -19,9 +19,10 @@ import (
 )
 
 type TestHelper struct {
-	App    *App
-	Store  *mockstore.MockStore
-	logger *mlog.Logger
+	App          *App
+	Store        *mockstore.MockStore
+	FilesBackend *mocks.FileBackend
+	logger       *mlog.Logger
 }
 
 func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
@@ -29,18 +30,18 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	defer ctrl.Finish()
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
-
-	auth := auth.New(&cfg, store)
+	filesBackend := &mocks.FileBackend{}
+	auth := auth.New(&cfg, store, nil)
 	logger := mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)
 	sessionToken := "TESTTOKEN"
-	wsserver := ws.NewServer(auth, sessionToken, false, logger)
+	wsserver := ws.NewServer(auth, sessionToken, false, logger, store)
 	webhook := webhook.NewClient(&cfg, logger)
 	metricsService := metrics.NewMetrics(metrics.InstanceInfo{})
 
 	appServices := Services{
 		Auth:             auth,
 		Store:            store,
-		FilesBackend:     &mocks.FileBackend{},
+		FilesBackend:     filesBackend,
 		Webhook:          webhook,
 		Metrics:          metricsService,
 		Logger:           logger,
@@ -49,14 +50,16 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	app2 := New(&cfg, wsserver, appServices)
 
 	tearDown := func() {
+		app2.Shutdown()
 		if logger != nil {
 			_ = logger.Shutdown()
 		}
 	}
 
 	return &TestHelper{
-		App:    app2,
-		Store:  store,
-		logger: logger,
+		App:          app2,
+		Store:        store,
+		FilesBackend: filesBackend,
+		logger:       logger,
 	}, tearDown
 }

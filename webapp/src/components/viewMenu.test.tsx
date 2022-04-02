@@ -43,8 +43,17 @@ describe('/components/viewMenu', () => {
             },
         },
         searchText: {},
+        teams: {
+            current: {id: 'team-id'},
+        },
         boards: {
-            current: board,
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         cards: {
             templates: [card],

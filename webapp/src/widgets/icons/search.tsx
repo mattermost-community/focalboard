@@ -9,7 +9,7 @@ export default function Search(): JSX.Element {
     return (
         <CompassIcon
             icon='magnify'
-            className='CompassIcon'
+            className='MagnifyIcon'
         />
     )
 }

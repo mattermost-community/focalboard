@@ -10,7 +10,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {FetchMock} from '../../test/fetchMock'
 import {TestBlockFactory} from '../../test/testBlockFactory'
@@ -68,21 +68,32 @@ describe('components/cardDetail/CardDetail', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                workspaceUsers: [
+                boardUsers: [
                     {username: 'username_1'},
                 ],
+            },
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
                 boards: {
                     [board.id]: board,
                 },
                 current: board.id,
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
                     [card.id]: card,
                 },
                 current: card.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         })
 
@@ -124,8 +135,20 @@ describe('components/cardDetail/CardDetail', () => {
     test('should show comments in readonly view', async () => {
         const mockStore = configureStore([])
         const store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                boards: {
+                    [board.id]: board,
+                },
+                current: board.id,
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
             users: {
-                workspaceUsers: [
+                boardUsers: [
                     {username: 'username_1'},
                 ],
             },
@@ -186,21 +209,32 @@ describe('components/cardDetail/CardDetail', () => {
                         focalboard_onboardingTourStep: '0',
                     },
                 },
-                workspaceUsers: [
+                boardUsers: [
                     {username: 'username_1'},
                 ],
+            },
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
                 boards: {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 current: welcomeBoard.id,
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
                     [welcomeCard.id]: welcomeCard,
                 },
                 current: welcomeCard.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         })
 
@@ -280,21 +314,32 @@ describe('components/cardDetail/CardDetail', () => {
                         focalboard_onboardingTourStep: '1',
                     },
                 },
-                workspaceUsers: [
+                boardUsers: [
                     {username: 'username_1'},
                 ],
+            },
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
                 boards: {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 current: welcomeBoard.id,
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
                     [welcomeCard.id]: welcomeCard,
                 },
                 current: welcomeCard.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         })
 
@@ -372,21 +417,32 @@ describe('components/cardDetail/CardDetail', () => {
                         focalboard_onboardingTourStep: '2',
                     },
                 },
-                workspaceUsers: [
+                boardUsers: [
                     {username: 'username_1'},
                 ],
+            },
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
                 boards: {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 current: welcomeBoard.id,
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
                     [welcomeCard.id]: welcomeCard,
                 },
                 current: welcomeCard.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         }
         const store = mockStore(state)
