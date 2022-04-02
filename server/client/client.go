@@ -164,18 +164,6 @@ func (c *Client) GetBlockRoute(boardID, blockID string) string {
 	return fmt.Sprintf("%s/%s", c.GetBlocksRoute(boardID), blockID)
 }
 
-<<<<<<< HEAD
-func (c *Client) ExportBlocksRoute() string {
-	return fmt.Sprintf("%s/export", c.GetBlocksRoute())
-}
-
-func (c *Client) ImportBlocksRoute() string {
-	return fmt.Sprintf("%s/import", c.GetBlocksRoute())
-}
-
-func (c *Client) GetBlocks() ([]model.Block, *Response) {
-	r, err := c.DoAPIGet(c.GetBlocksRoute(), "")
-=======
 func (c *Client) GetSubtreeRoute(boardID, blockID string) string {
 	return fmt.Sprintf("%s/subtree", c.GetBlockRoute(boardID, blockID))
 }
@@ -220,7 +208,6 @@ func (c *Client) GetTeam(teamID string) (*model.Team, *Response) {
 
 func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
 	r, err := c.DoAPIGet(c.GetBlocksRoute(boardID), "")
->>>>>>> upstream/main
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -320,12 +307,6 @@ func (c *Client) GetSubtree(boardID, blockID string) ([]model.Block, *Response) 
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-<<<<<<< HEAD
-func (c *Client) ExportBlocks(rootID string) ([]model.Block, *Response) {
-	route := fmt.Sprintf("%s?root_id=%s", c.ExportBlocksRoute(), rootID)
-
-	r, err := c.DoAPIGet(route, "")
-=======
 // Boards and blocks.
 func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
 	r, err := c.DoAPIPost(c.GetBoardsAndBlocksRoute(), toJSON(bab))
@@ -339,25 +320,16 @@ func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.Board
 
 func (c *Client) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
 	r, err := c.DoAPIPatch(c.GetBoardsAndBlocksRoute(), toJSON(pbab))
->>>>>>> upstream/main
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
-<<<<<<< HEAD
-	return model.BlocksFromJSON(r.Body), BuildResponse(r)
-}
-
-func (c *Client) ImportBlocks(blocks []model.Block) (bool, *Response) {
-	r, err := c.DoAPIPost(c.ImportBlocksRoute(), toJSON(blocks))
-=======
 	return model.BoardsAndBlocksFromJSON(r.Body), BuildResponse(r)
 }
 
 func (c *Client) DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks) (bool, *Response) {
 	r, err := c.DoAPIDelete(c.GetBoardsAndBlocksRoute(), toJSON(dbab))
->>>>>>> upstream/main
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
@@ -480,20 +452,6 @@ func (c *Client) UserChangePassword(id string, data *api.ChangePasswordRequest) 
 	return true, BuildResponse(r)
 }
 
-<<<<<<< HEAD
-// Workspaces
-
-func (c *Client) GetWorkspacesRoute() string {
-	return "/workspaces"
-}
-
-func (c *Client) GetWorkspaceRoute(id string) string {
-	return fmt.Sprintf("%s/%s", c.GetWorkspacesRoute(), id)
-}
-
-func (c *Client) GetWorkspace(id string) (*model.Workspace, *Response) {
-	r, err := c.DoAPIGet(c.GetWorkspaceRoute(id), "")
-=======
 func (c *Client) CreateBoard(board *model.Board) (*model.Board, *Response) {
 	r, err := c.DoAPIPost(c.GetBoardsRoute(), toJSON(board))
 	if err != nil {
@@ -531,37 +489,11 @@ func (c *Client) GetBoard(boardID, readToken string) (*model.Board, *Response) {
 	}
 
 	r, err := c.DoAPIGet(url, "")
->>>>>>> upstream/main
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
-<<<<<<< HEAD
-	workspace, err := model.WorkspaceFromJSON(r.Body)
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-
-	return workspace, BuildResponse(r)
-}
-
-func (c *Client) RegenerateSignupTokenRoute(id string) string {
-	return fmt.Sprintf("%s/%s", c.GetWorkspaceRoute(id), "regenerate_signup_token")
-}
-
-func (c *Client) RegenerateSignupToken(id string) *Response {
-	r, err := c.DoAPIPost(c.RegenerateSignupTokenRoute(id), "")
-	if err != nil {
-		return BuildErrorResponse(r, err)
-	}
-
-	return BuildResponse(r)
-}
-
-func (c *Client) GetWorkspaceUploadFileRoute(workspaceID, rootID string) string {
-	return fmt.Sprintf("/workspaces/%s/%s/files", workspaceID, rootID)
-=======
 	return model.BoardFromJSON(r.Body), BuildResponse(r)
 }
 
@@ -652,7 +584,6 @@ func (c *Client) DeleteBoardMember(member *model.BoardMember) (bool, *Response) 
 
 func (c *Client) GetTeamUploadFileRoute(teamID, boardID string) string {
 	return fmt.Sprintf("%s/%s/files", c.GetTeamRoute(teamID), boardID)
->>>>>>> upstream/main
 }
 
 func (c *Client) TeamUploadFile(teamID, boardID string, data io.Reader) (*api.FileUploadResponse, *Response) {
