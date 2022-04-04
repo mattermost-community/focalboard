@@ -470,6 +470,18 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				CreateAt:    now,
 				UpdateAt:    now,
 			}
+
+			user, err := a.app.GetUser(userID)
+			if err != nil {
+				a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", err)
+				return
+			}
+
+			if user.IsGuest {
+				a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "guests not supported", nil)
+				return
+			}
+
 			ctx := context.WithValue(r.Context(), sessionContextKey, session)
 			handler(w, r.WithContext(ctx))
 			return
