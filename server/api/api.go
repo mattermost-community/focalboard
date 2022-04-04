@@ -2547,7 +2547,6 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	if board.Type == model.BoardTypePrivate {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
