@@ -31,6 +31,7 @@ export const TelemetryActions = {
     AddTemplateFromCard: 'addTemplateFromCard',
     ViewSharedBoard: 'viewSharedBoard',
     ShareBoardOpenModal: 'shareBoard_openModal',
+    ShareBoardLogin: 'shareBoard_login',
     ShareLinkPublicCopy: 'shareLinkPublic_copy',
     ShareLinkInternalCopy: 'shareLinkInternal_copy',
     ImportArchive: 'settings_importArchive',

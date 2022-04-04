@@ -125,7 +125,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
           />
         </button>
         <div
-          class="Menu noselect left"
+          class="Menu noselect left "
         >
           <div
             class="menu-contents"
@@ -283,7 +283,7 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
           />
         </button>
         <div
-          class="Menu noselect left"
+          class="Menu noselect left "
         >
           <div
             class="menu-contents"

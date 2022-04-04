@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {useHistory, Link, Redirect} from 'react-router-dom'
+import {Link, Redirect, useLocation, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
 import {useAppDispatch, useAppSelector} from '../store/hooks'
@@ -15,15 +15,20 @@ const LoginPage = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
-    const history = useHistory()
     const dispatch = useAppDispatch()
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
+    const queryParams = new URLSearchParams(useLocation().search)
+    const history = useHistory()
 
     const handleLogin = async (): Promise<void> => {
         const logged = await client.login(username, password)
         if (logged) {
             await dispatch(fetchMe())
-            history.push('/')
+            if (queryParams) {
+                history.push(queryParams.get('r') || '/')
+            } else {
+                history.push('/')
+            }
         } else {
             setErrorMessage('Login failed')
         }

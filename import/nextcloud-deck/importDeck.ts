@@ -3,8 +3,9 @@
 import * as fs from 'fs'
 import minimist from 'minimist'
 import {exit} from 'process'
-import {ArchiveUtils} from '../../webapp/src/blocks/archive'
+import {ArchiveUtils} from '../util/archive'
 import {Block} from '../../webapp/src/blocks/block'
+import {Board as FBBoard} from '../../webapp/src/blocks/board'
 import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
 import {createBoardView} from '../../webapp/src/blocks/boardView'
 import {createCard} from '../../webapp/src/blocks/card'
@@ -69,10 +70,10 @@ async function main() {
     }))
 
     // Convert
-    const blocks = convert(board, stacks)
+    const [boards, blocks] = convert(board, stacks)
 
     // // Save output
-    const outputData = ArchiveUtils.buildBlockArchive(blocks)
+    const outputData = ArchiveUtils.buildBlockArchive(boards, blocks)
     fs.writeFileSync(outputFile, outputData)
 
     console.log(`Exported to ${outputFile}`)
@@ -85,13 +86,13 @@ async function selectBoard(deckClient: NextcloudDeckClient): Promise<number> {
     return readline.questionInt("Enter Board ID: ")
 }
 
-function convert(deckBoard: Board, stacks: Stack[]): Block[] {
+function convert(deckBoard: Board, stacks: Stack[]): [FBBoard[], Block[]] {
+    const boards: FBBoard[] = []
     const blocks: Block[] = []
 
     // Board
     const board = createBoard()
     console.log(`Board: ${deckBoard.title}`)
-    board.rootId = board.id
     board.title = deckBoard.title
 
     let colorIndex = 0
@@ -145,14 +146,14 @@ function convert(deckBoard: Board, stacks: Stack[]): Block[] {
         options: []
     }
 
-    board.fields.cardProperties = [stackProperty, labelProperty, dueDateProperty]
-    blocks.push(board)
+    board.cardProperties = [stackProperty, labelProperty, dueDateProperty]
+    boards.push(board)
 
     // Board view
     const view = createBoardView()
     view.title = 'Board View'
     view.fields.viewType = 'board'
-    view.rootId = board.id
+    view.boardId = board.id
     view.parentId = board.id
     blocks.push(view)
 
@@ -164,7 +165,7 @@ function convert(deckBoard: Board, stacks: Stack[]): Block[] {
 
                 const outCard = createCard()
                 outCard.title = card.title
-                outCard.rootId = board.id
+                outCard.boardId = board.id
                 outCard.parentId = board.id
 
                 // Map Stacks to Select property options
@@ -189,7 +190,7 @@ function convert(deckBoard: Board, stacks: Stack[]): Block[] {
                 if (card.description) {
                     const text = createTextBlock()
                     text.title = card.description
-                    text.rootId = board.id
+                    text.boardId = board.id
                     text.parentId = outCard.id
                     blocks.push(text)
 
@@ -200,7 +201,7 @@ function convert(deckBoard: Board, stacks: Stack[]): Block[] {
                 card.comments?.forEach(comment => {
                     const commentBlock = createCommentBlock()
                     commentBlock.title = comment.message
-                    commentBlock.rootId = board.id
+                    commentBlock.boardId = board.id
                     commentBlock.parentId = outCard.id
                     blocks.push(commentBlock)
                 })
@@ -210,7 +211,7 @@ function convert(deckBoard: Board, stacks: Stack[]): Block[] {
     console.log('')
     console.log(`Transformed Board ${deckBoard.title} into ${blocks.length} blocks.`)
 
-    return blocks
+    return [boards, blocks]
 }
 
 function showHelp() {
