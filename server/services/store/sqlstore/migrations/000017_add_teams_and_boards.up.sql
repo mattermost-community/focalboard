@@ -119,7 +119,9 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE B.type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->>'description')::text,
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type,
+                 COALESCE(B.title, ''),
+                 (B.fields->>'description')::text,
                  B.fields->>'icon',
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
@@ -145,7 +147,9 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE B.type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type,
+                 COALESCE(B.title, ''),
+                 JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')),
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
@@ -171,7 +175,9 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->>'description')::text,
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
+                 COALESCE(title, ''),
+                 (fields->>'description')::text,
                  B.fields->>'icon',
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
