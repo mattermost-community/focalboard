@@ -164,10 +164,6 @@ func (c *Client) GetBlockRoute(boardID, blockID string) string {
 	return fmt.Sprintf("%s/%s", c.GetBlocksRoute(boardID), blockID)
 }
 
-func (c *Client) GetSubtreeRoute(boardID, blockID string) string {
-	return fmt.Sprintf("%s/subtree", c.GetBlockRoute(boardID, blockID))
-}
-
 func (c *Client) GetBoardsRoute() string {
 	return "/boards"
 }
@@ -295,16 +291,6 @@ func (c *Client) DeleteBlock(boardID, blockID string) (bool, *Response) {
 	defer closeBody(r)
 
 	return true, BuildResponse(r)
-}
-
-func (c *Client) GetSubtree(boardID, blockID string) ([]model.Block, *Response) {
-	r, err := c.DoAPIGet(c.GetSubtreeRoute(boardID, blockID), "")
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-	defer closeBody(r)
-
-	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
 // Boards and blocks.

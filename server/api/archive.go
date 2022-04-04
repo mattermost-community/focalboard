@@ -8,6 +8,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -103,6 +105,9 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
 
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
@@ -143,7 +148,7 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards/{boardID}/archive/import archiveImport
+	// swagger:operation POST /api/v1/teams/{teamID}/archive/import archiveImport
 	//
 	// Import an archive of boards.
 	//
@@ -153,9 +158,9 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 	// consumes:
 	// - multipart/form-data
 	// parameters:
-	// - name: boardID
+	// - name: teamID
 	//   in: path
-	//   description: Workspace ID
+	//   description: Team ID
 	//   required: true
 	//   type: string
 	// - name: file
@@ -198,6 +203,10 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := a.app.ImportArchive(file, opt); err != nil {
+		a.logger.Debug("Error importing archive",
+			mlog.String("team_id", teamID),
+			mlog.Err(err),
+		)
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
