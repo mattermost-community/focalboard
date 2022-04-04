@@ -54,6 +54,20 @@ describe('utils', () => {
         })
     })
 
+    describe('countCheckboxesInMarkdown', () => {
+        test('should count checkboxes', () => {
+            const text = `
+                ## Header
+                - [x] one
+                - [ ] two
+                - [x] three
+            `.replace(/\n\s+/gm, '\n')
+            const checkboxes = Utils.countCheckboxesInMarkdown(text)
+            expect(checkboxes.total).toBe(3)
+            expect(checkboxes.checked).toBe(2)
+        })
+    })
+
     describe('test - buildURL', () => {
         test('buildURL, no base', () => {
             expect(Utils.buildURL('test', true)).toBe('http://localhost/test')
@@ -130,6 +144,20 @@ describe('utils', () => {
             const previousYear = currentYear - 1
             const date = new Date(previousYear, 6, 9, 5, 35)
             expect(Utils.displayDateTime(date, intl)).toBe(`July 09, ${previousYear}, 5:35 AM`)
+        })
+    })
+
+    describe('compare versions', () => {
+        it('should return one if b > a', () => {
+            expect(Utils.compareVersions('0.9.4', '0.10.0')).toBe(1)
+        })
+
+        it('should return zero if a = b', () => {
+            expect(Utils.compareVersions('1.2.3', '1.2.3')).toBe(0)
+        })
+
+        it('should return minus one if b < a', () => {
+            expect(Utils.compareVersions('10.9.4', '10.9.2')).toBe(-1)
         })
     })
 })

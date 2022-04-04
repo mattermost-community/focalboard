@@ -1,0 +1,40 @@
+/* Copyright (c) 2021-present Mattermost, Inc. All Rights Reserved. */
+/* See LICENSE.txt for license information. */
+
+.OptionsApp {
+  label {
+    display: block;
+    font-size: 90%;
+    font-style: italic;
+  }
+  
+  input[type=text], input[type=password], select {
+    width: 20em;
+    max-width: 100%;
+    margin-bottom: 1em;
+  }
+  
+  input[type=submit] {
+    display: block;
+  }
+  
+  .status {
+    margin: 1em 0 1em 0;
+
+    .in-progress {
+      background-color: grey;
+      padding: 0.5em;
+    }
+
+    .success {
+      background-color: lightgreen;
+      padding: 0.5em;
+    }
+    
+    .error {
+      background-color: lightpink;
+      padding: 0.5em;
+    }
+  }
+  
+}

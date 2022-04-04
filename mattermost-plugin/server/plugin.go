@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 	"net/url"
 	"path"
@@ -19,6 +20,7 @@ import (
 	"github.com/mattermost/focalboard/server/ws"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
+	"github.com/mattermost/mattermost-plugin-api/cluster"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
@@ -27,9 +29,11 @@ import (
 )
 
 const (
-	boardsFeatureFlagName = "BoardsFeatureFlags"
-	pluginName            = "focalboard"
-	sharedBoardsName      = "enablepublicsharedboards"
+	boardsFeatureFlagName     = "BoardsFeatureFlags"
+	pluginName                = "focalboard"
+	sharedBoardsName          = "enablepublicsharedboards"
+	notifyFreqCardSecondsKey  = "notify_freq_card_seconds"
+	notifyFreqBoardSecondsKey = "notify_freq_board_seconds"
 )
 
 type BoardsEmbed struct {
@@ -83,8 +87,20 @@ func (p *Plugin) OnActivate() error {
 	serverID := client.System.GetDiagnosticID()
 	cfg := p.createBoardsConfig(*mmconfig, baseURL, serverID)
 
+	storeParams := sqlstore.Params{
+		DBType:           cfg.DBType,
+		ConnectionString: cfg.DBConfigString,
+		TablePrefix:      cfg.DBTablePrefix,
+		Logger:           logger,
+		DB:               sqlDB,
+		IsPlugin:         true,
+		NewMutexFn: func(name string) (*cluster.Mutex, error) {
+			return cluster.NewMutex(p.API, name)
+		},
+	}
+
 	var db store.Store
-	db, err = sqlstore.New(cfg.DBType, cfg.DBConfigString, cfg.DBTablePrefix, logger, sqlDB, true)
+	db, err = sqlstore.New(storeParams)
 	if err != nil {
 		return fmt.Errorf("error initializing the DB: %w", err)
 	}
@@ -98,10 +114,27 @@ func (p *Plugin) OnActivate() error {
 
 	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db))
 
-	mentionsBackend, err := createMentionsNotifyBackend(client, baseURL+"/boards", logger)
-	if err != nil {
-		return fmt.Errorf("error creating mentions notifications backend: %w", err)
+	backendParams := notifyBackendParams{
+		cfg:        cfg,
+		client:     client,
+		serverRoot: baseURL + "/boards",
+		logger:     logger,
 	}
+
+	var notifyBackends []notify.Backend
+
+	mentionsBackend, err := createMentionsNotifyBackend(backendParams)
+	if err != nil {
+		return fmt.Errorf("error creating mention notifications backend: %w", err)
+	}
+	notifyBackends = append(notifyBackends, mentionsBackend)
+
+	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams, db, p.wsPluginAdapter)
+	if err2 != nil {
+		return fmt.Errorf("error creating subscription notifications backend: %w", err2)
+	}
+	notifyBackends = append(notifyBackends, subscriptionsBackend)
+	mentionsBackend.AddListener(subscriptionsBackend)
 
 	params := server.Params{
 		Cfg:             cfg,
@@ -110,7 +143,7 @@ func (p *Plugin) OnActivate() error {
 		Logger:          logger,
 		ServerID:        serverID,
 		WSAdapter:       p.wsPluginAdapter,
-		NotifyBackends:  []notify.Backend{mentionsBackend},
+		NotifyBackends:  notifyBackends,
 	}
 
 	server, err := server.New(params)
@@ -166,17 +199,7 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		enablePublicSharedBoards = true
 	}
 
-	featureFlags := make(map[string]string)
-	for key, value := range mmconfig.FeatureFlags.ToMap() {
-		// Break out FeatureFlags and pass remaining
-		if key == boardsFeatureFlagName {
-			for _, flag := range strings.Split(value, "-") {
-				featureFlags[flag] = "true"
-			}
-		} else {
-			featureFlags[key] = value
-		}
-	}
+	featureFlags := parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 
 	return &config.Configuration{
 		ServerRoot:               baseURL + "/plugins/focalboard",
@@ -201,7 +224,49 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		AuthMode:                 "mattermost",
 		EnablePublicSharedBoards: enablePublicSharedBoards,
 		FeatureFlags:             featureFlags,
+		NotifyFreqCardSeconds:    getPluginSettingInt(mmconfig, notifyFreqCardSecondsKey, 120),
+		NotifyFreqBoardSeconds:   getPluginSettingInt(mmconfig, notifyFreqBoardSecondsKey, 86400),
 	}
+}
+
+func getPluginSetting(mmConfig mmModel.Config, key string) (interface{}, bool) {
+	plugin, ok := mmConfig.PluginSettings.Plugins[pluginName]
+	if !ok {
+		return nil, false
+	}
+
+	val, ok := plugin[key]
+	if !ok {
+		return nil, false
+	}
+	return val, true
+}
+
+func getPluginSettingInt(mmConfig mmModel.Config, key string, def int) int {
+	val, ok := getPluginSetting(mmConfig, key)
+	if !ok {
+		return def
+	}
+	valFloat, ok := val.(float64)
+	if !ok {
+		return def
+	}
+	return int(math.Round(valFloat))
+}
+
+func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {
+	featureFlags := make(map[string]string)
+	for key, value := range configFeatureFlags {
+		// Break out FeatureFlags and pass remaining
+		if key == boardsFeatureFlagName {
+			for _, flag := range strings.Split(value, "-") {
+				featureFlags[flag] = "true"
+			}
+		} else {
+			featureFlags[key] = value
+		}
+	}
+	return featureFlags
 }
 
 func (p *Plugin) OnWebSocketConnect(webConnID, userID string) {
@@ -252,28 +317,40 @@ func defaultLoggingConfig() string {
 				{"id": 1, "name": "fatal", "stacktrace": true},
 				{"id": 0, "name": "panic", "stacktrace": true}
 			]
-		}
+		},
+		"errors_file": {
+			"Type": "file",
+			"Format": "plain",
+			"Levels": [
+				{"ID": 2, "Name": "error", "Stacktrace": true}
+			],
+			"Options": {
+				"Compress": true,
+				"Filename": "focalboard_errors.log",
+				"MaxAgeDays": 0,
+				"MaxBackups": 5,
+				"MaxSizeMB": 10 
+			},
+			"MaxQueueSize": 1000
+		}		
 	}`
 }
 
 func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) {
-	return postWithBoardsEmbed(post, p.API.GetConfig().FeatureFlags.BoardsUnfurl), ""
+	return postWithBoardsEmbed(post), ""
 }
 
 func (p *Plugin) MessageWillBeUpdated(_ *plugin.Context, newPost, _ *mmModel.Post) (*mmModel.Post, string) {
-	return postWithBoardsEmbed(newPost, p.API.GetConfig().FeatureFlags.BoardsUnfurl), ""
+	return postWithBoardsEmbed(newPost), ""
 }
 
-func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) *mmModel.Post {
+func postWithBoardsEmbed(post *mmModel.Post) *mmModel.Post {
 	if _, ok := post.GetProps()["boards"]; ok {
 		post.AddProp("boards", nil)
 	}
 
-	if !showBoardsUnfurl {
-		return post
-	}
-
-	firstLink := getFirstLink(post.Message)
+	firstLink, newPostMessage := getFirstLinkAndShortenAllBoardsLink(post.Message)
+	post.Message = newPostMessage
 
 	if firstLink == "" {
 		return post
@@ -287,9 +364,8 @@ func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) *mmModel.Pos
 
 	// Trim away the first / because otherwise after we split the string, the first element in the array is a empty element
 	urlPath := u.Path
-	if strings.HasPrefix(urlPath, "/") {
-		urlPath = u.Path[1:]
-	}
+	urlPath = strings.TrimPrefix(urlPath, "/")
+	urlPath = strings.TrimSuffix(urlPath, "/")
 	pathSplit := strings.Split(strings.ToLower(urlPath), "/")
 	queryParams := u.Query()
 
@@ -325,19 +401,33 @@ func postWithBoardsEmbed(post *mmModel.Post, showBoardsUnfurl bool) *mmModel.Pos
 	return post
 }
 
-func getFirstLink(str string) string {
-	firstLink := ""
+func getFirstLinkAndShortenAllBoardsLink(postMessage string) (firstLink, newPostMessage string) {
+	newPostMessage = postMessage
+	seenLinks := make(map[string]bool)
+	markdown.Inspect(postMessage, func(blockOrInline interface{}) bool {
+		if autoLink, ok := blockOrInline.(*markdown.Autolink); ok {
+			link := autoLink.Destination()
 
-	markdown.Inspect(str, func(blockOrInline interface{}) bool {
-		if _, ok := blockOrInline.(*markdown.Autolink); ok {
-			if link := blockOrInline.(*markdown.Autolink).Destination(); firstLink == "" {
+			if firstLink == "" {
+				firstLink = link
+			}
+
+			if seen := seenLinks[link]; !seen && isBoardsLink(link) {
+				// TODO: Make sure that <Jump To Card> is Internationalized and translated to the Users Language preference
+				markdownFormattedLink := fmt.Sprintf("[%s](%s)", "<Jump To Card>", link)
+				newPostMessage = strings.ReplaceAll(newPostMessage, link, markdownFormattedLink)
+				seenLinks[link] = true
+			}
+		}
+		if inlineLink, ok := blockOrInline.(*markdown.InlineLink); ok {
+			if link := inlineLink.Destination(); firstLink == "" {
 				firstLink = link
 			}
 		}
 		return true
 	})
 
-	return firstLink
+	return firstLink, newPostMessage
 }
 
 func returnBoardsParams(pathArray []string) (workspaceID, boardID, viewID, cardID string) {
@@ -381,4 +471,24 @@ func returnBoardsParams(pathArray []string) (workspaceID, boardID, viewID, cardI
 		cardID = pathArray[index+7]
 	}
 	return workspaceID, boardID, viewID, cardID
+}
+
+func isBoardsLink(link string) bool {
+	u, err := url.Parse(link)
+
+	if err != nil {
+		return false
+	}
+
+	urlPath := u.Path
+	urlPath = strings.TrimPrefix(urlPath, "/")
+	urlPath = strings.TrimSuffix(urlPath, "/")
+	pathSplit := strings.Split(strings.ToLower(urlPath), "/")
+
+	if len(pathSplit) == 0 {
+		return false
+	}
+
+	workspaceID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
+	return workspaceID != "" && boardID != "" && viewID != "" && cardID != ""
 }

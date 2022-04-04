@@ -6,6 +6,21 @@ This changelog summarizes updates to our open source project. You can also find 
 
 ## [Work In Progress] - vNext Release - [Date TBD]
 
+## v0.12 Release - January, 2022
+* Change notifications. Thanks @wiggin77!
+* Person avatars. Thanks @asaadmahmood!
+* Updated comment sort order. Thanks @asaadmahmood!
+
+## v0.11 Release - December, 2021
+* Calendar view. Thanks @sbishel!
+* `@mention` autocomplete. Thanks @hahmadia!
+
+## v0.10 Release - November, 2021
+* @mention notifications. Thanks @wiggin77!
+* Board calculations. Thanks @harshilsharma63!
+* Unfurl card previews in posts. Thanks @hahmadia!
+* Plus many, many contributions from Hacktoberfest and beyond, including from: @jufab, @kamre, @Johennes, @nishantwrp, @tiago154, @DeeJayBro, @CuriousCorrelation, @prakharporwal, @donno2048, @anchepiece, @puerco, @adithyaakrishna, @JenyaFTW, @ivernus, @grsky360, @b4sen, @naresh1205, @JtheBAB, @ssensalo, @berkeka, @yedamao, @Prassud, @NakulChauhan2001, @achie27, @crspeller, @sahil9001, @alauregaillard, @igordsm, @rafaeelaudibert, @kaakaa, @Sayanta66, @Bhavin789, @Shahzayb, @kayazeren, @fcoiuri, @tsabi, @DeviousLab, @leosunmo, @xMicky24GIT, @majidsajadi, @marcvelasco, and @aloks98. Sorry if we missed anyone in this list!
+
 ## v0.9 Release - August, 2021
 * New date range property type. Thanks @sbishel!
 * Changed the urls to use routes instead of query parameters. Thanks @jespino!

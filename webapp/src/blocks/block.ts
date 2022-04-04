@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import difference from 'lodash/difference'
+
 import {Utils} from '../utils'
 
 const contentBlockTypes = ['text', 'image', 'divider', 'checkbox'] as const
@@ -63,43 +65,42 @@ function createBlock(block?: Block): Block {
 // contains the delta to update the block and another one for the undo
 // action, in case it happens
 function createPatchesFromBlocks(newBlock: Block, oldBlock: Block): BlockPatch[] {
-    const oldDeletedFields = [] as string[]
-    const newUpdatedFields = Object.keys(newBlock.fields).reduce((acc, val): Record<string, any> => {
-        // the field is in both old and new, so it is part of the new
-        // patch
-        if (val in oldBlock.fields) {
-            acc[val] = newBlock.fields[val]
-        } else {
-            // the field is only in the new block, so we set it to be
-            // removed in the undo patch
-            oldDeletedFields.push(val)
+    const newDeletedFields = difference(Object.keys(newBlock.fields), Object.keys(oldBlock.fields))
+    const newUpdatedFields: Record<string, any> = {}
+    const newUpdatedData: Record<string, any> = {}
+    Object.keys(newBlock.fields).forEach((val) => {
+        if (oldBlock.fields[val] !== newBlock.fields[val]) {
+            newUpdatedFields[val] = newBlock.fields[val]
         }
-        return acc
-    }, {} as Record<string, any>)
-
-    const newDeletedFields = [] as string[]
-    const oldUpdatedFields = Object.keys(oldBlock.fields).reduce((acc, val): Record<string, any> => {
-        // the field is in both, so in this case we set the old one to
-        // be applied for the undo patch
-        if (val in newBlock.fields) {
-            acc[val] = oldBlock.fields[val]
-        } else {
-            // the field is only on the old block, which means the
-            // update patch should remove it
-            newDeletedFields.push(val)
+    })
+    Object.keys(newBlock).forEach((val) => {
+        if (val !== 'fields' && (oldBlock as any)[val] !== (newBlock as any)[val]) {
+            newUpdatedData[val] = (newBlock as any)[val]
         }
-        return acc
-    }, {} as Record<string, any>)
+    })
 
-    // ToDo: add tests
+    const oldDeletedFields = difference(Object.keys(oldBlock.fields), Object.keys(newBlock.fields))
+    const oldUpdatedFields: Record<string, any> = {}
+    const oldUpdatedData: Record<string, any> = {}
+    Object.keys(oldBlock.fields).forEach((val) => {
+        if (oldBlock.fields[val] !== newBlock.fields[val]) {
+            oldUpdatedFields[val] = oldBlock.fields[val]
+        }
+    })
+    Object.keys(oldBlock).forEach((val) => {
+        if (val !== 'fields' && (oldBlock as any)[val] !== (newBlock as any)[val]) {
+            oldUpdatedData[val] = (oldBlock as any)[val]
+        }
+    })
+
     return [
         {
-            ...newBlock as BlockPatch,
+            ...newUpdatedData,
             updatedFields: newUpdatedFields,
             deletedFields: oldDeletedFields,
         },
         {
-            ...oldBlock as BlockPatch,
+            ...oldUpdatedData,
             updatedFields: oldUpdatedFields,
             deletedFields: newDeletedFields,
         },

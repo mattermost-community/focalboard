@@ -27,6 +27,7 @@ import ImageElement from '../content/imageElement'
 import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
 import './galleryCard.scss'
+import CardBadges from '../cardBadges'
 
 type Props = {
     board: Board
@@ -35,6 +36,7 @@ type Props = {
     visiblePropertyTemplates: IPropertyTemplate[]
     visibleTitle: boolean
     isSelected: boolean
+    visibleBadges: boolean
     readonly: boolean
     isManualSort: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
@@ -93,7 +95,7 @@ const GalleryCard = React.memo((props: Props) => {
                             name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
                             onClick={() => {
                                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
-                                mutator.duplicateCard(card.id)
+                                mutator.duplicateCard(card.id, board)
                             }}
                         />
                         <Menu.Text
@@ -176,6 +178,11 @@ const GalleryCard = React.memo((props: Props) => {
                         </Tooltip>
                     ))}
                 </div>}
+            {props.visibleBadges &&
+                <CardBadges
+                    card={card}
+                    className='gallery-badges'
+                />}
         </div>
     )
 })

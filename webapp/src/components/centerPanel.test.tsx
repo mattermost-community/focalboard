@@ -15,9 +15,20 @@ import {Constants} from '../constants'
 
 import CenterPanel from './centerPanel'
 Object.defineProperty(Constants, 'versionString', {value: '1.0.0'})
+jest.mock('react-router-dom', () => {
+    const originalModule = jest.requireActual('react-router-dom')
+
+    return {
+        ...originalModule,
+        useRouteMatch: jest.fn(() => {
+            return {url: '/board/view'}
+        }),
+    }
+})
 jest.mock('../utils')
 jest.mock('../mutator')
 jest.mock('../telemetry/telemetryClient')
+jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(Mutator, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
@@ -57,12 +68,20 @@ describe('components/centerPanel', () => {
         ],
     }
     const state = {
+        clientConfig: {
+            value: {
+                featureFlags: {
+                    subscriptions: true,
+                },
+            },
+        },
         searchText: '',
         users: {
             me: {},
             workspaceUsers: [
                 {username: 'username_1'},
             ],
+            blockSubscriptions: [],
         },
         boards: {
             current: board.id,

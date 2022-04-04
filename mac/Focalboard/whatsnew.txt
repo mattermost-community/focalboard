@@ -1,0 +1,11 @@
+Welcome to Focalboard v0.11.0!
+
+Thank you contributors! There are a number of improvements in this release, and one major new feature:
+
+* Calendar view. Thanks @sbishel!
+
+If you like what you see, please consider taking a moment to rate this version in the App Store. Your positive ratings make a real difference for us.
+
+Thanks so much,
+
+-- The Focalboard developers and community

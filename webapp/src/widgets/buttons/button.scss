@@ -74,8 +74,8 @@
     }
 
     &.emphasis--tertiary {
+        background: rgba(var(--button-bg-rgb), 0.08);
         color: rgb(var(--button-bg-rgb));
-        background-color: rgb(var(--button-bg-rgb), 0.08);
 
         &:hover {
             background-color: rgb(var(--button-bg-rgb), 0.12);
@@ -108,6 +108,7 @@
 
     &.size--medium {
         font-size: 14px;
+        font-weight: 600;
         padding: 0 20px;
         height: 40px;
     }

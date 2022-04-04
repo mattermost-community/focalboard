@@ -1,6 +1,6 @@
 {
 	"name": "focalboard",
-	"version": "0.10.0",
+	"version": "0.14.0",
 	"private": true,
 	"description": "",
 	"scripts": {
@@ -13,22 +13,29 @@
 		"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache && stylelint --fix **/*.scss",
 		"fix:scss": "prettier --write './src/**/*.scss'",
 		"i18n-extract": "formatjs extract ../mattermost-plugin/webapp/src/*/*/*.ts? src/*/*/*.ts? src/*/*.ts? src/*.ts? --out-file i18n/tmp.json; formatjs compile i18n/tmp.json --out-file i18n/en.json; rm i18n/tmp.json",
-		"runserver-test": "cd cypress && cross-env FOCALBOARD_SINGLE_USER_TOKEN=TESTTOKEN ../../bin/focalboard-server -single-user",
+		"runserver-test": "cd cypress && \"../../bin/focalboard-server\"",
 		"cypress:ci": "start-server-and-test runserver-test http://localhost:8088 cypress:run",
 		"cypress:run": "cypress run",
 		"cypress:run:chrome": "cypress run --browser chrome",
 		"cypress:run:firefox": "cypress run --browser firefox",
 		"cypress:run:edge": "cypress run --browser edge",
 		"cypress:run:electron": "cypress run --browser electron",
-		"cypress:open": "cypress open",
-		"updatesnapshots": "jest --updateSnapshot"
+		"cypress:open": "cypress open"
 	},
 	"dependencies": {
+		"@draft-js-plugins/editor": "^4.1.0",
+		"@draft-js-plugins/emoji": "^4.5.5",
+		"@draft-js-plugins/mention": "^5.0.0",
+		"@fullcalendar/core": "^5.10.0",
+		"@fullcalendar/daygrid": "^5.10.0",
+		"@fullcalendar/interaction": "^5.10.0",
+		"@fullcalendar/react": "^5.10.0",
 		"@mattermost/compass-icons": "^0.1.10",
 		"@reduxjs/toolkit": "^1.6.0",
 		"color": "^4.0.0",
-		"easymde": "^2.15.0",
+		"draft-js": "^0.11.7",
 		"emoji-mart": "^3.0.1",
+		"fullcalendar": "^5.10.0",
 		"imagemin-gifsicle": "^7.0.0",
 		"imagemin-mozjpeg": "^9.0.0",
 		"imagemin-optipng": "^8.0.0",
@@ -43,6 +50,7 @@
 		"react-day-picker": "^7.4.10",
 		"react-dnd": "^14.0.2",
 		"react-dnd-html5-backend": "^14.0.0",
+		"react-dnd-scrolling": "^1.2.1",
 		"react-dnd-touch-backend": "^14.0.0",
 		"react-dom": "^17.0.2",
 		"react-hot-keys": "^2.6.2",
@@ -50,8 +58,7 @@
 		"react-intl": "^5.13.5",
 		"react-redux": "^7.2.4",
 		"react-router-dom": "^5.2.0",
-		"react-select": "^4.3.0",
-		"react-simplemde-editor": "^5.0.1"
+		"react-select": "^4.3.0"
 	},
 	"jest": {
 		"moduleNameMapper": {
@@ -75,11 +82,13 @@
 	"devDependencies": {
 		"@formatjs/cli": "^3.2.0",
 		"@formatjs/ts-transformer": "^3.2.1",
+		"@testing-library/cypress": "^8.0.2",
 		"@testing-library/dom": "^7.31.2",
 		"@testing-library/jest-dom": "^5.11.10",
 		"@testing-library/react": "^11.2.5",
 		"@testing-library/user-event": "^13.1.9",
 		"@types/color": "^3.0.2",
+		"@types/draft-js": "^0.11.6",
 		"@types/emoji-mart": "^3.0.4",
 		"@types/jest": "^26.0.21",
 		"@types/marked": "^2.0.0",

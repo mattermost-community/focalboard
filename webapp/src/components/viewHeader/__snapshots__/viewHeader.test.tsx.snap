@@ -30,7 +30,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="octo-spacer"
     />
     <div
-      aria-label="menuwrapper"
+      aria-label="Properties menu"
       class="MenuWrapper"
       role="button"
     >
@@ -100,7 +100,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="ModalWrapper"
     >
       <div
-        aria-label="menuwrapper"
+        aria-label="View menu"
         class="MenuWrapper"
         role="button"
       >

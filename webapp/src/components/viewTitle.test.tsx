@@ -18,6 +18,8 @@ import ViewTitle from './viewTitle'
 
 jest.mock('../mutator')
 jest.mock('../utils')
+jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
+
 const mockedMutator = mocked(mutator, true)
 const mockedUtils = mocked(Utils, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
@@ -30,8 +32,18 @@ describe('components/viewTitle', () => {
     const board = TestBlockFactory.createBoard()
     board.id = 'test-id'
     board.rootId = board.id
-
-    const store = mockStateStore([], {})
+    const state = {
+        users: {
+            workspaceUsers: {
+                1: {username: 'abc'},
+                2: {username: 'd'},
+                3: {username: 'e'},
+                4: {username: 'f'},
+                5: {username: 'g'},
+            },
+        },
+    }
+    const store = mockStateStore([], state)
 
     beforeEach(() => {
         jest.clearAllMocks()
@@ -144,23 +156,5 @@ describe('components/viewTitle', () => {
         userEvent.type(titleInput, 'other title')
         fireEvent.blur(titleInput)
         expect(mockedMutator.changeTitle).toBeCalledTimes(1)
-    })
-
-    test('change description', async () => {
-        board.fields.showDescription = true
-        await act(async () => {
-            render(wrapIntl(
-                <ReduxProvider store={store}>
-                    <ViewTitle
-                        board={board}
-                        readonly={false}
-                    />
-                </ReduxProvider>,
-            ))
-        })
-        const descriptionInput = screen.getAllByRole('textbox', {hidden: true})[2]
-        userEvent.type(descriptionInput, 'other description')
-        fireEvent.blur(descriptionInput)
-        expect(mockedMutator.changeDescription).toBeCalledTimes(1)
     })
 })

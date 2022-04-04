@@ -55,6 +55,7 @@ describe('/components/viewMenu', () => {
             },
             current: 'boardView',
         },
+        clientConfig: {},
     }
 
     const history = createMemoryHistory()

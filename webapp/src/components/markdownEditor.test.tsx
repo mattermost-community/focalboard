@@ -3,170 +3,130 @@
 import {act, fireEvent, render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 
-import {mocked} from 'ts-jest/utils'
-
-import {mockDOM, wrapDNDIntl} from '../testUtils'
-
-import {Utils} from '../utils'
+import {mockDOM, wrapDNDIntl, mockStateStore} from '../testUtils'
 
 import {MarkdownEditor} from './markdownEditor'
 
 jest.mock('../utils')
-const mockedUtils = mocked(Utils, true)
 jest.useFakeTimers()
+jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 
 describe('components/markdownEditor', () => {
     beforeAll(mockDOM)
     beforeEach(jest.clearAllMocks)
+    const state = {
+        users: {
+            workspaceUsers: {
+                1: {username: 'abc'},
+                2: {username: 'd'},
+                3: {username: 'e'},
+                4: {username: 'f'},
+                5: {username: 'g'},
+            },
+        },
+    }
+    const store = mockStateStore([], state)
     test('should match snapshot', async () => {
         let container
         await act(async () => {
             const result = render(wrapDNDIntl(
-                <MarkdownEditor
-                    id={'test-id'}
-                    text={''}
-                    placeholderText={'placeholder'}
-                    className={'classname-test'}
-                    readonly={false}
-
-                    onChange={jest.fn()}
-                    onFocus={jest.fn()}
-
-                    onBlur={jest.fn()}
-                    onAccept={jest.fn()}
-                />,
+                <ReduxProvider store={store}>
+                    <MarkdownEditor
+                        id={'test-id'}
+                        text={''}
+                        placeholderText={'placeholder'}
+                        className={'classname-test'}
+                        readonly={false}
+                        onChange={jest.fn()}
+                        onFocus={jest.fn()}
+                        onBlur={jest.fn()}
+                    />
+                </ReduxProvider>,
             ))
             container = result.container
         })
         expect(container).toMatchSnapshot()
     })
-    test('return markdownEditor, write hello and verify blur', async () => {
-        const onMockedBlur = jest.fn()
+
+    test('should match snapshot with initial text', async () => {
         let container
         await act(async () => {
             const result = render(wrapDNDIntl(
-                <MarkdownEditor
-                    id={'test-id'}
-                    text={''}
-                    placeholderText={'placeholder'}
-                    className={'classname-test'}
-                    readonly={false}
+                <ReduxProvider store={store}>
 
-                    onChange={jest.fn()}
-                    onFocus={jest.fn()}
+                    <MarkdownEditor
+                        id={'test-id'}
+                        text={'some initial text already set'}
+                        placeholderText={'placeholder'}
+                        className={'classname-test'}
+                        readonly={false}
+                        onChange={jest.fn()}
+                        onFocus={jest.fn()}
+                        onBlur={jest.fn()}
+                    />
+                </ReduxProvider>,
 
-                    onBlur={onMockedBlur}
-                    onAccept={jest.fn()}
-                />,
             ))
             container = result.container
-            const elementMarkDown = screen.getByRole('textbox', {hidden: true})
-            userEvent.click(elementMarkDown)
         })
-        const elementsTextArea = screen.getAllByRole('textbox', {hidden: true})
-        expect(elementsTextArea).not.toBeNull()
-        expect(elementsTextArea.length).toBeGreaterThanOrEqual(2)
-        userEvent.type(elementsTextArea[1], 'hello')
-        fireEvent.blur(elementsTextArea[1])
-        expect(onMockedBlur).toBeCalledTimes(1)
-        expect(onMockedBlur).toBeCalledWith('hello')
         expect(container).toMatchSnapshot()
     })
 
-    test('return markdownEditor, write hi and verify change', async () => {
-        const onMockedChange = jest.fn()
+    test('should match snapshot with on click on preview element', async () => {
         let container
         await act(async () => {
             const result = render(wrapDNDIntl(
-                <MarkdownEditor
-                    id={'test-id'}
-                    text={''}
-                    placeholderText={'placeholder'}
-                    className={'classname-test'}
-                    readonly={false}
+                <ReduxProvider store={store}>
+                    <MarkdownEditor
+                        id={'test-id'}
+                        text={'some initial text already set'}
+                        placeholderText={'placeholder'}
+                        className={'classname-test'}
+                        readonly={false}
+                        onChange={jest.fn()}
+                        onFocus={jest.fn()}
+                        onBlur={jest.fn()}
+                    />
+                </ReduxProvider>,
 
-                    onChange={onMockedChange}
-                    onFocus={jest.fn()}
-
-                    onBlur={jest.fn()}
-                    onAccept={jest.fn()}
-                />,
             ))
             container = result.container
-            const elementMarkDown = screen.getByRole('textbox', {hidden: true})
-            userEvent.click(elementMarkDown)
+            const previewElement = screen.getByTestId('preview-element')
+            userEvent.click(previewElement)
         })
-        const elementsTextArea = screen.getAllByRole('textbox', {hidden: true})
-        expect(elementsTextArea).not.toBeNull()
-        expect(elementsTextArea.length).toBeGreaterThanOrEqual(2)
-        const elementText = elementsTextArea[1]
-        userEvent.type(elementText, 'h')
-        expect(onMockedChange).toBeCalledTimes(1)
-        expect(onMockedChange).toBeCalledWith('h')
-        userEvent.type(elementText, 'i')
-        expect(onMockedChange).toBeCalledTimes(2)
-        expect(onMockedChange).toBeCalledWith('hi')
         expect(container).toMatchSnapshot()
     })
-    test('return markdownEditor and verify accept', async () => {
-        const onMockedAccept = jest.fn()
+
+    test('should match snapshot with on click on preview element and then click out of it', async () => {
+        let container
         await act(async () => {
-            render(wrapDNDIntl(
-                <MarkdownEditor
-                    id={'test-id'}
-                    text={''}
-                    placeholderText={'placeholder'}
-                    className={'classname-test'}
-                    readonly={false}
+            const result = render(wrapDNDIntl(
+                <ReduxProvider store={store}>
+                    <MarkdownEditor
+                        id={'test-id'}
+                        text={'some initial text already set'}
+                        placeholderText={'placeholder'}
+                        className={'classname-test'}
+                        readonly={false}
+                        onChange={jest.fn()}
+                        onFocus={jest.fn()}
+                        onBlur={jest.fn()}
+                    />
+                </ReduxProvider>,
 
-                    onChange={jest.fn()}
-                    onFocus={jest.fn()}
-
-                    onBlur={jest.fn()}
-                    onAccept={onMockedAccept}
-                />,
             ))
-            const elementMarkDown = screen.getByRole('textbox', {hidden: true})
-            userEvent.click(elementMarkDown)
+            container = result.container
+            const previewElement = screen.getByTestId('preview-element')
+            userEvent.click(previewElement)
+            fireEvent.keyDown(container, {
+                key: 'Escape',
+                code: 'Escape',
+                keyCode: 27,
+                charCode: 27,
+            })
         })
-        const elementsTextArea = screen.getAllByRole('textbox', {hidden: true})
-        expect(elementsTextArea).not.toBeNull()
-        expect(elementsTextArea.length).toBeGreaterThanOrEqual(2)
-        fireEvent.click(elementsTextArea[1])
-        fireEvent.keyDown(elementsTextArea[1], {metaKey: true, keyCode: 13})
-        act(() => {
-            jest.runOnlyPendingTimers()
-        })
-        expect(mockedUtils.log).toBeCalledTimes(1)
-        expect(onMockedAccept).toBeCalledTimes(1)
-    })
-    test('return markdownEditor and verify blur on escape', async () => {
-        const onMockedBlur = jest.fn()
-        await act(async () => {
-            render(wrapDNDIntl(
-                <MarkdownEditor
-                    id={'test-id'}
-                    text={''}
-                    placeholderText={'placeholder'}
-                    className={'classname-test'}
-                    readonly={false}
-
-                    onChange={jest.fn()}
-                    onFocus={jest.fn()}
-
-                    onBlur={onMockedBlur}
-                    onAccept={jest.fn()}
-                />,
-            ))
-            const elementMarkDown = screen.getByRole('textbox', {hidden: true})
-            userEvent.click(elementMarkDown)
-        })
-        const elementsTextArea = screen.getAllByRole('textbox', {hidden: true})
-        expect(elementsTextArea).not.toBeNull()
-        expect(elementsTextArea.length).toBeGreaterThanOrEqual(2)
-        fireEvent.click(elementsTextArea[1])
-        fireEvent.keyDown(elementsTextArea[1], {keyCode: 27})
-        expect(onMockedBlur).toBeCalledTimes(1)
+        expect(container).toMatchSnapshot()
     })
 })

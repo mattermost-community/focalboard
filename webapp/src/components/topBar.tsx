@@ -29,10 +29,12 @@ const TopBar = React.memo((): JSX.Element => {
                     />
                 </a>
                 <div className='versionFrame'>
-                    <div className='version'>
-                        {`v${Constants.versionString}`}
+                    <div
+                        className='version'
+                        title={`v${Constants.versionString}`}
+                    >
+                        {Constants.versionDisplayString}
                     </div>
-                    <div className='versionBadge'>{'BETA'}</div>
                 </div>
             </div>
         )
