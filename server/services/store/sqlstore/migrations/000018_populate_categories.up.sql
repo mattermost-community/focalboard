@@ -1,9 +1,11 @@
 CREATE TABLE {{.prefix}}categories (
-    id varchar(36) NOT NULL,
+    {{if .mysql}}id INT NOT NULL UNIQUE AUTO_INCREMENT,{{end}}
+    {{if .postgres}}id SERIAL,{{end}}
+    {{if .sqlite}}id varchar(36),{{end}}
     name varchar(100) NOT NULL,
     user_id varchar(32) NOT NULL,
     team_id varchar(32) NOT NULL,
-    channel_id varchar(32),
+    {{if not .sqlite}}
     create_at BIGINT,
     update_at BIGINT,
     delete_at BIGINT,
@@ -15,7 +17,7 @@ CREATE TABLE {{.prefix}}categories (
         name,
         user_id,
         team_id,
-        channel_id,
+        {{if not .sqlite}}channel_id,{{end}}
         create_at,
         update_at,
         delete_at
