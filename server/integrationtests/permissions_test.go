@@ -262,6 +262,8 @@ func TestPermissionsGetTeamTemplates(t *testing.T) {
 	testData := setupData(t, th)
 	clients := setupClients(th)
 
+	builtInTemplateCount := 7
+
 	ttCases := []TestCase{
 		// Get Team Boards
 		{"/teams/test-team/templates", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -271,13 +273,14 @@ func TestPermissionsGetTeamTemplates(t *testing.T) {
 		{"/teams/test-team/templates", methodGet, "", userCommenter, http.StatusOK, 2},
 		{"/teams/test-team/templates", methodGet, "", userEditor, http.StatusOK, 2},
 		{"/teams/test-team/templates", methodGet, "", userAdmin, http.StatusOK, 2},
+		// Built-in templates
 		{"/teams/0/templates", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/teams/0/templates", methodGet, "", userNoTeamMember, http.StatusOK, 7},
-		{"/teams/0/templates", methodGet, "", userTeamMember, http.StatusOK, 7},
-		{"/teams/0/templates", methodGet, "", userViewer, http.StatusOK, 7},
-		{"/teams/0/templates", methodGet, "", userCommenter, http.StatusOK, 7},
-		{"/teams/0/templates", methodGet, "", userEditor, http.StatusOK, 7},
-		{"/teams/0/templates", methodGet, "", userAdmin, http.StatusOK, 7},
+		{"/teams/0/templates", methodGet, "", userNoTeamMember, http.StatusOK, builtInTemplateCount},
+		{"/teams/0/templates", methodGet, "", userTeamMember, http.StatusOK, builtInTemplateCount},
+		{"/teams/0/templates", methodGet, "", userViewer, http.StatusOK, builtInTemplateCount},
+		{"/teams/0/templates", methodGet, "", userCommenter, http.StatusOK, builtInTemplateCount},
+		{"/teams/0/templates", methodGet, "", userEditor, http.StatusOK, builtInTemplateCount},
+		{"/teams/0/templates", methodGet, "", userAdmin, http.StatusOK, builtInTemplateCount},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -454,7 +457,7 @@ func TestPermissionsDuplicateBoard(t *testing.T) {
 
 		{"/boards/{PUBLIC_BOARD_ID}/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
 		{"/boards/{PUBLIC_BOARD_ID}/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/duplicate", methodPost, "", userTeamMember, http.StatusOK, 1}, // TODO: Confirm that this behavior is what we want
+		{"/boards/{PUBLIC_BOARD_ID}/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
 		{"/boards/{PUBLIC_BOARD_ID}/duplicate", methodPost, "", userViewer, http.StatusOK, 1},
 		{"/boards/{PUBLIC_BOARD_ID}/duplicate", methodPost, "", userCommenter, http.StatusOK, 1},
 		{"/boards/{PUBLIC_BOARD_ID}/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
@@ -490,7 +493,7 @@ func TestPermissionsDuplicateBoard(t *testing.T) {
 
 		{"/boards/{PUBLIC_BOARD_ID}/duplicate?toTeam=other-team", methodPost, "", userAnon, http.StatusUnauthorized, 0},
 		{"/boards/{PUBLIC_BOARD_ID}/duplicate?toTeam=other-team", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/duplicate?toTeam=other-team", methodPost, "", userTeamMember, http.StatusOK, 1}, // TODO: Confirm that this behavior is what we want
+		{"/boards/{PUBLIC_BOARD_ID}/duplicate?toTeam=other-team", methodPost, "", userTeamMember, http.StatusForbidden, 0},
 		{"/boards/{PUBLIC_BOARD_ID}/duplicate?toTeam=other-team", methodPost, "", userViewer, http.StatusOK, 1},
 		{"/boards/{PUBLIC_BOARD_ID}/duplicate?toTeam=other-team", methodPost, "", userCommenter, http.StatusOK, 1},
 		{"/boards/{PUBLIC_BOARD_ID}/duplicate?toTeam=other-team", methodPost, "", userEditor, http.StatusOK, 1},
@@ -1101,7 +1104,7 @@ func TestPermissionsDeleteBoardMember(t *testing.T) {
 		{"/boards/{PUBLIC_TEMPLATE_ID}/members/team-member", methodDelete, "", userAdmin, http.StatusOK, 0},
 
 		// Invalid boardID
-		{"/boards/invalid/members/viewer", methodDelete, "", userAdmin, http.StatusForbidden, 0},
+		{"/boards/invalid/members/viewer", methodDelete, "", userAdmin, http.StatusNotFound, 0},
 
 		// Invalid memberID
 		{"/boards/{PUBLIC_TEMPLATE_ID}/members/invalid", methodDelete, "", userAdmin, http.StatusOK, 0},
