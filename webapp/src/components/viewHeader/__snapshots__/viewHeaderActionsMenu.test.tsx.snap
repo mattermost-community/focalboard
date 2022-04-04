@@ -19,7 +19,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu 1`] = `
         />
       </button>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -116,7 +116,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
         />
       </button>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -213,7 +213,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
         />
       </button>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"

@@ -3,7 +3,7 @@
 exports[`components/table/TableHeaderMenu should match snapshot, other column 1`] = `
 <div>
   <div
-    class="Menu noselect bottom"
+    class="Menu noselect bottom "
   >
     <div
       class="menu-contents"
@@ -173,7 +173,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
 exports[`components/table/TableHeaderMenu should match snapshot, title column 1`] = `
 <div>
   <div
-    class="Menu noselect bottom"
+    class="Menu noselect bottom "
   >
     <div
       class="menu-contents"

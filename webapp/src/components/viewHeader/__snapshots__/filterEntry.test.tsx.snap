@@ -19,7 +19,7 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
         </span>
       </button>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"
@@ -193,7 +193,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
         </span>
       </button>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"
@@ -353,7 +353,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
         </span>
       </button>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"
@@ -513,7 +513,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
         </span>
       </button>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"
@@ -673,7 +673,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
         </span>
       </button>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"
@@ -833,7 +833,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
         </span>
       </button>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"
@@ -979,7 +979,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
         </span>
       </button>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"

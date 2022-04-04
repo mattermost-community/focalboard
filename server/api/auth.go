@@ -166,6 +166,9 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
@@ -228,6 +231,9 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
@@ -278,6 +284,9 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
@@ -377,6 +386,9 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
@@ -458,6 +470,18 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				CreateAt:    now,
 				UpdateAt:    now,
 			}
+
+			user, err := a.app.GetUser(userID)
+			if err != nil {
+				a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", err)
+				return
+			}
+
+			if user.IsGuest {
+				a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "guests not supported", nil)
+				return
+			}
+
 			ctx := context.WithValue(r.Context(), sessionContextKey, session)
 			handler(w, r.WithContext(ctx))
 			return

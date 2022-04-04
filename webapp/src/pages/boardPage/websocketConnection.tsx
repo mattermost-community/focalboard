@@ -22,6 +22,7 @@ import {useAppSelector, useAppDispatch} from '../../store/hooks'
 
 import {followBlock, getMe, unfollowBlock} from '../../store/users'
 import {IUser} from '../../user'
+import {Constants} from "../../constants"
 
 const websocketTimeoutForBanner = 5000
 
@@ -49,8 +50,8 @@ const WebsocketConnection = (props: Props) => {
     useEffect(() => {
         let subscribedToTeam = false
         if (wsClient.state === 'open') {
-            wsClient.authenticate(props.teamId || '0', token)
-            wsClient.subscribeToTeam(props.teamId || '0')
+            wsClient.authenticate(props.teamId || Constants.globalTeamId, token)
+            wsClient.subscribeToTeam(props.teamId || Constants.globalTeamId)
             subscribedToTeam = true
         }
 
@@ -71,7 +72,7 @@ const WebsocketConnection = (props: Props) => {
 
         const incrementalBoardUpdate = (_: WSClient, boards: Board[]) => {
             // only takes into account the entities that belong to the team or the user boards
-            const teamBoards = boards.filter((b: Board) => b.teamId === '0' || b.teamId === props.teamId)
+            const teamBoards = boards.filter((b: Board) => b.teamId === Constants.globalTeamId || b.teamId === props.teamId)
             dispatch(updateBoards(teamBoards))
         }
 
@@ -83,8 +84,8 @@ const WebsocketConnection = (props: Props) => {
         const updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
             if (newState === 'open') {
                 const newToken = localStorage.getItem('focalboardSessionId') || ''
-                wsClient.authenticate(props.teamId || '0', newToken)
-                wsClient.subscribeToTeam(props.teamId || '0')
+                wsClient.authenticate(props.teamId || Constants.globalTeamId, newToken)
+                wsClient.subscribeToTeam(props.teamId || Constants.globalTeamId)
                 subscribedToTeam = true
             }
 
@@ -108,12 +109,12 @@ const WebsocketConnection = (props: Props) => {
         wsClient.addOnReconnect(() => dispatch(props.loadAction(props.boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
         wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
-            if (subscription.subscriberId === me?.id && subscription.teamId === props.teamId) {
+            if (subscription.subscriberId === me?.id) {
                 dispatch(followBlock(subscription))
             }
         })
         wsClient.setOnUnfollowBlock((_: WSClient, subscription: Subscription): void => {
-            if (subscription.subscriberId === me?.id && subscription.teamId === props.teamId) {
+            if (subscription.subscriberId === me?.id) {
                 dispatch(unfollowBlock(subscription))
             }
         })
