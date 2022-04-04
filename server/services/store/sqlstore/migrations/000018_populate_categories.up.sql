@@ -1,7 +1,5 @@
 CREATE TABLE {{.prefix}}categories (
-    {{if .mysql}}id INT NOT NULL UNIQUE AUTO_INCREMENT,{{end}}
-    {{if .postgres}}id SERIAL,{{end}}
-    {{if .sqlite}}id varchar(36),{{end}}
+    id varchar(36) NOT NULL,
     name varchar(100) NOT NULL,
     user_id varchar(32) NOT NULL,
     team_id varchar(32) NOT NULL,
