@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 
 import {useEffect, useCallback} from 'react'
+import {useIntl} from 'react-intl'
 
 import {ImageBlock, createImageBlock} from '../../blocks/imageBlock'
 import {sendFlashMessage} from '../flashMessages'
@@ -9,6 +10,7 @@ import octoClient from '../../octoClient'
 import mutator from '../../mutator'
 
 export default function useImagePaste(boardId: string, cardId: string, contentOrder: Array<string | string[]>): void {
+    const intl = useIntl()
     const uploadItems = useCallback(async (items: FileList) => {
         let newImage: File|null = null
         const uploads: Promise<string|undefined>[] = []
@@ -40,7 +42,7 @@ export default function useImagePaste(boardId: string, cardId: string, contentOr
         }
 
         if (someFilesNotUploaded) {
-            sendFlashMessage({content: "Some files not uploaded. File size limit reached", severity: 'normal'})
+            sendFlashMessage({content: intl.formatMessage({id: 'imagePaste.upload-failed', defaultMessage: 'Some files not uploaded. File size limit reached'}), severity: 'normal'})
         }
 
         mutator.performAsUndoGroup(async () => {
