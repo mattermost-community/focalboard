@@ -16,6 +16,7 @@ import ViewHeader from './viewHeader'
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
 const card = TestBlockFactory.createCard(board)
+const card2 = TestBlockFactory.createCard(board)
 
 jest.mock('react-router-dom', () => {
     const originalModule = jest.requireActual('react-router-dom')
@@ -34,15 +35,30 @@ describe('components/viewHeader/viewHeader', () => {
             me: {
                 id: 'user-id-1',
                 username: 'username_1',
+                props: {},
             },
         },
         searchText: {
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
         boards: {
-            current: board,
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            templates: [],
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         cards: {
             templates: [card],
+            cards: {
+                [card2.id]: card2,
+            },
+            current: card2.id,
         },
         views: {
             views: {
@@ -61,13 +77,34 @@ describe('components/viewHeader/viewHeader', () => {
                         activeView={activeView}
                         views={[activeView]}
                         cards={[card]}
-                        groupByProperty={board.fields.cardProperties[0]}
+                        groupByProperty={board.cardProperties[0]}
                         addCard={jest.fn()}
                         addCardFromTemplate={jest.fn()}
                         addCardTemplate={jest.fn()}
                         editCardTemplate={jest.fn()}
                         readonly={false}
-                        showShared={false}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        expect(container).toMatchSnapshot()
+    })
+    test('return viewHeader without permissions', () => {
+        const localStore = mockStateStore([], {...state, teams: {current: undefined}})
+        const {container} = render(
+            wrapIntl(
+                <ReduxProvider store={localStore}>
+                    <ViewHeader
+                        board={board}
+                        activeView={activeView}
+                        views={[activeView]}
+                        cards={[card]}
+                        groupByProperty={board.cardProperties[0]}
+                        addCard={jest.fn()}
+                        addCardFromTemplate={jest.fn()}
+                        addCardTemplate={jest.fn()}
+                        editCardTemplate={jest.fn()}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ),
@@ -83,13 +120,12 @@ describe('components/viewHeader/viewHeader', () => {
                         activeView={activeView}
                         views={[activeView]}
                         cards={[card]}
-                        groupByProperty={board.fields.cardProperties[0]}
+                        groupByProperty={board.cardProperties[0]}
                         addCard={jest.fn()}
                         addCardFromTemplate={jest.fn()}
                         addCardTemplate={jest.fn()}
                         editCardTemplate={jest.fn()}
                         readonly={true}
-                        showShared={false}
                     />
                 </ReduxProvider>,
             ),

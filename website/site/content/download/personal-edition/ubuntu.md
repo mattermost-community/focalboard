@@ -14,13 +14,14 @@ Follow these steps it up on an Ubuntu server. To upgrade an existing installatio
 Popular hosted options include:
 * [Digital Ocean](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-18-04)
 * [Amazon EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html)
+* [Linode](https://www.linode.com/docs/products/compute/)
 
 ## Install Focalboard
 
-Download the Ubuntu archive package from the appropriate [release in GitHub](https://github.com/mattermost/focalboard/releases). E.g. this is the link for v0.9.2 (which may no longer be the latest one):
+Download the Ubuntu archive package from the appropriate [release in GitHub](https://github.com/mattermost/focalboard/releases). The example below uses the link for **v0.15.0**, but you're encouraged to use the latest version in the release list:
 
 ```
-wget https://github.com/mattermost/focalboard/releases/download/v0.9.2/focalboard-server-linux-amd64.tar.gz
+wget https://github.com/mattermost/focalboard/releases/download/v0.15.0/focalboard-server-linux-amd64.tar.gz
 tar -xvzf focalboard-server-linux-amd64.tar.gz
 sudo mv focalboard /opt
 ```
@@ -37,6 +38,7 @@ sudo apt install nginx
 You may need to adjust your firewall settings depending on the host, e.g.
 * [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-18-04)
 * [EC2](https://docs.nginx.com/nginx/deployment-guides/amazon-web-services/ec2-instances-for-nginx/)
+* [Linode](https://www.linode.com/docs/guides/how-to-install-nginx-ubuntu-18-04/)
 
 ### Configure NGINX
 

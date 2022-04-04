@@ -16,7 +16,7 @@ type Props = {
     readonly: boolean
 }
 
-const TextElement = React.memo((props: Props): JSX.Element => {
+const TextElement = (props: Props): JSX.Element => {
     const {block, readonly} = props
     const intl = useIntl()
 
@@ -26,13 +26,13 @@ const TextElement = React.memo((props: Props): JSX.Element => {
             placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
             onBlur={(text) => {
                 if (text !== block.title) {
-                    mutator.changeTitle(block.id, block.title, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
+                    mutator.changeBlockTitle(block.boardId, block.id, block.title, text, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
                 }
             }}
             readonly={readonly}
         />
     )
-})
+}
 
 contentRegistry.registerContentType({
     type: 'text',
@@ -51,4 +51,4 @@ contentRegistry.registerContentType({
     },
 })
 
-export default TextElement
+export default React.memo(TextElement)

@@ -1,0 +1,115 @@
+.BoardTemplateSelector {
+    position: absolute;
+    background-color: rgb(var(--center-channel-bg-rgb));
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding-bottom: 48px;
+
+    .toolbar {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        padding: 24px;
+    }
+
+    .header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        .title {
+            font-size: 25px;
+        }
+
+        .description {
+            max-width: 640px;
+            text-align: center;
+            margin: 0 0 32px;
+        }
+    }
+
+    .templates {
+        display: flex;
+        width: 100%;
+        padding: 0 32px;
+        justify-content: center;
+
+        @media (min-width: 768px) {
+            padding: 0 10%;
+        }
+
+        .templates-list {
+            margin-right: 32px;
+            width: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+
+            .new-template {
+                position: relative;
+                display: flex;
+                align-items: center;
+                padding: 8px 16px;
+                margin-bottom: 4px;
+                border-radius: var(--default-rad);
+                cursor: pointer;
+
+                .template-icon {
+                    margin-right: 10px;
+                }
+
+                &:hover {
+                    background-color: rgba(var(--center-channel-color-rgb), 0.1);
+                }
+            }
+        }
+    }
+
+    .template-preview-box {
+        padding-bottom: 32px;
+        position: relative;
+        background-color: rgb(var(--center-channel-bg-rgb));
+        box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
+            rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
+        border-radius: var(--modal-rad);
+        overflow: hidden;
+        width: 100%;
+        max-width: 1000px;
+
+        .buttons {
+            display: flex;
+            position: absolute;
+            bottom: 32px;
+            width: 100%;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 24px;
+
+            @media (min-width: 1024px) {
+                flex-direction: row;
+            }
+        }
+
+        .empty-board {
+            background-color: rgb(var(--center-channel-bg-rgb));
+        }
+
+        .Button {
+            &:first-child {
+                margin-bottom: 16px;
+
+                @media (min-width: 1024px) {
+                    margin: 0 16px 0 0;
+                }
+            }
+
+            > .buttons:first-child {
+                padding-top: 32px;
+            }
+        }
+    }
+}

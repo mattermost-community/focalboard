@@ -1,11 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {CsvExporter} from '../../csvExporter'
 import {Archiver} from '../../archiver'
-import {IUser} from '../../user'
 import {Board} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
@@ -13,18 +12,14 @@ import IconButton from '../../widgets/buttons/iconButton'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {getMe} from '../../store/users'
-import {useAppSelector} from '../../store/hooks'
 
 import ModalWrapper from '../modalWrapper'
-import ShareBoardComponent from '../shareBoardComponent'
 import {sendFlashMessage} from '../flashMessages'
 
 type Props = {
     board: Board
     activeView: BoardView
     cards: Card[]
-    showShared: boolean
 }
 
 // import {mutator} from '../../mutator'
@@ -37,12 +32,12 @@ type Props = {
 //         for (let i = 0; i < count; i++) {
 //             const card = new Card()
 //             card.parentId = board.id
-//             card.rootId = board.rootId
-//             card.fields.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.fields.cardProperties)
+//             card.boardId = board.boardId
+//             card.fields.properties = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.cardProperties)
 //             card.title = `Test Card ${startCount + i + 1}`
 //             card.fields.icon = BlockIcons.shared.randomIcon()
 
-//             const groupByProperty = board.fields.cardProperties.find((o) => o.id === activeView.fields.groupById)
+//             const groupByProperty = board.cardProperties.find((o) => o.id === activeView.fields.groupById)
 //             if (groupByProperty && groupByProperty.options.length > 0) {
 //                 // Cycle through options
 //                 const option = groupByProperty.options[optionIndex]
@@ -97,20 +92,15 @@ function onExportCsvTrigger(board: Board, activeView: BoardView, cards: Card[], 
     }
 }
 
-const ViewHeaderActionsMenu = React.memo((props: Props) => {
-    const [showShareDialog, setShowShareDialog] = useState(false)
-
+const ViewHeaderActionsMenu = (props: Props) => {
     const {board, activeView, cards} = props
-    const user = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
-
-    const showShareBoard = user && user.id !== 'single-user' && props.showShared
 
     return (
         <ModalWrapper>
-            <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
+            <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-header-menu', defaultMessage: 'View header menu'})}>
                 <IconButton icon={<OptionsIcon/>}/>
-                <Menu>
+                <Menu position='left'>
                     <Menu.Text
                         id='exportCsv'
                         name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
@@ -121,14 +111,6 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
                         onClick={() => Archiver.exportBoardArchive(board)}
                     />
-                    {showShareBoard &&
-                        <Menu.Text
-                            id='shareBoard'
-                            name={intl.formatMessage({id: 'ViewHeader.share-board', defaultMessage: 'Share board'})}
-                            onClick={() => setShowShareDialog(true)}
-                        />
-                    }
-
                     {/*
                     <Menu.Separator/>
 
@@ -155,14 +137,8 @@ const ViewHeaderActionsMenu = React.memo((props: Props) => {
                     */}
                 </Menu>
             </MenuWrapper>
-            {showShareDialog &&
-                <ShareBoardComponent
-                    boardId={board.id || ''}
-                    onClose={() => setShowShareDialog(false)}
-                />
-            }
         </ModalWrapper>
     )
-})
+}
 
-export default ViewHeaderActionsMenu
+export default React.memo(ViewHeaderActionsMenu)

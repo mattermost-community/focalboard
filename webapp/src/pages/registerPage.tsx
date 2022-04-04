@@ -1,23 +1,24 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {useHistory, Link} from 'react-router-dom'
+import {useHistory, Link, Redirect} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import {useAppDispatch} from '../store/hooks'
-import {fetchMe} from '../store/users'
+import {useAppDispatch, useAppSelector} from '../store/hooks'
+import {fetchMe, getLoggedIn} from '../store/users'
 
 import Button from '../widgets/buttons/button'
 import client from '../octoClient'
 import './registerPage.scss'
 
-const RegisterPage = React.memo(() => {
+const RegisterPage = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const history = useHistory()
     const dispatch = useAppDispatch()
+    const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
 
     const handleRegister = async (): Promise<void> => {
         const queryString = new URLSearchParams(window.location.search)
@@ -35,6 +36,10 @@ const RegisterPage = React.memo(() => {
         } else {
             setErrorMessage(`${response.json?.error}`)
         }
+    }
+
+    if (loggedIn) {
+        return <Redirect to={'/'}/>
     }
 
     return (
@@ -96,6 +101,6 @@ const RegisterPage = React.memo(() => {
             }
         </div>
     )
-})
+}
 
-export default RegisterPage
+export default React.memo(RegisterPage)

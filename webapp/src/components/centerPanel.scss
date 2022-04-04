@@ -44,7 +44,20 @@
         left: 0;
         background: rgb(var(--center-channel-bg-rgb));
         z-index: 100;
+
+        > .mid-head {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .ViewTitle {
+            flex: 1;
+            padding-right: 16px;
+        }
     }
+
 
     > div:nth-child(2) {
         padding: 0 0 0 1px;
@@ -55,5 +68,10 @@
             padding-left: 20px;
             -webkit-overflow-scrolling: touch;
         }
+    }
+
+    .shareButtonWrapper {
+        position: relative;
+        flex: 0 0 auto;
     }
 }

@@ -64,8 +64,9 @@
         flex: 1 1 auto;
         overflow-y: auto;
         max-width: 100%;
+        margin-top: 12px;
 
-        > div {
+        > div:last-child {
             margin-bottom: 16px;
         }
     }
@@ -135,6 +136,19 @@
     .HideSidebarIcon {
         stroke: rgba(var(--sidebar-text-rgb), 0.5);
         stroke-width: 6px;
+    }
+
+    .add-board {
+        display: flex;
+        padding: 0 16px 0 20px;
+        cursor: pointer;
+        color: rgba(var(--sidebar-text-rgb), 0.64);
+        height: 36px;
+        align-items: center;
+
+        &:hover {
+            background-color: rgba(var(--sidebar-text-rgb), 0.08);
+        }
     }
 
     @media screen and (min-width: 768px) {

@@ -17,7 +17,11 @@
         font-size: 14px;
         line-height: 14px;
         padding: 2px 10px;
-        color: rgba(var(--center-channel-color-rgb), 0.7);
+        color: rgba(var(--center-channel-color-rgb), 0.72);
+
+        &:hover {
+            color: rgba(var(--center-channel-color-rgb), 1);
+        }
     }
 
     .HelpIcon {

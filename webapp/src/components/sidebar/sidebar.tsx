@@ -1,10 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
-
-import {useIntl} from 'react-intl'
-
-import DashboardOnboardingSvg from '../../svg/dashboard-onboarding'
+import {FormattedMessage} from 'react-intl'
 
 import {getActiveThemeName, loadTheme} from '../../theme'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -12,24 +9,36 @@ import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 import {getSortedBoards} from '../../store/boards'
-import {getSortedViews} from '../../store/views'
-import {getCurrentWorkspace} from '../../store/workspace'
-import {useAppSelector} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 
 import './sidebar.scss'
 
-import WorkspaceSwitcher from '../workspaceSwitcher/workspaceSwitcher'
+import {
+    BlockCategoryWebsocketData,
+    Category,
+    CategoryBlocks,
+    fetchSidebarCategories,
+    getSidebarCategories, updateBlockCategories,
+    updateCategories,
+} from '../../store/sidebar'
 
-import SidebarAddBoardMenu from './sidebarAddBoardMenu'
-import SidebarBoardItem from './sidebarBoardItem'
+import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
+
+import wsClient, {WSClient} from '../../wsclient'
+
+import {getCurrentTeam} from '../../store/teams'
+
+import {Constants} from "../../constants"
+
+import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
+import {addMissingItems} from './utils'
 
 type Props = {
     activeBoardId?: string
-    activeViewId?: string
-    isDashboard?: boolean
+    onBoardTemplateSelectorOpen?: () => void
 }
 
 function getWindowDimensions() {
@@ -40,13 +49,32 @@ function getWindowDimensions() {
     }
 }
 
-const Sidebar = React.memo((props: Props) => {
+const Sidebar = (props: Props) => {
     const [isHidden, setHidden] = useState(false)
     const [userHidden, setUserHidden] = useState(false)
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
     const boards = useAppSelector(getSortedBoards)
-    const views = useAppSelector(getSortedViews)
-    const intl = useIntl()
+    const dispatch = useAppDispatch()
+    const partialCategories = useAppSelector<Array<CategoryBlocks>>(getSidebarCategories)
+    const sidebarCategories = addMissingItems(partialCategories, boards)
+
+    useEffect(() => {
+        wsClient.addOnChange((_: WSClient, categories: Category[]) => {
+            dispatch(updateCategories(categories))
+        }, 'category')
+
+        wsClient.addOnChange((_: WSClient, blockCategories: Array<BlockCategoryWebsocketData>) => {
+            dispatch(updateBlockCategories(blockCategories))
+        }, 'blockCategories')
+    }, [])
+
+    const team = useAppSelector(getCurrentTeam)
+
+    useEffect(() => {
+        if (team) {
+            dispatch(fetchSidebarCategories(team!.id))
+        }
+    }, [team?.id])
 
     useEffect(() => {
         loadTheme()
@@ -65,7 +93,6 @@ const Sidebar = React.memo((props: Props) => {
         hideSidebar()
     }, [windowDimensions])
 
-    const workspace = useAppSelector(getCurrentWorkspace)
     if (!boards) {
         return <div/>
     }
@@ -127,7 +154,7 @@ const Sidebar = React.memo((props: Props) => {
                     </div>
                 </div>}
 
-            {workspace && workspace.id !== '0' &&
+            {team && team.id !== Constants.globalTeamId &&
                 <div className='WorkspaceTitle'>
                     {Utils.isFocalboardPlugin() &&
                     <>
@@ -146,61 +173,42 @@ const Sidebar = React.memo((props: Props) => {
                 </div>
             }
 
-            {
-                workspace && workspace.id !== '0' && !props.isDashboard &&
-                <WorkspaceSwitcher activeWorkspace={workspace}/>
-            }
+            <BoardsSwitcher onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}/>
 
-            {
-                props.isDashboard &&
-                (
-                    <React.Fragment>
-                        <WorkspaceSwitcher/>
-                        <div className='Sidebar__onboarding'>
-                            <DashboardOnboardingSvg/>
-                            <div>
-                                {intl.formatMessage({id: 'DashboardPage.CenterPanel.ChangeChannels', defaultMessage: 'Use the switcher to easily change channels'})}
-                            </div>
-                        </div>
-                    </React.Fragment>
-                )
-            }
-
-            {
-                !props.isDashboard &&
-                <div className='octo-sidebar-list'>
-                    {
-                        boards.map((board) => {
-                            const nextBoardId = boards.length > 1 ? boards.find((o) => o.id !== board.id)?.id : undefined
-                            return (
-                                <SidebarBoardItem
-                                    hideSidebar={hideSidebar}
-                                    key={board.id}
-                                    views={views}
-                                    board={board}
-                                    activeBoardId={props.activeBoardId}
-                                    activeViewId={props.activeViewId}
-                                    nextBoardId={board.id === props.activeBoardId ? nextBoardId : undefined}
-                                />
-                            )
-                        })
-                    }
-                </div>
-            }
+            <div className='octo-sidebar-list'>
+                {
+                    sidebarCategories.map((category) => (
+                        <SidebarCategory
+                            hideSidebar={hideSidebar}
+                            key={category.id}
+                            activeBoardID={props.activeBoardId}
+                            categoryBlocks={category}
+                            boards={boards}
+                            allCategories={sidebarCategories}
+                        />
+                    ))
+                }
+            </div>
 
             <div className='octo-spacer'/>
 
             {
-                (!props.isDashboard && !Utils.isFocalboardPlugin()) &&
-                <SidebarAddBoardMenu
-                    activeBoardId={props.activeBoardId}
-                />
+                (!Utils.isFocalboardPlugin()) &&
+                <div
+                    className='add-board'
+                    onClick={props.onBoardTemplateSelectorOpen}
+                >
+                    <FormattedMessage
+                        id='Sidebar.add-board'
+                        defaultMessage='+ Add board'
+                    />
+                </div>
             }
 
             {!Utils.isFocalboardPlugin() &&
                 <SidebarSettingsMenu activeTheme={getActiveThemeName()}/>}
         </div>
     )
-})
+}
 
-export default Sidebar
+export default React.memo(Sidebar)

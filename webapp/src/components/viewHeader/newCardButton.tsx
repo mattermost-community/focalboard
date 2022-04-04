@@ -22,7 +22,7 @@ type Props = {
     editCardTemplate: (cardTemplateId: string) => void
 }
 
-const NewCardButton = React.memo((props: Props): JSX.Element => {
+const NewCardButton = (props: Props): JSX.Element => {
     const cardTemplates: Card[] = useAppSelector(getCurrentBoardTemplates)
     const currentView = useAppSelector(getCurrentView)
     const intl = useIntl()
@@ -79,6 +79,6 @@ const NewCardButton = React.memo((props: Props): JSX.Element => {
             </Menu>
         </ButtonWithMenu>
     )
-})
+}
 
-export default NewCardButton
+export default React.memo(NewCardButton)

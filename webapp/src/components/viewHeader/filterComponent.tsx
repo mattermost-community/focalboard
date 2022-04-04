@@ -23,7 +23,7 @@ type Props = {
     onClose: () => void
 }
 
-const FilterComponent = React.memo((props: Props): JSX.Element => {
+const FilterComponent = (props: Props): JSX.Element => {
     const conditionClicked = (optionId: string, filter: FilterClause): void => {
         const {activeView} = props
 
@@ -36,7 +36,7 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
         Utils.assert(newFilter, `No filter at index ${filterIndex}`)
         if (newFilter.condition !== optionId) {
             newFilter.condition = optionId as FilterCondition
-            mutator.changeViewFilter(activeView.id, activeView.fields.filter, filterGroup)
+            mutator.changeViewFilter(board.id, activeView.id, activeView.fields.filter, filterGroup)
         }
     }
 
@@ -48,7 +48,7 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
         const filter = createFilterClause()
 
         // Pick the first select property that isn't already filtered on
-        const selectProperty = board.fields.cardProperties.
+        const selectProperty = board.cardProperties.
             filter((o: IPropertyTemplate) => !filters.find((f) => f.propertyId === o.id)).
             find((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect')
         if (selectProperty) {
@@ -56,7 +56,7 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
         }
         filterGroup.filters.push(filter)
 
-        mutator.changeViewFilter(activeView.id, activeView.fields.filter, filterGroup)
+        mutator.changeViewFilter(board.id, activeView.id, activeView.fields.filter, filterGroup)
     }
 
     const {board, activeView} = props
@@ -91,6 +91,6 @@ const FilterComponent = React.memo((props: Props): JSX.Element => {
             </div>
         </Modal>
     )
-})
+}
 
-export default FilterComponent
+export default React.memo(FilterComponent)

@@ -45,6 +45,7 @@ __debug_bin
 files
 octo*.db
 focalboard*.db
+*.boardarchive
 .eslintcache
 .vscode/settings.json
 # config.json is copied from app-config.json in the Makefile

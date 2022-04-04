@@ -15,13 +15,15 @@ import CheckIcon from '../../widgets/icons/check'
 import mutator from '../../mutator'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentView} from '../../store/views'
+import {getCurrentBoardId} from '../../store/boards'
 
 type Props = {
     addCard: () => void
 }
 
-const EmptyCardButton = React.memo((props: Props) => {
+const EmptyCardButton = (props: Props) => {
     const currentView = useAppSelector(getCurrentView)
+    const boardId = useAppSelector(getCurrentBoardId)
     const intl = useIntl()
 
     return (
@@ -45,13 +47,13 @@ const EmptyCardButton = React.memo((props: Props) => {
                                 defaultMessage: 'Set as default',
                             })}
                             onClick={async () => {
-                                await mutator.clearDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId)
+                                await mutator.clearDefaultTemplate(boardId, currentView.id, currentView.fields.defaultTemplateId)
                             }}
                         />
                     </Menu>
                 </MenuWrapper>
             }
         />)
-})
+}
 
-export default EmptyCardButton
+export default React.memo(EmptyCardButton)

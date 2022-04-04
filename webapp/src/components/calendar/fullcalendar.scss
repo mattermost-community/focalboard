@@ -3,13 +3,20 @@
     margin-bottom: 10px;
     overflow: auto;
 
-    a {
+    .fc-daygrid-event,
+    .fc-daygrid-day-number {
         text-decoration: none;
         color: var(--link-color-rgb);
 
         &:hover {
-            background-color: unset !important;;
+            background-color: unset;
         }
+    }
+
+    .EventContent {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .octo-tooltip {
@@ -62,6 +69,12 @@
             align-items: center;
             width: 100%;
 
+            &.with-plus {
+                .addEvent {
+                    display: none;
+                }
+            }
+
             .addEvent {
                 border-radius: 4px;
                 margin: 0 4px;
@@ -90,10 +103,11 @@
         }
 
         &:hover {
-            .dateContainer {
+            .dateContainer.with-plus {
                 // display: flex;
                 flex-direction: row;
                 justify-content: space-between;
+                align-items: flex-end;
 
                 .addEvent {
                     display: flex;

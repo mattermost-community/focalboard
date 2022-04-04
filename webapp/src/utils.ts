@@ -1,24 +1,32 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import marked from 'marked'
+import {marked} from 'marked'
 import {IntlShape} from 'react-intl'
 import moment from 'moment'
 
+import {generatePath, match as routerMatch} from "react-router-dom"
+
+import {History} from "history"
+
 import {Block} from './blocks/block'
-import {createBoard} from './blocks/board'
+import {Board as BoardType, BoardMember, createBoard} from './blocks/board'
 import {createBoardView} from './blocks/boardView'
 import {createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
 import {IAppWindow} from './types'
+import {ChangeHandlerType, WSMessage} from './wsclient'
+import {BlockCategoryWebsocketData, Category} from './store/sidebar'
 
 declare let window: IAppWindow
 
-const imageURLForUser = (window as any).Components?.imageURLForUser
+const imageURLForUser = typeof window === 'undefined' ? undefined : (window as any).Components?.imageURLForUser
 const IconClass = 'octo-icon'
 const OpenButtonClass = 'open-button'
 const SpacerClass = 'octo-spacer'
 const HorizontalGripClass = 'HorizontalGrip'
 const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
+
+export type WSMessagePayloads = Block | Category | BlockCategoryWebsocketData | BoardType | BoardMember | null
 
 // eslint-disable-next-line no-shadow
 enum IDType {
@@ -31,6 +39,11 @@ enum IDType {
     User = 'u',
     Token = 'k',
     BlockID = 'a',
+}
+
+export const KeyCodes: Record<string, [string, number]> = {
+    ENTER: ['Enter', 13],
+    COMPOSING: ['Composing', 229],
 }
 
 class Utils {
@@ -500,7 +513,7 @@ class Utils {
     }
 
     static getFrontendBaseURL(absolute?: boolean): string {
-        let frontendBaseURL = window.frontendBaseURL || Utils.getBaseURL(absolute)
+        let frontendBaseURL = window.frontendBaseURL || Utils.getBaseURL()
         frontendBaseURL = frontendBaseURL.replace(/\/+$/, '')
         if (frontendBaseURL.indexOf('/') === 0) {
             frontendBaseURL = frontendBaseURL.slice(1)
@@ -512,6 +525,10 @@ class Utils {
     }
 
     static buildURL(path: string, absolute?: boolean): string {
+        if (!Utils.isFocalboardPlugin()) {
+            return path
+        }
+
         const baseURL = Utils.getBaseURL()
         let finalPath = baseURL + path
         if (path.indexOf('/') !== 0) {
@@ -541,10 +558,23 @@ class Utils {
         return window.location.pathname.includes('/plugins/focalboard')
     }
 
+    static fixWSData(message: WSMessage): [WSMessagePayloads, ChangeHandlerType] {
+        if (message.block) {
+            return [this.fixBlock(message.block), 'block']
+        } else if (message.board) {
+            return [this.fixBoard(message.board), 'board']
+        } else if (message.category) {
+            return [message.category, 'category']
+        } else if (message.blockCategories) {
+            return [message.blockCategories, 'blockCategories']
+        } else if (message.member) {
+            return [message.member, 'boardMembers']
+        }
+        return [null, 'block']
+    }
+
     static fixBlock(block: Block): Block {
         switch (block.type) {
-        case 'board':
-            return createBoard(block)
         case 'view':
             return createBoardView(block)
         case 'card':
@@ -554,6 +584,10 @@ class Utils {
         default:
             return block
         }
+    }
+
+    static fixBoard(board: BoardType): BoardType {
+        return createBoard(board)
     }
 
     static userAgent(): string {
@@ -617,11 +651,11 @@ class Utils {
         return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
     }
 
-    static buildOriginalPath(workspaceId = '', boardId = '', viewId = '', cardId = ''): string {
+    static buildOriginalPath(teamID = '', boardId = '', viewId = '', cardId = ''): string {
         let originalPath = ''
 
-        if (workspaceId) {
-            originalPath += `${workspaceId}/`
+        if (teamID) {
+            originalPath += `${teamID}/`
         }
 
         if (boardId) {
@@ -637,6 +671,57 @@ class Utils {
         }
 
         return originalPath
+    }
+
+    static uuid(): string {
+        return (window as any).URL.createObjectURL(new Blob([])).substr(-36)
+    }
+
+    static isKeyPressed(event: KeyboardEvent, key: [string, number]): boolean {
+        // There are two types of keyboards
+        // 1. English with different layouts(Ex: Dvorak)
+        // 2. Different language keyboards(Ex: Russian)
+        if (event.keyCode === KeyCodes.COMPOSING[1]) {
+            return false
+        }
+
+        // checks for event.key for older browsers and also for the case of different English layout keyboards.
+        if (typeof event.key !== 'undefined' && event.key !== 'Unidentified' && event.key !== 'Dead') {
+            const isPressedByCode = event.key === key[0] || event.key === key[0].toUpperCase()
+            if (isPressedByCode) {
+                return true
+            }
+        }
+
+        // used for different language keyboards to detect the position of keys
+        return event.keyCode === key[1]
+    }
+
+    static isMac() {
+        return navigator.platform.toUpperCase().indexOf('MAC') >= 0
+    }
+
+    static cmdOrCtrlPressed(e: KeyboardEvent, allowAlt = false) {
+        if (allowAlt) {
+            return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey)
+        }
+        return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey && !e.altKey)
+    }
+
+    static showBoard(
+        boardId: string,
+        match: routerMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>,
+        history: History,
+    ) {
+        // if the same board, reuse the match params
+        // otherwise remove viewId and cardId, results in first view being selected
+        const params = {...match.params, boardId: boardId || ''}
+        if (boardId !== match.params.boardId) {
+            params.viewId = undefined
+            params.cardId = undefined
+        }
+        const newPath = generatePath(match.path, params)
+        history.push(newPath)
     }
 }
 

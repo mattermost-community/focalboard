@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect} from 'react'
+import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
@@ -89,44 +89,19 @@ export const PropertyTypes = (props: TypesProps): JSX.Element => {
     )
 }
 
-const PropertyMenu = React.memo((props: Props) => {
+const PropertyMenu = (props: Props) => {
     const intl = useIntl()
-    const nameTextbox = useRef<HTMLInputElement>(null)
-    const [name, setName] = useState(props.propertyName)
 
     const deleteText = intl.formatMessage({
         id: 'PropertyMenu.Delete',
         defaultMessage: 'Delete',
     })
 
-    useEffect(() => {
-        nameTextbox.current?.focus()
-        nameTextbox.current?.setSelectionRange(0, name.length)
-    }, [])
-
     return (
         <Menu>
-            <input
-                ref={nameTextbox}
-                type='text'
-                className='PropertyMenu menu-textbox'
-                onClick={(e) => e.stopPropagation()}
-                onChange={(e) => {
-                    setName(e.target.value)
-                }}
-                title={name}
-                value={name}
-                onBlur={() => props.onTypeAndNameChanged(props.propertyType, name)}
-                onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === 'Escape') {
-                        props.onTypeAndNameChanged(props.propertyType, name)
-                        e.stopPropagation()
-                        if (e.key === 'Enter') {
-                            e.target.dispatchEvent(new Event('menuItemClicked'))
-                        }
-                    }
-                }}
-                spellCheck={true}
+            <Menu.TextInput
+                initialValue={props.propertyName}
+                onValueChanged={(n) => props.onTypeAndNameChanged(props.propertyType, n)}
             />
             <Menu.SubMenu
                 id='type'
@@ -134,7 +109,7 @@ const PropertyMenu = React.memo((props: Props) => {
             >
                 <PropertyTypes
                     label={intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
-                    onTypeSelected={(type: PropertyType) => props.onTypeAndNameChanged(type, name)}
+                    onTypeSelected={(type: PropertyType) => props.onTypeAndNameChanged(type, props.propertyName)}
                 />
             </Menu.SubMenu>
             <Menu.Text
@@ -144,6 +119,6 @@ const PropertyMenu = React.memo((props: Props) => {
             />
         </Menu>
     )
-})
+}
 
-export default PropertyMenu
+export default React.memo(PropertyMenu)

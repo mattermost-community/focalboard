@@ -53,10 +53,10 @@ const filterValue = (props: Props): JSX.Element|null => {
                             Utils.assert(newFilter, `No filter at index ${filterIndex}`)
                             if (filter.values.includes(o.id)) {
                                 newFilter.values = newFilter.values.filter((id) => id !== optionId)
-                                mutator.changeViewFilter(view.id, view.fields.filter, filterGroup)
+                                mutator.changeViewFilter(view.boardId, view.id, view.fields.filter, filterGroup)
                             } else {
                                 newFilter.values.push(optionId)
-                                mutator.changeViewFilter(view.id, view.fields.filter, filterGroup)
+                                mutator.changeViewFilter(view.boardId, view.id, view.fields.filter, filterGroup)
                             }
                         }}
                     />

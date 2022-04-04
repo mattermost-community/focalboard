@@ -11,8 +11,8 @@ import {IUser} from '../../user'
 import FocalboardLogoIcon from '../../widgets/icons/focalboard_logo'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {getMe} from '../../store/users'
-import {useAppSelector} from '../../store/hooks'
+import {getMe, setMe} from '../../store/users'
+import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {Utils} from '../../utils'
 
 import ModalWrapper from '../modalWrapper'
@@ -25,7 +25,8 @@ import './sidebarUserMenu.scss'
 
 declare let window: IAppWindow
 
-const SidebarUserMenu = React.memo(() => {
+const SidebarUserMenu = () => {
+    const dispatch = useAppDispatch()
     const history = useHistory()
     const [showRegistrationLinkDialog, setShowRegistrationLinkDialog] = useState(false)
     const user = useAppSelector<IUser|null>(getMe)
@@ -60,6 +61,7 @@ const SidebarUserMenu = React.memo(() => {
                                 name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
                                 onClick={async () => {
                                     await octoClient.logout()
+                                    dispatch(setMe(null))
                                     history.push('/login')
                                 }}
                             />
@@ -106,6 +108,6 @@ const SidebarUserMenu = React.memo(() => {
             </ModalWrapper>
         </div>
     )
-})
+}
 
-export default SidebarUserMenu
+export default React.memo(SidebarUserMenu)

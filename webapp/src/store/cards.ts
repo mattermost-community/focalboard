@@ -7,13 +7,15 @@ import {Card} from '../blocks/card'
 import {IUser} from '../user'
 import {Board} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
+import {CommentBlock} from '../blocks/commentBlock'
 import {Utils} from '../utils'
 import {Constants} from '../constants'
 import {CardFilter} from '../cardFilter'
 
-import {initialLoad, initialReadOnlyLoad} from './initialLoad'
+import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
 import {getCurrentBoard} from './boards'
-import {getWorkspaceUsers} from './users'
+import {getBoardUsers} from './users'
+import {getLastCommentByCard} from './comments'
 import {getCurrentView} from './views'
 import {getSearchText} from './searchText'
 
@@ -59,7 +61,7 @@ const cardsSlice = createSlice({
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
             state.cards = {}
             state.templates = {}
-            for (const block of action.payload) {
+            for (const block of action.payload.blocks) {
                 if (block.type === 'card' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Card
                 } else if (block.type === 'card' && !block.fields.isTemplate) {
@@ -67,7 +69,7 @@ const cardsSlice = createSlice({
                 }
             }
         })
-        builder.addCase(initialLoad.fulfilled, (state, action) => {
+        builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.cards = {}
             state.templates = {}
             for (const block of action.payload.blocks) {
@@ -109,18 +111,18 @@ export function getCard(cardId: string): (state: RootState) => Card|undefined {
 }
 
 export const getCurrentBoardCards = createSelector(
-    (state) => state.boards.current,
+    (state: RootState) => state.boards.current,
     getCards,
     (boardId, cards) => {
-        return Object.values(cards).filter((c) => c.parentId === boardId) as Card[]
+        return Object.values(cards).filter((c) => c.boardId === boardId) as Card[]
     },
 )
 
 export const getCurrentBoardTemplates = createSelector(
-    (state) => state.boards.current,
+    (state: RootState) => state.boards.current,
     getTemplates,
     (boardId, templates) => {
-        return Object.values(templates).filter((c) => c.parentId === boardId) as Card[]
+        return Object.values(templates).filter((c) => c.boardId === boardId) as Card[]
     },
 )
 
@@ -157,7 +159,7 @@ function manualOrder(activeView: BoardView, cardA: Card, cardB: Card) {
     return indexA - indexB
 }
 
-function sortCards(cards: Card[], board: Board, activeView: BoardView, usersById: {[key: string]: IUser}): Card[] {
+function sortCards(cards: Card[], lastCommentByCard: {[key: string]: CommentBlock}, board: Board, activeView: BoardView, usersById: {[key: string]: IUser}): Card[] {
     if (!activeView) {
         return cards
     }
@@ -178,7 +180,7 @@ function sortCards(cards: Card[], board: Board, activeView: BoardView, usersById
             })
         } else {
             const sortPropertyId = sortOption.propertyId
-            const template = board.fields.cardProperties.find((o) => o.id === sortPropertyId)
+            const template = board.cardProperties.find((o) => o.id === sortPropertyId)
             if (!template) {
                 Utils.logError(`Missing template for property id: ${sortPropertyId}`)
                 return sortedCards
@@ -186,10 +188,6 @@ function sortCards(cards: Card[], board: Board, activeView: BoardView, usersById
             Utils.log(`Sort by property: ${template?.name}`)
             sortedCards = sortedCards.sort((a, b) => {
                 // Always put cards with no titles at the bottom, regardless of sort
-                if (!a.title || !b.title) {
-                    return titleOrCreatedOrder(a, b)
-                }
-
                 let aValue = a.fields.properties[sortPropertyId] || ''
                 let bValue = b.fields.properties[sortPropertyId] || ''
 
@@ -221,7 +219,9 @@ function sortCards(cards: Card[], board: Board, activeView: BoardView, usersById
                 } else if (template.type === 'createdTime') {
                     result = a.createAt - b.createAt
                 } else if (template.type === 'updatedTime') {
-                    result = a.updateAt - b.updateAt
+                    const aUpdateAt = Math.max(a.updateAt, lastCommentByCard[a.id]?.updateAt || 0)
+                    const bUpdateAt = Math.max(b.updateAt, lastCommentByCard[b.id]?.updateAt || 0)
+                    result = aUpdateAt - bUpdateAt
                 } else {
                     // Text-based sort
 
@@ -270,7 +270,7 @@ function searchFilterCards(cards: Card[], board: Board, searchTextRaw: string): 
 
         for (const [propertyId, propertyValue] of Object.entries(card.fields.properties)) {
             // TODO: Refactor to a shared function that returns the display value of a property
-            const propertyTemplate = board.fields.cardProperties.find((o) => o.id === propertyId)
+            const propertyTemplate = board.cardProperties.find((o) => o.id === propertyId)
             if (propertyTemplate) {
                 if (propertyTemplate.type === 'select') {
                     // Look up the value of the select option
@@ -296,23 +296,30 @@ function searchFilterCards(cards: Card[], board: Board, searchTextRaw: string): 
 
 export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
     getCurrentBoardCards,
+    getLastCommentByCard,
     getCurrentBoard,
     getCurrentView,
     getSearchText,
-    getWorkspaceUsers,
-    (cards, board, view, searchText, users) => {
+    getBoardUsers,
+    (cards, lastCommentByCard, board, view, searchText, users) => {
         if (!view || !board || !users || !cards) {
             return []
         }
         let result = cards
         if (view.fields.filter) {
-            result = CardFilter.applyFilterGroup(view.fields.filter, board.fields.cardProperties, result)
+            result = CardFilter.applyFilterGroup(view.fields.filter, board.cardProperties, result)
         }
 
         if (searchText) {
             result = searchFilterCards(result, board, searchText)
         }
-        result = sortCards(result, board, view, users)
+        result = sortCards(result, lastCommentByCard, board, view, users)
         return result
     },
+)
+
+export const getCurrentCard = createSelector(
+    (state: RootState) => state.cards.current,
+    (state: RootState) => state.cards.cards,
+    (current, cards) => cards[current],
 )

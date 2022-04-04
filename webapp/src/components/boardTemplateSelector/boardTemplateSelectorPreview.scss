@@ -1,0 +1,12 @@
+.BoardTemplateSelectorPreview {
+    position: relative;
+    transform: scale(0.6) translateX(-30%) translateY(-30%);
+    width: 158%;
+    height: 480px;
+    border-radius: var(--modal-rad);
+    pointer-events: none;
+
+    .Kanban {
+        overflow: hidden;
+    }
+}

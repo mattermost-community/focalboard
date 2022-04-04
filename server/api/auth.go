@@ -166,6 +166,9 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
@@ -228,6 +231,9 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
@@ -278,6 +284,9 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
@@ -302,13 +311,13 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 	// Validate token
 	if len(registerData.Token) > 0 {
-		workspace, err2 := a.app.GetRootWorkspace()
+		team, err2 := a.app.GetRootTeam()
 		if err2 != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err2)
 			return
 		}
 
-		if registerData.Token != workspace.SignupToken {
+		if registerData.Token != team.SignupToken {
 			a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "invalid token", nil)
 			return
 		}
@@ -377,6 +386,9 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
@@ -433,9 +445,9 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 
 			now := utils.GetMillis()
 			session := &model.Session{
-				ID:          SingleUser,
+				ID:          model.SingleUser,
 				Token:       token,
-				UserID:      SingleUser,
+				UserID:      model.SingleUser,
 				AuthService: a.authService,
 				Props:       map[string]interface{}{},
 				CreateAt:    now,
@@ -458,6 +470,18 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				CreateAt:    now,
 				UpdateAt:    now,
 			}
+
+			user, err := a.app.GetUser(userID)
+			if err != nil {
+				a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", err)
+				return
+			}
+
+			if user.IsGuest {
+				a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "guests not supported", nil)
+				return
+			}
+
 			ctx := context.WithValue(r.Context(), sessionContextKey, session)
 			handler(w, r.WithContext(ctx))
 			return

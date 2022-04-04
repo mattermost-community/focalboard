@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/sidebarCategory sidebar call hideSidebar 1`] = `
+<div>
+  <div
+    class="SidebarCategory"
+  >
+    <div
+      class="octo-sidebar-item category ' expanded "
+    >
+      <button
+        class="IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-chevron-down ChevronDownIcon"
+        />
+      </button>
+      <div
+        class="octo-sidebar-title category-title"
+        title="Category 1"
+      >
+        Category 1
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="SidebarBoardItem subitem "
+    >
+      <div
+        class="octo-sidebar-icon"
+      >
+        i
+      </div>
+      <div
+        class="octo-sidebar-title"
+        title="board title"
+      >
+        board title
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper x"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="SidebarBoardItem subitem "
+    >
+      <div
+        class="octo-sidebar-icon"
+      >
+        i
+      </div>
+      <div
+        class="octo-sidebar-title"
+        title="board title"
+      >
+        board title
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper x"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/sidebarCategory sidebar call hideSidebar 2`] = `
+<div>
+  <div
+    class="SidebarCategory"
+  >
+    <div
+      class="octo-sidebar-item category ' collapsed "
+    >
+      <button
+        class="IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-chevron-right ChevronRightIcon"
+        />
+      </button>
+      <div
+        class="octo-sidebar-title category-title"
+        title="Category 1"
+      >
+        Category 1
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

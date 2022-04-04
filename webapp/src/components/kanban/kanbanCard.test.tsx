@@ -3,12 +3,13 @@
 import React from 'react'
 import {render, screen, within} from '@testing-library/react'
 import '@testing-library/jest-dom'
+import {MemoryRouter} from 'react-router-dom'
 
 import {Provider as ReduxProvider} from 'react-redux'
 
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import Mutator from '../../mutator'
 import {Utils} from '../../utils'
@@ -49,9 +50,27 @@ describe('src/components/kanban/kanbanCard', () => {
         cards: {
             cards: [card],
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: 'board_id_1',
+            boards: {
+                board_id_1: {id: 'board_id_1'},
+            },
+            myBoardMemberships: {
+                board_id_1: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
         contents: {},
         comments: {
             comments: {},
+        },
+        users: {
+            me: {
+                id: 'user_id_1',
+                props: {},
+            },
         },
     }
     const store = mockStateStore([], state)
@@ -71,7 +90,7 @@ describe('src/components/kanban/kanbanCard', () => {
                     isManualSort={false}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
         expect(container).toMatchSnapshot()
     })
     test('should match snapshot with readonly', () => {
@@ -89,7 +108,7 @@ describe('src/components/kanban/kanbanCard', () => {
                     isManualSort={false}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
         expect(container).toMatchSnapshot()
     })
     test('return kanbanCard and click on delete menu ', () => {
@@ -107,7 +126,7 @@ describe('src/components/kanban/kanbanCard', () => {
                     isManualSort={false}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
 
         const {container} = result
 
@@ -143,7 +162,7 @@ describe('src/components/kanban/kanbanCard', () => {
                     isManualSort={false}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
         const elementMenuWrapper = screen.getByRole('button', {name: 'menuwrapper'})
         expect(elementMenuWrapper).not.toBeNull()
         userEvent.click(elementMenuWrapper)
@@ -169,7 +188,7 @@ describe('src/components/kanban/kanbanCard', () => {
                     isManualSort={false}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
         const elementMenuWrapper = screen.getByRole('button', {name: 'menuwrapper'})
         expect(elementMenuWrapper).not.toBeNull()
         userEvent.click(elementMenuWrapper)

@@ -18,7 +18,7 @@ type Props = {
     cords: {x: number, y?: number, z?: number}
 }
 
-const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
+const AddContentMenuItem = (props:Props): JSX.Element => {
     const {card, type, cords} = props
     const index = cords.x
     const contentOrder = card.fields.contentOrder.slice()
@@ -37,20 +37,20 @@ const AddContentMenuItem = React.memo((props:Props): JSX.Element => {
             name={handler.getDisplayText(intl)}
             icon={handler.getIcon()}
             onClick={async () => {
-                const newBlock = await handler.createBlock(card.rootId)
+                const newBlock = await handler.createBlock(card.boardId)
                 newBlock.parentId = card.id
-                newBlock.rootId = card.rootId
+                newBlock.boardId = card.boardId
 
                 const typeName = handler.getDisplayText(intl)
                 const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
                 mutator.performAsUndoGroup(async () => {
-                    const insertedBlock = await mutator.insertBlock(newBlock, description)
+                    const insertedBlock = await mutator.insertBlock(newBlock.boardId, newBlock, description)
                     contentOrder.splice(index, 0, insertedBlock.id)
-                    await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
+                    await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, contentOrder, description)
                 })
             }}
         />
     )
-})
+}
 
-export default AddContentMenuItem
+export default React.memo(AddContentMenuItem)

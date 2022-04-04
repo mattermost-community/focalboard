@@ -31,7 +31,7 @@ type Props = {
     onDropToGroup: (srcCard: Card, groupID: string, dstCardID: string) => void
 }
 
-const TableGroup = React.memo((props: Props): JSX.Element => {
+const TableGroup = (props: Props): JSX.Element => {
     const {board, activeView, group, onDropToGroup, groupByProperty} = props
     const groupId = group.option.id
 
@@ -86,6 +86,6 @@ const TableGroup = React.memo((props: Props): JSX.Element => {
             />}
         </div>
     )
-})
+}
 
-export default TableGroup
+export default React.memo(TableGroup)

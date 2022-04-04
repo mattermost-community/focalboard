@@ -15,6 +15,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import CheckIcon from '../../widgets/icons/check'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentView} from '../../store/views'
+import {getCurrentBoardId} from '../../store/boards'
 
 type Props = {
     cardTemplate: Card
@@ -22,12 +23,13 @@ type Props = {
     editCardTemplate: (cardTemplateId: string) => void
 }
 
-const NewCardButtonTemplateItem = React.memo((props: Props) => {
+const NewCardButtonTemplateItem = (props: Props) => {
     const currentView = useAppSelector(getCurrentView)
     const {cardTemplate} = props
     const intl = useIntl()
     const displayName = cardTemplate.title || intl.formatMessage({id: 'ViewHeader.untitled', defaultMessage: 'Untitled'})
     const isDefaultTemplate = currentView.fields.defaultTemplateId === cardTemplate.id
+    const boardId = useAppSelector(getCurrentBoardId)
 
     return (
         <Menu.Text
@@ -48,7 +50,7 @@ const NewCardButtonTemplateItem = React.memo((props: Props) => {
                             id='default'
                             name={intl.formatMessage({id: 'ViewHeader.set-default-template', defaultMessage: 'Set as default'})}
                             onClick={async () => {
-                                await mutator.setDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId, cardTemplate.id)
+                                await mutator.setDefaultTemplate(boardId, currentView.id, currentView.fields.defaultTemplateId, cardTemplate.id)
                             }}
                         />
                         <Menu.Text
@@ -66,7 +68,7 @@ const NewCardButtonTemplateItem = React.memo((props: Props) => {
                             onClick={async () => {
                                 await mutator.performAsUndoGroup(async () => {
                                     if (currentView.fields.defaultTemplateId === cardTemplate.id) {
-                                        await mutator.clearDefaultTemplate(currentView.id, currentView.fields.defaultTemplateId)
+                                        await mutator.clearDefaultTemplate(boardId, currentView.id, currentView.fields.defaultTemplateId)
                                     }
                                     await mutator.deleteBlock(cardTemplate, 'delete card template')
                                 })
@@ -77,6 +79,6 @@ const NewCardButtonTemplateItem = React.memo((props: Props) => {
             }
         />
     )
-})
+}
 
-export default NewCardButtonTemplateItem
+export default React.memo(NewCardButtonTemplateItem)

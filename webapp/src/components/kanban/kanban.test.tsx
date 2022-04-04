@@ -5,7 +5,8 @@ import {fireEvent, render, screen, waitFor} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {mocked} from 'ts-jest/utils'
+import {MemoryRouter} from 'react-router-dom'
+import {mocked} from 'jest-mock'
 import userEvent from '@testing-library/user-event'
 
 import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
@@ -66,8 +67,26 @@ describe('src/component/kanban/kanban', () => {
     }
 
     const state = {
+        users: {
+            me: {
+                id: 'user_id_1',
+                props: {},
+            },
+        },
         cards: {
             cards: [card1, card2, card3],
+        },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: 'board_id_1',
+            boards: {
+                board_id_1: {id: 'board_id_1'},
+            },
+            myBoardMemberships: {
+                board_id_1: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         contents: {},
         comments: {
@@ -110,7 +129,41 @@ describe('src/component/kanban/kanban', () => {
                     showCard={jest.fn()}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
+        expect(container).toMatchSnapshot()
+    })
+    test('should match snapshot without permissions', () => {
+        const localStore = mockStateStore([], {...state, teams: {current: undefined}})
+        const {container} = render(wrapDNDIntl(
+            <ReduxProvider store={localStore}>
+                <Kanban
+                    board={board}
+                    activeView={activeView}
+                    cards={[card1, card2, card3]}
+                    groupByProperty={groupProperty}
+                    visibleGroups={[
+                        {
+                            option: optionQ1,
+                            cards: [card1, card2],
+                        }, {
+                            option: optionQ2,
+                            cards: [card3],
+                        },
+                    ]}
+                    hiddenGroups={[
+                        {
+                            option: optionQ3,
+                            cards: [],
+                        },
+                    ]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    onCardClicked={jest.fn()}
+                    addCard={jest.fn()}
+                    showCard={jest.fn()}
+                />
+            </ReduxProvider>,
+        ), {wrapper: MemoryRouter})
         expect(container).toMatchSnapshot()
     })
     test('do not return a kanban with groupByProperty undefined', () => {
@@ -143,7 +196,7 @@ describe('src/component/kanban/kanban', () => {
                     showCard={jest.fn()}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
 
         expect(mockedUtils.assertFailure).toBeCalled()
         expect(container).toMatchSnapshot()
@@ -178,7 +231,7 @@ describe('src/component/kanban/kanban', () => {
                     showCard={jest.fn()}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
 
         const cardsElement = container.querySelectorAll('.KanbanCard')
         expect(cardsElement).not.toBeNull()
@@ -223,7 +276,7 @@ describe('src/component/kanban/kanban', () => {
                     showCard={jest.fn()}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
 
         const cardsElement = container.querySelectorAll('.KanbanCard')
         expect(cardsElement).not.toBeNull()
@@ -268,7 +321,7 @@ describe('src/component/kanban/kanban', () => {
                     showCard={jest.fn()}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
 
         const cardsElement = container.querySelectorAll('.KanbanCard')
         expect(cardsElement).not.toBeNull()
@@ -314,7 +367,7 @@ describe('src/component/kanban/kanban', () => {
                     showCard={jest.fn()}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
         const allButtonsNew = screen.getAllByRole('button', {name: '+ New'})
         expect(allButtonsNew).not.toBeNull()
         userEvent.click(allButtonsNew[0])
@@ -351,7 +404,7 @@ describe('src/component/kanban/kanban', () => {
                     showCard={jest.fn()}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
         const buttonKanbanCalculation = screen.getByRole('button', {name: '2'})
         expect(buttonKanbanCalculation).toBeDefined()
         userEvent.click(buttonKanbanCalculation!)
@@ -388,7 +441,7 @@ describe('src/component/kanban/kanban', () => {
                     showCard={jest.fn()}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
 
         const inputTitle = screen.getByRole('textbox', {name: optionQ1.value})
         expect(inputTitle).toBeDefined()
@@ -397,7 +450,7 @@ describe('src/component/kanban/kanban', () => {
         fireEvent.blur(inputTitle)
 
         await waitFor(async () => {
-            expect(mockedchangePropertyOptionValue).toBeCalledWith(board, groupProperty, optionQ1, 'New Q1')
+            expect(mockedchangePropertyOptionValue).toBeCalledWith(board.id, board.cardProperties, groupProperty, optionQ1, 'New Q1')
         })
 
         expect(container).toMatchSnapshot()
@@ -432,7 +485,7 @@ describe('src/component/kanban/kanban', () => {
                     showCard={jest.fn()}
                 />
             </ReduxProvider>,
-        ))
+        ), {wrapper: MemoryRouter})
         const buttonAddGroup = screen.getByRole('button', {name: '+ Add a group'})
         expect(buttonAddGroup).toBeDefined()
         userEvent.click(buttonAddGroup)

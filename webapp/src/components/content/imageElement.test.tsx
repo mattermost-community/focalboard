@@ -6,7 +6,7 @@ import {render} from '@testing-library/react'
 
 import {act} from 'react-dom/test-utils'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {ImageBlock} from '../../blocks/imageBlock'
 
@@ -23,9 +23,8 @@ mockedOcto.getFileAsDataUrl.mockResolvedValue('test.jpg')
 describe('components/content/ImageElement', () => {
     const defaultBlock: ImageBlock = {
         id: 'test-id',
-        workspaceId: '',
+        boardId: '1',
         parentId: '',
-        rootId: '1',
         modifiedBy: 'test-user-id',
         schema: 0,
         type: 'image',

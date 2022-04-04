@@ -19,7 +19,7 @@ type Props = {
     activeView: BoardView
     orderedCards: Card[]
 }
-const ViewHeaderSortMenu = React.memo((props: Props) => {
+const ViewHeaderSortMenu = (props: Props) => {
     const {properties, activeView, orderedCards} = props
     const hasSort = activeView.fields.sortOptions?.length > 0
     const sortDisplayOptions = properties?.map((o) => ({id: o.id, name: o.name}))
@@ -37,7 +37,7 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
                 {propertyId, reversed: false},
             ]
         }
-        mutator.changeViewSortOptions(activeView.id, activeView.fields.sortOptions, newSortOptions)
+        mutator.changeViewSortOptions(activeView.boardId, activeView.id, activeView.fields.sortOptions, newSortOptions)
     }, [activeView.id, activeView.fields.sortOptions])
 
     const onManualSort = useCallback(() => {
@@ -46,11 +46,11 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
         const newView = {...activeView, fields: {...activeView.fields}}
         newView.fields.cardOrder = orderedCards.map((o) => o.id || '') || []
         newView.fields.sortOptions = []
-        mutator.updateBlock(newView, activeView, 'reorder')
+        mutator.updateBlock(activeView.boardId, newView, activeView, 'reorder')
     }, [activeView, orderedCards])
 
     const onRevertSort = useCallback(() => {
-        mutator.changeViewSortOptions(activeView.id, activeView.fields.sortOptions, [])
+        mutator.changeViewSortOptions(activeView.boardId, activeView.id, activeView.fields.sortOptions, [])
     }, [activeView.id, activeView.fields.sortOptions])
 
     return (
@@ -101,6 +101,6 @@ const ViewHeaderSortMenu = React.memo((props: Props) => {
             </Menu>
         </MenuWrapper>
     )
-})
+}
 
-export default ViewHeaderSortMenu
+export default React.memo(ViewHeaderSortMenu)

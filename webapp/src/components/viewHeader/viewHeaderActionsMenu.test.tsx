@@ -8,7 +8,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
@@ -43,7 +43,8 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
     beforeEach(() => {
         jest.clearAllMocks()
     })
-    test('return menu with Share Boards', () => {
+
+    test('return menu', () => {
         const {container} = render(
             wrapIntl(
                 <ReduxProvider store={store}>
@@ -51,37 +52,17 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
                         board={board}
                         activeView={activeView}
                         cards={[card]}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ),
         )
         const buttonElement = screen.getByRole('button', {
-            name: 'View menu',
+            name: 'View header menu',
         })
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
     })
 
-    test('return menu without Share Boards', () => {
-        const {container} = render(
-            wrapIntl(
-                <ReduxProvider store={store}>
-                    <ViewHeaderActionsMenu
-                        board={board}
-                        activeView={activeView}
-                        cards={[card]}
-                        showShared={false}
-                    />
-                </ReduxProvider>,
-            ),
-        )
-        const buttonElement = screen.getByRole('button', {
-            name: 'View menu',
-        })
-        userEvent.click(buttonElement)
-        expect(container).toMatchSnapshot()
-    })
     test('return menu and verify call to csv exporter', () => {
         const {container} = render(
             wrapIntl(
@@ -90,12 +71,11 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
                         board={board}
                         activeView={activeView}
                         cards={[card]}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ),
         )
-        const buttonElement = screen.getByRole('button', {name: 'View menu'})
+        const buttonElement = screen.getByRole('button', {name: 'View header menu'})
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
         const buttonExportCSV = screen.getByRole('button', {name: 'Export to CSV'})
@@ -111,12 +91,11 @@ describe('components/viewHeader/viewHeaderActionsMenu', () => {
                         board={board}
                         activeView={activeView}
                         cards={[card]}
-                        showShared={true}
                     />
                 </ReduxProvider>,
             ),
         )
-        const buttonElement = screen.getByRole('button', {name: 'View menu'})
+        const buttonElement = screen.getByRole('button', {name: 'View header menu'})
         userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
         const buttonExportBoardArchive = screen.getByRole('button', {name: 'Export board archive'})

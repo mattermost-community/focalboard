@@ -5,13 +5,14 @@ describe('Manage groups', () => {
     beforeEach(() => {
         cy.apiInitServer()
         cy.apiResetBoards()
+        cy.apiGetMe().then((userID) => cy.apiSkipTour(userID))
         localStorage.setItem('welcomePageViewed', 'true')
     })
 
     it('MM-T4284 Adding a group', () => {
         // Visit a page and create new empty board
         cy.visit('/')
-        cy.uiCreateBoard('Empty board')
+        cy.uiCreateEmptyBoard()
 
         cy.contains('+ Add a group').click({force: true})
         cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('exist')
@@ -26,7 +27,7 @@ describe('Manage groups', () => {
     it('MM-T4285 Adding group color', () => {
         // Visit a page and create new empty board
         cy.visit('/')
-        cy.uiCreateBoard('Empty board')
+        cy.uiCreateEmptyBoard()
 
         cy.contains('+ Add a group').click({force: true})
         cy.get('.KanbanColumnHeader .Editable[value=\'New group\']').should('exist')

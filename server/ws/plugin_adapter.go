@@ -14,20 +14,22 @@ import (
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const websocketMessagePrefix = "custom_focalboard_"
 
-var errMissingWorkspaceInCommand = fmt.Errorf("command doesn't contain workspaceId")
+var errMissingTeamInCommand = fmt.Errorf("command doesn't contain teamId")
 
 type PluginAdapterInterface interface {
+	Adapter
 	OnWebSocketConnect(webConnID, userID string)
 	OnWebSocketDisconnect(webConnID, userID string)
 	WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest)
 	BroadcastConfigChange(clientConfig model.ClientConfig)
-	BroadcastBlockChange(workspaceID string, block model.Block)
-	BroadcastBlockDelete(workspaceID, blockID, parentID string)
-	BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription)
+	BroadcastBlockChange(teamID string, block model.Block)
+	BroadcastBlockDelete(teamID, blockID, parentID string)
+	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
 	HandleClusterEvent(ev mmModel.PluginClusterEvent)
 }
 
@@ -35,27 +37,31 @@ type PluginAdapter struct {
 	api            plugin.API
 	auth           auth.AuthInterface
 	staleThreshold time.Duration
+	store          Store
+	logger         *mlog.Logger
 
 	listenersMU       sync.RWMutex
 	listeners         map[string]*PluginAdapterClient
 	listenersByUserID map[string][]*PluginAdapterClient
 
-	subscriptionsMU      sync.RWMutex
-	listenersByWorkspace map[string][]*PluginAdapterClient
-	listenersByBlock     map[string][]*PluginAdapterClient
+	subscriptionsMU  sync.RWMutex
+	listenersByTeam  map[string][]*PluginAdapterClient
+	listenersByBlock map[string][]*PluginAdapterClient
 }
 
-func NewPluginAdapter(api plugin.API, auth auth.AuthInterface) *PluginAdapter {
+func NewPluginAdapter(api plugin.API, auth auth.AuthInterface, store Store, logger *mlog.Logger) *PluginAdapter {
 	return &PluginAdapter{
-		api:                  api,
-		auth:                 auth,
-		staleThreshold:       5 * time.Minute,
-		listeners:            make(map[string]*PluginAdapterClient),
-		listenersByUserID:    make(map[string][]*PluginAdapterClient),
-		listenersByWorkspace: make(map[string][]*PluginAdapterClient),
-		listenersByBlock:     make(map[string][]*PluginAdapterClient),
-		listenersMU:          sync.RWMutex{},
-		subscriptionsMU:      sync.RWMutex{},
+		api:               api,
+		auth:              auth,
+		store:             store,
+		staleThreshold:    5 * time.Minute,
+		logger:            logger,
+		listeners:         make(map[string]*PluginAdapterClient),
+		listenersByUserID: make(map[string][]*PluginAdapterClient),
+		listenersByTeam:   make(map[string][]*PluginAdapterClient),
+		listenersByBlock:  make(map[string][]*PluginAdapterClient),
+		listenersMU:       sync.RWMutex{},
+		subscriptionsMU:   sync.RWMutex{},
 	}
 }
 
@@ -74,11 +80,11 @@ func (pa *PluginAdapter) GetListenersByUserID(userID string) []*PluginAdapterCli
 	return pa.listenersByUserID[userID]
 }
 
-func (pa *PluginAdapter) GetListenersByWorkspace(workspaceID string) []*PluginAdapterClient {
+func (pa *PluginAdapter) GetListenersByTeam(teamID string) []*PluginAdapterClient {
 	pa.subscriptionsMU.RLock()
 	defer pa.subscriptionsMU.RUnlock()
 
-	return pa.listenersByWorkspace[workspaceID]
+	return pa.listenersByTeam[teamID]
 }
 
 func (pa *PluginAdapter) GetListenersByBlock(blockID string) []*PluginAdapterClient {
@@ -100,9 +106,9 @@ func (pa *PluginAdapter) removeListener(pac *PluginAdapterClient) {
 	pa.listenersMU.Lock()
 	defer pa.listenersMU.Unlock()
 
-	// workspace subscriptions
-	for _, workspace := range pac.workspaces {
-		pa.removeListenerFromWorkspace(pac, workspace)
+	// team subscriptions
+	for _, team := range pac.teams {
+		pa.removeListenerFromTeam(pac, team)
 	}
 
 	// block subscriptions
@@ -130,18 +136,18 @@ func (pa *PluginAdapter) removeExpiredForUserID(userID string) {
 	}
 }
 
-func (pa *PluginAdapter) removeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string) {
-	newWorkspaceListeners := []*PluginAdapterClient{}
-	for _, listener := range pa.GetListenersByWorkspace(workspaceID) {
+func (pa *PluginAdapter) removeListenerFromTeam(pac *PluginAdapterClient, teamID string) {
+	newTeamListeners := []*PluginAdapterClient{}
+	for _, listener := range pa.GetListenersByTeam(teamID) {
 		if listener.webConnID != pac.webConnID {
-			newWorkspaceListeners = append(newWorkspaceListeners, listener)
+			newTeamListeners = append(newTeamListeners, listener)
 		}
 	}
 	pa.subscriptionsMU.Lock()
-	pa.listenersByWorkspace[workspaceID] = newWorkspaceListeners
+	pa.listenersByTeam[teamID] = newTeamListeners
 	pa.subscriptionsMU.Unlock()
 
-	pac.unsubscribeFromWorkspace(workspaceID)
+	pac.unsubscribeFromTeam(teamID)
 }
 
 func (pa *PluginAdapter) removeListenerFromBlock(pac *PluginAdapterClient, blockID string) {
@@ -158,29 +164,29 @@ func (pa *PluginAdapter) removeListenerFromBlock(pac *PluginAdapterClient, block
 	pac.unsubscribeFromBlock(blockID)
 }
 
-func (pa *PluginAdapter) subscribeListenerToWorkspace(pac *PluginAdapterClient, workspaceID string) {
-	if pac.isSubscribedToWorkspace(workspaceID) {
+func (pa *PluginAdapter) subscribeListenerToTeam(pac *PluginAdapterClient, teamID string) {
+	if pac.isSubscribedToTeam(teamID) {
 		return
 	}
 
 	pa.subscriptionsMU.Lock()
-	pa.listenersByWorkspace[workspaceID] = append(pa.listenersByWorkspace[workspaceID], pac)
+	pa.listenersByTeam[teamID] = append(pa.listenersByTeam[teamID], pac)
 	pa.subscriptionsMU.Unlock()
 
-	pac.subscribeToWorkspace(workspaceID)
+	pac.subscribeToTeam(teamID)
 }
 
-func (pa *PluginAdapter) unsubscribeListenerFromWorkspace(pac *PluginAdapterClient, workspaceID string) {
-	if !pac.isSubscribedToWorkspace(workspaceID) {
+func (pa *PluginAdapter) unsubscribeListenerFromTeam(pac *PluginAdapterClient, teamID string) {
+	if !pac.isSubscribedToTeam(teamID) {
 		return
 	}
 
-	pa.removeListenerFromWorkspace(pac, workspaceID)
+	pa.removeListenerFromTeam(pac, teamID)
 }
 
-func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
+func (pa *PluginAdapter) getUserIDsForTeam(teamID string) []string {
 	userMap := map[string]bool{}
-	for _, pac := range pa.GetListenersByWorkspace(workspaceID) {
+	for _, pac := range pa.GetListenersByTeam(teamID) {
 		if pac.isActive() {
 			userMap[pac.userID] = true
 		}
@@ -191,6 +197,58 @@ func (pa *PluginAdapter) getUserIDsForWorkspace(workspaceID string) []string {
 		userIDs = append(userIDs, userID)
 	}
 	return userIDs
+}
+
+func (pa *PluginAdapter) getUserIDsForTeamAndBoard(teamID, boardID string, ensureUserIDs ...string) []string {
+	userMap := map[string]bool{}
+	for _, pac := range pa.GetListenersByTeam(teamID) {
+		if pac.isActive() {
+			userMap[pac.userID] = true
+		}
+	}
+
+	members, err := pa.store.GetMembersForBoard(boardID)
+	if err != nil {
+		pa.logger.Error("error getting members for board",
+			mlog.String("method", "getUserIDsForTeamAndBoard"),
+			mlog.String("teamID", teamID),
+			mlog.String("boardID", boardID),
+		)
+		return nil
+	}
+
+	// the list of users would be the intersection between the ones
+	// that are connected to the team and the board members that need
+	// to see the updates
+	userIDs := []string{}
+	for _, member := range members {
+		for userID := range userMap {
+			if userID == member.UserID {
+				userIDs = append(userIDs, userID)
+			}
+		}
+	}
+
+	// if we don't have to make sure that some IDs are included, we
+	// can return at this point
+	if len(ensureUserIDs) == 0 {
+		return userIDs
+	}
+
+	completeUserMap := map[string]bool{}
+	for _, id := range userIDs {
+		completeUserMap[id] = true
+	}
+	for _, id := range ensureUserIDs {
+		completeUserMap[id] = true
+	}
+
+	completeUserIDs := []string{}
+	for id := range completeUserMap {
+		completeUserIDs = append(completeUserIDs, id)
+	}
+
+	return completeUserIDs
 }
 
 //nolint:unused
@@ -204,9 +262,9 @@ func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient,
 
 func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
 	if existingPAC, ok := pa.GetListenerByWebConnID(webConnID); ok {
-		pa.api.LogDebug("inactive connection found for webconn, reusing",
-			"webConnID", webConnID,
-			"userID", userID,
+		pa.logger.Debug("inactive connection found for webconn, reusing",
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
 		)
 		atomic.StoreInt64(&existingPAC.inactiveAt, 0)
 		return
@@ -216,7 +274,7 @@ func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
 		inactiveAt: 0,
 		webConnID:  webConnID,
 		userID:     userID,
-		workspaces: []string{},
+		teams:      []string{},
 		blocks:     []string{},
 	}
 
@@ -227,9 +285,9 @@ func (pa *PluginAdapter) OnWebSocketConnect(webConnID, userID string) {
 func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
 	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
-		pa.api.LogDebug("received a disconnect for an unregistered webconn",
-			"webConnID", webConnID,
-			"userID", userID,
+		pa.logger.Debug("received a disconnect for an unregistered webconn",
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
 		)
 		return
 	}
@@ -240,10 +298,10 @@ func (pa *PluginAdapter) OnWebSocketDisconnect(webConnID, userID string) {
 func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error) {
 	c := &WebsocketCommand{Action: strings.TrimPrefix(req.Action, websocketMessagePrefix)}
 
-	if workspaceID, ok := req.Data["workspaceId"]; ok {
-		c.WorkspaceID = workspaceID.(string)
+	if teamID, ok := req.Data["teamId"]; ok {
+		c.TeamID = teamID.(string)
 	} else {
-		return nil, errMissingWorkspaceInCommand
+		return nil, errMissingTeamInCommand
 	}
 
 	if readToken, ok := req.Data["readToken"]; ok {
@@ -260,10 +318,10 @@ func commandFromRequest(req *mmModel.WebSocketRequest) (*WebsocketCommand, error
 func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
 	pac, ok := pa.GetListenerByWebConnID(webConnID)
 	if !ok {
-		pa.api.LogError("received a message for an unregistered webconn",
-			"webConnID", webConnID,
-			"userID", userID,
-			"action", req.Action,
+		pa.logger.Debug("received a message for an unregistered webconn",
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("action", req.Action),
 		)
 		return
 	}
@@ -275,11 +333,11 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 
 	command, err := commandFromRequest(req)
 	if err != nil {
-		pa.api.LogError("error getting command from request",
-			"err", err,
-			"action", req.Action,
-			"webConnID", webConnID,
-			"userID", userID,
+		pa.logger.Error("error getting command from request",
+			mlog.String("action", req.Action),
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.Err(err),
 		)
 		return
 	}
@@ -289,33 +347,34 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 	// as there is no such thing as unauthenticated websocket
 	// connections in plugin mode. Only a debug line is logged
 	case websocketActionSubscribeBlocks, websocketActionUnsubscribeBlocks:
-		pa.api.LogDebug(`Command not implemented in plugin mode`,
-			"command", command.Action,
-			"webConnID", webConnID,
-			"userID", userID,
-			"workspaceID", command.WorkspaceID,
+		pa.logger.Debug(`Command not implemented in plugin mode`,
+			mlog.String("command", command.Action),
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("teamID", command.TeamID),
 		)
 
-	case websocketActionSubscribeWorkspace:
-		pa.api.LogDebug(`Command: SUBSCRIBE_WORKSPACE`,
-			"webConnID", webConnID,
-			"userID", userID,
-			"workspaceID", command.WorkspaceID,
+	case websocketActionSubscribeTeam:
+		pa.logger.Debug(`Command not implemented in plugin mode`,
+			mlog.String("command", command.Action),
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("teamID", command.TeamID),
 		)
 
-		if !pa.auth.DoesUserHaveWorkspaceAccess(userID, command.WorkspaceID) {
+		if !pa.auth.DoesUserHaveTeamAccess(userID, command.TeamID) {
 			return
 		}
 
-		pa.subscribeListenerToWorkspace(pac, command.WorkspaceID)
-	case websocketActionUnsubscribeWorkspace:
-		pa.api.LogDebug(`Command: UNSUBSCRIBE_WORKSPACE`,
-			"webConnID", webConnID,
-			"userID", userID,
-			"workspaceID", command.WorkspaceID,
+		pa.subscribeListenerToTeam(pac, command.TeamID)
+	case websocketActionUnsubscribeTeam:
+		pa.logger.Debug(`Command: UNSUBSCRIBE_WORKSPACE`,
+			mlog.String("webConnID", webConnID),
+			mlog.String("userID", userID),
+			mlog.String("teamID", command.TeamID),
 		)
 
-		pa.unsubscribeListenerFromWorkspace(pac, command.WorkspaceID)
+		pa.unsubscribeListenerFromTeam(pac, command.TeamID)
 	}
 }
 
@@ -337,61 +396,184 @@ func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) 
 	pa.sendMessageToAll(utils.StructToMap(pluginConfig))
 }
 
-// sendWorkspaceMessageSkipCluster sends a message to all the users
-// with a websocket client connected to.
-func (pa *PluginAdapter) sendWorkspaceMessageSkipCluster(event string, workspaceID string, payload map[string]interface{}) {
-	userIDs := pa.getUserIDsForWorkspace(workspaceID)
+// sendTeamMessageSkipCluster sends a message to all the users
+// with a websocket client subscribed to a given team.
+func (pa *PluginAdapter) sendTeamMessageSkipCluster(event, teamID string, payload map[string]interface{}) {
+	userIDs := pa.getUserIDsForTeam(teamID)
 	for _, userID := range userIDs {
 		pa.api.PublishWebSocketEvent(event, payload, &mmModel.WebsocketBroadcast{UserId: userID})
 	}
 }
 
-// sendWorkspaceMessage sends and propagates a message that is aimed
-// for all the users that are subscribed to a given workspace.
-func (pa *PluginAdapter) sendWorkspaceMessage(event string, workspaceID string, payload map[string]interface{}) {
+// sendTeamMessage sends and propagates a message that is aimed
+// for all the users that are subscribed to a given team.
+func (pa *PluginAdapter) sendTeamMessage(event, teamID string, payload map[string]interface{}) {
 	go func() {
 		clusterMessage := &ClusterMessage{
-			WorkspaceID: workspaceID,
-			Payload:     payload,
+			TeamID:  teamID,
+			Payload: payload,
 		}
 
 		pa.sendMessageToCluster("websocket_message", clusterMessage)
 	}()
 
-	pa.sendWorkspaceMessageSkipCluster(event, workspaceID, payload)
+	pa.sendTeamMessageSkipCluster(event, teamID, payload)
 }
 
-func (pa *PluginAdapter) BroadcastBlockChange(workspaceID string, block model.Block) {
-	pa.api.LogInfo("BroadcastingBlockChange",
-		"workspaceID", workspaceID,
-		"blockID", block.ID,
+// sendBoardMessageSkipCluster sends a message to all the users
+// subscribed to a given team that belong to one of its boards.
+func (pa *PluginAdapter) sendBoardMessageSkipCluster(teamID, boardID string, payload map[string]interface{}, ensureUserIDs ...string) {
+	userIDs := pa.getUserIDsForTeamAndBoard(teamID, boardID, ensureUserIDs...)
+	for _, userID := range userIDs {
+		pa.api.PublishWebSocketEvent(websocketActionUpdateBoard, payload, &mmModel.WebsocketBroadcast{UserId: userID})
+	}
+}
+
+// sendBoardMessage sends and propagates a message that is aimed for
+// all the users that are subscribed to the board's team and are
+// members of it too.
+func (pa *PluginAdapter) sendBoardMessage(teamID, boardID string, payload map[string]interface{}, ensureUserIDs ...string) {
+	go func() {
+		clusterMessage := &ClusterMessage{
+			TeamID:      teamID,
+			BoardID:     boardID,
+			Payload:     payload,
+			EnsureUsers: ensureUserIDs,
+		}
+
+		pa.sendMessageToCluster("websocket_message", clusterMessage)
+	}()
+
+	pa.sendBoardMessageSkipCluster(teamID, boardID, payload, ensureUserIDs...)
+}
+
+func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block model.Block) {
+	pa.logger.Debug("BroadcastingBlockChange",
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", block.BoardID),
+		mlog.String("blockID", block.ID),
 	)
 
-	message := UpdateMsg{
+	message := UpdateBlockMsg{
 		Action: websocketActionUpdateBlock,
+		TeamID: teamID,
 		Block:  block,
 	}
 
-	pa.sendWorkspaceMessage(websocketActionUpdateBlock, workspaceID, utils.StructToMap(message))
+	pa.sendBoardMessage(teamID, block.BoardID, utils.StructToMap(message))
 }
 
-func (pa *PluginAdapter) BroadcastBlockDelete(workspaceID, blockID, parentID string) {
+func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
+	pa.logger.Debug("BroadcastCategoryChange",
+		mlog.String("userID", category.TeamID),
+		mlog.String("teamID", category.TeamID),
+		mlog.String("categoryID", category.ID),
+	)
+
+	message := UpdateCategoryMessage{
+		Action:   websocketActionUpdateCategory,
+		TeamID:   category.TeamID,
+		Category: &category,
+	}
+
+	pa.sendTeamMessage(websocketActionUpdateCategory, category.TeamID, utils.StructToMap(message))
+}
+
+func (pa *PluginAdapter) BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData) {
+	pa.logger.Debug(
+		"BroadcastCategoryBlockChange",
+		mlog.String("userID", userID),
+		mlog.String("teamID", teamID),
+		mlog.String("categoryID", blockCategory.CategoryID),
+		mlog.String("blockID", blockCategory.BlockID),
+	)
+
+	message := UpdateCategoryMessage{
+		Action:          websocketActionUpdateCategoryBlock,
+		TeamID:          teamID,
+		BlockCategories: &blockCategory,
+	}
+
+	pa.sendTeamMessage(websocketActionUpdateCategoryBlock, teamID, utils.StructToMap(message))
+}
+
+func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {
 	now := utils.GetMillis()
 	block := model.Block{}
 	block.ID = blockID
-	block.ParentID = parentID
+	block.BoardID = boardID
 	block.UpdateAt = now
 	block.DeleteAt = now
-	block.WorkspaceID = workspaceID
 
-	pa.BroadcastBlockChange(workspaceID, block)
+	pa.BroadcastBlockChange(teamID, block)
 }
 
-func (pa *PluginAdapter) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
-	pa.api.LogInfo("BroadcastingSubscriptionChange",
-		"workspaceID", workspaceID,
-		"blockID", subscription.BlockID,
-		"subscriberID", subscription.SubscriberID,
+func (pa *PluginAdapter) BroadcastBoardChange(teamID string, board *model.Board) {
+	pa.logger.Info("BroadcastingBoardChange",
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", board.ID),
+	)
+
+	message := UpdateBoardMsg{
+		Action: websocketActionUpdateBoard,
+		TeamID: teamID,
+		Board:  board,
+	}
+
+	pa.sendBoardMessage(teamID, board.ID, utils.StructToMap(message))
+}
+
+func (pa *PluginAdapter) BroadcastBoardDelete(teamID, boardID string) {
+	now := utils.GetMillis()
+	board := &model.Board{}
+	board.ID = boardID
+	board.TeamID = teamID
+	board.UpdateAt = now
+	board.DeleteAt = now
+
+	pa.BroadcastBoardChange(teamID, board)
+}
+
+func (pa *PluginAdapter) BroadcastMemberChange(teamID, boardID string, member *model.BoardMember) {
+	pa.logger.Info("BroadcastingMemberChange",
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", boardID),
+		mlog.String("userID", member.UserID),
+	)
+
+	message := UpdateMemberMsg{
+		Action: websocketActionUpdateMember,
+		TeamID: teamID,
+		Member: member,
+	}
+
+	pa.sendBoardMessage(teamID, boardID, utils.StructToMap(message))
+}
+
+func (pa *PluginAdapter) BroadcastMemberDelete(teamID, boardID, userID string) {
+	pa.logger.Info("BroadcastingMemberDelete",
+		mlog.String("teamID", teamID),
+		mlog.String("boardID", boardID),
+		mlog.String("userID", userID),
+	)
+
+	message := UpdateMemberMsg{
+		Action: websocketActionDeleteMember,
+		TeamID: teamID,
+		Member: &model.BoardMember{UserID: userID, BoardID: boardID},
+	}
+
+	// when fetching the members of the board that should receive the
+	// member deletion message, the deleted member will not be one of
+	// them, so we need to ensure they receive the message
+	pa.sendBoardMessage(teamID, boardID, utils.StructToMap(message), userID)
+}
+
+func (pa *PluginAdapter) BroadcastSubscriptionChange(teamID string, subscription *model.Subscription) {
+	pa.logger.Debug("BroadcastingSubscriptionChange",
+		mlog.String("TeamID", teamID),
+		mlog.String("blockID", subscription.BlockID),
+		mlog.String("subscriberID", subscription.SubscriberID),
 	)
 
 	message := UpdateSubscription{
@@ -399,5 +581,5 @@ func (pa *PluginAdapter) BroadcastSubscriptionChange(workspaceID string, subscri
 		Subscription: subscription,
 	}
 
-	pa.sendWorkspaceMessage(websocketActionUpdateSubscription, workspaceID, utils.StructToMap(message))
+	pa.sendTeamMessage(websocketActionUpdateSubscription, teamID, utils.StructToMap(message))
 }

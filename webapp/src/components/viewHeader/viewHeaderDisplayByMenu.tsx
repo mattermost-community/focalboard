@@ -19,7 +19,7 @@ type Props = {
     dateDisplayPropertyName?: string
 }
 
-const ViewHeaderDisplayByMenu = React.memo((props: Props) => {
+const ViewHeaderDisplayByMenu = (props: Props) => {
     const {properties, activeView, dateDisplayPropertyName} = props
     const intl = useIntl()
 
@@ -58,7 +58,7 @@ const ViewHeaderDisplayByMenu = React.memo((props: Props) => {
                             if (activeView.fields.dateDisplayPropertyId === id) {
                                 return
                             }
-                            mutator.changeViewDateDisplayPropertyId(activeView.id, activeView.fields.dateDisplayPropertyId, id)
+                            mutator.changeViewDateDisplayPropertyId(activeView.boardId, activeView.id, activeView.fields.dateDisplayPropertyId, id)
                         }}
                     />
                 ))}
@@ -74,6 +74,6 @@ const ViewHeaderDisplayByMenu = React.memo((props: Props) => {
             </Menu>
         </MenuWrapper>
     )
-})
+}
 
-export default ViewHeaderDisplayByMenu
+export default React.memo(ViewHeaderDisplayByMenu)
