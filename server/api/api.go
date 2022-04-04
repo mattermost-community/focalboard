@@ -1799,6 +1799,9 @@ func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
 
 	team, err := a.app.GetRootTeam()
 	if err != nil {
