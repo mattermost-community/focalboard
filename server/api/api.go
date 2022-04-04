@@ -295,7 +295,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	if !hasValidReadToken {
 		if board.IsTemplate && board.Type == model.BoardTypeOpen {
-			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+			if board.TeamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
 				return
 			}
@@ -1969,7 +1969,7 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
-	if teamID != "0" && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+	if teamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
 		return
 	}
@@ -2670,7 +2670,7 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if board.IsTemplate && board.Type == model.BoardTypeOpen {
-		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+		if board.TeamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 			return
 		}

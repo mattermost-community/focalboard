@@ -14,7 +14,7 @@ import (
 func TestApp_initializeTemplates(t *testing.T) {
 	board := &model.Board{
 		ID:              utils.NewID(utils.IDTypeBoard),
-		TeamID:          globalTeamID,
+		TeamID:          model.GlobalTeamID,
 		Type:            model.BoardTypeOpen,
 		Title:           "test board",
 		IsTemplate:      true,
@@ -43,7 +43,7 @@ func TestApp_initializeTemplates(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		th.Store.EXPECT().GetTemplateBoards(globalTeamID, "").Return([]*model.Board{}, nil)
+		th.Store.EXPECT().GetTemplateBoards(model.GlobalTeamID, "").Return([]*model.Board{}, nil)
 		th.Store.EXPECT().RemoveDefaultTemplates([]*model.Board{}).Return(nil)
 		th.Store.EXPECT().CreateBoardsAndBlocks(gomock.Any(), gomock.Any()).AnyTimes().Return(boardsAndBlocks, nil)
 		th.Store.EXPECT().GetMembersForBoard(board.ID).AnyTimes().Return([]*model.BoardMember{}, nil)
@@ -61,7 +61,7 @@ func TestApp_initializeTemplates(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		th.Store.EXPECT().GetTemplateBoards(globalTeamID, "").Return([]*model.Board{board}, nil)
+		th.Store.EXPECT().GetTemplateBoards(model.GlobalTeamID, "").Return([]*model.Board{board}, nil)
 
 		done, err := th.App.initializeTemplates()
 		require.NoError(t, err, "initializeTemplates should not error")
