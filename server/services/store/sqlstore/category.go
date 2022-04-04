@@ -40,6 +40,7 @@ func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) err
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"categories").
 		Columns(
+			"id",
 			"name",
 			"user_id",
 			"team_id",
@@ -48,6 +49,7 @@ func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) err
 			"delete_at",
 		).
 		Values(
+			category.ID,
 			category.Name,
 			category.UserID,
 			category.TeamID,

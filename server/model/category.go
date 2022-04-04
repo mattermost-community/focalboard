@@ -17,6 +17,7 @@ type Category struct {
 }
 
 func (c *Category) Hydrate() {
+	c.ID = utils.NewID(utils.IDTypeNone)
 	c.CreateAt = utils.GetMillis()
 	c.UpdateAt = c.CreateAt
 }
