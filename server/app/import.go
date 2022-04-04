@@ -120,11 +120,12 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 	var boardID string
 
 	lineNum := 1
+	firstLine := true
 	for {
 		line, errRead := readLine(lineReader)
 		if len(line) != 0 {
 			var skip bool
-			if lineNum == 1 {
+			if firstLine {
 				// first line might be a header tag (old archive format)
 				if strings.HasPrefix(string(line), legacyFileBegin) {
 					skip = true
@@ -138,7 +139,7 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 				}
 
 				// first line must be a board
-				if lineNum == 1 && archiveLine.Type == "block" {
+				if firstLine && archiveLine.Type == "block" {
 					archiveLine.Type = "board_block"
 				}
 
@@ -179,6 +180,7 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 				default:
 					return "", model.NewErrUnsupportedArchiveLineType(lineNum, archiveLine.Type)
 				}
+				firstLine = false
 			}
 		}
 
@@ -202,6 +204,18 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 	boardsAndBlocks, err = a.CreateBoardsAndBlocks(boardsAndBlocks, opt.ModifiedBy, false)
 	if err != nil {
 		return "", fmt.Errorf("error inserting archive blocks: %w", err)
+	}
+
+	// add user to all the new boards.
+	for _, board := range boardsAndBlocks.Boards {
+		boardMember := &model.BoardMember{
+			BoardID:     board.ID,
+			UserID:      opt.ModifiedBy,
+			SchemeAdmin: true,
+		}
+		if _, err := a.AddMemberToBoard(boardMember); err != nil {
+			return "", fmt.Errorf("cannot add member to board: %w", err)
+		}
 	}
 
 	// find new board id
