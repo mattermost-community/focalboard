@@ -9,7 +9,7 @@ import (
 // initialize is called when the App is first created.
 func (a *App) initialize(skipTemplateInit bool) {
 	if !skipTemplateInit {
-		if err := a.initializeTemplates(); err != nil {
+		if err := a.InitTemplates(); err != nil {
 			a.logger.Error(`InitializeTemplates failed`, mlog.Err(err))
 		}
 	}

@@ -23,7 +23,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
         />
       </div>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -147,7 +147,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
         />
       </div>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -271,7 +271,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
         />
       </div>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"

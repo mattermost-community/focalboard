@@ -14,6 +14,10 @@
     border-radius: var(--default-rad);
     box-shadow: var(--elevation-4);
 
+    &.fixed {
+        position: fixed;
+    }
+
     .menu-contents {
         display: flex;
         flex-direction: column;

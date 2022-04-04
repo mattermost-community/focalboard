@@ -38,6 +38,7 @@ import {UserConfigPatch} from '../user'
 import octoClient from '../octoClient'
 
 import ShareBoardButton from './shareBoard/shareBoardButton'
+import ShareBoardLoginButton from './shareBoard/shareBoardLoginButton'
 
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
@@ -334,6 +335,9 @@ const CenterPanel = (props: Props) => {
         e.stopPropagation()
     }, [selectedCardIds, props.activeView, props.cards, showCard])
 
+    const showShareButton = !props.readonly && me?.id !== 'single-user'
+    const showShareLoginButton = props.readonly && me?.id !== 'single-user'
+
     const {groupByProperty, activeView, board, views, cards} = props
     const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(
         () => getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty),
@@ -369,13 +373,14 @@ const CenterPanel = (props: Props) => {
                         readonly={props.readonly}
                     />
                     <div className='shareButtonWrapper'>
-                        {!props.readonly &&
-                            (
-                                <ShareBoardButton
-                                    boardId={props.board.id}
-                                    enableSharedBoards={props.clientConfig?.enablePublicSharedBoards || false}
-                                />
-                            )
+                        {showShareButton &&
+                        <ShareBoardButton
+                            boardId={props.board.id}
+                            enableSharedBoards={props.clientConfig?.enablePublicSharedBoards || false}
+                        />
+                        }
+                        {showShareLoginButton &&
+                            <ShareBoardLoginButton/>
                         }
                         <ShareBoardTourStep/>
                     </div>

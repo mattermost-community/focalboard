@@ -234,7 +234,10 @@ func (s *MattermostAuthLayer) GetTeam(id string) (*model.Team, error) {
 	var displayName string
 	err := row.Scan(&displayName)
 	if err != nil {
-		s.logger.Error("GetTeam scan error", mlog.Err(err))
+		s.logger.Error("GetTeam scan error",
+			mlog.String("team_id", id),
+			mlog.Err(err),
+		)
 		return nil, err
 	}
 

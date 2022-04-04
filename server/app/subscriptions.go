@@ -3,6 +3,8 @@ package app
 import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 func (a *App) CreateSubscription(sub *model.Subscription) (*model.Subscription, error) {
@@ -37,5 +39,15 @@ func (a *App) notifySubscriptionChanged(subscription *model.Subscription) {
 	if a.notifications == nil {
 		return
 	}
-	a.notifications.BroadcastSubscriptionChange(subscription)
+
+	board, err := a.getBoardForBlock(subscription.BlockID)
+	if err != nil {
+		a.logger.Error("Error notifying subscription change",
+			mlog.String("subscriber_id", subscription.SubscriberID),
+			mlog.String("block_id", subscription.BlockID),
+			mlog.Err(err),
+		)
+	}
+
+	a.notifications.BroadcastSubscriptionChange(board.TeamID, subscription)
 }

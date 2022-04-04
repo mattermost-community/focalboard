@@ -16,7 +16,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
         propOption
       </span>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"
@@ -105,7 +105,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
         propOption
       </span>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"

@@ -6,7 +6,7 @@ Object {
   "baseElement": <body>
     <div>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"
@@ -182,7 +182,7 @@ Object {
   </body>,
   "container": <div>
     <div
-      class="Menu noselect bottom"
+      class="Menu noselect bottom "
     >
       <div
         class="menu-contents"
@@ -415,7 +415,7 @@ Object {
   "baseElement": <body>
     <div>
       <div
-        class="Menu noselect bottom"
+        class="Menu noselect bottom "
       >
         <div
           class="menu-contents"
@@ -532,7 +532,7 @@ Object {
   </body>,
   "container": <div>
     <div
-      class="Menu noselect bottom"
+      class="Menu noselect bottom "
     >
       <div
         class="menu-contents"

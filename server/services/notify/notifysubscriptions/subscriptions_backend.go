@@ -205,7 +205,7 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 }
 
 // BroadcastSubscriptionChange sends a websocket message with details of the changed subscription to all
-// connected users in the workspace.
-func (b *Backend) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
-	b.wsAdapter.BroadcastSubscriptionChange(workspaceID, subscription)
+// connected users in the team.
+func (b *Backend) BroadcastSubscriptionChange(teamID string, subscription *model.Subscription) {
+	b.wsAdapter.BroadcastSubscriptionChange(teamID, subscription)
 }

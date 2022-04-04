@@ -39,7 +39,7 @@ exports[`components/cardDetail/comment return comment 1`] = `
           />
         </button>
         <div
-          class="Menu noselect left"
+          class="Menu noselect left "
         >
           <div
             class="menu-contents"
@@ -145,7 +145,7 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
           />
         </button>
         <div
-          class="Menu noselect left"
+          class="Menu noselect left "
         >
           <div
             class="menu-contents"
