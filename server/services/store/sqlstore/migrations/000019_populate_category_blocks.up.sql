@@ -1,7 +1,5 @@
 CREATE TABLE {{.prefix}}category_blocks (
-    {{if .mysql}}id INT AUTO_INCREMENT,{{end}}
-    {{if .postgres}}id SERIAL,{{end}}
-    {{if .sqlite}}id varchar(36),{{end}}
+    id varchar(36) NOT NULL,
     user_id varchar(32) NOT NULL,
     category_id varchar(36) NOT NULL,
     block_id VARCHAR(36) NOT NULL,
