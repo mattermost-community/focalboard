@@ -1,12 +1,14 @@
 package integrationtests
 
 import (
-	"fmt"
+	"errors"
 	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 )
+
+var errTestStore = errors.New("plugin test store error")
 
 type PluginTestStore struct {
 	store.Store
@@ -21,12 +23,54 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 	return &PluginTestStore{
 		Store: innerStore,
 		users: map[string]*model.User{
-			"no-team-member": {ID: "no-team-member", Props: map[string]interface{}{}, Username: "no-team-member", Email: "no-team-member@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
-			"team-member":    {ID: "team-member", Props: map[string]interface{}{}, Username: "team-member", Email: "team-member@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
-			"viewer":         {ID: "viewer", Props: map[string]interface{}{}, Username: "viewer", Email: "viewer@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
-			"commenter":      {ID: "commenter", Props: map[string]interface{}{}, Username: "commenter", Email: "commenter@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
-			"editor":         {ID: "editor", Props: map[string]interface{}{}, Username: "editor", Email: "editor@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
-			"admin":          {ID: "admin", Props: map[string]interface{}{}, Username: "admin", Email: "admin@sample.com", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+			"no-team-member": {
+				ID:       "no-team-member",
+				Props:    map[string]interface{}{},
+				Username: "no-team-member",
+				Email:    "no-team-member@sample.com",
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+			},
+			"team-member": {
+				ID:       "team-member",
+				Props:    map[string]interface{}{},
+				Username: "team-member",
+				Email:    "team-member@sample.com",
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+			},
+			"viewer": {
+				ID:       "viewer",
+				Props:    map[string]interface{}{},
+				Username: "viewer",
+				Email:    "viewer@sample.com",
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+			},
+			"commenter": {
+				ID:       "commenter",
+				Props:    map[string]interface{}{},
+				Username: "commenter",
+				Email:    "commenter@sample.com",
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+			},
+			"editor": {
+				ID:       "editor",
+				Props:    map[string]interface{}{},
+				Username: "editor",
+				Email:    "editor@sample.com",
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+			},
+			"admin": {
+				ID:       "admin",
+				Props:    map[string]interface{}{},
+				Username: "admin",
+				Email:    "admin@sample.com",
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+			},
 		},
 		testTeam:  &model.Team{ID: "test-team", Title: "Test Team"},
 		otherTeam: &model.Team{ID: "other-team", Title: "Other Team"},
@@ -36,16 +80,17 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 }
 
 func (s *PluginTestStore) GetTeam(id string) (*model.Team, error) {
-	if id == "0" {
+	switch id {
+	case "0":
 		return s.baseTeam, nil
-	} else if id == "other-team" {
+	case "other-team":
 		return s.otherTeam, nil
-	} else if id == "test-team" {
+	case "test-team":
 		return s.testTeam, nil
-	} else if id == "empty-team" {
+	case "empty-team":
 		return s.emptyTeam, nil
 	}
-	return nil, fmt.Errorf("Team id %s not found", id)
+	return nil, errTestStore
 }
 
 func (s *PluginTestStore) GetTeamsForUser(userID string) ([]*model.Team, error) {
@@ -63,13 +108,13 @@ func (s *PluginTestStore) GetTeamsForUser(userID string) ([]*model.Team, error) 
 	case "admin":
 		return []*model.Team{s.testTeam, s.otherTeam}, nil
 	}
-	return nil, fmt.Errorf("UserID %s not found", userID)
+	return nil, errTestStore
 }
 
 func (s *PluginTestStore) GetUserByID(userID string) (*model.User, error) {
 	user := s.users[userID]
 	if user == nil {
-		return nil, fmt.Errorf("UserID %s not found", userID)
+		return nil, errTestStore
 	}
 	return user, nil
 }
@@ -80,7 +125,7 @@ func (s *PluginTestStore) GetUserByEmail(email string) (*model.User, error) {
 			return user, nil
 		}
 	}
-	return nil, fmt.Errorf("User email %s not found", email)
+	return nil, errTestStore
 }
 
 func (s *PluginTestStore) GetUserByUsername(username string) (*model.User, error) {
@@ -89,7 +134,7 @@ func (s *PluginTestStore) GetUserByUsername(username string) (*model.User, error
 			return user, nil
 		}
 	}
-	return nil, fmt.Errorf("User username %s not found", username)
+	return nil, errTestStore
 }
 
 func (s *PluginTestStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
@@ -114,7 +159,8 @@ func (s *PluginTestStore) PatchUserProps(userID string, patch model.UserPropPatc
 }
 
 func (s *PluginTestStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
-	if teamID == s.testTeam.ID {
+	switch {
+	case teamID == s.testTeam.ID:
 		return []*model.User{
 			s.users["team-member"],
 			s.users["viewer"],
@@ -122,7 +168,7 @@ func (s *PluginTestStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 			s.users["editor"],
 			s.users["admin"],
 		}, nil
-	} else if teamID == s.otherTeam.ID {
+	case teamID == s.otherTeam.ID:
 		return []*model.User{
 			s.users["team-member"],
 			s.users["viewer"],
@@ -130,10 +176,10 @@ func (s *PluginTestStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 			s.users["editor"],
 			s.users["admin"],
 		}, nil
-	} else if teamID == s.emptyTeam.ID {
+	case teamID == s.emptyTeam.ID:
 		return []*model.User{}, nil
 	}
-	return nil, fmt.Errorf("TeamID %s not found", teamID)
+	return nil, errTestStore
 }
 
 func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {

@@ -1,3 +1,4 @@
+//nolint:dupl
 package integrationtests
 
 import (
@@ -12,16 +13,6 @@ import (
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/stretchr/testify/require"
-)
-
-const (
-	userAnon         string = "anon"
-	userNoTeamMember        = "no-team-member"
-	userTeamMember          = "team-member"
-	userViewer              = "viewer"
-	userCommenter           = "commenter"
-	userEditor              = "editor"
-	userAdmin               = "admin"
 )
 
 type Clients struct {
@@ -63,12 +54,12 @@ func setupClients(th *TestHelper) Clients {
 		Admin:        client.NewClient(th.Server.Config().ServerRoot, ""),
 	}
 
-	clients.NoTeamMember.HTTPHeader["Mattermost-User-Id"] = "no-team-member"
-	clients.TeamMember.HTTPHeader["Mattermost-User-Id"] = "team-member"
-	clients.Viewer.HTTPHeader["Mattermost-User-Id"] = "viewer"
-	clients.Commenter.HTTPHeader["Mattermost-User-Id"] = "commenter"
-	clients.Editor.HTTPHeader["Mattermost-User-Id"] = "editor"
-	clients.Admin.HTTPHeader["Mattermost-User-Id"] = "admin"
+	clients.NoTeamMember.HTTPHeader["Mattermost-User-Id"] = userNoTeamMember
+	clients.TeamMember.HTTPHeader["Mattermost-User-Id"] = userTeamMember
+	clients.Viewer.HTTPHeader["Mattermost-User-Id"] = userViewer
+	clients.Commenter.HTTPHeader["Mattermost-User-Id"] = userCommenter
+	clients.Editor.HTTPHeader["Mattermost-User-Id"] = userEditor
+	clients.Admin.HTTPHeader["Mattermost-User-Id"] = userAdmin
 
 	return clients
 }
@@ -87,58 +78,59 @@ type TestData struct {
 }
 
 func setupData(t *testing.T, th *TestHelper) TestData {
-	customTemplate1, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 1", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypeOpen}, "admin", true)
+	customTemplate1, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 1", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypeOpen}, userAdmin, true)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, "admin")
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, userAdmin)
 	require.NoError(t, err)
-	customTemplate2, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate}, "admin", true)
+	customTemplate2, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate}, userAdmin, true)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, "admin")
-	require.NoError(t, err)
-
-	board1, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 1", TeamID: "test-team", Type: model.BoardTypeOpen}, "admin", true)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID}, "admin")
-	require.NoError(t, err)
-	board2, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 2", TeamID: "test-team", Type: model.BoardTypePrivate}, "admin", true)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-4", Title: "Test", Type: "card", BoardID: board2.ID}, "admin")
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, userAdmin)
 	require.NoError(t, err)
 
-	err = th.Server.App().UpsertSharing(model.Sharing{ID: board2.ID, Enabled: true, Token: "valid", ModifiedBy: "admin", UpdateAt: model.GetMillis()})
-
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: "viewer", SchemeViewer: true})
+	board1, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 1", TeamID: "test-team", Type: model.BoardTypeOpen}, userAdmin, true)
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: "viewer", SchemeViewer: true})
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID}, userAdmin)
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: "commenter", SchemeCommenter: true})
+	board2, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 2", TeamID: "test-team", Type: model.BoardTypePrivate}, userAdmin, true)
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: "commenter", SchemeCommenter: true})
-	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: "editor", SchemeEditor: true})
-	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: "editor", SchemeEditor: true})
-	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: "admin", SchemeAdmin: true})
-	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: "admin", SchemeAdmin: true})
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-4", Title: "Test", Type: "card", BoardID: board2.ID}, userAdmin)
 	require.NoError(t, err)
 
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: "viewer", SchemeViewer: true})
+	err = th.Server.App().UpsertSharing(model.Sharing{ID: board2.ID, Enabled: true, Token: "valid", ModifiedBy: userAdmin, UpdateAt: model.GetMillis()})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: "viewer", SchemeViewer: true})
+
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userViewer, SchemeViewer: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: "commenter", SchemeCommenter: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userViewer, SchemeViewer: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: "commenter", SchemeCommenter: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userCommenter, SchemeCommenter: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: "editor", SchemeEditor: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userCommenter, SchemeCommenter: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: "editor", SchemeEditor: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userEditor, SchemeEditor: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: "admin", SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userEditor, SchemeEditor: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: "admin", SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userAdmin, SchemeAdmin: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userAdmin, SchemeAdmin: true})
+	require.NoError(t, err)
+
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userViewer, SchemeViewer: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userViewer, SchemeViewer: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userCommenter, SchemeCommenter: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userCommenter, SchemeCommenter: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userEditor, SchemeEditor: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userEditor, SchemeEditor: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userAdmin, SchemeAdmin: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userAdmin, SchemeAdmin: true})
 	require.NoError(t, err)
 
 	return TestData{
@@ -180,14 +172,19 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 			switch tc.method {
 			case methodGet:
 				response, err = reqClient.DoAPIGet(url, "")
+				defer response.Body.Close()
 			case methodPost:
 				response, err = reqClient.DoAPIPost(url, tc.body)
+				defer response.Body.Close()
 			case methodPatch:
 				response, err = reqClient.DoAPIPatch(url, tc.body)
+				defer response.Body.Close()
 			case methodPut:
 				response, err = reqClient.DoAPIPut(url, tc.body)
+				defer response.Body.Close()
 			case methodDelete:
 				response, err = reqClient.DoAPIDelete(url, tc.body)
+				defer response.Body.Close()
 			}
 
 			require.Equal(t, tc.expectedStatusCode, response.StatusCode)
@@ -627,7 +624,7 @@ func TestPermissionsPatchBoardBlocks(t *testing.T) {
 	clients := setupClients(th)
 
 	counter := 0
-	newBlocksPatchJSON := func(blockID, boardID string) string {
+	newBlocksPatchJSON := func(blockID string) string {
 		counter++
 		newTitle := "New Title"
 		return toJSON(t, model.BlockPatchBatch{
@@ -639,37 +636,37 @@ func TestPermissionsPatchBoardBlocks(t *testing.T) {
 	}
 
 	ttCases := []TestCase{
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4", testData.privateBoard.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4", testData.privateBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4", testData.privateBoard.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4", testData.privateBoard.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4", testData.privateBoard.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4", testData.privateBoard.ID), userEditor, http.StatusOK, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4", testData.privateBoard.ID), userAdmin, http.StatusOK, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4"), userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4"), userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4"), userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4"), userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4"), userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4"), userEditor, http.StatusOK, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-4"), userAdmin, http.StatusOK, 0},
 
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3", testData.publicBoard.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3", testData.publicBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3", testData.publicBoard.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3", testData.publicBoard.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3", testData.publicBoard.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3", testData.publicBoard.ID), userEditor, http.StatusOK, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3", testData.publicBoard.ID), userAdmin, http.StatusOK, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3"), userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3"), userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3"), userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3"), userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3"), userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3"), userEditor, http.StatusOK, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPatch, newBlocksPatchJSON("block-3"), userAdmin, http.StatusOK, 0},
 
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2", testData.privateTemplate.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2", testData.privateTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2", testData.privateTemplate.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2", testData.privateTemplate.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2", testData.privateTemplate.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2", testData.privateTemplate.ID), userEditor, http.StatusOK, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2", testData.privateTemplate.ID), userAdmin, http.StatusOK, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2"), userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2"), userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2"), userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2"), userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2"), userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2"), userEditor, http.StatusOK, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-2"), userAdmin, http.StatusOK, 0},
 
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1", testData.publicTemplate.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1", testData.publicTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1", testData.publicTemplate.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1", testData.publicTemplate.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1", testData.publicTemplate.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1", testData.publicTemplate.ID), userEditor, http.StatusOK, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1", testData.publicTemplate.ID), userAdmin, http.StatusOK, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1"), userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1"), userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1"), userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1"), userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1"), userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1"), userEditor, http.StatusOK, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1"), userAdmin, http.StatusOK, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -728,13 +725,13 @@ func TestPermissionsDeleteBoardBlock(t *testing.T) {
 	testData := setupData(t, th)
 	clients := setupClients(th)
 
-	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, "admin")
+	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, "admin")
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, "admin")
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, "admin")
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
 	require.NoError(t, err)
 
 	ttCases := []TestCase{
@@ -782,29 +779,29 @@ func TestPermissionsUndeleteBoardBlock(t *testing.T) {
 	testData := setupData(t, th)
 	clients := setupClients(th)
 
-	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, "admin")
+	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, "admin")
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, "admin")
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, "admin")
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-1", "admin")
+	err = th.Server.App().DeleteBlock("block-1", userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-2", "admin")
+	err = th.Server.App().DeleteBlock("block-2", userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-3", "admin")
+	err = th.Server.App().DeleteBlock("block-3", userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-4", "admin")
+	err = th.Server.App().DeleteBlock("block-4", userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-5", "admin")
+	err = th.Server.App().DeleteBlock("block-5", userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-6", "admin")
+	err = th.Server.App().DeleteBlock("block-6", userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-7", "admin")
+	err = th.Server.App().DeleteBlock("block-7", userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-8", "admin")
+	err = th.Server.App().DeleteBlock("block-8", userAdmin)
 	require.NoError(t, err)
 
 	ttCases := []TestCase{
@@ -852,13 +849,13 @@ func TestPermissionsDuplicateBoardBlock(t *testing.T) {
 	testData := setupData(t, th)
 	clients := setupClients(th)
 
-	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, "admin")
+	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, "admin")
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, "admin")
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, "admin")
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
 	require.NoError(t, err)
 
 	ttCases := []TestCase{
@@ -951,7 +948,7 @@ func TestPermissionsCreateBoardMembers(t *testing.T) {
 	boardMemberJSON := func(boardID string) string {
 		return toJSON(t, model.BoardMember{
 			BoardID:      boardID,
-			UserID:       "team-member",
+			UserID:       userTeamMember,
 			SchemeEditor: true,
 		})
 	}
@@ -1001,7 +998,7 @@ func TestPermissionsUpdateBoardMember(t *testing.T) {
 	boardMemberJSON := func(boardID string) string {
 		return toJSON(t, model.BoardMember{
 			BoardID:      boardID,
-			UserID:       "team-member",
+			UserID:       userTeamMember,
 			SchemeEditor: false,
 			SchemeViewer: true,
 		})
@@ -1058,13 +1055,13 @@ func TestPermissionsDeleteBoardMember(t *testing.T) {
 	testData := setupData(t, th)
 	clients := setupClients(th)
 
-	_, err := th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicBoard.ID, UserID: "team-member", SchemeViewer: true})
+	_, err := th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicBoard.ID, UserID: userTeamMember, SchemeViewer: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateBoard.ID, UserID: "team-member", SchemeViewer: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateBoard.ID, UserID: userTeamMember, SchemeViewer: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicTemplate.ID, UserID: "team-member", SchemeViewer: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicTemplate.ID, UserID: userTeamMember, SchemeViewer: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateTemplate.ID, UserID: "team-member", SchemeViewer: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateTemplate.ID, UserID: userTeamMember, SchemeViewer: true})
 	require.NoError(t, err)
 
 	ttCases := []TestCase{
@@ -1122,7 +1119,9 @@ func TestPermissionsJoinBoardAsMember(t *testing.T) {
 		{"/boards/{PRIVATE_BOARD_ID}/join", methodPost, "", userAnon, http.StatusUnauthorized, 0},
 		{"/boards/{PRIVATE_BOARD_ID}/join", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
 		{"/boards/{PRIVATE_BOARD_ID}/join", methodPost, "", userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/join", methodPost, "", userViewer, http.StatusForbidden, 0}, // Do we want to forbid already existing members to join to the board or simply return the current membership?
+
+		// Do we want to forbid already existing members to join to the board or simply return the current membership?
+		{"/boards/{PRIVATE_BOARD_ID}/join", methodPost, "", userViewer, http.StatusForbidden, 0},
 		{"/boards/{PRIVATE_BOARD_ID}/join", methodPost, "", userCommenter, http.StatusForbidden, 0},
 		{"/boards/{PRIVATE_BOARD_ID}/join", methodPost, "", userEditor, http.StatusForbidden, 0},
 		{"/boards/{PRIVATE_BOARD_ID}/join", methodPost, "", userAdmin, http.StatusForbidden, 0},
@@ -1204,13 +1203,13 @@ func TestPermissionsLeaveBoardAsMember(t *testing.T) {
 	}
 	runTestCases(t, ttCases, testData, clients)
 
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicBoard.ID, UserID: "admin", SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicBoard.ID, UserID: userAdmin, SchemeAdmin: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateBoard.ID, UserID: "admin", SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateBoard.ID, UserID: userAdmin, SchemeAdmin: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicTemplate.ID, UserID: "admin", SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicTemplate.ID, UserID: userAdmin, SchemeAdmin: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateTemplate.ID, UserID: "admin", SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateTemplate.ID, UserID: userAdmin, SchemeAdmin: true})
 	require.NoError(t, err)
 
 	require.NoError(t, th.Server.App().DeleteBoardMember(testData.publicBoard.ID, "not-real-user"))
@@ -1748,12 +1747,12 @@ func TestPermissionsCreateCategory(t *testing.T) {
 
 	ttCases := []TestCase{
 		{"/teams/test-team/categories", methodPost, category(""), userAnon, http.StatusUnauthorized, 0},
-		{"/teams/test-team/categories", methodPost, category("no-team-member"), userNoTeamMember, http.StatusOK, 1},
-		{"/teams/test-team/categories", methodPost, category("team-member"), userTeamMember, http.StatusOK, 1},
-		{"/teams/test-team/categories", methodPost, category("viewer"), userViewer, http.StatusOK, 1},
-		{"/teams/test-team/categories", methodPost, category("commenter"), userCommenter, http.StatusOK, 1},
-		{"/teams/test-team/categories", methodPost, category("editor"), userEditor, http.StatusOK, 1},
-		{"/teams/test-team/categories", methodPost, category("admin"), userAdmin, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userNoTeamMember), userNoTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userTeamMember), userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userViewer), userViewer, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userCommenter), userCommenter, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userEditor), userEditor, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userAdmin), userAdmin, http.StatusOK, 1},
 
 		{"/teams/test-team/categories", methodPost, category("other"), userAnon, http.StatusUnauthorized, 0},
 		{"/teams/test-team/categories", methodPost, category("other"), userNoTeamMember, http.StatusBadRequest, 0},
@@ -1764,12 +1763,12 @@ func TestPermissionsCreateCategory(t *testing.T) {
 		{"/teams/test-team/categories", methodPost, category("other"), userAdmin, http.StatusBadRequest, 0},
 
 		{"/teams/other-team/categories", methodPost, category(""), userAnon, http.StatusUnauthorized, 0},
-		{"/teams/other-team/categories", methodPost, category("no-team-member"), userNoTeamMember, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories", methodPost, category("team-member"), userTeamMember, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories", methodPost, category("viewer"), userViewer, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories", methodPost, category("commenter"), userCommenter, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories", methodPost, category("editor"), userEditor, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories", methodPost, category("admin"), userAdmin, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userNoTeamMember), userNoTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userTeamMember), userTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userViewer), userViewer, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userCommenter), userCommenter, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userEditor), userEditor, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userAdmin), userAdmin, http.StatusBadRequest, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1780,17 +1779,29 @@ func TestPermissionsUpdateCategory(t *testing.T) {
 	testData := setupData(t, th)
 	clients := setupClients(th)
 
-	categoryNoTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "no-team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryNoTeamMember, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryTeamMember, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryViewer, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "viewer", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryViewer, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userViewer, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryCommenter, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "commenter", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryCommenter, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userCommenter, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryEditor, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "editor", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryEditor, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userEditor, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryAdmin, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "admin", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryAdmin, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userAdmin, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
 
 	category := func(userID string, categoryID string) string {
@@ -1806,12 +1817,12 @@ func TestPermissionsUpdateCategory(t *testing.T) {
 
 	ttCases := []TestCase{
 		{"/teams/test-team/categories/any", methodPut, category("", "any"), userAnon, http.StatusUnauthorized, 0},
-		{"/teams/test-team/categories/" + categoryNoTeamMember.ID, methodPut, category("no-team-member", categoryNoTeamMember.ID), userNoTeamMember, http.StatusOK, 1},
-		{"/teams/test-team/categories/" + categoryTeamMember.ID, methodPut, category("team-member", categoryTeamMember.ID), userTeamMember, http.StatusOK, 1},
-		{"/teams/test-team/categories/" + categoryViewer.ID, methodPut, category("viewer", categoryViewer.ID), userViewer, http.StatusOK, 1},
-		{"/teams/test-team/categories/" + categoryCommenter.ID, methodPut, category("commenter", categoryCommenter.ID), userCommenter, http.StatusOK, 1},
-		{"/teams/test-team/categories/" + categoryEditor.ID, methodPut, category("editor", categoryEditor.ID), userEditor, http.StatusOK, 1},
-		{"/teams/test-team/categories/" + categoryAdmin.ID, methodPut, category("admin", categoryAdmin.ID), userAdmin, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryNoTeamMember.ID, methodPut, category(userNoTeamMember, categoryNoTeamMember.ID), userNoTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryTeamMember.ID, methodPut, category(userTeamMember, categoryTeamMember.ID), userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryViewer.ID, methodPut, category(userViewer, categoryViewer.ID), userViewer, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryCommenter.ID, methodPut, category(userCommenter, categoryCommenter.ID), userCommenter, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryEditor.ID, methodPut, category(userEditor, categoryEditor.ID), userEditor, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryAdmin.ID, methodPut, category(userAdmin, categoryAdmin.ID), userAdmin, http.StatusOK, 1},
 
 		{"/teams/test-team/categories/any", methodPut, category("other", "any"), userAnon, http.StatusUnauthorized, 0},
 		{"/teams/test-team/categories/" + categoryNoTeamMember.ID, methodPut, category("other", categoryNoTeamMember.ID), userNoTeamMember, http.StatusBadRequest, 0},
@@ -1822,12 +1833,12 @@ func TestPermissionsUpdateCategory(t *testing.T) {
 		{"/teams/test-team/categories/" + categoryAdmin.ID, methodPut, category("other", categoryAdmin.ID), userAdmin, http.StatusBadRequest, 0},
 
 		{"/teams/other-team/categories/any", methodPut, category("", "any"), userAnon, http.StatusUnauthorized, 0},
-		{"/teams/other-team/categories/" + categoryNoTeamMember.ID, methodPut, category("no-team-member", categoryNoTeamMember.ID), userNoTeamMember, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories/" + categoryTeamMember.ID, methodPut, category("team-member", categoryTeamMember.ID), userTeamMember, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories/" + categoryViewer.ID, methodPut, category("viewer", categoryViewer.ID), userViewer, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories/" + categoryCommenter.ID, methodPut, category("commenter", categoryCommenter.ID), userCommenter, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories/" + categoryEditor.ID, methodPut, category("editor", categoryEditor.ID), userEditor, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories/" + categoryAdmin.ID, methodPut, category("admin", categoryAdmin.ID), userAdmin, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryNoTeamMember.ID, methodPut, category(userNoTeamMember, categoryNoTeamMember.ID), userNoTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryTeamMember.ID, methodPut, category(userTeamMember, categoryTeamMember.ID), userTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryViewer.ID, methodPut, category(userViewer, categoryViewer.ID), userViewer, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryCommenter.ID, methodPut, category(userCommenter, categoryCommenter.ID), userCommenter, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryEditor.ID, methodPut, category(userEditor, categoryEditor.ID), userEditor, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryAdmin.ID, methodPut, category(userAdmin, categoryAdmin.ID), userAdmin, http.StatusBadRequest, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1838,17 +1849,29 @@ func TestPermissionsDeleteCategory(t *testing.T) {
 	testData := setupData(t, th)
 	clients := setupClients(th)
 
-	categoryNoTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "no-team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryNoTeamMember, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryTeamMember, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryViewer, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "viewer", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryViewer, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userViewer, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryCommenter, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "commenter", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryCommenter, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userCommenter, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryEditor, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "editor", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryEditor, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userEditor, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryAdmin, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "admin", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryAdmin, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userAdmin, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
 
 	ttCases := []TestCase{
@@ -1877,17 +1900,29 @@ func TestPermissionsUpdateCategoryBlock(t *testing.T) {
 	testData := setupData(t, th)
 	clients := setupClients(th)
 
-	categoryNoTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "no-team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryNoTeamMember, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryTeamMember, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "team-member", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryTeamMember, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryViewer, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "viewer", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryViewer, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userViewer, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryCommenter, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "commenter", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryCommenter, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userCommenter, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryEditor, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "editor", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryEditor, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userEditor, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	categoryAdmin, err := th.Server.App().CreateCategory(&model.Category{Name: "Test category", TeamID: "test-team", UserID: "admin", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()})
+	categoryAdmin, err := th.Server.App().CreateCategory(
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userAdmin, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
 
 	ttCases := []TestCase{
@@ -1945,12 +1980,12 @@ func TestPermissionsCreateSubscription(t *testing.T) {
 	}
 	ttCases := []TestCase{
 		{"/subscriptions", methodPost, subscription(""), userAnon, http.StatusUnauthorized, 0},
-		{"/subscriptions", methodPost, subscription("no-team-member"), userNoTeamMember, http.StatusOK, 1},
-		{"/subscriptions", methodPost, subscription("team-member"), userTeamMember, http.StatusOK, 1},
-		{"/subscriptions", methodPost, subscription("viewer"), userViewer, http.StatusOK, 1},
-		{"/subscriptions", methodPost, subscription("commenter"), userCommenter, http.StatusOK, 1},
-		{"/subscriptions", methodPost, subscription("editor"), userEditor, http.StatusOK, 1},
-		{"/subscriptions", methodPost, subscription("admin"), userAdmin, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userNoTeamMember), userNoTeamMember, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userTeamMember), userTeamMember, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userViewer), userViewer, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userCommenter), userCommenter, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userEditor), userEditor, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userAdmin), userAdmin, http.StatusOK, 1},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1986,19 +2021,33 @@ func TestPermissionsDeleteSubscription(t *testing.T) {
 	testData := setupData(t, th)
 	clients := setupClients(th)
 
-	_, err := th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "no-team-member", CreateAt: model.GetMillis()})
+	_, err := th.Server.App().CreateSubscription(
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userNoTeamMember, CreateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "team-member", CreateAt: model.GetMillis()})
+	_, err = th.Server.App().CreateSubscription(
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userTeamMember, CreateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "viewer", CreateAt: model.GetMillis()})
+	_, err = th.Server.App().CreateSubscription(
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userViewer, CreateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "commenter", CreateAt: model.GetMillis()})
+	_, err = th.Server.App().CreateSubscription(
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userCommenter, CreateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "editor", CreateAt: model.GetMillis()})
+	_, err = th.Server.App().CreateSubscription(
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userEditor, CreateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "admin", CreateAt: model.GetMillis()})
+	_, err = th.Server.App().CreateSubscription(
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userAdmin, CreateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
-	_, err = th.Server.App().CreateSubscription(&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "other", CreateAt: model.GetMillis()})
+	_, err = th.Server.App().CreateSubscription(
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: "other", CreateAt: model.GetMillis()},
+	)
 	require.NoError(t, err)
 
 	ttCases := []TestCase{

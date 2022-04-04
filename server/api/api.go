@@ -1247,7 +1247,8 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, blockID := range patches.BlockIDs {
-		block, err := a.app.GetBlockByID(blockID)
+		var block *model.Block
+		block, err = a.app.GetBlockByID(blockID)
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
 			return
@@ -3722,7 +3723,6 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying cards"})
 			return
 		}
-
 	}
 
 	auditRec := a.makeAuditRecord(r, "patchBoardsAndBlocks", audit.Fail)
@@ -3843,7 +3843,6 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying cards"})
 			return
 		}
-
 	}
 
 	if err := dbab.IsValid(); err != nil {

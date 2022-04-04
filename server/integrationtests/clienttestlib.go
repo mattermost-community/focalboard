@@ -29,6 +29,16 @@ const (
 	password      = "Pa$$word"
 )
 
+const (
+	userAnon         string = "anon"
+	userNoTeamMember string = "no-team-member"
+	userTeamMember   string = "team-member"
+	userViewer       string = "viewer"
+	userCommenter    string = "commenter"
+	userEditor       string = "editor"
+	userAdmin        string = "admin"
+)
+
 type LicenseType int
 
 const (
@@ -46,9 +56,9 @@ type TestHelper struct {
 
 type FakePermissionPluginAPI struct{}
 
-func (_ *FakePermissionPluginAPI) LogError(str string, params ...interface{}) {}
-func (_ *FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool {
-	if userID == "no-team-member" {
+func (*FakePermissionPluginAPI) LogError(str string, params ...interface{}) {}
+func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool {
+	if userID == userNoTeamMember {
 		return false
 	}
 	if teamID == "empty-team" {
@@ -167,9 +177,7 @@ func newTestServerPluginMode() *server.Server {
 		panic(err)
 	}
 
-	var db store.Store
-
-	db = NewPluginTestStore(innerStore)
+	db := NewPluginTestStore(innerStore)
 
 	permissionsService := mmpermissions.New(db, &FakePermissionPluginAPI{})
 
