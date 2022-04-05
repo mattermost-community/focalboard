@@ -494,7 +494,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 }
 
 func initNotificationService(backends []notify.Backend, logger *mlog.Logger) (*notify.Service, error) {
-	loggerBackend := notifylogger.New(logger, mlog.LvlTrace)
+	loggerBackend := notifylogger.New(logger, mlog.LvlDebug)
 
 	backends = append(backends, loggerBackend)
 
