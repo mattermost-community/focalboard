@@ -34,6 +34,11 @@ func TestApp_initializeTemplates(t *testing.T) {
 		Blocks: []model.Block{block},
 	}
 
+	boardMember := &model.BoardMember{
+		BoardID: board.ID,
+		UserID:  "test-user",
+	}
+
 	t.Run("Needs template init", func(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
@@ -42,6 +47,8 @@ func TestApp_initializeTemplates(t *testing.T) {
 		th.Store.EXPECT().RemoveDefaultTemplates([]*model.Board{}).Return(nil)
 		th.Store.EXPECT().CreateBoardsAndBlocks(gomock.Any(), gomock.Any()).AnyTimes().Return(boardsAndBlocks, nil)
 		th.Store.EXPECT().GetMembersForBoard(board.ID).AnyTimes().Return([]*model.BoardMember{}, nil)
+		th.Store.EXPECT().GetBoard(board.ID).AnyTimes().Return(board, nil)
+		th.Store.EXPECT().GetMemberForBoard(gomock.Any(), gomock.Any()).AnyTimes().Return(boardMember, nil)
 
 		th.FilesBackend.On("WriteFile", mock.Anything, mock.Anything).Return(int64(1), nil)
 

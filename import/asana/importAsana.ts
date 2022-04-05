@@ -5,6 +5,7 @@ import minimist from 'minimist'
 import {exit} from 'process'
 import {ArchiveUtils} from '../util/archive'
 import {Block} from '../../webapp/src/blocks/block'
+import {Board} from '../../webapp/src/blocks/board'
 import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
 import {createBoardView} from '../../webapp/src/blocks/boardView'
 import {createCard} from '../../webapp/src/blocks/card'
@@ -49,11 +50,11 @@ function main() {
     const input = JSON.parse(inputData) as Asana
 
     // Convert
-    const blocks = convert(input)
+    const [boards, blocks] = convert(input)
 
     // Save output
     // TODO: Stream output
-    const outputData = ArchiveUtils.buildBlockArchive(blocks)
+    const outputData = ArchiveUtils.buildBlockArchive(boards, blocks)
     fs.writeFileSync(outputFile, outputData)
 
     console.log(`Exported to ${outputFile}`)
@@ -88,22 +89,22 @@ function getSections(input: Asana, projectId: string): Workspace[] {
     return [...sectionMap.values()]
 }
 
-function convert(input: Asana): Block[] {
+function convert(input: Asana): [Board[], Block[]] {
     const projects = getProjects(input)
     if (projects.length < 1) {
         console.error('No projects found')
-        return []
+        return [[],[]]
     }
 
     // TODO: Handle multiple projects
     const project = projects[0]
 
+    const boards: Board[] = []
     const blocks: Block[] = []
 
     // Board
     const board = createBoard()
     console.log(`Board: ${project.name}`)
-    board.rootId = board.id
     board.title = project.name
 
     // Convert sections (columns) to a Select property
@@ -130,14 +131,14 @@ function convert(input: Asana): Block[] {
         options
     }
     board.cardProperties = [cardProperty]
-    blocks.push(board)
+    boards.push(board)
 
     // Board view
     const view = createBoardView()
     view.title = 'Board View'
     view.fields.viewType = 'board'
-    view.rootId = board.id
     view.parentId = board.id
+    view.boardId = board.id
     blocks.push(view)
 
     // Cards
@@ -146,7 +147,7 @@ function convert(input: Asana): Block[] {
 
         const outCard = createCard()
         outCard.title = card.name
-        outCard.rootId = board.id
+        outCard.boardId = board.id
         outCard.parentId = board.id
 
         // Map lists to Select property options
@@ -168,8 +169,8 @@ function convert(input: Asana): Block[] {
             // console.log(`\t${card.notes}`)
             const text = createTextBlock()
             text.title = card.notes
-            text.rootId = board.id
             text.parentId = outCard.id
+            text.boardId = board.id
             blocks.push(text)
 
             outCard.fields.contentOrder = [text.id]
@@ -179,7 +180,7 @@ function convert(input: Asana): Block[] {
     console.log('')
     console.log(`Found ${input.data.length} card(s).`)
 
-    return blocks
+    return [boards, blocks]
 }
 
 function showHelp() {

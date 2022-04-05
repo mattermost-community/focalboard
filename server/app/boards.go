@@ -69,6 +69,21 @@ func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetada
 	return board, &boardMetadata, nil
 }
 
+// getBoardForBlock returns the board that owns the specified block.
+func (a *App) getBoardForBlock(blockID string) (*model.Board, error) {
+	block, err := a.GetBlockByID(blockID)
+	if err != nil {
+		return nil, fmt.Errorf("cannot get block %s: %w", blockID, err)
+	}
+
+	board, err := a.GetBoard(block.BoardID)
+	if err != nil {
+		return nil, fmt.Errorf("cannot get board %s: %w", block.BoardID, err)
+	}
+
+	return board, nil
+}
+
 func (a *App) getBoardHistory(boardID string, latest bool) (*model.Board, error) {
 	opts := model.QueryBlockHistoryOptions{
 		Limit:      1,

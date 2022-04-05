@@ -4,6 +4,7 @@ import * as fs from 'fs'
 import {exit} from 'process'
 import {ArchiveUtils} from '../util/archive'
 import {Block} from '../../webapp/src/blocks/block'
+import {Board} from '../../webapp/src/blocks/board'
 import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
 import {createBoardView} from '../../webapp/src/blocks/boardView'
 import {Card, createCard} from '../../webapp/src/blocks/card'
@@ -70,23 +71,23 @@ async function run(inputFile: string, outputFile: string): Promise<number> {
 	// console.dir(items);
 
     // Convert
-    const blocks = convert(items)
+    const [boards, blocks] = convert(items)
 
     // Save output
     // TODO: Stream output
-    const outputData = ArchiveUtils.buildBlockArchive(blocks)
+    const outputData = ArchiveUtils.buildBlockArchive(boards, blocks)
     fs.writeFileSync(outputFile, outputData)
     console.log(`Exported ${blocks.length} block(s) to ${outputFile}`)
 
     return blocks.length
 }
 
-function convert(items: any[]) {
+function convert(items: any[]): [Board[], Block[]] {
+    const boards: Board[] = []
     const blocks: Block[] = []
 
     // Board
     const board = createBoard()
-    board.rootId = board.id
     board.title = 'Jira import'
 
     // Compile standard properties
@@ -126,13 +127,13 @@ function convert(items: any[]) {
     }
     board.cardProperties.push(createdDateProperty)
 
-    blocks.push(board)
+    boards.push(board)
 
     // Board view
     const view = createBoardView()
     view.title = 'Board View'
     view.fields.viewType = 'board'
-    view.rootId = board.id
+    view.boardId = board.id
     view.parentId = board.id
     blocks.push(view)
 
@@ -145,7 +146,7 @@ function convert(items: any[]) {
 
         const card = createCard()
         card.title = item.summary
-        card.rootId = board.id
+        card.boardId = board.id
         card.parentId = board.id
 
         // Map standard properties
@@ -169,7 +170,7 @@ function convert(items: any[]) {
             console.log(`\t${description}`)
             const text = createTextBlock()
             text.title = description
-            text.rootId = board.id
+            text.boardId = board.id
             text.parentId = card.id
             blocks.push(text)
 
@@ -179,7 +180,7 @@ function convert(items: any[]) {
         blocks.push(card)
     }
 
-    return blocks
+    return [boards, blocks]
 }
 
 function buildCardPropertyFromValues(propertyName: string, allValues: string[]) {
