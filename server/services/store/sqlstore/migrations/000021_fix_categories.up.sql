@@ -1,6 +1,4 @@
 {{if .sqlite}}
-ALTER TABLE {{.prefix}}categories MODIFY COLUMN id VARCHAR(36) NOT NULL;
-ALTER TABLE {{.prefix}}category_blocks MODIFY COLUMN id VARCHAR(36) NOT NULL;
 ALTER TABLE {{.prefix}}categories ADD COLUMN channel_id VARCHAR(36);
 {{end}}
 
