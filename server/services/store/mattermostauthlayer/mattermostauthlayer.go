@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 
 	sq "github.com/Masterminds/squirrel"
@@ -54,7 +55,8 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
 		From("Users").
-		Where(sq.Eq{"deleteAt": 0})
+		Where(sq.Eq{"deleteAt": 0}).
+		Where(sq.NotEq{"roles": "system_guest"})
 	row := query.QueryRow()
 
 	var count int
@@ -66,67 +68,31 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 	return count, nil
 }
 
-func (s *MattermostAuthLayer) getUserByCondition(condition sq.Eq) (*model.User, error) {
-	users, err := s.getUsersByCondition(condition)
-	if err != nil {
-		return nil, err
-	}
-
-	var user *model.User
-	for _, u := range users {
-		user = u
-		break
-	}
-
-	return user, nil
-}
-
-func (s *MattermostAuthLayer) getUsersByCondition(condition sq.Eq) (map[string]*model.User, error) {
-	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.email", "u.password", "u.MFASecret as mfa_secret", "u.AuthService as auth_service", "COALESCE(u.AuthData, '') as auth_data",
-			"u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at", "u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
-		From("Users as u").
-		LeftJoin("Bots b ON ( b.UserId = u.ID )").
-		Where(sq.Eq{"u.deleteAt": 0}).
-		Where(condition)
-	row, err := query.Query()
-	if err != nil {
-		return nil, err
-	}
-
-	users := map[string]*model.User{}
-
-	for row.Next() {
-		user := model.User{}
-
-		var propsBytes []byte
-		err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.MfaSecret, &user.AuthService,
-			&user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt, &user.IsBot)
-		if err != nil {
-			return nil, err
-		}
-
-		err = json.Unmarshal(propsBytes, &user.Props)
-		if err != nil {
-			return nil, err
-		}
-
-		users[user.ID] = &user
-	}
-
-	return users, nil
-}
-
 func (s *MattermostAuthLayer) GetUserByID(userID string) (*model.User, error) {
-	return s.getUserByCondition(sq.Eq{"id": userID})
+	mmuser, err := s.pluginAPI.GetUser(userID)
+	if err != nil {
+		return nil, err
+	}
+	user := mmUserToFbUser(mmuser)
+	return &user, nil
 }
 
 func (s *MattermostAuthLayer) GetUserByEmail(email string) (*model.User, error) {
-	return s.getUserByCondition(sq.Eq{"email": email})
+	mmuser, err := s.pluginAPI.GetUserByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+	user := mmUserToFbUser(mmuser)
+	return &user, nil
 }
 
 func (s *MattermostAuthLayer) GetUserByUsername(username string) (*model.User, error) {
-	return s.getUserByCondition(sq.Eq{"username": username})
+	mmuser, err := s.pluginAPI.GetUserByUsername(username)
+	if err != nil {
+		return nil, err
+	}
+	user := mmUserToFbUser(mmuser)
+	return &user, nil
 }
 
 func (s *MattermostAuthLayer) CreateUser(user *model.User) error {
@@ -233,7 +199,10 @@ func (s *MattermostAuthLayer) GetTeam(id string) (*model.Team, error) {
 	var displayName string
 	err := row.Scan(&displayName)
 	if err != nil {
-		s.logger.Error("GetTeam scan error", mlog.Err(err))
+		s.logger.Error("GetTeam scan error",
+			mlog.String("team_id", id),
+			mlog.Err(err),
+		)
 		return nil, err
 	}
 
@@ -289,6 +258,7 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 		Join("TeamMembers as tm ON tm.UserID = u.ID").
 		LeftJoin("Bots b ON ( b.UserId = Users.ID )").
 		Where(sq.Eq{"u.deleteAt": 0}).
+		Where(sq.NotEq{"u.roles": "system_guest"}).
 		Where(sq.Eq{"tm.TeamId": teamID})
 
 	rows, err := query.Query()
@@ -320,6 +290,7 @@ func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery strin
 			sq.Like{"u.lastname": "%" + searchQuery + "%"},
 		}).
 		Where(sq.Eq{"tm.TeamId": teamID}).
+		Where(sq.NotEq{"u.roles": "system_guest"}).
 		OrderBy("u.username").
 		Limit(10)
 
@@ -384,4 +355,34 @@ func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, err
 	}
 
 	return channel.Id, nil
+}
+
+func mmUserToFbUser(mmUser *mmModel.User) model.User {
+	props := map[string]interface{}{}
+	for key, value := range mmUser.Props {
+		props[key] = value
+	}
+	authData := ""
+	if mmUser.AuthData != nil {
+		authData = *mmUser.AuthData
+	}
+	return model.User{
+		ID:          mmUser.Id,
+		Username:    mmUser.Username,
+		Email:       mmUser.Email,
+		Password:    mmUser.Password,
+		MfaSecret:   mmUser.MfaSecret,
+		AuthService: mmUser.AuthService,
+		AuthData:    authData,
+		Props:       props,
+		CreateAt:    mmUser.CreateAt,
+		UpdateAt:    mmUser.UpdateAt,
+		DeleteAt:    mmUser.DeleteAt,
+		IsBot:       mmUser.IsBot,
+		IsGuest:     mmUser.IsGuest(),
+	}
+}
+
+func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
+	return s.pluginAPI.GetLicense()
 }

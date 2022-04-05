@@ -5,6 +5,7 @@ import minimist from 'minimist'
 import {exit} from 'process'
 import {ArchiveUtils} from '../util/archive'
 import {Block} from '../../webapp/src/blocks/block'
+import {Board} from '../../webapp/src/blocks/board'
 import {IPropertyOption, IPropertyTemplate, createBoard} from '../../webapp/src/blocks/board'
 import {createBoardView} from '../../webapp/src/blocks/boardView'
 import {createCard} from '../../webapp/src/blocks/card'
@@ -56,31 +57,34 @@ function main() {
     const inputData = fs.readFileSync(inputFile, 'utf-8')
     const input = JSON.parse(inputData) as Todoist
 
+    const boards = [] as Board[]
     const blocks = [] as Block[]
 
     input.projects.forEach(project => {
-        blocks.push(...convert(input, project))
+        const [brds, blks] = convert(input, project)
+        boards.push(...brds)
+        blocks.push(...blks)
     })
 
     // Save output
     // TODO: Stream output
-    const outputData = ArchiveUtils.buildBlockArchive(blocks)
+    const outputData = ArchiveUtils.buildBlockArchive(boards, blocks)
     fs.writeFileSync(outputFile, outputData)
 
     console.log(`Exported to ${outputFile}`)
 }
 
-function convert(input: Todoist, project: Project): Block[] {
+function convert(input: Todoist, project: Project): [Board[], Block[]] {
+    const boards: Board[] = []
     const blocks: Block[] = []
 
     if (project.name === 'Inbox') {
-        return blocks
+        return [boards, blocks]
     }
 
     // Board
     const board = createBoard()
     console.log(`Board: ${project.name}`)
-    board.rootId = board.id
     board.title = project.name
     board.description = project.name
 
@@ -115,13 +119,13 @@ function convert(input: Todoist, project: Project): Block[] {
         options
     }
     board.cardProperties = [cardProperty]
-    blocks.push(board)
+    boards.push(board)
 
     // Board view
     const view = createBoardView()
     view.title = 'Board View'
     view.fields.viewType = 'board'
-    view.rootId = board.id
+    view.boardId = board.id
     view.parentId = board.id
     blocks.push(view)
 
@@ -130,7 +134,7 @@ function convert(input: Todoist, project: Project): Block[] {
     cards.forEach(card => {
         const outCard = createCard()
         outCard.title = card.content
-        outCard.rootId = board.id
+        outCard.boardId = board.id
         outCard.parentId = board.id
 
         // Map lists to Select property options
@@ -148,14 +152,14 @@ function convert(input: Todoist, project: Project): Block[] {
         // console.log(`\t${card.desc}`)
         const text = createTextBlock()
         text.title = getCardDescription(input, card).join('\n\n')
-        text.rootId = board.id
+        text.boardId = board.id
         text.parentId = outCard.id
         blocks.push(text)
 
         outCard.fields.contentOrder = [text.id]
     })
 
-    return blocks
+    return [boards, blocks]
 }
 
 function getProjectColumns(input: Todoist, project: Project): Array<Section> {

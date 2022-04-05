@@ -4,7 +4,6 @@ import React from 'react'
 import {
     Redirect,
     Route,
-    useRouteMatch,
 } from 'react-router-dom'
 
 import {Utils} from './utils'
@@ -12,6 +11,8 @@ import {getLoggedIn, getMe} from './store/users'
 import {useAppSelector} from './store/hooks'
 import {UserSettingKey} from './userSettings'
 import {IUser, UserPropPrefix} from './user'
+import {getClientConfig} from './store/clientConfig'
+import {ClientConfig} from './config/clientConfig'
 
 type RouteProps = {
     path: string|string[]
@@ -25,46 +26,51 @@ type RouteProps = {
 
 function FBRoute(props: RouteProps) {
     const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
-    const match = useRouteMatch<any>()
     const me = useAppSelector<IUser|null>(getMe)
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
-    let originalPath
-    if (props.getOriginalPath) {
-        originalPath = props.getOriginalPath(match)
-    }
+    let redirect: React.ReactNode = null
 
-    if (Utils.isFocalboardPlugin() && (me?.id !== 'single-user') && props.path !== '/welcome' && loggedIn === true && !me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
-        if (originalPath) {
-            return <Redirect to={`/welcome?r=${originalPath}`}/>
-        }
-        return <Redirect to='/welcome'/>
-    }
+    const showWelcomePage = !clientConfig.featureFlags.disableTour &&
+        Utils.isFocalboardPlugin() &&
+        (me?.id !== 'single-user') &&
+        props.path !== '/welcome' &&
+        loggedIn === true &&
+        !me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]
 
-    if (loggedIn === false && props.loginRequired) {
-        if (originalPath) {
-            let redirectUrl = '/' + Utils.buildURL(originalPath)
-            if (redirectUrl.indexOf('//') === 0) {
-                redirectUrl = redirectUrl.slice(1)
+    if (showWelcomePage) {
+        redirect = ({match}: any) => {
+            if (props.getOriginalPath) {
+                return <Redirect to={`/welcome?r=${props.getOriginalPath!(match)}`}/>
             }
-            const loginUrl = `/error?id=not-logged-in&r=${encodeURIComponent(redirectUrl)}`
-            return <Redirect to={loginUrl}/>
+            return <Redirect to='/welcome'/>
         }
-        return <Redirect to='/error?id=not-logged-in'/>
     }
 
-    if (loggedIn === true || !props.loginRequired) {
-        return (
-            <Route
-                path={props.path}
-                render={props.render}
-                component={props.component}
-                exact={props.exact}
-            >
-                {props.children}
-            </Route>
-        )
+    if (redirect === null && loggedIn === false && props.loginRequired) {
+        redirect = ({match}: any) => {
+            if (props.getOriginalPath) {
+                let redirectUrl = '/' + Utils.buildURL(props.getOriginalPath!(match))
+                if (redirectUrl.indexOf('//') === 0) {
+                    redirectUrl = redirectUrl.slice(1)
+                }
+                const loginUrl = `/error?id=not-logged-in&r=${encodeURIComponent(redirectUrl)}`
+                return <Redirect to={loginUrl}/>
+            }
+            return <Redirect to='/error?id=not-logged-in'/>
+        }
     }
-    return null
+
+    return (
+        <Route
+            path={props.path}
+            render={props.render}
+            component={props.component}
+            exact={props.exact}
+        >
+            {redirect || props.children}
+        </Route>
+    )
 }
 
 export default React.memo(FBRoute)

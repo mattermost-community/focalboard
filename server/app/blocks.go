@@ -234,15 +234,6 @@ func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
 	return nil
 }
 
-func (a *App) GetSubTree(boardID, blockID string, levels int, opts model.QuerySubtreeOptions) ([]model.Block, error) {
-	// Only 2 or 3 levels are supported for now
-	if levels >= 3 {
-		return a.store.GetSubTree3(boardID, blockID, opts)
-	}
-
-	return a.store.GetSubTree2(boardID, blockID, opts)
-}
-
 func (a *App) GetBlockByID(blockID string) (*model.Block, error) {
 	return a.store.GetBlock(blockID)
 }

@@ -22,6 +22,8 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 import {fetchUserBlockSubscriptions, getMe} from '../../store/users'
 import {IUser} from '../../user'
 
+import {Constants} from "../../constants"
+
 import SetWindowTitleAndIcon from './setWindowTitleAndIcon'
 import TeamToBoardAndViewRedirect from './teamToBoardAndViewRedirect'
 import UndoRedoHotKeys from './undoRedoHotKeys'
@@ -41,7 +43,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const dispatch = useAppDispatch()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
-    const teamId = match.params.teamId || UserSettings.lastTeamId || '0'
+    const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const me = useAppSelector<IUser|null>(getMe)
 
     // if we're in a legacy route and not showing a shared board,
@@ -80,14 +82,11 @@ const BoardPage = (props: Props): JSX.Element => {
         return initialLoad
     }, [props.readonly])
 
-    const loadOrJoinBoard = useCallback(async (userId: string, boardTeamId: string, boardId: string, viewId: string) => {
-        // set the active board if we're able to pick one
-        dispatch(setCurrentBoard(boardId))
-
+    const loadOrJoinBoard = useCallback(async (userId: string, boardTeamId: string, boardId: string) => {
         // and fetch its data
         const result: any = await dispatch(loadBoardData(boardId))
-        if (result.payload.blocks.length === 0) {
-            const member = await octoClient.createBoardMember({userId, boardId})
+        if (result.payload.blocks.length === 0 && userId) {
+            const member = await octoClient.joinBoard(boardId)
             if (!member) {
                 UserSettings.setLastBoardID(boardTeamId, null)
                 UserSettings.setLastViewId(boardId, null)
@@ -101,23 +100,28 @@ const BoardPage = (props: Props): JSX.Element => {
             teamId: boardTeamId,
             boardId,
         }))
-
-        // and set it as most recently viewed board
-        UserSettings.setLastBoardID(boardTeamId, boardId)
-
-        if (viewId && viewId !== '0') {
-            dispatch(setCurrentView(viewId))
-            UserSettings.setLastViewId(boardId, viewId)
-        }
     }, [])
 
     useEffect(() => {
         dispatch(loadAction(match.params.boardId))
 
-        if (match.params.boardId && me) {
-            loadOrJoinBoard(me.id, teamId, match.params.boardId, match.params.viewId)
+        if (match.params.boardId) {
+            // set the active board
+            dispatch(setCurrentBoard(match.params.boardId))
+
+            // and set it as most recently viewed board
+            UserSettings.setLastBoardID(teamId, match.params.boardId)
+
+            if (match.params.viewId && match.params.viewId !== Constants.globalTeamId) {
+                dispatch(setCurrentView(match.params.viewId))
+                UserSettings.setLastViewId(match.params.boardId, match.params.viewId)
+            }
+
+            if (!props.readonly && me) {
+                loadOrJoinBoard(me.id, teamId, match.params.boardId)
+            }
         }
-    }, [teamId, match.params.boardId, match.params.viewId])
+    }, [teamId, match.params.boardId, match.params.viewId, me?.id])
 
     if (props.readonly) {
         useEffect(() => {

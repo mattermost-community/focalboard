@@ -6,7 +6,7 @@ import {render} from '@testing-library/react'
 
 import {act} from 'react-dom/test-utils'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {ImageBlock} from '../../blocks/imageBlock'
 

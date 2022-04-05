@@ -970,7 +970,20 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
             </div>
             <div
               class="shareButtonWrapper"
-            />
+            >
+              <div
+                class="ShareBoardLoginButton"
+              >
+                <button
+                  title="Login"
+                  type="button"
+                >
+                  <span>
+                    Login
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
           <div
             class="ViewHeader"
@@ -2174,7 +2187,20 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
             </div>
             <div
               class="shareButtonWrapper"
-            />
+            >
+              <div
+                class="ShareBoardLoginButton"
+              >
+                <button
+                  title="Login"
+                  type="button"
+                >
+                  <span>
+                    Login
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
           <div
             class="ViewHeader"
@@ -2403,15 +2429,15 @@ exports[`src/components/workspace show add new view tooltip 1`] = `
   data-escaped=""
   data-placement="bottom-start"
   data-reference-hidden=""
-  data-state="hidden"
+  data-state="visible"
   role="tooltip"
-  style="max-width: 320px; transition-duration: 0ms;"
+  style="max-width: 320px; transition-duration: 250ms;"
   tabindex="-1"
 >
   <div
     class="tippy-content"
-    data-state="hidden"
-    style="transition-duration: 0ms;"
+    data-state="visible"
+    style="transition-duration: 250ms;"
   >
     <div>
       <div>

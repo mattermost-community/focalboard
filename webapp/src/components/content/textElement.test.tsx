@@ -7,7 +7,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import '@testing-library/jest-dom'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {TextBlock} from '../../blocks/textBlock'
 

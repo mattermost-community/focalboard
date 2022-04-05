@@ -1,11 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
-import {useHistory, Link} from 'react-router-dom'
+import {useHistory, Link, Redirect} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import {useAppDispatch} from '../store/hooks'
-import {fetchMe} from '../store/users'
+import {useAppDispatch, useAppSelector} from '../store/hooks'
+import {fetchMe, getLoggedIn} from '../store/users'
 
 import Button from '../widgets/buttons/button'
 import client from '../octoClient'
@@ -18,6 +18,7 @@ const RegisterPage = () => {
     const [errorMessage, setErrorMessage] = useState('')
     const history = useHistory()
     const dispatch = useAppDispatch()
+    const loggedIn = useAppSelector<boolean|null>(getLoggedIn)
 
     const handleRegister = async (): Promise<void> => {
         const queryString = new URLSearchParams(window.location.search)
@@ -35,6 +36,10 @@ const RegisterPage = () => {
         } else {
             setErrorMessage(`${response.json?.error}`)
         }
+    }
+
+    if (loggedIn) {
+        return <Redirect to={'/'}/>
     }
 
     return (

@@ -4,7 +4,7 @@ import {act, render, waitFor} from '@testing-library/react'
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {MemoryRouter} from 'react-router-dom'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import userEvent from '@testing-library/user-event'
 
@@ -449,15 +449,15 @@ describe('src/components/workspace', () => {
                     <Workspace readonly={false}/>
                 </ReduxProvider>,
             ), {wrapper: MemoryRouter})
-            jest.runOnlyPendingTimers()
         })
 
-        await waitFor(() => {
-            const elements = document.querySelectorAll('.AddViewTourStep')
-            expect(elements).toBeDefined()
-            expect(elements.length).toBe(2)
-            expect(elements[1]).toMatchSnapshot()
-        })
+        jest.runOnlyPendingTimers()
+
+        await waitFor(() => expect(document.querySelectorAll('.AddViewTourStep')).toBeDefined(), {timeout: 5000})
+
+        const elements = document.querySelectorAll('.AddViewTourStep')
+        expect(elements.length).toBe(2)
+        expect(elements[1]).toMatchSnapshot()
     })
 
     test('show copy link tooltip', async () => {
