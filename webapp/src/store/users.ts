@@ -44,8 +44,9 @@ const usersSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {
-        setMe: (state, action: PayloadAction<IUser>) => {
+        setMe: (state, action: PayloadAction<IUser|null>) => {
             state.me = action.payload
+            state.loggedIn = Boolean(state.me)
         },
         setBoardUsers: (state, action: PayloadAction<IUser[]>) => {
             state.boardUsers = action.payload.reduce((acc: {[key: string]: IUser}, user: IUser) => {

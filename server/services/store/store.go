@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 // Store represents the abstraction of the data storage.
@@ -32,6 +33,8 @@ type Store interface {
 	// @withTransaction
 	PatchBlock(blockID string, blockPatch *model.BlockPatch, userID string) error
 	GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
+	GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
+	GetBoardHistory(boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error)
 	GetBoardAndCardByID(blockID string) (board *model.Board, card *model.Block, err error)
 	GetBoardAndCard(block *model.Block) (board *model.Board, card *model.Block, err error)
 	// @withTransaction
@@ -126,11 +129,13 @@ type Store interface {
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
 
 	RemoveDefaultTemplates(boards []*model.Board) error
-	GetTemplateBoards(teamID string) ([]*model.Board, error)
+	GetTemplateBoards(teamID, userID string) ([]*model.Board, error)
 
 	DBType() string
 
 	IsErrNotFound(err error) bool
+
+	GetLicense() *mmModel.License
 }
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.

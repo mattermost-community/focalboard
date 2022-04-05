@@ -16,7 +16,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
         Settings
       </div>
       <div
-        class="Menu noselect top"
+        class="Menu noselect top "
       >
         <div
           class="menu-contents"
@@ -324,7 +324,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
         Settings
       </div>
       <div
-        class="Menu noselect top"
+        class="Menu noselect top "
       >
         <div
           class="menu-contents"
@@ -845,7 +845,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
         Settings
       </div>
       <div
-        class="Menu noselect top"
+        class="Menu noselect top "
       >
         <div
           class="menu-contents"
@@ -1015,7 +1015,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
         Settings
       </div>
       <div
-        class="Menu noselect top"
+        class="Menu noselect top "
       >
         <div
           class="menu-contents"

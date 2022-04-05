@@ -46,14 +46,14 @@ func (a *App) PrepareOnboardingTour(userID string, teamID string) (string, strin
 }
 
 func (a *App) getOnboardingBoardID() (string, error) {
-	boards, err := a.store.GetTemplateBoards(globalTeamID)
+	boards, err := a.store.GetTemplateBoards(model.GlobalTeamID, "")
 	if err != nil {
 		return "", err
 	}
 
 	var onboardingBoardID string
 	for _, block := range boards {
-		if block.Title == WelcomeBoardTitle {
+		if block.Title == WelcomeBoardTitle && block.TeamID == model.GlobalTeamID {
 			onboardingBoardID = block.ID
 			break
 		}
@@ -79,6 +79,18 @@ func (a *App) createWelcomeBoard(userID, teamID string) (string, error) {
 
 	if len(bab.Boards) != 1 {
 		return "", errCannotCreateBoard
+	}
+
+	// need variable for this to
+	// get reference for board patch
+	newType := model.BoardTypePrivate
+
+	patch := &model.BoardPatch{
+		Type: &newType,
+	}
+
+	if _, err := a.PatchBoard(patch, bab.Boards[0].ID, userID); err != nil {
+		return "", err
 	}
 
 	return bab.Boards[0].ID, nil
