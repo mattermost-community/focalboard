@@ -14,5 +14,5 @@ ALTER TABLE {{.prefix}}categories ALTER COLUMN id TYPE SERIAL;
 ALTER TABLE {{.prefix}}category_blocks ALTER COLUMN id DROP NOT NULL;
 ALTER TABLE {{.prefix}}category_blocks ALTER COLUMN id TYPE SERIAL;
 ALTER TABLE {{.prefix}}categories ALTER COLUMN channel_id TYPE VARCHAR(32);
-ALTER TABLE {{.prefix}}category_blocks ALTER COLUMN id SET NOT NULL;
+ALTER TABLE {{.prefix}}categories ALTER COLUMN channel_id SET NOT NULL;
 {{end}}
