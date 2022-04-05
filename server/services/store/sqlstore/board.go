@@ -241,11 +241,18 @@ func (s *SQLStore) getBoard(db sq.BaseRunner, boardID string) (*model.Board, err
 func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
+		Distinct().
 		From(s.tablePrefix + "boards as b").
-		Join(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
+		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		Where(sq.Eq{"b.team_id": teamID}).
-		Where(sq.Eq{"bm.user_id": userID}).
-		Where(sq.Eq{"b.is_template": false})
+		Where(sq.Eq{"b.is_template": false}).
+		Where(sq.Or{
+			sq.Eq{"b.type": model.BoardTypeOpen},
+			sq.And{
+				sq.Eq{"b.type": model.BoardTypePrivate},
+				sq.Eq{"bm.user_id": userID},
+			},
+		})
 
 	rows, err := query.Query()
 	if err != nil {
