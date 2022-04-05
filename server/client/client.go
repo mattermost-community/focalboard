@@ -180,6 +180,10 @@ func (c *Client) GetJoinBoardRoute(boardID string) string {
 	return fmt.Sprintf("%s/%s/join", c.GetBoardsRoute(), boardID)
 }
 
+func (c *Client) GetLeaveBoardRoute(boardID string) string {
+	return fmt.Sprintf("%s/%s/join", c.GetBoardsRoute(), boardID)
+}
+
 func (c *Client) GetBlocksRoute(boardID string) string {
 	return fmt.Sprintf("%s/blocks", c.GetBoardRoute(boardID))
 }
@@ -540,6 +544,16 @@ func (c *Client) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember
 
 func (c *Client) JoinBoard(boardID string) (*model.BoardMember, *Response) {
 	r, err := c.DoAPIPost(c.GetJoinBoardRoute(boardID), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardMemberFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) LeaveBoard(boardID string) (*model.BoardMember, *Response) {
+	r, err := c.DoAPIPost(c.GetLeaveBoardRoute(boardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}

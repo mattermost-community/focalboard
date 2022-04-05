@@ -87,7 +87,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
 	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/undelete", a.sessionRequired(a.handleUndeleteBlock)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.attachSession(a.handleDuplicateBlock, false)).Methods("POST")
+	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.sessionRequired(a.handleDuplicateBlock)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/metadata", a.sessionRequired(a.handleGetBoardMetadata)).Methods("GET")
 
 	// Member APIs
@@ -96,6 +96,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}/members/{userID}", a.sessionRequired(a.handleUpdateMember)).Methods("PUT")
 	apiv1.HandleFunc("/boards/{boardID}/members/{userID}", a.sessionRequired(a.handleDeleteMember)).Methods("DELETE")
 	apiv1.HandleFunc("/boards/{boardID}/join", a.sessionRequired(a.handleJoinBoard)).Methods("POST")
+	apiv1.HandleFunc("/boards/{boardID}/leave", a.sessionRequired(a.handleLeaveBoard)).Methods("POST")
 
 	// Sharing APIs
 	apiv1.HandleFunc("/boards/{boardID}/sharing", a.sessionRequired(a.handlePostSharing)).Methods("POST")
@@ -137,8 +138,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}/blocks/{blockID}", a.sessionRequired(a.handleUpdateCategoryBlock)).Methods(http.MethodPost)
 
 	// Get Files API
-	files := r.PathPrefix("/files").Subrouter()
-	files.HandleFunc("/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
+	apiv1.HandleFunc("/files/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
 
 	// Subscriptions
 	apiv1.HandleFunc("/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
@@ -261,6 +261,8 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	//       type: array
 	//       items:
 	//         "$ref": "#/definitions/Block"
+	//   '404':
+	//     description: board not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -275,6 +277,12 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 
+	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
+	if userID == "" && !hasValidReadToken {
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		return
+	}
+
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -285,9 +293,9 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !a.hasValidReadTokenForBoard(r, boardID) {
-		if board.IsTemplate {
-			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+	if !hasValidReadToken {
+		if board.IsTemplate && board.Type == model.BoardTypeOpen {
+			if board.TeamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
 				return
 			}
@@ -474,6 +482,8 @@ func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
 		case errors.Is(err, app.ErrorCategoryDeleted):
 			a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", err)
 		case errors.Is(err, app.ErrorCategoryPermissionDenied):
+			// TODO: The permissions should be handled as much as possible at
+			// the API level, this needs to be changed
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
 		default:
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -505,9 +515,14 @@ func (a *API) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
 
 	deletedCategory, err := a.app.DeleteCategory(categoryID, userID, teamID)
 	if err != nil {
-		if errors.Is(err, app.ErrorCategoryPermissionDenied) {
+		switch {
+		case errors.Is(err, app.ErrorInvalidCategory):
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		case errors.Is(err, app.ErrorCategoryPermissionDenied):
+			// TODO: The permissions should be handled as much as possible at
+			// the API level, this needs to be changed
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
-		} else {
+		default:
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		}
 		return
@@ -563,6 +578,7 @@ func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) 
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
 
+	// TODO: Check the category and the team matches
 	err := a.app.AddUpdateUserCategoryBlock(teamID, userID, categoryID, blockID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -755,7 +771,7 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 
 	// a user can update only own config
 	if userID != session.UserID {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", nil)
 		return
 	}
 
@@ -950,6 +966,8 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	// responses:
 	//   '200':
 	//     description: success
+	//   '404':
+	//     description: block not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -993,7 +1011,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks/{blockID}/undelete undeleteBlock
+	// swagger:operation POST /api/v1/boards/{boardID}/blocks/{blockID}/undelete undeleteBlock
 	//
 	// Undeletes a block
 	//
@@ -1001,9 +1019,9 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
-	// - name: workspaceID
+	// - name: boardID
 	//   in: path
-	//   description: Workspace ID
+	//   description: Board ID
 	//   required: true
 	//   type: string
 	// - name: blockID
@@ -1016,6 +1034,10 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 	// responses:
 	//   '200':
 	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/BlockPatch"
+	//   '404':
+	//     description: block not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -1027,19 +1049,56 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	blockID := vars["blockID"]
+	boardID := vars["boardID"]
+
+	board, err := a.app.GetBoard(boardID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if board == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	block, err := a.app.GetLastBlockHistoryEntry(blockID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if block == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if board.ID != block.BoardID {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
+		return
+	}
 
 	auditRec := a.makeAuditRecord(r, "undeleteBlock", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("blockID", blockID)
 
-	err := a.app.UndeleteBlock(blockID, userID)
+	undeletedBlock, err := a.app.UndeleteBlock(blockID, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	undeletedBlockData, err := json.Marshal(undeletedBlock)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	a.logger.Debug("UNDELETE Block", mlog.String("blockID", blockID))
-	jsonStringResponse(w, http.StatusOK, "{}")
+	jsonBytesResponse(w, http.StatusOK, undeletedBlockData)
 
 	auditRec.Success()
 }
@@ -1074,6 +1133,8 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	// responses:
 	//   '200':
 	//     description: success
+	//   '404':
+	//     description: block not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -1185,6 +1246,19 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 		auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), patches.BlockIDs[i])
 	}
 
+	for _, blockID := range patches.BlockIDs {
+		var block *model.Block
+		block, err = a.app.GetBlockByID(blockID)
+		if err != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+			return
+		}
+		if !a.permissions.HasPermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+			return
+		}
+	}
+
 	err = a.app.PatchBlocks(teamID, patches, userID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -1220,6 +1294,8 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 	//     description: success
 	//     schema:
 	//       "$ref": "#/definitions/Sharing"
+	//   '404':
+	//     description: board not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -1229,7 +1305,7 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 	boardID := vars["boardID"]
 
 	userID := getUserID(r)
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionShareBoard) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to sharing the board"})
 		return
 	}
@@ -1500,6 +1576,11 @@ func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
 	}
 
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
+	}
+
 	team, err := a.app.GetRootTeam()
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -1555,6 +1636,8 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	// responses:
 	//   '200':
 	//     description: success
+	//   '404':
+	//     description: file not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -1566,6 +1649,11 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
+	if userID == "" && !hasValidReadToken {
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", nil)
+		return
+	}
+
 	if !hasValidReadToken && !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 		return
@@ -1659,6 +1747,8 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	//     description: success
 	//     schema:
 	//       "$ref": "#/definitions/FileUploadResponse"
+	//   '404':
+	//     description: board not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -1883,7 +1973,7 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
-	if teamID != "0" && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+	if teamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
 		return
 	}
@@ -1899,12 +1989,21 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	results := []*model.Board{}
+	for _, board := range boards {
+		if board.Type == model.BoardTypeOpen {
+			results = append(results, board)
+		} else if a.permissions.HasPermissionToBoard(userID, board.ID, model.PermissionViewBoard) {
+			results = append(results, board)
+		}
+	}
+
 	a.logger.Debug("GetTemplates",
 		mlog.String("teamID", teamID),
-		mlog.Int("boardsCount", len(boards)),
+		mlog.Int("boardsCount", len(results)),
 	)
 
-	data, err := json.Marshal(boards)
+	data, err := json.Marshal(results)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -1913,7 +2012,7 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 	// response
 	jsonBytesResponse(w, http.StatusOK, data)
 
-	auditRec.AddMeta("templatesCount", len(boards))
+	auditRec.AddMeta("templatesCount", len(results))
 	auditRec.Success()
 }
 
@@ -2049,7 +2148,7 @@ func (a *API) handleDeleteSubscription(w http.ResponseWriter, r *http.Request) {
 
 	// User can only delete subscriptions for themselves
 	if session.UserID != subscriberID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "userID and subscriberID mismatch", nil)
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "access denied", nil)
 		return
 	}
 
@@ -2107,7 +2206,7 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 
 	// User can only get subscriptions for themselves (for now)
 	if session.UserID != subscriberID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "userID and subscriberID mismatch", nil)
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "access denied", nil)
 		return
 	}
 
@@ -2248,10 +2347,14 @@ func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 	teamID := mux.Vars(r)["teamID"]
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := getUserID(r)
 
-	teamID, boardID, err := a.app.PrepareOnboardingTour(session.UserID, teamID)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		return
+	}
+
+	teamID, boardID, err := a.app.PrepareOnboardingTour(userID, teamID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -2291,6 +2394,8 @@ func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
 	//     description: success
 	//     schema:
 	//       "$ref": "#/definitions/Board"
+	//   '404':
+	//     description: board not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -2376,6 +2481,8 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 	//     description: success
 	//     schema:
 	//       $ref: '#/definitions/Board'
+	//   '404':
+	//     description: board not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -2471,6 +2578,8 @@ func (a *API) handleDeleteBoard(w http.ResponseWriter, r *http.Request) {
 	// responses:
 	//   '200':
 	//     description: success
+	//   '404':
+	//     description: board not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -2478,6 +2587,17 @@ func (a *API) handleDeleteBoard(w http.ResponseWriter, r *http.Request) {
 
 	boardID := mux.Vars(r)["boardID"]
 	userID := getUserID(r)
+
+	// Check if board exists
+	board, err := a.app.GetBoard(boardID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if board == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to delete board"})
@@ -2520,6 +2640,8 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 	//     description: success
 	//     schema:
 	//       $ref: '#/definitions/BoardsAndBlocks'
+	//   '404':
+	//     description: board not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -2530,11 +2652,6 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	asTemplate := query.Get("asTemplate")
 	toTeam := query.Get("toTeam")
-
-	if toTeam != "" && !a.permissions.HasPermissionToTeam(userID, toTeam, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
-		return
-	}
 
 	if userID == "" {
 		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
@@ -2551,13 +2668,18 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if board.Type == model.BoardTypePrivate {
-		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+	if toTeam == "" && !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
+	if board.IsTemplate && board.Type == model.BoardTypeOpen {
+		if board.TeamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 			return
 		}
 	} else {
-		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 			return
 		}
@@ -2617,6 +2739,8 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 	//       type: array
 	//       items:
 	//         "$ref": "#/definitions/Block"
+	//   '404':
+	//     description: board or block not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -2628,18 +2752,37 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	asTemplate := query.Get("asTemplate")
 
-	if userID == "" {
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
-		return
-	}
-
-	board, err := a.app.GetBlockByID(blockID)
+	board, err := a.app.GetBoard(boardID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 	if board == nil {
 		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+	}
+
+	if userID == "" {
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		return
+	}
+
+	block, err := a.app.GetBlockByID(blockID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if block == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if board.ID != block.BoardID {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
 		return
 	}
 
@@ -2755,11 +2898,6 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
-	// - name: boardID
-	//   in: path
-	//   description: Board ID
-	//   required: true
-	//   type: string
 	// - name: teamID
 	//   in: path
 	//   description: Team ID
@@ -2917,12 +3055,16 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 	//     description: success
 	//     schema:
 	//       $ref: '#/definitions/BoardMember'
+	//   '404':
+	//     description: board not found
 	//   default:
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	boardID := mux.Vars(r)["boardID"]
+	userID := getUserID(r)
+
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -2933,7 +3075,10 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID := getUserID(r)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
+		return
+	}
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -2957,11 +3102,6 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 		UserID:       reqBoardMember.UserID,
 		BoardID:      boardID,
 		SchemeEditor: true,
-	}
-
-	if board.Type == model.BoardTypePrivate && !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
-		return
 	}
 
 	auditRec := a.makeAuditRecord(r, "addMember", audit.Fail)
@@ -3015,7 +3155,7 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 	//       $ref: '#/definitions/BoardMember'
 	//   '404':
 	//     description: board not found
-	//   '503':
+	//   '403':
 	//     description: access denied
 	//   default:
 	//     description: internal error
@@ -3067,7 +3207,7 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.logger.Debug("AddMember",
+	a.logger.Debug("JoinBoard",
 		mlog.String("boardID", board.ID),
 		mlog.String("addedUserID", userID),
 	)
@@ -3080,6 +3220,82 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 
 	// response
 	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.Success()
+}
+
+func (a *API) handleLeaveBoard(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /boards/{boardID}/leave leaveBoard
+	//
+	// Remove your own membership from a board
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: boardID
+	//   in: path
+	//   description: Board ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   '404':
+	//     description: board not found
+	//   '403':
+	//     description: access denied
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	userID := getUserID(r)
+	if userID == "" {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+		return
+	}
+
+	boardID := mux.Vars(r)["boardID"]
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", nil)
+		return
+	}
+
+	board, err := a.app.GetBoard(boardID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if board == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "leaveBoard", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+	auditRec.AddMeta("addedUserID", userID)
+
+	err = a.app.DeleteBoardMember(boardID, userID)
+	if errors.Is(err, app.ErrBoardMemberIsLastAdmin) {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		return
+	}
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("LeaveBoard",
+		mlog.String("boardID", board.ID),
+		mlog.String("addedUserID", userID),
+	)
+
+	jsonStringResponse(w, http.StatusOK, "{}")
 
 	auditRec.Success()
 }
@@ -3207,6 +3423,8 @@ func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
 	// responses:
 	//   '200':
 	//     description: success
+	//   '404':
+	//     description: board not found
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -3216,11 +3434,6 @@ func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
 	paramsUserID := mux.Vars(r)["userID"]
 	userID := getUserID(r)
 
-	if paramsUserID != userID && !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
-		return
-	}
-
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -3228,6 +3441,11 @@ func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
 	}
 	if board == nil {
 		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", err)
+		return
+	}
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
 		return
 	}
 
@@ -3299,38 +3517,16 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	for _, block := range newBab.Blocks {
-		// Error checking
-		if len(block.Type) < 1 {
-			message := fmt.Sprintf("missing type for block id %s", block.ID)
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
-			return
-		}
-
-		if block.CreateAt < 1 {
-			message := fmt.Sprintf("invalid createAt for block id %s", block.ID)
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
-			return
-		}
-
-		if block.UpdateAt < 1 {
-			message := fmt.Sprintf("invalid UpdateAt for block id %s", block.ID)
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
-			return
-		}
+	if len(newBab.Boards) == 0 {
+		message := "at least one board is required"
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
+		return
 	}
 
-	// permission check
-	createsPublicBoards := false
-	createsPrivateBoards := false
 	teamID := ""
+	boardIDs := map[string]bool{}
 	for _, board := range newBab.Boards {
-		if board.Type == model.BoardTypeOpen {
-			createsPublicBoards = true
-		}
-		if board.Type == model.BoardTypePrivate {
-			createsPrivateBoards = true
-		}
+		boardIDs[board.ID] = true
 
 		if teamID == "" {
 			teamID = board.TeamID
@@ -3350,6 +3546,38 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		}
 	}
 
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
+		return
+	}
+
+	for _, block := range newBab.Blocks {
+		// Error checking
+		if len(block.Type) < 1 {
+			message := fmt.Sprintf("missing type for block id %s", block.ID)
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
+			return
+		}
+
+		if block.CreateAt < 1 {
+			message := fmt.Sprintf("invalid createAt for block id %s", block.ID)
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
+			return
+		}
+
+		if block.UpdateAt < 1 {
+			message := fmt.Sprintf("invalid UpdateAt for block id %s", block.ID)
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
+			return
+		}
+
+		if !boardIDs[block.BoardID] {
+			message := fmt.Sprintf("invalid BoardID %s (not exists in the created boards)", block.BoardID)
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
+			return
+		}
+	}
+
 	// IDs of boards and blocks are used to confirm that they're
 	// linked and then regenerated by the server
 	newBab, err = model.GenerateBoardsAndBlocksIDs(newBab, a.logger)
@@ -3358,15 +3586,6 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	if createsPublicBoards && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionCreatePublicChannel) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create public boards"})
-		return
-	}
-
-	if createsPrivateBoards && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionCreatePrivateChannel) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create private boards"})
-		return
-	}
 	auditRec := a.makeAuditRecord(r, "createBoardsAndBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("teamID", teamID)
@@ -3503,6 +3722,11 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
 			return
 		}
+
+		if !a.permissions.HasPermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying cards"})
+			return
+		}
 	}
 
 	auditRec := a.makeAuditRecord(r, "patchBoardsAndBlocks", audit.Fail)
@@ -3575,7 +3799,9 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 	// user must have permission to delete all the boards, and that
 	// would include the permission to manage their blocks
 	teamID := ""
+	boardIDMap := map[string]bool{}
 	for _, boardID := range dbab.Boards {
+		boardIDMap[boardID] = true
 		// all boards in the request should belong to the same team
 		board, err := a.app.GetBoard(boardID)
 		if err != nil {
@@ -3597,6 +3823,28 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		// permission check
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to delete board"})
+			return
+		}
+	}
+
+	for _, blockID := range dbab.Blocks {
+		block, err2 := a.app.GetBlockByID(blockID)
+		if err2 != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err2)
+			return
+		}
+		if block == nil {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+			return
+		}
+
+		if _, ok := boardIDMap[block.BoardID]; !ok {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+			return
+		}
+
+		if !a.permissions.HasPermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying cards"})
 			return
 		}
 	}

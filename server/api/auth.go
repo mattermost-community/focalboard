@@ -170,6 +170,11 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
 	}
 
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
+	}
+
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
 		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
@@ -235,6 +240,11 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
 	}
 
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
+	}
+
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
 		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
@@ -286,6 +296,11 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
+
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
 	}
 
 	if len(a.singleUserToken) > 0 {
@@ -388,6 +403,11 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
+
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
 	}
 
 	if len(a.singleUserToken) > 0 {

@@ -44,10 +44,12 @@ func TestGetBoards(t *testing.T) {
 		teamID := "0"
 		otherTeamID := "other-team-id"
 		user1 := th.GetUser1()
+		user2 := th.GetUser2()
 
 		board1 := &model.Board{
 			TeamID: teamID,
 			Type:   model.BoardTypeOpen,
+			Title:  "Board 1",
 		}
 		rBoard1, err := th.Server.App().CreateBoard(board1, user1.ID, true)
 		require.NoError(t, err)
@@ -56,14 +58,16 @@ func TestGetBoards(t *testing.T) {
 		board2 := &model.Board{
 			TeamID: teamID,
 			Type:   model.BoardTypeOpen,
+			Title:  "Board 2",
 		}
-		rBoard2, err := th.Server.App().CreateBoard(board2, user1.ID, false)
+		rBoard2, err := th.Server.App().CreateBoard(board2, user2.ID, false)
 		require.NoError(t, err)
 		require.NotNil(t, rBoard2)
 
 		board3 := &model.Board{
 			TeamID: teamID,
 			Type:   model.BoardTypePrivate,
+			Title:  "Board 3",
 		}
 		rBoard3, err := th.Server.App().CreateBoard(board3, user1.ID, true)
 		require.NoError(t, err)
@@ -72,35 +76,43 @@ func TestGetBoards(t *testing.T) {
 		board4 := &model.Board{
 			TeamID: teamID,
 			Type:   model.BoardTypePrivate,
+			Title:  "Board 4",
 		}
 		rBoard4, err := th.Server.App().CreateBoard(board4, user1.ID, false)
 		require.NoError(t, err)
 		require.NotNil(t, rBoard4)
 
 		board5 := &model.Board{
+			TeamID: teamID,
+			Type:   model.BoardTypePrivate,
+			Title:  "Board 5",
+		}
+		rBoard5, err := th.Server.App().CreateBoard(board5, user2.ID, true)
+		require.NoError(t, err)
+		require.NotNil(t, rBoard5)
+
+		board6 := &model.Board{
 			TeamID: otherTeamID,
 			Type:   model.BoardTypeOpen,
 		}
-		rBoard5, err := th.Server.App().CreateBoard(board5, user1.ID, true)
+		rBoard6, err := th.Server.App().CreateBoard(board6, user1.ID, true)
 		require.NoError(t, err)
-		require.NotNil(t, rBoard5)
+		require.NotNil(t, rBoard6)
 
 		boards, resp := th.Client.GetBoardsForTeam(teamID)
 		th.CheckOK(resp)
 		require.NotNil(t, boards)
-		require.Len(t, boards, 2)
-
-		boardIDs := []string{}
-		for _, board := range boards {
-			boardIDs = append(boardIDs, board.ID)
-		}
-		require.ElementsMatch(t, []string{rBoard1.ID, rBoard3.ID}, boardIDs)
+		require.ElementsMatch(t, []*model.Board{
+			rBoard1,
+			rBoard2,
+			rBoard3,
+		}, boards)
 
 		boardsFromOtherTeam, resp := th.Client.GetBoardsForTeam(otherTeamID)
 		th.CheckOK(resp)
 		require.NotNil(t, boardsFromOtherTeam)
 		require.Len(t, boardsFromOtherTeam, 1)
-		require.Equal(t, rBoard5.ID, boardsFromOtherTeam[0].ID)
+		require.Equal(t, rBoard6.ID, boardsFromOtherTeam[0].ID)
 	})
 }
 
@@ -815,7 +827,7 @@ func TestDeleteBoard(t *testing.T) {
 		defer th.TearDown()
 
 		success, resp := th.Client.DeleteBoard("non-existing-board")
-		th.CheckForbidden(resp)
+		th.CheckNotFound(resp)
 		require.False(t, success)
 	})
 
@@ -1023,15 +1035,26 @@ func TestAddMember(t *testing.T) {
 			}
 
 			member, resp := th.Client2.AddMemberToBoard(newMember)
-			th.CheckOK(resp)
-			require.Equal(t, newMember.UserID, member.UserID)
-			require.Equal(t, newMember.BoardID, member.BoardID)
-			require.Equal(t, newMember.SchemeAdmin, member.SchemeAdmin)
-			require.Equal(t, newMember.SchemeEditor, member.SchemeEditor)
-			require.False(t, member.SchemeCommenter)
-			require.False(t, member.SchemeViewer)
+			th.CheckForbidden(resp)
+			require.Nil(t, member)
 
-			members, resp := th.Client.GetMembersForBoard(board.ID)
+			members, resp := th.Client2.GetMembersForBoard(board.ID)
+			th.CheckForbidden(resp)
+			require.Nil(t, members)
+
+			// Join board - will become an editor
+			member, resp = th.Client2.JoinBoard(board.ID)
+			th.CheckOK(resp)
+			require.NoError(t, resp.Error)
+			require.NotNil(t, member)
+			require.Equal(t, board.ID, member.BoardID)
+			require.Equal(t, th.GetUser2().ID, member.UserID)
+
+			member, resp = th.Client2.AddMemberToBoard(newMember)
+			th.CheckForbidden(resp)
+			require.Nil(t, member)
+
+			members, resp = th.Client2.GetMembersForBoard(board.ID)
 			th.CheckOK(resp)
 			require.Len(t, members, 2)
 		})
@@ -1370,13 +1393,14 @@ func TestDeleteMember(t *testing.T) {
 			require.NoError(t, err)
 			require.Len(t, members, 2)
 
+			// Should fail - must call leave to leave a board
 			success, resp := th.Client2.DeleteBoardMember(memberToDelete)
-			th.CheckOK(resp)
-			require.True(t, success)
+			th.CheckForbidden(resp)
+			require.False(t, success)
 
 			members, err = th.Server.App().GetMembersForBoard(board.ID)
 			require.NoError(t, err)
-			require.Len(t, members, 1)
+			require.Len(t, members, 2)
 		})
 
 		//nolint:dupl
