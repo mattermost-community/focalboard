@@ -8,7 +8,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {FilterClause} from '../../blocks/filterClause'
 
@@ -44,7 +44,7 @@ const mockedConditionClicked = jest.fn()
 describe('components/viewHeader/filterEntry', () => {
     beforeEach(() => {
         jest.clearAllMocks()
-        board.fields.cardProperties[0].options = [{id: 'Status', value: 'Status', color: ''}]
+        board.cardProperties[0].options = [{id: 'Status', value: 'Status', color: ''}]
         activeView.fields.filter.filters = [filter]
     })
     test('return filterEntry', () => {

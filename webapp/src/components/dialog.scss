@@ -13,6 +13,16 @@
         width: 100%;
         height: 100%;
         background-color: rgba(var(--center-channel-color-rgb), 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .toolbar {
+        display: flex;
+        flex-direction: row;
+        padding: 16px;
+        justify-content: space-between;
     }
 
     .dialog {
@@ -63,7 +73,7 @@
         > .toolbar {
             display: flex;
             flex-direction: row;
-            padding: 16px;
+            padding: 24px;
             justify-content: space-between;
         }
 

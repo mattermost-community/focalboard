@@ -52,12 +52,12 @@ class CsvExporter {
 
     private static generateTableArray(board: Board, cards: Card[], viewToExport: BoardView, intl: IntlShape): string[][] {
         const rows: string[][] = []
-        const visibleProperties = board.fields.cardProperties.filter((template: IPropertyTemplate) => viewToExport.fields.visiblePropertyIds.includes(template.id))
+        const visibleProperties = board.cardProperties.filter((template: IPropertyTemplate) => viewToExport.fields.visiblePropertyIds.includes(template.id))
 
         if (viewToExport.fields.viewType === 'calendar' &&
             viewToExport.fields.dateDisplayPropertyId &&
             !viewToExport.fields.visiblePropertyIds.includes(viewToExport.fields.dateDisplayPropertyId)) {
-            const dateDisplay = board.fields.cardProperties.find((template: IPropertyTemplate) => viewToExport.fields.dateDisplayPropertyId === template.id)
+            const dateDisplay = board.cardProperties.find((template: IPropertyTemplate) => viewToExport.fields.dateDisplayPropertyId === template.id)
             if (dateDisplay) {
                 visibleProperties.push(dateDisplay)
             }

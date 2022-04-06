@@ -18,7 +18,7 @@ function Switch(props: Props): JSX.Element {
         switchSize = 'size--medium'
     }
 
-    const className = props.isOn ? `Switch ${switchSize} on` : `Switch ${switchSize}`
+    const className = `Switch override-main ${switchSize}${props.isOn ? ' on' : ''}`
     return (
         <div
             className={className}

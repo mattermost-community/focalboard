@@ -44,7 +44,7 @@ describe('components/table/Table', () => {
 
     const state = {
         users: {
-            workspaceUsers: {
+            boardUsers: {
                 'user-id-1': {username: 'username_1'} as IUser,
                 'user-id-2': {username: 'username_2'} as IUser,
                 'user-id-3': {username: 'username_3'} as IUser,
@@ -53,13 +53,27 @@ describe('components/table/Table', () => {
         },
         comments: {
             comments: {},
+            commentsByCard: {},
         },
         contents: {
             contents: {},
+            contentsByCard: {},
         },
         cards: {
             cards: {
                 [card.id]: card,
+            },
+        },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
             },
         },
     }
@@ -70,6 +84,34 @@ describe('components/table/Table', () => {
 
         const mockStore = configureStore([])
         const store = mockStore(state)
+
+        const component = wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <Table
+                    board={board}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card]}
+                    views={[view, view2]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('should match snapshot without permissions', async () => {
+        const callback = jest.fn()
+        const addCard = jest.fn()
+
+        const mockStore = configureStore([])
+        const store = mockStore({...state, teams: {current: undefined}})
 
         const component = wrapDNDIntl(
             <ReduxProvider store={store}>
@@ -159,7 +201,7 @@ describe('components/table/Table', () => {
 describe('components/table/Table extended', () => {
     const state = {
         users: {
-            workspaceUsers: {
+            boardUsers: {
                 'user-id-1': {username: 'username_1'} as IUser,
                 'user-id-2': {username: 'username_2'} as IUser,
                 'user-id-3': {username: 'username_3'} as IUser,
@@ -168,12 +210,26 @@ describe('components/table/Table extended', () => {
         },
         comments: {
             comments: {},
+            commentsByCard: {},
         },
         contents: {
             contents: {},
+            contentsByCard: {},
         },
         cards: {
             cards: {},
+        },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: 'board_id',
+            boards: {
+                board_id: {id: 'board_id'},
+            },
+            myBoardMemberships: {
+                board_id: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
     }
 
@@ -181,7 +237,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const dateCreatedId = Utils.createGuid(IDType.User)
-        board.fields.cardProperties.push({
+        board.cardProperties.push({
             id: dateCreatedId,
             name: 'Date Created',
             type: 'createdTime',
@@ -211,6 +267,18 @@ describe('components/table/Table extended', () => {
                     [card2.id]: card2,
                 },
             },
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
         })
 
         const component = wrapDNDIntl(
@@ -238,7 +306,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const dateUpdatedId = Utils.createGuid(IDType.User)
-        board.fields.cardProperties.push({
+        board.cardProperties.push({
             id: dateUpdatedId,
             name: 'Date Updated',
             type: 'updatedTime',
@@ -278,10 +346,16 @@ describe('components/table/Table extended', () => {
                 comments: {
                     [card2Comment.id]: card2Comment,
                 },
+                commentsByCard: {
+                    [card2.id]: [card2Comment],
+                },
             },
             contents: {
                 contents: {
                     [card2Text.id]: card2Text,
+                },
+                contentsByCard: {
+                    [card2.id]: [card2Text],
                 },
             },
             cards: {
@@ -317,7 +391,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const createdById = Utils.createGuid(IDType.User)
-        board.fields.cardProperties.push({
+        board.cardProperties.push({
             id: createdById,
             name: 'Created By',
             type: 'createdBy',
@@ -375,7 +449,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const modifiedById = Utils.createGuid(IDType.User)
-        board.fields.cardProperties.push({
+        board.cardProperties.push({
             id: modifiedById,
             name: 'Last Modified By',
             type: 'updatedBy',
@@ -419,10 +493,16 @@ describe('components/table/Table extended', () => {
                 comments: {
                     [card2Comment.id]: card2Comment,
                 },
+                commentsByCard: {
+                    [card2.id]: [card2Comment],
+                },
             },
             contents: {
                 contents: {
                     [card1Text.id]: card1Text,
+                },
+                contentsByCard: {
+                    [card1.id]: [card1Text],
                 },
             },
             cards: {
@@ -459,7 +539,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const modifiedById = Utils.createGuid(IDType.User)
-        board.fields.cardProperties.push({
+        board.cardProperties.push({
             id: modifiedById,
             name: 'Last Modified By',
             type: 'updatedBy',

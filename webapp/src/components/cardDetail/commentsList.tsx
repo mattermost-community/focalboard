@@ -14,12 +14,15 @@ import {MarkdownEditor} from '../markdownEditor'
 import {IUser} from '../../user'
 import {getMe} from '../../store/users'
 
+import AddCommentTourStep from '../onboardingTour/addComments/addComments'
+
 import Comment from './comment'
+
 import './commentsList.scss'
 
 type Props = {
     comments: readonly CommentBlock[]
-    rootId: string
+    boardId: string
     cardId: string
     readonly: boolean
 }
@@ -31,15 +34,15 @@ const CommentsList = (props: Props) => {
     const onSendClicked = () => {
         const commentText = newComment
         if (commentText) {
-            const {rootId, cardId} = props
+            const {cardId, boardId} = props
             Utils.log(`Send comment: ${commentText}`)
             Utils.assertValue(cardId)
 
             const comment = createCommentBlock()
             comment.parentId = cardId
-            comment.rootId = rootId
+            comment.boardId = boardId
             comment.title = commentText
-            mutator.insertBlock(comment, 'add comment')
+            mutator.insertBlock(boardId, comment, 'add comment')
             setNewComment('')
         }
     }
@@ -75,6 +78,8 @@ const CommentsList = (props: Props) => {
                 />
             </Button>
             }
+
+            <AddCommentTourStep/>
         </div>
     )
 

@@ -186,7 +186,7 @@ describe('components/properties/select', () => {
         ))
 
         userEvent.click(screen.getByTestId(nonEditableSelectTestId))
-        userEvent.type(screen.getByRole('textbox', {name: /value selector/i}), `${newOption}{enter}`)
+        userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), `${newOption}{enter}`)
 
         expect(onCreate).toHaveBeenCalledWith(newOption)
     })

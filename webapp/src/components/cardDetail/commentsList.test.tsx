@@ -48,9 +48,26 @@ describe('components/cardDetail/CommentsList', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                workspaceUsers: [
+                boardUsers: [
                     {username: 'username_1'},
                 ],
+            },
+            boards: {
+                boards: {
+                    board_id_1: {title: 'Board'},
+                },
+                current: 'board_id_1',
+            },
+            cards: {
+                cards: {
+                    card_id_1: {title: 'Card'},
+                },
+                current: 'card_id_1',
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         })
 
@@ -59,8 +76,8 @@ describe('components/cardDetail/CommentsList', () => {
                 {wrapIntl(
                     <CommentsList
                         comments={[comment1, comment2]}
-                        rootId={'root_id'}
                         cardId={'card_id'}
+                        boardId={'board_id'}
                         readonly={false}
                     />,
                 )}
@@ -88,7 +105,7 @@ describe('components/cardDetail/CommentsList', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                workspaceUsers: [
+                boardUsers: [
                     {username: 'username_1'},
                 ],
             },
@@ -99,8 +116,8 @@ describe('components/cardDetail/CommentsList', () => {
                 {wrapIntl(
                     <CommentsList
                         comments={[comment1, comment2]}
-                        rootId={'root_id'}
                         cardId={'card_id'}
+                        boardId={'board_id'}
                         readonly={true}
                     />,
                 )}

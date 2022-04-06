@@ -19,7 +19,7 @@ func StoreTestUserStore(t *testing.T, setup func(t *testing.T) (store.Store, fun
 	t.Run("SetGetSystemSettings", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testGetWorkspaceUsers(t, store)
+		testGetTeamUsers(t, store)
 	})
 
 	t.Run("CreateAndGetUser", func(t *testing.T) {
@@ -39,11 +39,16 @@ func StoreTestUserStore(t *testing.T, setup func(t *testing.T) (store.Store, fun
 		defer tearDown()
 		testCreateAndGetRegisteredUserCount(t, store)
 	})
+	t.Run("TestPatchUserProps", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testPatchUserProps(t, store)
+	})
 }
 
-func testGetWorkspaceUsers(t *testing.T, store store.Store) {
-	t.Run("GetWorkspaceUSers", func(t *testing.T) {
-		users, err := store.GetUsersByWorkspace("workspace_1")
+func testGetTeamUsers(t *testing.T, store store.Store) {
+	t.Run("GetTeamUSers", func(t *testing.T) {
+		users, err := store.GetUsersByTeam("team_1")
 		require.Equal(t, 0, len(users))
 		require.Equal(t, sql.ErrNoRows, err)
 
@@ -62,7 +67,7 @@ func testGetWorkspaceUsers(t *testing.T, store store.Store) {
 			})
 		}()
 
-		users, err = store.GetUsersByWorkspace("workspace_1")
+		users, err = store.GetUsersByTeam("team_1")
 		require.Equal(t, 1, len(users))
 		require.Equal(t, "darth.vader", users[0].Username)
 		require.NoError(t, err)
@@ -163,4 +168,62 @@ func testCreateAndGetRegisteredUserCount(t *testing.T, store store.Store) {
 	got, err := store.GetRegisteredUserCount()
 	require.NoError(t, err)
 	require.Equal(t, randomN, got)
+}
+
+func testPatchUserProps(t *testing.T, store store.Store) {
+	user := &model.User{
+		ID: utils.NewID(utils.IDTypeUser),
+	}
+	err := store.CreateUser(user)
+	require.NoError(t, err)
+
+	// Only update props
+	patch := model.UserPropPatch{
+		UpdatedFields: map[string]string{
+			"new_key_1": "new_value_1",
+			"new_key_2": "new_value_2",
+			"new_key_3": "new_value_3",
+		},
+	}
+
+	err = store.PatchUserProps(user.ID, patch)
+	require.NoError(t, err)
+	fetchedUser, err := store.GetUserByID(user.ID)
+	require.NoError(t, err)
+	require.Equal(t, fetchedUser.Props["new_key_1"], "new_value_1")
+	require.Equal(t, fetchedUser.Props["new_key_2"], "new_value_2")
+	require.Equal(t, fetchedUser.Props["new_key_3"], "new_value_3")
+
+	// Delete a prop
+	patch = model.UserPropPatch{
+		DeletedFields: []string{
+			"new_key_1",
+		},
+	}
+
+	err = store.PatchUserProps(user.ID, patch)
+	require.NoError(t, err)
+	fetchedUser, err = store.GetUserByID(user.ID)
+	require.NoError(t, err)
+	_, ok := fetchedUser.Props["new_key_1"]
+	require.False(t, ok)
+	require.Equal(t, fetchedUser.Props["new_key_2"], "new_value_2")
+	require.Equal(t, fetchedUser.Props["new_key_3"], "new_value_3")
+
+	// update and delete together
+	patch = model.UserPropPatch{
+		UpdatedFields: map[string]string{
+			"new_key_3": "new_value_3_new_again",
+		},
+		DeletedFields: []string{
+			"new_key_2",
+		},
+	}
+	err = store.PatchUserProps(user.ID, patch)
+	require.NoError(t, err)
+	fetchedUser, err = store.GetUserByID(user.ID)
+	require.NoError(t, err)
+	_, ok = fetchedUser.Props["new_key_2"]
+	require.False(t, ok)
+	require.Equal(t, fetchedUser.Props["new_key_3"], "new_value_3_new_again")
 }

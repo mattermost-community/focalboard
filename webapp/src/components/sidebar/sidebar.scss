@@ -64,8 +64,9 @@
         flex: 1 1 auto;
         overflow-y: auto;
         max-width: 100%;
+        margin-top: 12px;
 
-        > div {
+        > div:last-child {
             margin-bottom: 16px;
         }
     }

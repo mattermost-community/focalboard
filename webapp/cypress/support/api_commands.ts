@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 
 import {Board} from '../../src/blocks/board'
+import {UserConfigPatch} from '../../src/user'
 
 Cypress.Commands.add('apiRegisterUser', (data: Cypress.UserData, token?: string, failOnError?: boolean) => {
     return cy.request({
@@ -51,33 +52,48 @@ Cypress.Commands.add('apiInitServer', () => {
     return cy.apiRegisterUser(data, '', false).apiLoginUser(data)
 })
 
-Cypress.Commands.add('apiDeleteBlock', (id: string) => {
+Cypress.Commands.add('apiDeleteBoard', (id: string) => {
     return cy.request({
         method: 'DELETE',
-        url: `/api/v1/workspaces/0/blocks/${encodeURIComponent(id)}`,
+        url: `/api/v1/boards/${encodeURIComponent(id)}`,
         ...headers(),
     })
 })
 
-const deleteBlocks = (ids: string[]) => {
+const deleteBoards = (ids: string[]) => {
     if (ids.length === 0) {
         return
     }
     const [id, ...other] = ids
-    cy.apiDeleteBlock(id).then(() => deleteBlocks(other))
+    cy.apiDeleteBoard(id).then(() => deleteBoards(other))
 }
 
 Cypress.Commands.add('apiResetBoards', () => {
     return cy.request({
         method: 'GET',
-        url: '/api/v1/workspaces/0/blocks?type=board',
+        url: '/api/v1/teams/0/boards',
         ...headers(),
     }).then((response) => {
         if (Array.isArray(response.body)) {
             const boards = response.body as Board[]
-            const toDelete = boards.filter((b) => !b.fields.isTemplate).map((b) => b.id)
-            deleteBlocks(toDelete)
+            const toDelete = boards.filter((b) => !b.isTemplate).map((b) => b.id)
+            deleteBoards(toDelete)
         }
+    })
+})
+
+Cypress.Commands.add('apiSkipTour', (userID: string) => {
+    const body: UserConfigPatch = {
+        updatedFields: {
+            focalboard_welcomePageViewed: '1',
+        },
+    }
+
+    return cy.request({
+        method: 'PUT',
+        url: `/api/v1/users/${encodeURIComponent(userID)}/config`,
+        ...headers(),
+        body,
     })
 })
 
@@ -101,8 +117,8 @@ Cypress.Commands.add('apiChangePassword', (userId: string, oldPassword: string, 
 
 Cypress.Commands.add('uiCreateNewBoard', (title?: string) => {
     cy.log('**Create new empty board**')
-    cy.findByText('+ Add board').click()
-    cy.get('.empty-board').first().click({force: true})
+    cy.uiCreateEmptyBoard()
+
     cy.findByPlaceholderText('Untitled board').should('exist')
     cy.wait(10)
     if (title) {

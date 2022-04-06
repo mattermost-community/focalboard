@@ -20,19 +20,19 @@ beforeEach(() => {
 
 describe('components/table/calculation/CalculationRow', () => {
     const board = TestBlockFactory.createBoard()
-    board.fields.cardProperties.push({
+    board.cardProperties.push({
         id: 'property_2',
         name: 'Property 2',
         type: 'text',
         options: [],
     })
-    board.fields.cardProperties.push({
+    board.cardProperties.push({
         id: 'property_3',
         name: 'Property 3',
         type: 'text',
         options: [],
     })
-    board.fields.cardProperties.push({
+    board.cardProperties.push({
         id: 'property_4',
         name: 'Property 4',
         type: 'text',
@@ -71,7 +71,7 @@ describe('components/table/calculation/CalculationRow', () => {
     })
 
     test('should match snapshot', async () => {
-        board.fields.columnCalculations = {
+        board.columnCalculations = {
             property_2: 'count',
             property_3: 'countValue',
             property_4: 'countUniqueValue',

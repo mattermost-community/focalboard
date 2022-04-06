@@ -10,7 +10,8 @@ import {Utils} from '../utils'
 
 import {Subscription} from '../wsclient'
 
-import {initialLoad} from './initialLoad'
+// TODO: change this whene the initial load is complete
+// import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
 
@@ -21,7 +22,7 @@ export const fetchMe = createAsyncThunk(
 
 type UsersStatus = {
     me: IUser|null
-    workspaceUsers: {[key: string]: IUser}
+    boardUsers: {[key: string]: IUser}
     loggedIn: boolean|null
     blockSubscriptions: Array<Subscription>
 }
@@ -33,7 +34,7 @@ export const fetchUserBlockSubscriptions = createAsyncThunk(
 
 const initialState = {
     me: null,
-    workspaceUsers: {},
+    boardUsers: {},
     loggedIn: null,
     userWorkspaces: [],
     blockSubscriptions: [],
@@ -43,14 +44,20 @@ const usersSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {
-        setMe: (state, action: PayloadAction<IUser>) => {
+        setMe: (state, action: PayloadAction<IUser|null>) => {
             state.me = action.payload
+            state.loggedIn = Boolean(state.me)
         },
-        setWorkspaceUsers: (state, action: PayloadAction<IUser[]>) => {
-            state.workspaceUsers = action.payload.reduce((acc: {[key: string]: IUser}, user: IUser) => {
+        setBoardUsers: (state, action: PayloadAction<IUser[]>) => {
+            state.boardUsers = action.payload.reduce((acc: {[key: string]: IUser}, user: IUser) => {
                 acc[user.id] = user
                 return acc
             }, {})
+        },
+        addBoardUsers: (state, action: PayloadAction<IUser[]>) => {
+            action.payload.forEach((user: IUser) => {
+                state.boardUsers[user.id] = user
+            })
         },
         followBlock: (state, action: PayloadAction<Subscription>) => {
             state.blockSubscriptions.push(action.payload)
@@ -58,6 +65,11 @@ const usersSlice = createSlice({
         unfollowBlock: (state, action: PayloadAction<Subscription>) => {
             const oldSubscriptions = state.blockSubscriptions
             state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload.blockId)
+        },
+        patchProps: (state, action: PayloadAction<Record<string, string>>) => {
+            if (state.me) {
+                state.me.props = action.payload
+            }
         },
     },
     extraReducers: (builder) => {
@@ -69,35 +81,63 @@ const usersSlice = createSlice({
             state.me = null
             state.loggedIn = false
         })
-        builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.workspaceUsers = action.payload.workspaceUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
-                acc[user.id] = user
-                return acc
-            }, {})
-        })
+
+        // TODO: change this when the initial load is complete
+        // builder.addCase(initialLoad.fulfilled, (state, action) => {
+        //     state.boardUsers = action.payload.boardUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
+        //         acc[user.id] = user
+        //         return acc
+        //     }, {})
+        // })
+
         builder.addCase(fetchUserBlockSubscriptions.fulfilled, (state, action) => {
             state.blockSubscriptions = action.payload
         })
     },
 })
 
-export const {setMe, setWorkspaceUsers} = usersSlice.actions
+export const {setMe, setBoardUsers, addBoardUsers, followBlock, unfollowBlock, patchProps} = usersSlice.actions
 export const {reducer} = usersSlice
 
 export const getMe = (state: RootState): IUser|null => state.users.me
 export const getLoggedIn = (state: RootState): boolean|null => state.users.loggedIn
-export const getWorkspaceUsers = (state: RootState): {[key: string]: IUser} => state.users.workspaceUsers
+export const getBoardUsers = (state: RootState): {[key: string]: IUser} => state.users.boardUsers
 
-export const getWorkspaceUsersList = createSelector(
-    getWorkspaceUsers,
-    (workspaceUsers) => Object.values(workspaceUsers).sort((a, b) => a.username.localeCompare(b.username)),
+export const getBoardUsersList = createSelector(
+    getBoardUsers,
+    (boardUsers) => Object.values(boardUsers).sort((a, b) => a.username.localeCompare(b.username)),
 )
 
 export const getUser = (userId: string): (state: RootState) => IUser|undefined => {
     return (state: RootState): IUser|undefined => {
-        const users = getWorkspaceUsers(state)
+        const users = getBoardUsers(state)
         return users[userId]
     }
 }
 
-export const {followBlock, unfollowBlock} = usersSlice.actions
+export const getOnboardingTourStarted = createSelector(
+    getMe,
+    (me): boolean => {
+        if (!me) {
+            return false
+        }
+
+        return Boolean(me.props?.focalboard_onboardingTourStarted)
+    },
+)
+
+export const getOnboardingTourStep = createSelector(
+    getMe,
+    (me): string => {
+        if (!me) {
+            return ''
+        }
+
+        return me.props?.focalboard_onboardingTourStep
+    },
+)
+
+export const getOnboardingTourCategory = createSelector(
+    getMe,
+    (me): string => (me ? me.props?.focalboard_tourCategory : ''),
+)

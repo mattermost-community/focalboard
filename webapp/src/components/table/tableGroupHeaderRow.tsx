@@ -117,7 +117,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                                 id='hide'
                                 icon={<HideIcon/>}
                                 name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
-                                onClick={() => mutator.hideViewColumn(activeView, group.option.id || '')}
+                                onClick={() => mutator.hideViewColumn(board.id, activeView, group.option.id || '')}
                             />
                             {group.option.id &&
                                 <>
@@ -125,7 +125,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                                         id='delete'
                                         icon={<DeleteIcon/>}
                                         name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
-                                        onClick={() => mutator.deletePropertyOption(board, groupByProperty!, group.option)}
+                                        onClick={() => mutator.deletePropertyOption(board.id, board.cardProperties, groupByProperty!, group.option)}
                                     />
                                     <Menu.Separator/>
                                     {Object.entries(Constants.menuColors).map(([key, color]) => (
@@ -133,7 +133,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                                             key={key}
                                             id={key}
                                             name={color}
-                                            onClick={() => mutator.changePropertyOptionColor(board, groupByProperty!, group.option, key)}
+                                            onClick={() => mutator.changePropertyOptionColor(board.id, board.cardProperties, groupByProperty!, group.option, key)}
                                         />
                                     ))}
                                 </>}

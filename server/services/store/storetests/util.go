@@ -29,26 +29,19 @@ func createTestUsers(t *testing.T, store store.Store, num int) []*model.User {
 	return users
 }
 
-func createTestBlocks(t *testing.T, store store.Store, container store.Container, userID string, num int) []*model.Block {
+func createTestBlocks(t *testing.T, store store.Store, userID string, num int) []*model.Block {
 	var blocks []*model.Block
 	for i := 0; i < num; i++ {
 		block := &model.Block{
-			ID:          utils.NewID(utils.IDTypeBlock),
-			RootID:      utils.NewID(utils.IDTypeBlock),
-			Type:        "card",
-			CreatedBy:   userID,
-			WorkspaceID: container.WorkspaceID,
+			ID:        utils.NewID(utils.IDTypeBlock),
+			BoardID:   utils.NewID(utils.IDTypeBoard),
+			Type:      "card",
+			CreatedBy: userID,
 		}
-		err := store.InsertBlock(container, block, userID)
+		err := store.InsertBlock(block, userID)
 		require.NoError(t, err)
 
 		blocks = append(blocks, block)
 	}
 	return blocks
-}
-
-func containerForWorkspace(workspaceID string) store.Container {
-	return store.Container{
-		WorkspaceID: workspaceID,
-	}
 }

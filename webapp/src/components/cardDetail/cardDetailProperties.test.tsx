@@ -4,9 +4,12 @@
 import React from 'react'
 import {render, screen, act} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import '@testing-library/jest-dom'
 import {createIntl} from 'react-intl'
+
+import configureStore from 'redux-mock-store'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import {PropertyType} from '../../blocks/board'
 import {wrapIntl} from '../../testUtils'
@@ -21,7 +24,7 @@ const mockedMutator = mocked(mutator, true)
 
 describe('components/cardDetail/CardDetailProperties', () => {
     const board = TestBlockFactory.createBoard()
-    board.fields.cardProperties = [
+    board.cardProperties = [
         {
             id: 'property_id_1',
             name: 'Owner',
@@ -67,19 +70,62 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
     const cards = [card]
 
+    const state = {
+        users: {
+            me: {
+                id: 'user_id_1',
+                props: {
+                    focalboard_onboardingTourStarted: true,
+                    focalboard_tourCategory: 'card',
+                    focalboard_onboardingTourStep: '1',
+                },
+            },
+        },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            boards: {
+                [board.id]: board,
+            },
+            current: board.id,
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
+        cards: {
+            cards: {
+                [card.id]: card,
+            },
+            current: card.id,
+        },
+        clientConfig: {
+            value: {
+                featureFlags: {},
+            },
+        },
+    }
+
+    const mockStore = configureStore([])
+    let store = mockStore(state)
+
+    beforeEach(() => {
+        store = mockStore(state)
+    })
+
     function renderComponent() {
-        const component = wrapIntl((
-            <CardDetailProperties
-                board={board!}
-                card={card}
-                cards={[card]}
-                contents={[]}
-                comments={[]}
-                activeView={view}
-                views={views}
-                readonly={false}
-            />
-        ))
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <CardDetailProperties
+                    board={board!}
+                    card={card}
+                    cards={[card]}
+                    activeView={view}
+                    views={views}
+                    readonly={false}
+                />
+            </ReduxProvider>,
+        )
 
         return render(component)
     }
@@ -125,7 +171,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         // rename to "Owner-Renamed"
         onPropertyRenameOpenConfirmationDialog(result.container)
 
-        const propertyTemplate = board.fields.cardProperties[0]
+        const propertyTemplate = board.cardProperties[0]
 
         const confirmButton = result.getByTitle('Change Property')
         expect(confirmButton).toBeDefined()
@@ -176,7 +222,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
 
         openDeleteConfirmationDialog(container)
 
-        const propertyTemplate = board.fields.cardProperties[0]
+        const propertyTemplate = board.cardProperties[0]
 
         const confirmButton = result.getByTitle('Delete')
         expect(confirmButton).toBeDefined()
@@ -230,4 +276,3 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(confirmDialog).toBeDefined()
     }
 })
-

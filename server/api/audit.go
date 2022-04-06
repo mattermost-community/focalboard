@@ -17,12 +17,7 @@ func (a *API) makeAuditRecord(r *http.Request, event string, initialStatus strin
 		userID = session.UserID
 	}
 
-	workspaceID := "unknown"
-	container, err := a.getContainer(r)
-	if err == nil {
-		workspaceID = container.WorkspaceID
-	}
-
+	teamID := "unknown"
 	rec := &audit.Record{
 		APIPath:   r.URL.Path,
 		Event:     event,
@@ -31,7 +26,7 @@ func (a *API) makeAuditRecord(r *http.Request, event string, initialStatus strin
 		SessionID: sessionID,
 		Client:    r.UserAgent(),
 		IPAddress: r.RemoteAddr,
-		Meta:      []audit.Meta{{K: audit.KeyWorkspaceID, V: workspaceID}},
+		Meta:      []audit.Meta{{K: audit.KeyTeamID, V: teamID}},
 	}
 
 	return rec

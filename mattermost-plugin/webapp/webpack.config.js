@@ -111,21 +111,11 @@ module.exports = {
                 exclude: [/node_modules/],
             },
             {
-                test: /\.(png|eot|tiff|svg|woff2|woff|ttf|jpg)$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: 'static',
-                            publicPath: '/static/',
-                        },
-                    },
-                    {
-                        loader: 'image-webpack-loader',
-                        options: {},
-                    },
-                ],
+                test: /\.(png|eot|tiff|svg|woff2|woff|ttf|jpg|gif)$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'static/[name].[ext]',
+                }
             },
         ],
     },
