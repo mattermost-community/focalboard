@@ -385,11 +385,6 @@ func (s *SQLStore) GetSubTree2(boardID string, blockID string, opts model.QueryS
 
 }
 
-func (s *SQLStore) GetSubTree3(boardID string, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
-	return s.getSubTree3(s.db, boardID, blockID, opts)
-
-}
-
 func (s *SQLStore) GetSubscribersCountForBlock(blockID string) (int, error) {
 	return s.getSubscribersCountForBlock(s.db, blockID)
 
