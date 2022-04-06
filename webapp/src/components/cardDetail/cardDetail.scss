@@ -70,6 +70,7 @@
 
     .ValueSelector__menu {
         max-width: 100%;
+        z-index: 10;
 
         .value-menu-option {
             justify-content: space-between;
