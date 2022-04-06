@@ -5,9 +5,7 @@ CREATE TABLE {{.prefix}}categories (
     name varchar(100) NOT NULL,
     user_id varchar(32) NOT NULL,
     team_id varchar(32) NOT NULL,
-    {{if not .sqlite}}
-      channel_id varchar(32) NOT NULL,
-    {{end}}
+    channel_id varchar(36) NOT NULL,
     create_at BIGINT,
     update_at BIGINT,
     delete_at BIGINT,
