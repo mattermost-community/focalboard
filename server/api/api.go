@@ -1779,7 +1779,12 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 
 	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusRequestEntityTooLarge, "", err)
+		fmt.Println(err.Error())
+		if strings.HasSuffix(err.Error(), "http: request body too large") {
+			a.errorResponse(w, r.URL.Path, http.StatusRequestEntityTooLarge, "", err)
+			return
+		}
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 		return
 	}
 	defer file.Close()
