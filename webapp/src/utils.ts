@@ -4,6 +4,10 @@ import {marked} from 'marked'
 import {IntlShape} from 'react-intl'
 import moment from 'moment'
 
+import {generatePath, match as routerMatch} from "react-router-dom"
+
+import {History} from "history"
+
 import {Block} from './blocks/block'
 import {Board as BoardType, BoardMember, createBoard} from './blocks/board'
 import {createBoardView} from './blocks/boardView'
@@ -509,7 +513,7 @@ class Utils {
     }
 
     static getFrontendBaseURL(absolute?: boolean): string {
-        let frontendBaseURL = window.frontendBaseURL || Utils.getBaseURL(absolute)
+        let frontendBaseURL = window.frontendBaseURL || Utils.getBaseURL()
         frontendBaseURL = frontendBaseURL.replace(/\/+$/, '')
         if (frontendBaseURL.indexOf('/') === 0) {
             frontendBaseURL = frontendBaseURL.slice(1)
@@ -702,6 +706,22 @@ class Utils {
             return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey)
         }
         return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey && !e.altKey)
+    }
+
+    static showBoard(
+        boardId: string,
+        match: routerMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>,
+        history: History,
+    ) {
+        // if the same board, reuse the match params
+        // otherwise remove viewId and cardId, results in first view being selected
+        const params = {...match.params, boardId: boardId || ''}
+        if (boardId !== match.params.boardId) {
+            params.viewId = undefined
+            params.cardId = undefined
+        }
+        const newPath = generatePath(match.path, params)
+        history.push(newPath)
     }
 }
 

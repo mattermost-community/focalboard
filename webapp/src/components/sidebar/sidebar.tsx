@@ -29,6 +29,8 @@ import wsClient, {WSClient} from '../../wsclient'
 
 import {getCurrentTeam} from '../../store/teams'
 
+import {Constants} from "../../constants"
+
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
@@ -152,7 +154,7 @@ const Sidebar = (props: Props) => {
                     </div>
                 </div>}
 
-            {team && team.id !== '0' &&
+            {team && team.id !== Constants.globalTeamId &&
                 <div className='WorkspaceTitle'>
                     {Utils.isFocalboardPlugin() &&
                     <>

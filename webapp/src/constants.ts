@@ -186,6 +186,8 @@ class Constants {
         Y: ['y', 89],
         Z: ['z', 90],
     }
+
+    static readonly globalTeamId = '0'
 }
 
 export {Constants, Permission}

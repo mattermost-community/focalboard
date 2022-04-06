@@ -10,6 +10,7 @@ import (
 var (
 	ErrorCategoryPermissionDenied = errors.New("category doesn't belong to user")
 	ErrorCategoryDeleted          = errors.New("category is deleted")
+	ErrorInvalidCategory          = errors.New("invalid category")
 )
 
 func (a *App) CreateCategory(category *model.Category) (*model.Category, error) {
@@ -84,6 +85,11 @@ func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category
 	// verify if category belongs to the user
 	if existingCategory.UserID != userID {
 		return nil, ErrorCategoryPermissionDenied
+	}
+
+	// verify if category belongs to the team
+	if existingCategory.TeamID != teamID {
+		return nil, ErrorInvalidCategory
 	}
 
 	if err = a.store.DeleteCategory(categoryID, userID, teamID); err != nil {
