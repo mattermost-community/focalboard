@@ -23,7 +23,7 @@ CREATE TABLE {{.prefix}}categories (
     )
     SELECT
         {{ if .postgres }}
-            REPLACE(uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)::varchar, '-', '');
+            REPLACE(uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)::varchar, '-', ''),
         {{ end }}
         {{ if .mysql }}
             REPLACE(UUID(), '-', ''),
