@@ -28,8 +28,6 @@ CREATE TABLE {{.prefix}}category_blocks (
         AND {{.prefix}}boards.is_template = false
 ;
 
-    --ALTER TABLE {{.prefix}}categories DROP COLUMN channel_id;
-
     {{if .mysql}}
         ALTER TABLE {{.prefix}}category_blocks MODIFY id varchar(36);
     {{end}}
