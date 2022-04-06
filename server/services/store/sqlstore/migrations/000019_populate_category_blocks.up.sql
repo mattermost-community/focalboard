@@ -13,7 +13,7 @@ CREATE TABLE {{.prefix}}category_blocks (
     INSERT INTO {{.prefix}}category_blocks(id, user_id, category_id, block_id, create_at, update_at, delete_at)
     SELECT
         {{ if .postgres }}
-            REPLACE(uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)::varchar, '-', '');
+            REPLACE(uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)::varchar, '-', ''),
         {{ end }}
         {{ if .mysql }}
             REPLACE(UUID(), '-', ''),
