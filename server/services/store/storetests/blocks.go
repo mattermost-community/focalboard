@@ -802,14 +802,14 @@ func testDuplicateBlock(t *testing.T, store store.Store) {
 	t.Run("duplicate existing block as no template", func(t *testing.T) {
 		blocks, err := store.DuplicateBlock(testBoardID, "child1", testUserID, false)
 		require.NoError(t, err)
-		require.Len(t, blocks, 3)
+		require.Len(t, blocks, 2)
 		require.Equal(t, false, blocks[0].Fields["isTemplate"])
 	})
 
 	t.Run("duplicate existing block as template", func(t *testing.T) {
 		blocks, err := store.DuplicateBlock(testBoardID, "child1", testUserID, true)
 		require.NoError(t, err)
-		require.Len(t, blocks, 3)
+		require.Len(t, blocks, 2)
 		require.Equal(t, true, blocks[0].Fields["isTemplate"])
 	})
 
