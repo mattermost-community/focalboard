@@ -30,5 +30,3 @@ CREATE TABLE {{.prefix}}category_blocks (
         JOIN {{.prefix}}boards ON {{.prefix}}categories.channel_id = {{.prefix}}boards.channel_id
         AND {{.prefix}}boards.is_template = false;
 {{end}}
-
-ALTER TABLE {{.prefix}}categories DROP COLUMN channel_id;
