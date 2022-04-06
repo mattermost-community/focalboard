@@ -3873,12 +3873,21 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 // Response helpers
 
 func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message string, sourceError error) {
-	a.logger.Error("API ERROR",
-		mlog.Int("code", code),
-		mlog.Err(sourceError),
-		mlog.String("msg", message),
-		mlog.String("api", api),
-	)
+	if code == http.StatusUnauthorized {
+		a.logger.Debug("API DEBUG",
+			mlog.Int("code", code),
+			mlog.Err(sourceError),
+			mlog.String("msg", message),
+			mlog.String("api", api),
+		)
+	} else {
+		a.logger.Error("API ERROR",
+			mlog.Int("code", code),
+			mlog.Err(sourceError),
+			mlog.String("msg", message),
+			mlog.String("api", api),
+		)
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: code})
