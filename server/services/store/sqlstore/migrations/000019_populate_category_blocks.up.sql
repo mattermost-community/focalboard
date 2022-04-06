@@ -23,7 +23,6 @@ CREATE TABLE {{.prefix}}category_blocks (
         {{.prefix}}boards.id,
         {{if .postgres}}(extract(epoch from now())*1000)::bigint,{{end}}
         {{if .mysql}}UNIX_TIMESTAMP() * 1000,{{end}}
-        {{if .sqlite}}CAST(strftime('%s', 'now') * 1000 as bigint),{{end}}
         0,
         0
     FROM

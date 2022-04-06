@@ -16,7 +16,7 @@ CREATE TABLE {{.prefix}}categories (
         name,
         user_id,
         team_id,
-        {{if not .sqlite}}channel_id,{{end}}
+        channel_id,
         create_at,
         update_at,
         delete_at
@@ -31,10 +31,9 @@ CREATE TABLE {{.prefix}}categories (
         COALESCE(nullif(c.DisplayName, ''), 'Direct Message') as category_name,
         cm.UserId,
         COALESCE(nullif(c.TeamId, ''), 'direct_message') as team_id,
-        {{if not .sqlite}}cm.ChannelId,{{end}}
+        cm.ChannelId,
         {{if .postgres}}(extract(epoch from now())*1000)::bigint,{{end}}
         {{if .mysql}}UNIX_TIMESTAMP() * 1000,{{end}}
-        {{if .sqlite}}CAST(strftime('%s', 'now') * 1000 as bigint),{{end}}
         0,
         0
     FROM
