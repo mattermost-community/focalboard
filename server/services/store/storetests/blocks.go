@@ -18,7 +18,6 @@ const (
 	testBoardID = "board-id"
 )
 
-//nolint:dupl
 func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	t.Run("InsertBlock", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -54,11 +53,6 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		store, tearDown := setup(t)
 		defer tearDown()
 		testGetSubTree2(t, store)
-	})
-	t.Run("GetSubTree3", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testGetSubTree3(t, store)
 	})
 	t.Run("GetBlocks", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -512,47 +506,6 @@ func testGetSubTree2(t *testing.T, store store.Store) {
 	})
 }
 
-func testGetSubTree3(t *testing.T, store store.Store) {
-	boardID := testBoardID
-	blocks, err := store.GetBlocksForBoard(boardID)
-	require.NoError(t, err)
-	initialCount := len(blocks)
-
-	InsertBlocks(t, store, subtreeSampleBlocks, "user-id-1")
-	time.Sleep(1 * time.Millisecond)
-	defer DeleteBlocks(t, store, subtreeSampleBlocks, "test")
-
-	blocks, err = store.GetBlocksForBoard(boardID)
-	require.NoError(t, err)
-	require.Len(t, blocks, initialCount+6)
-
-	t.Run("from board id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(boardID, "parent", model.QuerySubtreeOptions{})
-		require.NoError(t, err)
-		require.Len(t, blocks, 5)
-		require.True(t, ContainsBlockWithID(blocks, "parent"))
-		require.True(t, ContainsBlockWithID(blocks, "child1"))
-		require.True(t, ContainsBlockWithID(blocks, "child2"))
-		require.True(t, ContainsBlockWithID(blocks, "grandchild1"))
-		require.True(t, ContainsBlockWithID(blocks, "grandchild2"))
-	})
-
-	t.Run("from child id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(boardID, "child1", model.QuerySubtreeOptions{})
-		require.NoError(t, err)
-		require.Len(t, blocks, 3)
-		require.True(t, ContainsBlockWithID(blocks, "child1"))
-		require.True(t, ContainsBlockWithID(blocks, "grandchild1"))
-		require.True(t, ContainsBlockWithID(blocks, "greatgrandchild1"))
-	})
-
-	t.Run("from not existing id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(boardID, "not-exists", model.QuerySubtreeOptions{})
-		require.NoError(t, err)
-		require.Len(t, blocks, 0)
-	})
-}
-
 func testDeleteBlock(t *testing.T, store store.Store) {
 	userID := testUserID
 	boardID := testBoardID
@@ -849,14 +802,14 @@ func testDuplicateBlock(t *testing.T, store store.Store) {
 	t.Run("duplicate existing block as no template", func(t *testing.T) {
 		blocks, err := store.DuplicateBlock(testBoardID, "child1", testUserID, false)
 		require.NoError(t, err)
-		require.Len(t, blocks, 3)
+		require.Len(t, blocks, 2)
 		require.Equal(t, false, blocks[0].Fields["isTemplate"])
 	})
 
 	t.Run("duplicate existing block as template", func(t *testing.T) {
 		blocks, err := store.DuplicateBlock(testBoardID, "child1", testUserID, true)
 		require.NoError(t, err)
-		require.Len(t, blocks, 3)
+		require.Len(t, blocks, 2)
 		require.Equal(t, true, blocks[0].Fields["isTemplate"])
 	})
 

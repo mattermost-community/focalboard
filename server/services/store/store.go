@@ -18,7 +18,6 @@ type Store interface {
 	GetBlocksWithBoardID(boardID string) ([]model.Block, error)
 	GetBlocksWithType(boardID, blockType string) ([]model.Block, error)
 	GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
-	GetSubTree3(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
 	GetBlocksForBoard(boardID string) ([]model.Block, error)
 	// @withTransaction
 	InsertBlock(block *model.Block, userID string) error
