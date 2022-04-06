@@ -3,7 +3,7 @@ CREATE TABLE {{.prefix}}categories (
     name varchar(100) NOT NULL,
     user_id varchar(32) NOT NULL,
     team_id varchar(32) NOT NULL,
-    channel_id varchar(32) NOT NULL,
+    channel_id varchar(32),
     create_at BIGINT,
     update_at BIGINT,
     delete_at BIGINT,
