@@ -802,7 +802,7 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 	return nil
 }
 
-func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, limit int64) (int64, error) {
+func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, batchSize int64) (int64, error) {
 	mlog.Info("Start Boards Data Retention",
 		mlog.String("Global Retention Date", time.Unix(globalRetentionDate/1000, 0).String()),
 		mlog.Int64("Raw Date", globalRetentionDate))
@@ -829,8 +829,7 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 		LeftJoin("( " + subQuery + " ) As subquery ON ( subquery.board_id = " + s.tablePrefix + "boards)").
 		Where(sq.Lt{"maxDate": globalRetentionDate}).
 		Where(sq.NotEq{"team_id": "0"}).
-		Where(sq.Eq{"is_template": false}).
-		Limit(uint64(limit))
+		Where(sq.Eq{"is_template": false})
 
 	rows, err := builder.Query()
 	if err != nil {
@@ -847,7 +846,7 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 	if len(deleteIds) > 0 {
 		mlog.Debug("Data Retention DeleteIDs " + strings.Join(deleteIds, ", "))
 		for table, field := range deleteTables {
-			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds)
+			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds, batchSize)
 			if err != nil {
 				return int64(totalAffected), err
 			}
@@ -880,57 +879,37 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 	table string,
 	deleteColumn string,
 	deleteIds []string,
+	batchSize int64,
 ) (int64, error) {
 	whereClause := deleteColumn + ` IN ('` + strings.Join(deleteIds, `','`) + `')`
 	deleteQuery := s.getQueryBuilder(db).
 		Delete(s.tablePrefix + table).
-		Where(whereClause)
-		// .Limit(uint64(limit))
+		Where(whereClause).
+		Limit(uint64(batchSize))
 
 	s1, _, _ := deleteQuery.ToSql()
 	mlog.Debug(s1)
-	result, err := deleteQuery.Exec()
-	if err != nil {
-		return 0, errors.Wrap(err, "failed to delete "+table)
+
+	var totalRowsAffected int64
+	var batchRowsAffected int64
+	for {
+		result, err := deleteQuery.Exec()
+		if err != nil {
+			return 0, errors.Wrap(err, "failed to delete "+table)
+		}
+
+		batchRowsAffected, err = result.RowsAffected()
+		if err != nil {
+			return 0, errors.Wrap(err, "failed to get rows affected for "+table)
+		}
+		totalRowsAffected += batchRowsAffected
+		if batchRowsAffected != batchSize {
+			break
+		}
 	}
 
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return 0, errors.Wrap(err, "failed to get rows affected for "+table)
-	}
-	mlog.Debug("Rows Affected" + strconv.FormatInt(rowsAffected, 10))
-	return rowsAffected, nil
-}
-
-func (s *SQLStore) cleanupOrphans(
-	db sq.BaseRunner,
-	table string,
-	deleteColumn string,
-) (int64, error) {
-
-	orphanQuery := s.getQueryBuilder(db).
-		Select(deleteColumn).
-		From(s.tablePrefix + table + "a").
-		LeftJoin(s.tablePrefix + "boards b on a.board_id = b.id").
-		Where(sq.Eq{"b.id": nil})
-
-	deleteQuery := s.getQueryBuilder(db).
-		Delete(s.tablePrefix + table).
-		Where(sq.Eq{"b.id": orphanQuery})
-
-	s1, _, _ := deleteQuery.ToSql()
-	mlog.Debug(s1)
-	result, err := deleteQuery.Exec()
-	if err != nil {
-		return 0, errors.Wrap(err, "failed to delete "+table)
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return 0, errors.Wrap(err, "failed to get rows affected for "+table)
-	}
-	mlog.Debug("Rows Affected" + strconv.FormatInt(rowsAffected, 10))
-	return rowsAffected, nil
+	mlog.Debug("Rows Affected" + strconv.FormatInt(totalRowsAffected, 10))
+	return totalRowsAffected, nil
 }
 
 func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
