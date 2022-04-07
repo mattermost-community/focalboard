@@ -51,7 +51,6 @@ type WSSubscriptionMsg = {
 
 export interface Subscription {
     blockId: string
-    teamId: string
     subscriberId: string
     blockType: string
     subscriberType: string

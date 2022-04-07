@@ -93,7 +93,7 @@ describe('components/properties/multiSelect', () => {
 
         userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
 
-        expect(screen.getByRole('textbox', {name: /value selector/i})).toBeInTheDocument()
+        expect(screen.getByRole('combobox', {name: /value selector/i})).toBeInTheDocument()
     })
 
     it('can select a option', async () => {
@@ -118,7 +118,7 @@ describe('components/properties/multiSelect', () => {
 
         userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
 
-        userEvent.type(screen.getByRole('textbox', {name: /value selector/i}), 'b{enter}')
+        userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), 'b{enter}')
 
         expect(onChange).toHaveBeenCalledWith(['multi-option-1', 'multi-option-2'])
     })
@@ -175,7 +175,7 @@ describe('components/properties/multiSelect', () => {
 
         userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
 
-        userEvent.type(screen.getByRole('textbox', {name: /value selector/i}), 'new-value{enter}')
+        userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), 'new-value{enter}')
 
         const selectedValues = propertyTemplate.options.filter((option: IPropertyOption) => propertyValue.includes(option.id))
 

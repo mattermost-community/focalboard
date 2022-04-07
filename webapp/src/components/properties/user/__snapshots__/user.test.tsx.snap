@@ -3,8 +3,12 @@
 exports[`components/properties/user not readonly 1`] = `
 <div>
   <div
-    class="UserProperty css-2b097c-container"
+    class="UserProperty css-b62m3t-container"
   >
+    <span
+      class="css-1f43avz-a11yText-A11yText"
+      id="react-select-3-live-region"
+    />
     <span
       aria-atomic="false"
       aria-live="polite"
@@ -15,10 +19,10 @@ exports[`components/properties/user not readonly 1`] = `
       class="react-select__control css-18140j1-Control"
     >
       <div
-        class="react-select__value-container react-select__value-container--has-value css-o7cxt9-ValueContainer"
+        class="react-select__value-container react-select__value-container--has-value css-433wy7-ValueContainer"
       >
         <div
-          class="react-select__single-value css-14cfm31-singleValue"
+          class="react-select__single-value css-1lixa2z-singleValue"
         >
           <div
             class="UserProperty-item"
@@ -27,28 +31,27 @@ exports[`components/properties/user not readonly 1`] = `
           </div>
         </div>
         <div
-          class="css-1shkodo-Input"
+          class="react-select__input-container css-ox1y69-Input"
+          data-value=""
         >
-          <div
+          <input
+            aria-autocomplete="list"
+            aria-controls="react-select-3-listbox"
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-owns="react-select-3-listbox"
+            autocapitalize="none"
+            autocomplete="off"
+            autocorrect="off"
             class="react-select__input"
-            style="display: inline-block;"
-          >
-            <input
-              aria-autocomplete="list"
-              autocapitalize="none"
-              autocomplete="off"
-              autocorrect="off"
-              id="react-select-3-input"
-              spellcheck="false"
-              style="box-sizing: content-box; width: 2px; border: 0px; opacity: 1; outline: 0; padding: 0px;"
-              tabindex="0"
-              type="text"
-              value=""
-            />
-            <div
-              style="position: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px; overflow: scroll; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
-            />
-          </div>
+            id="react-select-3-input"
+            role="combobox"
+            spellcheck="false"
+            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+            tabindex="0"
+            type="text"
+            value=""
+          />
         </div>
       </div>
       <div
@@ -100,8 +103,12 @@ exports[`components/properties/user not readonly 1`] = `
 exports[`components/properties/user not readonly not existing user 1`] = `
 <div>
   <div
-    class="UserProperty css-2b097c-container"
+    class="UserProperty css-b62m3t-container"
   >
+    <span
+      class="css-1f43avz-a11yText-A11yText"
+      id="react-select-2-live-region"
+    />
     <span
       aria-atomic="false"
       aria-live="polite"
@@ -112,36 +119,37 @@ exports[`components/properties/user not readonly not existing user 1`] = `
       class="react-select__control css-18140j1-Control"
     >
       <div
-        class="react-select__value-container css-o7cxt9-ValueContainer"
+        class="react-select__value-container css-433wy7-ValueContainer"
       >
         <div
-          class="react-select__placeholder css-1wa3eu0-placeholder"
+          class="react-select__placeholder css-14el2xx-placeholder"
+          id="react-select-2-placeholder"
         >
           Empty
         </div>
         <div
-          class="css-1shkodo-Input"
+          class="react-select__input-container css-ox1y69-Input"
+          data-value=""
         >
-          <div
+          <input
+            aria-autocomplete="list"
+            aria-controls="react-select-2-listbox"
+            aria-describedby="react-select-2-placeholder"
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-owns="react-select-2-listbox"
+            autocapitalize="none"
+            autocomplete="off"
+            autocorrect="off"
             class="react-select__input"
-            style="display: inline-block;"
-          >
-            <input
-              aria-autocomplete="list"
-              autocapitalize="none"
-              autocomplete="off"
-              autocorrect="off"
-              id="react-select-2-input"
-              spellcheck="false"
-              style="box-sizing: content-box; width: 2px; border: 0px; opacity: 1; outline: 0; padding: 0px;"
-              tabindex="0"
-              type="text"
-              value=""
-            />
-            <div
-              style="position: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px; overflow: scroll; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
-            />
-          </div>
+            id="react-select-2-input"
+            role="combobox"
+            spellcheck="false"
+            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+            tabindex="0"
+            type="text"
+            value=""
+          />
         </div>
       </div>
       <div
@@ -190,8 +198,12 @@ exports[`components/properties/user readonly view 1`] = `
 exports[`components/properties/user user dropdown open 1`] = `
 <div>
   <div
-    class="UserProperty css-2b097c-container"
+    class="UserProperty css-b62m3t-container"
   >
+    <span
+      class="css-1f43avz-a11yText-A11yText"
+      id="react-select-4-live-region"
+    />
     <span
       aria-atomic="false"
       aria-live="polite"
@@ -211,10 +223,10 @@ exports[`components/properties/user user dropdown open 1`] = `
       class="react-select__control react-select__control--is-focused react-select__control--menu-is-open css-18140j1-Control"
     >
       <div
-        class="react-select__value-container react-select__value-container--has-value css-o7cxt9-ValueContainer"
+        class="react-select__value-container react-select__value-container--has-value css-433wy7-ValueContainer"
       >
         <div
-          class="react-select__single-value css-14cfm31-singleValue"
+          class="react-select__single-value css-1lixa2z-singleValue"
         >
           <div
             class="UserProperty-item"
@@ -223,28 +235,27 @@ exports[`components/properties/user user dropdown open 1`] = `
           </div>
         </div>
         <div
-          class="css-1shkodo-Input"
+          class="react-select__input-container css-ox1y69-Input"
+          data-value=""
         >
-          <div
+          <input
+            aria-autocomplete="list"
+            aria-controls="react-select-4-listbox"
+            aria-expanded="true"
+            aria-haspopup="true"
+            aria-owns="react-select-4-listbox"
+            autocapitalize="none"
+            autocomplete="off"
+            autocorrect="off"
             class="react-select__input"
-            style="display: inline-block;"
-          >
-            <input
-              aria-autocomplete="list"
-              autocapitalize="none"
-              autocomplete="off"
-              autocorrect="off"
-              id="react-select-4-input"
-              spellcheck="false"
-              style="box-sizing: content-box; width: 2px; border: 0px; opacity: 1; outline: 0; padding: 0px;"
-              tabindex="0"
-              type="text"
-              value=""
-            />
-            <div
-              style="position: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px; overflow: scroll; white-space: pre; font-family: -webkit-small-control; letter-spacing: normal; text-transform: none;"
-            />
-          </div>
+            id="react-select-4-input"
+            role="combobox"
+            spellcheck="false"
+            style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+            tabindex="0"
+            type="text"
+            value=""
+          />
         </div>
       </div>
       <div
@@ -291,11 +302,13 @@ exports[`components/properties/user user dropdown open 1`] = `
     </div>
     <div
       class="react-select__menu css-10b6da7-menu"
+      id="react-select-4-listbox"
     >
       <div
         class="react-select__menu-list css-g29tl0-MenuList"
       >
         <div
+          aria-disabled="false"
           class="react-select__option react-select__option--is-focused react-select__option--is-selected css-10e3bcm-option"
           id="react-select-4-option-0"
           tabindex="-1"

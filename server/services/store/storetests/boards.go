@@ -73,6 +73,11 @@ func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, fu
 		defer tearDown()
 		testSearchBoardsForUserAndTeam(t, store)
 	})
+	t.Run("GetBoardHistory", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBoardHistory(t, store)
+	})
 }
 
 func testGetBoard(t *testing.T, store store.Store) {
@@ -119,7 +124,7 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			TeamID: teamID1,
 			Type:   model.BoardTypeOpen,
 		}
-		_, _, err := store.InsertBoardWithAdmin(board1, userID)
+		rBoard1, _, err := store.InsertBoardWithAdmin(board1, userID)
 		require.NoError(t, err)
 
 		board2 := &model.Board{
@@ -127,7 +132,7 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			TeamID: teamID1,
 			Type:   model.BoardTypePrivate,
 		}
-		_, _, err = store.InsertBoardWithAdmin(board2, userID)
+		rBoard2, _, err := store.InsertBoardWithAdmin(board2, userID)
 		require.NoError(t, err)
 
 		board3 := &model.Board{
@@ -135,7 +140,7 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			TeamID: teamID1,
 			Type:   model.BoardTypeOpen,
 		}
-		_, err = store.InsertBoard(board3, "other-user")
+		rBoard3, err := store.InsertBoard(board3, "other-user")
 		require.NoError(t, err)
 
 		board4 := &model.Board{
@@ -163,16 +168,14 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 		_, err = store.InsertBoard(board6, "other-user")
 		require.NoError(t, err)
 
-		t.Run("should only find the two boards that the user is a member of for team 1", func(t *testing.T) {
+		t.Run("should only find the two boards that the user is a member of for team 1 plus the one open board", func(t *testing.T) {
 			boards, err := store.GetBoardsForUserAndTeam(userID, teamID1)
 			require.NoError(t, err)
-			require.Len(t, boards, 2)
-
-			boardIDs := []string{}
-			for _, board := range boards {
-				boardIDs = append(boardIDs, board.ID)
-			}
-			require.ElementsMatch(t, []string{board1.ID, board2.ID}, boardIDs)
+			require.ElementsMatch(t, []*model.Board{
+				rBoard1,
+				rBoard2,
+				rBoard3,
+			}, boards)
 		})
 
 		t.Run("should only find the board that the user is a member of for team 2", func(t *testing.T) {
@@ -521,12 +524,20 @@ func testSaveMember(t *testing.T, store store.Store) {
 			SchemeAdmin: true,
 		}
 
+		memberHistory, err := store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		initialMemberHistory := len(memberHistory)
+
 		nbm, err := store.SaveMember(bm)
 		require.NoError(t, err)
 		require.Equal(t, userID, nbm.UserID)
 		require.Equal(t, boardID, nbm.BoardID)
 
 		require.True(t, nbm.SchemeAdmin)
+
+		memberHistory, err = store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		require.Len(t, memberHistory, initialMemberHistory+1)
 	})
 
 	t.Run("should correctly update a member", func(t *testing.T) {
@@ -537,6 +548,10 @@ func testSaveMember(t *testing.T, store store.Store) {
 			SchemeViewer: true,
 		}
 
+		memberHistory, err := store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		initialMemberHistory := len(memberHistory)
+
 		nbm, err := store.SaveMember(bm)
 		require.NoError(t, err)
 		require.Equal(t, userID, nbm.UserID)
@@ -545,6 +560,10 @@ func testSaveMember(t *testing.T, store store.Store) {
 		require.False(t, nbm.SchemeAdmin)
 		require.True(t, nbm.SchemeEditor)
 		require.True(t, nbm.SchemeViewer)
+
+		memberHistory, err = store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		require.Len(t, memberHistory, initialMemberHistory)
 	})
 }
 
@@ -630,7 +649,15 @@ func testDeleteMember(t *testing.T, store store.Store) {
 	boardID := testBoardID
 
 	t.Run("should return nil if deleting a nonexistent member", func(t *testing.T) {
+		memberHistory, err := store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		initialMemberHistory := len(memberHistory)
+
 		require.NoError(t, store.DeleteMember(boardID, userID))
+
+		memberHistory, err = store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		require.Len(t, memberHistory, initialMemberHistory)
 	})
 
 	t.Run("should correctly delete a member", func(t *testing.T) {
@@ -644,11 +671,19 @@ func testDeleteMember(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 		require.NotNil(t, nbm)
 
+		memberHistory, err := store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		initialMemberHistory := len(memberHistory)
+
 		require.NoError(t, store.DeleteMember(boardID, userID))
 
 		rbm, err := store.GetMemberForBoard(boardID, userID)
 		require.ErrorIs(t, err, sql.ErrNoRows)
 		require.Nil(t, rbm)
+
+		memberHistory, err = store.GetBoardMemberHistory(boardID, userID, 0)
+		require.NoError(t, err)
+		require.Len(t, memberHistory, initialMemberHistory+1)
 	})
 }
 
@@ -857,5 +892,109 @@ func testUndeleteBoard(t *testing.T, store store.Store) {
 		block, err := store.GetBoard("not-exists")
 		require.Error(t, err)
 		require.Nil(t, block)
+	})
+}
+
+func testGetBoardHistory(t *testing.T, store store.Store) {
+	userID := testUserID
+
+	t.Run("testGetBoardHistory: create board", func(t *testing.T) {
+		originalTitle := "Board: original title"
+		boardID := utils.NewID(utils.IDTypeBoard)
+		board := &model.Board{
+			ID:     boardID,
+			Title:  originalTitle,
+			TeamID: testTeamID,
+			Type:   model.BoardTypeOpen,
+		}
+
+		rBoard1, err := store.InsertBoard(board, userID)
+		require.NoError(t, err)
+
+		opts := model.QueryBlockHistoryOptions{
+			Limit:      0,
+			Descending: false,
+		}
+
+		boards, err := store.GetBoardHistory(board.ID, opts)
+		require.NoError(t, err)
+		require.Len(t, boards, 1)
+
+		// wait to avoid hitting pk uniqueness constraint in history
+		time.Sleep(10 * time.Millisecond)
+
+		userID2 := "user-id-2"
+		newTitle := "Board: A new title"
+		newDescription := "A new description"
+		patch := &model.BoardPatch{Title: &newTitle, Description: &newDescription}
+		patchedBoard, err := store.PatchBoard(boardID, patch, userID2)
+		require.NoError(t, err)
+
+		// Updated history
+		boards, err = store.GetBoardHistory(board.ID, opts)
+		require.NoError(t, err)
+		require.Len(t, boards, 2)
+		require.Equal(t, boards[0].Title, originalTitle)
+		require.Equal(t, boards[1].Title, newTitle)
+		require.Equal(t, boards[1].Description, newDescription)
+
+		// Check history against latest board
+		rBoard2, err := store.GetBoard(board.ID)
+		require.NoError(t, err)
+		require.Equal(t, rBoard2.Title, newTitle)
+		require.Equal(t, rBoard2.Title, boards[1].Title)
+		require.NotZero(t, rBoard2.UpdateAt)
+		require.Equal(t, rBoard1.UpdateAt, boards[0].UpdateAt)
+		require.Equal(t, rBoard2.UpdateAt, patchedBoard.UpdateAt)
+		require.Equal(t, rBoard2.UpdateAt, boards[1].UpdateAt)
+		require.Equal(t, rBoard1, boards[0])
+		require.Equal(t, rBoard2, boards[1])
+
+		// wait to avoid hitting pk uniqueness constraint in history
+		time.Sleep(10 * time.Millisecond)
+
+		newTitle2 := "Board: A new title 2"
+		patch2 := &model.BoardPatch{Title: &newTitle2}
+		patchBoard2, err := store.PatchBoard(boardID, patch2, userID2)
+		require.NoError(t, err)
+
+		// Updated history
+		opts = model.QueryBlockHistoryOptions{
+			Limit:      1,
+			Descending: true,
+		}
+		boards, err = store.GetBoardHistory(board.ID, opts)
+		require.NoError(t, err)
+		require.Len(t, boards, 1)
+		require.Equal(t, boards[0].Title, newTitle2)
+		require.Equal(t, boards[0], patchBoard2)
+
+		// Delete board
+		time.Sleep(10 * time.Millisecond)
+		err = store.DeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		// Updated history after delete
+		opts = model.QueryBlockHistoryOptions{
+			Limit:      0,
+			Descending: true,
+		}
+		boards, err = store.GetBoardHistory(board.ID, opts)
+		require.NoError(t, err)
+		require.Len(t, boards, 4)
+		require.NotZero(t, boards[0].UpdateAt)
+		require.Greater(t, boards[0].UpdateAt, patchBoard2.UpdateAt)
+		require.NotZero(t, boards[0].DeleteAt)
+		require.Greater(t, boards[0].DeleteAt, patchBoard2.UpdateAt)
+	})
+
+	t.Run("testGetBoardHistory: nonexisting board", func(t *testing.T) {
+		opts := model.QueryBlockHistoryOptions{
+			Limit:      0,
+			Descending: false,
+		}
+		boards, err := store.GetBoardHistory("nonexistent-id", opts)
+		require.NoError(t, err)
+		require.Len(t, boards, 0)
 	})
 }

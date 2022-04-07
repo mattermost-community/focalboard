@@ -186,6 +186,21 @@ func (mr *MockAPIMockRecorder) CreatePost(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePost", reflect.TypeOf((*MockAPI)(nil).CreatePost), arg0)
 }
 
+// CreateSession mocks base method.
+func (m *MockAPI) CreateSession(arg0 *model.Session) (*model.Session, *model.AppError) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSession", arg0)
+	ret0, _ := ret[0].(*model.Session)
+	ret1, _ := ret[1].(*model.AppError)
+	return ret0, ret1
+}
+
+// CreateSession indicates an expected call of CreateSession.
+func (mr *MockAPIMockRecorder) CreateSession(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSession", reflect.TypeOf((*MockAPI)(nil).CreateSession), arg0)
+}
+
 // CreateTeam mocks base method.
 func (m *MockAPI) CreateTeam(arg0 *model.Team) (*model.Team, *model.AppError) {
 	m.ctrl.T.Helper()
@@ -455,6 +470,20 @@ func (m *MockAPI) ExecuteSlashCommand(arg0 *model.CommandArgs) (*model.CommandRe
 func (mr *MockAPIMockRecorder) ExecuteSlashCommand(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExecuteSlashCommand", reflect.TypeOf((*MockAPI)(nil).ExecuteSlashCommand), arg0)
+}
+
+// ExtendSessionExpiry mocks base method.
+func (m *MockAPI) ExtendSessionExpiry(arg0 string, arg1 int64) *model.AppError {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ExtendSessionExpiry", arg0, arg1)
+	ret0, _ := ret[0].(*model.AppError)
+	return ret0
+}
+
+// ExtendSessionExpiry indicates an expected call of ExtendSessionExpiry.
+func (mr *MockAPIMockRecorder) ExtendSessionExpiry(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExtendSessionExpiry", reflect.TypeOf((*MockAPI)(nil).ExtendSessionExpiry), arg0, arg1)
 }
 
 // GetBot mocks base method.
@@ -1573,6 +1602,20 @@ func (mr *MockAPIMockRecorder) InstallPlugin(arg0, arg1 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InstallPlugin", reflect.TypeOf((*MockAPI)(nil).InstallPlugin), arg0, arg1)
 }
 
+// IsEnterpriseReady mocks base method.
+func (m *MockAPI) IsEnterpriseReady() bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsEnterpriseReady")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// IsEnterpriseReady indicates an expected call of IsEnterpriseReady.
+func (mr *MockAPIMockRecorder) IsEnterpriseReady() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsEnterpriseReady", reflect.TypeOf((*MockAPI)(nil).IsEnterpriseReady))
+}
+
 // KVCompareAndDelete mocks base method.
 func (m *MockAPI) KVCompareAndDelete(arg0 string, arg1 []byte) (bool, *model.AppError) {
 	m.ctrl.T.Helper()
@@ -2014,6 +2057,20 @@ func (mr *MockAPIMockRecorder) RemoveTeamIcon(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveTeamIcon", reflect.TypeOf((*MockAPI)(nil).RemoveTeamIcon), arg0)
 }
 
+// RemoveUserCustomStatus mocks base method.
+func (m *MockAPI) RemoveUserCustomStatus(arg0 string) *model.AppError {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveUserCustomStatus", arg0)
+	ret0, _ := ret[0].(*model.AppError)
+	return ret0
+}
+
+// RemoveUserCustomStatus indicates an expected call of RemoveUserCustomStatus.
+func (mr *MockAPIMockRecorder) RemoveUserCustomStatus(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveUserCustomStatus", reflect.TypeOf((*MockAPI)(nil).RemoveUserCustomStatus), arg0)
+}
+
 // RequestTrialLicense mocks base method.
 func (m *MockAPI) RequestTrialLicense(arg0 string, arg1 int, arg2, arg3 bool) *model.AppError {
 	m.ctrl.T.Helper()
@@ -2028,6 +2085,20 @@ func (mr *MockAPIMockRecorder) RequestTrialLicense(arg0, arg1, arg2, arg3 interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RequestTrialLicense", reflect.TypeOf((*MockAPI)(nil).RequestTrialLicense), arg0, arg1, arg2, arg3)
 }
 
+// RevokeSession mocks base method.
+func (m *MockAPI) RevokeSession(arg0 string) *model.AppError {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RevokeSession", arg0)
+	ret0, _ := ret[0].(*model.AppError)
+	return ret0
+}
+
+// RevokeSession indicates an expected call of RevokeSession.
+func (mr *MockAPIMockRecorder) RevokeSession(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeSession", reflect.TypeOf((*MockAPI)(nil).RevokeSession), arg0)
+}
+
 // RevokeUserAccessToken mocks base method.
 func (m *MockAPI) RevokeUserAccessToken(arg0 string) *model.AppError {
 	m.ctrl.T.Helper()
@@ -2040,6 +2111,20 @@ func (m *MockAPI) RevokeUserAccessToken(arg0 string) *model.AppError {
 func (mr *MockAPIMockRecorder) RevokeUserAccessToken(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeUserAccessToken", reflect.TypeOf((*MockAPI)(nil).RevokeUserAccessToken), arg0)
+}
+
+// RolesGrantPermission mocks base method.
+func (m *MockAPI) RolesGrantPermission(arg0 []string, arg1 string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RolesGrantPermission", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// RolesGrantPermission indicates an expected call of RolesGrantPermission.
+func (mr *MockAPIMockRecorder) RolesGrantPermission(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RolesGrantPermission", reflect.TypeOf((*MockAPI)(nil).RolesGrantPermission), arg0, arg1)
 }
 
 // SaveConfig mocks base method.
@@ -2435,6 +2520,20 @@ func (m *MockAPI) UpdateUserActive(arg0 string, arg1 bool) *model.AppError {
 func (mr *MockAPIMockRecorder) UpdateUserActive(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUserActive", reflect.TypeOf((*MockAPI)(nil).UpdateUserActive), arg0, arg1)
+}
+
+// UpdateUserCustomStatus mocks base method.
+func (m *MockAPI) UpdateUserCustomStatus(arg0 string, arg1 *model.CustomStatus) *model.AppError {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateUserCustomStatus", arg0, arg1)
+	ret0, _ := ret[0].(*model.AppError)
+	return ret0
+}
+
+// UpdateUserCustomStatus indicates an expected call of UpdateUserCustomStatus.
+func (mr *MockAPIMockRecorder) UpdateUserCustomStatus(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUserCustomStatus", reflect.TypeOf((*MockAPI)(nil).UpdateUserCustomStatus), arg0, arg1)
 }
 
 // UpdateUserStatus mocks base method.

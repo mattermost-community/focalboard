@@ -15,6 +15,7 @@ jobs:
         with:
           go-version: 1.16
       - uses: actions/checkout@v2
+      - run: make templates-archive
       - name: server-lint
         uses: golangci/golangci-lint-action@v2
         with:

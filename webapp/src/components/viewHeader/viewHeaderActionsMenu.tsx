@@ -100,7 +100,7 @@ const ViewHeaderActionsMenu = (props: Props) => {
         <ModalWrapper>
             <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-header-menu', defaultMessage: 'View header menu'})}>
                 <IconButton icon={<OptionsIcon/>}/>
-                <Menu>
+                <Menu position='left'>
                     <Menu.Text
                         id='exportCsv'
                         name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}

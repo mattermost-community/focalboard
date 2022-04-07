@@ -517,7 +517,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 
 		userID := th.GetUser1().ID
 		initialTitle := "initial title"
-		newTitle := "new title"
+		newTitle := "new patched title"
 
 		newBoard1 := &model.Board{
 			Title:  initialTitle,
@@ -580,7 +580,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 
 		userID := th.GetUser1().ID
 		initialTitle := "initial title"
-		newTitle := "new title"
+		newTitle := "new other title"
 
 		newBoard1 := &model.Board{
 			Title:  initialTitle,

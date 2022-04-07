@@ -99,6 +99,7 @@ func (p *Plugin) OnActivate() error {
 		NewMutexFn: func(name string) (*cluster.Mutex, error) {
 			return cluster.NewMutex(p.API, name)
 		},
+		PluginAPI: &p.API,
 	}
 
 	var db store.Store
@@ -218,6 +219,7 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		FilesDriver:              *mmconfig.FileSettings.DriverName,
 		FilesPath:                *mmconfig.FileSettings.Directory,
 		FilesS3Config:            filesS3Config,
+		MaxFileSize:              *mmconfig.FileSettings.MaxFileSize,
 		Telemetry:                enableTelemetry,
 		TelemetryID:              serverID,
 		WebhookUpdate:            []string{},

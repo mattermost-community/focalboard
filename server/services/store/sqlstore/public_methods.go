@@ -18,6 +18,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -269,6 +270,11 @@ func (s *SQLStore) GetBlockHistory(blockID string, opts model.QueryBlockHistoryO
 
 }
 
+func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	return s.getBlockHistoryDescendants(s.db, boardID, opts)
+
+}
+
 func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 	return s.getBlocksForBoard(s.db, boardID)
 
@@ -314,6 +320,11 @@ func (s *SQLStore) GetBoardHistory(boardID string, opts model.QueryBoardHistoryO
 
 }
 
+func (s *SQLStore) GetBoardMemberHistory(boardID string, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error) {
+	return s.getBoardMemberHistory(s.db, boardID, userID, limit)
+
+}
+
 func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*model.Board, error) {
 	return s.getBoardsForUserAndTeam(s.db, userID, teamID)
 
@@ -321,6 +332,11 @@ func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*mod
 
 func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
 	return s.getCategory(s.db, id)
+
+}
+
+func (s *SQLStore) GetLicense() *mmModel.License {
+	return s.getLicense(s.db)
 
 }
 
@@ -369,11 +385,6 @@ func (s *SQLStore) GetSubTree2(boardID string, blockID string, opts model.QueryS
 
 }
 
-func (s *SQLStore) GetSubTree3(boardID string, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
-	return s.getSubTree3(s.db, boardID, blockID, opts)
-
-}
-
 func (s *SQLStore) GetSubscribersCountForBlock(blockID string) (int, error) {
 	return s.getSubscribersCountForBlock(s.db, blockID)
 
@@ -419,8 +430,8 @@ func (s *SQLStore) GetTeamsForUser(userID string) ([]*model.Team, error) {
 
 }
 
-func (s *SQLStore) GetTemplateBoards(teamID string) ([]*model.Board, error) {
-	return s.getTemplateBoards(s.db, teamID)
+func (s *SQLStore) GetTemplateBoards(teamID string, userID string) ([]*model.Board, error) {
+	return s.getTemplateBoards(s.db, teamID, userID)
 
 }
 

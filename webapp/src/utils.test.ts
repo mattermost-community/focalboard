@@ -3,6 +3,10 @@
 
 import {createIntl} from 'react-intl'
 
+import {createMemoryHistory} from "history"
+
+import {match as routerMatch} from "react-router-dom"
+
 import {Utils, IDType} from './utils'
 import {IAppWindow} from './types'
 
@@ -159,6 +163,27 @@ describe('utils', () => {
 
         it('should return minus one if b < a', () => {
             expect(Utils.compareVersions('10.9.4', '10.9.2')).toBe(-1)
+        })
+    })
+
+    describe('showBoard test', () => {
+        it('should switch boards', () => {
+            const match = {
+                params: {
+                    boardId: 'board_id_1',
+                    viewId: 'view_id_1',
+                    cardId: 'card_id_1',
+                    teamId: 'team_id_1',
+                },
+                path: '/team/:teamId/:boardId?/:viewId?/:cardId?',
+            } as unknown as routerMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>
+
+            const history = createMemoryHistory()
+            history.push = jest.fn()
+
+            Utils.showBoard('board_id_2', match, history)
+
+            expect(history.push).toBeCalledWith('/team/team_id_1/board_id_2')
         })
     })
 })

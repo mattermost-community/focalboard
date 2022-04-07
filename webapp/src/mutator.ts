@@ -1014,7 +1014,7 @@ class Mutator {
         afterRedo?: (newBoardId: string) => Promise<void>,
         beforeUndo?: () => Promise<void>,
         toTeam?: string,
-    ): Promise<[Block[], string]> {
+    ): Promise<BoardsAndBlocks> {
         return undoManager.perform(
             async () => {
                 const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate, toTeam)
@@ -1047,7 +1047,7 @@ class Mutator {
         beforeUndo: () => Promise<void>,
         boardTemplateId: string,
         toTeam?: string,
-    ): Promise<[Block[], string]> {
+    ): Promise<BoardsAndBlocks> {
         const asTemplate = false
         const actionDescription = intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'})
 
