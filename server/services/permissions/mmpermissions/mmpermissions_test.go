@@ -94,6 +94,11 @@ func TestHasPermissionToBoard(t *testing.T) {
 			Return(nil, sql.ErrNoRows).
 			Times(1)
 
+		th.store.EXPECT().
+			GetBoardHistory(boardID, model.QueryBoardHistoryOptions{Limit: 1, Descending: true}).
+			Return(nil, sql.ErrNoRows).
+			Times(1)
+
 		hasPermission := th.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards)
 		assert.False(t, hasPermission)
 	})
