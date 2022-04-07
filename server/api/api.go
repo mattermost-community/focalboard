@@ -1574,10 +1574,6 @@ func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
-	}
-
-	if a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
 		return
 	}
 
@@ -1773,8 +1769,16 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if a.app.GetConfig().MaxFileSize > 0 {
+		r.Body = http.MaxBytesReader(w, r.Body, a.app.GetConfig().MaxFileSize)
+	}
+
 	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
+		if strings.HasSuffix(err.Error(), "http: request body too large") {
+			a.errorResponse(w, r.URL.Path, http.StatusRequestEntityTooLarge, "", err)
+			return
+		}
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 		return
 	}
@@ -3873,12 +3877,21 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 // Response helpers
 
 func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message string, sourceError error) {
-	a.logger.Error("API ERROR",
-		mlog.Int("code", code),
-		mlog.Err(sourceError),
-		mlog.String("msg", message),
-		mlog.String("api", api),
-	)
+	if code == http.StatusUnauthorized {
+		a.logger.Debug("API DEBUG",
+			mlog.Int("code", code),
+			mlog.Err(sourceError),
+			mlog.String("msg", message),
+			mlog.String("api", api),
+		)
+	} else {
+		a.logger.Error("API ERROR",
+			mlog.Int("code", code),
+			mlog.Err(sourceError),
+			mlog.String("msg", message),
+			mlog.String("api", api),
+		)
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: code})

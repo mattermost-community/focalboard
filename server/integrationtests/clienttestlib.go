@@ -384,6 +384,11 @@ func (th *TestHelper) CheckForbidden(r *client.Response) {
 	require.Error(th.T, r.Error)
 }
 
+func (th *TestHelper) CheckRequestEntityTooLarge(r *client.Response) {
+	require.Equal(th.T, http.StatusRequestEntityTooLarge, r.StatusCode)
+	require.Error(th.T, r.Error)
+}
+
 func (th *TestHelper) CheckNotImplemented(r *client.Response) {
 	require.Equal(th.T, http.StatusNotImplemented, r.StatusCode)
 	require.Error(th.T, r.Error)
