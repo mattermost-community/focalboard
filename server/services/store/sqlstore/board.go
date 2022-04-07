@@ -699,7 +699,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 
 	if len(boards) == 0 {
 		s.logger.Warn("undeleteBlock board not found", mlog.String("board_id", boardID))
-		return nil // deleting non-exiting board is not considered an error (for now)
+		return nil // undeleting non-existing board is not considered an error (for now)
 	}
 	board := boards[0]
 
