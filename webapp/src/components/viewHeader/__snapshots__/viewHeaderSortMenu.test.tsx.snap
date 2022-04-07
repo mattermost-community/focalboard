@@ -31,8 +31,12 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -48,8 +52,12 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -70,8 +78,12 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -89,8 +101,12 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -108,8 +124,12 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -136,8 +156,12 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -155,8 +179,12 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -180,8 +208,12 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >

@@ -38,18 +38,22 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                     class="MenuOption TextOption menu-option"
                     role="button"
                   >
-                    <svg
-                      class="SortUpIcon Icon"
-                      viewBox="0 0 100 100"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <div
+                      class=""
                     >
-                      <polyline
-                        points="50,20 50,80"
-                      />
-                      <polyline
-                        points="30,40 50,20 70,40"
-                      />
-                    </svg>
+                      <svg
+                        class="SortUpIcon Icon"
+                        viewBox="0 0 100 100"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <polyline
+                          points="50,20 50,80"
+                        />
+                        <polyline
+                          points="30,40 50,20 70,40"
+                        />
+                      </svg>
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -66,18 +70,22 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                     class="MenuOption TextOption menu-option"
                     role="button"
                   >
-                    <svg
-                      class="SortDownIcon Icon"
-                      viewBox="0 0 100 100"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <div
+                      class=""
                     >
-                      <polyline
-                        points="50,20 50,80"
-                      />
-                      <polyline
-                        points="30,60 50,80 70,60"
-                      />
-                    </svg>
+                      <svg
+                        class="SortDownIcon Icon"
+                        viewBox="0 0 100 100"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <polyline
+                          points="50,20 50,80"
+                        />
+                        <polyline
+                          points="30,60 50,80 70,60"
+                        />
+                      </svg>
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -118,9 +126,13 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                     class="MenuOption TextOption menu-option"
                     role="button"
                   >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                    <div
+                      class=""
+                    >
+                      <i
+                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -144,8 +156,12 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >

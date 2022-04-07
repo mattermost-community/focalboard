@@ -36,8 +36,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -59,8 +63,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -81,8 +89,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -106,8 +118,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -125,8 +141,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -144,8 +164,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -169,8 +193,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -223,8 +251,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -246,8 +278,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -268,8 +304,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -293,8 +333,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -312,8 +356,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -331,8 +379,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -356,8 +408,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -411,8 +467,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -436,8 +496,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -455,8 +519,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -474,8 +542,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -499,8 +571,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -577,8 +653,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -600,8 +680,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -623,8 +707,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -645,8 +733,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -670,8 +762,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -689,8 +785,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -708,8 +808,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -733,8 +837,12 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >

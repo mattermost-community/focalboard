@@ -60,9 +60,13 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -77,9 +81,13 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-content-copy content-copy"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-content-copy content-copy"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -96,9 +104,13 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-link-variant LinkIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-link-variant LinkIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -122,8 +134,12 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -190,9 +206,13 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -207,9 +227,13 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-content-copy content-copy"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-content-copy content-copy"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -226,9 +250,13 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-link-variant LinkIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-link-variant LinkIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -252,8 +280,12 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -356,9 +388,13 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -373,9 +409,13 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-content-copy content-copy"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-content-copy content-copy"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -392,9 +432,13 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-link-variant LinkIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-link-variant LinkIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -418,8 +462,12 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -490,9 +538,13 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -507,9 +559,13 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-content-copy content-copy"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-content-copy content-copy"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -526,9 +582,13 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-link-variant LinkIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-link-variant LinkIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -552,8 +612,12 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -782,9 +846,13 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -799,9 +867,13 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-content-copy content-copy"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-content-copy content-copy"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -818,9 +890,13 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-link-variant LinkIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-link-variant LinkIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -844,8 +920,12 @@ exports[`src/components/gallery/GalleryCard without block content should match s
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
