@@ -8,6 +8,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/notify/notifymentions"
 	"github.com/mattermost/focalboard/server/services/notify/notifysubscriptions"
 	"github.com/mattermost/focalboard/server/services/notify/plugindelivery"
+	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/ws"
 
@@ -26,19 +27,20 @@ const (
 )
 
 type notifyBackendParams struct {
-	cfg        *config.Configuration
-	client     *pluginapi.Client
-	serverRoot string
-	logger     *mlog.Logger
+	cfg         *config.Configuration
+	client      *pluginapi.Client
+	permissions permissions.PermissionsService
+	serverRoot  string
+	logger      *mlog.Logger
 }
 
 func createMentionsNotifyBackend(params notifyBackendParams) (*notifymentions.Backend, error) {
-	delivery, err := createDelivery(params.client, params.serverRoot)
+	delivery, err := createDelivery(params.client, params.serverRoot, params.permissions)
 	if err != nil {
 		return nil, err
 	}
 
-	backend := notifymentions.New(delivery, params.logger)
+	backend := notifymentions.New(delivery, params.permissions, params.logger)
 
 	return backend, nil
 }
@@ -46,7 +48,7 @@ func createMentionsNotifyBackend(params notifyBackendParams) (*notifymentions.Ba
 func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.Store,
 	wsPluginAdapter ws.PluginAdapterInterface) (*notifysubscriptions.Backend, error) {
 	//
-	delivery, err := createDelivery(params.client, params.serverRoot)
+	delivery, err := createDelivery(params.client, params.serverRoot, params.permissions)
 	if err != nil {
 		return nil, err
 	}
@@ -54,6 +56,7 @@ func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.St
 	backendParams := notifysubscriptions.BackendParams{
 		ServerRoot:             params.serverRoot,
 		Store:                  store,
+		Permissions:            params.permissions,
 		Delivery:               delivery,
 		WSAdapter:              wsPluginAdapter,
 		Logger:                 params.logger,
@@ -65,7 +68,7 @@ func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.St
 	return backend, nil
 }
 
-func createDelivery(client *pluginapi.Client, serverRoot string) (*plugindelivery.PluginDelivery, error) {
+func createDelivery(client *pluginapi.Client, serverRoot string, permissions permissions.PermissionsService) (*plugindelivery.PluginDelivery, error) {
 	bot := &model.Bot{
 		Username:    botUsername,
 		DisplayName: botDisplayname,
@@ -78,7 +81,7 @@ func createDelivery(client *pluginapi.Client, serverRoot string) (*plugindeliver
 
 	pluginAPI := &pluginAPIAdapter{client: client}
 
-	return plugindelivery.New(botID, serverRoot, pluginAPI), nil
+	return plugindelivery.New(botID, serverRoot, pluginAPI, permissions), nil
 }
 
 type pluginAPIAdapter struct {

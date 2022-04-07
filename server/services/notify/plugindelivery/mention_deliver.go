@@ -4,6 +4,7 @@
 package plugindelivery
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/services/notify"
@@ -12,9 +13,13 @@ import (
 	"github.com/mattermost/mattermost-server/v6/model"
 )
 
+var (
+	ErrMentionPermission = errors.New("mention not permitted")
+)
+
 // MentionDeliver notifies a user they have been mentioned in a block.
 func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string, evt notify.BlockChangeEvent) (string, error) {
-	member, err := teamMemberFromUsername(pd.api, mentionUsername, evt.TeamID)
+	user, err := userByUsername(pd.api, mentionUsername)
 	if err != nil {
 		if isErrNotFound(err) {
 			// not really an error; could just be someone typed "@sometext"
@@ -24,12 +29,17 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 		}
 	}
 
+	// make sure mentioned user has permissions to team.
+	if !pd.permissions.HasPermissionToTeam(user.Id, evt.TeamID, model.PermissionViewTeam) {
+		return "", fmt.Errorf("mentioned user %s not member of team %s: %w", user.Id, evt.TeamID, ErrMentionPermission)
+	}
+
 	author, err := pd.api.GetUserByID(evt.ModifiedByID)
 	if err != nil {
 		return "", fmt.Errorf("cannot find user: %w", err)
 	}
 
-	channel, err := pd.api.GetDirectChannel(member.UserId, pd.botID)
+	channel, err := pd.api.GetDirectChannel(user.Id, pd.botID)
 	if err != nil {
 		return "", fmt.Errorf("cannot get direct channel: %w", err)
 	}
@@ -40,5 +50,5 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 		ChannelId: channel.Id,
 		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),
 	}
-	return member.UserId, pd.api.CreatePost(post)
+	return user.Id, pd.api.CreatePost(post)
 }

@@ -17,6 +17,8 @@ type Store interface {
 
 	GetUserByID(userID string) (*model.User, error)
 
+	GetMemberForBoard(boardID, userID string) (*model.BoardMember, error)
+
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
 	GetSubscribersForBlock(blockID string) ([]*model.Subscriber, error)
 	GetSubscribersCountForBlock(blockID string) (int, error)
