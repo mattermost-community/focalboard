@@ -18,4 +18,5 @@ type PermissionsService interface {
 type Store interface {
 	GetBoard(boardID string) (*model.Board, error)
 	GetMemberForBoard(boardID, userID string) (*model.BoardMember, error)
+	GetBoardHistory(boardID string, opts model.QueryBoardHistoryOptions) ([]*model.Board, error)
 }

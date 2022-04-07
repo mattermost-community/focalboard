@@ -85,7 +85,7 @@ func (a *App) getBoardForBlock(blockID string) (*model.Board, error) {
 }
 
 func (a *App) getBoardHistory(boardID string, latest bool) (*model.Board, error) {
-	opts := model.QueryBlockHistoryOptions{
+	opts := model.QueryBoardHistoryOptions{
 		Limit:      1,
 		Descending: latest,
 	}
