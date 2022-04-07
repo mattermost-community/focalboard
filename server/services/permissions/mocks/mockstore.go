@@ -49,6 +49,21 @@ func (mr *MockStoreMockRecorder) GetBoard(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoard", reflect.TypeOf((*MockStore)(nil).GetBoard), arg0)
 }
 
+// GetBoardHistory mocks base method.
+func (m *MockStore) GetBoardHistory(arg0 string, arg1 model.QueryBoardHistoryOptions) ([]*model.Board, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBoardHistory", arg0, arg1)
+	ret0, _ := ret[0].([]*model.Board)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBoardHistory indicates an expected call of GetBoardHistory.
+func (mr *MockStoreMockRecorder) GetBoardHistory(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoardHistory", reflect.TypeOf((*MockStore)(nil).GetBoardHistory), arg0, arg1)
+}
+
 // GetMemberForBoard mocks base method.
 func (m *MockStore) GetMemberForBoard(arg0, arg1 string) (*model.BoardMember, error) {
 	m.ctrl.T.Helper()

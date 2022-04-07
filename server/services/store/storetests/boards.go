@@ -911,7 +911,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		rBoard1, err := store.InsertBoard(board, userID)
 		require.NoError(t, err)
 
-		opts := model.QueryBlockHistoryOptions{
+		opts := model.QueryBoardHistoryOptions{
 			Limit:      0,
 			Descending: false,
 		}
@@ -959,7 +959,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		// Updated history
-		opts = model.QueryBlockHistoryOptions{
+		opts = model.QueryBoardHistoryOptions{
 			Limit:      1,
 			Descending: true,
 		}
@@ -975,7 +975,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		// Updated history after delete
-		opts = model.QueryBlockHistoryOptions{
+		opts = model.QueryBoardHistoryOptions{
 			Limit:      0,
 			Descending: true,
 		}
@@ -989,7 +989,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 	})
 
 	t.Run("testGetBoardHistory: nonexisting board", func(t *testing.T) {
-		opts := model.QueryBlockHistoryOptions{
+		opts := model.QueryBoardHistoryOptions{
 			Limit:      0,
 			Descending: false,
 		}
