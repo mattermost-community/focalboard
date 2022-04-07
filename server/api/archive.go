@@ -46,6 +46,12 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	boardID := vars["boardID"]
+	userID := getUserID(r)
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+		return
+	}
 
 	auditRec := a.makeAuditRecord(r, "archiveExportBoard", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
@@ -105,6 +111,14 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
+
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
+	}
 
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
@@ -181,6 +195,11 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		return
+	}
 
 	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {

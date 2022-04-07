@@ -11,15 +11,19 @@ import (
 	"github.com/mattermost/focalboard/server/services/permissions"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/plugin"
 )
+
+type APIInterface interface {
+	HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool
+	LogError(string, ...interface{})
+}
 
 type Service struct {
 	store permissions.Store
-	api   plugin.API
+	api   APIInterface
 }
 
-func New(store permissions.Store, api plugin.API) *Service {
+func New(store permissions.Store, api APIInterface) *Service {
 	return &Service{
 		store: store,
 		api:   api,
