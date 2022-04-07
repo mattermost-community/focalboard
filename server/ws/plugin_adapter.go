@@ -400,6 +400,11 @@ func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) 
 // with a websocket client subscribed to a given team.
 func (pa *PluginAdapter) sendTeamMessageSkipCluster(event, teamID string, payload map[string]interface{}) {
 	userIDs := pa.getUserIDsForTeam(teamID)
+	pa.sendUserMessageSkipCluster(event, payload, userIDs...)
+}
+
+// sendUserMessageSkipCluster sends the message to specific users.
+func (pa *PluginAdapter) sendUserMessageSkipCluster(event string, payload map[string]interface{}, userIDs ...string) {
 	for _, userID := range userIDs {
 		pa.api.PublishWebSocketEvent(event, payload, &mmModel.WebsocketBroadcast{UserId: userID})
 	}
@@ -407,11 +412,12 @@ func (pa *PluginAdapter) sendTeamMessageSkipCluster(event, teamID string, payloa
 
 // sendTeamMessage sends and propagates a message that is aimed
 // for all the users that are subscribed to a given team.
-func (pa *PluginAdapter) sendTeamMessage(event, teamID string, payload map[string]interface{}) {
+func (pa *PluginAdapter) sendTeamMessage(event, teamID string, payload map[string]interface{}, ensureUserIDs ...string) {
 	go func() {
 		clusterMessage := &ClusterMessage{
-			TeamID:  teamID,
-			Payload: payload,
+			TeamID:      teamID,
+			Payload:     payload,
+			EnsureUsers: ensureUserIDs,
 		}
 
 		pa.sendMessageToCluster("websocket_message", clusterMessage)
@@ -424,9 +430,7 @@ func (pa *PluginAdapter) sendTeamMessage(event, teamID string, payload map[strin
 // subscribed to a given team that belong to one of its boards.
 func (pa *PluginAdapter) sendBoardMessageSkipCluster(teamID, boardID string, payload map[string]interface{}, ensureUserIDs ...string) {
 	userIDs := pa.getUserIDsForTeamAndBoard(teamID, boardID, ensureUserIDs...)
-	for _, userID := range userIDs {
-		pa.api.PublishWebSocketEvent(websocketActionUpdateBoard, payload, &mmModel.WebsocketBroadcast{UserId: userID})
-	}
+	pa.sendUserMessageSkipCluster(websocketActionUpdateBoard, payload, userIDs...)
 }
 
 // sendBoardMessage sends and propagates a message that is aimed for
@@ -465,7 +469,7 @@ func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block model.Block) 
 
 func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
 	pa.logger.Debug("BroadcastCategoryChange",
-		mlog.String("userID", category.TeamID),
+		mlog.String("userID", category.UserID),
 		mlog.String("teamID", category.TeamID),
 		mlog.String("categoryID", category.ID),
 	)
@@ -476,7 +480,7 @@ func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
 		Category: &category,
 	}
 
-	pa.sendTeamMessage(websocketActionUpdateCategory, category.TeamID, utils.StructToMap(message))
+	pa.sendUserMessageSkipCluster(websocketActionUpdateCategory, utils.StructToMap(message), category.UserID)
 }
 
 func (pa *PluginAdapter) BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData) {
