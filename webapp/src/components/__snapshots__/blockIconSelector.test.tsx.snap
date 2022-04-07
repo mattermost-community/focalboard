@@ -55,7 +55,7 @@ exports[`components/blockIconSelector return menu on click 1`] = `
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <svg
                     class="EmojiIcon Icon"
@@ -114,7 +114,7 @@ exports[`components/blockIconSelector return menu on click 1`] = `
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -143,7 +143,7 @@ exports[`components/blockIconSelector return menu on click 1`] = `
               role="button"
             >
               <div
-                class="false"
+                class=""
               >
                 <div
                   class="noicon"

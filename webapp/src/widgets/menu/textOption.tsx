@@ -27,7 +27,7 @@ function TextOption(props:TextOptionProps): JSX.Element {
                 props.onClick(props.id)
             }}
         >
-            <div className={`${check ? 'menu-option__check' : 'false'}`}>{icon ?? <div className='noicon'/>}</div>
+            <div className={`${check ? 'menu-option__check' : ''}`}>{icon ?? <div className='noicon'/>}</div>
             <div className='menu-name'>{name}</div>
             {rightIcon ?? <div className='noicon'/>}
         </div>

@@ -31,7 +31,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <svg
                     class="ShowIcon Icon"
@@ -66,7 +66,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
               role="button"
             >
               <div
-                class="false"
+                class=""
               >
                 <div
                   class="noicon"
@@ -128,7 +128,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <svg
                     class="ShowIcon Icon"
@@ -163,7 +163,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
               role="button"
             >
               <div
-                class="false"
+                class=""
               >
                 <div
                   class="noicon"

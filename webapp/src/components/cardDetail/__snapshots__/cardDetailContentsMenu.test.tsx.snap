@@ -34,7 +34,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <svg
                     class="TextIcon Icon"
@@ -63,7 +63,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <svg
                     class="ImageIcon Icon"
@@ -92,7 +92,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <svg
                     class="DividerIcon Icon"
@@ -121,7 +121,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <svg
                     class="CheckIcon Icon"
@@ -156,7 +156,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
               role="button"
             >
               <div
-                class="false"
+                class=""
               >
                 <div
                   class="noicon"
@@ -213,7 +213,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <svg
                     class="TextIcon Icon"
@@ -242,7 +242,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <svg
                     class="ImageIcon Icon"
@@ -271,7 +271,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <svg
                     class="DividerIcon Icon"
@@ -300,7 +300,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                 role="button"
               >
                 <div
-                  class="false"
+                  class=""
                 >
                   <svg
                     class="CheckIcon Icon"
@@ -335,7 +335,7 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
               role="button"
             >
               <div
-                class="false"
+                class=""
               >
                 <div
                   class="noicon"

@@ -442,7 +442,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                       role="button"
                     >
                       <div
-                        class="false"
+                        class=""
                       >
                         <i
                           class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -465,7 +465,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                       role="button"
                     >
                       <div
-                        class="false"
+                        class=""
                       >
                         <i
                           class="CompassIcon icon-link-variant LinkIcon"
@@ -488,7 +488,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                       role="button"
                     >
                       <div
-                        class="false"
+                        class=""
                       >
                         <i
                           class="CompassIcon icon-plus undefined"
@@ -517,7 +517,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                     role="button"
                   >
                     <div
-                      class="false"
+                      class=""
                     >
                       <div
                         class="noicon"
