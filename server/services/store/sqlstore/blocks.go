@@ -168,60 +168,6 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string,
 	return s.blocksFromRows(rows)
 }
 
-// getSubTree3 returns blocks within 3 levels of the given blockID.
-func (s *SQLStore) getSubTree3(db sq.BaseRunner, boardID string, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
-	// This first subquery returns repeated blocks
-	query := s.getQueryBuilder(db).Select(
-		"l3.id",
-		"l3.parent_id",
-		"l3.created_by",
-		"l3.modified_by",
-		"l3."+s.escapeField("schema"),
-		"l3.type",
-		"l3.title",
-		"l3.fields",
-		s.timestampToCharField("l3.insert_at", "insertAt"),
-		"l3.create_at",
-		"l3.update_at",
-		"l3.delete_at",
-		"l3.board_id",
-	).
-		From(s.tablePrefix + "blocks" + " as l1").
-		Join(s.tablePrefix + "blocks" + " as l2 on l2.parent_id = l1.id or l2.id = l1.id").
-		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
-		Where(sq.Eq{"l1.id": blockID}).
-		Where(sq.Eq{"l3.board_id": boardID}).
-		OrderBy("insertAt,l3.id")
-
-	if opts.BeforeUpdateAt != 0 {
-		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
-	}
-
-	if opts.AfterUpdateAt != 0 {
-		query = query.Where(sq.GtOrEq{"update_at": opts.AfterUpdateAt})
-	}
-
-	if s.dbType == model.PostgresDBType {
-		query = query.Options("DISTINCT ON (insertAt,l3.id)")
-	} else {
-		query = query.Distinct()
-	}
-
-	if opts.Limit != 0 {
-		query = query.Limit(opts.Limit)
-	}
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`getSubTree3 ERROR`, mlog.Err(err))
-
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-
-	return s.blocksFromRows(rows)
-}
-
 func (s *SQLStore) getBlocksForBoard(db sq.BaseRunner, boardID string) ([]model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
@@ -799,7 +745,7 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 }
 
 func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
-	blocks, err := s.getSubTree3(db, boardID, blockID, model.QuerySubtreeOptions{})
+	blocks, err := s.getSubTree2(db, boardID, blockID, model.QuerySubtreeOptions{})
 	if err != nil {
 		return nil, err
 	}

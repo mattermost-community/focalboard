@@ -120,10 +120,11 @@ func (p *Plugin) OnActivate() error {
 	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db, permissionsService), db, logger)
 
 	backendParams := notifyBackendParams{
-		cfg:        cfg,
-		client:     client,
-		serverRoot: baseURL + "/boards",
-		logger:     logger,
+		cfg:         cfg,
+		client:      client,
+		permissions: permissionsService,
+		serverRoot:  baseURL + "/boards",
+		logger:      logger,
 	}
 
 	var notifyBackends []notify.Backend
@@ -219,6 +220,7 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		FilesDriver:              *mmconfig.FileSettings.DriverName,
 		FilesPath:                *mmconfig.FileSettings.Directory,
 		FilesS3Config:            filesS3Config,
+		MaxFileSize:              *mmconfig.FileSettings.MaxFileSize,
 		Telemetry:                enableTelemetry,
 		TelemetryID:              serverID,
 		WebhookUpdate:            []string{},

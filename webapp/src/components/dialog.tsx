@@ -57,7 +57,7 @@ const Dialog = (props: Props) => {
                                 size='medium'
                             />
                         }
-                        {toolbar && <div className='cardToolbar'>{toolbar}</div>}
+                        {toolbar && <div>{toolbar}</div>}
                         {toolsMenu && <MenuWrapper>
                             <IconButton
                                 size='medium'

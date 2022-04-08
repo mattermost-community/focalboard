@@ -18,8 +18,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -37,8 +41,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -56,8 +64,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -75,8 +87,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -94,8 +110,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -111,8 +131,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -128,8 +152,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -153,8 +181,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
           role="button"
         >
           <div
-            class="noicon"
-          />
+            class=""
+          >
+            <div
+              class="noicon"
+            />
+          </div>
           <div
             class="menu-name"
           >
@@ -188,8 +220,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -207,8 +243,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -226,8 +266,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -245,8 +289,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -271,8 +319,12 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
           role="button"
         >
           <div
-            class="noicon"
-          />
+            class=""
+          >
+            <div
+              class="noicon"
+            />
+          </div>
           <div
             class="menu-name"
           >

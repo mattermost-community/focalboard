@@ -81,6 +81,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handlePatchBoard)).Methods("PATCH")
 	apiv1.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handleDeleteBoard)).Methods("DELETE")
 	apiv1.HandleFunc("/boards/{boardID}/duplicate", a.sessionRequired(a.handleDuplicateBoard)).Methods("POST")
+	apiv1.HandleFunc("/boards/{boardID}/undelete", a.sessionRequired(a.handleUndeleteBoard)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.attachSession(a.handleGetBlocks, false)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePatchBlocks)).Methods("PATCH")
@@ -1103,6 +1104,58 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
+func (a *API) handleUndeleteBoard(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/boards/{boardID}/undelete undeleteBoard
+	//
+	// Undeletes a board
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: boardID
+	//   in: path
+	//   description: ID of board to undelete
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	vars := mux.Vars(r)
+	boardID := vars["boardID"]
+
+	auditRec := a.makeAuditRecord(r, "undeleteBoard", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to undelete board"})
+		return
+	}
+
+	err := a.app.UndeleteBoard(boardID, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("UNDELETE Board", mlog.String("boardID", boardID))
+	jsonStringResponse(w, http.StatusOK, "{}")
+
+	auditRec.Success()
+}
+
 func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation PATCH /api/v1/boards/{boardID}/blocks/{blockID} patchBlock
 	//
@@ -1574,10 +1627,6 @@ func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
-	}
-
-	if a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
 		return
 	}
 
@@ -1773,8 +1822,16 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if a.app.GetConfig().MaxFileSize > 0 {
+		r.Body = http.MaxBytesReader(w, r.Body, a.app.GetConfig().MaxFileSize)
+	}
+
 	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
+		if strings.HasSuffix(err.Error(), "http: request body too large") {
+			a.errorResponse(w, r.URL.Path, http.StatusRequestEntityTooLarge, "", err)
+			return
+		}
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 		return
 	}
@@ -3873,12 +3930,21 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 // Response helpers
 
 func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message string, sourceError error) {
-	a.logger.Error("API ERROR",
-		mlog.Int("code", code),
-		mlog.Err(sourceError),
-		mlog.String("msg", message),
-		mlog.String("api", api),
-	)
+	if code == http.StatusUnauthorized {
+		a.logger.Debug("API DEBUG",
+			mlog.Int("code", code),
+			mlog.Err(sourceError),
+			mlog.String("msg", message),
+			mlog.String("api", api),
+		)
+	} else {
+		a.logger.Error("API ERROR",
+			mlog.Int("code", code),
+			mlog.Err(sourceError),
+			mlog.String("msg", message),
+			mlog.String("api", api),
+		)
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: code})
