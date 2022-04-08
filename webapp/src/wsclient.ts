@@ -40,7 +40,7 @@ export const ACTION_UNSUBSCRIBE_TEAM = 'UNSUBSCRIBE_TEAM'
 export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
 export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
 export const ACTION_UPDATE_CATEGORY = 'UPDATE_CATEGORY'
-export const ACTION_UPDATE_BLOCK_CATEGORY = 'UPDATE_BLOCK_CATEGORY'
+export const ACTION_UPDATE_BOARD_CATEGORY = 'UPDATE_BOARD_CATEGORY'
 export const ACTION_UPDATE_SUBSCRIPTION = 'UPDATE_SUBSCRIPTION'
 
 type WSSubscriptionMsg = {
@@ -385,7 +385,7 @@ class WSClient {
                 case ACTION_UPDATE_CATEGORY:
                     this.updateHandler(message)
                     break
-                case ACTION_UPDATE_BLOCK_CATEGORY:
+                case ACTION_UPDATE_BOARD_CATEGORY:
                     this.updateHandler(message)
                     break
                 case ACTION_UPDATE_SUBSCRIPTION:

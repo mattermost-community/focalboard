@@ -17,7 +17,7 @@ const (
 	websocketActionUpdateBlock         = "UPDATE_BLOCK"
 	websocketActionUpdateConfig        = "UPDATE_CLIENT_CONFIG"
 	websocketActionUpdateCategory      = "UPDATE_CATEGORY"
-	websocketActionUpdateCategoryBlock = "UPDATE_BLOCK_CATEGORY"
+	websocketActionUpdateCategoryBoard = "UPDATE_BOARD_CATEGORY"
 	websocketActionUpdateSubscription  = "UPDATE_SUBSCRIPTION"
 )
 

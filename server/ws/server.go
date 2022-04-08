@@ -599,7 +599,7 @@ func (ws *Server) BroadcastCategoryChange(category model.Category) {
 
 func (ws *Server) BroadcastCategoryBoardChange(teamID, userID string, boardCategory model.BoardCategoryWebsocketData) {
 	message := UpdateCategoryMessage{
-		Action:          websocketActionUpdateCategoryBlock,
+		Action:          websocketActionUpdateCategoryBoard,
 		TeamID:          teamID,
 		BoardCategories: &boardCategory,
 	}

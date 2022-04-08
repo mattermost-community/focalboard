@@ -479,9 +479,9 @@ func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
 	pa.sendTeamMessage(websocketActionUpdateCategory, category.TeamID, utils.StructToMap(message))
 }
 
-func (pa *PluginAdapter) BroadcastCategoryBlockChange(teamID, userID string, boardCategory model.BoardCategoryWebsocketData) {
+func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boardCategory model.BoardCategoryWebsocketData) {
 	pa.logger.Debug(
-		"BroadcastCategoryBlockChange",
+		"BroadcastCategoryBoardChange",
 		mlog.String("userID", userID),
 		mlog.String("teamID", teamID),
 		mlog.String("categoryID", boardCategory.CategoryID),
@@ -489,12 +489,12 @@ func (pa *PluginAdapter) BroadcastCategoryBlockChange(teamID, userID string, boa
 	)
 
 	message := UpdateCategoryMessage{
-		Action:          websocketActionUpdateCategoryBlock,
+		Action:          websocketActionUpdateCategoryBoard,
 		TeamID:          teamID,
 		BoardCategories: &boardCategory,
 	}
 
-	pa.sendTeamMessage(websocketActionUpdateCategoryBlock, teamID, utils.StructToMap(message))
+	pa.sendTeamMessage(websocketActionUpdateCategoryBoard, teamID, utils.StructToMap(message))
 }
 
 func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {
