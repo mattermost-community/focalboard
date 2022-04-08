@@ -259,6 +259,9 @@ func TestPermissionsGetTeamTemplates(t *testing.T) {
 	testData := setupData(t, th)
 	clients := setupClients(th)
 
+	err := th.Server.App().InitTemplates()
+	require.NoError(t, err, "InitTemplates should succeed")
+
 	builtInTemplateCount := 7
 
 	ttCases := []TestCase{
@@ -2074,6 +2077,9 @@ func TestPermissionsOnboard(t *testing.T) {
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
+
+	err := th.Server.App().InitTemplates()
+	require.NoError(t, err, "InitTemplates should not fail")
 
 	ttCases := []TestCase{
 		{"/teams/test-team/onboard", methodPost, "", userAnon, http.StatusUnauthorized, 0},

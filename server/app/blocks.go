@@ -344,7 +344,8 @@ func (a *App) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 }
 
 func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBlock *model.Block, modifiedByID string) {
-	if a.notifications == nil {
+	// don't notify if notifications service disabled, or block change is generated via system user.
+	if a.notifications == nil || modifiedByID == model.SystemUserID {
 		return
 	}
 

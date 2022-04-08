@@ -1479,6 +1479,9 @@ func TestGetTemplates(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
 
+		err := th.Server.App().InitTemplates()
+		require.NoError(t, err, "InitTemplates should not fail")
+
 		teamID := "my-team-id"
 		rBoards, resp := th.Client.GetTemplatesForTeam("0")
 		th.CheckOK(resp)
