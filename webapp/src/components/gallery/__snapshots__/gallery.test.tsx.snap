@@ -139,9 +139,13 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class=""
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -156,9 +160,13 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
-                  <i
-                    class="CompassIcon icon-content-copy content-copy"
-                  />
+                  <div
+                    class=""
+                  >
+                    <i
+                      class="CompassIcon icon-content-copy content-copy"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -175,9 +183,13 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
-                  <i
-                    class="CompassIcon icon-link-variant LinkIcon"
-                  />
+                  <div
+                    class=""
+                  >
+                    <i
+                      class="CompassIcon icon-link-variant LinkIcon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -201,8 +213,12 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class=""
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -298,9 +314,13 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
-                  <i
-                    class="CompassIcon icon-link-variant LinkIcon"
-                  />
+                  <div
+                    class=""
+                  >
+                    <i
+                      class="CompassIcon icon-link-variant LinkIcon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -324,8 +344,12 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class=""
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >

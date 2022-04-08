@@ -7,20 +7,24 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton 1`] = `
     class="MenuOption TextOption menu-option bold-menu-text"
     role="button"
   >
-    <svg
-      class="CardIcon Icon"
-      viewBox="0 0 100 100"
-      xmlns="http://www.w3.org/2000/svg"
+    <div
+      class=""
     >
-      <rect
-        height="40"
-        rx="3"
-        ry="3"
-        width="60"
-        x="20"
-        y="30"
-      />
-    </svg>
+      <svg
+        class="CardIcon Icon"
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          height="40"
+          rx="3"
+          ry="3"
+          width="60"
+          x="20"
+          y="30"
+        />
+      </svg>
+    </div>
     <div
       class="menu-name"
     >
@@ -51,20 +55,24 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
     class="MenuOption TextOption menu-option bold-menu-text"
     role="button"
   >
-    <svg
-      class="CardIcon Icon"
-      viewBox="0 0 100 100"
-      xmlns="http://www.w3.org/2000/svg"
+    <div
+      class=""
     >
-      <rect
-        height="40"
-        rx="3"
-        ry="3"
-        width="60"
-        x="20"
-        y="30"
-      />
-    </svg>
+      <svg
+        class="CardIcon Icon"
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          height="40"
+          rx="3"
+          ry="3"
+          width="60"
+          x="20"
+          y="30"
+        />
+      </svg>
+    </div>
     <div
       class="menu-name"
     >
@@ -98,15 +106,19 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <svg
-                  class="CheckIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  class=""
                 >
-                  <polyline
-                    points="20,60 40,80 80,40"
-                  />
-                </svg>
+                  <svg
+                    class="CheckIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="20,60 40,80 80,40"
+                    />
+                  </svg>
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -130,8 +142,12 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -156,20 +172,24 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and addCar
     class="MenuOption TextOption menu-option bold-menu-text"
     role="button"
   >
-    <svg
-      class="CardIcon Icon"
-      viewBox="0 0 100 100"
-      xmlns="http://www.w3.org/2000/svg"
+    <div
+      class=""
     >
-      <rect
-        height="40"
-        rx="3"
-        ry="3"
-        width="60"
-        x="20"
-        y="30"
-      />
-    </svg>
+      <svg
+        class="CardIcon Icon"
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          height="40"
+          rx="3"
+          ry="3"
+          width="60"
+          x="20"
+          y="30"
+        />
+      </svg>
+    </div>
     <div
       class="menu-name"
     >

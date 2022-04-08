@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/wiggin77/merror"
@@ -31,10 +32,11 @@ var (
 // via notifications hints written to the database so that fewer notifications are sent for active
 // blocks.
 type notifier struct {
-	serverRoot string
-	store      Store
-	delivery   SubscriptionDelivery
-	logger     *mlog.Logger
+	serverRoot  string
+	store       Store
+	permissions permissions.PermissionsService
+	delivery    SubscriptionDelivery
+	logger      *mlog.Logger
 
 	hints chan *model.NotificationHint
 
@@ -44,12 +46,13 @@ type notifier struct {
 
 func newNotifier(params BackendParams) *notifier {
 	return &notifier{
-		serverRoot: params.ServerRoot,
-		store:      params.Store,
-		delivery:   params.Delivery,
-		logger:     params.Logger,
-		done:       nil,
-		hints:      make(chan *model.NotificationHint, hintQueueSize),
+		serverRoot:  params.ServerRoot,
+		store:       params.Store,
+		permissions: params.Permissions,
+		delivery:    params.Delivery,
+		logger:      params.Logger,
+		done:        nil,
+		hints:       make(chan *model.NotificationHint, hintQueueSize),
 	}
 }
 
@@ -216,10 +219,20 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 			// don't notify the author of their own changes.
 			authorName, isAuthor := diffAuthors[sub.SubscriberID]
 			if isAuthor && len(diffAuthors) == 1 {
-				n.logger.Debug("notifySubscribers - deliver, skipping author",
+				n.logger.Debug("notifySubscribers - skipping author",
 					mlog.Any("hint", hint),
 					mlog.String("author_id", sub.SubscriberID),
 					mlog.String("author_username", authorName),
+				)
+				continue
+			}
+
+			// make sure the subscriber still has permissions for the board.
+			if !n.permissions.HasPermissionToBoard(sub.SubscriberID, board.ID, model.PermissionViewBoard) {
+				n.logger.Debug("notifySubscribers - skipping non-board member",
+					mlog.Any("hint", hint),
+					mlog.String("subscriber_id", sub.SubscriberID),
+					mlog.String("board_id", board.ID),
 				)
 				continue
 			}
