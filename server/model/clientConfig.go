@@ -5,4 +5,5 @@ type ClientConfig struct {
 	TelemetryID              string            `json:"telemetryid"`
 	EnablePublicSharedBoards bool              `json:"enablePublicSharedBoards"`
 	FeatureFlags             map[string]string `json:"featureFlags"`
+	ClientLicense            map[string]string `json:"clientLicense"`
 }
