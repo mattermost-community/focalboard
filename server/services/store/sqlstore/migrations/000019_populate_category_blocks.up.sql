@@ -12,7 +12,7 @@ CREATE TABLE {{.prefix}}category_boards (
 CREATE INDEX idx_categoryboards_category_id ON {{.prefix}}category_boards(category_id);
 
 {{if .plugin}}
-    INSERT INTO {{.prefix}}category_boards(id, category_id, board_id, create_at, update_at, delete_at)
+    INSERT INTO {{.prefix}}category_boards(id, user_id, category_id, board_id, create_at, update_at, delete_at)
     SELECT
         {{ if .postgres }}
             REPLACE(uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)::varchar, '-', ''),
