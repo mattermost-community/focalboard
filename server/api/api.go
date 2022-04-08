@@ -1140,7 +1140,7 @@ func (a *API) handleUndeleteBoard(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("boardID", boardID)
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create public boards"})
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to undelete board"})
 		return
 	}
 
