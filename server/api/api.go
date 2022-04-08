@@ -134,8 +134,8 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
 
 	// Category Block APIs
-	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBlocks)).Methods(http.MethodGet)
-	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}/blocks/{blockID}", a.sessionRequired(a.handleUpdateCategoryBlock)).Methods(http.MethodPost)
+	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBoards)).Methods(http.MethodGet)
+	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/{boardID}", a.sessionRequired(a.handleUpdateCategoryBoard)).Methods(http.MethodPost)
 
 	// Get Files API
 	apiv1.HandleFunc("/files/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
@@ -538,7 +538,7 @@ func (a *API) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func (a *API) handleGetUserCategoryBlocks(w http.ResponseWriter, r *http.Request) {
+func (a *API) handleGetUserCategoryBoards(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
@@ -549,7 +549,7 @@ func (a *API) handleGetUserCategoryBlocks(w http.ResponseWriter, r *http.Request
 	auditRec := a.makeAuditRecord(r, "getUserCategoryBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
-	categoryBlocks, err := a.app.GetUserCategoryBlocks(userID, teamID)
+	categoryBlocks, err := a.app.GetUserCategoryBoards(userID, teamID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -565,13 +565,13 @@ func (a *API) handleGetUserCategoryBlocks(w http.ResponseWriter, r *http.Request
 	auditRec.Success()
 }
 
-func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) {
-	auditRec := a.makeAuditRecord(r, "updateCategoryBlock", audit.Fail)
+func (a *API) handleUpdateCategoryBoard(w http.ResponseWriter, r *http.Request) {
+	auditRec := a.makeAuditRecord(r, "updateCategoryBoard", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
 	vars := mux.Vars(r)
 	categoryID := vars["categoryID"]
-	blockID := vars["blockID"]
+	boardID := vars["boardID"]
 	teamID := vars["teamID"]
 
 	ctx := r.Context()
@@ -579,7 +579,7 @@ func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) 
 	userID := session.UserID
 
 	// TODO: Check the category and the team matches
-	err := a.app.AddUpdateUserCategoryBlock(teamID, userID, categoryID, blockID)
+	err := a.app.AddUpdateUserCategoryBoard(teamID, userID, categoryID, boardID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

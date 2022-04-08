@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"io"
+	"time"
 )
 
 type BoardType string
@@ -359,5 +360,5 @@ type BoardMemberHistoryEntry struct {
 
 	// The insertion time
 	// required: true
-	InsertAt int64 `json:"insertAt"`
+	InsertAt time.Time `json:"insertAt"`
 }

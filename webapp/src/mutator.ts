@@ -914,8 +914,8 @@ class Mutator {
         await octoClient.updateSidebarCategory(category)
     }
 
-    async moveBlockToCategory(teamID: string, blockID: string, toCategoryID: string, fromCategoryID: string): Promise<void> {
-        await octoClient.moveBlockToCategory(teamID, blockID, toCategoryID, fromCategoryID)
+    async moveBoardToCategory(teamID: string, blockID: string, toCategoryID: string, fromCategoryID: string): Promise<void> {
+        await octoClient.moveBoardToCategory(teamID, blockID, toCategoryID, fromCategoryID)
     }
 
     async followBlock(blockId: string, blockType: string, userId: string) {
