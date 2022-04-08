@@ -10,7 +10,7 @@ import (
 )
 
 func TestSharing(t *testing.T) {
-	th := SetupTestHelper(t).InitBasic()
+	th := SetupTestHelper(t, false).InitBasic()
 	defer th.TearDown()
 
 	var boardID string

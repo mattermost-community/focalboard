@@ -17,7 +17,7 @@ const (
 )
 
 func TestUserRegister(t *testing.T) {
-	th := SetupTestHelper(t).Start()
+	th := SetupTestHelper(t, false).Start()
 	defer th.TearDown()
 
 	// register
@@ -37,7 +37,7 @@ func TestUserRegister(t *testing.T) {
 }
 
 func TestUserLogin(t *testing.T) {
-	th := SetupTestHelper(t).Start()
+	th := SetupTestHelper(t, false).Start()
 	defer th.TearDown()
 
 	t.Run("with nonexist user", func(t *testing.T) {
@@ -79,7 +79,7 @@ func TestUserLogin(t *testing.T) {
 }
 
 func TestGetMe(t *testing.T) {
-	th := SetupTestHelper(t).Start()
+	th := SetupTestHelper(t, false).Start()
 	defer th.TearDown()
 
 	t.Run("not login yet", func(t *testing.T) {
@@ -121,7 +121,7 @@ func TestGetMe(t *testing.T) {
 }
 
 func TestGetUser(t *testing.T) {
-	th := SetupTestHelper(t).Start()
+	th := SetupTestHelper(t, false).Start()
 	defer th.TearDown()
 
 	// register
@@ -166,7 +166,7 @@ func TestGetUser(t *testing.T) {
 }
 
 func TestUserChangePassword(t *testing.T) {
-	th := SetupTestHelper(t).Start()
+	th := SetupTestHelper(t, false).Start()
 	defer th.TearDown()
 
 	// register
@@ -213,7 +213,7 @@ func randomBytes(t *testing.T, n int) []byte {
 
 func TestTeamUploadFile(t *testing.T) {
 	t.Run("no permission", func(t *testing.T) { // native auth, but not login
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		teamID := "0"
@@ -225,7 +225,7 @@ func TestTeamUploadFile(t *testing.T) {
 	})
 
 	t.Run("a board admin should be able to update a file", func(t *testing.T) { // single token auth
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		teamID := "0"
@@ -246,7 +246,7 @@ func TestTeamUploadFile(t *testing.T) {
 	})
 
 	t.Run("user that doesn't belong to the board should not be able to upload a file", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		teamID := "0"

@@ -12,7 +12,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).Start()
+		th := SetupTestHelper(t, false).Start()
 		defer th.TearDown()
 
 		newBab := &model.BoardsAndBlocks{
@@ -26,7 +26,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 	})
 
 	t.Run("invalid boards and blocks", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		t.Run("no boards", func(t *testing.T) {
@@ -167,7 +167,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 	teamID := "team-id"
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).Start()
+		th := SetupTestHelper(t, false).Start()
 		defer th.TearDown()
 
 		pbab := &model.PatchBoardsAndBlocks{}
@@ -178,7 +178,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 	})
 
 	t.Run("invalid patch boards and blocks", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		userID := th.GetUser1().ID
@@ -317,7 +317,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 	})
 
 	t.Run("if the user doesn't have permissions for one of the boards, nothing should be updated", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		userID := th.GetUser1().ID
@@ -381,7 +381,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 	})
 
 	t.Run("boards belonging to different teams should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		userID := th.GetUser1().ID
@@ -445,7 +445,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 	})
 
 	t.Run("patches should be rejected if one is invalid", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		userID := th.GetUser1().ID
@@ -512,7 +512,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 	})
 
 	t.Run("patches should be rejected if there is a block that doesn't belong to the boards being patched", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		userID := th.GetUser1().ID
@@ -575,7 +575,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 	})
 
 	t.Run("patches should be applied if they're valid and they're related", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		userID := th.GetUser1().ID
@@ -660,7 +660,7 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 	teamID := "team-id"
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).Start()
+		th := SetupTestHelper(t, false).Start()
 		defer th.TearDown()
 
 		dbab := &model.DeleteBoardsAndBlocks{}
@@ -671,7 +671,7 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 	})
 
 	t.Run("invalid delete boards and blocks", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		// a board is required for the permission checks
@@ -724,7 +724,7 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 	})
 
 	t.Run("if the user has no permissions to one of the boards, nothing should be deleted", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		// the user is an admin of the first board
@@ -754,7 +754,7 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 	})
 
 	t.Run("all boards and blocks should be deleted if the request is correct", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBab := &model.BoardsAndBlocks{

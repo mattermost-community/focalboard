@@ -18,7 +18,7 @@ const (
 
 func TestGetBoards(t *testing.T) {
 	t.Run("a non authenticated client should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		th.Logout(th.Client)
 
@@ -38,7 +38,7 @@ func TestGetBoards(t *testing.T) {
 	})
 
 	t.Run("should only return the boards that the user is a member of", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		teamID := "0"
@@ -118,7 +118,7 @@ func TestGetBoards(t *testing.T) {
 
 func TestCreateBoard(t *testing.T) {
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		th.Logout(th.Client)
 
@@ -133,7 +133,7 @@ func TestCreateBoard(t *testing.T) {
 	})
 
 	t.Run("create public board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		me := th.GetUser1()
@@ -167,7 +167,7 @@ func TestCreateBoard(t *testing.T) {
 	})
 
 	t.Run("create private board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		me := th.GetUser1()
@@ -200,7 +200,7 @@ func TestCreateBoard(t *testing.T) {
 	})
 
 	t.Run("create invalid board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		title := "board title"
@@ -257,7 +257,7 @@ func TestCreateBoard(t *testing.T) {
 
 func TestSearchBoards(t *testing.T) {
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		th.Logout(th.Client)
 
@@ -267,7 +267,7 @@ func TestSearchBoards(t *testing.T) {
 	})
 
 	t.Run("all the matching private boards that the user is a member of and all matching public boards should be returned", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		teamID := testTeamID
@@ -369,7 +369,7 @@ func TestSearchBoards(t *testing.T) {
 
 func TestGetBoard(t *testing.T) {
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		th.Logout(th.Client)
 
@@ -379,7 +379,7 @@ func TestGetBoard(t *testing.T) {
 	})
 
 	t.Run("valid read token should be enough to get the board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
 
@@ -421,7 +421,7 @@ func TestGetBoard(t *testing.T) {
 	})
 
 	t.Run("nonexisting board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		board, resp := th.Client.GetBoard("nonexistent board", "")
@@ -430,7 +430,7 @@ func TestGetBoard(t *testing.T) {
 	})
 
 	t.Run("a user that doesn't have permissions to a private board cannot retrieve it", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		teamID := testTeamID
@@ -447,7 +447,7 @@ func TestGetBoard(t *testing.T) {
 	})
 
 	t.Run("a user that has permissions to a private board can retrieve it", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		teamID := testTeamID
@@ -464,7 +464,7 @@ func TestGetBoard(t *testing.T) {
 	})
 
 	t.Run("a user that doesn't have permissions to a public board but have them to its team can retrieve it", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		teamID := testTeamID
@@ -484,7 +484,7 @@ func TestGetBoard(t *testing.T) {
 
 func TestGetBoardMetadata(t *testing.T) {
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelperWithLicense(t, LicenseEnterprise).InitBasic()
+		th := SetupTestHelperWithLicense(t, LicenseEnterprise, false).InitBasic()
 		defer th.TearDown()
 		th.Logout(th.Client)
 
@@ -494,7 +494,7 @@ func TestGetBoardMetadata(t *testing.T) {
 	})
 
 	t.Run("getBoardMetadata query is correct", func(t *testing.T) {
-		th := SetupTestHelperWithLicense(t, LicenseEnterprise).InitBasic()
+		th := SetupTestHelperWithLicense(t, LicenseEnterprise, false).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
 
@@ -576,7 +576,7 @@ func TestGetBoardMetadata(t *testing.T) {
 	})
 
 	t.Run("getBoardMetadata should fail with no license", func(t *testing.T) {
-		th := SetupTestHelperWithLicense(t, LicenseNone).InitBasic()
+		th := SetupTestHelperWithLicense(t, LicenseNone, false).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
 
@@ -597,7 +597,7 @@ func TestGetBoardMetadata(t *testing.T) {
 	})
 
 	t.Run("getBoardMetadata should fail on Professional license", func(t *testing.T) {
-		th := SetupTestHelperWithLicense(t, LicenseProfessional).InitBasic()
+		th := SetupTestHelperWithLicense(t, LicenseProfessional, false).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
 
@@ -618,7 +618,7 @@ func TestGetBoardMetadata(t *testing.T) {
 	})
 
 	t.Run("valid read token should not get the board metadata", func(t *testing.T) {
-		th := SetupTestHelperWithLicense(t, LicenseEnterprise).InitBasic()
+		th := SetupTestHelperWithLicense(t, LicenseEnterprise, false).InitBasic()
 		defer th.TearDown()
 		th.Server.Config().EnablePublicSharedBoards = true
 
@@ -665,7 +665,7 @@ func TestPatchBoard(t *testing.T) {
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		th.Logout(th.Client)
 
@@ -691,7 +691,7 @@ func TestPatchBoard(t *testing.T) {
 	})
 
 	t.Run("non existing board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newTitle := "a new title 2"
@@ -703,7 +703,7 @@ func TestPatchBoard(t *testing.T) {
 	})
 
 	t.Run("invalid patch on a board with permissions", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		user1 := th.GetUser1()
@@ -725,7 +725,7 @@ func TestPatchBoard(t *testing.T) {
 	})
 
 	t.Run("valid patch on a board with permissions", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		user1 := th.GetUser1()
@@ -749,7 +749,7 @@ func TestPatchBoard(t *testing.T) {
 	})
 
 	t.Run("valid patch on a board without permissions", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		user1 := th.GetUser1()
@@ -780,7 +780,7 @@ func TestDeleteBoard(t *testing.T) {
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		th.Logout(th.Client)
 
@@ -802,7 +802,7 @@ func TestDeleteBoard(t *testing.T) {
 	})
 
 	t.Run("a user without permissions should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBoard := &model.Board{
@@ -823,7 +823,7 @@ func TestDeleteBoard(t *testing.T) {
 	})
 
 	t.Run("non existing board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		success, resp := th.Client.DeleteBoard("non-existing-board")
@@ -832,7 +832,7 @@ func TestDeleteBoard(t *testing.T) {
 	})
 
 	t.Run("an existing board should be correctly deleted", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBoard := &model.Board{
@@ -880,7 +880,7 @@ func TestGetMembersForBoard(t *testing.T) {
 	}
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		board := createBoardWithUsers(th)
 		th.Logout(th.Client)
@@ -891,7 +891,7 @@ func TestGetMembersForBoard(t *testing.T) {
 	})
 
 	t.Run("a user without permissions should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		board := createBoardWithUsers(th)
 
@@ -903,7 +903,7 @@ func TestGetMembersForBoard(t *testing.T) {
 	})
 
 	t.Run("non existing board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		members, resp := th.Client.GetMembersForBoard("non-existing-board")
@@ -912,7 +912,7 @@ func TestGetMembersForBoard(t *testing.T) {
 	})
 
 	t.Run("should correctly return board members for a valid board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		board := createBoardWithUsers(th)
 
@@ -926,7 +926,7 @@ func TestAddMember(t *testing.T) {
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		th.Logout(th.Client)
 
@@ -950,7 +950,7 @@ func TestAddMember(t *testing.T) {
 	})
 
 	t.Run("a user without permissions should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBoard := &model.Board{
@@ -973,7 +973,7 @@ func TestAddMember(t *testing.T) {
 	})
 
 	t.Run("non existing board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newMember := &model.BoardMember{
@@ -989,7 +989,7 @@ func TestAddMember(t *testing.T) {
 
 	t.Run("should correctly add a new member for a valid board", func(t *testing.T) {
 		t.Run("a private board through an admin user", func(t *testing.T) {
-			th := SetupTestHelper(t).InitBasic()
+			th := SetupTestHelper(t, false).InitBasic()
 			defer th.TearDown()
 
 			newBoard := &model.Board{
@@ -1017,7 +1017,7 @@ func TestAddMember(t *testing.T) {
 		})
 
 		t.Run("a public board through a user that is not yet a member", func(t *testing.T) {
-			th := SetupTestHelper(t).InitBasic()
+			th := SetupTestHelper(t, false).InitBasic()
 			defer th.TearDown()
 
 			newBoard := &model.Board{
@@ -1060,7 +1060,7 @@ func TestAddMember(t *testing.T) {
 		})
 
 		t.Run("should always add a new member as an editor", func(t *testing.T) {
-			th := SetupTestHelper(t).InitBasic()
+			th := SetupTestHelper(t, false).InitBasic()
 			defer th.TearDown()
 
 			newBoard := &model.Board{
@@ -1088,7 +1088,7 @@ func TestAddMember(t *testing.T) {
 	})
 
 	t.Run("should do nothing if the member already exists", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBoard := &model.Board{
@@ -1129,7 +1129,7 @@ func TestUpdateMember(t *testing.T) {
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBoard := &model.Board{
@@ -1153,7 +1153,7 @@ func TestUpdateMember(t *testing.T) {
 	})
 
 	t.Run("a user without permissions should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBoard := &model.Board{
@@ -1176,7 +1176,7 @@ func TestUpdateMember(t *testing.T) {
 	})
 
 	t.Run("non existing board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		updatedMember := &model.BoardMember{
@@ -1191,7 +1191,7 @@ func TestUpdateMember(t *testing.T) {
 	})
 
 	t.Run("should correctly update a member for a valid board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBoard := &model.Board{
@@ -1227,7 +1227,7 @@ func TestUpdateMember(t *testing.T) {
 	})
 
 	t.Run("should not update a member if that means that a board will not have any admin", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBoard := &model.Board{
@@ -1259,7 +1259,7 @@ func TestDeleteMember(t *testing.T) {
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBoard := &model.Board{
@@ -1282,7 +1282,7 @@ func TestDeleteMember(t *testing.T) {
 	})
 
 	t.Run("a user without permissions should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBoard := &model.Board{
@@ -1304,7 +1304,7 @@ func TestDeleteMember(t *testing.T) {
 	})
 
 	t.Run("non existing board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		updatedMember := &model.BoardMember{
@@ -1320,7 +1320,7 @@ func TestDeleteMember(t *testing.T) {
 	t.Run("should correctly delete a member for a valid board", func(t *testing.T) {
 		//nolint:dupl
 		t.Run("admin removing a user", func(t *testing.T) {
-			th := SetupTestHelper(t).InitBasic()
+			th := SetupTestHelper(t, false).InitBasic()
 			defer th.TearDown()
 
 			newBoard := &model.Board{
@@ -1362,7 +1362,7 @@ func TestDeleteMember(t *testing.T) {
 
 		//nolint:dupl
 		t.Run("user removing themselves", func(t *testing.T) {
-			th := SetupTestHelper(t).InitBasic()
+			th := SetupTestHelper(t, false).InitBasic()
 			defer th.TearDown()
 
 			newBoard := &model.Board{
@@ -1405,7 +1405,7 @@ func TestDeleteMember(t *testing.T) {
 
 		//nolint:dupl
 		t.Run("a non admin user should not be able to remove another user", func(t *testing.T) {
-			th := SetupTestHelper(t).InitBasic()
+			th := SetupTestHelper(t, false).InitBasic()
 			defer th.TearDown()
 
 			newBoard := &model.Board{
@@ -1447,7 +1447,7 @@ func TestDeleteMember(t *testing.T) {
 	})
 
 	t.Run("should not delete a member if that means that a board will not have any admin", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		newBoard := &model.Board{
@@ -1476,7 +1476,7 @@ func TestDeleteMember(t *testing.T) {
 
 func TestGetTemplates(t *testing.T) {
 	t.Run("should be able to retrieve built-in templates", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, true).InitBasic()
 		defer th.TearDown()
 
 		teamID := "my-team-id"
@@ -1526,7 +1526,7 @@ func TestGetTemplates(t *testing.T) {
 
 func TestJoinBoard(t *testing.T) {
 	t.Run("create and join public board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		me := th.GetUser1()
@@ -1561,7 +1561,7 @@ func TestJoinBoard(t *testing.T) {
 	})
 
 	t.Run("create and join private board (should not succeed)", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		me := th.GetUser1()
@@ -1590,7 +1590,7 @@ func TestJoinBoard(t *testing.T) {
 	})
 
 	t.Run("join invalid board", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		member, resp := th.Client2.JoinBoard("nonexistent-board-ID")

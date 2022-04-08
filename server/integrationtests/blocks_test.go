@@ -11,7 +11,7 @@ import (
 )
 
 func TestGetBlocks(t *testing.T) {
-	th := SetupTestHelperWithToken(t).Start()
+	th := SetupTestHelperWithToken(t, false).Start()
 	defer th.TearDown()
 
 	board := th.CreateBoard("team-id", model.BoardTypeOpen)
@@ -53,7 +53,7 @@ func TestGetBlocks(t *testing.T) {
 }
 
 func TestPostBlock(t *testing.T) {
-	th := SetupTestHelperWithToken(t).Start()
+	th := SetupTestHelperWithToken(t, false).Start()
 	defer th.TearDown()
 
 	board := th.CreateBoard("team-id", model.BoardTypeOpen)
@@ -162,7 +162,7 @@ func TestPostBlock(t *testing.T) {
 }
 
 func TestPatchBlock(t *testing.T) {
-	th := SetupTestHelperWithToken(t).Start()
+	th := SetupTestHelperWithToken(t, false).Start()
 	defer th.TearDown()
 
 	initialID := utils.NewID(utils.IDTypeBlock)
@@ -260,7 +260,7 @@ func TestPatchBlock(t *testing.T) {
 }
 
 func TestDeleteBlock(t *testing.T) {
-	th := SetupTestHelperWithToken(t).Start()
+	th := SetupTestHelperWithToken(t, false).Start()
 	defer th.TearDown()
 
 	board := th.CreateBoard("team-id", model.BoardTypeOpen)
@@ -311,7 +311,7 @@ func TestDeleteBlock(t *testing.T) {
 }
 
 func TestUndeleteBlock(t *testing.T) {
-	th := SetupTestHelper(t).InitBasic()
+	th := SetupTestHelper(t, false).InitBasic()
 	defer th.TearDown()
 
 	board := th.CreateBoard("team-id", model.BoardTypeOpen)
@@ -380,7 +380,7 @@ func TestUndeleteBlock(t *testing.T) {
 func TestGetSubtree(t *testing.T) {
 	t.Skip("TODO: fix flaky test")
 
-	th := SetupTestHelperWithToken(t).Start()
+	th := SetupTestHelperWithToken(t, false).Start()
 	defer th.TearDown()
 
 	board := th.CreateBoard("team-id", model.BoardTypeOpen)

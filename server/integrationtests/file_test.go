@@ -15,7 +15,7 @@ func TestUploadFile(t *testing.T) {
 	)
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 		th.Logout(th.Client)
 
@@ -25,7 +25,7 @@ func TestUploadFile(t *testing.T) {
 	})
 
 	t.Run("upload a file to an existing team and board without permissions", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		file, resp := th.Client.TeamUploadFile(testTeamID, "not-valid-board", bytes.NewBuffer([]byte("test")))
@@ -34,7 +34,7 @@ func TestUploadFile(t *testing.T) {
 	})
 
 	t.Run("upload a file to an existing team and board with permissions", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		testBoard := th.CreateBoard(testTeamID, model.BoardTypeOpen)
@@ -46,7 +46,7 @@ func TestUploadFile(t *testing.T) {
 	})
 
 	t.Run("upload a file to an existing team and board with permissions but reaching the MaxFileLimit", func(t *testing.T) {
-		th := SetupTestHelper(t).InitBasic()
+		th := SetupTestHelper(t, false).InitBasic()
 		defer th.TearDown()
 
 		testBoard := th.CreateBoard(testTeamID, model.BoardTypeOpen)

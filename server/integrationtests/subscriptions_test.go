@@ -62,7 +62,7 @@ func createTestSubscriptions(client *client.Client, num int) ([]*model.Subscript
 }
 
 func TestCreateSubscription(t *testing.T) {
-	th := SetupTestHelper(t).InitBasic()
+	th := SetupTestHelper(t, false).InitBasic()
 	defer th.TearDown()
 
 	t.Run("Create valid subscription", func(t *testing.T) {
@@ -98,7 +98,7 @@ func TestCreateSubscription(t *testing.T) {
 }
 
 func TestGetSubscriptions(t *testing.T) {
-	th := SetupTestHelper(t).InitBasic()
+	th := SetupTestHelper(t, false).InitBasic()
 	defer th.TearDown()
 
 	t.Run("Get subscriptions for user", func(t *testing.T) {
@@ -121,7 +121,7 @@ func TestGetSubscriptions(t *testing.T) {
 }
 
 func TestDeleteSubscription(t *testing.T) {
-	th := SetupTestHelper(t).InitBasic()
+	th := SetupTestHelper(t, false).InitBasic()
 	defer th.TearDown()
 
 	t.Run("Delete valid subscription", func(t *testing.T) {

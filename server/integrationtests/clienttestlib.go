@@ -110,11 +110,11 @@ func getTestConfig() (*config.Configuration, error) {
 	}, nil
 }
 
-func newTestServer(singleUserToken string) *server.Server {
-	return newTestServerWithLicense(singleUserToken, LicenseNone)
+func newTestServer(singleUserToken string, initTemplates bool) *server.Server {
+	return newTestServerWithLicense(singleUserToken, LicenseNone, initTemplates)
 }
 
-func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *server.Server {
+func newTestServerWithLicense(singleUserToken string, licenseType LicenseType, initTemplates bool) *server.Server {
 	cfg, err := getTestConfig()
 	if err != nil {
 		panic(err)
@@ -150,6 +150,7 @@ func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *
 		DBStore:            db,
 		Logger:             logger,
 		PermissionsService: permissionsService,
+		SkipInitTemplates:  !initTemplates,
 	}
 
 	srv, err := server.New(params)
@@ -160,7 +161,7 @@ func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *
 	return srv
 }
 
-func newTestServerPluginMode() *server.Server {
+func newTestServerPluginMode(initTemplates bool) *server.Server {
 	cfg, err := getTestConfig()
 	if err != nil {
 		panic(err)
@@ -186,6 +187,7 @@ func newTestServerPluginMode() *server.Server {
 		DBStore:            db,
 		Logger:             logger,
 		PermissionsService: permissionsService,
+		SkipInitTemplates:  !initTemplates,
 	}
 
 	srv, err := server.New(params)
@@ -196,29 +198,29 @@ func newTestServerPluginMode() *server.Server {
 	return srv
 }
 
-func SetupTestHelperWithToken(t *testing.T) *TestHelper {
+func SetupTestHelperWithToken(t *testing.T, initTemplates bool) *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{T: t}
-	th.Server = newTestServer(sessionToken)
+	th.Server = newTestServer(sessionToken, initTemplates)
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
 	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
 	return th
 }
 
-func SetupTestHelper(t *testing.T) *TestHelper {
-	return SetupTestHelperWithLicense(t, LicenseNone)
+func SetupTestHelper(t *testing.T, initTemplates bool) *TestHelper {
+	return SetupTestHelperWithLicense(t, LicenseNone, initTemplates)
 }
 
-func SetupTestHelperPluginMode(t *testing.T) *TestHelper {
+func SetupTestHelperPluginMode(t *testing.T, initTemplates bool) *TestHelper {
 	th := &TestHelper{T: t}
-	th.Server = newTestServerPluginMode()
+	th.Server = newTestServerPluginMode(initTemplates)
 	th.Start()
 	return th
 }
 
-func SetupTestHelperWithLicense(t *testing.T, licenseType LicenseType) *TestHelper {
+func SetupTestHelperWithLicense(t *testing.T, licenseType LicenseType, initTemplates bool) *TestHelper {
 	th := &TestHelper{T: t}
-	th.Server = newTestServerWithLicense("", licenseType)
+	th.Server = newTestServerWithLicense("", licenseType, initTemplates)
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
 	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, "")
 	return th

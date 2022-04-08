@@ -217,7 +217,7 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 }
 
 func TestPermissionsGetTeamBoards(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -235,7 +235,7 @@ func TestPermissionsGetTeamBoards(t *testing.T) {
 }
 
 func TestPermissionsSearchTeamBoards(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -254,7 +254,7 @@ func TestPermissionsSearchTeamBoards(t *testing.T) {
 }
 
 func TestPermissionsGetTeamTemplates(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, true)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -283,7 +283,7 @@ func TestPermissionsGetTeamTemplates(t *testing.T) {
 }
 
 func TestPermissionsCreateBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -306,7 +306,7 @@ func TestPermissionsCreateBoard(t *testing.T) {
 }
 
 func TestPermissionsGetBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -353,7 +353,7 @@ func TestPermissionsGetBoard(t *testing.T) {
 }
 
 func TestPermissionsPatchBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -395,7 +395,7 @@ func TestPermissionsPatchBoard(t *testing.T) {
 }
 
 func TestPermissionsDeleteBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -437,7 +437,7 @@ func TestPermissionsDeleteBoard(t *testing.T) {
 }
 
 func TestPermissionsDuplicateBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -516,7 +516,7 @@ func TestPermissionsDuplicateBoard(t *testing.T) {
 }
 
 func TestPermissionsGetBoardBlocks(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -563,7 +563,7 @@ func TestPermissionsGetBoardBlocks(t *testing.T) {
 }
 
 func TestPermissionsCreateBoardBlocks(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -618,7 +618,7 @@ func TestPermissionsCreateBoardBlocks(t *testing.T) {
 }
 
 func TestPermissionsPatchBoardBlocks(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -672,7 +672,7 @@ func TestPermissionsPatchBoardBlocks(t *testing.T) {
 }
 
 func TestPermissionsPatchBoardBlock(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -720,7 +720,7 @@ func TestPermissionsPatchBoardBlock(t *testing.T) {
 }
 
 func TestPermissionsDeleteBoardBlock(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -774,7 +774,7 @@ func TestPermissionsDeleteBoardBlock(t *testing.T) {
 }
 
 func TestPermissionsUndeleteBoardBlock(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -844,7 +844,7 @@ func TestPermissionsUndeleteBoardBlock(t *testing.T) {
 }
 
 func TestPermissionsDuplicateBoardBlock(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -898,7 +898,7 @@ func TestPermissionsDuplicateBoardBlock(t *testing.T) {
 }
 
 func TestPermissionsGetBoardMembers(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -940,7 +940,7 @@ func TestPermissionsGetBoardMembers(t *testing.T) {
 }
 
 func TestPermissionsCreateBoardMembers(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -990,7 +990,7 @@ func TestPermissionsCreateBoardMembers(t *testing.T) {
 }
 
 func TestPermissionsUpdateBoardMember(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1050,7 +1050,7 @@ func TestPermissionsUpdateBoardMember(t *testing.T) {
 }
 
 func TestPermissionsDeleteBoardMember(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1110,7 +1110,7 @@ func TestPermissionsDeleteBoardMember(t *testing.T) {
 }
 
 func TestPermissionsJoinBoardAsMember(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1154,7 +1154,7 @@ func TestPermissionsJoinBoardAsMember(t *testing.T) {
 }
 
 func TestPermissionsLeaveBoardAsMember(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1228,7 +1228,7 @@ func TestPermissionsLeaveBoardAsMember(t *testing.T) {
 }
 
 func TestPermissionsShareBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1272,7 +1272,7 @@ func TestPermissionsShareBoard(t *testing.T) {
 }
 
 func TestPermissionsGetSharedBoardInfo(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1319,7 +1319,7 @@ func TestPermissionsGetSharedBoardInfo(t *testing.T) {
 }
 
 func TestPermissionsListTeams(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1337,7 +1337,7 @@ func TestPermissionsListTeams(t *testing.T) {
 }
 
 func TestPermissionsGetTeam(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1363,7 +1363,7 @@ func TestPermissionsGetTeam(t *testing.T) {
 }
 
 func TestPermissionsRegenerateSignupTokenPluginMode(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1379,7 +1379,7 @@ func TestPermissionsRegenerateSignupTokenPluginMode(t *testing.T) {
 }
 
 func TestPermissionsGetTeamUsers(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1405,7 +1405,7 @@ func TestPermissionsGetTeamUsers(t *testing.T) {
 }
 
 func TestPermissionsTeamArchiveExportPluginMode(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1421,7 +1421,7 @@ func TestPermissionsTeamArchiveExportPluginMode(t *testing.T) {
 }
 
 func TestPermissionsUploadFile(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1463,7 +1463,7 @@ func TestPermissionsUploadFile(t *testing.T) {
 }
 
 func TestPermissionsGetMe(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1481,7 +1481,7 @@ func TestPermissionsGetMe(t *testing.T) {
 }
 
 func TestPermissionsGetMyMemberships(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1499,7 +1499,7 @@ func TestPermissionsGetMyMemberships(t *testing.T) {
 }
 
 func TestPermissionsGetUser(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1533,7 +1533,7 @@ func TestPermissionsGetUser(t *testing.T) {
 }
 
 func TestPermissionsUserChangePasswordPluginMode(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1546,7 +1546,7 @@ func TestPermissionsUserChangePasswordPluginMode(t *testing.T) {
 }
 
 func TestPermissionsUpdateUserConfig(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1566,7 +1566,7 @@ func TestPermissionsUpdateUserConfig(t *testing.T) {
 }
 
 func TestPermissionsCreateBoardsAndBlocks(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1591,7 +1591,7 @@ func TestPermissionsCreateBoardsAndBlocks(t *testing.T) {
 }
 
 func TestPermissionsUpdateBoardsAndBlocks(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1637,7 +1637,7 @@ func TestPermissionsUpdateBoardsAndBlocks(t *testing.T) {
 }
 
 func TestPermissionsDeleteBoardsAndBlocks(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1660,7 +1660,7 @@ func TestPermissionsDeleteBoardsAndBlocks(t *testing.T) {
 }
 
 func TestPermissionsLoginPluginMode(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1673,7 +1673,7 @@ func TestPermissionsLoginPluginMode(t *testing.T) {
 }
 
 func TestPermissionsLogoutPluginMode(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1686,7 +1686,7 @@ func TestPermissionsLogoutPluginMode(t *testing.T) {
 }
 
 func TestPermissionsRegisterPluginMode(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1699,7 +1699,7 @@ func TestPermissionsRegisterPluginMode(t *testing.T) {
 }
 
 func TestPermissionsClientConfig(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1712,7 +1712,7 @@ func TestPermissionsClientConfig(t *testing.T) {
 }
 
 func TestPermissionsGetCategories(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1730,7 +1730,7 @@ func TestPermissionsGetCategories(t *testing.T) {
 }
 
 func TestPermissionsCreateCategory(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1774,7 +1774,7 @@ func TestPermissionsCreateCategory(t *testing.T) {
 }
 
 func TestPermissionsUpdateCategory(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1844,7 +1844,7 @@ func TestPermissionsUpdateCategory(t *testing.T) {
 }
 
 func TestPermissionsDeleteCategory(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1895,7 +1895,7 @@ func TestPermissionsDeleteCategory(t *testing.T) {
 }
 
 func TestPermissionsUpdateCategoryBlock(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1938,7 +1938,7 @@ func TestPermissionsUpdateCategoryBlock(t *testing.T) {
 }
 
 func TestPermissionsGetFile(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1964,7 +1964,7 @@ func TestPermissionsGetFile(t *testing.T) {
 }
 
 func TestPermissionsCreateSubscription(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -1991,7 +1991,7 @@ func TestPermissionsCreateSubscription(t *testing.T) {
 }
 
 func TestPermissionsGetSubscriptions(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -2016,7 +2016,7 @@ func TestPermissionsGetSubscriptions(t *testing.T) {
 }
 
 func TestPermissionsDeleteSubscription(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -2070,7 +2070,7 @@ func TestPermissionsDeleteSubscription(t *testing.T) {
 }
 
 func TestPermissionsOnboard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, true)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -2088,7 +2088,7 @@ func TestPermissionsOnboard(t *testing.T) {
 }
 
 func TestPermissionsBoardArchiveExport(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
@@ -2130,7 +2130,7 @@ func TestPermissionsBoardArchiveExport(t *testing.T) {
 }
 
 func TestPermissionsBoardArchiveImport(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperPluginMode(t, false)
 	defer th.TearDown()
 	testData := setupData(t, th)
 	clients := setupClients(th)
