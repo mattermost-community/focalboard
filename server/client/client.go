@@ -472,6 +472,16 @@ func (c *Client) DeleteBoard(boardID string) (bool, *Response) {
 	return true, BuildResponse(r)
 }
 
+func (c *Client) UndeleteBoard(boardID string) (bool, *Response) {
+	r, err := c.DoAPIPost(c.GetBoardRoute(boardID)+"/undelete", "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
 func (c *Client) GetBoard(boardID, readToken string) (*model.Board, *Response) {
 	url := c.GetBoardRoute(boardID)
 	if readToken != "" {
