@@ -2,6 +2,7 @@ package integrationtests
 
 import (
 	"encoding/json"
+	"sort"
 	"testing"
 	"time"
 
@@ -252,6 +253,68 @@ func TestCreateBoard(t *testing.T) {
 			require.NoError(t, err)
 			require.Empty(t, boards)
 		})
+	})
+}
+
+func TestGetAllBlocksForBoard(t *testing.T) {
+	th := SetupTestHelperWithToken(t).Start()
+	defer th.TearDown()
+
+	board := th.CreateBoard("board-id", model.BoardTypeOpen)
+
+	parentBlockID := utils.NewID(utils.IDTypeBlock)
+	childBlockID1 := utils.NewID(utils.IDTypeBlock)
+	childBlockID2 := utils.NewID(utils.IDTypeBlock)
+
+	t.Run("Create the block structure", func(t *testing.T) {
+		newBlocks := []model.Block{
+			{
+				ID:       parentBlockID,
+				BoardID:  board.ID,
+				CreateAt: 1,
+				UpdateAt: 1,
+				Type:     model.TypeCard,
+			},
+			{
+				ID:       childBlockID1,
+				BoardID:  board.ID,
+				ParentID: parentBlockID,
+				CreateAt: 2,
+				UpdateAt: 2,
+				Type:     model.TypeCard,
+			},
+			{
+				ID:       childBlockID2,
+				BoardID:  board.ID,
+				ParentID: parentBlockID,
+				CreateAt: 2,
+				UpdateAt: 2,
+				Type:     model.TypeCard,
+			},
+		}
+
+		insertedBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks)
+		require.NoError(t, resp.Error)
+		require.Len(t, insertedBlocks, len(newBlocks))
+
+		insertedBlockIDs := make([]string, len(insertedBlocks))
+		for i, b := range insertedBlocks {
+			insertedBlockIDs[i] = b.ID
+		}
+
+		fetchedBlocks, resp := th.Client.GetAllBlocksForBoard(board.ID)
+		require.NoError(t, resp.Error)
+		require.Len(t, fetchedBlocks, len(newBlocks))
+
+		fetchedblockIDs := make([]string, len(fetchedBlocks))
+		for i, b := range fetchedBlocks {
+			fetchedblockIDs[i] = b.ID
+		}
+
+		sort.Strings(insertedBlockIDs)
+		sort.Strings(fetchedblockIDs)
+
+		require.Equal(t, insertedBlockIDs, fetchedblockIDs)
 	})
 }
 
