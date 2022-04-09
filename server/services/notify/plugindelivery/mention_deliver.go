@@ -7,10 +7,11 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/utils"
 
-	"github.com/mattermost/mattermost-server/v6/model"
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
 var (
@@ -29,12 +30,44 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 		}
 	}
 
-	// make sure mentioned user has permissions to team.
-	if !pd.permissions.HasPermissionToTeam(user.Id, evt.TeamID, model.PermissionViewTeam) {
-		return "", fmt.Errorf("mentioned user %s not member of team %s: %w", user.Id, evt.TeamID, ErrMentionPermission)
+	if evt.ModifiedBy == nil {
+		return "", fmt.Errorf("invalid user cannot mention: %w", ErrMentionPermission)
 	}
 
-	author, err := pd.api.GetUserByID(evt.ModifiedByID)
+	if evt.Board.Type == model.BoardTypeOpen {
+		// public board rules:
+		//    - admin, editor, commenter: can mention anyone on team
+		//    - guest: can mention board members
+		switch {
+		case evt.ModifiedBy.SchemeAdmin, evt.ModifiedBy.SchemeEditor, evt.ModifiedBy.SchemeCommenter:
+			if !pd.permissions.HasPermissionToTeam(user.Id, evt.TeamID, model.PermissionViewTeam) {
+				return "", fmt.Errorf("%s cannot mention non-team member %s : %w", evt.ModifiedBy.UserID, user.Id, ErrMentionPermission)
+			}
+		case evt.ModifiedBy.SchemeViewer:
+			// viewer should not have gotten this far since they cannot add text to a card
+			return "", fmt.Errorf("%s (viewer) cannot mention user %s: %w", evt.ModifiedBy.UserID, user.Id, ErrMentionPermission)
+		default:
+			// this is a guest
+			if !pd.permissions.HasPermissionToBoard(user.Id, evt.Board.ID, model.PermissionViewBoard) {
+				return "", fmt.Errorf("%s cannot mention non-board member %s : %w", evt.ModifiedBy.UserID, user.Id, ErrMentionPermission)
+			}
+		}
+	} else {
+		// private board rules:
+		//    - admin, editor, commenter, guest: can mention board members
+		switch {
+		case evt.ModifiedBy.SchemeViewer:
+			// viewer should not have gotten this far since they cannot add text to a card
+			return "", fmt.Errorf("%s (viewer) cannot mention user %s: %w", evt.ModifiedBy.UserID, user.Id, ErrMentionPermission)
+		default:
+			// everyone else can mention board members
+			if !pd.permissions.HasPermissionToBoard(user.Id, evt.Board.ID, model.PermissionViewBoard) {
+				return "", fmt.Errorf("%s cannot mention non-board member %s : %w", evt.ModifiedBy.UserID, user.Id, ErrMentionPermission)
+			}
+		}
+	}
+
+	author, err := pd.api.GetUserByID(evt.ModifiedBy.UserID)
 	if err != nil {
 		return "", fmt.Errorf("cannot find user: %w", err)
 	}
@@ -45,7 +78,7 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 	}
 	link := utils.MakeCardLink(pd.serverRoot, evt.Board.TeamID, evt.Board.ID, evt.Card.ID)
 
-	post := &model.Post{
+	post := &mm_model.Post{
 		UserId:    pd.botID,
 		ChannelId: channel.Id,
 		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),

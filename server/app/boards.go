@@ -240,6 +240,10 @@ func (a *App) GetMembersForUser(userID string) ([]*model.BoardMember, error) {
 	return a.store.GetMembersForUser(userID)
 }
 
+func (a *App) GetMemberForBoard(boardID string, userID string) (*model.BoardMember, error) {
+	return a.store.GetMemberForBoard(boardID, userID)
+}
+
 func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, error) {
 	board, err := a.store.GetBoard(member.BoardID)
 	if errors.Is(err, sql.ErrNoRows) {
