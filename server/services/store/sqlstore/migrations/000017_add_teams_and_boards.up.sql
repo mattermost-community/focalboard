@@ -82,17 +82,14 @@ CREATE TABLE {{.prefix}}boards (
     {{if .mysql}}
     properties JSON,
     card_properties JSON,
-    column_calculations JSON,
     {{end}}
     {{if .postgres}}
     properties JSONB,
     card_properties JSONB,
-    column_calculations JSONB,
     {{end}}
     {{if .sqlite}}
     properties TEXT,
     card_properties TEXT,
-    column_calculations TEXT,
     {{end}}
     create_at BIGINT,
     update_at BIGINT,
@@ -120,17 +117,14 @@ CREATE TABLE {{.prefix}}boards_history (
     {{if .mysql}}
     properties JSON,
     card_properties JSON,
-    column_calculations JSON,
     {{end}}
     {{if .postgres}}
     properties JSONB,
     card_properties JSONB,
-    column_calculations JSONB,
     {{end}}
     {{if .sqlite}}
     properties TEXT,
     card_properties TEXT,
-    column_calculations TEXT,
     {{end}}
     create_at BIGINT,
     update_at BIGINT,
@@ -151,7 +145,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
-                 '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
+                 '{}', B.fields->'cardProperties', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
           INNER JOIN channels AS C ON C.Id=B.channel_id
@@ -165,7 +159,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
-                 '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
+                 '{}', B.fields->'cardProperties', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B
           INNER JOIN channels AS C ON C.Id=B.channel_id
@@ -181,7 +175,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
+                 '{}', B.fields->'$.cardProperties', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
           INNER JOIN Channels AS C ON C.Id=B.channel_id
@@ -195,7 +189,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
+                 '{}', B.fields->'$.cardProperties', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B
           INNER JOIN Channels AS C ON C.Id=B.channel_id
@@ -212,7 +206,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
-                 '{}', fields->'cardProperties', fields->'columnCalculations', create_at,
+                 '{}', fields->'cardProperties', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks AS B
           WHERE type='board'
@@ -225,7 +219,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
-                 '{}', fields->'cardProperties', fields->'columnCalculations', create_at,
+                 '{}', fields->'cardProperties', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history AS B
           WHERE type='board'
@@ -240,7 +234,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
+                 '{}', fields->'$.cardProperties', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks AS B
           WHERE type='board'
@@ -253,7 +247,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
+                 '{}', fields->'$.cardProperties', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history AS B
           WHERE type='board'
@@ -266,7 +260,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  json_extract(fields, '$.description'),
                  json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
                  json_extract(fields, '$.templateVer'),
-                 '{}', json_extract(fields, '$.cardProperties'), json_extract(fields, '$.columnCalculations'), create_at,
+                 '{}', json_extract(fields, '$.cardProperties'), create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks
           WHERE type='board'
@@ -277,7 +271,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  json_extract(fields, '$.description'),
                  json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
                  json_extract(fields, '$.templateVer'),
-                 '{}', json_extract(fields, '$.cardProperties'), json_extract(fields, '$.columnCalculations'), create_at,
+                 '{}', json_extract(fields, '$.cardProperties'), create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history
           WHERE type='board'
