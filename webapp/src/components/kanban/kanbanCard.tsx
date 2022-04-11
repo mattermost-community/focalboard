@@ -21,6 +21,9 @@ import Tooltip from '../../widgets/tooltip'
 import {Permission} from '../../constants'
 import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
+import {IUser} from '../../user'
+import {getMe} from '../../store/users'
+import {useAppSelector} from '../../store/hooks'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
@@ -51,6 +54,7 @@ const KanbanCard = (props: Props) => {
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
+    const me = useAppSelector<IUser|null>(getMe)
     let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
     if (props.isManualSort && isOver) {
         className += ' dragover'
@@ -142,21 +146,23 @@ const KanbanCard = (props: Props) => {
                                 }}
                             />
                         </BoardPermissionGate>
-                        <Menu.Text
-                            icon={<LinkIcon/>}
-                            id='copy'
-                            name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
-                            onClick={() => {
-                                let cardLink = window.location.href
+                        {me?.id !== "single-user" &&
+                            <Menu.Text
+                                icon={<LinkIcon/>}
+                                id='copy'
+                                name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
+                                onClick={() => {
+                                    let cardLink = window.location.href
 
-                                if (!cardLink.includes(card.id)) {
-                                    cardLink += `/${card.id}`
-                                }
+                                    if (!cardLink.includes(card.id)) {
+                                        cardLink += `/${card.id}`
+                                    }
 
-                                Utils.copyTextToClipboard(cardLink)
-                                sendFlashMessage({content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                            }}
-                        />
+                                    Utils.copyTextToClipboard(cardLink)
+                                    sendFlashMessage({content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                                }}
+                            />
+                        }
                     </Menu>
                 </MenuWrapper>
                 }
