@@ -8,9 +8,9 @@ type props = {
 }
 
 const ViewLimitDialog = (props: props): JSX.Element => {
-    console.log(props)
-
-    return (<div/>)
+    return (
+        <Dial
+    )
 }
 
 export default React.memo(ViewLimitDialog)
