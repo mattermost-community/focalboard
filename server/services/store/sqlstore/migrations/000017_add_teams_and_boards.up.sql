@@ -39,7 +39,7 @@ UPDATE {{.prefix}}blocks b
 {{if .sqlite}}
 UPDATE {{.prefix}}blocks SET fields = replace(fields, '"columnCalculations":[]', '"columnCalculations":{}');
 
-UPDATE {{.prefix}}blocks b
+UPDATE {{.prefix}}blocks AS b
     SET fields = (
         SELECT  json_set(a.fields, '$.columnCalculations',json_extract(c.fields,  '$.columnCalculations')) from blocks AS a
         JOIN {{.prefix}}blocks AS c on c.id = a.root_id
