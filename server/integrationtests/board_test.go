@@ -2,6 +2,7 @@ package integrationtests
 
 import (
 	"encoding/json"
+	"sort"
 	"testing"
 	"time"
 
@@ -252,6 +253,68 @@ func TestCreateBoard(t *testing.T) {
 			require.NoError(t, err)
 			require.Empty(t, boards)
 		})
+	})
+}
+
+func TestGetAllBlocksForBoard(t *testing.T) {
+	th := SetupTestHelperWithToken(t).Start()
+	defer th.TearDown()
+
+	board := th.CreateBoard("board-id", model.BoardTypeOpen)
+
+	parentBlockID := utils.NewID(utils.IDTypeBlock)
+	childBlockID1 := utils.NewID(utils.IDTypeBlock)
+	childBlockID2 := utils.NewID(utils.IDTypeBlock)
+
+	t.Run("Create the block structure", func(t *testing.T) {
+		newBlocks := []model.Block{
+			{
+				ID:       parentBlockID,
+				BoardID:  board.ID,
+				CreateAt: 1,
+				UpdateAt: 1,
+				Type:     model.TypeCard,
+			},
+			{
+				ID:       childBlockID1,
+				BoardID:  board.ID,
+				ParentID: parentBlockID,
+				CreateAt: 2,
+				UpdateAt: 2,
+				Type:     model.TypeCard,
+			},
+			{
+				ID:       childBlockID2,
+				BoardID:  board.ID,
+				ParentID: parentBlockID,
+				CreateAt: 2,
+				UpdateAt: 2,
+				Type:     model.TypeCard,
+			},
+		}
+
+		insertedBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks)
+		require.NoError(t, resp.Error)
+		require.Len(t, insertedBlocks, len(newBlocks))
+
+		insertedBlockIDs := make([]string, len(insertedBlocks))
+		for i, b := range insertedBlocks {
+			insertedBlockIDs[i] = b.ID
+		}
+
+		fetchedBlocks, resp := th.Client.GetAllBlocksForBoard(board.ID)
+		require.NoError(t, resp.Error)
+		require.Len(t, fetchedBlocks, len(newBlocks))
+
+		fetchedblockIDs := make([]string, len(fetchedBlocks))
+		for i, b := range fetchedBlocks {
+			fetchedblockIDs[i] = b.ID
+		}
+
+		sort.Strings(insertedBlockIDs)
+		sort.Strings(fetchedblockIDs)
+
+		require.Equal(t, insertedBlockIDs, fetchedblockIDs)
 	})
 }
 
@@ -850,6 +913,128 @@ func TestDeleteBoard(t *testing.T) {
 		dbBoard, err := th.Server.App().GetBoard(board.ID)
 		require.NoError(t, err)
 		require.Nil(t, dbBoard)
+	})
+}
+
+func TestUndeleteBoard(t *testing.T) {
+	teamID := testTeamID
+
+	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+		th.Logout(th.Client)
+
+		newBoard := &model.Board{
+			Title:  "title",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, err := th.Server.App().CreateBoard(newBoard, "user-id", false)
+		require.NoError(t, err)
+
+		time.Sleep(1 * time.Millisecond)
+		err = th.Server.App().DeleteBoard(newBoard.ID, "user-id")
+		require.NoError(t, err)
+
+		success, resp := th.Client.UndeleteBoard(board.ID)
+		th.CheckUnauthorized(resp)
+		require.False(t, success)
+
+		dbBoard, err := th.Server.App().GetBoard(board.ID)
+		require.NoError(t, err)
+		require.Nil(t, dbBoard)
+	})
+
+	t.Run("a user without membership should be rejected", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		newBoard := &model.Board{
+			Title:  "title",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, err := th.Server.App().CreateBoard(newBoard, "some-user-id", false)
+		require.NoError(t, err)
+
+		time.Sleep(1 * time.Millisecond)
+		err = th.Server.App().DeleteBoard(newBoard.ID, "some-user-id")
+		require.NoError(t, err)
+
+		success, resp := th.Client.UndeleteBoard(board.ID)
+		th.CheckForbidden(resp)
+		require.False(t, success)
+
+		dbBoard, err := th.Server.App().GetBoard(board.ID)
+		require.NoError(t, err)
+		require.Nil(t, dbBoard)
+	})
+
+	t.Run("a user with membership but without permissions should be rejected", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		newBoard := &model.Board{
+			Title:  "title",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, err := th.Server.App().CreateBoard(newBoard, "some-user-id", false)
+		require.NoError(t, err)
+
+		newUser2Member := &model.BoardMember{
+			UserID:       "user-id",
+			BoardID:      board.ID,
+			SchemeEditor: true,
+		}
+		_, err = th.Server.App().AddMemberToBoard(newUser2Member)
+		require.NoError(t, err)
+
+		time.Sleep(1 * time.Millisecond)
+		err = th.Server.App().DeleteBoard(newBoard.ID, "some-user-id")
+		require.NoError(t, err)
+
+		success, resp := th.Client.UndeleteBoard(board.ID)
+		th.CheckForbidden(resp)
+		require.False(t, success)
+
+		dbBoard, err := th.Server.App().GetBoard(board.ID)
+		require.NoError(t, err)
+		require.Nil(t, dbBoard)
+	})
+
+	t.Run("non existing board", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		success, resp := th.Client.UndeleteBoard("non-existing-board")
+		th.CheckForbidden(resp)
+		require.False(t, success)
+	})
+
+	t.Run("an existing deleted board should be correctly undeleted", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		newBoard := &model.Board{
+			Title:  "title",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, err := th.Server.App().CreateBoard(newBoard, th.GetUser1().ID, true)
+		require.NoError(t, err)
+
+		time.Sleep(1 * time.Millisecond)
+		err = th.Server.App().DeleteBoard(newBoard.ID, "user-id")
+		require.NoError(t, err)
+
+		success, resp := th.Client.UndeleteBoard(board.ID)
+		th.CheckOK(resp)
+		require.True(t, success)
+
+		dbBoard, err := th.Server.App().GetBoard(board.ID)
+		require.NoError(t, err)
+		require.NotNil(t, dbBoard)
 	})
 }
 
@@ -1478,6 +1663,9 @@ func TestGetTemplates(t *testing.T) {
 	t.Run("should be able to retrieve built-in templates", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
+
+		err := th.Server.App().InitTemplates()
+		require.NoError(t, err, "InitTemplates should not fail")
 
 		teamID := "my-team-id"
 		rBoards, resp := th.Client.GetTemplatesForTeam("0")
