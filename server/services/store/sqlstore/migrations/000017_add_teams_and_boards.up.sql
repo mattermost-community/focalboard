@@ -12,15 +12,52 @@ ALTER TABLE {{.prefix}}blocks_history ADD COLUMN board_id VARCHAR(36);
 
 {{- /* cleanup incorrect data format in column calculations */ -}}
 {{if .mysql}}
-UPDATE {{.prefix}}blocks SET fields = JSON_SET(fields, '$.columnCalculations', cast('{}' as json))  WHERE fields->'$.columnCalculations' = cast('[]' as json);
-{{end}}
+UPDATE {{.prefix}}blocks SET fields = JSON_SET(fields, '$.columnCalculations', cast('{}' as json)) WHERE fields->'$.columnCalculations' = cast('[]' as json);
 
+UPDATE {{.prefix}}blocks b
+  JOIN (
+    SELECT id, fields->'$.columnCalculations' as board_calculations from {{.prefix}}blocks
+    WHERE fields -> '$.columnCalculations' <> cast('{}' as json) and fields -> '$.columnCalculations' <> cast('[]' as json)
+  ) AS s on s.id = b.root_id
+  SET fields = JSON_SET(fields, '$.columnCalculations', cast(s.board_calculations as json))
+  WHERE b.fields->'$.viewType' = 'table'
+  AND b.type = 'view';
+
+UPDATE {{.prefix}}blocks SET fields = JSON_SET(fields, '$.columnCalculations', cast('{}' as json))  
+  WHERE fields -> '$.columnCalculations' <> cast('[]' as json) AND type='board';
+{{end}}
 {{if .postgres}}
 UPDATE {{.prefix}}blocks SET fields = fields::jsonb - 'columnCalculations' || '{"columnCalculations": {}}' WHERE fields->>'columnCalculations' = '[]';
-{{end}}
 
+WITH subquery AS (
+  SELECT id, fields ->> 'columnCalculations' as board_calculations from {{.prefix}}blocks
+  WHERE fields ->> 'columnCalculations' <> '{}')
+UPDATE {{.prefix}}blocks b
+    SET b.fields = b.fields::jsonb|| json_build_object('columnCalculations', s.board_calculations)::jsonb
+    FROM subquery AS s
+    WHERE s.id = b.root_id
+    AND b.fields ->> 'viewType' = 'table'
+    AND b.type = 'view';
+    
+UPDATE {{.prefix}}blocks SET fields = fields::jsonb - 'columnCalculations' || '{"columnCalculations": {}}' 
+  WHERE fields->>'columnCalculations' <> '{}' AND type='board';
+{{end}}
 {{if .sqlite}}
 UPDATE {{.prefix}}blocks SET fields = replace(fields, '"columnCalculations":[]', '"columnCalculations":{}');
+
+UPDATE {{.prefix}}blocks b
+    SET fields = (
+        SELECT  json_set(a.fields, '$.columnCalculations',json_extract(c.fields,  '$.columnCalculations')) from blocks AS a
+        JOIN blocks AS c on c.id = a.root_id
+        WHERE a.id = b.id)
+    WHERE json_extract(b.fields,'$.viewType') = 'table'
+    AND b.type = 'view';
+
+UPDATE {{.prefix}}blocks AS b 
+  SET fields = (
+    SELECT  json_set(json_remove(a.fields, '$.columnCalculations'),'$.columnCalculations','{}') from {{.prefix}}blocks AS a 
+      WHERE a.id = b.id)
+  WHERE json_extract(fields, '$.columnCalculations') <> '{}';
 {{end}}
 
 {{- /* add boards tables */ -}}
