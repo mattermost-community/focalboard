@@ -164,10 +164,6 @@ func (c *Client) GetBlockRoute(boardID, blockID string) string {
 	return fmt.Sprintf("%s/%s", c.GetBlocksRoute(boardID), blockID)
 }
 
-func (c *Client) GetSubtreeRoute(boardID, blockID string) string {
-	return fmt.Sprintf("%s/subtree", c.GetBlockRoute(boardID, blockID))
-}
-
 func (c *Client) GetBoardsRoute() string {
 	return "/boards"
 }
@@ -181,6 +177,10 @@ func (c *Client) GetBoardMetadataRoute(boardID string) string {
 }
 
 func (c *Client) GetJoinBoardRoute(boardID string) string {
+	return fmt.Sprintf("%s/%s/join", c.GetBoardsRoute(), boardID)
+}
+
+func (c *Client) GetLeaveBoardRoute(boardID string) string {
 	return fmt.Sprintf("%s/%s/join", c.GetBoardsRoute(), boardID)
 }
 
@@ -295,16 +295,6 @@ func (c *Client) DeleteBlock(boardID, blockID string) (bool, *Response) {
 	defer closeBody(r)
 
 	return true, BuildResponse(r)
-}
-
-func (c *Client) GetSubtree(boardID, blockID string) ([]model.Block, *Response) {
-	r, err := c.DoAPIGet(c.GetSubtreeRoute(boardID, blockID), "")
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
-	}
-	defer closeBody(r)
-
-	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
 // Boards and blocks.
@@ -482,6 +472,16 @@ func (c *Client) DeleteBoard(boardID string) (bool, *Response) {
 	return true, BuildResponse(r)
 }
 
+func (c *Client) UndeleteBoard(boardID string) (bool, *Response) {
+	r, err := c.DoAPIPost(c.GetBoardRoute(boardID)+"/undelete", "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
 func (c *Client) GetBoard(boardID, readToken string) (*model.Board, *Response) {
 	url := c.GetBoardRoute(boardID)
 	if readToken != "" {
@@ -554,6 +554,16 @@ func (c *Client) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember
 
 func (c *Client) JoinBoard(boardID string) (*model.BoardMember, *Response) {
 	r, err := c.DoAPIPost(c.GetJoinBoardRoute(boardID), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardMemberFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) LeaveBoard(boardID string) (*model.BoardMember, *Response) {
+	r, err := c.DoAPIPost(c.GetLeaveBoardRoute(boardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}

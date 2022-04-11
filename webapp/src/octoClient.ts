@@ -201,20 +201,6 @@ class OctoClient {
         return (await this.getJson(response, {})) as Record<string, string>
     }
 
-    async getSubtree(boardId?: string, levels = 2, teamID?: string): Promise<Block[]> {
-        let path = this.teamPath(teamID) + `/blocks/${encodeURIComponent(boardId || '')}/subtree?l=${levels}`
-        const readToken = Utils.getReadToken()
-        if (readToken) {
-            path += `&read_token=${readToken}`
-        }
-        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return []
-        }
-        const blocks = (await this.getJson(response, [])) as Block[]
-        return this.fixBlocks(blocks)
-    }
-
     // If no boardID is provided, it will export the entire archive
     async exportArchive(boardID = ''): Promise<Response> {
         const path = `/api/v1/boards/${boardID}/archive/export`
@@ -340,9 +326,17 @@ class OctoClient {
         })
     }
 
-    async undeleteBlock(blockId: string): Promise<Response> {
+    async undeleteBlock(boardId: string, blockId: string): Promise<Response> {
         Utils.log(`undeleteBlock: ${blockId}`)
-        return fetch(this.getBaseURL() + this.teamPath() + `/blocks/${encodeURIComponent(blockId)}/undelete`, {
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${encodeURIComponent(boardId)}/blocks/${encodeURIComponent(blockId)}/undelete`, {
+            method: 'POST',
+            headers: this.headers(),
+        })
+    }
+
+    async undeleteBoard(boardId: string): Promise<Response> {
+        Utils.log(`undeleteBoard: ${boardId}`)
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}/undelete`, {
             method: 'POST',
             headers: this.headers(),
         })

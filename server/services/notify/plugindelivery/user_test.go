@@ -42,43 +42,35 @@ var (
 	}
 )
 
-func userToMember(user *mm_model.User, teamID string) *mm_model.TeamMember {
-	return &mm_model.TeamMember{
-		TeamId: teamID,
-		UserId: user.Id,
-	}
-}
-
-func Test_teamMemberFromUsername(t *testing.T) {
+func Test_userByUsername(t *testing.T) {
 	delivery := newPlugAPIMock(mockUsers)
 
 	tests := []struct {
 		name    string
 		uname   string
 		teamID  string
-		want    *mm_model.TeamMember
+		want    *mm_model.User
 		wantErr bool
 	}{
-		{name: "user1", uname: user1.Username, teamID: defTeamID, want: userToMember(user1, defTeamID), wantErr: false},
-		{name: "user1 with period", uname: user1.Username + ".", teamID: defTeamID, want: userToMember(user1, defTeamID), wantErr: false},
-		{name: "user1 with period plus more", uname: user1.Username + ". ", teamID: defTeamID, want: userToMember(user1, defTeamID), wantErr: false},
-		{name: "user2 with periods", uname: user2.Username + "...", teamID: defTeamID, want: userToMember(user2, defTeamID), wantErr: false},
-		{name: "user2 with underscore", uname: user2.Username + "_", teamID: defTeamID, want: userToMember(user2, defTeamID), wantErr: false},
-		{name: "user2 with hyphen plus more", uname: user2.Username + "- ", teamID: defTeamID, want: userToMember(user2, defTeamID), wantErr: false},
-		{name: "user2 with hyphen plus all", uname: user2.Username + ".-_ ", teamID: defTeamID, want: userToMember(user2, defTeamID), wantErr: false},
-		{name: "user3 with underscore", uname: user3.Username + "_", teamID: defTeamID, want: userToMember(user3, defTeamID), wantErr: false},
-		{name: "user4 missing", uname: user4.Username, want: nil, teamID: defTeamID, wantErr: true},
-		{name: "user5 wrong team", uname: user5.Username, teamID: "bogus_team", want: nil, wantErr: true},
+		{name: "user1", uname: user1.Username, want: user1, wantErr: false},
+		{name: "user1 with period", uname: user1.Username + ".", want: user1, wantErr: false},
+		{name: "user1 with period plus more", uname: user1.Username + ". ", want: user1, wantErr: false},
+		{name: "user2 with periods", uname: user2.Username + "...", want: user2, wantErr: false},
+		{name: "user2 with underscore", uname: user2.Username + "_", want: user2, wantErr: false},
+		{name: "user2 with hyphen plus more", uname: user2.Username + "- ", want: user2, wantErr: false},
+		{name: "user2 with hyphen plus all", uname: user2.Username + ".-_ ", want: user2, wantErr: false},
+		{name: "user3 with underscore", uname: user3.Username + "_", want: user3, wantErr: false},
+		{name: "user4 missing", uname: user4.Username, want: nil, wantErr: true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := teamMemberFromUsername(delivery, tt.uname, tt.teamID)
+			got, err := userByUsername(delivery, tt.uname)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("userFromUsername() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("userByUsername() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("userFromUsername()\ngot:\n%v\nwant:\n%v\n", got, tt.want)
+				t.Errorf("userByUsername()\ngot:\n%v\nwant:\n%v\n", got, tt.want)
 			}
 		})
 	}

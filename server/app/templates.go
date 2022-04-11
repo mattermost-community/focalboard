@@ -13,7 +13,6 @@ import (
 
 const (
 	defaultTemplateVersion = 2
-	globalTeamID           = "0"
 )
 
 func (a *App) InitTemplates() error {
@@ -23,7 +22,7 @@ func (a *App) InitTemplates() error {
 
 // initializeTemplates imports default templates if the boards table is empty.
 func (a *App) initializeTemplates() (bool, error) {
-	boards, err := a.store.GetTemplateBoards(globalTeamID, "")
+	boards, err := a.store.GetTemplateBoards(model.GlobalTeamID, "")
 	if err != nil {
 		return false, fmt.Errorf("cannot initialize templates: %w", err)
 	}
@@ -49,13 +48,13 @@ func (a *App) initializeTemplates() (bool, error) {
 	r := bytes.NewReader(assets.DefaultTemplatesArchive)
 
 	opt := model.ImportArchiveOptions{
-		TeamID:        globalTeamID,
-		ModifiedBy:    "system",
+		TeamID:        model.GlobalTeamID,
+		ModifiedBy:    model.SystemUserID,
 		BlockModifier: fixTemplateBlock,
 		BoardModifier: fixTemplateBoard,
 	}
 	if err = a.ImportArchive(r, opt); err != nil {
-		return false, fmt.Errorf("cannot initialize global templates for team %s: %w", globalTeamID, err)
+		return false, fmt.Errorf("cannot initialize global templates for team %s: %w", model.GlobalTeamID, err)
 	}
 	return true, nil
 }
@@ -70,7 +69,7 @@ func (a *App) isInitializationNeeded(boards []*model.Board) (bool, string) {
 	// look for any built-in template boards with the wrong version number (or no version #).
 	for _, board := range boards {
 		// if not built-in board...skip
-		if board.CreatedBy != "system" {
+		if board.CreatedBy != model.SystemUserID {
 			continue
 		}
 		if board.TemplateVersion < defaultTemplateVersion {

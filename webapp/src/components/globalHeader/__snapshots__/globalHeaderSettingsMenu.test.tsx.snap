@@ -63,8 +63,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -80,8 +84,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -97,8 +105,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -114,8 +126,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -131,8 +147,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -148,8 +168,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -172,8 +196,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -195,8 +223,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class=""
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -261,8 +293,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class=""
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -286,8 +322,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -362,8 +402,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class=""
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -411,8 +455,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -434,8 +482,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -451,8 +503,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -468,8 +524,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -485,8 +545,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -502,8 +566,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -519,8 +587,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -536,8 +608,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -553,8 +629,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -570,8 +650,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -587,8 +671,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -604,8 +692,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -621,8 +713,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -638,8 +734,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -655,8 +755,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -672,8 +776,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -689,8 +797,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -713,8 +825,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                         role="button"
                       >
                         <div
-                          class="noicon"
-                        />
+                          class=""
+                        >
+                          <div
+                            class="noicon"
+                          />
+                        </div>
                         <div
                           class="menu-name"
                         >
@@ -759,8 +875,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class=""
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -784,8 +904,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -882,8 +1006,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class=""
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -948,8 +1076,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class=""
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -973,8 +1105,12 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
