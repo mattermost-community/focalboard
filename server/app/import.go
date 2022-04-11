@@ -270,18 +270,17 @@ func (a *App) blockToBoard(block *model.Block, opt model.ImportArchiveOptions) (
 	}
 
 	board := &model.Board{
-		ID:                 block.ID,
-		TeamID:             opt.TeamID,
-		CreatedBy:          block.CreatedBy,
-		ModifiedBy:         block.ModifiedBy,
-		Type:               model.BoardTypePrivate,
-		Title:              block.Title,
-		CreateAt:           block.CreateAt,
-		UpdateAt:           block.UpdateAt,
-		DeleteAt:           block.DeleteAt,
-		Properties:         make(map[string]interface{}),
-		CardProperties:     make([]map[string]interface{}, 0),
-		ColumnCalculations: make(map[string]interface{}),
+		ID:             block.ID,
+		TeamID:         opt.TeamID,
+		CreatedBy:      block.CreatedBy,
+		ModifiedBy:     block.ModifiedBy,
+		Type:           model.BoardTypePrivate,
+		Title:          block.Title,
+		CreateAt:       block.CreateAt,
+		UpdateAt:       block.UpdateAt,
+		DeleteAt:       block.DeleteAt,
+		Properties:     make(map[string]interface{}),
+		CardProperties: make([]map[string]interface{}, 0),
 	}
 
 	if icon, ok := stringValue(block.Fields, "icon"); ok {
@@ -304,9 +303,6 @@ func (a *App) blockToBoard(block *model.Block, opt model.ImportArchiveOptions) (
 	}
 	if cardProperties, ok := arrayMapsValue(block.Fields, "cardProperties"); ok {
 		board.CardProperties = cardProperties
-	}
-	if columnCalculations, ok := mapValue(block.Fields, "columnCalculations"); ok {
-		board.ColumnCalculations = columnCalculations
 	}
 	return board, nil
 }

@@ -29,7 +29,6 @@ type Board = {
     templateVersion: number
     properties: Record<string, string | string[]>
     cardProperties: IPropertyTemplate[]
-    columnCalculations: Record<string, string>
 
     createAt: number
     updateAt: number
@@ -48,9 +47,6 @@ type BoardPatch = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updatedCardProperties?: IPropertyTemplate[]
     deletedCardProperties?: string[]
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    updatedColumnCalculations?: Record<string, any>
-    deletedColumnCalculations?: string[]
 }
 
 type BoardMember = {
@@ -132,7 +128,6 @@ function createBoard(board?: Board): Board {
         templateVersion: board?.templateVersion || 0,
         properties: board?.properties || {},
         cardProperties,
-        columnCalculations: board?.columnCalculations || {},
         createAt: board?.createAt || now,
         updateAt: board?.updateAt || now,
         deleteAt: board?.deleteAt || 0,
@@ -224,7 +219,6 @@ function createCardPropertiesPatches(newCardProperties: IPropertyTemplate[], old
 // action, in case it happens
 function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[] {
     const newDeletedProperties = difference(Object.keys(newBoard.properties || {}), Object.keys(oldBoard.properties || {}))
-    const newDeletedColumnCalculations = difference(Object.keys(newBoard.columnCalculations), Object.keys(oldBoard.columnCalculations))
 
     const newUpdatedProperties: Record<string, any> = {}
     Object.keys(newBoard.properties || {}).forEach((val) => {
@@ -232,25 +226,17 @@ function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[]
             newUpdatedProperties[val] = newBoard.properties[val]
         }
     })
-    const newUpdatedColumnCalculations: Record<string, any> = {}
-    Object.keys(newBoard.columnCalculations).forEach((val) => {
-        if (oldBoard.columnCalculations[val] !== newBoard.columnCalculations[val]) {
-            newUpdatedColumnCalculations[val] = newBoard.columnCalculations[val]
-        }
-    })
 
     const newData: Record<string, any> = {}
     Object.keys(newBoard).forEach((val) => {
         if (val !== 'properties' &&
             val !== 'cardProperties' &&
-            val !== 'columnCalculations' &&
             (oldBoard as any)[val] !== (newBoard as any)[val]) {
             newData[val] = (newBoard as any)[val]
         }
     })
 
     const oldDeletedProperties = difference(Object.keys(oldBoard.properties || {}), Object.keys(newBoard.properties || {}))
-    const oldDeletedColumnCalculations = difference(Object.keys(oldBoard.columnCalculations), Object.keys(newBoard.columnCalculations))
 
     const oldUpdatedProperties: Record<string, any> = {}
     Object.keys(oldBoard.properties || {}).forEach((val) => {
@@ -258,18 +244,11 @@ function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[]
             oldUpdatedProperties[val] = oldBoard.properties[val]
         }
     })
-    const oldUpdatedColumnCalculations: Record<string, any> = {}
-    Object.keys(oldBoard.columnCalculations).forEach((val) => {
-        if (newBoard.columnCalculations[val] !== oldBoard.columnCalculations[val]) {
-            oldUpdatedColumnCalculations[val] = oldBoard.columnCalculations[val]
-        }
-    })
 
     const oldData: Record<string, any> = {}
     Object.keys(oldBoard).forEach((val) => {
         if (val !== 'properties' &&
             val !== 'cardProperties' &&
-            val !== 'columnCalculations' &&
             (newBoard as any)[val] !== (oldBoard as any)[val]) {
             oldData[val] = (oldBoard as any)[val]
         }
@@ -283,16 +262,12 @@ function createPatchesFromBoards(newBoard: Board, oldBoard: Board): BoardPatch[]
             ...cardPropertiesPatch,
             updatedProperties: newUpdatedProperties,
             deletedProperties: oldDeletedProperties,
-            updatedColumnCalculations: newUpdatedColumnCalculations,
-            deletedColumnCalculations: oldDeletedColumnCalculations,
         },
         {
             ...oldData,
             ...cardPropertiesUndoPatch,
             updatedProperties: oldUpdatedProperties,
             deletedProperties: newDeletedProperties,
-            updatedColumnCalculations: oldUpdatedColumnCalculations,
-            deletedColumnCalculations: newDeletedColumnCalculations,
         },
     ]
 }

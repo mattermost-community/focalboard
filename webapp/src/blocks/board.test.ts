@@ -94,20 +94,6 @@ describe('board tests', () => {
             const result = createPatchesFromBoards(board, oldBoard)
             expect(result).toMatchSnapshot()
         })
-
-        it('should update a column calculation on the redo and revert it on the undo', () => {
-            const board = TestBlockFactory.createBoard()
-            const oldBoard = createBoard(board)
-            board.columnCalculations = {
-                cal1: 'val1',
-            }
-            oldBoard.columnCalculations = {
-                cal1: 'another-val1',
-            }
-
-            const result = createPatchesFromBoards(board, oldBoard)
-            expect(result).toMatchSnapshot()
-        })
     })
 
     describe('correctly generate patches for boards and blocks', () => {

@@ -691,11 +691,6 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		return err
 	}
 
-	columnCalculationsJSON, err := json.Marshal(board.ColumnCalculations)
-	if err != nil {
-		return err
-	}
-
 	now := utils.GetMillis()
 	columns := []string{
 		"id",
@@ -732,7 +727,6 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		board.TemplateVersion,
 		propertiesJSON,
 		cardPropertiesJSON,
-		columnCalculationsJSON,
 		board.CreateAt,
 		now,
 		0,
