@@ -69,9 +69,11 @@ func TestSetConfiguration(t *testing.T) {
 	}
 
 	directory := "testDirectory"
+	maxFileSize := int64(1048576000)
 	baseFileSettings := &model.FileSettings{
-		DriverName: &driverName,
-		Directory:  &directory,
+		DriverName:  &driverName,
+		Directory:   &directory,
+		MaxFileSize: &maxFileSize,
 	}
 
 	days := 365
