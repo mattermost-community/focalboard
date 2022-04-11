@@ -121,6 +121,7 @@
   "DeleteBoardDialog.confirm-tite": "Confirm Delete Board",
   "DeleteBoardDialog.confirm-tite-template": "Confirm Delete Board Template",
   "Dialog.closeDialog": "Close dialog",
+  "Dialog.closeDialogFooterBtn": "Close",
   "EditableDayPicker.today": "Today",
   "Error.mobileweb": "Mobile web support is currently in early beta. Not all functionality may be present.",
   "Error.websocket-closed": "Websocket connection closed, connection interrupted. If this persists, check your server or web proxy configuration.",
@@ -310,5 +311,8 @@
   "tutorial_tip.got_it": "Got it",
   "tutorial_tip.ok": "Next",
   "tutorial_tip.out": "Opt out of these tips.",
-  "tutorial_tip.seen": "Seen this before?"
+  "tutorial_tip.seen": "Seen this before?",
+  "viewLimitReached.title": "Views per board limit reached",
+  "viewLimitReached.body": "Notify your Admin to upgrade to our Professional or Enterprise plan to have unlimited views per boards, unlimited cards, and more.",
+  "viewLimitReached.actionBtnText": "Notify Admin"
 }

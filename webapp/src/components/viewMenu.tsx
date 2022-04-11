@@ -21,6 +21,7 @@ import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
+import ViewLimitDialog from "./viewLimitDialog/viewLimitDialog"
 
 type Props = {
     board: Board,
@@ -242,73 +243,76 @@ const ViewMenu = (props: Props) => {
     }
 
     return (
-        <Menu>
-            {views.map((view: BoardView) => (
-                <Menu.Text
-                    key={view.id}
-                    id={view.id}
-                    name={view.title}
-                    icon={iconForViewType(view.fields.viewType)}
-                    onClick={handleViewClick}
-                />))}
-            <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                <Menu.Separator/>
-            </BoardPermissionGate>
-            {!props.readonly &&
-                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+        <>
+            <Menu>
+                {views.map((view: BoardView) => (
                     <Menu.Text
-                        id='__duplicateView'
-                        name={duplicateViewText}
-                        icon={<DuplicateIcon/>}
-                        onClick={handleDuplicateView}
-                    />
-                </BoardPermissionGate>
-            }
-            {!props.readonly && views.length > 1 &&
+                        key={view.id}
+                        id={view.id}
+                        name={view.title}
+                        icon={iconForViewType(view.fields.viewType)}
+                        onClick={handleViewClick}
+                    />))}
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                    <Menu.Text
-                        id='__deleteView'
-                        name={deleteViewText}
-                        icon={<DeleteIcon/>}
-                        onClick={handleDeleteView}
-                    />
+                    <Menu.Separator/>
                 </BoardPermissionGate>
-            }
-            {!props.readonly &&
-                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                    <Menu.SubMenu
-                        id='__addView'
-                        name={addViewText}
-                        icon={<AddIcon/>}
-                    >
+                {!props.readonly &&
+                    <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                         <Menu.Text
-                            id='board'
-                            name={boardText}
-                            icon={<BoardIcon/>}
-                            onClick={handleAddViewBoard}
+                            id='__duplicateView'
+                            name={duplicateViewText}
+                            icon={<DuplicateIcon/>}
+                            onClick={handleDuplicateView}
                         />
+                    </BoardPermissionGate>
+                }
+                {!props.readonly && views.length > 1 &&
+                    <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                         <Menu.Text
-                            id='table'
-                            name={tableText}
-                            icon={<TableIcon/>}
-                            onClick={handleAddViewTable}
+                            id='__deleteView'
+                            name={deleteViewText}
+                            icon={<DeleteIcon/>}
+                            onClick={handleDeleteView}
                         />
-                        <Menu.Text
-                            id='gallery'
-                            name={galleryText}
-                            icon={<GalleryIcon/>}
-                            onClick={handleAddViewGallery}
-                        />
-                        <Menu.Text
-                            id='calendar'
-                            name='Calendar'
-                            icon={<CalendarIcon/>}
-                            onClick={handleAddViewCalendar}
-                        />
-                    </Menu.SubMenu>
-                </BoardPermissionGate>
-            }
-        </Menu>
+                    </BoardPermissionGate>
+                }
+                {!props.readonly &&
+                    <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                        <Menu.SubMenu
+                            id='__addView'
+                            name={addViewText}
+                            icon={<AddIcon/>}
+                        >
+                            <Menu.Text
+                                id='board'
+                                name={boardText}
+                                icon={<BoardIcon/>}
+                                onClick={handleAddViewBoard}
+                            />
+                            <Menu.Text
+                                id='table'
+                                name={tableText}
+                                icon={<TableIcon/>}
+                                onClick={handleAddViewTable}
+                            />
+                            <Menu.Text
+                                id='gallery'
+                                name={galleryText}
+                                icon={<GalleryIcon/>}
+                                onClick={handleAddViewGallery}
+                            />
+                            <Menu.Text
+                                id='calendar'
+                                name='Calendar'
+                                icon={<CalendarIcon/>}
+                                onClick={handleAddViewCalendar}
+                            />
+                        </Menu.SubMenu>
+                    </BoardPermissionGate>
+                }
+            </Menu>
+            <ViewLimitDialog onClose={() => {}}/>
+        </>
     )
 }
 
