@@ -27,10 +27,10 @@ UPDATE {{.prefix}}blocks b
 UPDATE {{.prefix}}blocks SET fields = fields::jsonb - 'columnCalculations' || '{"columnCalculations": {}}' WHERE fields->>'columnCalculations' = '[]';
 
 WITH subquery AS (
-  SELECT id, fields ->> 'columnCalculations' as board_calculations from {{.prefix}}blocks
+  SELECT id, fields->'columnCalculations' as board_calculations from {{.prefix}}blocks
   WHERE fields ->> 'columnCalculations' <> '{}')
 UPDATE {{.prefix}}blocks b
-    SET fields = b.fields::jsonb|| json_build_object('columnCalculations', s.board_calculations)::jsonb
+    SET fields = b.fields::jsonb|| json_build_object('columnCalculations', s.board_calculations::jsonb)::jsonb
     FROM subquery AS s
     WHERE s.id = b.root_id
     AND b.fields ->> 'viewType' = 'table'
