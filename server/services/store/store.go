@@ -27,13 +27,15 @@ type Store interface {
 	InsertBlocks(blocks []model.Block, userID string) error
 	// @withTransaction
 	UndeleteBlock(blockID string, modifiedBy string) error
+	// @withTransaction
+	UndeleteBoard(boardID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
 	GetBlock(blockID string) (*model.Block, error)
 	// @withTransaction
 	PatchBlock(blockID string, blockPatch *model.BlockPatch, userID string) error
 	GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
 	GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
-	GetBoardHistory(boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error)
+	GetBoardHistory(boardID string, opts model.QueryBoardHistoryOptions) ([]*model.Board, error)
 	GetBoardAndCardByID(blockID string) (board *model.Board, card *model.Block, err error)
 	GetBoardAndCard(block *model.Block) (board *model.Board, card *model.Block, err error)
 	// @withTransaction

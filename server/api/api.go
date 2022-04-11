@@ -81,6 +81,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handlePatchBoard)).Methods("PATCH")
 	apiv1.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handleDeleteBoard)).Methods("DELETE")
 	apiv1.HandleFunc("/boards/{boardID}/duplicate", a.sessionRequired(a.handleDuplicateBoard)).Methods("POST")
+	apiv1.HandleFunc("/boards/{boardID}/undelete", a.sessionRequired(a.handleUndeleteBoard)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.attachSession(a.handleGetBlocks, false)).Methods("GET")
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
 	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePatchBlocks)).Methods("PATCH")
@@ -1099,6 +1100,58 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	a.logger.Debug("UNDELETE Block", mlog.String("blockID", blockID))
 	jsonBytesResponse(w, http.StatusOK, undeletedBlockData)
+
+	auditRec.Success()
+}
+
+func (a *API) handleUndeleteBoard(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /api/v1/boards/{boardID}/undelete undeleteBoard
+	//
+	// Undeletes a board
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: boardID
+	//   in: path
+	//   description: ID of board to undelete
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	vars := mux.Vars(r)
+	boardID := vars["boardID"]
+
+	auditRec := a.makeAuditRecord(r, "undeleteBoard", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to undelete board"})
+		return
+	}
+
+	err := a.app.UndeleteBoard(boardID, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("UNDELETE Board", mlog.String("boardID", boardID))
+	jsonStringResponse(w, http.StatusOK, "{}")
 
 	auditRec.Success()
 }

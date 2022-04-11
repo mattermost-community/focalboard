@@ -171,7 +171,7 @@ class Mutator {
                 await octoClient.deleteBlock(block.boardId, block.id)
             },
             async () => {
-                await octoClient.undeleteBlock(block.id)
+                await octoClient.undeleteBlock(block.boardId, block.id)
                 await afterUndo?.()
             },
             actualDescription,
@@ -221,7 +221,7 @@ class Mutator {
             },
             async () => {
                 await beforeUndo?.(board)
-                await octoClient.createBoard(board)
+                await octoClient.undeleteBoard(board.id)
             },
             description,
             this.undoGroupId,

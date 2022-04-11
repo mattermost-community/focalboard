@@ -315,7 +315,7 @@ func (s *SQLStore) GetBoardAndCardByID(blockID string) (*model.Board, *model.Blo
 
 }
 
-func (s *SQLStore) GetBoardHistory(boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error) {
+func (s *SQLStore) GetBoardHistory(boardID string, opts model.QueryBoardHistoryOptions) ([]*model.Board, error) {
 	return s.getBoardHistory(s.db, boardID, opts)
 
 }
@@ -680,6 +680,30 @@ func (s *SQLStore) UndeleteBlock(blockID string, modifiedBy string) error {
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "UndeleteBlock"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (s *SQLStore) UndeleteBoard(boardID string, modifiedBy string) error {
+	if s.dbType == model.SqliteDBType {
+		return s.undeleteBoard(s.db, boardID, modifiedBy)
+	}
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.undeleteBoard(tx, boardID, modifiedBy)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "UndeleteBoard"))
 		}
 		return err
 	}
