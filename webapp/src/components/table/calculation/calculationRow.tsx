@@ -38,11 +38,6 @@ const CalculationRow = (props: Props): JSX.Element => {
         id: Constants.titleColumnId,
     } as IPropertyTemplate
 
-    // const templates: IPropertyTemplate[] = [
-    //     titleTemplate,
-    //     ...props.board.cardProperties.filter((template) => props.activeView.fields.visiblePropertyIds.includes(template.id)),
-    // ]
-
     const visiblePropertyTemplates = useMemo(() => ([
         titleTemplate,
         ...activeView.fields.visiblePropertyIds.map((id) => board.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
@@ -58,7 +53,7 @@ const CalculationRow = (props: Props): JSX.Element => {
             onMouseEnter={() => setHovered(!readonly)}
             onMouseLeave={() => setHovered(false)}
         >
-            {                
+            {
                 visiblePropertyTemplates.map((template) => {
                     const style = {width: columnWidth(resizingColumn, activeView.fields.columnWidths, offset, template.id)}
                     const defaultValue = template.id === Constants.titleColumnId ? Options.count.value : Options.none.value
