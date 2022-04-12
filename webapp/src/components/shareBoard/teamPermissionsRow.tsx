@@ -60,12 +60,14 @@ const TeamPermissionsRow = (): JSX.Element => {
                         <Menu position='left'>
                             <Menu.Text
                                 id='Editor'
+                                check={true}
                                 icon={currentRole === 'Editor' ? <CheckIcon/> : null}
                                 name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
                                 onClick={() => updateBoardType(board, BoardTypeOpen)}
                             />
                             <Menu.Text
                                 id='None'
+                                check={true}
                                 icon={currentRole === 'None' ? <CheckIcon/> : null}
                                 name={intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})}
                                 onClick={() => updateBoardType(board, BoardTypePrivate)}

@@ -13,7 +13,7 @@ const (
 	usernameSpecialChars = ".-_ "
 )
 
-func teamMemberFromUsername(api PluginAPI, username string, teamID string) (*mm_model.TeamMember, error) {
+func userByUsername(api PluginAPI, username string) (*mm_model.User, error) {
 	// check for usernames that might have trailing punctuation
 	var user *mm_model.User
 	var err error
@@ -36,13 +36,7 @@ func teamMemberFromUsername(api PluginAPI, username string, teamID string) (*mm_
 		return nil, err
 	}
 
-	// make sure user is member of team.
-	member, err := api.GetTeamMember(teamID, user.Id)
-	if err != nil {
-		return nil, err
-	}
-
-	return member, nil
+	return user, nil
 }
 
 // trimUsernameSpecialChar tries to remove the last character from word if it

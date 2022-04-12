@@ -85,7 +85,7 @@ func (a *App) getBoardForBlock(blockID string) (*model.Board, error) {
 }
 
 func (a *App) getBoardHistory(boardID string, latest bool) (*model.Board, error) {
-	opts := model.QueryBlockHistoryOptions{
+	opts := model.QueryBoardHistoryOptions{
 		Limit:      1,
 		Descending: latest,
 	}
@@ -367,4 +367,38 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 
 func (a *App) SearchBoardsForUserAndTeam(term, userID, teamID string) ([]*model.Board, error) {
 	return a.store.SearchBoardsForUserAndTeam(term, userID, teamID)
+}
+
+func (a *App) UndeleteBoard(boardID string, modifiedBy string) error {
+	boards, err := a.store.GetBoardHistory(boardID, model.QueryBoardHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return err
+	}
+
+	if len(boards) == 0 {
+		// undeleting non-existing board not considered an error
+		return nil
+	}
+
+	err = a.store.UndeleteBoard(boardID, modifiedBy)
+	if err != nil {
+		return err
+	}
+
+	board, err := a.store.GetBoard(boardID)
+	if err != nil {
+		return err
+	}
+
+	if board == nil {
+		a.logger.Error("Error loading the board after undelete, not propagating through websockets or notifications")
+		return nil
+	}
+
+	a.blockChangeNotifier.Enqueue(func() error {
+		a.wsAdapter.BroadcastBoardChange(board.TeamID, board)
+		return nil
+	})
+
+	return nil
 }

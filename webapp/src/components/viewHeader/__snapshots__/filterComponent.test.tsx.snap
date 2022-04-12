@@ -54,8 +54,12 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -73,8 +77,12 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -92,8 +100,12 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -111,8 +123,12 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -136,8 +152,12 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -245,8 +265,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -264,8 +288,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -283,8 +311,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -302,8 +334,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -327,8 +363,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -450,8 +490,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -469,8 +513,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -488,8 +536,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -507,8 +559,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -532,8 +588,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -627,8 +687,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -646,8 +710,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -665,8 +733,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -684,8 +756,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -709,8 +785,12 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >

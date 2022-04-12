@@ -1,11 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useState, Suspense} from 'react'
 
 import {Utils} from '../utils'
 import './markdownEditor.scss'
 
-import MarkdownEditorInput from './markdownEditorInput/markdownEditorInput'
+const MarkdownEditorInput = React.lazy(() => import('./markdownEditorInput/markdownEditorInput'))
 
 type Props = {
     id?: string
@@ -50,14 +50,16 @@ const MarkdownEditor = (props: Props): JSX.Element => {
     }
 
     const editorElement = (
-        <MarkdownEditorInput
-            id={id}
-            onChange={onChange}
-            onFocus={onFocus}
-            onBlur={editorOnBlur}
-            initialText={text}
-            isEditing={isEditing}
-        />
+        <Suspense fallback={<></>}>
+            <MarkdownEditorInput
+                id={id}
+                onChange={onChange}
+                onFocus={onFocus}
+                onBlur={editorOnBlur}
+                initialText={text}
+                isEditing={isEditing}
+            />
+        </Suspense>
     )
 
     const element = (

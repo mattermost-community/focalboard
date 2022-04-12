@@ -406,8 +406,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -423,8 +427,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -440,8 +448,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -457,8 +469,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -474,8 +490,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -491,8 +511,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -508,8 +532,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -525,8 +553,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -542,8 +574,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -559,8 +595,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -576,8 +616,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -593,8 +637,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -610,8 +658,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -627,8 +679,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class="noicon"
-                  />
+                    class=""
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -652,8 +708,12 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class=""
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
