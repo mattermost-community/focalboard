@@ -69,8 +69,23 @@ func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetada
 	return board, &boardMetadata, nil
 }
 
+// getBoardForBlock returns the board that owns the specified block.
+func (a *App) getBoardForBlock(blockID string) (*model.Board, error) {
+	block, err := a.GetBlockByID(blockID)
+	if err != nil {
+		return nil, fmt.Errorf("cannot get block %s: %w", blockID, err)
+	}
+
+	board, err := a.GetBoard(block.BoardID)
+	if err != nil {
+		return nil, fmt.Errorf("cannot get board %s: %w", block.BoardID, err)
+	}
+
+	return board, nil
+}
+
 func (a *App) getBoardHistory(boardID string, latest bool) (*model.Board, error) {
-	opts := model.QueryBlockHistoryOptions{
+	opts := model.QueryBoardHistoryOptions{
 		Limit:      1,
 		Descending: latest,
 	}
@@ -150,8 +165,8 @@ func (a *App) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, er
 	return a.store.GetBoardsForUserAndTeam(userID, teamID)
 }
 
-func (a *App) GetTemplateBoards(teamID string) ([]*model.Board, error) {
-	return a.store.GetTemplateBoards(teamID)
+func (a *App) GetTemplateBoards(teamID, userID string) ([]*model.Board, error) {
+	return a.store.GetTemplateBoards(teamID, userID)
 }
 
 func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*model.Board, error) {
@@ -352,4 +367,38 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 
 func (a *App) SearchBoardsForUserAndTeam(term, userID, teamID string) ([]*model.Board, error) {
 	return a.store.SearchBoardsForUserAndTeam(term, userID, teamID)
+}
+
+func (a *App) UndeleteBoard(boardID string, modifiedBy string) error {
+	boards, err := a.store.GetBoardHistory(boardID, model.QueryBoardHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return err
+	}
+
+	if len(boards) == 0 {
+		// undeleting non-existing board not considered an error
+		return nil
+	}
+
+	err = a.store.UndeleteBoard(boardID, modifiedBy)
+	if err != nil {
+		return err
+	}
+
+	board, err := a.store.GetBoard(boardID)
+	if err != nil {
+		return err
+	}
+
+	if board == nil {
+		a.logger.Error("Error loading the board after undelete, not propagating through websockets or notifications")
+		return nil
+	}
+
+	a.blockChangeNotifier.Enqueue(func() error {
+		a.wsAdapter.BroadcastBoardChange(board.TeamID, board)
+		return nil
+	})
+
+	return nil
 }

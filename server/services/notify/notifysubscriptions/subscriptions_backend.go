@@ -9,6 +9,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/mattermost/focalboard/server/ws"
 	"github.com/wiggin77/merror"
 
@@ -22,6 +23,7 @@ const (
 type BackendParams struct {
 	ServerRoot             string
 	Store                  Store
+	Permissions            permissions.PermissionsService
 	Delivery               SubscriptionDelivery
 	WSAdapter              ws.Adapter
 	Logger                 *mlog.Logger
@@ -32,6 +34,7 @@ type BackendParams struct {
 // Backend provides the notification backend for subscriptions.
 type Backend struct {
 	store                  Store
+	permissions            permissions.PermissionsService
 	delivery               SubscriptionDelivery
 	notifier               *notifier
 	wsAdapter              ws.Adapter
@@ -44,6 +47,7 @@ func New(params BackendParams) *Backend {
 	return &Backend{
 		store:                  params.Store,
 		delivery:               params.Delivery,
+		permissions:            params.Permissions,
 		notifier:               newNotifier(params),
 		wsAdapter:              params.WSAdapter,
 		logger:                 params.Logger,
@@ -179,6 +183,10 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 		return
 	}
 
+	// TODO: Automatically add user to board?  Fail and show UI?  Waiting for PM decision.
+	//       Currently the subscription created below will only notify if the user is already
+	//       a member of the board.
+
 	sub := &model.Subscription{
 		BlockType:      model.TypeCard,
 		BlockID:        evt.Card.ID,
@@ -205,7 +213,7 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 }
 
 // BroadcastSubscriptionChange sends a websocket message with details of the changed subscription to all
-// connected users in the workspace.
-func (b *Backend) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
-	b.wsAdapter.BroadcastSubscriptionChange(workspaceID, subscription)
+// connected users in the team.
+func (b *Backend) BroadcastSubscriptionChange(teamID string, subscription *model.Subscription) {
+	b.wsAdapter.BroadcastSubscriptionChange(teamID, subscription)
 }

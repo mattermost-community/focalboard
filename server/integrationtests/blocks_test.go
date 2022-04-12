@@ -375,72 +375,20 @@ func TestUndeleteBlock(t *testing.T) {
 		require.NoError(t, resp.Error)
 		require.Len(t, blocks, initialCount+1)
 	})
-}
 
-func TestGetSubtree(t *testing.T) {
-	t.Skip("TODO: fix flaky test")
+	t.Run("Try to undelete a block without permissions", func(t *testing.T) {
+		// this avoids triggering uniqueness constraint of
+		// id,insert_at on block history
+		time.Sleep(10 * time.Millisecond)
 
-	th := SetupTestHelperWithToken(t).Start()
-	defer th.TearDown()
-
-	board := th.CreateBoard("team-id", model.BoardTypeOpen)
-
-	parentBlockID := utils.NewID(utils.IDTypeBlock)
-	childBlockID1 := utils.NewID(utils.IDTypeBlock)
-	childBlockID2 := utils.NewID(utils.IDTypeBlock)
-
-	t.Run("Create the block structure", func(t *testing.T) {
-		newBlocks := []model.Block{
-			{
-				ID:       parentBlockID,
-				BoardID:  board.ID,
-				CreateAt: 1,
-				UpdateAt: 1,
-				Type:     model.TypeCard,
-			},
-			{
-				ID:       childBlockID1,
-				BoardID:  board.ID,
-				ParentID: parentBlockID,
-				CreateAt: 2,
-				UpdateAt: 2,
-				Type:     model.TypeCard,
-			},
-			{
-				ID:       childBlockID2,
-				BoardID:  board.ID,
-				ParentID: parentBlockID,
-				CreateAt: 2,
-				UpdateAt: 2,
-				Type:     model.TypeCard,
-			},
-		}
-
-		_, resp := th.Client.InsertBlocks(board.ID, newBlocks)
+		_, resp := th.Client.DeleteBlock(board.ID, blockID)
 		require.NoError(t, resp.Error)
+
+		_, resp = th.Client2.UndeleteBlock(board.ID, blockID)
+		th.CheckForbidden(resp)
 
 		blocks, resp := th.Client.GetBlocksForBoard(board.ID)
 		require.NoError(t, resp.Error)
-		require.Len(t, blocks, 1) // GetBlocks returns root blocks (null ParentID)
-
-		blockIDs := make([]string, len(blocks))
-		for i, b := range blocks {
-			blockIDs[i] = b.ID
-		}
-		require.Contains(t, blockIDs, parentBlockID)
-	})
-
-	t.Run("Get subtree for parent ID", func(t *testing.T) {
-		blocks, resp := th.Client.GetSubtree(board.ID, parentBlockID)
-		require.NoError(t, resp.Error)
-		require.Len(t, blocks, 3)
-
-		blockIDs := make([]string, len(blocks))
-		for i, b := range blocks {
-			blockIDs[i] = b.ID
-		}
-		require.Contains(t, blockIDs, parentBlockID)
-		require.Contains(t, blockIDs, childBlockID1)
-		require.Contains(t, blockIDs, childBlockID2)
+		require.Len(t, blocks, initialCount)
 	})
 }

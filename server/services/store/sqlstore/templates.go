@@ -18,7 +18,7 @@ var (
 func (s *SQLStore) removeDefaultTemplates(db sq.BaseRunner, boards []*model.Board) error {
 	count := 0
 	for _, board := range boards {
-		if board.CreatedBy != "system" {
+		if board.CreatedBy != model.SystemUserID {
 			continue
 		}
 		// default template deletion does not need to go to blocks_history
@@ -54,13 +54,24 @@ func (s *SQLStore) removeDefaultTemplates(db sq.BaseRunner, boards []*model.Boar
 	return nil
 }
 
-// getDefaultTemplateBoards fetches all template blocks .
-func (s *SQLStore) getTemplateBoards(db sq.BaseRunner, teamID string) ([]*model.Board, error) {
+// getTemplateBoards fetches all template boards .
+func (s *SQLStore) getTemplateBoards(db sq.BaseRunner, teamID, userID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("")...).
-		From(s.tablePrefix + "boards").
-		Where(sq.Eq{"coalesce(team_id, '0')": teamID}).
-		Where(sq.Eq{"is_template": true})
+		From(s.tablePrefix+"boards as b").
+		LeftJoin(s.tablePrefix+"board_members as bm on b.id = bm.board_id and bm.user_id = ?", userID).
+		Where(sq.Eq{"is_template": true}).
+		Where(sq.Eq{"b.team_id": teamID}).
+		Where(sq.Or{
+			// this is to include public templates even if there is not board_member entry
+			sq.And{
+				sq.Eq{"bm.board_id": nil},
+				sq.Eq{"b.type": model.BoardTypeOpen},
+			},
+			sq.And{
+				sq.NotEq{"bm.board_id": nil},
+			},
+		})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -69,5 +80,10 @@ func (s *SQLStore) getTemplateBoards(db sq.BaseRunner, teamID string) ([]*model.
 	}
 	defer s.CloseRows(rows)
 
-	return s.boardsFromRows(rows)
+	userTemplates, err := s.boardsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return userTemplates, nil
 }

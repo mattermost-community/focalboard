@@ -112,6 +112,12 @@ type BlockPatchBatch struct {
 // Return true to import the block or false to skip import.
 type BoardModifier func(board *Board, cache map[string]interface{}) bool
 
+// BlockModifier is a callback that can modify each block during an import.
+// A cache of arbitrary data will be passed for each call and any changes
+// to the cache will be preserved for the next call.
+// Return true to import the block or false to skip import.
+type BlockModifier func(block *Block, cache map[string]interface{}) bool
+
 func BlocksFromJSON(data io.Reader) []Block {
 	var blocks []Block
 	_ = json.NewDecoder(data).Decode(&blocks)
@@ -175,6 +181,14 @@ type QuerySubtreeOptions struct {
 
 // QueryBlockHistoryOptions are query options that can be passed to GetBlockHistory.
 type QueryBlockHistoryOptions struct {
+	BeforeUpdateAt int64  // if non-zero then filter for records with update_at less than BeforeUpdateAt
+	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
+	Limit          uint64 // if non-zero then limit the number of returned records
+	Descending     bool   // if true then the records are sorted by insert_at in descending order
+}
+
+// QueryBoardHistoryOptions are query options that can be passed to GetBoardHistory.
+type QueryBoardHistoryOptions struct {
 	BeforeUpdateAt int64  // if non-zero then filter for records with update_at less than BeforeUpdateAt
 	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
 	Limit          uint64 // if non-zero then limit the number of returned records

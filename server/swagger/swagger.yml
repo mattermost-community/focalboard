@@ -260,6 +260,32 @@ definitions:
     - schemeViewer
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
+  BoardMemberHistoryEntry:
+    description: BoardMemberHistoryEntry stores the information of the membership of a user on a board
+    properties:
+      action:
+        description: The action that added this history entry (created or deleted)
+        type: string
+        x-go-name: Action
+      boardId:
+        description: The ID of the board
+        type: string
+        x-go-name: BoardID
+      insertAt:
+        description: The insertion time
+        format: int64
+        type: integer
+        x-go-name: InsertAt
+      userId:
+        description: The ID of the user
+        type: string
+        x-go-name: UserID
+    required:
+    - boardId
+    - userId
+    - insertAt
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
   BoardMetadata:
     description: BoardMetadata contains metadata for a Board
     properties:
@@ -882,6 +908,8 @@ paths:
       responses:
         "200":
           description: success
+        "404":
+          description: board not found
         default:
           description: internal error
           schema:
@@ -904,6 +932,8 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/Board'
+        "404":
+          description: board not found
         default:
           description: internal error
           schema:
@@ -932,6 +962,8 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/Board'
+        "404":
+          description: board not found
         default:
           description: internal error
           schema:
@@ -959,34 +991,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Exports an archive of all blocks for one boards.
-  /api/v1/boards/{boardID}/archive/import:
-    post:
-      consumes:
-      - multipart/form-data
-      operationId: archiveImport
-      parameters:
-      - description: Workspace ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: archive file to import
-        in: formData
-        name: file
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Import an archive of boards.
   /api/v1/boards/{boardID}/blocks:
     get:
       description: Returns blocks
@@ -1014,6 +1018,8 @@ paths:
             items:
               $ref: '#/definitions/Block'
             type: array
+        "404":
+          description: board not found
         default:
           description: internal error
           schema:
@@ -1102,6 +1108,8 @@ paths:
       responses:
         "200":
           description: success
+        "404":
+          description: block not found
         default:
           description: internal error
           schema:
@@ -1133,6 +1141,8 @@ paths:
       responses:
         "200":
           description: success
+        "404":
+          description: block not found
         default:
           description: internal error
           schema:
@@ -1163,6 +1173,8 @@ paths:
             items:
               $ref: '#/definitions/Block'
             type: array
+        "404":
+          description: board or block not found
         default:
           description: internal error
           schema:
@@ -1199,6 +1211,36 @@ paths:
             items:
               $ref: '#/definitions/Block'
             type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /api/v1/boards/{boardID}/blocks/{blockID}/undelete:
+    post:
+      description: Undeletes a block
+      operationId: undeleteBlock
+      parameters:
+      - description: Board ID
+        in: path
+        name: boardID
+        required: true
+        type: string
+      - description: ID of block to undelete
+        in: path
+        name: blockID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/BlockPatch'
+        "404":
+          description: block not found
         default:
           description: internal error
           schema:
@@ -1276,6 +1318,8 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/BoardsAndBlocks'
+        "404":
+          description: board not found
         default:
           description: internal error
           schema:
@@ -1327,6 +1371,8 @@ paths:
       responses:
         "200":
           description: success
+        "404":
+          description: board not found
         default:
           description: internal error
           schema:
@@ -1377,6 +1423,8 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/Sharing'
+        "404":
+          description: board not found
         default:
           description: internal error
           schema:
@@ -1633,6 +1681,34 @@ paths:
       security:
       - BearerAuth: []
       summary: Exports an archive of all blocks for all the boards in a team.
+  /api/v1/teams/{teamID}/archive/import:
+    post:
+      consumes:
+      - multipart/form-data
+      operationId: archiveImport
+      parameters:
+      - description: Team ID
+        in: path
+        name: teamID
+        required: true
+        type: string
+      - description: archive file to import
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Import an archive of boards.
   /api/v1/teams/{teamID}/boards:
     get:
       description: Returns team boards
@@ -1686,6 +1762,8 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/FileUploadResponse'
+        "404":
+          description: board not found
         default:
           description: internal error
           schema:
@@ -1697,11 +1775,6 @@ paths:
       description: Returns the boards that match with a search term
       operationId: searchBoards
       parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
       - description: Team ID
         in: path
         name: teamID
@@ -1919,66 +1992,6 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
-  /api/v1/workspaces/{workspaceID}/blocks/{blockID}/undelete:
-    post:
-      description: Undeletes a block
-      operationId: undeleteBlock
-      parameters:
-      - description: Workspace ID
-        in: path
-        name: workspaceID
-        required: true
-        type: string
-      - description: ID of block to undelete
-        in: path
-        name: blockID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/{rootID}/{fileID}:
-    get:
-      description: Returns the contents of an uploaded file
-      operationId: getFile
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: ID of the root block
-        in: path
-        name: rootID
-        required: true
-        type: string
-      - description: ID of the file
-        in: path
-        name: fileID
-        required: true
-        type: string
-      produces:
-      - application/json
-      - image/jpg
-      - image/png
-      - image/gif
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
   /boards/{boardID}/join:
     post:
       description: Become a member of a board
@@ -1996,10 +2009,35 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/BoardMember'
+        "403":
+          description: access denied
         "404":
           description: board not found
-        "503":
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /boards/{boardID}/leave:
+    post:
+      description: Remove your own membership from a board
+      operationId: leaveBoard
+      parameters:
+      - description: Board ID
+        in: path
+        name: boardID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        "403":
           description: access denied
+        "404":
+          description: board not found
         default:
           description: internal error
           schema:
@@ -2029,6 +2067,8 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/BoardMember'
+        "404":
+          description: board not found
         default:
           description: internal error
           schema:

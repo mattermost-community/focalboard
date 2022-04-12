@@ -6,12 +6,14 @@ describe('Login actions', () => {
     const email = Cypress.env('email')
     const password = Cypress.env('password')
 
+    beforeEach(() => {
+        localStorage.setItem('language', 'en')
+    })
+
     it('Can perform login/register actions', () => {
         // Redirects to login page
-        cy.log('**Redirects to error then login page**')
+        cy.log('**Redirects to login page (except plugin mode) **')
         cy.visit('/')
-        cy.location('pathname').should('eq', '/error')
-        cy.get('button').contains('Log in').click()
         cy.location('pathname').should('eq', '/login')
         cy.get('.LoginPage').contains('Log in')
         cy.get('#login-username').should('exist')
@@ -40,7 +42,7 @@ describe('Login actions', () => {
         // User should not be logged in automatically
         cy.log('**User should not be logged in automatically**')
         cy.visit('/')
-        cy.location('pathname').should('eq', '/error')
+        cy.location('pathname').should('eq', '/login')
 
         // Can log in registered user
         cy.log('**Can log in registered user**')
@@ -58,10 +60,12 @@ describe('Login actions', () => {
         cy.get('button').contains('Change password').click()
         cy.get('.succeeded').click()
         workspaceIsAvailable()
+        logoutUser()
 
         // Can log in user with new password
         cy.log('**Can log in user with new password**')
         loginUser(newPassword).then(() => resetPassword(newPassword))
+        logoutUser()
 
         // Can't register second user without invite link
         cy.log('**Can\'t register second user without invite link**')
@@ -84,10 +88,7 @@ describe('Login actions', () => {
         cy.get('.Button').contains('Copied').should('exist')
 
         cy.get('a.shareUrl').invoke('attr', 'href').then((inviteLink) => {
-            // Log out existing user
-            cy.log('**Log out existing user**')
-            cy.get('.Sidebar .SidebarUserMenu').click()
-            cy.get('.menu-name').contains('Log out').click()
+            logoutUser()
 
             // Register a new user
             cy.log('**Register new user**')
@@ -112,6 +113,13 @@ describe('Login actions', () => {
         cy.get('#login-password').type(withPassword)
         cy.get('button').contains('Log in').click()
         return workspaceIsAvailable()
+    }
+
+    const logoutUser = () => {
+        cy.log('**Log out existing user**')
+        cy.get('.SidebarUserMenu').click()
+        cy.get('.menu-name').contains('Log out').click()
+        cy.location('pathname').should('eq', '/login')
     }
 
     const resetPassword = (oldPassword: string) => {

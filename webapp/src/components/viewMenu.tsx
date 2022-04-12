@@ -71,7 +71,7 @@ const ViewMenu = (props: Props) => {
         Utils.log('deleteView')
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardView, {board: board.id, view: activeView.id})
         const view = activeView
-        const nextView = views.find((o) => o !== view)
+        const nextView = views.find((o) => o.id !== view.id)
         mutator.deleteBlock(view, 'delete view')
         if (nextView) {
             showView(nextView.id)

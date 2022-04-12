@@ -22,6 +22,8 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 import {fetchUserBlockSubscriptions, getMe} from '../../store/users'
 import {IUser} from '../../user'
 
+import {Constants} from "../../constants"
+
 import SetWindowTitleAndIcon from './setWindowTitleAndIcon'
 import TeamToBoardAndViewRedirect from './teamToBoardAndViewRedirect'
 import UndoRedoHotKeys from './undoRedoHotKeys'
@@ -41,7 +43,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const dispatch = useAppDispatch()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
-    const teamId = match.params.teamId || UserSettings.lastTeamId || '0'
+    const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const me = useAppSelector<IUser|null>(getMe)
 
     // if we're in a legacy route and not showing a shared board,
@@ -110,7 +112,7 @@ const BoardPage = (props: Props): JSX.Element => {
             // and set it as most recently viewed board
             UserSettings.setLastBoardID(teamId, match.params.boardId)
 
-            if (match.params.viewId && match.params.viewId !== '0') {
+            if (match.params.viewId && match.params.viewId !== Constants.globalTeamId) {
                 dispatch(setCurrentView(match.params.viewId))
                 UserSettings.setLastViewId(match.params.boardId, match.params.viewId)
             }

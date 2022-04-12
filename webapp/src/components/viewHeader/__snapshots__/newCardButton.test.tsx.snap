@@ -38,20 +38,24 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 class="MenuOption TextOption menu-option bold-menu-text"
                 role="button"
               >
-                <svg
-                  class="CardIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  class=""
                 >
-                  <rect
-                    height="40"
-                    rx="3"
-                    ry="3"
-                    width="60"
-                    x="20"
-                    y="30"
-                  />
-                </svg>
+                  <svg
+                    class="CardIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      height="40"
+                      rx="3"
+                      ry="3"
+                      width="60"
+                      x="20"
+                      y="30"
+                    />
+                  </svg>
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -79,9 +83,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-plus AddIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-plus AddIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -105,8 +113,12 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -162,20 +174,24 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 class="MenuOption TextOption menu-option bold-menu-text"
                 role="button"
               >
-                <svg
-                  class="CardIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  class=""
                 >
-                  <rect
-                    height="40"
-                    rx="3"
-                    ry="3"
-                    width="60"
-                    x="20"
-                    y="30"
-                  />
-                </svg>
+                  <svg
+                    class="CardIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      height="40"
+                      rx="3"
+                      ry="3"
+                      width="60"
+                      x="20"
+                      y="30"
+                    />
+                  </svg>
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -203,9 +219,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-plus AddIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-plus AddIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -229,8 +249,12 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -286,20 +310,24 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 class="MenuOption TextOption menu-option bold-menu-text"
                 role="button"
               >
-                <svg
-                  class="CardIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  class=""
                 >
-                  <rect
-                    height="40"
-                    rx="3"
-                    ry="3"
-                    width="60"
-                    x="20"
-                    y="30"
-                  />
-                </svg>
+                  <svg
+                    class="CardIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      height="40"
+                      rx="3"
+                      ry="3"
+                      width="60"
+                      x="20"
+                      y="30"
+                    />
+                  </svg>
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -327,9 +355,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-plus AddIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-plus AddIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -353,8 +385,12 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >

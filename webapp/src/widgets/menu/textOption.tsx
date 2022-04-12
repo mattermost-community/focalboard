@@ -5,13 +5,14 @@ import React from 'react'
 import {MenuOptionProps} from './menuItem'
 
 type TextOptionProps = MenuOptionProps & {
+    check?: boolean
     icon?: React.ReactNode,
     rightIcon?: React.ReactNode,
     className?: string
 }
 
 function TextOption(props:TextOptionProps): JSX.Element {
-    const {name, icon, rightIcon} = props
+    const {name, icon, rightIcon, check} = props
     let className = 'MenuOption TextOption menu-option'
     if (props.className) {
         className += ' ' + props.className
@@ -26,7 +27,7 @@ function TextOption(props:TextOptionProps): JSX.Element {
                 props.onClick(props.id)
             }}
         >
-            {icon ?? <div className='noicon'/>}
+            <div className={`${check ? 'menu-option__check' : ''}`}>{icon ?? <div className='noicon'/>}</div>
             <div className='menu-name'>{name}</div>
             {rightIcon ?? <div className='noicon'/>}
         </div>

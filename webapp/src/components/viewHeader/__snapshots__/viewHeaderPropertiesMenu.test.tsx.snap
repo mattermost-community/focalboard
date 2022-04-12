@@ -153,8 +153,12 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -346,8 +350,12 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >

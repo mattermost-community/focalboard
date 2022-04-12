@@ -11,6 +11,7 @@ describe('Create and delete board / card', () => {
         cy.apiResetBoards()
         cy.apiGetMe().then((userID) => cy.apiSkipTour(userID))
         localStorage.setItem('welcomePageViewed', 'true')
+        localStorage.setItem('language', 'en')
     })
 
     it('MM-T4274 Create an Empty Board', () => {
@@ -29,7 +30,7 @@ describe('Create and delete board / card', () => {
         // Create empty board
         cy.contains('Create empty board').should('exist').click({force: true})
         cy.get('.BoardComponent').should('exist')
-        cy.get('.Editable.title').invoke('attr', 'placeholder').should('contain', 'Untitled board')
+        cy.get('.Editable.title').invoke('attr', 'placeholder').should('contain', 'Untitled Board')
 
         // Change Title
         cy.get('.Editable.title').

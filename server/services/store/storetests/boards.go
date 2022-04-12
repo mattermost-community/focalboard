@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//nolint:dupl
 func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	t.Run("GetBoard", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -38,6 +37,11 @@ func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, fu
 		store, tearDown := setup(t)
 		defer tearDown()
 		testDeleteBoard(t, store)
+	})
+	t.Run("UndeleteBoard", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testUndeleteBoard(t, store)
 	})
 	t.Run("InsertBoardWithAdmin", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -120,7 +124,7 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			TeamID: teamID1,
 			Type:   model.BoardTypeOpen,
 		}
-		_, _, err := store.InsertBoardWithAdmin(board1, userID)
+		rBoard1, _, err := store.InsertBoardWithAdmin(board1, userID)
 		require.NoError(t, err)
 
 		board2 := &model.Board{
@@ -128,7 +132,7 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			TeamID: teamID1,
 			Type:   model.BoardTypePrivate,
 		}
-		_, _, err = store.InsertBoardWithAdmin(board2, userID)
+		rBoard2, _, err := store.InsertBoardWithAdmin(board2, userID)
 		require.NoError(t, err)
 
 		board3 := &model.Board{
@@ -136,7 +140,7 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			TeamID: teamID1,
 			Type:   model.BoardTypeOpen,
 		}
-		_, err = store.InsertBoard(board3, "other-user")
+		rBoard3, err := store.InsertBoard(board3, "other-user")
 		require.NoError(t, err)
 
 		board4 := &model.Board{
@@ -164,16 +168,14 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 		_, err = store.InsertBoard(board6, "other-user")
 		require.NoError(t, err)
 
-		t.Run("should only find the two boards that the user is a member of for team 1", func(t *testing.T) {
+		t.Run("should only find the two boards that the user is a member of for team 1 plus the one open board", func(t *testing.T) {
 			boards, err := store.GetBoardsForUserAndTeam(userID, teamID1)
 			require.NoError(t, err)
-			require.Len(t, boards, 2)
-
-			boardIDs := []string{}
-			for _, board := range boards {
-				boardIDs = append(boardIDs, board.ID)
-			}
-			require.ElementsMatch(t, []string{board1.ID, board2.ID}, boardIDs)
+			require.ElementsMatch(t, []*model.Board{
+				rBoard1,
+				rBoard2,
+				rBoard3,
+			}, boards)
 		})
 
 		t.Run("should only find the board that the user is a member of for team 2", func(t *testing.T) {
@@ -806,6 +808,93 @@ func testSearchBoardsForUserAndTeam(t *testing.T, store store.Store) {
 	}
 }
 
+func testUndeleteBoard(t *testing.T, store store.Store) {
+	userID := testUserID
+
+	t.Run("existing id", func(t *testing.T) {
+		boardID := utils.NewID(utils.IDTypeBoard)
+
+		board := &model.Board{
+			ID:     boardID,
+			TeamID: testTeamID,
+			Type:   model.BoardTypeOpen,
+		}
+
+		newBoard, err := store.InsertBoard(board, userID)
+		require.NoError(t, err)
+		require.NotNil(t, newBoard)
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err = store.DeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		board, err = store.GetBoard(boardID)
+		require.Error(t, err)
+		require.Nil(t, board)
+
+		time.Sleep(1 * time.Millisecond)
+		err = store.UndeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		board, err = store.GetBoard(boardID)
+		require.NoError(t, err)
+		require.NotNil(t, board)
+	})
+
+	t.Run("existing id multiple times", func(t *testing.T) {
+		boardID := utils.NewID(utils.IDTypeBoard)
+
+		board := &model.Board{
+			ID:     boardID,
+			TeamID: testTeamID,
+			Type:   model.BoardTypeOpen,
+		}
+
+		newBoard, err := store.InsertBoard(board, userID)
+		require.NoError(t, err)
+		require.NotNil(t, newBoard)
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err = store.DeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		board, err = store.GetBoard(boardID)
+		require.Error(t, err)
+		require.Nil(t, board)
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err = store.UndeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		board, err = store.GetBoard(boardID)
+		require.NoError(t, err)
+		require.NotNil(t, board)
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err = store.UndeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		board, err = store.GetBoard(boardID)
+		require.NoError(t, err)
+		require.NotNil(t, board)
+	})
+
+	t.Run("from not existing id", func(t *testing.T) {
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err := store.UndeleteBoard("not-exists", userID)
+		require.NoError(t, err)
+
+		block, err := store.GetBoard("not-exists")
+		require.Error(t, err)
+		require.Nil(t, block)
+	})
+}
+
 func testGetBoardHistory(t *testing.T, store store.Store) {
 	userID := testUserID
 
@@ -822,7 +911,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		rBoard1, err := store.InsertBoard(board, userID)
 		require.NoError(t, err)
 
-		opts := model.QueryBlockHistoryOptions{
+		opts := model.QueryBoardHistoryOptions{
 			Limit:      0,
 			Descending: false,
 		}
@@ -870,7 +959,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		// Updated history
-		opts = model.QueryBlockHistoryOptions{
+		opts = model.QueryBoardHistoryOptions{
 			Limit:      1,
 			Descending: true,
 		}
@@ -886,7 +975,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		// Updated history after delete
-		opts = model.QueryBlockHistoryOptions{
+		opts = model.QueryBoardHistoryOptions{
 			Limit:      0,
 			Descending: true,
 		}
@@ -900,7 +989,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 	})
 
 	t.Run("testGetBoardHistory: nonexisting board", func(t *testing.T) {
-		opts := model.QueryBlockHistoryOptions{
+		opts := model.QueryBoardHistoryOptions{
 			Limit:      0,
 			Descending: false,
 		}
