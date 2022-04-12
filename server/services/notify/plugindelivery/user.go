@@ -13,14 +13,14 @@ const (
 	usernameSpecialChars = ".-_ "
 )
 
-func userByUsername(api PluginAPI, username string) (*mm_model.User, error) {
+func (pd *PluginDelivery) UserByUsername(username string) (*mm_model.User, error) {
 	// check for usernames that might have trailing punctuation
 	var user *mm_model.User
 	var err error
 	ok := true
 	trimmed := username
 	for ok {
-		user, err = api.GetUserByUsername(trimmed)
+		user, err = pd.api.GetUserByUsername(trimmed)
 		if err != nil && !isErrNotFound(err) {
 			return nil, err
 		}

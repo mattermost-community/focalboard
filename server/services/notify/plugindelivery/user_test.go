@@ -43,7 +43,8 @@ var (
 )
 
 func Test_userByUsername(t *testing.T) {
-	delivery := newPlugAPIMock(mockUsers)
+	pluginAPI := newPlugAPIMock(mockUsers)
+	delivery := New("bot_id", "server_root", pluginAPI)
 
 	tests := []struct {
 		name    string
@@ -64,7 +65,7 @@ func Test_userByUsername(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := userByUsername(delivery, tt.uname)
+			got, err := delivery.UserByUsername(tt.uname)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("userByUsername() error = %v, wantErr %v", err, tt.wantErr)
 				return
