@@ -233,13 +233,6 @@ export default class Plugin {
             }
 
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
-        } else {
-            windowAny.frontendBaseURL = subpath + '/plug/focalboard'
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
-                const currentTeam = mmStore.getState().entities.teams.currentTeamId
-                window.open(`${window.location.origin}/plug/focalboard/team/${currentTeam}`)
-            }, 'Boards', 'Boards')
-            this.registry.registerCustomRoute('/', MainApp)
         }
 
         const config = await octoClient.getClientConfig()
