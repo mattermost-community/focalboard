@@ -214,8 +214,8 @@ detach: setup-attach
 
 ## Runs any lints and unit tests defined for the server and webapp, if they exist.
 .PHONY: test
+test: export FB_UNIT_TESTING=1
 test: webapp/node_modules
-export FB_UNIT_TESTING=1
 ifneq ($(HAS_SERVER),)
 	$(GO) test -v $(GO_TEST_FLAGS) ./server/...
 endif

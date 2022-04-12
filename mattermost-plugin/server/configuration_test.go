@@ -33,10 +33,17 @@ func TestOnConfigurationChange(t *testing.T) {
 		Directory: &stringRef,
 		Plugins:   basePlugins,
 	}
+	falseRef := false
+	intRef := 365
+	baseDataRetentionSettings := &serverModel.DataRetentionSettings{
+		EnableBoardsDeletion: &falseRef,
+		BoardsRetentionDays:  &intRef,
+	}
 
 	baseConfig := &serverModel.Config{
-		FeatureFlags:   baseFeatureFlags,
-		PluginSettings: *basePluginSettings,
+		FeatureFlags:          baseFeatureFlags,
+		PluginSettings:        *basePluginSettings,
+		DataRetentionSettings: *baseDataRetentionSettings,
 	}
 
 	t.Run("Test Load Plugin Success", func(t *testing.T) {
