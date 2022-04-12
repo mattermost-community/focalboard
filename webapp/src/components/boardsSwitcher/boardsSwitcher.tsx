@@ -12,6 +12,8 @@ import BoardSwitcherDialog from '../boardsSwitcherDialog/boardSwitcherDialog'
 import {Utils} from '../../utils'
 import {Constants} from '../../constants'
 
+import IconButton from '../../widgets/buttons/iconButton'
+
 type Props = {
     onBoardTemplateSelectorOpen?: () => void,
 }
@@ -63,12 +65,13 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
 
             {
                 Utils.isFocalboardPlugin() &&
-                <span
+                <IconButton
+                    size='small'
+                    inverted={true}
                     className='add-board-icon'
                     onClick={props.onBoardTemplateSelectorOpen}
-                >
-                    <AddIcon/>
-                </span>
+                    icon={<AddIcon/>}
+                />
             }
 
             {
