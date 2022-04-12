@@ -183,31 +183,6 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 		return
 	}
 
-	// admin, editor, commenter can auto-add user to public board
-	if evt.Board.Type == model.BoardTypeOpen {
-		switch {
-		case evt.ModifiedBy.SchemeAdmin, evt.ModifiedBy.SchemeEditor, evt.ModifiedBy.SchemeCommenter:
-			// add mentionee to the board if not already a member
-			_, err := b.store.GetMemberForBoard(evt.Board.ID, userID)
-			if b.store.IsErrNotFound(err) {
-				// currently all memberships are created as editors by default
-				newBoardMember := &model.BoardMember{
-					UserID:       userID,
-					BoardID:      evt.Board.ID,
-					SchemeEditor: true,
-				}
-				if _, err := b.store.SaveMember(newBoardMember); err != nil {
-					b.logger.Debug("Cannot add mentioned user to board",
-						mlog.String("user_id", userID),
-						mlog.String("board_id", evt.Board.ID),
-						mlog.Err(err),
-					)
-					return
-				}
-			}
-		}
-	}
-
 	// user mentioned must be a board member to subscribe to card.
 	if !b.permissions.HasPermissionToBoard(userID, evt.Board.ID, model.PermissionViewBoard) {
 		b.logger.Debug("Not subscribing mentioned non-board member to card",

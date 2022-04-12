@@ -185,17 +185,29 @@ func (b *Backend) deliverMentionNotification(username string, extract string, ev
 				return "", fmt.Errorf("%s cannot mention non-team member %s : %w", evt.ModifiedBy.UserID, mentionedUser.Id, ErrMentionPermission)
 			}
 			// add mentioned user to board (if not already a member)
-			_, err := b.store.GetMemberForBoard(evt.Board.ID, mentionedUser.Id)
-			if b.store.IsErrNotFound(err) {
+			member, err := b.store.GetMemberForBoard(evt.Board.ID, mentionedUser.Id)
+			if member == nil || b.store.IsErrNotFound(err) {
 				// currently all memberships are created as editors by default
 				newBoardMember := &model.BoardMember{
 					UserID:       mentionedUser.Id,
 					BoardID:      evt.Board.ID,
 					SchemeEditor: true,
 				}
-				if _, err := b.store.SaveMember(newBoardMember); err != nil {
+				if member, err = b.store.SaveMember(newBoardMember); err != nil {
 					return "", fmt.Errorf("cannot add mentioned user %s to board %s: %w", mentionedUser.Id, evt.Board.ID, err)
 				}
+				b.logger.Debug("auto-added mentioned user to board",
+					mlog.String("user_id", mentionedUser.Id),
+					mlog.String("board_id", evt.Board.ID),
+					mlog.String("board_type", string(evt.Board.Type)),
+				)
+				b.wsAdapter.BroadcastMemberChange(evt.TeamID, evt.Board.ID, member)
+			} else {
+				b.logger.Debug("skipping auto-add mentioned user to board; already a member",
+					mlog.String("user_id", mentionedUser.Id),
+					mlog.String("board_id", evt.Board.ID),
+					mlog.String("board_type", string(evt.Board.Type)),
+				)
 			}
 		case evt.ModifiedBy.SchemeViewer:
 			// viewer should not have gotten this far since they cannot add text to a card
