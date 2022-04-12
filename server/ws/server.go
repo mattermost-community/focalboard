@@ -14,8 +14,6 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-const singleUserID = "single-user-id"
-
 func (wss *websocketSession) WriteJSON(v interface{}) error {
 	wss.mu.Lock()
 	defer wss.mu.Unlock()
@@ -224,7 +222,7 @@ func (ws *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 			// if single user mode, check that the userID is valid and
 			// assume that the user has permission if so
 			if len(ws.singleUserToken) != 0 {
-				if wsSession.userID != singleUserID {
+				if wsSession.userID != model.SingleUser {
 					continue
 				}
 
@@ -426,7 +424,7 @@ func (ws *Server) removeListenerFromBlock(listener *websocketSession, blockID st
 func (ws *Server) getUserIDForToken(token string) string {
 	if len(ws.singleUserToken) > 0 {
 		if token == ws.singleUserToken {
-			return singleUserID
+			return model.SingleUser
 		} else {
 			return ""
 		}
