@@ -58,7 +58,7 @@ func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 			return err
 		}
 
-		dir, filename := path.Split(hdr.Name)
+		dir, filename := filepath.Split(hdr.Name)
 		dir = path.Clean(dir)
 
 		switch filename {

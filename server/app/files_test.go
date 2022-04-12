@@ -2,6 +2,8 @@ package app
 
 import (
 	"io"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -15,7 +17,6 @@ import (
 const (
 	testFileName = "temp-file-name"
 	testBoardID  = "test-board-id"
-	testFilePath = "1/test-board-id/temp-file-name"
 )
 
 type TestError struct{}
@@ -23,6 +24,8 @@ type TestError struct{}
 func (err *TestError) Error() string { return "Mocked File backend error" }
 
 func TestGetFileReader(t *testing.T) {
+	testFilePath := filepath.Join("1", "test-board-id", "temp-file-name")
+
 	th, _ := SetupTestHelper(t)
 	mockedReadCloseSeek := &mocks.ReadCloseSeeker{}
 	t.Run("should get file reader from filestore successfully", func(t *testing.T) {
@@ -105,7 +108,7 @@ func TestGetFileReader(t *testing.T) {
 	})
 
 	t.Run("should move file from old filepath to new filepath, if file doesnot exists in new filepath and workspace id is 0", func(t *testing.T) {
-		filePath := "0/test-board-id/temp-file-name"
+		filePath := filepath.Join("0", "test-board-id", "temp-file-name")
 		workspaceid := "0"
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
@@ -140,7 +143,7 @@ func TestGetFileReader(t *testing.T) {
 	})
 
 	t.Run("should return file reader, if file doesnot exists in new filepath and old file path", func(t *testing.T) {
-		filePath := "0/test-board-id/temp-file-name"
+		filePath := filepath.Join("0", "test-board-id", "temp-file-name")
 		fileName := testFileName
 		workspaceid := "0"
 		mockedFileBackend := &mocks.FileBackend{}
@@ -185,7 +188,7 @@ func TestSaveFile(t *testing.T) {
 		th.App.filesBackend = mockedFileBackend
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
-			paths := strings.Split(path, "/")
+			paths := strings.Split(path, string(os.PathSeparator))
 			assert.Equal(t, "1", paths[0])
 			assert.Equal(t, testBoardID, paths[1])
 			fileName = paths[2]
@@ -208,7 +211,7 @@ func TestSaveFile(t *testing.T) {
 		th.App.filesBackend = mockedFileBackend
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
-			paths := strings.Split(path, "/")
+			paths := strings.Split(path, string(os.PathSeparator))
 			assert.Equal(t, "1", paths[0])
 			assert.Equal(t, "test-board-id", paths[1])
 			assert.Equal(t, "jpg", strings.Split(paths[2], ".")[1])
@@ -232,7 +235,7 @@ func TestSaveFile(t *testing.T) {
 		mockedError := &TestError{}
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
-			paths := strings.Split(path, "/")
+			paths := strings.Split(path, string(os.PathSeparator))
 			assert.Equal(t, "1", paths[0])
 			assert.Equal(t, "test-board-id", paths[1])
 			assert.Equal(t, "jpg", strings.Split(paths[2], ".")[1])
