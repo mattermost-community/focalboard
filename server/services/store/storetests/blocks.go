@@ -800,7 +800,6 @@ func testGetBlock(t *testing.T, store store.Store) {
 }
 
 func testRunDataRetention(t *testing.T, store store.Store) {
-
 	validBoard := model.Board{
 		ID:         "board-id-test",
 		IsTemplate: false,
