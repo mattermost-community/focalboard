@@ -12,7 +12,7 @@ func (a *App) AddUpdateUserCategoryBoard(teamID, userID, categoryID, boardID str
 		return err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastCategoryBoardChange(
 			teamID,
 			userID,
@@ -20,7 +20,8 @@ func (a *App) AddUpdateUserCategoryBoard(teamID, userID, categoryID, boardID str
 				BoardID:    boardID,
 				CategoryID: categoryID,
 			})
-	}()
+		return nil
+	})
 
 	return nil
 }
