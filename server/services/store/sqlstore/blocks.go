@@ -757,22 +757,21 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 		"blocks_history": "board_id",
 		"boards":         "id",
 		"boards_history": "id",
-		"board_memebers": "board_id",
+		"board_members":  "board_id",
 		"sharing":        "id",
 	}
 
 	subBuilder := s.getQueryBuilder(db).
 		Select("board_id, MAX(update_at) AS maxDate").
 		From(s.tablePrefix + "blocks").
-		Where("board_id <> '0'").
 		GroupBy("board_id")
 
 	subQuery, _, _ := subBuilder.ToSql()
 
 	builder := s.getQueryBuilder(db).
-		Select("board_id").
+		Select("id").
 		From(s.tablePrefix + "boards").
-		LeftJoin("( " + subQuery + " ) As subquery ON ( subquery.board_id = " + s.tablePrefix + "boards)").
+		LeftJoin("( " + subQuery + " ) As subquery ON (subquery.board_id = id)").
 		Where(sq.Lt{"maxDate": globalRetentionDate}).
 		Where(sq.NotEq{"team_id": "0"}).
 		Where(sq.Eq{"is_template": false})
@@ -830,9 +829,7 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 	whereClause := deleteColumn + ` IN ('` + strings.Join(deleteIds, `','`) + `')`
 	deleteQuery := s.getQueryBuilder(db).
 		Delete(s.tablePrefix + table).
-		Where(whereClause).
-		Limit(uint64(batchSize))
-
+		Where(whereClause)
 	s1, _, _ := deleteQuery.ToSql()
 	mlog.Debug(s1)
 

@@ -800,24 +800,34 @@ func testGetBlock(t *testing.T, store store.Store) {
 }
 
 func testRunDataRetention(t *testing.T, store store.Store) {
+
+	validBoard := model.Board{
+		ID:         "board-id-test",
+		IsTemplate: false,
+		ModifiedBy: "user-id-1",
+		TeamID:     "team-id",
+	}
+	board, err := store.InsertBoard(&validBoard, "user-id-1")
+	require.NoError(t, err)
+
 	validBlock := model.Block{
 		ID:         "id-test",
-		BoardID:    "board-id",
+		BoardID:    board.ID,
 		ModifiedBy: "user-id-1",
 	}
 
 	validBlock2 := model.Block{
 		ID:         "id-test2",
-		BoardID:    "board-id",
+		BoardID:    board.ID,
 		ModifiedBy: "user-id-1",
 	}
 
 	newBlocks := []model.Block{validBlock, validBlock2}
 
-	err := store.InsertBlocks(newBlocks, "user-id-1")
+	err = store.InsertBlocks(newBlocks, "user-id-1")
 	require.NoError(t, err)
 
-	blocks, err := store.GetBlocksWithBoardID("board-id")
+	blocks, err := store.GetBlocksWithBoardID(board.ID)
 	require.NoError(t, err)
 	require.Len(t, blocks, len(newBlocks))
 	initialCount := len(blocks)
@@ -834,7 +844,7 @@ func testRunDataRetention(t *testing.T, store store.Store) {
 		require.True(t, deletions > int64(initialCount))
 
 		// expect all blocks to be deleted.
-		blocks, errBlocks := store.GetBlocksWithBoardID("board-id")
+		blocks, errBlocks := store.GetBlocksWithBoardID(board.ID)
 		require.NoError(t, errBlocks)
 		require.Equal(t, 0, len(blocks))
 	})
