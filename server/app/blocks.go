@@ -358,7 +358,7 @@ func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBl
 
 	boardMember, _ := a.GetMemberForBoard(board.ID, modifiedByID)
 	if boardMember == nil {
-		// create guest board member
+		// create temporary guest board member
 		boardMember = &model.BoardMember{
 			BoardID: board.ID,
 			UserID:  modifiedByID,
