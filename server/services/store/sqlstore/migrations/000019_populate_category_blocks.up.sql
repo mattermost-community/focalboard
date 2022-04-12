@@ -1,6 +1,6 @@
 CREATE TABLE {{.prefix}}category_boards (
     id varchar(36) NOT NULL,
-    user_id varchar(32) NOT NULL,
+    user_id varchar(36) NOT NULL,
     category_id varchar(36) NOT NULL,
     board_id VARCHAR(36) NOT NULL,
     create_at BIGINT,
