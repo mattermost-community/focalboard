@@ -24,19 +24,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: npm ci
-      run: cd webapp; npm ci
-
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
         go-version: 1.16
-
-    - name: Build Linux server
-      run: make server-linux-package
-
-    - name: Copy server binary for Cypress
-      run: cp bin/linux/focalboard-server bin/
 
     - name: "Test server: ${{matrix['db']}}"
       run: make server-test-${{matrix['db']}}
@@ -84,6 +75,26 @@ jobs:
 
   ci-windows-server:
     runs-on: windows-2022
+
+    strategy:
+      matrix:
+        db:
+          - sqlite
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.16
+
+    - name: "Test server (minimum): ${{matrix['db']}}"
+      run: make server-test-mini-${{matrix['db']}}
+
+  ci-mac-server:
+    runs-on: macos-11
 
     strategy:
       matrix:
