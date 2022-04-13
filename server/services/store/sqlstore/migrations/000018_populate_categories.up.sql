@@ -30,10 +30,9 @@ CREATE INDEX idx_categories_user_id_team_id ON {{.prefix}}categories(user_id, te
         {{ if .mysql }}
             REPLACE(UUID(), '-', ''),
         {{ end }}
-        COALESCE(nullif(c.DisplayName, ''), 'Direct Message') as category_name,
+        c.DisplayName,
         cm.UserId,
-        /* TODO: Ask Harshil about it */
-        COALESCE(nullif(c.TeamId, ''), 'direct_message') as team_id,
+        c.TeamId,
         cm.ChannelId,
         {{if .postgres}}(extract(epoch from now())*1000)::bigint,{{end}}
         {{if .mysql}}UNIX_TIMESTAMP() * 1000,{{end}}
@@ -42,6 +41,6 @@ CREATE INDEX idx_categories_user_id_team_id ON {{.prefix}}categories(user_id, te
     FROM
         {{.prefix}}boards boards
             JOIN ChannelMembers cm on boards.channel_id = cm.ChannelId
-            JOIN Channels c on cm.ChannelId = c.id
+            JOIN Channels c on cm.ChannelId = c.id and c.Type != 'D'
     GROUP BY cm.UserId, c.TeamId, cm.ChannelId, c.DisplayName;
 {{end}}
