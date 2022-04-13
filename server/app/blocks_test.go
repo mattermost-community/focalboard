@@ -115,7 +115,7 @@ func TestUndeleteBlock(t *testing.T) {
 		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
-		err := th.App.UndeleteBlock("block-id", "user-id-1")
+		_, err := th.App.UndeleteBlock("block-id", "user-id-1")
 		require.NoError(t, err)
 	})
 
@@ -129,7 +129,7 @@ func TestUndeleteBlock(t *testing.T) {
 		).Return([]model.Block{block}, nil)
 		th.Store.EXPECT().UndeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(blockError{"error"})
 		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
-		err := th.App.UndeleteBlock("block-id", "user-id-1")
+		_, err := th.App.UndeleteBlock("block-id", "user-id-1")
 		require.Error(t, err, "error")
 	})
 }

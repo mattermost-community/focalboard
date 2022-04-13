@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/mattermost/focalboard/server/auth"
+	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
@@ -235,6 +236,6 @@ func TestGetUserIDForTokenInSingleUserMode(t *testing.T) {
 	})
 
 	t.Run("Should return the single user ID if the token is correct", func(t *testing.T) {
-		require.Equal(t, singleUserID, server.getUserIDForToken(singleUserToken))
+		require.Equal(t, model.SingleUser, server.getUserIDForToken(singleUserToken))
 	})
 }

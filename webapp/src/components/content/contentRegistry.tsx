@@ -11,7 +11,7 @@ export type ContentHandler = {
     type: BlockTypes,
     getDisplayText: (intl: IntlShape) => string,
     getIcon: () => JSX.Element,
-    createBlock: (boardId: string) => Promise<ContentBlock>,
+    createBlock: (boardId: string, intl: IntlShape) => Promise<ContentBlock>,
     createComponent: (block: ContentBlock, readonly: boolean, onAddElement?: () => void, onDeleteElement?: () => void) => JSX.Element,
 }
 

@@ -13,6 +13,7 @@ type ClusterMessage struct {
 	EnsureUsers []string
 }
 
+//nolint:unparam // the `id` param is to key this function generic and handle more than just websocket messages
 func (pa *PluginAdapter) sendMessageToCluster(id string, clusterMessage *ClusterMessage) {
 	b, err := json.Marshal(clusterMessage)
 	if err != nil {

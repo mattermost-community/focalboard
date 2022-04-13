@@ -6,7 +6,7 @@ import SeparatorOption from './separatorOption'
 import SwitchOption from './switchOption'
 import TextOption from './textOption'
 import ColorOption from './colorOption'
-import SubMenuOption from './subMenuOption'
+import SubMenuOption, {HoveringContext} from './subMenuOption'
 import LabelOption from './labelOption'
 
 import './menu.scss'
@@ -15,6 +15,7 @@ import textInputOption from './textInputOption'
 type Props = {
     children: React.ReactNode
     position?: 'top' | 'bottom' | 'left' | 'right'
+    fixed?: boolean
 }
 
 export default class Menu extends React.PureComponent<Props> {
@@ -27,25 +28,23 @@ export default class Menu extends React.PureComponent<Props> {
     static Label = LabelOption
 
     public state = {
-        hoveringIdx: -1,
+        hovering: null,
     }
 
     public render(): JSX.Element {
-        const {position, children} = this.props
+        const {position, fixed, children} = this.props
         return (
-            <div className={'Menu noselect ' + (position || 'bottom')}>
+            <div className={`Menu noselect ${position || 'bottom'} ${fixed ? ' fixed' : ''}`}>
                 <div className='menu-contents'>
                     <div className='menu-options'>
-                        {React.Children.map(children, (child, i) => {
-                            return addChildMenuItem({
-                                child,
-                                onMouseEnter: () =>
-                                    this.setState({
-                                        hoveringIdx: i,
-                                    }),
-                                isHovering: () => i === this.state.hoveringIdx,
-                            })
-                        })}
+                        {React.Children.map(children, (child) => (
+                            <div
+                                onMouseEnter={() => this.setState({hovering: child})}
+                            >
+                                <HoveringContext.Provider value={child == this.state.hovering}>
+                                    {child}
+                                </HoveringContext.Provider>
+                            </div>))}
                     </div>
 
                     <div className='menu-spacer hideOnWidescreen'/>
@@ -66,29 +65,4 @@ export default class Menu extends React.PureComponent<Props> {
     private onCancel = () => {
         // No need to do anything, as click bubbled up to MenuWrapper, which closes
     }
-}
-
-function addChildMenuItem(props: {child: React.ReactNode, onMouseEnter: () => void, isHovering: () => boolean}): JSX.Element | null {
-    const {child, onMouseEnter, isHovering} = props
-    if (child !== null) {
-        if (React.isValidElement(child)) {
-            const castedChild = child as React.ReactElement
-
-            return (
-                <div
-                    onMouseEnter={onMouseEnter}
-                >
-                    {castedChild.type === SubMenuOption ? (
-                        <castedChild.type
-                            {...castedChild.props}
-                            isHovering={isHovering}
-                        />
-                    ) : (
-                        <castedChild.type {...castedChild.props}/>
-                    )}
-                </div>
-            )
-        }
-    }
-    return (null)
 }

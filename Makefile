@@ -1,4 +1,4 @@
-.PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app-wpf linux-app modd-precheck
+.PHONY: prebuild clean cleanall ci server server-mac server-linux server-win server-linux-package generate watch-server webapp mac-app win-app-wpf linux-app modd-precheck templates-archive
 
 PACKAGE_FOLDER = focalboard
 
@@ -35,25 +35,28 @@ ci: server-test
 	cd webapp; npm run test
 	cd webapp; npm run cypress:ci
 
-server: ## Build server for local environment.
+templates-archive: ## Build templates archive file
+	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive" 
+
+server: templates-archive ## Build server for local environment.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
 	cd server; go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/focalboard-server ./main
 
-server-mac: ## Build server for Mac.
+server-mac: templates-archive ## Build server for Mac.
 	mkdir -p bin/mac
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
 	cd server; env GOOS=darwin GOARCH=$(MAC_GO_ARCH) go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/mac/focalboard-server ./main
 
-server-linux: ## Build server for Linux.
+server-linux: templates-archive ## Build server for Linux.
 	mkdir -p bin/linux
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
 	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/linux/focalboard-server ./main
 
-server-win: ## Build server for Windows.
+server-win: templates-archive ## Build server for Windows.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
 	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/win/focalboard-server.exe ./main
 
-server-dll: ## Build server as Windows DLL.
+server-dll: templates-archive ## Build server as Windows DLL.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
 	cd server; env GOOS=windows GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -buildmode=c-shared -o ../bin/win-dll/focalboard-server.dll ./main
 
@@ -87,7 +90,7 @@ generate: ## Install and run code generators.
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
 	cd server; go generate ./...
 
-server-lint: ## Run linters on server code.
+server-lint: templates-archive ## Run linters on server code.
 	@if ! [ -x "$$(command -v golangci-lint)" ]; then \
 		echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
 		exit 1; \
@@ -112,14 +115,16 @@ watch-server-test: modd-precheck ## Run server tests watching for changes
 
 server-test: server-test-sqlite server-test-mysql server-test-postgres ## Run server tests
 
-server-test-sqlite: ## Run server tests using sqlite
+server-test-sqlite: export FB_UNIT_TESTING=1
+
+server-test-sqlite: templates-archive ## Run server tests using sqlite
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
 
 server-test-mysql: export FB_UNIT_TESTING=1
 server-test-mysql: export FB_STORE_TEST_DB_TYPE=mysql
 server-test-mysql: export FB_STORE_TEST_DOCKER_PORT=44445
 
-server-test-mysql: ## Run server tests using mysql
+server-test-mysql: templates-archive ## Run server tests using mysql
 	@echo Starting docker container for mysql
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml run start_dependencies
@@ -130,7 +135,7 @@ server-test-postgres: export FB_UNIT_TESTING=1
 server-test-postgres: export FB_STORE_TEST_DB_TYPE=postgres
 server-test-postgres: export FB_STORE_TEST_DOCKER_PORT=44446
 
-server-test-postgres: ## Run server tests using postgres
+server-test-postgres: templates-archive ## Run server tests using postgres
 	@echo Starting docker container for postgres
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml run start_dependencies
@@ -159,7 +164,8 @@ mac-app: server-mac webapp ## Build Mac application.
 	cp app-config.json mac/resources/config.json
 	cp -R webapp/pack mac/resources/pack
 	mkdir -p mac/temp
-	xcodebuild archive -workspace mac/Focalboard.xcworkspace -scheme Focalboard -archivePath mac/temp/focalboard.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" CODE_SIGNING_ALLOWED="NO"
+	xcodebuild archive -workspace mac/Focalboard.xcworkspace -scheme Focalboard -archivePath mac/temp/focalboard.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" CODE_SIGNING_ALLOWED="NO" \
+		|| { echo "xcodebuild failed, did you install the full Xcode and not just the CLI tools?"; exit 1; }
 	mkdir -p mac/dist
 	cp -R mac/temp/focalboard.xcarchive/Products/Applications/Focalboard.app mac/dist/
 	# xcodebuild -exportArchive -archivePath mac/temp/focalboard.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
