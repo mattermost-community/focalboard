@@ -122,7 +122,9 @@ func (p *Plugin) OnActivate() error {
 	backendParams := notifyBackendParams{
 		cfg:         cfg,
 		client:      client,
+		store:       db,
 		permissions: permissionsService,
+		wsAdapter:   p.wsPluginAdapter,
 		serverRoot:  baseURL + "/boards",
 		logger:      logger,
 	}
@@ -135,7 +137,7 @@ func (p *Plugin) OnActivate() error {
 	}
 	notifyBackends = append(notifyBackends, mentionsBackend)
 
-	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams, db, p.wsPluginAdapter)
+	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams)
 	if err2 != nil {
 		return fmt.Errorf("error creating subscription notifications backend: %w", err2)
 	}
@@ -209,7 +211,7 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 	featureFlags := parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 
 	return &config.Configuration{
-		ServerRoot:               baseURL + "/plugins/focalboard",
+		ServerRoot:               baseURL,
 		Port:                     -1,
 		DBType:                   *mmconfig.SqlSettings.DriverName,
 		DBConfigString:           *mmconfig.SqlSettings.DataSource,
