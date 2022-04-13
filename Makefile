@@ -123,7 +123,7 @@ server-test-sqlite: templates-archive ## Run server tests using sqlite
 server-test-mini-sqlite: export FB_UNIT_TESTING=1
 
 server-test-mini-sqlite: templates-archive ## Run server tests using sqlite
-	cd server; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
+	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
 
 server-test-mysql: export FB_UNIT_TESTING=1
 server-test-mysql: export FB_STORE_TEST_DB_TYPE=mysql
