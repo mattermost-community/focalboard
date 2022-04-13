@@ -218,29 +218,6 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
             </div>
             <div>
               <div
-                aria-label="Export archive"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class=""
-                >
-                  <div
-                    class="noicon"
-                  />
-                </div>
-                <div
-                  class="menu-name"
-                >
-                  Export archive
-                </div>
-                <div
-                  class="noicon"
-                />
-              </div>
-            </div>
-            <div>
-              <div
                 class="MenuOption SubMenuOption menu-option open-left"
                 id="lang"
               >
@@ -393,29 +370,6 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                 >
                   Import
                 </div>
-              </div>
-            </div>
-            <div>
-              <div
-                aria-label="Export archive"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class=""
-                >
-                  <div
-                    class="noicon"
-                  />
-                </div>
-                <div
-                  class="menu-name"
-                >
-                  Export archive
-                </div>
-                <div
-                  class="noicon"
-                />
               </div>
             </div>
             <div>
@@ -997,29 +951,6 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
                 >
                   Import
                 </div>
-              </div>
-            </div>
-            <div>
-              <div
-                aria-label="Export archive"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class=""
-                >
-                  <div
-                    class="noicon"
-                  />
-                </div>
-                <div
-                  class="menu-name"
-                >
-                  Export archive
-                </div>
-                <div
-                  class="noicon"
-                />
               </div>
             </div>
             <div>
