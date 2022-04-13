@@ -10,6 +10,7 @@ import {Utils} from './utils'
 import {IAppWindow} from './types'
 
 declare let window: IAppWindow
+const hashSignToken = '___hash_sign___'
 
 class CsvExporter {
     static exportTableCsv(board: Board, activeView: BoardView, cards: Card[], intl: IntlShape, view?: BoardView): void {
@@ -28,8 +29,9 @@ class CsvExporter {
             csvContent += encodedRow + '\r\n'
         })
 
+        const encodedUri = encodeURI(csvContent).replace(hashSignToken, '%23')
+
         const filename = `${Utils.sanitizeFilename(viewToExport.title || 'Untitled')}.csv`
-        const encodedUri = encodeURI(csvContent)
         const link = document.createElement('a')
         link.style.display = 'none'
         link.setAttribute('href', encodedUri)
@@ -47,6 +49,7 @@ class CsvExporter {
     }
 
     private static encodeText(text: string): string {
+        text = text.replace(/#/g, hashSignToken)
         return text.replace(/"/g, '""')
     }
 
