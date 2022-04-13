@@ -49,8 +49,7 @@ class CsvExporter {
     }
 
     private static encodeText(text: string): string {
-        text = text.replace(/#/g, hashSignToken)
-        return text.replace(/"/g, '""')
+        return text.replace(/"/g, '""').replace(/#/g, hashSignToken)
     }
 
     private static generateTableArray(board: Board, cards: Card[], viewToExport: BoardView, intl: IntlShape): string[][] {
