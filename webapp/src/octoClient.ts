@@ -557,7 +557,7 @@ class OctoClient {
     }
 
     async getFileAsDataUrl(boardId: string, fileId: string): Promise<string> {
-        let path = '/files/teams/' + this.teamId + '/' + boardId + '/' + fileId
+        let path = '/api/v1/files/teams/' + this.teamId + '/' + boardId + '/' + fileId
         const readToken = Utils.getReadToken()
         if (readToken) {
             path += `?read_token=${readToken}`
