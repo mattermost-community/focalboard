@@ -119,7 +119,7 @@ const CardDialog = (props: Props): JSX.Element => {
                     onClick={handleDeleteButtonOnClick}
                 />
             </BoardPermissionGate>
-            {me?.id !== "single-user" &&
+            {me?.id !== 'single-user' &&
                 <Menu.Text
                     icon={<LinkIcon/>}
                     id='copy'

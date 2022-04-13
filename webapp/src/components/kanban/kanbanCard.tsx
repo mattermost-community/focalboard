@@ -146,7 +146,7 @@ const KanbanCard = (props: Props) => {
                                 }}
                             />
                         </BoardPermissionGate>
-                        {me?.id !== "single-user" &&
+                        {me?.id !== 'single-user' &&
                             <Menu.Text
                                 icon={<LinkIcon/>}
                                 id='copy'
