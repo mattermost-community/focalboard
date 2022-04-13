@@ -1,1 +1,1 @@
-DELETE from {{.prefix}}category_blocks;
+DELETE from {{.prefix}}category_boards;

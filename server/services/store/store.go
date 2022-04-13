@@ -113,8 +113,8 @@ type Store interface {
 	UpdateCategory(category model.Category) error
 	DeleteCategory(categoryID, userID, teamID string) error
 
-	GetUserCategoryBlocks(userID, teamID string) ([]model.CategoryBlocks, error)
-	AddUpdateCategoryBlock(userID, categoryID, blockID string) error
+	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error)
+	AddUpdateCategoryBoard(userID, categoryID, blockID string) error
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(blockID string, subscriberID string) error

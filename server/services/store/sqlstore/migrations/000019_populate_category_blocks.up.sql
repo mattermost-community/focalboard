@@ -1,16 +1,18 @@
-CREATE TABLE {{.prefix}}category_blocks (
+CREATE TABLE {{.prefix}}category_boards (
     id varchar(36) NOT NULL,
-    user_id varchar(32) NOT NULL,
+    user_id varchar(36) NOT NULL,
     category_id varchar(36) NOT NULL,
-    block_id VARCHAR(36) NOT NULL,
+    board_id VARCHAR(36) NOT NULL,
     create_at BIGINT,
     update_at BIGINT,
     delete_at BIGINT,
     PRIMARY KEY (id)
     ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
+CREATE INDEX idx_categoryboards_category_id ON {{.prefix}}category_boards(category_id);
+
 {{if .plugin}}
-    INSERT INTO {{.prefix}}category_blocks(id, user_id, category_id, block_id, create_at, update_at, delete_at)
+    INSERT INTO {{.prefix}}category_boards(id, user_id, category_id, board_id, create_at, update_at, delete_at)
     SELECT
         {{ if .postgres }}
             REPLACE(uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)::varchar, '-', ''),

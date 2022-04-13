@@ -494,22 +494,22 @@ func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
 	pa.sendUserMessageSkipCluster(websocketActionUpdateCategory, payload, category.UserID)
 }
 
-func (pa *PluginAdapter) BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData) {
+func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boardCategory model.BoardCategoryWebsocketData) {
 	pa.logger.Debug(
-		"BroadcastCategoryBlockChange",
+		"BroadcastCategoryBoardChange",
 		mlog.String("userID", userID),
 		mlog.String("teamID", teamID),
-		mlog.String("categoryID", blockCategory.CategoryID),
-		mlog.String("blockID", blockCategory.BlockID),
+		mlog.String("categoryID", boardCategory.CategoryID),
+		mlog.String("blockID", boardCategory.BoardID),
 	)
 
 	message := UpdateCategoryMessage{
-		Action:          websocketActionUpdateCategoryBlock,
+		Action:          websocketActionUpdateCategoryBoard,
 		TeamID:          teamID,
-		BlockCategories: &blockCategory,
+		BoardCategories: &boardCategory,
 	}
 
-	pa.sendTeamMessage(websocketActionUpdateCategoryBlock, teamID, utils.StructToMap(message))
+	pa.sendTeamMessage(websocketActionUpdateCategoryBoard, teamID, utils.StructToMap(message))
 }
 
 func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {

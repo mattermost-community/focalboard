@@ -28,20 +28,20 @@ describe('components/sidebarCategory', () => {
     const board1 = TestBlockFactory.createBoard()
     const board2 = TestBlockFactory.createBoard()
     const boards = [board1, board2]
-    const categoryBlocks1 = TestBlockFactory.createCategoryBlocks()
-    categoryBlocks1.name = 'Category 1'
-    categoryBlocks1.blockIDs = [board1.id, board2.id]
+    const categoryBoards1 = TestBlockFactory.createCategoryBoards()
+    categoryBoards1.name = 'Category 1'
+    categoryBoards1.boardIDs = [board1.id, board2.id]
 
-    const categoryBlocks2 = TestBlockFactory.createCategoryBlocks()
-    categoryBlocks2.name = 'Category 2'
+    const categoryBoards2 = TestBlockFactory.createCategoryBoards()
+    categoryBoards2.name = 'Category 2'
 
-    const categoryBlocks3 = TestBlockFactory.createCategoryBlocks()
-    categoryBlocks3.name = 'Category 3'
+    const categoryBoards3 = TestBlockFactory.createCategoryBoards()
+    categoryBoards3.name = 'Category 3'
 
-    const allCategoryBlocks = [
-        categoryBlocks1,
-        categoryBlocks2,
-        categoryBlocks3,
+    const allCategoryBoards = [
+        categoryBoards1,
+        categoryBoards2,
+        categoryBoards3,
     ]
 
     const state = {
@@ -78,9 +78,9 @@ describe('components/sidebarCategory', () => {
                 <Router history={history}>
                     <SidebarCategory
                         hideSidebar={() => {}}
-                        categoryBlocks={categoryBlocks1}
+                        categoryBoards={categoryBoards1}
                         boards={boards}
-                        allCategories={allCategoryBlocks}
+                        allCategories={allCategoryBoards}
                     />
                 </Router>
             </ReduxProvider>,
