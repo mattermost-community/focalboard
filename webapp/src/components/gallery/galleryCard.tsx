@@ -8,6 +8,8 @@ import {Card} from '../../blocks/card'
 import {ContentBlock} from '../../blocks/contentBlock'
 import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
+import {IUser} from '../../user'
+import {getMe} from '../../store/users'
 import {getCardContents} from '../../store/contents'
 import {useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -49,6 +51,7 @@ const GalleryCard = (props: Props) => {
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
     const contents = useAppSelector(getCardContents(card.id))
+    const me = useAppSelector<IUser|null>(getMe)
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
@@ -99,21 +102,23 @@ const GalleryCard = (props: Props) => {
                                 }}
                             />
                         </BoardPermissionGate>
-                        <Menu.Text
-                            icon={<LinkIcon/>}
-                            id='copy'
-                            name={intl.formatMessage({id: 'GalleryCard.copyLink', defaultMessage: 'Copy link'})}
-                            onClick={() => {
-                                let cardLink = window.location.href
+                        {me?.id !== 'single-user' &&
+                            <Menu.Text
+                                icon={<LinkIcon/>}
+                                id='copy'
+                                name={intl.formatMessage({id: 'GalleryCard.copyLink', defaultMessage: 'Copy link'})}
+                                onClick={() => {
+                                    let cardLink = window.location.href
 
-                                if (!cardLink.includes(card.id)) {
-                                    cardLink += `/${card.id}`
-                                }
+                                    if (!cardLink.includes(card.id)) {
+                                        cardLink += `/${card.id}`
+                                    }
 
-                                Utils.copyTextToClipboard(cardLink)
-                                sendFlashMessage({content: intl.formatMessage({id: 'GalleryCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                            }}
-                        />
+                                    Utils.copyTextToClipboard(cardLink)
+                                    sendFlashMessage({content: intl.formatMessage({id: 'GalleryCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                                }}
+                            />
+                        }
                     </Menu>
                 </MenuWrapper>
             }

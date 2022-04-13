@@ -16,7 +16,7 @@ CREATE TABLE {{.prefix}}category_blocks (
             REPLACE(uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)::varchar, '-', ''),
         {{ end }}
         {{ if .mysql }}
-            REPLACE(UUID(), '-', ''),
+            UUID(),
         {{ end }}
         {{.prefix}}categories.user_id,
         {{.prefix}}categories.id,

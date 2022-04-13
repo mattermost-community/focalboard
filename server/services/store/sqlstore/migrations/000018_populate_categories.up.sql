@@ -26,7 +26,7 @@ CREATE TABLE {{.prefix}}categories (
             REPLACE(uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)::varchar, '-', ''),
         {{ end }}
         {{ if .mysql }}
-            REPLACE(UUID(), '-', ''),
+            UUID(),
         {{ end }}
         COALESCE(nullif(c.DisplayName, ''), 'Direct Message') as category_name,
         cm.UserId,
