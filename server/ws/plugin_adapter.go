@@ -480,7 +480,18 @@ func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
 		Category: &category,
 	}
 
-	pa.sendUserMessageSkipCluster(websocketActionUpdateCategory, utils.StructToMap(message), category.UserID)
+	payload := utils.StructToMap(message)
+
+	go func() {
+		clusterMessage := &ClusterMessage{
+			Payload:     payload,
+			EnsureUsers: []string{category.UserID},
+		}
+
+		pa.sendMessageToCluster("websocket_message", clusterMessage)
+	}()
+
+	pa.sendUserMessageSkipCluster(websocketActionUpdateCategory, payload, category.UserID)
 }
 
 func (pa *PluginAdapter) BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData) {
