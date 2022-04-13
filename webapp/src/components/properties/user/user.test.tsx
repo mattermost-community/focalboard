@@ -127,7 +127,7 @@ describe('components/properties/user', () => {
         if (container) {
             // this is the actual element where the click event triggers
             // opening of the dropdown
-            const userProperty = container.querySelector('.UserProperty > div > div:nth-child(1) > div:nth-child(2) > div > input')
+            const userProperty = container.querySelector('.UserProperty > div > div:nth-child(1) > div:nth-child(2) > input')
             expect(userProperty).not.toBeNull()
 
             act(() => {

@@ -234,15 +234,6 @@ func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
 	return nil
 }
 
-func (a *App) GetSubTree(boardID, blockID string, levels int, opts model.QuerySubtreeOptions) ([]model.Block, error) {
-	// Only 2 or 3 levels are supported for now
-	if levels >= 3 {
-		return a.store.GetSubTree3(boardID, blockID, opts)
-	}
-
-	return a.store.GetSubTree2(boardID, blockID, opts)
-}
-
 func (a *App) GetBlockByID(blockID string) (*model.Block, error) {
 	return a.store.GetBlock(blockID)
 }
@@ -291,35 +282,46 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 	return nil
 }
 
-func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
+func (a *App) GetLastBlockHistoryEntry(blockID string) (*model.Block, error) {
 	blocks, err := a.store.GetBlockHistory(blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
 	if err != nil {
-		return err
+		return nil, err
+	}
+	if len(blocks) == 0 {
+		return nil, nil
+	}
+	return &blocks[0], nil
+}
+
+func (a *App) UndeleteBlock(blockID string, modifiedBy string) (*model.Block, error) {
+	blocks, err := a.store.GetBlockHistory(blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return nil, err
 	}
 
 	if len(blocks) == 0 {
 		// undeleting non-existing block not considered an error
-		return nil
+		return nil, nil
 	}
 
 	err = a.store.UndeleteBlock(blockID, modifiedBy)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	block, err := a.store.GetBlock(blockID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if block == nil {
 		a.logger.Error("Error loading the block after undelete, not propagating through websockets or notifications")
-		return nil
+		return nil, nil
 	}
 
 	board, err := a.store.GetBoard(block.BoardID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
@@ -330,7 +332,7 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
 		return nil
 	})
 
-	return nil
+	return block, nil
 }
 
 func (a *App) GetBlockCountsByType() (map[string]int64, error) {
@@ -342,7 +344,8 @@ func (a *App) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 }
 
 func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBlock *model.Block, modifiedByID string) {
-	if a.notifications == nil {
+	// don't notify if notifications service disabled, or block change is generated via system user.
+	if a.notifications == nil || modifiedByID == model.SystemUserID {
 		return
 	}
 

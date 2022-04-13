@@ -38,47 +38,6 @@ const groupProperty: IPropertyTemplate = {
     ],
 }
 
-jest.mock('../../octoClient', () => {
-    return {
-        getSubtree: jest.fn(() => Promise.resolve([
-            {
-                id: '1',
-                teamId: 'team',
-                title: 'Template',
-                icon: '🚴🏻‍♂️',
-                cardProperties: [groupProperty],
-                dateDisplayPropertyId: 'id-5',
-            },
-            {
-                id: '2',
-                boardId: '1',
-                title: 'View',
-                type: 'view',
-                fields: {
-                    groupById: 'group-prop-id',
-                    viewType: 'board',
-                    visibleOptionIds: ['group-prop-id'],
-                    hiddenOptionIds: [],
-                    visiblePropertyIds: ['group-prop-id'],
-                    sortOptions: [],
-                    kanbanCalculations: {},
-                },
-            },
-            {
-                id: '3',
-                boardId: '1',
-                title: 'Card',
-                type: 'card',
-                fields: {
-                    icon: '🚴🏻‍♂️',
-                    properties: {
-                        'group-prop-id': 'test',
-                    },
-                },
-            },
-        ])),
-    }
-})
 jest.mock('../../utils')
 jest.mock('../../mutator')
 

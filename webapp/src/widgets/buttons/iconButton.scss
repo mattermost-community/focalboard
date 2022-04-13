@@ -27,12 +27,12 @@
 
         &:hover {
             color: rgba(var(--sidebar-text-rgb), 1);
-            background-color: rgba(var(--button-bg-rgb), 0.08);
+            background-color: rgba(var(--sidebar-text-rgb), 0.08);
         }
 
         &:active {
             color: rgba(var(--sidebar-text-rgb), 1);
-            background-color: rgba(var(--button-bg-rgb), 0.16);
+            background-color: rgba(var(--sidebar-text-rgb), 0.16);
         }
     }
 

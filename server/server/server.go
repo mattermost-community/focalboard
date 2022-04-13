@@ -130,14 +130,15 @@ func New(params Params) (*Server, error) {
 	}
 
 	appServices := app.Services{
-		Auth:          authenticator,
-		Store:         params.DBStore,
-		FilesBackend:  filesBackend,
-		Webhook:       webhookClient,
-		Metrics:       metricsService,
-		Notifications: notificationService,
-		Logger:        params.Logger,
-		Permissions:   params.PermissionsService,
+		Auth:             authenticator,
+		Store:            params.DBStore,
+		FilesBackend:     filesBackend,
+		Webhook:          webhookClient,
+		Metrics:          metricsService,
+		Notifications:    notificationService,
+		Logger:           params.Logger,
+		Permissions:      params.PermissionsService,
+		SkipTemplateInit: utils.IsRunningUnitTests(),
 	}
 	app := app.New(params.Cfg, wsAdapter, appServices)
 
@@ -202,11 +203,6 @@ func New(params Params) (*Server, error) {
 	}
 
 	server.initHandlers()
-
-	if err := app.InitTemplates(); err != nil {
-		params.Logger.Error("Unable initialize team templates", mlog.Err(err))
-		return nil, err
-	}
 
 	return &server, nil
 }

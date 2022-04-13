@@ -12,6 +12,7 @@ import {Category, CategoryBlocks} from './store/sidebar'
 import {Team} from './store/teams'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
+import {Constants} from "./constants"
 
 //
 // OctoClient is the client interface to the server APIs
@@ -45,7 +46,7 @@ class OctoClient {
         localStorage.setItem('focalboardSessionId', value)
     }
 
-    constructor(serverUrl?: string, public teamId = '0') {
+    constructor(serverUrl?: string, public teamId = Constants.globalTeamId) {
         this.serverUrl = serverUrl
     }
 
@@ -144,7 +145,7 @@ class OctoClient {
     private teamPath(teamId?: string): string {
         let teamIdToUse = teamId
         if (!teamId) {
-            teamIdToUse = this.teamId === '0' ? UserSettings.lastTeamId || this.teamId : this.teamId
+            teamIdToUse = this.teamId === Constants.globalTeamId ? UserSettings.lastTeamId || this.teamId : this.teamId
         }
 
         return `/api/v1/teams/${teamIdToUse}`
@@ -200,23 +201,13 @@ class OctoClient {
         return (await this.getJson(response, {})) as Record<string, string>
     }
 
-    async getSubtree(boardId?: string, levels = 2, teamID?: string): Promise<Block[]> {
-        let path = this.teamPath(teamID) + `/blocks/${encodeURIComponent(boardId || '')}/subtree?l=${levels}`
-        const readToken = Utils.getReadToken()
-        if (readToken) {
-            path += `&read_token=${readToken}`
-        }
-        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return []
-        }
-        const blocks = (await this.getJson(response, [])) as Block[]
-        return this.fixBlocks(blocks)
+    async exportBoardArchive(boardID: string): Promise<Response> {
+        const path = `/api/v1/boards/${boardID}/archive/export`
+        return fetch(this.getBaseURL() + path, {headers: this.headers()})
     }
 
-    // If no boardID is provided, it will export the entire archive
-    async exportArchive(boardID = ''): Promise<Response> {
-        const path = `/api/v1/boards/${boardID}/archive/export`
+    async exportFullArchive(teamID: string): Promise<Response> {
+        const path = `/api/v1/teams/${teamID}/archive/export`
         return fetch(this.getBaseURL() + path, {headers: this.headers()})
     }
 
@@ -339,9 +330,17 @@ class OctoClient {
         })
     }
 
-    async undeleteBlock(blockId: string): Promise<Response> {
+    async undeleteBlock(boardId: string, blockId: string): Promise<Response> {
         Utils.log(`undeleteBlock: ${blockId}`)
-        return fetch(this.getBaseURL() + this.teamPath() + `/blocks/${encodeURIComponent(blockId)}/undelete`, {
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${encodeURIComponent(boardId)}/blocks/${encodeURIComponent(blockId)}/undelete`, {
+            method: 'POST',
+            headers: this.headers(),
+        })
+    }
+
+    async undeleteBoard(boardId: string): Promise<Response> {
+        Utils.log(`undeleteBoard: ${boardId}`)
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}/undelete`, {
             method: 'POST',
             headers: this.headers(),
         })
@@ -349,7 +348,6 @@ class OctoClient {
 
     async followBlock(blockId: string, blockType: string, userId: string): Promise<Response> {
         const body: Subscription = {
-            teamId: this.teamId,
             blockType,
             blockId,
             subscriberType: 'user',
@@ -426,6 +424,21 @@ class OctoClient {
             method: 'POST',
             headers: this.headers(),
             body,
+        })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return this.getJson<BoardMember>(response, {} as BoardMember)
+    }
+
+    async joinBoard(boardId: string): Promise<BoardMember|undefined> {
+        Utils.log(`joinBoard: board ${boardId}`)
+
+        const response = await fetch(this.getBaseURL() + `/api/v1/boards/${boardId}/join`, {
+            method: 'POST',
+            headers: this.headers()
         })
 
         if (response.status !== 200) {
@@ -544,7 +557,7 @@ class OctoClient {
     }
 
     async getFileAsDataUrl(boardId: string, fileId: string): Promise<string> {
-        let path = '/files/teams/' + this.teamId + '/' + boardId + '/' + fileId
+        let path = '/api/v1/files/teams/' + this.teamId + '/' + boardId + '/' + fileId
         const readToken = Utils.getReadToken()
         if (readToken) {
             path += `?read_token=${readToken}`

@@ -13,6 +13,7 @@ import {getCardContents} from '../store/contents'
 import {useAppSelector} from '../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
+import CompassIcon from '../widgets/icons/compassIcon'
 import DeleteIcon from '../widgets/icons/delete'
 import LinkIcon from '../widgets/icons/Link'
 import Menu from '../widgets/menu'
@@ -118,25 +119,31 @@ const CardDialog = (props: Props): JSX.Element => {
                     onClick={handleDeleteButtonOnClick}
                 />
             </BoardPermissionGate>
-            <Menu.Text
-                icon={<LinkIcon/>}
-                id='copy'
-                name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
-                onClick={() => {
-                    let cardLink = window.location.href
+            {me?.id !== 'single-user' &&
+                <Menu.Text
+                    icon={<LinkIcon/>}
+                    id='copy'
+                    name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
+                    onClick={() => {
+                        let cardLink = window.location.href
 
-                    if (!cardLink.includes(props.cardId)) {
-                        cardLink += `/${props.cardId}`
-                    }
+                        if (!cardLink.includes(props.cardId)) {
+                            cardLink += `/${props.cardId}`
+                        }
 
-                    Utils.copyTextToClipboard(cardLink)
-                    sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                }}
-            />
+                        Utils.copyTextToClipboard(cardLink)
+                        sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                    }}
+                />
+            }
             {!isTemplate &&
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                     <Menu.Text
                         id='makeTemplate'
+                        icon={
+                            <CompassIcon
+                                icon='plus'
+                            />}
                         name='New template from card'
                         onClick={makeTemplateClicked}
                     />

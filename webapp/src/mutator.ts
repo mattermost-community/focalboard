@@ -171,7 +171,7 @@ class Mutator {
                 await octoClient.deleteBlock(block.boardId, block.id)
             },
             async () => {
-                await octoClient.undeleteBlock(block.id)
+                await octoClient.undeleteBlock(block.boardId, block.id)
                 await afterUndo?.()
             },
             actualDescription,
@@ -221,7 +221,7 @@ class Mutator {
             },
             async () => {
                 await beforeUndo?.(board)
-                await octoClient.createBoard(board)
+                await octoClient.undeleteBoard(board.id)
             },
             description,
             this.undoGroupId,
@@ -1014,7 +1014,7 @@ class Mutator {
         afterRedo?: (newBoardId: string) => Promise<void>,
         beforeUndo?: () => Promise<void>,
         toTeam?: string,
-    ): Promise<[Block[], string]> {
+    ): Promise<BoardsAndBlocks> {
         return undoManager.perform(
             async () => {
                 const boardsAndBlocks = await octoClient.duplicateBoard(boardId, asTemplate, toTeam)
@@ -1047,7 +1047,7 @@ class Mutator {
         beforeUndo: () => Promise<void>,
         boardTemplateId: string,
         toTeam?: string,
-    ): Promise<[Block[], string]> {
+    ): Promise<BoardsAndBlocks> {
         const asTemplate = false
         const actionDescription = intl.formatMessage({id: 'Mutator.new-board-from-template', defaultMessage: 'new board from template'})
 
@@ -1114,8 +1114,13 @@ class Mutator {
     // Other methods
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient
-    async exportArchive(boardID?: string): Promise<Response> {
-        return octoClient.exportArchive(boardID)
+    async exportBoardArchive(boardID: string): Promise<Response> {
+        return octoClient.exportBoardArchive(boardID)
+    }
+
+    // Not a mutator, but convenient to put here since Mutator wraps OctoClient
+    async exportFullArchive(teamID: string): Promise<Response> {
+        return octoClient.exportFullArchive(teamID)
     }
 
     // Not a mutator, but convenient to put here since Mutator wraps OctoClient

@@ -3,11 +3,14 @@ package sqlstore
 import (
 	"database/sql"
 
+	"github.com/mattermost/mattermost-server/v6/plugin"
+
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/mattermost-plugin-api/cluster"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -20,6 +23,7 @@ type SQLStore struct {
 	isPlugin         bool
 	logger           *mlog.Logger
 	NewMutexFn       MutexFactory
+	pluginAPI        *plugin.API
 }
 
 // MutexFactory is used by the store in plugin mode to generate
@@ -42,6 +46,7 @@ func New(params Params) (*SQLStore, error) {
 		logger:           params.Logger,
 		isPlugin:         params.IsPlugin,
 		NewMutexFn:       params.NewMutexFn,
+		pluginAPI:        params.PluginAPI,
 	}
 
 	err := store.Migrate()
@@ -87,4 +92,8 @@ func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam
 		return "\"" + fieldName + "\""
 	}
 	return fieldName
+}
+
+func (s *SQLStore) getLicense(db sq.BaseRunner) *mmModel.License {
+	return nil
 }

@@ -16,7 +16,7 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
       </span>
     </button>
     <div
-      class="Menu noselect bottom"
+      class="Menu noselect bottom "
     >
       <div
         class="menu-contents"
@@ -60,8 +60,12 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >

@@ -7,6 +7,7 @@ import {Card} from '../blocks/card'
 import {IUser} from '../user'
 import {Board} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
+import {CommentBlock} from '../blocks/commentBlock'
 import {Utils} from '../utils'
 import {Constants} from '../constants'
 import {CardFilter} from '../cardFilter'
@@ -14,6 +15,7 @@ import {CardFilter} from '../cardFilter'
 import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
 import {getCurrentBoard} from './boards'
 import {getBoardUsers} from './users'
+import {getLastCommentByCard} from './comments'
 import {getCurrentView} from './views'
 import {getSearchText} from './searchText'
 
@@ -157,7 +159,7 @@ function manualOrder(activeView: BoardView, cardA: Card, cardB: Card) {
     return indexA - indexB
 }
 
-function sortCards(cards: Card[], board: Board, activeView: BoardView, usersById: {[key: string]: IUser}): Card[] {
+function sortCards(cards: Card[], lastCommentByCard: {[key: string]: CommentBlock}, board: Board, activeView: BoardView, usersById: {[key: string]: IUser}): Card[] {
     if (!activeView) {
         return cards
     }
@@ -217,7 +219,9 @@ function sortCards(cards: Card[], board: Board, activeView: BoardView, usersById
                 } else if (template.type === 'createdTime') {
                     result = a.createAt - b.createAt
                 } else if (template.type === 'updatedTime') {
-                    result = a.updateAt - b.updateAt
+                    const aUpdateAt = Math.max(a.updateAt, lastCommentByCard[a.id]?.updateAt || 0)
+                    const bUpdateAt = Math.max(b.updateAt, lastCommentByCard[b.id]?.updateAt || 0)
+                    result = aUpdateAt - bUpdateAt
                 } else {
                     // Text-based sort
 
@@ -292,11 +296,12 @@ function searchFilterCards(cards: Card[], board: Board, searchTextRaw: string): 
 
 export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
     getCurrentBoardCards,
+    getLastCommentByCard,
     getCurrentBoard,
     getCurrentView,
     getSearchText,
     getBoardUsers,
-    (cards, board, view, searchText, users) => {
+    (cards, lastCommentByCard, board, view, searchText, users) => {
         if (!view || !board || !users || !cards) {
             return []
         }
@@ -308,7 +313,7 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
         if (searchText) {
             result = searchFilterCards(result, board, searchText)
         }
-        result = sortCards(result, board, view, users)
+        result = sortCards(result, lastCommentByCard, board, view, users)
         return result
     },
 )

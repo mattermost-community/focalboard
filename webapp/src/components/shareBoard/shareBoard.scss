@@ -207,9 +207,23 @@
             border: 0;
             color: rgba(var(--link-color-rgb), 1);
             padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
 
             &:hover {
                 text-decoration: underline;
+            }
+        }
+
+        .Menu {
+            position: fixed;
+            left: 53%;
+            right: auto;
+
+            .menu-contents {
+                min-width: 240px;
+                max-width: 240px;
             }
         }
     }

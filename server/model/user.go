@@ -6,7 +6,9 @@ import (
 )
 
 const (
-	SingleUser = "single-user"
+	SingleUser   = "single-user"
+	GlobalTeamID = "0"
+	SystemUserID = "system"
 )
 
 // User is a user
@@ -55,6 +57,10 @@ type User struct {
 	// If the user is a bot or not
 	// required: true
 	IsBot bool `json:"is_bot"`
+
+	// If the user is a guest or not
+	// required: true
+	IsGuest bool `json:"is_guest"`
 }
 
 // UserPropPatch is a user property patch
