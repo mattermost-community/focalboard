@@ -72,7 +72,12 @@ describe('Create and delete board / card', () => {
         cy.log('**Create card**')
         cy.get('.ViewHeader').contains('New').click()
         cy.get('.CardDetail').should('exist')
-
+        
+        //Check title has focus when card is created
+        cy.log('**Check title has focus when card is created**')
+        cy.get('.CardDetail .EditableArea.title').
+            should('have.focus')
+        
         // Change card title
         cy.log('**Change card title**')
         // eslint-disable-next-line cypress/no-unnecessary-waiting
