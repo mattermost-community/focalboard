@@ -201,9 +201,13 @@ class OctoClient {
         return (await this.getJson(response, {})) as Record<string, string>
     }
 
-    // If no boardID is provided, it will export the entire archive
-    async exportArchive(boardID = ''): Promise<Response> {
+    async exportBoardArchive(boardID: string): Promise<Response> {
         const path = `/api/v1/boards/${boardID}/archive/export`
+        return fetch(this.getBaseURL() + path, {headers: this.headers()})
+    }
+
+    async exportFullArchive(teamID: string): Promise<Response> {
+        const path = `/api/v1/teams/${teamID}/archive/export`
         return fetch(this.getBaseURL() + path, {headers: this.headers()})
     }
 
