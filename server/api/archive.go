@@ -115,11 +115,6 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
 	}
 
-	if a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
-		return
-	}
-
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 
