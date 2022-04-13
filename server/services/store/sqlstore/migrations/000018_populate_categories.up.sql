@@ -41,6 +41,6 @@ CREATE INDEX idx_categories_user_id_team_id ON {{.prefix}}categories(user_id, te
     FROM
         {{.prefix}}boards boards
             JOIN ChannelMembers cm on boards.channel_id = cm.ChannelId
-            JOIN Channels c on cm.ChannelId = c.id and c.Type != 'D'
+            JOIN Channels c on cm.ChannelId = c.id and (c.Type = 'O' or c.Type = 'P')
     GROUP BY cm.UserId, c.TeamId, cm.ChannelId, c.DisplayName;
 {{end}}
