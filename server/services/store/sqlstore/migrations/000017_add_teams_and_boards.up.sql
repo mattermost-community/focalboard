@@ -232,7 +232,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  COALESCE(title, ''),
                  json_extract(fields, '$.description'),
                  json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
-                 json_extract(fields, '$.templateVer'),
+                 COALESCE(json_extract(fields, '$.templateVer'), 0),
                  '{}', json_extract(fields, '$.cardProperties'), json_extract(fields, '$.columnCalculations'), create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks
@@ -243,7 +243,7 @@ CREATE TABLE {{.prefix}}boards_history (
                  COALESCE(title, ''),
                  json_extract(fields, '$.description'),
                  json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
-                 json_extract(fields, '$.templateVer'),
+                 COALESCE(json_extract(fields, '$.templateVer'), 0),
                  '{}', json_extract(fields, '$.cardProperties'), json_extract(fields, '$.columnCalculations'), create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history
