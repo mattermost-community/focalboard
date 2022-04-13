@@ -192,6 +192,7 @@ func testInsertBlock(t *testing.T, store store.Store) {
 		// inserting
 		err := store.InsertBlock(&block, "user-id-1")
 		require.NoError(t, err)
+		expectedTime := time.Now()
 
 		retrievedBlock, err := store.GetBlock("id-10")
 		assert.NoError(t, err)
@@ -199,8 +200,8 @@ func testInsertBlock(t *testing.T, store store.Store) {
 		assert.Equal(t, "board-id-1", retrievedBlock.BoardID)
 		assert.Equal(t, "user-id-1", retrievedBlock.CreatedBy)
 		assert.Equal(t, "user-id-1", retrievedBlock.ModifiedBy)
-		assert.WithinDurationf(t, time.Now(), utils.GetTimeForMillis(retrievedBlock.CreateAt), 1*time.Second, "create time should be current time")
-		assert.WithinDurationf(t, time.Now(), utils.GetTimeForMillis(retrievedBlock.UpdateAt), 1*time.Second, "update time should be current time")
+		assert.WithinDurationf(t, expectedTime, utils.GetTimeForMillis(retrievedBlock.CreateAt), 1*time.Second, "create time should be current time")
+		assert.WithinDurationf(t, expectedTime, utils.GetTimeForMillis(retrievedBlock.UpdateAt), 1*time.Second, "update time should be current time")
 	})
 }
 
