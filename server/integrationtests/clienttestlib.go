@@ -268,7 +268,7 @@ func (th *TestHelper) InitBasic() *TestHelper {
 	th.RegisterAndLogin(th.Client, user1Username, "user1@sample.com", password, "")
 
 	// get token
-	team, resp := th.Client.GetTeam("0")
+	team, resp := th.Client.GetTeam(model.GlobalTeamID)
 	th.CheckOK(resp)
 	require.NotNil(th.T, team)
 	require.NotNil(th.T, team.SignupToken)
