@@ -326,9 +326,17 @@ class OctoClient {
         })
     }
 
-    async undeleteBlock(blockId: string): Promise<Response> {
+    async undeleteBlock(boardId: string, blockId: string): Promise<Response> {
         Utils.log(`undeleteBlock: ${blockId}`)
-        return fetch(this.getBaseURL() + this.teamPath() + `/blocks/${encodeURIComponent(blockId)}/undelete`, {
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${encodeURIComponent(boardId)}/blocks/${encodeURIComponent(blockId)}/undelete`, {
+            method: 'POST',
+            headers: this.headers(),
+        })
+    }
+
+    async undeleteBoard(boardId: string): Promise<Response> {
+        Utils.log(`undeleteBoard: ${boardId}`)
+        return fetch(`${this.getBaseURL()}/api/v1/boards/${boardId}/undelete`, {
             method: 'POST',
             headers: this.headers(),
         })

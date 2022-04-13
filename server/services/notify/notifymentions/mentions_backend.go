@@ -9,6 +9,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -24,17 +25,19 @@ type MentionListener interface {
 
 // Backend provides the notification backend for @mentions.
 type Backend struct {
-	delivery MentionDelivery
-	logger   *mlog.Logger
+	delivery    MentionDelivery
+	permissions permissions.PermissionsService
+	logger      *mlog.Logger
 
 	mux       sync.RWMutex
 	listeners []MentionListener
 }
 
-func New(delivery MentionDelivery, logger *mlog.Logger) *Backend {
+func New(delivery MentionDelivery, permissions permissions.PermissionsService, logger *mlog.Logger) *Backend {
 	return &Backend{
-		delivery: delivery,
-		logger:   logger,
+		delivery:    delivery,
+		permissions: permissions,
+		logger:      logger,
 	}
 }
 
@@ -80,7 +83,9 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		return nil
 	}
 
-	if evt.BlockChanged.Type != model.TypeText && evt.BlockChanged.Type != model.TypeComment {
+	switch evt.BlockChanged.Type {
+	case model.TypeText, model.TypeComment, model.TypeImage:
+	default:
 		return nil
 	}
 
@@ -108,6 +113,11 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		userID, err := b.delivery.MentionDeliver(username, extract, evt)
 		if err != nil {
 			merr.Append(fmt.Errorf("cannot deliver notification for @%s: %w", username, err))
+		}
+
+		if userID == "" {
+			// was a `@` followed by something other than a username.
+			continue
 		}
 
 		b.logger.Debug("Mention notification delivered",

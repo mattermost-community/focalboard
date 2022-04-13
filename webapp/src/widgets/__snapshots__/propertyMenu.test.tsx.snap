@@ -77,8 +77,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -94,8 +98,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -111,8 +119,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -128,8 +140,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -145,8 +161,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -162,8 +182,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -179,8 +203,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -196,8 +224,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -213,8 +245,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -230,8 +266,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -247,8 +287,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -264,8 +308,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -281,8 +329,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -298,8 +350,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -322,8 +378,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                     role="button"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class=""
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
@@ -345,8 +405,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class=""
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >
@@ -370,8 +434,12 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
           role="button"
         >
           <div
-            class="noicon"
-          />
+            class=""
+          >
+            <div
+              class="noicon"
+            />
+          </div>
           <div
             class="menu-name"
           >

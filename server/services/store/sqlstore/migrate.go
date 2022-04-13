@@ -10,7 +10,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/utils"
 
-	"path/filepath"
 	"strconv"
 	"text/template"
 
@@ -147,7 +146,7 @@ func (s *SQLStore) Migrate() error {
 	migrationAssets := &embedded.AssetSource{
 		Names: assetNamesForDriver,
 		AssetFunc: func(name string) ([]byte, error) {
-			asset, mErr := assets.ReadFile(filepath.Join("migrations", name))
+			asset, mErr := assets.ReadFile("migrations/" + name)
 			if mErr != nil {
 				return nil, mErr
 			}

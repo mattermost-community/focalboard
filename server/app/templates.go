@@ -49,7 +49,7 @@ func (a *App) initializeTemplates() (bool, error) {
 
 	opt := model.ImportArchiveOptions{
 		TeamID:        model.GlobalTeamID,
-		ModifiedBy:    "system",
+		ModifiedBy:    model.SystemUserID,
 		BlockModifier: fixTemplateBlock,
 		BoardModifier: fixTemplateBoard,
 	}
@@ -69,7 +69,7 @@ func (a *App) isInitializationNeeded(boards []*model.Board) (bool, string) {
 	// look for any built-in template boards with the wrong version number (or no version #).
 	for _, board := range boards {
 		// if not built-in board...skip
-		if board.CreatedBy != "system" {
+		if board.CreatedBy != model.SystemUserID {
 			continue
 		}
 		if board.TemplateVersion < defaultTemplateVersion {

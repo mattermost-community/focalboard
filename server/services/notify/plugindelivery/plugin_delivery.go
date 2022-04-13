@@ -4,10 +4,7 @@
 package plugindelivery
 
 import (
-	"fmt"
-
-	"github.com/mattermost/focalboard/server/services/notify"
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/focalboard/server/services/permissions"
 
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
@@ -42,45 +39,17 @@ type PluginAPI interface {
 
 // PluginDelivery provides ability to send notifications to direct message channels via Mattermost plugin API.
 type PluginDelivery struct {
-	botID      string
-	serverRoot string
-	api        PluginAPI
+	botID       string
+	serverRoot  string
+	api         PluginAPI
+	permissions permissions.PermissionsService
 }
 
-func New(botID string, serverRoot string, api PluginAPI) *PluginDelivery {
+func New(botID string, serverRoot string, api PluginAPI, permissions permissions.PermissionsService) *PluginDelivery {
 	return &PluginDelivery{
-		botID:      botID,
-		serverRoot: serverRoot,
-		api:        api,
+		botID:       botID,
+		serverRoot:  serverRoot,
+		api:         api,
+		permissions: permissions,
 	}
-}
-
-func (pd *PluginDelivery) Deliver(mentionUsername string, extract string, evt notify.BlockChangeEvent) error {
-	member, err := teamMemberFromUsername(pd.api, mentionUsername, evt.TeamID)
-	if err != nil {
-		if isErrNotFound(err) {
-			// not really an error; could just be someone typed "@sometext"
-			return nil
-		} else {
-			return fmt.Errorf("cannot lookup mentioned user: %w", err)
-		}
-	}
-
-	author, err := pd.api.GetUserByID(evt.ModifiedByID)
-	if err != nil {
-		return fmt.Errorf("cannot find user: %w", err)
-	}
-
-	channel, err := pd.api.GetDirectChannel(member.UserId, pd.botID)
-	if err != nil {
-		return fmt.Errorf("cannot get direct channel: %w", err)
-	}
-	link := utils.MakeCardLink(pd.serverRoot, evt.TeamID, evt.Board.ID, evt.Card.ID)
-
-	post := &mm_model.Post{
-		UserId:    pd.botID,
-		ChannelId: channel.Id,
-		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),
-	}
-	return pd.api.CreatePost(post)
 }
