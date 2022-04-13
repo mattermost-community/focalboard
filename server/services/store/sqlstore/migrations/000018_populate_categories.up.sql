@@ -28,7 +28,7 @@ CREATE INDEX idx_categories_user_id_team_id ON {{.prefix}}categories(user_id, te
             REPLACE(uuid_in(md5(random()::text || clock_timestamp()::text)::cstring)::varchar, '-', ''),
         {{ end }}
         {{ if .mysql }}
-            REPLACE(UUID(), '-', ''),
+            UUID(),
         {{ end }}
         c.DisplayName,
         cm.UserId,

@@ -34,7 +34,7 @@ Refer to the [Mattermost API documentation here](https://api.mattermost.com/#tag
 Pass this token as a bearer token to the Boards APIs, e.g.
 
 ```
-curl -i -H "X-Requested-With: XMLHttpRequest" -H 'Authorization: Bearer abcdefghijklmnopqrstuvwxyz' https://community.mattermost.com/plugins/focalboard/api/v1/workspaces
+curl -i -H "X-Requested-With: XMLHttpRequest" -H 'Authorization: Bearer abcdefghijklmnopqrstuvwxyz' https://community.mattermost.com/plugins/focalboard/api/v2/workspaces
 ```
 
 Note that the `X-Requested-With: XMLHttpRequest` header is required to pass the CSRF check.

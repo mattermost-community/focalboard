@@ -218,9 +218,9 @@ export default class Plugin {
             )
 
             const goToFocalboardTemplate = () => {
-                const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelIntro, {channelID: currentChannel})
-                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
+                const currentTeam = mmStore.getState().entities.teams.currentTeamId
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelIntro, {teamID: currentTeam})
+                window.open(`${windowAny.frontendBaseURL}/team/${currentTeam}`, '_blank', 'noopener')
             }
 
             if (registry.registerChannelIntroButtonAction) {
@@ -233,13 +233,6 @@ export default class Plugin {
             }
 
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
-        } else {
-            windowAny.frontendBaseURL = subpath + '/plug/focalboard'
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => {
-                const currentChannel = mmStore.getState().entities.channels.currentChannelId
-                window.open(`${window.location.origin}/plug/focalboard/workspace/${currentChannel}`)
-            }, 'Boards', 'Boards')
-            this.registry.registerCustomRoute('/', MainApp)
         }
 
         const config = await octoClient.getClientConfig()

@@ -81,3 +81,23 @@ jobs:
 
     - name: "Test webapp: Cypress"
       run: "cd webapp; npm run cypress:ci"
+
+  ci-windows-server:
+    runs-on: windows-2022
+
+    strategy:
+      matrix:
+        db:
+          - sqlite
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.16
+
+    - name: "Test server: ${{matrix['db']}}"
+      run: make server-test-${{matrix['db']}}
