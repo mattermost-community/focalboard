@@ -89,8 +89,6 @@ jobs:
       matrix:
         db:
           - sqlite
-          - mysql
-          - postgres
 
     steps:
     - name: Checkout
