@@ -177,10 +177,11 @@ func TestCreateBoard(t *testing.T) {
 			require.NotNil(t, rBlocks)
 		})
 
-		t.Run("A non-member user should not be able to access the public board and its blocks", func(t *testing.T) {
+		t.Run("A non-member user should be able to access the public board but not its blocks", func(t *testing.T) {
 			rbBoard, resp := th.Client2.GetBoard(board.ID, "")
-			th.CheckForbidden(resp)
-			require.Nil(t, rbBoard)
+			th.CheckOK(resp)
+			require.NotNil(t, rbBoard)
+			require.Equal(t, board, rbBoard)
 
 			rBlocks, resp := th.Client2.GetBlocksForBoard(board.ID)
 			th.CheckForbidden(resp)
@@ -194,7 +195,7 @@ func TestCreateBoard(t *testing.T) {
 
 		me := th.GetUser1()
 
-		title := "board title"
+		title := "private board title"
 		teamID := testTeamID
 		newBoard := &model.Board{
 			Title:  title,
@@ -246,7 +247,7 @@ func TestCreateBoard(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
 
-		title := "board title"
+		title := "invalid board title"
 		teamID := testTeamID
 		user1 := th.GetUser1()
 
@@ -362,7 +363,7 @@ func TestCreateBoardTemplate(t *testing.T) {
 
 		me := th.GetUser1()
 
-		title := "board title"
+		title := "private board template title"
 		teamID := testTeamID
 		newBoard := &model.Board{
 			Title:      title,
