@@ -68,94 +68,94 @@ func NewAPI(app *app.App, singleUserToken string, authService string, permission
 }
 
 func (a *API) RegisterRoutes(r *mux.Router) {
-	apiv1 := r.PathPrefix("/api/v1").Subrouter()
-	apiv1.Use(a.panicHandler)
-	apiv1.Use(a.requireCSRFToken)
+	apiv2 := r.PathPrefix("/api/v2").Subrouter()
+	apiv2.Use(a.panicHandler)
+	apiv2.Use(a.requireCSRFToken)
 
 	// Board APIs
-	apiv1.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
-	apiv1.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
-	apiv1.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
-	apiv1.HandleFunc("/boards", a.sessionRequired(a.handleCreateBoard)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}", a.attachSession(a.handleGetBoard, false)).Methods("GET")
-	apiv1.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handlePatchBoard)).Methods("PATCH")
-	apiv1.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handleDeleteBoard)).Methods("DELETE")
-	apiv1.HandleFunc("/boards/{boardID}/duplicate", a.sessionRequired(a.handleDuplicateBoard)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/undelete", a.sessionRequired(a.handleUndeleteBoard)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/blocks", a.attachSession(a.handleGetBlocks, false)).Methods("GET")
-	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePatchBlocks)).Methods("PATCH")
-	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
-	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
-	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/undelete", a.sessionRequired(a.handleUndeleteBlock)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.sessionRequired(a.handleDuplicateBlock)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/metadata", a.sessionRequired(a.handleGetBoardMetadata)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
+	apiv2.HandleFunc("/boards", a.sessionRequired(a.handleCreateBoard)).Methods("POST")
+	apiv2.HandleFunc("/boards/{boardID}", a.attachSession(a.handleGetBoard, false)).Methods("GET")
+	apiv2.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handlePatchBoard)).Methods("PATCH")
+	apiv2.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handleDeleteBoard)).Methods("DELETE")
+	apiv2.HandleFunc("/boards/{boardID}/duplicate", a.sessionRequired(a.handleDuplicateBoard)).Methods("POST")
+	apiv2.HandleFunc("/boards/{boardID}/undelete", a.sessionRequired(a.handleUndeleteBoard)).Methods("POST")
+	apiv2.HandleFunc("/boards/{boardID}/blocks", a.attachSession(a.handleGetBlocks, false)).Methods("GET")
+	apiv2.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
+	apiv2.HandleFunc("/boards/{boardID}/blocks", a.sessionRequired(a.handlePatchBlocks)).Methods("PATCH")
+	apiv2.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
+	apiv2.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
+	apiv2.HandleFunc("/boards/{boardID}/blocks/{blockID}/undelete", a.sessionRequired(a.handleUndeleteBlock)).Methods("POST")
+	apiv2.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.sessionRequired(a.handleDuplicateBlock)).Methods("POST")
+	apiv2.HandleFunc("/boards/{boardID}/metadata", a.sessionRequired(a.handleGetBoardMetadata)).Methods("GET")
 
 	// Member APIs
-	apiv1.HandleFunc("/boards/{boardID}/members", a.sessionRequired(a.handleGetMembersForBoard)).Methods("GET")
-	apiv1.HandleFunc("/boards/{boardID}/members", a.sessionRequired(a.handleAddMember)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/members/{userID}", a.sessionRequired(a.handleUpdateMember)).Methods("PUT")
-	apiv1.HandleFunc("/boards/{boardID}/members/{userID}", a.sessionRequired(a.handleDeleteMember)).Methods("DELETE")
-	apiv1.HandleFunc("/boards/{boardID}/join", a.sessionRequired(a.handleJoinBoard)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/leave", a.sessionRequired(a.handleLeaveBoard)).Methods("POST")
+	apiv2.HandleFunc("/boards/{boardID}/members", a.sessionRequired(a.handleGetMembersForBoard)).Methods("GET")
+	apiv2.HandleFunc("/boards/{boardID}/members", a.sessionRequired(a.handleAddMember)).Methods("POST")
+	apiv2.HandleFunc("/boards/{boardID}/members/{userID}", a.sessionRequired(a.handleUpdateMember)).Methods("PUT")
+	apiv2.HandleFunc("/boards/{boardID}/members/{userID}", a.sessionRequired(a.handleDeleteMember)).Methods("DELETE")
+	apiv2.HandleFunc("/boards/{boardID}/join", a.sessionRequired(a.handleJoinBoard)).Methods("POST")
+	apiv2.HandleFunc("/boards/{boardID}/leave", a.sessionRequired(a.handleLeaveBoard)).Methods("POST")
 
 	// Sharing APIs
-	apiv1.HandleFunc("/boards/{boardID}/sharing", a.sessionRequired(a.handlePostSharing)).Methods("POST")
-	apiv1.HandleFunc("/boards/{boardID}/sharing", a.sessionRequired(a.handleGetSharing)).Methods("GET")
+	apiv2.HandleFunc("/boards/{boardID}/sharing", a.sessionRequired(a.handlePostSharing)).Methods("POST")
+	apiv2.HandleFunc("/boards/{boardID}/sharing", a.sessionRequired(a.handleGetSharing)).Methods("GET")
 
 	// Team APIs
-	apiv1.HandleFunc("/teams", a.sessionRequired(a.handleGetTeams)).Methods("GET")
-	apiv1.HandleFunc("/teams/{teamID}", a.sessionRequired(a.handleGetTeam)).Methods("GET")
-	apiv1.HandleFunc("/teams/{teamID}/regenerate_signup_token", a.sessionRequired(a.handlePostTeamRegenerateSignupToken)).Methods("POST")
-	apiv1.HandleFunc("/teams/{teamID}/users", a.sessionRequired(a.handleGetTeamUsers)).Methods("GET")
-	apiv1.HandleFunc("/teams/{teamID}/archive/export", a.sessionRequired(a.handleArchiveExportTeam)).Methods("GET")
-	apiv1.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
+	apiv2.HandleFunc("/teams", a.sessionRequired(a.handleGetTeams)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}", a.sessionRequired(a.handleGetTeam)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/regenerate_signup_token", a.sessionRequired(a.handlePostTeamRegenerateSignupToken)).Methods("POST")
+	apiv2.HandleFunc("/teams/{teamID}/users", a.sessionRequired(a.handleGetTeamUsers)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/archive/export", a.sessionRequired(a.handleArchiveExportTeam)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 
 	// User APIs
-	apiv1.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
-	apiv1.HandleFunc("/users/me/memberships", a.sessionRequired(a.handleGetMyMemberships)).Methods("GET")
-	apiv1.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
-	apiv1.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
-	apiv1.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
+	apiv2.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
+	apiv2.HandleFunc("/users/me/memberships", a.sessionRequired(a.handleGetMyMemberships)).Methods("GET")
+	apiv2.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
+	apiv2.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
+	apiv2.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
 
 	// BoardsAndBlocks APIs
-	apiv1.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handleCreateBoardsAndBlocks)).Methods("POST")
-	apiv1.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handlePatchBoardsAndBlocks)).Methods("PATCH")
-	apiv1.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handleDeleteBoardsAndBlocks)).Methods("DELETE")
+	apiv2.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handleCreateBoardsAndBlocks)).Methods("POST")
+	apiv2.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handlePatchBoardsAndBlocks)).Methods("PATCH")
+	apiv2.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handleDeleteBoardsAndBlocks)).Methods("DELETE")
 
 	// Auth APIs
-	apiv1.HandleFunc("/login", a.handleLogin).Methods("POST")
-	apiv1.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
-	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
-	apiv1.HandleFunc("/clientConfig", a.getClientConfig).Methods("GET")
+	apiv2.HandleFunc("/login", a.handleLogin).Methods("POST")
+	apiv2.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
+	apiv2.HandleFunc("/register", a.handleRegister).Methods("POST")
+	apiv2.HandleFunc("/clientConfig", a.getClientConfig).Methods("GET")
 
 	// Category APIs
-	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleCreateCategory)).Methods(http.MethodPost)
-	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleUpdateCategory)).Methods(http.MethodPut)
-	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
+	apiv2.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleCreateCategory)).Methods(http.MethodPost)
+	apiv2.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleUpdateCategory)).Methods(http.MethodPut)
+	apiv2.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
 
 	// Category Block APIs
-	apiv1.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBlocks)).Methods(http.MethodGet)
-	apiv1.HandleFunc("/teams/{teamID}/categories/{categoryID}/blocks/{blockID}", a.sessionRequired(a.handleUpdateCategoryBlock)).Methods(http.MethodPost)
+	apiv2.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBlocks)).Methods(http.MethodGet)
+	apiv2.HandleFunc("/teams/{teamID}/categories/{categoryID}/blocks/{blockID}", a.sessionRequired(a.handleUpdateCategoryBlock)).Methods(http.MethodPost)
 
 	// Get Files API
-	apiv1.HandleFunc("/files/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
+	apiv2.HandleFunc("/files/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
 
 	// Subscriptions
-	apiv1.HandleFunc("/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
-	apiv1.HandleFunc("/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
-	apiv1.HandleFunc("/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
+	apiv2.HandleFunc("/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
+	apiv2.HandleFunc("/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
+	apiv2.HandleFunc("/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
 
 	// onboarding tour endpoints
-	apiv1.HandleFunc("/teams/{teamID}/onboard", a.sessionRequired(a.handleOnboard)).Methods(http.MethodPost)
+	apiv2.HandleFunc("/teams/{teamID}/onboard", a.sessionRequired(a.handleOnboard)).Methods(http.MethodPost)
 
 	// archives
-	apiv1.HandleFunc("/boards/{boardID}/archive/export", a.sessionRequired(a.handleArchiveExportBoard)).Methods("GET")
-	apiv1.HandleFunc("/teams/{teamID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
+	apiv2.HandleFunc("/boards/{boardID}/archive/export", a.sessionRequired(a.handleArchiveExportBoard)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
-	r.HandleFunc("/api/v1/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
+	r.HandleFunc("/api/v2/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
 }
 
 func getUserID(r *http.Request) string {
@@ -230,7 +230,7 @@ func (a *API) hasValidReadTokenForBoard(r *http.Request, boardID string) bool {
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/boards/{boardID}/blocks getBlocks
+	// swagger:operation GET /boards/{boardID}/blocks getBlocks
 	//
 	// Returns blocks
 	//
@@ -591,7 +591,7 @@ func (a *API) handleUpdateCategoryBlock(w http.ResponseWriter, r *http.Request) 
 }
 
 func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards/{boardID}/blocks updateBlocks
+	// swagger:operation POST /boards/{boardID}/blocks updateBlocks
 	//
 	// Insert blocks. The specified IDs will only be used to link
 	// blocks with existing ones, the rest will be replaced by server
@@ -719,7 +719,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation PATCH /api/v1/users/{userID}/config updateUserConfig
+	// swagger:operation PATCH /users/{userID}/config updateUserConfig
 	//
 	// Updates user config
 	//
@@ -793,7 +793,7 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/users/{userID} getUser
+	// swagger:operation GET /users/{userID} getUser
 	//
 	// Returns a user
 	//
@@ -842,7 +842,7 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/users/me getMe
+	// swagger:operation GET /users/me getMe
 	//
 	// Returns the currently logged-in user
 	//
@@ -899,7 +899,7 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetMyMemberships(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/users/me/memberships getMyMemberships
+	// swagger:operation GET /users/me/memberships getMyMemberships
 	//
 	// Returns the currently users board memberships
 	//
@@ -944,7 +944,7 @@ func (a *API) handleGetMyMemberships(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation DELETE /api/v1/boards/{boardID}/blocks/{blockID} deleteBlock
+	// swagger:operation DELETE /boards/{boardID}/blocks/{blockID} deleteBlock
 	//
 	// Deletes a block
 	//
@@ -1012,7 +1012,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards/{boardID}/blocks/{blockID}/undelete undeleteBlock
+	// swagger:operation POST /boards/{boardID}/blocks/{blockID}/undelete undeleteBlock
 	//
 	// Undeletes a block
 	//
@@ -1105,7 +1105,7 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleUndeleteBoard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards/{boardID}/undelete undeleteBoard
+	// swagger:operation POST /boards/{boardID}/undelete undeleteBoard
 	//
 	// Undeletes a board
 	//
@@ -1157,7 +1157,7 @@ func (a *API) handleUndeleteBoard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation PATCH /api/v1/boards/{boardID}/blocks/{blockID} patchBlock
+	// swagger:operation PATCH /boards/{boardID}/blocks/{blockID} patchBlock
 	//
 	// Partially updates a block
 	//
@@ -1244,7 +1244,7 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation PATCH /api/v1/boards/{boardID}/blocks/ patchBlocks
+	// swagger:operation PATCH /boards/{boardID}/blocks/ patchBlocks
 	//
 	// Partially updates batch of blocks
 	//
@@ -1327,7 +1327,7 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 // Sharing
 
 func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/boards/{boardID}/sharing getSharing
+	// swagger:operation GET /boards/{boardID}/sharing getSharing
 	//
 	// Returns sharing information for a board
 	//
@@ -1396,7 +1396,7 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards/{boardID}/sharing postSharing
+	// swagger:operation POST /boards/{boardID}/sharing postSharing
 	//
 	// Sets sharing information for a board
 	//
@@ -1491,7 +1491,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 // Team
 
 func (a *API) handleGetTeams(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/teams getTeams
+	// swagger:operation GET /teams getTeams
 	//
 	// Returns information of all the teams
 	//
@@ -1534,7 +1534,7 @@ func (a *API) handleGetTeams(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetTeam(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/teams/{teamID} getTeam
+	// swagger:operation GET /teams/{teamID} getTeam
 	//
 	// Returns information of the root team
 	//
@@ -1603,7 +1603,7 @@ func (a *API) handleGetTeam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/teams/{teamID}/regenerate_signup_token regenerateSignupToken
+	// swagger:operation POST /teams/{teamID}/regenerate_signup_token regenerateSignupToken
 	//
 	// Regenerates the signup token for the root team
 	//
@@ -1654,7 +1654,7 @@ func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http
 // File upload
 
 func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET "api/v1/files/teams/{teamID}/{boardID}/{filename} getFile
+	// swagger:operation GET "api/v2/files/teams/{teamID}/{boardID}/{filename} getFile
 	//
 	// Returns the contents of an uploaded file
 	//
@@ -1765,7 +1765,7 @@ func FileUploadResponseFromJSON(data io.Reader) (*FileUploadResponse, error) {
 }
 
 func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/teams/{teamID}/boards/{boardID}/files uploadFile
+	// swagger:operation POST /teams/{teamID}/boards/{boardID}/files uploadFile
 	//
 	// Upload a binary file, attached to a root block
 	//
@@ -1866,7 +1866,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/teams/{teamID}/users getTeamUsers
+	// swagger:operation GET /teams/{teamID}/users getTeamUsers
 	//
 	// Returns team users
 	//
@@ -1931,7 +1931,7 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/teams/{teamID}/boards getBoards
+	// swagger:operation GET /teams/{teamID}/boards getBoards
 	//
 	// Returns team boards
 	//
@@ -1996,7 +1996,7 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/teams/{teamID}/templates getTemplates
+	// swagger:operation GET /teams/{teamID}/templates getTemplates
 	//
 	// Returns team templates
 	//
@@ -2072,7 +2072,7 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 // subscriptions
 
 func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/subscriptions createSubscription
+	// swagger:operation POST /subscriptions createSubscription
 	//
 	// Creates a subscription to a block for a user. The user will receive change notifications for the block.
 	//
@@ -2159,7 +2159,7 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleDeleteSubscription(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation DELETE /api/v1/subscriptions/{blockID}/{subscriberID} deleteSubscription
+	// swagger:operation DELETE /subscriptions/{blockID}/{subscriberID} deleteSubscription
 	//
 	// Deletes a subscription a user has for a a block. The user will no longer receive change notifications for the block.
 	//
@@ -2221,7 +2221,7 @@ func (a *API) handleDeleteSubscription(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/subscriptions/{subscriberID} getSubscriptions
+	// swagger:operation GET /subscriptions/{subscriberID} getSubscriptions
 	//
 	// Gets subscriptions for a user.
 	//
@@ -2286,7 +2286,7 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards createBoard
+	// swagger:operation POST /boards createBoard
 	//
 	// Creates a new board
 	//
@@ -2375,7 +2375,7 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/team/{teamID}/onboard onboard
+	// swagger:operation POST /team/{teamID}/onboard onboard
 	//
 	// Onboards a user on Boards.
 	//
@@ -2427,7 +2427,7 @@ func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/boards/{boardID} getBoard
+	// swagger:operation GET /boards/{boardID} getBoard
 	//
 	// Returns a board
 	//
@@ -2508,7 +2508,7 @@ func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation PATCH /api/v1/boards/{boardID} patchBoard
+	// swagger:operation PATCH /boards/{boardID} patchBoard
 	//
 	// Partially updates a board
 	//
@@ -2613,7 +2613,7 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleDeleteBoard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation DELETE /api/v1/boards/{boardID} deleteBoard
+	// swagger:operation DELETE /boards/{boardID} deleteBoard
 	//
 	// Removes a board
 	//
@@ -2673,7 +2673,7 @@ func (a *API) handleDeleteBoard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards/{boardID}/duplicate duplicateBoard
+	// swagger:operation POST /boards/{boardID}/duplicate duplicateBoard
 	//
 	// Returns the new created board and all the blocks
 	//
@@ -2765,7 +2765,7 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards/{boardID}/blocks/{blockID}/duplicate duplicateBlock
+	// swagger:operation POST /boards/{boardID}/blocks/{blockID}/duplicate duplicateBlock
 	//
 	// Returns the new created blocks
 	//
@@ -2868,7 +2868,7 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/boards/{boardID}/metadata getBoardMetadata
+	// swagger:operation GET /boards/{boardID}/metadata getBoardMetadata
 	//
 	// Returns a board's metadata
 	//
@@ -2943,7 +2943,7 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/teams/{teamID}/boards/search searchBoards
+	// swagger:operation GET /teams/{teamID}/boards/search searchBoards
 	//
 	// Returns the boards that match with a search term
 	//
@@ -3019,7 +3019,7 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetMembersForBoard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/boards/{boardID}/members getMembersForBoard
+	// swagger:operation GET /boards/{boardID}/members getMembersForBoard
 	//
 	// Returns the members of the board
 	//
@@ -3453,7 +3453,7 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation DELETE /api/v1/boards/{boardID}/members/{userID} deleteMember
+	// swagger:operation DELETE /boards/{boardID}/members/{userID} deleteMember
 	//
 	// Deletes a member from a board
 	//
@@ -3529,7 +3529,7 @@ func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/boards-and-blocks insertBoardsAndBlocks
+	// swagger:operation POST /boards-and-blocks insertBoardsAndBlocks
 	//
 	// Creates new boards and blocks
 	//
@@ -3673,7 +3673,7 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 }
 
 func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation PATCH /api/v1/boards-and-blocks patchBoardsAndBlocks
+	// swagger:operation PATCH /boards-and-blocks patchBoardsAndBlocks
 	//
 	// Patches a set of related boards and blocks
 	//
@@ -3811,7 +3811,7 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 }
 
 func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation DELETE /api/v1/boards-and-blocks deleteBoardsAndBlocks
+	// swagger:operation DELETE /boards-and-blocks deleteBoardsAndBlocks
 	//
 	// Deletes boards and blocks
 	//
