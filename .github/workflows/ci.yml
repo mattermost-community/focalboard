@@ -90,8 +90,8 @@ jobs:
       with:
         go-version: 1.16
 
-    - name: "Test server: ${{matrix['db']}}"
-      run: make server-test-${{matrix['db']}}
+    - name: "Test server (minimum): ${{matrix['db']}}"
+      run: make server-test-mini-${{matrix['db']}}
 
   ci-mac-server:
     runs-on: macos-11
