@@ -44,7 +44,7 @@ const SearchDialog = (props: Props): JSX.Element => {
             <div className='BoardSwitcherDialogBody'>
                 <div className='head'>
                     <h3 className='text-heading4'>{props.title}</h3>
-                    <h5 className='text-heading1'>{props.subTitle}</h5>
+                    <h5>{props.subTitle}</h5>
                     <div className='queryWrapper'>
                         <Search/>
                         <input
