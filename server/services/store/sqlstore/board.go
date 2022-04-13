@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -181,16 +182,28 @@ func (s *SQLStore) boardMemberHistoryEntriesFromRows(rows *sql.Rows) ([]*model.B
 
 	for rows.Next() {
 		var boardMemberHistoryEntry model.BoardMemberHistoryEntry
+		var insertAt sql.NullString
 
 		err := rows.Scan(
 			&boardMemberHistoryEntry.BoardID,
 			&boardMemberHistoryEntry.UserID,
 			&boardMemberHistoryEntry.Action,
-			&boardMemberHistoryEntry.InsertAt,
+			&insertAt,
 		)
 		if err != nil {
 			return nil, err
 		}
+
+		// parse the insert_at timestamp which is different based on database type.
+		dateTemplate := "2006-01-02T15:04:05Z0700"
+		if s.dbType == model.MysqlDBType {
+			dateTemplate = "2006-01-02 15:04:05.000000"
+		}
+		ts, err := time.Parse(dateTemplate, insertAt.String)
+		if err != nil {
+			return nil, fmt.Errorf("cannot parse datetime '%s' for board_members_history scan: %w", insertAt.String, err)
+		}
+		boardMemberHistoryEntry.InsertAt = ts
 
 		boardMemberHistoryEntries = append(boardMemberHistoryEntries, &boardMemberHistoryEntry)
 	}
@@ -537,8 +550,8 @@ func (s *SQLStore) deleteMember(db sq.BaseRunner, boardID, userID string) error 
 	if rowsAffected > 0 {
 		addToMembersHistory := s.getQueryBuilder(db).
 			Insert(s.tablePrefix+"board_members_history").
-			Columns("board_id", "user_id", "action", "insert_at").
-			Values(boardID, userID, "deleted", model.GetMillis())
+			Columns("board_id", "user_id", "action").
+			Values(boardID, userID, "deleted")
 
 		if _, err := addToMembersHistory.Exec(); err != nil {
 			return err
