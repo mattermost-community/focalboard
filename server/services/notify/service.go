@@ -27,7 +27,7 @@ type BlockChangeEvent struct {
 	Card         *model.Block
 	BlockChanged *model.Block
 	BlockOld     *model.Block
-	ModifiedByID string
+	ModifiedBy   *model.BoardMember
 }
 
 type SubscriptionChangeNotifier interface {

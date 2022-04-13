@@ -102,7 +102,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 			BlockType:      model.TypeCard,
 			BlockID:        evt.BlockChanged.ID,
 			SubscriberType: model.SubTypeUser,
-			SubscriberID:   evt.ModifiedByID,
+			SubscriberID:   evt.ModifiedBy.UserID,
 		}
 
 		if _, err = b.store.CreateSubscription(sub); err != nil {
@@ -119,7 +119,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for board %s: %w", evt.Board.ID, err))
 	}
-	if err = b.notifySubscribers(subs, evt.Board.ID, model.TypeBoard, evt.ModifiedByID); err != nil {
+	if err = b.notifySubscribers(subs, evt.Board.ID, model.TypeBoard, evt.ModifiedBy.UserID); err != nil {
 		merr.Append(fmt.Errorf("cannot notify board subscribers for board %s: %w", evt.Board.ID, err))
 	}
 
@@ -132,7 +132,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for card %s: %w", evt.Card.ID, err))
 	}
-	if err = b.notifySubscribers(subs, evt.Card.ID, model.TypeCard, evt.ModifiedByID); err != nil {
+	if err = b.notifySubscribers(subs, evt.Card.ID, model.TypeCard, evt.ModifiedBy.UserID); err != nil {
 		merr.Append(fmt.Errorf("cannot notify card subscribers for card %s: %w", evt.Card.ID, err))
 	}
 
@@ -142,7 +142,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		if err != nil {
 			merr.Append(fmt.Errorf("cannot fetch subscribers for block %s: %w", evt.BlockChanged.ID, err))
 		}
-		if err := b.notifySubscribers(subs, evt.BlockChanged.ID, evt.BlockChanged.Type, evt.ModifiedByID); err != nil {
+		if err := b.notifySubscribers(subs, evt.BlockChanged.ID, evt.BlockChanged.Type, evt.ModifiedBy.UserID); err != nil {
 			merr.Append(fmt.Errorf("cannot notify block subscribers for block %s: %w", evt.BlockChanged.ID, err))
 		}
 	}
@@ -183,9 +183,14 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 		return
 	}
 
-	// TODO: Automatically add user to board?  Fail and show UI?  Waiting for PM decision.
-	//       Currently the subscription created below will only notify if the user is already
-	//       a member of the board.
+	// user mentioned must be a board member to subscribe to card.
+	if !b.permissions.HasPermissionToBoard(userID, evt.Board.ID, model.PermissionViewBoard) {
+		b.logger.Debug("Not subscribing mentioned non-board member to card",
+			mlog.String("user_id", userID),
+			mlog.String("block_id", evt.BlockChanged.ID),
+		)
+		return
+	}
 
 	sub := &model.Subscription{
 		BlockType:      model.TypeCard,
@@ -195,7 +200,6 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 	}
 
 	var err error
-
 	if sub, err = b.store.CreateSubscription(sub); err != nil {
 		b.logger.Warn("Cannot subscribe mentioned user to card",
 			mlog.String("user_id", userID),

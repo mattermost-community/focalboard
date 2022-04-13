@@ -24,20 +24,20 @@ describe('components/sidebarBoardItem', () => {
     view.fields.sortOptions = []
     const history = createMemoryHistory()
 
-    const categoryBlocks1 = TestBlockFactory.createCategoryBlocks()
-    categoryBlocks1.name = 'Category 1'
-    categoryBlocks1.blockIDs = [board.id]
+    const categoryBoards1 = TestBlockFactory.createCategoryBoards()
+    categoryBoards1.name = 'Category 1'
+    categoryBoards1.boardIDs = [board.id]
 
-    const categoryBlocks2 = TestBlockFactory.createCategoryBlocks()
-    categoryBlocks2.name = 'Category 2'
+    const categoryBoards2 = TestBlockFactory.createCategoryBoards()
+    categoryBoards2.name = 'Category 2'
 
-    const categoryBlocks3 = TestBlockFactory.createCategoryBlocks()
-    categoryBlocks3.name = 'Category 3'
+    const categoryBoards3 = TestBlockFactory.createCategoryBoards()
+    categoryBoards3.name = 'Category 3'
 
-    const allCategoryBlocks = [
-        categoryBlocks1,
-        categoryBlocks2,
-        categoryBlocks3,
+    const allCategoryBoards = [
+        categoryBoards1,
+        categoryBoards2,
+        categoryBoards3,
     ]
 
     const state = {
@@ -73,9 +73,9 @@ describe('components/sidebarBoardItem', () => {
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarBoardItem
-                        categoryBlocks={categoryBlocks1}
+                        categoryBoards={categoryBoards1}
                         board={board}
-                        allCategories={allCategoryBlocks}
+                        allCategories={allCategoryBoards}
                         isActive={true}
                         showBoard={jest.fn()}
                         showView={jest.fn()}

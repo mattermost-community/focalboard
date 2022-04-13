@@ -29,11 +29,11 @@ const TeamToBoardAndViewRedirect = (): null => {
             if (!boardID && categories.length > 0) {
                 // a category may exist without any boards.
                 // find the first category with a board and pick it's first board
-                const categoryWithBoards = categories.find((category) => category.blockIDs.length > 0)
+                const categoryWithBoards = categories.find((category) => category.boardIDs.length > 0)
 
                 // there may even be no boards at all
                 if (categoryWithBoards) {
-                    boardID = categoryWithBoards.blockIDs[0]
+                    boardID = categoryWithBoards.boardIDs[0]
                 }
             }
 

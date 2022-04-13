@@ -7,7 +7,7 @@ import {Utils, WSMessagePayloads} from './utils'
 import {Block} from './blocks/block'
 import {Board, BoardMember} from './blocks/board'
 import {OctoUtils} from './octoUtils'
-import {BlockCategoryWebsocketData, Category} from './store/sidebar'
+import {BoardCategoryWebsocketData, Category} from './store/sidebar'
 
 // These are outgoing commands to the server
 type WSCommand = {
@@ -23,7 +23,7 @@ export type WSMessage = {
     block?: Block
     board?: Board
     category?: Category
-    blockCategories?: BlockCategoryWebsocketData
+    blockCategories?: BoardCategoryWebsocketData
     error?: string
     teamId?: string
     member?: BoardMember
@@ -40,7 +40,7 @@ export const ACTION_UNSUBSCRIBE_TEAM = 'UNSUBSCRIBE_TEAM'
 export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
 export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
 export const ACTION_UPDATE_CATEGORY = 'UPDATE_CATEGORY'
-export const ACTION_UPDATE_BLOCK_CATEGORY = 'UPDATE_BLOCK_CATEGORY'
+export const ACTION_UPDATE_BOARD_CATEGORY = 'UPDATE_BOARD_CATEGORY'
 export const ACTION_UPDATE_SUBSCRIPTION = 'UPDATE_SUBSCRIPTION'
 
 type WSSubscriptionMsg = {
@@ -81,7 +81,7 @@ export type ChangeHandlerType = 'block' | 'category' | 'blockCategories' | 'boar
 type UpdatedData = {
     Blocks: Block[]
     Categories: Category[]
-    BlockCategories: Array<BlockCategoryWebsocketData>
+    BoardCategories: Array<BoardCategoryWebsocketData>
     Boards: Board[]
     BoardMembers: BoardMember[]
 }
@@ -89,7 +89,7 @@ type UpdatedData = {
 type ChangeHandlers = {
     Block: OnChangeHandler[]
     Category: OnChangeHandler[]
-    BlockCategory: OnChangeHandler[]
+    BoardCategory: OnChangeHandler[]
     Board: OnChangeHandler[]
     BoardMember: OnChangeHandler[]
 }
@@ -107,14 +107,14 @@ class WSClient {
     state: 'init'|'open'|'close' = 'init'
     onStateChange: OnStateChangeHandler[] = []
     onReconnect: OnReconnectHandler[] = []
-    onChange: ChangeHandlers = {Block: [], Category: [], BlockCategory: [], Board: [], BoardMember: []}
+    onChange: ChangeHandlers = {Block: [], Category: [], BoardCategory: [], Board: [], BoardMember: []}
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
     onFollowBlock: FollowChangeHandler = () => {}
     onUnfollowBlock: FollowChangeHandler = () => {}
     private notificationDelay = 100
     private reopenDelay = 3000
-    private updatedData: UpdatedData = {Blocks: [], Categories: [], BlockCategories: [], Boards: [], BoardMembers: []}
+    private updatedData: UpdatedData = {Blocks: [], Categories: [], BoardCategories: [], Boards: [], BoardMembers: []}
     private updateTimeout?: NodeJS.Timeout
     private errorPollId?: NodeJS.Timeout
 
@@ -169,7 +169,7 @@ class WSClient {
             this.onChange.Category.push(handler)
             break
         case 'blockCategories':
-            this.onChange.BlockCategory.push(handler)
+            this.onChange.BoardCategory.push(handler)
             break
         case 'board':
             this.onChange.Board.push(handler)
@@ -187,7 +187,7 @@ class WSClient {
             haystack = this.onChange.Block
             break
         case 'blockCategories':
-            haystack = this.onChange.BlockCategory
+            haystack = this.onChange.BoardCategory
             break
         case 'board':
             haystack = this.onChange.Board
@@ -385,7 +385,7 @@ class WSClient {
                 case ACTION_UPDATE_CATEGORY:
                     this.updateHandler(message)
                     break
-                case ACTION_UPDATE_BLOCK_CATEGORY:
+                case ACTION_UPDATE_BOARD_CATEGORY:
                     this.updateHandler(message)
                     break
                 case ACTION_UPDATE_SUBSCRIPTION:
@@ -568,8 +568,8 @@ class WSClient {
             this.updatedData.Categories = this.updatedData.Categories.filter((c) => c.id !== (data as Category).id)
             this.updatedData.Categories.push(data as Category)
         } else if (type === 'blockCategories') {
-            this.updatedData.BlockCategories = this.updatedData.BlockCategories.filter((b) => b.blockID === (data as BlockCategoryWebsocketData).blockID)
-            this.updatedData.BlockCategories.push(data as BlockCategoryWebsocketData)
+            this.updatedData.BoardCategories = this.updatedData.BoardCategories.filter((b) => b.boardID === (data as BoardCategoryWebsocketData).boardID)
+            this.updatedData.BoardCategories.push(data as BoardCategoryWebsocketData)
         } else if (type === 'board') {
             this.updatedData.Boards = this.updatedData.Boards.filter((b) => b.id !== (data as Board).id)
             this.updatedData.Boards.push(data as Board)
@@ -612,8 +612,8 @@ class WSClient {
             Utils.log(`WSClient flush update category: ${category.id}`)
         }
 
-        for (const blockCategories of this.updatedData.BlockCategories) {
-            Utils.log(`WSClient flush update blockCategory: ${blockCategories.blockID} ${blockCategories.categoryID}`)
+        for (const blockCategories of this.updatedData.BoardCategories) {
+            Utils.log(`WSClient flush update blockCategory: ${blockCategories.boardID} ${blockCategories.categoryID}`)
         }
 
         for (const board of this.updatedData.Boards) {
@@ -636,8 +636,8 @@ class WSClient {
             handler(this, this.updatedData.Categories)
         }
 
-        for (const handler of this.onChange.BlockCategory) {
-            handler(this, this.updatedData.BlockCategories)
+        for (const handler of this.onChange.BoardCategory) {
+            handler(this, this.updatedData.BoardCategories)
         }
 
         for (const handler of this.onChange.Board) {
@@ -651,7 +651,7 @@ class WSClient {
         this.updatedData = {
             Blocks: [],
             Categories: [],
-            BlockCategories: [],
+            BoardCategories: [],
             Boards: [],
             BoardMembers: [],
         }
@@ -667,7 +667,7 @@ class WSClient {
         // Use this sequence so the onclose method doesn't try to re-open
         const ws = this.ws
         this.ws = null
-        this.onChange = {Block: [], Category: [], BlockCategory: [], Board: [], BoardMember: []}
+        this.onChange = {Block: [], Category: [], BoardCategory: [], Board: [], BoardMember: []}
         this.onReconnect = []
         this.onStateChange = []
         this.onError = []

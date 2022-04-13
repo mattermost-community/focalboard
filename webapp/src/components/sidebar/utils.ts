@@ -1,27 +1,27 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {CategoryBlocks, DefaultCategory} from '../../store/sidebar'
+import {CategoryBoards, DefaultCategory} from '../../store/sidebar'
 
 import {Block} from '../../blocks/block'
 import {Board} from '../../blocks/board'
 
-export function addMissingItems(sidebarCategories: Array<CategoryBlocks>, allItems: Array<Block | Board>): Array<CategoryBlocks> {
+export function addMissingItems(sidebarCategories: Array<CategoryBoards>, allItems: Array<Block | Board>): Array<CategoryBoards> {
     const blocksInCategories = new Map<string, boolean>()
     sidebarCategories.forEach(
-        (category) => category.blockIDs.forEach(
-            (blockID) => blocksInCategories.set(blockID, true),
+        (category) => category.boardIDs.forEach(
+            (boardID) => blocksInCategories.set(boardID, true),
         ),
     )
 
-    const defaultCategory: CategoryBlocks = {
+    const defaultCategory: CategoryBoards = {
         ...DefaultCategory,
-        blockIDs: [],
+        boardIDs: [],
     }
 
     allItems.forEach((block) => {
         if (!blocksInCategories.get(block.id)) {
-            defaultCategory.blockIDs.push(block.id)
+            defaultCategory.boardIDs.push(block.id)
         }
     })
 

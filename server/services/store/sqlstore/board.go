@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -181,16 +182,28 @@ func (s *SQLStore) boardMemberHistoryEntriesFromRows(rows *sql.Rows) ([]*model.B
 
 	for rows.Next() {
 		var boardMemberHistoryEntry model.BoardMemberHistoryEntry
+		var insertAt sql.NullString
 
 		err := rows.Scan(
 			&boardMemberHistoryEntry.BoardID,
 			&boardMemberHistoryEntry.UserID,
 			&boardMemberHistoryEntry.Action,
-			&boardMemberHistoryEntry.InsertAt,
+			&insertAt,
 		)
 		if err != nil {
 			return nil, err
 		}
+
+		// parse the insert_at timestamp which is different based on database type.
+		dateTemplate := "2006-01-02T15:04:05Z0700"
+		if s.dbType == model.MysqlDBType {
+			dateTemplate = "2006-01-02 15:04:05.000000"
+		}
+		ts, err := time.Parse(dateTemplate, insertAt.String)
+		if err != nil {
+			return nil, fmt.Errorf("cannot parse datetime '%s' for board_members_history scan: %w", insertAt.String, err)
+		}
+		boardMemberHistoryEntry.InsertAt = ts
 
 		boardMemberHistoryEntries = append(boardMemberHistoryEntries, &boardMemberHistoryEntry)
 	}
@@ -300,7 +313,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 
 	existingBoard, err := s.getBoard(db, board.ID)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return nil, err
+		return nil, fmt.Errorf("insertBoard error occurred while fetching existing board %s: %w", board.ID, err)
 	}
 
 	insertQuery := s.getQueryBuilder(db).Insert("").
@@ -348,7 +361,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 
 		if _, err := query.Exec(); err != nil {
 			s.logger.Error(`InsertBoard error occurred while updating existing board`, mlog.String("boardID", board.ID), mlog.Err(err))
-			return nil, err
+			return nil, fmt.Errorf("insertBoard error occurred while updating existing board %s: %w", board.ID, err)
 		}
 	} else {
 		insertQueryValues["created_by"] = userID
@@ -357,7 +370,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 
 		query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "boards")
 		if _, err := query.Exec(); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("insertBoard error occurred while inserting board %s: %w", board.ID, err)
 		}
 	}
 
@@ -365,7 +378,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "boards_history")
 	if _, err := query.Exec(); err != nil {
 		s.logger.Error("failed to insert board history", mlog.String("board_id", board.ID), mlog.Err(err))
-		return nil, err
+		return nil, fmt.Errorf("failed to insert board %s history: %w", board.ID, err)
 	}
 
 	return s.getBoard(db, board.ID)
@@ -462,7 +475,7 @@ func (s *SQLStore) insertBoardWithAdmin(db sq.BaseRunner, board *model.Board, us
 
 	nbm, err := s.saveMember(db, bm)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("cannot save member %s while inserting board %s: %w", bm.UserID, bm.BoardID, err)
 	}
 
 	return newBoard, nbm, nil
@@ -507,8 +520,8 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 	if oldMember == nil {
 		addToMembersHistory := s.getQueryBuilder(db).
 			Insert(s.tablePrefix+"board_members_history").
-			Columns("board_id", "user_id", "action", "insert_at").
-			Values(bm.BoardID, bm.UserID, "created", model.GetMillis())
+			Columns("board_id", "user_id", "action").
+			Values(bm.BoardID, bm.UserID, "created")
 
 		if _, err := addToMembersHistory.Exec(); err != nil {
 			return nil, err
@@ -537,8 +550,8 @@ func (s *SQLStore) deleteMember(db sq.BaseRunner, boardID, userID string) error 
 	if rowsAffected > 0 {
 		addToMembersHistory := s.getQueryBuilder(db).
 			Insert(s.tablePrefix+"board_members_history").
-			Columns("board_id", "user_id", "action", "insert_at").
-			Values(boardID, userID, "deleted", model.GetMillis())
+			Columns("board_id", "user_id", "action").
+			Values(boardID, userID, "deleted")
 
 		if _, err := addToMembersHistory.Exec(); err != nil {
 			return err

@@ -17,7 +17,7 @@ const (
 )
 
 func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/boards/{boardID}/archive/export archiveExportBoard
+	// swagger:operation GET /boards/{boardID}/archive/export archiveExportBoard
 	//
 	// Exports an archive of all blocks for one boards.
 	//
@@ -85,7 +85,7 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/teams/{teamID}/archive/export archiveExportTeam
+	// swagger:operation GET /teams/{teamID}/archive/export archiveExportTeam
 	//
 	// Exports an archive of all blocks for all the boards in a team.
 	//
@@ -154,7 +154,7 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/teams/{teamID}/archive/import archiveImport
+	// swagger:operation POST /teams/{teamID}/archive/import archiveImport
 	//
 	// Import an archive of boards.
 	//

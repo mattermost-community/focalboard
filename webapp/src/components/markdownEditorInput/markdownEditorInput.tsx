@@ -126,6 +126,10 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
 
     const onEditorStateChange = useCallback((newEditorState: EditorState) => {
         const newText = newEditorState.getCurrentContent().getPlainText()
+        const text = editorState.getCurrentContent().getPlainText()
+
+        if(text === newText) return
+
         onChange && onChange(newText)
         setEditorState(newEditorState)
     }, [onChange])
