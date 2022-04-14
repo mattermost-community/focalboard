@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
 
@@ -31,14 +31,25 @@ const Dialog = (props: Props) => {
 
     useHotkeys('esc', () => props.onClose())
 
+    const isBackdropClickedRef = useRef(false)
+
     return (
         <div className={`Dialog dialog-back ${props.className}`}>
+            <div className='backdrop'/>
             <div
                 className='wrapper'
                 onClick={(e) => {
                     e.stopPropagation()
-                    if (e.target === e.currentTarget) {
-                        props.onClose()
+                    if(!isBackdropClickedRef.current){
+                        return
+                    }
+                    isBackdropClickedRef.current = false
+                    props.onClose()
+        
+                }}
+                onMouseDown={(e) => {
+                    if(e.target === e.currentTarget){
+                        isBackdropClickedRef.current = true
                     }
                 }}
             >
