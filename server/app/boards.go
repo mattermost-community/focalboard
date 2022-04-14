@@ -369,8 +369,8 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	return nil
 }
 
-func (a *App) SearchBoardsForUserAndTeam(term, userID, teamID string) ([]*model.Board, error) {
-	return a.store.SearchBoardsForUserAndTeam(term, userID, teamID)
+func (a *App) SearchBoardsForUser(term, userID, teamID string) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUser(term, userID, teamID)
 }
 
 func (a *App) UndeleteBoard(boardID string, modifiedBy string) error {
