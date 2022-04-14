@@ -9,7 +9,7 @@ type UpdateCategoryMessage struct {
 	Action          string                            `json:"action"`
 	TeamID          string                            `json:"teamId"`
 	Category        *model.Category                   `json:"category,omitempty"`
-	BlockCategories *model.BlockCategoryWebsocketData `json:"blockCategories,omitempty"`
+	BoardCategories *model.BoardCategoryWebsocketData `json:"blockCategories,omitempty"`
 }
 
 // UpdateBlockMsg is sent on block updates.

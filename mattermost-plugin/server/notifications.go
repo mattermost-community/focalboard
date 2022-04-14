@@ -30,35 +30,43 @@ type notifyBackendParams struct {
 	cfg         *config.Configuration
 	client      *pluginapi.Client
 	permissions permissions.PermissionsService
+	store       store.Store
+	wsAdapter   ws.Adapter
 	serverRoot  string
 	logger      *mlog.Logger
 }
 
 func createMentionsNotifyBackend(params notifyBackendParams) (*notifymentions.Backend, error) {
-	delivery, err := createDelivery(params.client, params.serverRoot, params.permissions)
+	delivery, err := createDelivery(params.client, params.serverRoot)
 	if err != nil {
 		return nil, err
 	}
 
-	backend := notifymentions.New(delivery, params.permissions, params.logger)
+	backendParams := notifymentions.BackendParams{
+		Store:       params.store,
+		Permissions: params.permissions,
+		Delivery:    delivery,
+		WSAdapter:   params.wsAdapter,
+		Logger:      params.logger,
+	}
+
+	backend := notifymentions.New(backendParams)
 
 	return backend, nil
 }
 
-func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.Store,
-	wsPluginAdapter ws.PluginAdapterInterface) (*notifysubscriptions.Backend, error) {
-	//
-	delivery, err := createDelivery(params.client, params.serverRoot, params.permissions)
+func createSubscriptionsNotifyBackend(params notifyBackendParams) (*notifysubscriptions.Backend, error) {
+	delivery, err := createDelivery(params.client, params.serverRoot)
 	if err != nil {
 		return nil, err
 	}
 
 	backendParams := notifysubscriptions.BackendParams{
 		ServerRoot:             params.serverRoot,
-		Store:                  store,
+		Store:                  params.store,
 		Permissions:            params.permissions,
 		Delivery:               delivery,
-		WSAdapter:              wsPluginAdapter,
+		WSAdapter:              params.wsAdapter,
 		Logger:                 params.logger,
 		NotifyFreqCardSeconds:  params.cfg.NotifyFreqCardSeconds,
 		NotifyFreqBoardSeconds: params.cfg.NotifyFreqBoardSeconds,
@@ -68,7 +76,7 @@ func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.St
 	return backend, nil
 }
 
-func createDelivery(client *pluginapi.Client, serverRoot string, permissions permissions.PermissionsService) (*plugindelivery.PluginDelivery, error) {
+func createDelivery(client *pluginapi.Client, serverRoot string) (*plugindelivery.PluginDelivery, error) {
 	bot := &model.Bot{
 		Username:    botUsername,
 		DisplayName: botDisplayname,
@@ -81,7 +89,7 @@ func createDelivery(client *pluginapi.Client, serverRoot string, permissions per
 
 	pluginAPI := &pluginAPIAdapter{client: client}
 
-	return plugindelivery.New(botID, serverRoot, pluginAPI, permissions), nil
+	return plugindelivery.New(botID, serverRoot, pluginAPI), nil
 }
 
 type pluginAPIAdapter struct {

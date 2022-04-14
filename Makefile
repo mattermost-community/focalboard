@@ -36,7 +36,7 @@ ci: server-test
 	cd webapp; npm run cypress:ci
 
 templates-archive: ## Build templates archive file
-	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive" 
+	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
 
 server: templates-archive ## Build server for local environment.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
@@ -119,6 +119,11 @@ server-test-sqlite: export FB_UNIT_TESTING=1
 
 server-test-sqlite: templates-archive ## Run server tests using sqlite
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
+
+server-test-mini-sqlite: export FB_UNIT_TESTING=1
+
+server-test-mini-sqlite: templates-archive ## Run server tests using sqlite
+	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
 
 server-test-mysql: export FB_UNIT_TESTING=1
 server-test-mysql: export FB_STORE_TEST_DB_TYPE=mysql

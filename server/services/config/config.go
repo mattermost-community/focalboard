@@ -40,7 +40,7 @@ type Configuration struct {
 	MaxFileSize              int64             `json:"maxfilesize" mapstructure:"mafilesize"`
 	Telemetry                bool              `json:"telemetry" mapstructure:"telemetry"`
 	TelemetryID              string            `json:"telemetryid" mapstructure:"telemetryid"`
-	PrometheusAddress        string            `json:"prometheus_address" mapstructure:"prometheus_address"`
+	PrometheusAddress        string            `json:"prometheusaddress" mapstructure:"prometheusaddress"`
 	WebhookUpdate            []string          `json:"webhook_update" mapstructure:"webhook_update"`
 	Secret                   string            `json:"secret" mapstructure:"secret"`
 	SessionExpireTime        int64             `json:"session_expire_time" mapstructure:"session_expire_time"`
@@ -95,6 +95,7 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	viper.SetDefault("AuthMode", "native")
 	viper.SetDefault("NotifyFreqCardSeconds", 120)    // 2 minutes after last card edit
 	viper.SetDefault("NotifyFreqBoardSeconds", 86400) // 1 day after last card edit
+	viper.SetDefault("PrometheusAddress", "")
 
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {             // Handle errors reading the config file

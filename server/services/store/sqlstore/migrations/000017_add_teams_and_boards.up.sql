@@ -49,6 +49,8 @@ UPDATE {{.prefix}}blocks AS b
     AND b.type = 'view';
 {{end}}
 
+/* TODO: Migrate the columnCalculations at app level and remove it from the boards and boards_history tables */
+
 {{- /* add boards tables */ -}}
 CREATE TABLE {{.prefix}}boards (
     id VARCHAR(36) NOT NULL PRIMARY KEY,
@@ -84,6 +86,8 @@ CREATE TABLE {{.prefix}}boards (
     update_at BIGINT,
     delete_at BIGINT
 ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
+
+CREATE INDEX idx_board_team_id ON {{.prefix}}boards(team_id, is_template);
 
 CREATE TABLE {{.prefix}}boards_history (
     id VARCHAR(36) NOT NULL,

@@ -139,7 +139,7 @@ func isValidPassword(password string) error {
 }
 
 func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/login login
+	// swagger:operation POST /login login
 	//
 	// Login user
 	//
@@ -220,7 +220,7 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/logout logout
+	// swagger:operation POST /logout logout
 	//
 	// Logout user
 	//
@@ -271,7 +271,7 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/register register
+	// swagger:operation POST /register register
 	//
 	// Register new user
 	//
@@ -369,7 +369,7 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/users/{userID}/changepassword changePassword
+	// swagger:operation POST /users/{userID}/changepassword changePassword
 	//
 	// Change a user's password
 	//

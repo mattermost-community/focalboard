@@ -10,7 +10,7 @@ declare global {
 }
 
 async function request(method: string, host: string, resource: string, body: any, token: string | null) {
-  const response = await fetch(`${host}/api/v1/${resource}`, {
+  const response = await fetch(`${host}/api/v2/${resource}`, {
     'credentials': 'include',
     'headers': {
       'Accept': 'application/json',

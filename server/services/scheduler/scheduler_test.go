@@ -35,8 +35,8 @@ func TestCreateTask(t *testing.T) {
 
 func TestCreateRecurringTask(t *testing.T) {
 	taskName := "Test Recurring Task"
-	taskTime := time.Millisecond * 200
-	taskWait := time.Millisecond * 100
+	taskTime := time.Millisecond * 500
+	taskWait := time.Millisecond * 200
 
 	executionCount := new(int32)
 	testFunc := func() {
