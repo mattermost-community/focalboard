@@ -1545,7 +1545,7 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if sharing == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		jsonStringResponse(w, http.StatusOK, "{}")
 		return
 	}
 
