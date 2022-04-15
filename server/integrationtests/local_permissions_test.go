@@ -7,15 +7,58 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/mattermost/focalboard/server/api"
+	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/stretchr/testify/require"
 )
 
+func setupLocalClients(th *TestHelper) Clients {
+	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
+	th.RegisterAndLogin(th.Client, "sysadmin", "sysadmin@sample.com", password, "")
+
+	clients := Clients{
+		Anon:         client.NewClient(th.Server.Config().ServerRoot, ""),
+		NoTeamMember: client.NewClient(th.Server.Config().ServerRoot, ""),
+		TeamMember:   client.NewClient(th.Server.Config().ServerRoot, ""),
+		Viewer:       client.NewClient(th.Server.Config().ServerRoot, ""),
+		Commenter:    client.NewClient(th.Server.Config().ServerRoot, ""),
+		Editor:       client.NewClient(th.Server.Config().ServerRoot, ""),
+		Admin:        client.NewClient(th.Server.Config().ServerRoot, ""),
+	}
+
+	// get token
+	team, resp := th.Client.GetTeam(model.GlobalTeamID)
+	th.CheckOK(resp)
+	require.NotNil(th.T, team)
+	require.NotNil(th.T, team.SignupToken)
+
+	th.RegisterAndLogin(clients.NoTeamMember, userNoTeamMember, userNoTeamMember+"@sample.com", password, team.SignupToken)
+	userNoTeamMemberID = clients.NoTeamMember.GetUserID()
+
+	th.RegisterAndLogin(clients.TeamMember, userTeamMember, userTeamMember+"@sample.com", password, team.SignupToken)
+	userTeamMemberID = clients.TeamMember.GetUserID()
+
+	th.RegisterAndLogin(clients.Viewer, userViewer, userViewer+"@sample.com", password, team.SignupToken)
+	userViewerID = clients.Viewer.GetUserID()
+
+	th.RegisterAndLogin(clients.Commenter, userCommenter, userCommenter+"@sample.com", password, team.SignupToken)
+	userCommenterID = clients.Commenter.GetUserID()
+
+	th.RegisterAndLogin(clients.Editor, userEditor, userEditor+"@sample.com", password, team.SignupToken)
+	userEditorID = clients.Editor.GetUserID()
+
+	th.RegisterAndLogin(clients.Admin, userAdmin, userAdmin+"@sample.com", password, team.SignupToken)
+	userAdminID = clients.Admin.GetUserID()
+
+	return clients
+}
+
 func TestLocalPermissionsGetTeamBoards(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/boards", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -32,8 +75,8 @@ func TestLocalPermissionsGetTeamBoards(t *testing.T) {
 func TestLocalPermissionsSearchTeamBoards(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		// Search boards
@@ -51,8 +94,8 @@ func TestLocalPermissionsSearchTeamBoards(t *testing.T) {
 func TestLocalPermissionsGetTeamTemplates(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	err := th.Server.App().InitTemplates()
 	require.NoError(t, err, "InitTemplates should succeed")
@@ -83,8 +126,8 @@ func TestLocalPermissionsGetTeamTemplates(t *testing.T) {
 func TestLocalPermissionsCreateBoard(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	publicBoard := toJSON(t, model.Board{Title: "Board To Create", TeamID: "test-team", Type: model.BoardTypeOpen})
 	privateBoard := toJSON(t, model.Board{Title: "Board To Create", TeamID: "test-team", Type: model.BoardTypeOpen})
@@ -106,8 +149,8 @@ func TestLocalPermissionsCreateBoard(t *testing.T) {
 func TestLocalPermissionsGetBoard(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -153,8 +196,8 @@ func TestLocalPermissionsGetBoard(t *testing.T) {
 func TestLocalPermissionsPatchBoard(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"title\": \"test\"}", userAnon, http.StatusUnauthorized, 0},
@@ -195,8 +238,8 @@ func TestLocalPermissionsPatchBoard(t *testing.T) {
 func TestLocalPermissionsDeleteBoard(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
@@ -237,8 +280,8 @@ func TestLocalPermissionsDeleteBoard(t *testing.T) {
 func TestLocalPermissionsDuplicateBoard(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	// In same team
 	ttCases := []TestCase{
@@ -316,8 +359,8 @@ func TestLocalPermissionsDuplicateBoard(t *testing.T) {
 func TestLocalPermissionsGetBoardBlocks(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -363,8 +406,8 @@ func TestLocalPermissionsGetBoardBlocks(t *testing.T) {
 func TestLocalPermissionsCreateBoardBlocks(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	counter := 0
 	newBlockJSON := func(boardID string) string {
@@ -418,8 +461,8 @@ func TestLocalPermissionsCreateBoardBlocks(t *testing.T) {
 func TestLocalPermissionsPatchBoardBlocks(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	counter := 0
 	newBlocksPatchJSON := func(blockID string) string {
@@ -472,8 +515,8 @@ func TestLocalPermissionsPatchBoardBlocks(t *testing.T) {
 func TestLocalPermissionsPatchBoardBlock(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	newTitle := "New Title"
 	patchJSON := toJSON(t, model.BlockPatch{Title: &newTitle})
@@ -520,8 +563,8 @@ func TestLocalPermissionsPatchBoardBlock(t *testing.T) {
 func TestLocalPermissionsDeleteBoardBlock(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 	require.NoError(t, err)
@@ -574,8 +617,8 @@ func TestLocalPermissionsDeleteBoardBlock(t *testing.T) {
 func TestLocalPermissionsUndeleteBoardBlock(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 	require.NoError(t, err)
@@ -644,8 +687,8 @@ func TestLocalPermissionsUndeleteBoardBlock(t *testing.T) {
 func TestLocalPermissionsUndeleteBoard(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	err := th.Server.App().DeleteBoard(testData.publicBoard.ID, userAdmin)
 	require.NoError(t, err)
@@ -695,8 +738,8 @@ func TestLocalPermissionsUndeleteBoard(t *testing.T) {
 func TestLocalPermissionsDuplicateBoardBlock(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 	require.NoError(t, err)
@@ -749,8 +792,8 @@ func TestLocalPermissionsDuplicateBoardBlock(t *testing.T) {
 func TestLocalPermissionsGetBoardMembers(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/members", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -791,8 +834,8 @@ func TestLocalPermissionsGetBoardMembers(t *testing.T) {
 func TestLocalPermissionsCreateBoardMembers(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	boardMemberJSON := func(boardID string) string {
 		return toJSON(t, model.BoardMember{
@@ -841,8 +884,8 @@ func TestLocalPermissionsCreateBoardMembers(t *testing.T) {
 func TestLocalPermissionsUpdateBoardMember(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	boardMemberJSON := func(boardID string) string {
 		return toJSON(t, model.BoardMember{
@@ -901,16 +944,16 @@ func TestLocalPermissionsUpdateBoardMember(t *testing.T) {
 func TestLocalPermissionsDeleteBoardMember(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
-	_, err := th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicBoard.ID, UserID: userTeamMember, SchemeViewer: true})
+	_, err := th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicBoard.ID, UserID: userTeamMemberID, SchemeViewer: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateBoard.ID, UserID: userTeamMember, SchemeViewer: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateBoard.ID, UserID: userTeamMemberID, SchemeViewer: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicTemplate.ID, UserID: userTeamMember, SchemeViewer: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicTemplate.ID, UserID: userTeamMemberID, SchemeViewer: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateTemplate.ID, UserID: userTeamMember, SchemeViewer: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateTemplate.ID, UserID: userTeamMemberID, SchemeViewer: true})
 	require.NoError(t, err)
 
 	ttCases := []TestCase{
@@ -961,8 +1004,8 @@ func TestLocalPermissionsDeleteBoardMember(t *testing.T) {
 func TestLocalPermissionsJoinBoardAsMember(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/join", methodPost, "", userAnon, http.StatusUnauthorized, 0},
@@ -1005,8 +1048,8 @@ func TestLocalPermissionsJoinBoardAsMember(t *testing.T) {
 func TestLocalPermissionsLeaveBoardAsMember(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	_, err := th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicBoard.ID, UserID: "not-real-user", SchemeAdmin: true})
 	require.NoError(t, err)
@@ -1052,13 +1095,13 @@ func TestLocalPermissionsLeaveBoardAsMember(t *testing.T) {
 	}
 	runTestCases(t, ttCases, testData, clients)
 
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicBoard.ID, UserID: userAdmin, SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicBoard.ID, UserID: userAdminID, SchemeAdmin: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateBoard.ID, UserID: userAdmin, SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateBoard.ID, UserID: userAdminID, SchemeAdmin: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicTemplate.ID, UserID: userAdmin, SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicTemplate.ID, UserID: userAdminID, SchemeAdmin: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateTemplate.ID, UserID: userAdmin, SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.privateTemplate.ID, UserID: userAdminID, SchemeAdmin: true})
 	require.NoError(t, err)
 
 	require.NoError(t, th.Server.App().DeleteBoardMember(testData.publicBoard.ID, "not-real-user"))
@@ -1079,8 +1122,8 @@ func TestLocalPermissionsLeaveBoardAsMember(t *testing.T) {
 func TestLocalPermissionsShareBoard(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	sharing := toJSON(t, model.Sharing{Enabled: true, Token: "test-token"})
 
@@ -1123,8 +1166,8 @@ func TestLocalPermissionsShareBoard(t *testing.T) {
 func TestLocalPermissionsGetSharedBoardInfo(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	clients.Admin.PostSharing(&model.Sharing{ID: testData.publicBoard.ID, Enabled: true, Token: "test-token"})
 	clients.Admin.PostSharing(&model.Sharing{ID: testData.privateBoard.ID, Enabled: true, Token: "test-token"})
@@ -1170,17 +1213,17 @@ func TestLocalPermissionsGetSharedBoardInfo(t *testing.T) {
 func TestLocalPermissionsListTeams(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/teams", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/teams", methodGet, "", userNoTeamMember, http.StatusOK, 0},
-		{"/teams", methodGet, "", userTeamMember, http.StatusOK, 2},
-		{"/teams", methodGet, "", userViewer, http.StatusOK, 2},
-		{"/teams", methodGet, "", userCommenter, http.StatusOK, 2},
-		{"/teams", methodGet, "", userEditor, http.StatusOK, 2},
-		{"/teams", methodGet, "", userAdmin, http.StatusOK, 2},
+		{"/teams", methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/teams", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/teams", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/teams", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/teams", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/teams", methodGet, "", userAdmin, http.StatusOK, 1},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1188,8 +1231,8 @@ func TestLocalPermissionsListTeams(t *testing.T) {
 func TestLocalPermissionsGetTeam(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1211,18 +1254,18 @@ func TestLocalPermissionsGetTeam(t *testing.T) {
 	runTestCases(t, ttCases, testData, clients)
 }
 
-func TestLocalPermissionsRegenerateSignupTokenPluginMode(t *testing.T) {
+func TestLocalPermissionsRegenerateSignupToken(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/regenerate_signup_token", methodPost, "", userAnon, http.StatusUnauthorized, 0},
-		{"/teams/test-team/regenerate_signup_token", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+		{"/teams/test-team/regenerate_signup_token", methodPost, "", userAdmin, http.StatusOK, 0},
 
 		{"/teams/empty-team/regenerate_signup_token", methodPost, "", userAnon, http.StatusUnauthorized, 0},
-		{"/teams/empty-team/regenerate_signup_token", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+		{"/teams/empty-team/regenerate_signup_token", methodPost, "", userAdmin, http.StatusOK, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1230,41 +1273,33 @@ func TestLocalPermissionsRegenerateSignupTokenPluginMode(t *testing.T) {
 func TestLocalPermissionsGetTeamUsers(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/users", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/teams/test-team/users", methodGet, "", userNoTeamMember, http.StatusOK, 5},
-		{"/teams/test-team/users", methodGet, "", userTeamMember, http.StatusOK, 5},
-		{"/teams/test-team/users", methodGet, "", userViewer, http.StatusOK, 5},
-		{"/teams/test-team/users", methodGet, "", userCommenter, http.StatusOK, 5},
-		{"/teams/test-team/users", methodGet, "", userEditor, http.StatusOK, 5},
-		{"/teams/test-team/users", methodGet, "", userAdmin, http.StatusOK, 5},
-
-		// {"/teams/empty-team/users", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		// {"/teams/empty-team/users", methodGet, "", userNoTeamMember, http.StatusOK, 0},
-		// {"/teams/empty-team/users", methodGet, "", userTeamMember, http.StatusForbidden, 0},
-		// {"/teams/empty-team/users", methodGet, "", userViewer, http.StatusForbidden, 0},
-		// {"/teams/empty-team/users", methodGet, "", userCommenter, http.StatusForbidden, 0},
-		// {"/teams/empty-team/users", methodGet, "", userEditor, http.StatusForbidden, 0},
-		// {"/teams/empty-team/users", methodGet, "", userAdmin, http.StatusForbidden, 0},
+		{"/teams/test-team/users", methodGet, "", userNoTeamMember, http.StatusOK, 7},
+		{"/teams/test-team/users", methodGet, "", userTeamMember, http.StatusOK, 7},
+		{"/teams/test-team/users", methodGet, "", userViewer, http.StatusOK, 7},
+		{"/teams/test-team/users", methodGet, "", userCommenter, http.StatusOK, 7},
+		{"/teams/test-team/users", methodGet, "", userEditor, http.StatusOK, 7},
+		{"/teams/test-team/users", methodGet, "", userAdmin, http.StatusOK, 7},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
 
-func TestLocalPermissionsTeamArchiveExportPluginMode(t *testing.T) {
+func TestLocalPermissionsTeamArchiveExport(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/archive/export", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/teams/test-team/archive/export", methodGet, "", userAdmin, http.StatusNotImplemented, 0},
+		{"/teams/test-team/archive/export", methodGet, "", userAdmin, http.StatusOK, 1},
 
 		{"/teams/empty-team/archive/export", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/teams/empty-team/archive/export", methodGet, "", userAdmin, http.StatusNotImplemented, 0},
+		{"/teams/empty-team/archive/export", methodGet, "", userAdmin, http.StatusOK, 1},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1272,8 +1307,8 @@ func TestLocalPermissionsTeamArchiveExportPluginMode(t *testing.T) {
 func TestLocalPermissionsUploadFile(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/{PRIVATE_BOARD_ID}/files", methodPost, "", userAnon, http.StatusUnauthorized, 0},
@@ -1314,8 +1349,8 @@ func TestLocalPermissionsUploadFile(t *testing.T) {
 func TestLocalPermissionsGetMe(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/users/me", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1332,8 +1367,8 @@ func TestLocalPermissionsGetMe(t *testing.T) {
 func TestLocalPermissionsGetMyMemberships(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/users/me/memberships", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1350,46 +1385,51 @@ func TestLocalPermissionsGetMyMemberships(t *testing.T) {
 func TestLocalPermissionsGetUser(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
-		{"/users/no-team-member", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/users/no-team-member", methodGet, "", userNoTeamMember, http.StatusOK, 1},
-		{"/users/no-team-member", methodGet, "", userTeamMember, http.StatusOK, 1},
-		{"/users/no-team-member", methodGet, "", userViewer, http.StatusOK, 1},
-		{"/users/no-team-member", methodGet, "", userCommenter, http.StatusOK, 1},
-		{"/users/no-team-member", methodGet, "", userEditor, http.StatusOK, 1},
-		{"/users/no-team-member", methodGet, "", userAdmin, http.StatusOK, 1},
+		{"/users/" + userNoTeamMemberID, methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/" + userNoTeamMemberID, methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/users/" + userNoTeamMemberID, methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/users/" + userNoTeamMemberID, methodGet, "", userViewer, http.StatusOK, 1},
+		{"/users/" + userNoTeamMemberID, methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/users/" + userNoTeamMemberID, methodGet, "", userEditor, http.StatusOK, 1},
+		{"/users/" + userNoTeamMemberID, methodGet, "", userAdmin, http.StatusOK, 1},
 
-		{"/users/team-member", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/users/team-member", methodGet, "", userNoTeamMember, http.StatusOK, 1},
-		{"/users/team-member", methodGet, "", userTeamMember, http.StatusOK, 1},
-		{"/users/team-member", methodGet, "", userViewer, http.StatusOK, 1},
-		{"/users/team-member", methodGet, "", userCommenter, http.StatusOK, 1},
-		{"/users/team-member", methodGet, "", userEditor, http.StatusOK, 1},
-		{"/users/team-member", methodGet, "", userAdmin, http.StatusOK, 1},
+		{"/users/" + userTeamMemberID, methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/" + userTeamMemberID, methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/users/" + userTeamMemberID, methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/users/" + userTeamMemberID, methodGet, "", userViewer, http.StatusOK, 1},
+		{"/users/" + userTeamMemberID, methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/users/" + userTeamMemberID, methodGet, "", userEditor, http.StatusOK, 1},
+		{"/users/" + userTeamMemberID, methodGet, "", userAdmin, http.StatusOK, 1},
 
-		{"/users/viewer", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/users/viewer", methodGet, "", userNoTeamMember, http.StatusOK, 1},
-		{"/users/viewer", methodGet, "", userTeamMember, http.StatusOK, 1},
-		{"/users/viewer", methodGet, "", userViewer, http.StatusOK, 1},
-		{"/users/viewer", methodGet, "", userCommenter, http.StatusOK, 1},
-		{"/users/viewer", methodGet, "", userEditor, http.StatusOK, 1},
-		{"/users/viewer", methodGet, "", userAdmin, http.StatusOK, 1},
+		{"/users/" + userViewerID, methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/" + userViewerID, methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/users/" + userViewerID, methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/users/" + userViewerID, methodGet, "", userViewer, http.StatusOK, 1},
+		{"/users/" + userViewerID, methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/users/" + userViewerID, methodGet, "", userEditor, http.StatusOK, 1},
+		{"/users/" + userViewerID, methodGet, "", userAdmin, http.StatusOK, 1},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
 
-func TestLocalPermissionsUserChangePasswordPluginMode(t *testing.T) {
+func TestLocalPermissionsUserChangePassword(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
+
+	postBody := toJSON(t, api.ChangePasswordRequest{
+		OldPassword: password,
+		NewPassword: "newpa$$word123",
+	})
 
 	ttCases := []TestCase{
-		{"/users/admin/changepassword", methodPost, "", userAnon, http.StatusUnauthorized, 0},
-		{"/users/admin/changepassword", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+		{"/users/" + userAdminID + "/changepassword", methodPost, postBody, userAnon, http.StatusUnauthorized, 0},
+		{"/users/" + userAdminID + "/changepassword", methodPost, postBody, userAdmin, http.StatusOK, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1397,19 +1437,19 @@ func TestLocalPermissionsUserChangePasswordPluginMode(t *testing.T) {
 func TestLocalPermissionsUpdateUserConfig(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	patch := toJSON(t, model.UserPropPatch{UpdatedFields: map[string]string{"test": "test"}})
 
 	ttCases := []TestCase{
-		{"/users/team-member/config", methodPut, patch, userAnon, http.StatusUnauthorized, 0},
-		{"/users/team-member/config", methodPut, patch, userNoTeamMember, http.StatusForbidden, 0},
-		{"/users/team-member/config", methodPut, patch, userTeamMember, http.StatusOK, 1},
-		{"/users/team-member/config", methodPut, patch, userViewer, http.StatusForbidden, 0},
-		{"/users/team-member/config", methodPut, patch, userCommenter, http.StatusForbidden, 0},
-		{"/users/team-member/config", methodPut, patch, userEditor, http.StatusForbidden, 0},
-		{"/users/team-member/config", methodPut, patch, userAdmin, http.StatusForbidden, 0},
+		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userAnon, http.StatusUnauthorized, 0},
+		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userNoTeamMember, http.StatusForbidden, 0},
+		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userTeamMember, http.StatusOK, 1},
+		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userViewer, http.StatusForbidden, 0},
+		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userCommenter, http.StatusForbidden, 0},
+		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userEditor, http.StatusForbidden, 0},
+		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userAdmin, http.StatusForbidden, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1417,8 +1457,8 @@ func TestLocalPermissionsUpdateUserConfig(t *testing.T) {
 func TestLocalPermissionsCreateBoardsAndBlocks(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	bab := toJSON(t, model.BoardsAndBlocks{
 		Boards: []*model.Board{{ID: "test", Title: "Test Board", TeamID: "test-team"}},
@@ -1442,8 +1482,8 @@ func TestLocalPermissionsCreateBoardsAndBlocks(t *testing.T) {
 func TestLocalPermissionsUpdateBoardsAndBlocks(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	newTitle := "new title"
 	bab := toJSON(t, model.PatchBoardsAndBlocks{
@@ -1488,8 +1528,8 @@ func TestLocalPermissionsUpdateBoardsAndBlocks(t *testing.T) {
 func TestLocalPermissionsDeleteBoardsAndBlocks(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	bab := toJSON(t, model.DeleteBoardsAndBlocks{
 		Boards: []string{testData.publicBoard.ID},
@@ -1508,41 +1548,48 @@ func TestLocalPermissionsDeleteBoardsAndBlocks(t *testing.T) {
 	runTestCases(t, ttCases, testData, clients)
 }
 
-func TestLocalPermissionsLoginPluginMode(t *testing.T) {
+func TestLocalPermissionsLogin(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
+
+	loginReq := func(username, password string) string {
+		return toJSON(t, api.LoginRequest{
+			Type:     "normal",
+			Username: username,
+			Password: password,
+		})
+	}
 
 	ttCases := []TestCase{
-		{"/login", methodPost, "", userAnon, http.StatusNotImplemented, 0},
-		{"/login", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+		{"/login", methodPost, loginReq(userAnon, password), userAnon, http.StatusUnauthorized, 0},
+		{"/login", methodPost, loginReq(userAdmin, password), userAdmin, http.StatusOK, 1},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
 
-func TestLocalPermissionsLogoutPluginMode(t *testing.T) {
+func TestLocalPermissionsLogout(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/logout", methodPost, "", userAnon, http.StatusUnauthorized, 0},
-		{"/logout", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+		{"/logout", methodPost, "", userAdmin, http.StatusOK, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
 
-func TestLocalPermissionsRegisterPluginMode(t *testing.T) {
+func TestLocalPermissionsRegister(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
-		{"/register", methodPost, "", userAnon, http.StatusNotImplemented, 0},
-		{"/register", methodPost, "", userAdmin, http.StatusNotImplemented, 0},
+		{"/register", methodPost, "", userAnon, http.StatusInternalServerError, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1550,8 +1597,8 @@ func TestLocalPermissionsRegisterPluginMode(t *testing.T) {
 func TestLocalPermissionsClientConfig(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/clientConfig", methodGet, "", userAnon, http.StatusOK, 1},
@@ -1563,8 +1610,8 @@ func TestLocalPermissionsClientConfig(t *testing.T) {
 func TestLocalPermissionsGetCategories(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/categories", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1581,8 +1628,8 @@ func TestLocalPermissionsGetCategories(t *testing.T) {
 func TestLocalPermissionsCreateCategory(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	category := func(userID string) string {
 		return toJSON(t, model.Category{
@@ -1596,12 +1643,12 @@ func TestLocalPermissionsCreateCategory(t *testing.T) {
 
 	ttCases := []TestCase{
 		{"/teams/test-team/categories", methodPost, category(""), userAnon, http.StatusUnauthorized, 0},
-		{"/teams/test-team/categories", methodPost, category(userNoTeamMember), userNoTeamMember, http.StatusOK, 1},
-		{"/teams/test-team/categories", methodPost, category(userTeamMember), userTeamMember, http.StatusOK, 1},
-		{"/teams/test-team/categories", methodPost, category(userViewer), userViewer, http.StatusOK, 1},
-		{"/teams/test-team/categories", methodPost, category(userCommenter), userCommenter, http.StatusOK, 1},
-		{"/teams/test-team/categories", methodPost, category(userEditor), userEditor, http.StatusOK, 1},
-		{"/teams/test-team/categories", methodPost, category(userAdmin), userAdmin, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userNoTeamMemberID), userNoTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userTeamMemberID), userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userViewerID), userViewer, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userCommenterID), userCommenter, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userEditorID), userEditor, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodPost, category(userAdminID), userAdmin, http.StatusOK, 1},
 
 		{"/teams/test-team/categories", methodPost, category("other"), userAnon, http.StatusUnauthorized, 0},
 		{"/teams/test-team/categories", methodPost, category("other"), userNoTeamMember, http.StatusBadRequest, 0},
@@ -1612,12 +1659,12 @@ func TestLocalPermissionsCreateCategory(t *testing.T) {
 		{"/teams/test-team/categories", methodPost, category("other"), userAdmin, http.StatusBadRequest, 0},
 
 		{"/teams/other-team/categories", methodPost, category(""), userAnon, http.StatusUnauthorized, 0},
-		{"/teams/other-team/categories", methodPost, category(userNoTeamMember), userNoTeamMember, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories", methodPost, category(userTeamMember), userTeamMember, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories", methodPost, category(userViewer), userViewer, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories", methodPost, category(userCommenter), userCommenter, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories", methodPost, category(userEditor), userEditor, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories", methodPost, category(userAdmin), userAdmin, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userNoTeamMemberID), userNoTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userTeamMemberID), userTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userViewerID), userViewer, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userCommenterID), userCommenter, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userEditorID), userEditor, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories", methodPost, category(userAdminID), userAdmin, http.StatusBadRequest, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1625,31 +1672,31 @@ func TestLocalPermissionsCreateCategory(t *testing.T) {
 func TestLocalPermissionsUpdateCategory(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	categoryNoTeamMember, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMemberID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryTeamMember, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userTeamMemberID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryViewer, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userViewer, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userViewerID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryCommenter, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userCommenter, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userCommenterID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryEditor, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userEditor, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userEditorID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryAdmin, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userAdmin, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userAdminID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 
@@ -1665,15 +1712,15 @@ func TestLocalPermissionsUpdateCategory(t *testing.T) {
 	}
 
 	ttCases := []TestCase{
-		{"/teams/test-team/categories/any", methodPut, category("", "any"), userAnon, http.StatusUnauthorized, 0},
-		{"/teams/test-team/categories/" + categoryNoTeamMember.ID, methodPut, category(userNoTeamMember, categoryNoTeamMember.ID), userNoTeamMember, http.StatusOK, 1},
-		{"/teams/test-team/categories/" + categoryTeamMember.ID, methodPut, category(userTeamMember, categoryTeamMember.ID), userTeamMember, http.StatusOK, 1},
-		{"/teams/test-team/categories/" + categoryViewer.ID, methodPut, category(userViewer, categoryViewer.ID), userViewer, http.StatusOK, 1},
-		{"/teams/test-team/categories/" + categoryCommenter.ID, methodPut, category(userCommenter, categoryCommenter.ID), userCommenter, http.StatusOK, 1},
-		{"/teams/test-team/categories/" + categoryEditor.ID, methodPut, category(userEditor, categoryEditor.ID), userEditor, http.StatusOK, 1},
-		{"/teams/test-team/categories/" + categoryAdmin.ID, methodPut, category(userAdmin, categoryAdmin.ID), userAdmin, http.StatusOK, 1},
+		{"/teams/test-team/categories/any", methodPut, category("", "any"), userAnonID, http.StatusUnauthorized, 0},
+		{"/teams/test-team/categories/" + categoryNoTeamMember.ID, methodPut, category(userNoTeamMemberID, categoryNoTeamMember.ID), userNoTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryTeamMember.ID, methodPut, category(userTeamMemberID, categoryTeamMember.ID), userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryViewer.ID, methodPut, category(userViewerID, categoryViewer.ID), userViewer, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryCommenter.ID, methodPut, category(userCommenterID, categoryCommenter.ID), userCommenter, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryEditor.ID, methodPut, category(userEditorID, categoryEditor.ID), userEditor, http.StatusOK, 1},
+		{"/teams/test-team/categories/" + categoryAdmin.ID, methodPut, category(userAdminID, categoryAdmin.ID), userAdmin, http.StatusOK, 1},
 
-		{"/teams/test-team/categories/any", methodPut, category("other", "any"), userAnon, http.StatusUnauthorized, 0},
+		{"/teams/test-team/categories/any", methodPut, category("other", "any"), userAnonID, http.StatusUnauthorized, 0},
 		{"/teams/test-team/categories/" + categoryNoTeamMember.ID, methodPut, category("other", categoryNoTeamMember.ID), userNoTeamMember, http.StatusBadRequest, 0},
 		{"/teams/test-team/categories/" + categoryTeamMember.ID, methodPut, category("other", categoryTeamMember.ID), userTeamMember, http.StatusBadRequest, 0},
 		{"/teams/test-team/categories/" + categoryViewer.ID, methodPut, category("other", categoryViewer.ID), userViewer, http.StatusBadRequest, 0},
@@ -1681,13 +1728,13 @@ func TestLocalPermissionsUpdateCategory(t *testing.T) {
 		{"/teams/test-team/categories/" + categoryEditor.ID, methodPut, category("other", categoryEditor.ID), userEditor, http.StatusBadRequest, 0},
 		{"/teams/test-team/categories/" + categoryAdmin.ID, methodPut, category("other", categoryAdmin.ID), userAdmin, http.StatusBadRequest, 0},
 
-		{"/teams/other-team/categories/any", methodPut, category("", "any"), userAnon, http.StatusUnauthorized, 0},
-		{"/teams/other-team/categories/" + categoryNoTeamMember.ID, methodPut, category(userNoTeamMember, categoryNoTeamMember.ID), userNoTeamMember, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories/" + categoryTeamMember.ID, methodPut, category(userTeamMember, categoryTeamMember.ID), userTeamMember, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories/" + categoryViewer.ID, methodPut, category(userViewer, categoryViewer.ID), userViewer, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories/" + categoryCommenter.ID, methodPut, category(userCommenter, categoryCommenter.ID), userCommenter, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories/" + categoryEditor.ID, methodPut, category(userEditor, categoryEditor.ID), userEditor, http.StatusBadRequest, 0},
-		{"/teams/other-team/categories/" + categoryAdmin.ID, methodPut, category(userAdmin, categoryAdmin.ID), userAdmin, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/any", methodPut, category("", "any"), userAnonID, http.StatusUnauthorized, 0},
+		{"/teams/other-team/categories/" + categoryNoTeamMember.ID, methodPut, category(userNoTeamMemberID, categoryNoTeamMember.ID), userNoTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryTeamMember.ID, methodPut, category(userTeamMemberID, categoryTeamMember.ID), userTeamMember, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryViewer.ID, methodPut, category(userViewerID, categoryViewer.ID), userViewer, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryCommenter.ID, methodPut, category(userCommenterID, categoryCommenter.ID), userCommenter, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryEditor.ID, methodPut, category(userEditorID, categoryEditor.ID), userEditor, http.StatusBadRequest, 0},
+		{"/teams/other-team/categories/" + categoryAdmin.ID, methodPut, category(userAdminID, categoryAdmin.ID), userAdmin, http.StatusBadRequest, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1695,31 +1742,31 @@ func TestLocalPermissionsUpdateCategory(t *testing.T) {
 func TestLocalPermissionsDeleteCategory(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	categoryNoTeamMember, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMemberID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryTeamMember, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userTeamMemberID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryViewer, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userViewer, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userViewerID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryCommenter, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userCommenter, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userCommenterID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryEditor, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userEditor, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userEditorID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryAdmin, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userAdmin, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userAdminID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 
@@ -1746,31 +1793,31 @@ func TestLocalPermissionsDeleteCategory(t *testing.T) {
 func TestLocalPermissionsUpdateCategoryBoard(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	categoryNoTeamMember, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMemberID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryTeamMember, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userTeamMemberID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryViewer, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userViewer, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userViewerID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryCommenter, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userCommenter, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userCommenterID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryEditor, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userEditor, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userEditorID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	categoryAdmin, err := th.Server.App().CreateCategory(
-		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userAdmin, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userAdminID, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 
@@ -1789,8 +1836,8 @@ func TestLocalPermissionsUpdateCategoryBoard(t *testing.T) {
 func TestLocalPermissionsGetFile(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	newFileID, err := th.Server.App().SaveFile(bytes.NewBuffer([]byte("test")), "test-team", testData.privateBoard.ID, "test.png")
 	require.NoError(t, err)
@@ -1815,8 +1862,8 @@ func TestLocalPermissionsGetFile(t *testing.T) {
 func TestLocalPermissionsCreateSubscription(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	subscription := func(userID string) string {
 		return toJSON(t, model.Subscription{
@@ -1829,12 +1876,12 @@ func TestLocalPermissionsCreateSubscription(t *testing.T) {
 	}
 	ttCases := []TestCase{
 		{"/subscriptions", methodPost, subscription(""), userAnon, http.StatusUnauthorized, 0},
-		{"/subscriptions", methodPost, subscription(userNoTeamMember), userNoTeamMember, http.StatusOK, 1},
-		{"/subscriptions", methodPost, subscription(userTeamMember), userTeamMember, http.StatusOK, 1},
-		{"/subscriptions", methodPost, subscription(userViewer), userViewer, http.StatusOK, 1},
-		{"/subscriptions", methodPost, subscription(userCommenter), userCommenter, http.StatusOK, 1},
-		{"/subscriptions", methodPost, subscription(userEditor), userEditor, http.StatusOK, 1},
-		{"/subscriptions", methodPost, subscription(userAdmin), userAdmin, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userNoTeamMemberID), userNoTeamMember, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userTeamMemberID), userTeamMember, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userViewerID), userViewer, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userCommenterID), userCommenter, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userEditorID), userEditor, http.StatusOK, 1},
+		{"/subscriptions", methodPost, subscription(userAdminID), userAdmin, http.StatusOK, 1},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1842,17 +1889,17 @@ func TestLocalPermissionsCreateSubscription(t *testing.T) {
 func TestLocalPermissionsGetSubscriptions(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
-		{"/subscriptions/anon", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/subscriptions/no-team-member", methodGet, "", userNoTeamMember, http.StatusOK, 0},
-		{"/subscriptions/team-member", methodGet, "", userTeamMember, http.StatusOK, 0},
-		{"/subscriptions/viewer", methodGet, "", userViewer, http.StatusOK, 0},
-		{"/subscriptions/commenter", methodGet, "", userCommenter, http.StatusOK, 0},
-		{"/subscriptions/editor", methodGet, "", userEditor, http.StatusOK, 0},
-		{"/subscriptions/admin", methodGet, "", userAdmin, http.StatusOK, 0},
+		{"/subscriptions/" + userAnonID, methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/subscriptions/" + userNoTeamMemberID, methodGet, "", userNoTeamMember, http.StatusOK, 0},
+		{"/subscriptions/" + userTeamMemberID, methodGet, "", userTeamMember, http.StatusOK, 0},
+		{"/subscriptions/" + userViewerID, methodGet, "", userViewer, http.StatusOK, 0},
+		{"/subscriptions/" + userCommenterID, methodGet, "", userCommenter, http.StatusOK, 0},
+		{"/subscriptions/" + userEditorID, methodGet, "", userEditor, http.StatusOK, 0},
+		{"/subscriptions/" + userAdminID, methodGet, "", userAdmin, http.StatusOK, 0},
 
 		{"/subscriptions/other", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
 		{"/subscriptions/other", methodGet, "", userTeamMember, http.StatusForbidden, 0},
@@ -1867,31 +1914,31 @@ func TestLocalPermissionsGetSubscriptions(t *testing.T) {
 func TestLocalPermissionsDeleteSubscription(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	_, err := th.Server.App().CreateSubscription(
-		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userNoTeamMember, CreateAt: model.GetMillis()},
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userNoTeamMemberID, CreateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	_, err = th.Server.App().CreateSubscription(
-		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userTeamMember, CreateAt: model.GetMillis()},
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userTeamMemberID, CreateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	_, err = th.Server.App().CreateSubscription(
-		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userViewer, CreateAt: model.GetMillis()},
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userViewerID, CreateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	_, err = th.Server.App().CreateSubscription(
-		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userCommenter, CreateAt: model.GetMillis()},
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userCommenterID, CreateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	_, err = th.Server.App().CreateSubscription(
-		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userEditor, CreateAt: model.GetMillis()},
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userEditorID, CreateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	_, err = th.Server.App().CreateSubscription(
-		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userAdmin, CreateAt: model.GetMillis()},
+		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userAdminID, CreateAt: model.GetMillis()},
 	)
 	require.NoError(t, err)
 	_, err = th.Server.App().CreateSubscription(
@@ -1900,13 +1947,13 @@ func TestLocalPermissionsDeleteSubscription(t *testing.T) {
 	require.NoError(t, err)
 
 	ttCases := []TestCase{
-		{"/subscriptions/block-3/anon", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
-		{"/subscriptions/block-3/no-team-member", methodDelete, "", userNoTeamMember, http.StatusOK, 0},
-		{"/subscriptions/block-3/team-member", methodDelete, "", userTeamMember, http.StatusOK, 0},
-		{"/subscriptions/block-3/viewer", methodDelete, "", userViewer, http.StatusOK, 0},
-		{"/subscriptions/block-3/commenter", methodDelete, "", userCommenter, http.StatusOK, 0},
-		{"/subscriptions/block-3/editor", methodDelete, "", userEditor, http.StatusOK, 0},
-		{"/subscriptions/block-3/admin", methodDelete, "", userAdmin, http.StatusOK, 0},
+		{"/subscriptions/block-3/" + userAnonID, methodDelete, "", userAnon, http.StatusUnauthorized, 0},
+		{"/subscriptions/block-3/" + userNoTeamMemberID, methodDelete, "", userNoTeamMember, http.StatusOK, 0},
+		{"/subscriptions/block-3/" + userTeamMemberID, methodDelete, "", userTeamMember, http.StatusOK, 0},
+		{"/subscriptions/block-3/" + userViewerID, methodDelete, "", userViewer, http.StatusOK, 0},
+		{"/subscriptions/block-3/" + userCommenterID, methodDelete, "", userCommenter, http.StatusOK, 0},
+		{"/subscriptions/block-3/" + userEditorID, methodDelete, "", userEditor, http.StatusOK, 0},
+		{"/subscriptions/block-3/" + userAdminID, methodDelete, "", userAdmin, http.StatusOK, 0},
 
 		{"/subscriptions/block-3/other", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
 		{"/subscriptions/block-3/other", methodDelete, "", userTeamMember, http.StatusForbidden, 0},
@@ -1921,8 +1968,8 @@ func TestLocalPermissionsDeleteSubscription(t *testing.T) {
 func TestLocalPermissionsOnboard(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	err := th.Server.App().InitTemplates()
 	require.NoError(t, err, "InitTemplates should not fail")
@@ -1942,8 +1989,8 @@ func TestLocalPermissionsOnboard(t *testing.T) {
 func TestLocalPermissionsBoardArchiveExport(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/boards/{PUBLIC_BOARD_ID}/archive/export", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1984,8 +2031,8 @@ func TestLocalPermissionsBoardArchiveExport(t *testing.T) {
 func TestLocalPermissionsBoardArchiveImport(t *testing.T) {
 	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
-	clients := setupClients(th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/archive/import", methodPost, "", userAnon, http.StatusUnauthorized, 0},

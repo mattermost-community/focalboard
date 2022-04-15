@@ -61,6 +61,15 @@ func setupClients(th *TestHelper) Clients {
 	clients.Editor.HTTPHeader["Mattermost-User-Id"] = userEditor
 	clients.Admin.HTTPHeader["Mattermost-User-Id"] = userAdmin
 
+	// For plugin tests, the userID = username
+	userAnonID = userAnon
+	userNoTeamMemberID = userNoTeamMember
+	userTeamMemberID = userTeamMember
+	userViewerID = userViewer
+	userCommenterID = userCommenter
+	userEditorID = userEditor
+	userAdminID = userAdmin
+
 	return clients
 }
 
@@ -78,60 +87,94 @@ type TestData struct {
 }
 
 func setupData(t *testing.T, th *TestHelper) TestData {
-	customTemplate1, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 1", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypeOpen}, userAdmin, true)
+	customTemplate1, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 1", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypeOpen}, userAdminID, true)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, userAdmin)
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, userAdminID)
 	require.NoError(t, err)
-	customTemplate2, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate}, userAdmin, true)
+	customTemplate2, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate}, userAdminID, true)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, userAdmin)
-	require.NoError(t, err)
-
-	board1, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 1", TeamID: "test-team", Type: model.BoardTypeOpen}, userAdmin, true)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID}, userAdmin)
-	require.NoError(t, err)
-	board2, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 2", TeamID: "test-team", Type: model.BoardTypePrivate}, userAdmin, true)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-4", Title: "Test", Type: "card", BoardID: board2.ID}, userAdmin)
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, userAdminID)
 	require.NoError(t, err)
 
-	err = th.Server.App().UpsertSharing(model.Sharing{ID: board2.ID, Enabled: true, Token: "valid", ModifiedBy: userAdmin, UpdateAt: model.GetMillis()})
+	board1, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 1", TeamID: "test-team", Type: model.BoardTypeOpen}, userAdminID, true)
+	require.NoError(t, err)
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID}, userAdminID)
+	require.NoError(t, err)
+	board2, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 2", TeamID: "test-team", Type: model.BoardTypePrivate}, userAdminID, true)
 	require.NoError(t, err)
 
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userViewer, SchemeViewer: true})
+	rBoard2, err := th.Server.App().GetBoard(board2.ID)
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userViewer, SchemeViewer: true})
+	require.NotNil(t, rBoard2)
+	require.Equal(t, rBoard2, board2)
+
+	boardMember, err := th.Server.App().GetMemberForBoard(board2.ID, userAdminID)
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userCommenter, SchemeCommenter: true})
-	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userCommenter, SchemeCommenter: true})
-	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userEditor, SchemeEditor: true})
-	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userEditor, SchemeEditor: true})
-	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userAdmin, SchemeAdmin: true})
-	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userAdmin, SchemeAdmin: true})
+	require.NotNil(t, boardMember)
+	require.Equal(t, boardMember.UserID, userAdminID)
+	require.Equal(t, boardMember.BoardID, board2.ID)
+
+	err = th.Server.App().InsertBlock(model.Block{ID: "block-4", Title: "Test", Type: "card", BoardID: board2.ID}, userAdminID)
 	require.NoError(t, err)
 
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userViewer, SchemeViewer: true})
+	err = th.Server.App().UpsertSharing(model.Sharing{ID: board2.ID, Enabled: true, Token: "valid", ModifiedBy: userAdminID, UpdateAt: model.GetMillis()})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userViewer, SchemeViewer: true})
+
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userViewerID, SchemeViewer: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userCommenter, SchemeCommenter: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userViewerID, SchemeViewer: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userCommenter, SchemeCommenter: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userCommenterID, SchemeCommenter: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userEditor, SchemeEditor: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userCommenterID, SchemeCommenter: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userEditor, SchemeEditor: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userEditorID, SchemeEditor: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userAdmin, SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userEditorID, SchemeEditor: true})
 	require.NoError(t, err)
-	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userAdmin, SchemeAdmin: true})
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate1.ID, UserID: userAdminID, SchemeAdmin: true})
 	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: customTemplate2.ID, UserID: userAdminID, SchemeAdmin: true})
+	require.NoError(t, err)
+
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userViewerID, SchemeViewer: true})
+	require.NoError(t, err)
+
+	boardMember, err = th.Server.App().GetMemberForBoard(board1.ID, userViewerID)
+	require.NoError(t, err)
+	require.NotNil(t, boardMember)
+	require.Equal(t, boardMember.UserID, userViewerID)
+	require.Equal(t, boardMember.BoardID, board1.ID)
+
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userViewerID, SchemeViewer: true})
+	require.NoError(t, err)
+
+	boardMember, err = th.Server.App().GetMemberForBoard(board2.ID, userViewerID)
+	require.NoError(t, err)
+	require.NotNil(t, boardMember)
+	require.Equal(t, boardMember.UserID, userViewerID)
+	require.Equal(t, boardMember.BoardID, board2.ID)
+
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userCommenterID, SchemeCommenter: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userCommenterID, SchemeCommenter: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userEditorID, SchemeEditor: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userEditorID, SchemeEditor: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board1.ID, UserID: userAdminID, SchemeAdmin: true})
+	require.NoError(t, err)
+	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userAdminID, SchemeAdmin: true})
+	require.NoError(t, err)
+
+	fmt.Println("privateBoard members:")
+	boardMembers, err := th.Server.App().GetMembersForBoard(board2.ID)
+	require.NoError(t, err)
+	require.NotNil(t, boardMembers)
+	for _, boardMember = range boardMembers {
+		fmt.Printf("board: %s, user: %s, isAdmin: %v\n", boardMember.BoardID, boardMember.UserID, boardMember.SchemeAdmin)
+	}
 
 	return TestData{
 		publicBoard:     board1,
@@ -219,8 +262,8 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 func TestPermissionsGetTeamBoards(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/boards", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -237,8 +280,8 @@ func TestPermissionsGetTeamBoards(t *testing.T) {
 func TestPermissionsSearchTeamBoards(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		// Search boards
@@ -256,8 +299,8 @@ func TestPermissionsSearchTeamBoards(t *testing.T) {
 func TestPermissionsGetTeamTemplates(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	err := th.Server.App().InitTemplates()
 	require.NoError(t, err, "InitTemplates should succeed")
@@ -288,8 +331,8 @@ func TestPermissionsGetTeamTemplates(t *testing.T) {
 func TestPermissionsCreateBoard(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	publicBoard := toJSON(t, model.Board{Title: "Board To Create", TeamID: "test-team", Type: model.BoardTypeOpen})
 	privateBoard := toJSON(t, model.Board{Title: "Board To Create", TeamID: "test-team", Type: model.BoardTypeOpen})
@@ -311,8 +354,8 @@ func TestPermissionsCreateBoard(t *testing.T) {
 func TestPermissionsGetBoard(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -358,8 +401,8 @@ func TestPermissionsGetBoard(t *testing.T) {
 func TestPermissionsPatchBoard(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"title\": \"test\"}", userAnon, http.StatusUnauthorized, 0},
@@ -400,8 +443,8 @@ func TestPermissionsPatchBoard(t *testing.T) {
 func TestPermissionsDeleteBoard(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
@@ -442,8 +485,8 @@ func TestPermissionsDeleteBoard(t *testing.T) {
 func TestPermissionsDuplicateBoard(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	// In same team
 	ttCases := []TestCase{
@@ -521,8 +564,8 @@ func TestPermissionsDuplicateBoard(t *testing.T) {
 func TestPermissionsGetBoardBlocks(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -568,8 +611,8 @@ func TestPermissionsGetBoardBlocks(t *testing.T) {
 func TestPermissionsCreateBoardBlocks(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	counter := 0
 	newBlockJSON := func(boardID string) string {
@@ -623,8 +666,8 @@ func TestPermissionsCreateBoardBlocks(t *testing.T) {
 func TestPermissionsPatchBoardBlocks(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	counter := 0
 	newBlocksPatchJSON := func(blockID string) string {
@@ -677,8 +720,8 @@ func TestPermissionsPatchBoardBlocks(t *testing.T) {
 func TestPermissionsPatchBoardBlock(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	newTitle := "New Title"
 	patchJSON := toJSON(t, model.BlockPatch{Title: &newTitle})
@@ -725,8 +768,8 @@ func TestPermissionsPatchBoardBlock(t *testing.T) {
 func TestPermissionsDeleteBoardBlock(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 	require.NoError(t, err)
@@ -779,8 +822,8 @@ func TestPermissionsDeleteBoardBlock(t *testing.T) {
 func TestPermissionsUndeleteBoardBlock(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 	require.NoError(t, err)
@@ -849,8 +892,8 @@ func TestPermissionsUndeleteBoardBlock(t *testing.T) {
 func TestPermissionsUndeleteBoard(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	err := th.Server.App().DeleteBoard(testData.publicBoard.ID, userAdmin)
 	require.NoError(t, err)
@@ -900,8 +943,8 @@ func TestPermissionsUndeleteBoard(t *testing.T) {
 func TestPermissionsDuplicateBoardBlock(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 	require.NoError(t, err)
@@ -954,8 +997,8 @@ func TestPermissionsDuplicateBoardBlock(t *testing.T) {
 func TestPermissionsGetBoardMembers(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/members", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -996,8 +1039,8 @@ func TestPermissionsGetBoardMembers(t *testing.T) {
 func TestPermissionsCreateBoardMembers(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	boardMemberJSON := func(boardID string) string {
 		return toJSON(t, model.BoardMember{
@@ -1046,8 +1089,8 @@ func TestPermissionsCreateBoardMembers(t *testing.T) {
 func TestPermissionsUpdateBoardMember(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	boardMemberJSON := func(boardID string) string {
 		return toJSON(t, model.BoardMember{
@@ -1106,8 +1149,8 @@ func TestPermissionsUpdateBoardMember(t *testing.T) {
 func TestPermissionsDeleteBoardMember(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	_, err := th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicBoard.ID, UserID: userTeamMember, SchemeViewer: true})
 	require.NoError(t, err)
@@ -1166,8 +1209,8 @@ func TestPermissionsDeleteBoardMember(t *testing.T) {
 func TestPermissionsJoinBoardAsMember(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/join", methodPost, "", userAnon, http.StatusUnauthorized, 0},
@@ -1210,8 +1253,8 @@ func TestPermissionsJoinBoardAsMember(t *testing.T) {
 func TestPermissionsLeaveBoardAsMember(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	_, err := th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: testData.publicBoard.ID, UserID: "not-real-user", SchemeAdmin: true})
 	require.NoError(t, err)
@@ -1284,8 +1327,8 @@ func TestPermissionsLeaveBoardAsMember(t *testing.T) {
 func TestPermissionsShareBoard(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	sharing := toJSON(t, model.Sharing{Enabled: true, Token: "test-token"})
 
@@ -1328,8 +1371,8 @@ func TestPermissionsShareBoard(t *testing.T) {
 func TestPermissionsGetSharedBoardInfo(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	clients.Admin.PostSharing(&model.Sharing{ID: testData.publicBoard.ID, Enabled: true, Token: "test-token"})
 	clients.Admin.PostSharing(&model.Sharing{ID: testData.privateBoard.ID, Enabled: true, Token: "test-token"})
@@ -1375,8 +1418,8 @@ func TestPermissionsGetSharedBoardInfo(t *testing.T) {
 func TestPermissionsListTeams(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/teams", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1393,8 +1436,8 @@ func TestPermissionsListTeams(t *testing.T) {
 func TestPermissionsGetTeam(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1419,8 +1462,8 @@ func TestPermissionsGetTeam(t *testing.T) {
 func TestPermissionsRegenerateSignupTokenPluginMode(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/regenerate_signup_token", methodPost, "", userAnon, http.StatusUnauthorized, 0},
@@ -1435,8 +1478,8 @@ func TestPermissionsRegenerateSignupTokenPluginMode(t *testing.T) {
 func TestPermissionsGetTeamUsers(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/users", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1461,8 +1504,8 @@ func TestPermissionsGetTeamUsers(t *testing.T) {
 func TestPermissionsTeamArchiveExportPluginMode(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/archive/export", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1477,8 +1520,8 @@ func TestPermissionsTeamArchiveExportPluginMode(t *testing.T) {
 func TestPermissionsUploadFile(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/{PRIVATE_BOARD_ID}/files", methodPost, "", userAnon, http.StatusUnauthorized, 0},
@@ -1519,8 +1562,8 @@ func TestPermissionsUploadFile(t *testing.T) {
 func TestPermissionsGetMe(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/users/me", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1537,8 +1580,8 @@ func TestPermissionsGetMe(t *testing.T) {
 func TestPermissionsGetMyMemberships(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/users/me/memberships", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1555,8 +1598,8 @@ func TestPermissionsGetMyMemberships(t *testing.T) {
 func TestPermissionsGetUser(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/users/no-team-member", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1589,8 +1632,8 @@ func TestPermissionsGetUser(t *testing.T) {
 func TestPermissionsUserChangePasswordPluginMode(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/users/admin/changepassword", methodPost, "", userAnon, http.StatusUnauthorized, 0},
@@ -1602,8 +1645,8 @@ func TestPermissionsUserChangePasswordPluginMode(t *testing.T) {
 func TestPermissionsUpdateUserConfig(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	patch := toJSON(t, model.UserPropPatch{UpdatedFields: map[string]string{"test": "test"}})
 
@@ -1622,8 +1665,8 @@ func TestPermissionsUpdateUserConfig(t *testing.T) {
 func TestPermissionsCreateBoardsAndBlocks(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	bab := toJSON(t, model.BoardsAndBlocks{
 		Boards: []*model.Board{{ID: "test", Title: "Test Board", TeamID: "test-team"}},
@@ -1647,8 +1690,8 @@ func TestPermissionsCreateBoardsAndBlocks(t *testing.T) {
 func TestPermissionsUpdateBoardsAndBlocks(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	newTitle := "new title"
 	bab := toJSON(t, model.PatchBoardsAndBlocks{
@@ -1693,8 +1736,8 @@ func TestPermissionsUpdateBoardsAndBlocks(t *testing.T) {
 func TestPermissionsDeleteBoardsAndBlocks(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	bab := toJSON(t, model.DeleteBoardsAndBlocks{
 		Boards: []string{testData.publicBoard.ID},
@@ -1716,8 +1759,8 @@ func TestPermissionsDeleteBoardsAndBlocks(t *testing.T) {
 func TestPermissionsLoginPluginMode(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/login", methodPost, "", userAnon, http.StatusNotImplemented, 0},
@@ -1729,8 +1772,8 @@ func TestPermissionsLoginPluginMode(t *testing.T) {
 func TestPermissionsLogoutPluginMode(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/logout", methodPost, "", userAnon, http.StatusUnauthorized, 0},
@@ -1742,8 +1785,8 @@ func TestPermissionsLogoutPluginMode(t *testing.T) {
 func TestPermissionsRegisterPluginMode(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/register", methodPost, "", userAnon, http.StatusNotImplemented, 0},
@@ -1755,8 +1798,8 @@ func TestPermissionsRegisterPluginMode(t *testing.T) {
 func TestPermissionsClientConfig(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/clientConfig", methodGet, "", userAnon, http.StatusOK, 1},
@@ -1768,8 +1811,8 @@ func TestPermissionsClientConfig(t *testing.T) {
 func TestPermissionsGetCategories(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/categories", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -1786,8 +1829,8 @@ func TestPermissionsGetCategories(t *testing.T) {
 func TestPermissionsCreateCategory(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	category := func(userID string) string {
 		return toJSON(t, model.Category{
@@ -1830,8 +1873,8 @@ func TestPermissionsCreateCategory(t *testing.T) {
 func TestPermissionsUpdateCategory(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	categoryNoTeamMember, err := th.Server.App().CreateCategory(
 		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
@@ -1900,8 +1943,8 @@ func TestPermissionsUpdateCategory(t *testing.T) {
 func TestPermissionsDeleteCategory(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	categoryNoTeamMember, err := th.Server.App().CreateCategory(
 		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
@@ -1951,8 +1994,8 @@ func TestPermissionsDeleteCategory(t *testing.T) {
 func TestPermissionsUpdateCategoryBoard(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	categoryNoTeamMember, err := th.Server.App().CreateCategory(
 		&model.Category{Name: "Test category", TeamID: "test-team", UserID: userNoTeamMember, CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
@@ -1994,8 +2037,8 @@ func TestPermissionsUpdateCategoryBoard(t *testing.T) {
 func TestPermissionsGetFile(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	newFileID, err := th.Server.App().SaveFile(bytes.NewBuffer([]byte("test")), "test-team", testData.privateBoard.ID, "test.png")
 	require.NoError(t, err)
@@ -2020,8 +2063,8 @@ func TestPermissionsGetFile(t *testing.T) {
 func TestPermissionsCreateSubscription(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	subscription := func(userID string) string {
 		return toJSON(t, model.Subscription{
@@ -2047,8 +2090,8 @@ func TestPermissionsCreateSubscription(t *testing.T) {
 func TestPermissionsGetSubscriptions(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/subscriptions/anon", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -2072,8 +2115,8 @@ func TestPermissionsGetSubscriptions(t *testing.T) {
 func TestPermissionsDeleteSubscription(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	_, err := th.Server.App().CreateSubscription(
 		&model.Subscription{BlockType: "card", BlockID: "block-3", SubscriberType: "user", SubscriberID: userNoTeamMember, CreateAt: model.GetMillis()},
@@ -2126,8 +2169,8 @@ func TestPermissionsDeleteSubscription(t *testing.T) {
 func TestPermissionsOnboard(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	err := th.Server.App().InitTemplates()
 	require.NoError(t, err, "InitTemplates should not fail")
@@ -2147,8 +2190,8 @@ func TestPermissionsOnboard(t *testing.T) {
 func TestPermissionsBoardArchiveExport(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/boards/{PUBLIC_BOARD_ID}/archive/export", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -2189,8 +2232,8 @@ func TestPermissionsBoardArchiveExport(t *testing.T) {
 func TestPermissionsBoardArchiveImport(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()
-	testData := setupData(t, th)
 	clients := setupClients(th)
+	testData := setupData(t, th)
 
 	ttCases := []TestCase{
 		{"/teams/test-team/archive/import", methodPost, "", userAnon, http.StatusUnauthorized, 0},

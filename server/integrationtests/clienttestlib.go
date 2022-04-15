@@ -30,7 +30,7 @@ const (
 	password      = "Pa$$word"
 )
 
-const (
+var (
 	userAnon         string = "anon"
 	userNoTeamMember string = "no-team-member"
 	userTeamMember   string = "team-member"
@@ -38,6 +38,16 @@ const (
 	userCommenter    string = "commenter"
 	userEditor       string = "editor"
 	userAdmin        string = "admin"
+)
+
+var (
+	userAnonID         = userAnon
+	userNoTeamMemberID = userNoTeamMember
+	userTeamMemberID   = userTeamMember
+	userViewerID       = userViewer
+	userCommenterID    = userCommenter
+	userEditorID       = userEditor
+	userAdminID        = userAdmin
 )
 
 type LicenseType int
@@ -202,19 +212,17 @@ func newTestServerLocalMode() *server.Server {
 	if err != nil {
 		panic(err)
 	}
-	cfg.AuthMode = "mattermost"
 	cfg.EnablePublicSharedBoards = true
 
 	logger, _ := mlog.NewLogger()
 	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
 		panic(err)
 	}
-	innerStore, err := server.NewStore(cfg, logger)
+
+	db, err := server.NewStore(cfg, logger)
 	if err != nil {
 		panic(err)
 	}
-
-	db := NewPluginTestStore(innerStore)
 
 	permissionsService := localpermissions.New(db, logger)
 
@@ -229,6 +237,9 @@ func newTestServerLocalMode() *server.Server {
 	if err != nil {
 		panic(err)
 	}
+
+	// Reduce password has strength for unit tests to dramatically speed up account creation and login
+	auth.PasswordHashStrength = 4
 
 	return srv
 }
