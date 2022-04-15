@@ -197,6 +197,42 @@ func newTestServerPluginMode() *server.Server {
 	return srv
 }
 
+func newTestServerLocalMode() *server.Server {
+	cfg, err := getTestConfig()
+	if err != nil {
+		panic(err)
+	}
+	cfg.AuthMode = "mattermost"
+	cfg.EnablePublicSharedBoards = true
+
+	logger, _ := mlog.NewLogger()
+	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
+		panic(err)
+	}
+	innerStore, err := server.NewStore(cfg, logger)
+	if err != nil {
+		panic(err)
+	}
+
+	db := NewPluginTestStore(innerStore)
+
+	permissionsService := localpermissions.New(db, logger)
+
+	params := server.Params{
+		Cfg:                cfg,
+		DBStore:            db,
+		Logger:             logger,
+		PermissionsService: permissionsService,
+	}
+
+	srv, err := server.New(params)
+	if err != nil {
+		panic(err)
+	}
+
+	return srv
+}
+
 func SetupTestHelperWithToken(t *testing.T) *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{T: t}
@@ -213,6 +249,13 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 func SetupTestHelperPluginMode(t *testing.T) *TestHelper {
 	th := &TestHelper{T: t}
 	th.Server = newTestServerPluginMode()
+	th.Start()
+	return th
+}
+
+func SetupTestHelperLocalMode(t *testing.T) *TestHelper {
+	th := &TestHelper{T: t}
+	th.Server = newTestServerLocalMode()
 	th.Start()
 	return th
 }
