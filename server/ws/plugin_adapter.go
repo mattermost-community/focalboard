@@ -524,7 +524,7 @@ func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {
 }
 
 func (pa *PluginAdapter) BroadcastBoardChange(teamID string, board *model.Board) {
-	pa.logger.Info("BroadcastingBoardChange",
+	pa.logger.Debug("BroadcastingBoardChange",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", board.ID),
 	)
@@ -550,7 +550,7 @@ func (pa *PluginAdapter) BroadcastBoardDelete(teamID, boardID string) {
 }
 
 func (pa *PluginAdapter) BroadcastMemberChange(teamID, boardID string, member *model.BoardMember) {
-	pa.logger.Info("BroadcastingMemberChange",
+	pa.logger.Debug("BroadcastingMemberChange",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", boardID),
 		mlog.String("userID", member.UserID),
@@ -566,7 +566,7 @@ func (pa *PluginAdapter) BroadcastMemberChange(teamID, boardID string, member *m
 }
 
 func (pa *PluginAdapter) BroadcastMemberDelete(teamID, boardID, userID string) {
-	pa.logger.Info("BroadcastingMemberDelete",
+	pa.logger.Debug("BroadcastingMemberDelete",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", boardID),
 		mlog.String("userID", userID),

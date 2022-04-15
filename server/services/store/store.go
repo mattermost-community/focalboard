@@ -3,11 +3,13 @@
 package store
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -161,6 +163,15 @@ func IsErrNotFound(err error) bool {
 		return false
 	}
 
+	// check if this is a store.ErrNotFound
 	var nf *ErrNotFound
-	return errors.As(err, &nf)
+	if errors.As(err, &nf) {
+		return true
+	}
+
+	// check if this is a sql.ErrNotFound
+	if errors.Is(err, sql.ErrNoRows) {
+		return true
+	}
+	return false
 }
