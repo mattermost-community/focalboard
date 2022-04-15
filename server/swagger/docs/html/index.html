@@ -857,7 +857,7 @@ ul.nav-tabs {
     },
     "createAt" : {
       "type" : "integer",
-      "description" : "The creation time",
+      "description" : "The creation time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
@@ -868,7 +868,7 @@ ul.nav-tabs {
     },
     "deleteAt" : {
       "type" : "integer",
-      "description" : "The deleted time. Set to indicate this block is deleted",
+      "description" : "The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted",
       "format" : "int64",
       "x-go-name" : "DeleteAt"
     },
@@ -912,7 +912,7 @@ ul.nav-tabs {
     },
     "updateAt" : {
       "type" : "integer",
-      "description" : "The last modified time",
+      "description" : "The last modified time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     }
@@ -1023,7 +1023,7 @@ ul.nav-tabs {
     },
     "createAt" : {
       "type" : "integer",
-      "description" : "The creation time",
+      "description" : "The creation time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
@@ -1034,7 +1034,7 @@ ul.nav-tabs {
     },
     "deleteAt" : {
       "type" : "integer",
-      "description" : "The deleted time. Set to indicate this block is deleted",
+      "description" : "The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted",
       "format" : "int64",
       "x-go-name" : "DeleteAt"
     },
@@ -1098,7 +1098,7 @@ ul.nav-tabs {
     },
     "updateAt" : {
       "type" : "integer",
-      "description" : "The last modified time",
+      "description" : "The last modified time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     }
@@ -1326,13 +1326,13 @@ ul.nav-tabs {
   "properties" : {
     "createAt" : {
       "type" : "integer",
-      "description" : "The creation time",
+      "description" : "The creation time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
     "deleteAt" : {
       "type" : "integer",
-      "description" : "The deleted time. Set to indicate this category is deleted",
+      "description" : "The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted",
       "format" : "int64",
       "x-go-name" : "DeleteAt"
     },
@@ -1353,7 +1353,7 @@ ul.nav-tabs {
     },
     "updateAt" : {
       "type" : "integer",
-      "description" : "The last modified time",
+      "description" : "The last modified time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     },
@@ -1380,13 +1380,13 @@ ul.nav-tabs {
     },
     "createAt" : {
       "type" : "integer",
-      "description" : "The creation time",
+      "description" : "The creation time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
     "deleteAt" : {
       "type" : "integer",
-      "description" : "The deleted time. Set to indicate this category is deleted",
+      "description" : "The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted",
       "format" : "int64",
       "x-go-name" : "DeleteAt"
     },
@@ -1407,7 +1407,7 @@ ul.nav-tabs {
     },
     "updateAt" : {
       "type" : "integer",
-      "description" : "The last modified time",
+      "description" : "The last modified time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     },
@@ -1579,7 +1579,7 @@ ul.nav-tabs {
     },
     "create_at" : {
       "type" : "integer",
-      "description" : "CreatedAt is the timestamp this notification hint was created",
+      "description" : "CreatedAt is the timestamp this notification hint was created in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
@@ -1590,7 +1590,7 @@ ul.nav-tabs {
     },
     "notify_at" : {
       "type" : "integer",
-      "description" : "NotifyAt is the timestamp this notification should be scheduled",
+      "description" : "NotifyAt is the timestamp this notification should be scheduled in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "NotifyAt"
     }
@@ -1692,7 +1692,7 @@ ul.nav-tabs {
     },
     "update_at" : {
       "type" : "integer",
-      "description" : "Updated time",
+      "description" : "Updated time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     }
@@ -1737,13 +1737,13 @@ ul.nav-tabs {
     },
     "createAt" : {
       "type" : "integer",
-      "description" : "CreatedAt is the timestamp this subscription was created",
+      "description" : "CreatedAt is the timestamp this subscription was created in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
     "deleteAt" : {
       "type" : "integer",
-      "description" : "DeleteAt is the timestamp this subscription was deleted, or zero if not deleted",
+      "description" : "DeleteAt is the timestamp this subscription was deleted in miliseconds since the current epoch, or zero if not deleted",
       "format" : "int64",
       "x-go-name" : "DeleteAt"
     },
@@ -1799,7 +1799,7 @@ ul.nav-tabs {
     },
     "updateAt" : {
       "type" : "integer",
-      "description" : "Updated time",
+      "description" : "Updated time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     }
@@ -1813,13 +1813,13 @@ ul.nav-tabs {
   "properties" : {
     "create_at" : {
       "type" : "integer",
-      "description" : "Created time",
+      "description" : "Created time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
     "delete_at" : {
       "type" : "integer",
-      "description" : "Deleted time, set to indicate user is deleted",
+      "description" : "Deleted time in miliseconds since the current epoch, set to indicate user is deleted",
       "format" : "int64",
       "x-go-name" : "DeleteAt"
     },
@@ -1849,7 +1849,7 @@ ul.nav-tabs {
     },
     "update_at" : {
       "type" : "integer",
-      "description" : "Updated time",
+      "description" : "Updated time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     },

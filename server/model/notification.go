@@ -21,11 +21,11 @@ type NotificationHint struct {
 	// ModifiedByID is the id of the user who made the block change
 	ModifiedByID string `json:"modified_by_id"`
 
-	// CreatedAt is the timestamp this notification hint was created
+	// CreatedAt is the timestamp this notification hint was created in miliseconds since the current epoch
 	// required: true
 	CreateAt int64 `json:"create_at"`
 
-	// NotifyAt is the timestamp this notification should be scheduled
+	// NotifyAt is the timestamp this notification should be scheduled in miliseconds since the current epoch
 	// required: true
 	NotifyAt int64 `json:"notify_at"`
 }

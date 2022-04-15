@@ -76,15 +76,15 @@ type Board struct {
 	// required: false
 	ColumnCalculations map[string]interface{} `json:"columnCalculations"`
 
-	// The creation time
+	// The creation time in miliseconds since the current epoch
 	// required: true
 	CreateAt int64 `json:"createAt"`
 
-	// The last modified time
+	// The last modified time in miliseconds since the current epoch
 	// required: true
 	UpdateAt int64 `json:"updateAt"`
 
-	// The deleted time. Set to indicate this block is deleted
+	// The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted
 	// required: false
 	DeleteAt int64 `json:"deleteAt"`
 }

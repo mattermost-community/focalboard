@@ -10,7 +10,7 @@ definitions:
         type: string
         x-go-name: BoardID
       createAt:
-        description: The creation time
+        description: The creation time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
@@ -19,7 +19,7 @@ definitions:
         type: string
         x-go-name: CreatedBy
       deleteAt:
-        description: The deleted time. Set to indicate this block is deleted
+        description: The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted
         format: int64
         type: integer
         x-go-name: DeleteAt
@@ -53,7 +53,7 @@ definitions:
       type:
         $ref: '#/definitions/BlockType'
       updateAt:
-        description: The last modified time
+        description: The last modified time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
@@ -147,7 +147,7 @@ definitions:
         type: object
         x-go-name: ColumnCalculations
       createAt:
-        description: The creation time
+        description: The creation time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
@@ -156,7 +156,7 @@ definitions:
         type: string
         x-go-name: CreatedBy
       deleteAt:
-        description: The deleted time. Set to indicate this block is deleted
+        description: The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted
         format: int64
         type: integer
         x-go-name: DeleteAt
@@ -206,7 +206,7 @@ definitions:
       type:
         $ref: '#/definitions/BoardType'
       updateAt:
-        description: The last modified time
+        description: The last modified time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
@@ -406,12 +406,12 @@ definitions:
     description: Category is a board category
     properties:
       createAt:
-        description: The creation time
+        description: The creation time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
       deleteAt:
-        description: The deleted time. Set to indicate this category is deleted
+        description: The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted
         format: int64
         type: integer
         x-go-name: DeleteAt
@@ -428,7 +428,7 @@ definitions:
         type: string
         x-go-name: TeamID
       updateAt:
-        description: The last modified time
+        description: The last modified time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
@@ -455,12 +455,12 @@ definitions:
         type: array
         x-go-name: BoardIDs
       createAt:
-        description: The creation time
+        description: The creation time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
       deleteAt:
-        description: The deleted time. Set to indicate this category is deleted
+        description: The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted
         format: int64
         type: integer
         x-go-name: DeleteAt
@@ -477,7 +477,7 @@ definitions:
         type: string
         x-go-name: TeamID
       updateAt:
-        description: The last modified time
+        description: The last modified time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
@@ -633,7 +633,7 @@ definitions:
       block_type:
         $ref: '#/definitions/BlockType'
       create_at:
-        description: CreatedAt is the timestamp this notification hint was created
+        description: CreatedAt is the timestamp this notification hint was created in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
@@ -642,7 +642,7 @@ definitions:
         type: string
         x-go-name: ModifiedByID
       notify_at:
-        description: NotifyAt is the timestamp this notification should be scheduled
+        description: NotifyAt is the timestamp this notification should be scheduled in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: NotifyAt
@@ -735,7 +735,7 @@ definitions:
         type: string
         x-go-name: Token
       update_at:
-        description: Updated time
+        description: Updated time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
@@ -778,12 +778,12 @@ definitions:
       blockType:
         $ref: '#/definitions/BlockType'
       createAt:
-        description: CreatedAt is the timestamp this subscription was created
+        description: CreatedAt is the timestamp this subscription was created in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
       deleteAt:
-        description: DeleteAt is the timestamp this subscription was deleted, or zero if not deleted
+        description: DeleteAt is the timestamp this subscription was deleted in miliseconds since the current epoch, or zero if not deleted
         format: int64
         type: integer
         x-go-name: DeleteAt
@@ -835,7 +835,7 @@ definitions:
         type: string
         x-go-name: Title
       updateAt:
-        description: Updated time
+        description: Updated time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
@@ -850,12 +850,12 @@ definitions:
     description: User is a user
     properties:
       create_at:
-        description: Created time
+        description: Created time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
       delete_at:
-        description: Deleted time, set to indicate user is deleted
+        description: Deleted time in miliseconds since the current epoch, set to indicate user is deleted
         format: int64
         type: integer
         x-go-name: DeleteAt
@@ -878,7 +878,7 @@ definitions:
         type: object
         x-go-name: Props
       update_at:
-        description: Updated time
+        description: Updated time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
