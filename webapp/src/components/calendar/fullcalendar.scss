@@ -229,7 +229,7 @@
     }
 
     .fc-day-today {
-        background: transparent;
+        background-color: rgb(var(--center-channel-bg-rgb));
 
         .fc-daygrid-day-number {
             .dateDisplay {
