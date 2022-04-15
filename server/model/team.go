@@ -28,7 +28,7 @@ type Team struct {
 	// required: true
 	ModifiedBy string `json:"modifiedBy"`
 
-	// Updated time
+	// Updated time in miliseconds since the current epoch
 	// required: true
 	UpdateAt int64 `json:"updateAt"`
 }

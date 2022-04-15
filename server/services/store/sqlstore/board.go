@@ -40,7 +40,6 @@ func boardFields(prefix string) []string {
 		"template_version",
 		"COALESCE(properties, '{}')",
 		"COALESCE(card_properties, '[]')",
-		"COALESCE(column_calculations, '{}')",
 		"create_at",
 		"update_at",
 		"delete_at",
@@ -77,7 +76,6 @@ func boardHistoryFields() []string {
 		"template_version",
 		"COALESCE(properties, '{}')",
 		"COALESCE(card_properties, '[]')",
-		"COALESCE(column_calculations, '{}')",
 		"COALESCE(create_at, 0)",
 		"COALESCE(update_at, 0)",
 		"COALESCE(delete_at, 0)",
@@ -103,7 +101,6 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 		var board model.Board
 		var propertiesBytes []byte
 		var cardPropertiesBytes []byte
-		var columnCalculationsBytes []byte
 
 		err := rows.Scan(
 			&board.ID,
@@ -120,7 +117,6 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			&board.TemplateVersion,
 			&propertiesBytes,
 			&cardPropertiesBytes,
-			&columnCalculationsBytes,
 			&board.CreateAt,
 			&board.UpdateAt,
 			&board.DeleteAt,
@@ -138,11 +134,6 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 		err = json.Unmarshal(cardPropertiesBytes, &board.CardProperties)
 		if err != nil {
 			s.logger.Error("board card properties unmarshal error", mlog.Err(err))
-			return nil, err
-		}
-		err = json.Unmarshal(columnCalculationsBytes, &board.ColumnCalculations)
-		if err != nil {
-			s.logger.Error("board column calculation unmarshal error", mlog.Err(err))
 			return nil, err
 		}
 
@@ -300,17 +291,6 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		return nil, err
 	}
 
-	columnCalculationsBytes, err := json.Marshal(board.ColumnCalculations)
-	if err != nil {
-		s.logger.Error(
-			"failed to marshal board.ColumnCalculations",
-			mlog.String("board_id", board.ID),
-			mlog.String("board.ColumnCalculations", fmt.Sprintf("%v", board.ColumnCalculations)),
-			mlog.Err(err),
-		)
-		return nil, err
-	}
-
 	existingBoard, err := s.getBoard(db, board.ID)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return nil, fmt.Errorf("insertBoard error occurred while fetching existing board %s: %w", board.ID, err)
@@ -322,24 +302,23 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	now := utils.GetMillis()
 
 	insertQueryValues := map[string]interface{}{
-		"id":                  board.ID,
-		"team_id":             board.TeamID,
-		"channel_id":          board.ChannelID,
-		"created_by":          board.CreatedBy,
-		"modified_by":         userID,
-		"type":                board.Type,
-		"title":               board.Title,
-		"description":         board.Description,
-		"icon":                board.Icon,
-		"show_description":    board.ShowDescription,
-		"is_template":         board.IsTemplate,
-		"template_version":    board.TemplateVersion,
-		"properties":          propertiesBytes,
-		"card_properties":     cardPropertiesBytes,
-		"column_calculations": columnCalculationsBytes,
-		"create_at":           board.CreateAt,
-		"update_at":           now,
-		"delete_at":           board.DeleteAt,
+		"id":               board.ID,
+		"team_id":          board.TeamID,
+		"channel_id":       board.ChannelID,
+		"created_by":       board.CreatedBy,
+		"modified_by":      userID,
+		"type":             board.Type,
+		"title":            board.Title,
+		"description":      board.Description,
+		"icon":             board.Icon,
+		"show_description": board.ShowDescription,
+		"is_template":      board.IsTemplate,
+		"template_version": board.TemplateVersion,
+		"properties":       propertiesBytes,
+		"card_properties":  cardPropertiesBytes,
+		"create_at":        board.CreateAt,
+		"update_at":        now,
+		"delete_at":        board.DeleteAt,
 	}
 
 	if existingBoard != nil {
@@ -355,7 +334,6 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Set("template_version", board.TemplateVersion).
 			Set("properties", propertiesBytes).
 			Set("card_properties", cardPropertiesBytes).
-			Set("column_calculations", columnCalculationsBytes).
 			Set("update_at", now).
 			Set("delete_at", board.DeleteAt)
 
@@ -413,30 +391,25 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 	if err != nil {
 		return err
 	}
-	columnCalculationsBytes, err := json.Marshal(board.ColumnCalculations)
-	if err != nil {
-		return err
-	}
 
 	insertQueryValues := map[string]interface{}{
-		"id":                  board.ID,
-		"team_id":             board.TeamID,
-		"channel_id":          board.ChannelID,
-		"created_by":          board.CreatedBy,
-		"modified_by":         userID,
-		"type":                board.Type,
-		"title":               board.Title,
-		"description":         board.Description,
-		"icon":                board.Icon,
-		"show_description":    board.ShowDescription,
-		"is_template":         board.IsTemplate,
-		"template_version":    board.TemplateVersion,
-		"properties":          propertiesBytes,
-		"card_properties":     cardPropertiesBytes,
-		"column_calculations": columnCalculationsBytes,
-		"create_at":           board.CreateAt,
-		"update_at":           now,
-		"delete_at":           now,
+		"id":               board.ID,
+		"team_id":          board.TeamID,
+		"channel_id":       board.ChannelID,
+		"created_by":       board.CreatedBy,
+		"modified_by":      userID,
+		"type":             board.Type,
+		"title":            board.Title,
+		"description":      board.Description,
+		"icon":             board.Icon,
+		"show_description": board.ShowDescription,
+		"is_template":      board.IsTemplate,
+		"template_version": board.TemplateVersion,
+		"properties":       propertiesBytes,
+		"card_properties":  cardPropertiesBytes,
+		"create_at":        board.CreateAt,
+		"update_at":        now,
+		"delete_at":        now,
 	}
 
 	// writing board history
@@ -731,11 +704,6 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		return err
 	}
 
-	columnCalculationsJSON, err := json.Marshal(board.ColumnCalculations)
-	if err != nil {
-		return err
-	}
-
 	now := utils.GetMillis()
 	columns := []string{
 		"id",
@@ -752,7 +720,6 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		"template_version",
 		"properties",
 		"card_properties",
-		"column_calculations",
 		"create_at",
 		"update_at",
 		"delete_at",
@@ -773,7 +740,6 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		board.TemplateVersion,
 		propertiesJSON,
 		cardPropertiesJSON,
-		columnCalculationsJSON,
 		board.CreateAt,
 		now,
 		0,

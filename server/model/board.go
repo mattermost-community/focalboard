@@ -72,19 +72,15 @@ type Board struct {
 	// required: false
 	CardProperties []map[string]interface{} `json:"cardProperties"`
 
-	// The calculations on the board's cards
-	// required: false
-	ColumnCalculations map[string]interface{} `json:"columnCalculations"`
-
-	// The creation time
+	// The creation time in miliseconds since the current epoch
 	// required: true
 	CreateAt int64 `json:"createAt"`
 
-	// The last modified time
+	// The last modified time in miliseconds since the current epoch
 	// required: true
 	UpdateAt int64 `json:"updateAt"`
 
-	// The deleted time. Set to indicate this block is deleted
+	// The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted
 	// required: false
 	DeleteAt int64 `json:"deleteAt"`
 }
@@ -127,14 +123,6 @@ type BoardPatch struct {
 	// The board removed card properties
 	// required: false
 	DeletedCardProperties []string `json:"deletedCardProperties"`
-
-	// The board updated column calculations
-	// required: false
-	UpdatedColumnCalculations map[string]interface{} `json:"updatedColumnCalculations"`
-
-	// The board deleted column calculations
-	// required: false
-	DeletedColumnCalculations []string `json:"deletedColumnCalculations"`
 }
 
 // BoardMember stores the information of the membership of a user on a board
@@ -299,14 +287,6 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 		}
 
 		board.CardProperties = newCardProperties
-	}
-
-	for key, columnCalculation := range p.UpdatedColumnCalculations {
-		board.ColumnCalculations[key] = columnCalculation
-	}
-
-	for _, key := range p.DeletedColumnCalculations {
-		delete(board.ColumnCalculations, key)
 	}
 
 	return board
