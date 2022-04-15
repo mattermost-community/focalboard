@@ -7,7 +7,8 @@ import {createCheckboxBlock} from '../../blocks/checkboxBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
 import CheckIcon from '../../widgets/icons/check'
 import mutator from '../../mutator'
-import Editable, {Focusable} from '../../widgets/editable'
+import {Focusable} from '../../widgets/editable'
+import EditableArea from '../../widgets/editableArea'
 import {useCardDetailContext} from '../cardDetail/cardDetailContext'
 
 import './checkboxElement.scss'
@@ -58,7 +59,7 @@ const CheckboxElement = (props: Props) => {
                     mutator.updateBlock(block.boardId, newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckbox', defaultMessage: 'toggled-checkbox'}))
                 }}
             />
-            <Editable
+            <EditableArea
                 ref={titleRef}
                 value={title}
                 placeholderText={intl.formatMessage({id: 'ContentBlock.editText', defaultMessage: 'Edit text...'})}
