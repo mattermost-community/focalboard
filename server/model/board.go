@@ -73,7 +73,6 @@ type Board struct {
 	CardProperties []map[string]interface{} `json:"cardProperties"`
 
 	// The creation time in miliseconds since the current epoch
-	// The creation time
 	// required: true
 	CreateAt int64 `json:"createAt"`
 

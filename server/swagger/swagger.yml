@@ -140,12 +140,6 @@ definitions:
         description: The ID of the channel that the board was created from
         type: string
         x-go-name: ChannelID
-      columnCalculations:
-        additionalProperties:
-          type: object
-        description: The calculations on the board's cards
-        type: object
-        x-go-name: ColumnCalculations
       createAt:
         description: The creation time in miliseconds since the current epoch
         format: int64
@@ -328,12 +322,6 @@ definitions:
           type: string
         type: array
         x-go-name: DeletedCardProperties
-      deletedColumnCalculations:
-        description: The board deleted column calculations
-        items:
-          type: string
-        type: array
-        x-go-name: DeletedColumnCalculations
       deletedProperties:
         description: The board removed properties
         items:
@@ -366,12 +354,6 @@ definitions:
           type: object
         type: array
         x-go-name: UpdatedCardProperties
-      updatedColumnCalculations:
-        additionalProperties:
-          type: object
-        description: The board updated column calculations
-        type: object
-        x-go-name: UpdatedColumnCalculations
       updatedProperties:
         additionalProperties:
           type: object

@@ -1012,15 +1012,6 @@ ul.nav-tabs {
       "description" : "The ID of the channel that the board was created from",
       "x-go-name" : "ChannelID"
     },
-    "columnCalculations" : {
-      "type" : "object",
-      "additionalProperties" : {
-        "type" : "object",
-        "properties" : { }
-      },
-      "description" : "The calculations on the board's cards",
-      "x-go-name" : "ColumnCalculations"
-    },
     "createAt" : {
       "type" : "integer",
       "description" : "The creation time in miliseconds since the current epoch",
@@ -1224,14 +1215,6 @@ ul.nav-tabs {
       },
       "x-go-name" : "DeletedCardProperties"
     },
-    "deletedColumnCalculations" : {
-      "type" : "array",
-      "description" : "The board deleted column calculations",
-      "items" : {
-        "type" : "string"
-      },
-      "x-go-name" : "DeletedColumnCalculations"
-    },
     "deletedProperties" : {
       "type" : "array",
       "description" : "The board removed properties",
@@ -1274,15 +1257,6 @@ ul.nav-tabs {
         }
       },
       "x-go-name" : "UpdatedCardProperties"
-    },
-    "updatedColumnCalculations" : {
-      "type" : "object",
-      "additionalProperties" : {
-        "type" : "object",
-        "properties" : { }
-      },
-      "description" : "The board updated column calculations",
-      "x-go-name" : "UpdatedColumnCalculations"
     },
     "updatedProperties" : {
       "type" : "object",
@@ -4424,9 +4398,6 @@ $(document).ready(function() {
   } ],
   &quot;modifiedBy&quot; : &quot;modifiedBy&quot;,
   &quot;templateVersion&quot; : 1,
-  &quot;columnCalculations&quot; : {
-    &quot;key&quot; : &quot;{}&quot;
-  },
   &quot;id&quot; : &quot;id&quot;,
   &quot;channelId&quot; : &quot;channelId&quot;,
   &quot;properties&quot; : {
@@ -16620,9 +16591,6 @@ Team ID
     } ],
     &quot;modifiedBy&quot; : &quot;modifiedBy&quot;,
     &quot;templateVersion&quot; : 1,
-    &quot;columnCalculations&quot; : {
-      &quot;key&quot; : &quot;{}&quot;
-    },
     &quot;id&quot; : &quot;id&quot;,
     &quot;channelId&quot; : &quot;channelId&quot;,
     &quot;properties&quot; : {
@@ -16647,9 +16615,6 @@ Team ID
     } ],
     &quot;modifiedBy&quot; : &quot;modifiedBy&quot;,
     &quot;templateVersion&quot; : 1,
-    &quot;columnCalculations&quot; : {
-      &quot;key&quot; : &quot;{}&quot;
-    },
     &quot;id&quot; : &quot;id&quot;,
     &quot;channelId&quot; : &quot;channelId&quot;,
     &quot;properties&quot; : {
@@ -20327,11 +20292,7 @@ $(document).ready(function() {
   &quot;updatedProperties&quot; : {
     &quot;key&quot; : &quot;{}&quot;
   },
-  &quot;deletedColumnCalculations&quot; : [ &quot;deletedColumnCalculations&quot;, &quot;deletedColumnCalculations&quot; ],
   &quot;icon&quot; : &quot;icon&quot;,
-  &quot;updatedColumnCalculations&quot; : {
-    &quot;key&quot; : &quot;{}&quot;
-  },
   &quot;deletedCardProperties&quot; : [ &quot;deletedCardProperties&quot;, &quot;deletedCardProperties&quot; ],
   &quot;description&quot; : &quot;description&quot;,
   &quot;updatedCardProperties&quot; : [ {
@@ -20874,11 +20835,7 @@ $(document).ready(function() {
     &quot;updatedProperties&quot; : {
       &quot;key&quot; : &quot;{}&quot;
     },
-    &quot;deletedColumnCalculations&quot; : [ &quot;deletedColumnCalculations&quot;, &quot;deletedColumnCalculations&quot; ],
     &quot;icon&quot; : &quot;icon&quot;,
-    &quot;updatedColumnCalculations&quot; : {
-      &quot;key&quot; : &quot;{}&quot;
-    },
     &quot;deletedCardProperties&quot; : [ &quot;deletedCardProperties&quot;, &quot;deletedCardProperties&quot; ],
     &quot;description&quot; : &quot;description&quot;,
     &quot;updatedCardProperties&quot; : [ {
@@ -20894,11 +20851,7 @@ $(document).ready(function() {
     &quot;updatedProperties&quot; : {
       &quot;key&quot; : &quot;{}&quot;
     },
-    &quot;deletedColumnCalculations&quot; : [ &quot;deletedColumnCalculations&quot;, &quot;deletedColumnCalculations&quot; ],
     &quot;icon&quot; : &quot;icon&quot;,
-    &quot;updatedColumnCalculations&quot; : {
-      &quot;key&quot; : &quot;{}&quot;
-    },
     &quot;deletedCardProperties&quot; : [ &quot;deletedCardProperties&quot;, &quot;deletedCardProperties&quot; ],
     &quot;description&quot; : &quot;description&quot;,
     &quot;updatedCardProperties&quot; : [ {
