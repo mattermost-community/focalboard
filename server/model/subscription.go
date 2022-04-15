@@ -43,11 +43,11 @@ type Subscription struct {
 	// required: true
 	NotifiedAt int64 `json:"notifiedAt,omitempty"`
 
-	// CreatedAt is the timestamp this subscription was created
+	// CreatedAt is the timestamp this subscription was created in miliseconds since the current epoch
 	// required: true
 	CreateAt int64 `json:"createAt"`
 
-	// DeleteAt is the timestamp this subscription was deleted, or zero if not deleted
+	// DeleteAt is the timestamp this subscription was deleted in miliseconds since the current epoch, or zero if not deleted
 	// required: true
 	DeleteAt int64 `json:"deleteAt"`
 }
