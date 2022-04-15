@@ -10,6 +10,7 @@
   "BoardMember.schemeAdmin": "Admin",
   "BoardMember.schemeEditor": "Éditeur",
   "BoardMember.schemeNone": "Aucun",
+  "BoardMember.schemeViewer": "Lecteur",
   "BoardPage.newVersion": "Une nouvelle version de Boards est disponible, cliquez ici pour recharger.",
   "BoardPage.syncFailed": "Le tableau a peut-être été supprimé ou vos droits d'accès révoqués.",
   "BoardTemplateSelector.add-template": "Nouveau modèle",
