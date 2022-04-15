@@ -295,6 +295,7 @@
   "createImageBlock.failed": "Kann Datei nicht hochladen. Limit für Dateigröße erreicht.",
   "default-properties.badges": "Kommentare und Beschreibung",
   "default-properties.title": "Titel",
+  "error.not-logged-in": "Deine Sitzung ist möglicherweise abgelaufen oder Du bist nicht eingeloggt.",
   "error.page.title": "Entschuldigung, etwas ist schief gelaufen",
   "generic.previous": "Zurück",
   "imagePaste.upload-failed": "Einige Dateien nicht hochgeladen. Limit für Dateigröße erreicht",
