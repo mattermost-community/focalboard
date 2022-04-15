@@ -5,4 +5,4 @@ if [[ $# < 2 ]] ; then
     exit 1
 fi
 
-curl --unix-socket /var/tmp/focalboard_local.socket http://localhost/api/v1/admin/users/$1/password -X POST -H 'Content-Type: application/json' -d '{ "password": "'$2'" }'
+curl --unix-socket /var/tmp/focalboard_local.socket http://localhost/api/v2/admin/users/$1/password -X POST -H 'Content-Type: application/json' -d '{ "password": "'$2'" }'

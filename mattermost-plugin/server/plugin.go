@@ -120,10 +120,13 @@ func (p *Plugin) OnActivate() error {
 	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db, permissionsService), db, logger)
 
 	backendParams := notifyBackendParams{
-		cfg:        cfg,
-		client:     client,
-		serverRoot: baseURL + "/boards",
-		logger:     logger,
+		cfg:         cfg,
+		client:      client,
+		store:       db,
+		permissions: permissionsService,
+		wsAdapter:   p.wsPluginAdapter,
+		serverRoot:  baseURL + "/boards",
+		logger:      logger,
 	}
 
 	var notifyBackends []notify.Backend
@@ -134,7 +137,7 @@ func (p *Plugin) OnActivate() error {
 	}
 	notifyBackends = append(notifyBackends, mentionsBackend)
 
-	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams, db, p.wsPluginAdapter)
+	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams)
 	if err2 != nil {
 		return fmt.Errorf("error creating subscription notifications backend: %w", err2)
 	}
@@ -219,6 +222,7 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		FilesDriver:              *mmconfig.FileSettings.DriverName,
 		FilesPath:                *mmconfig.FileSettings.Directory,
 		FilesS3Config:            filesS3Config,
+		MaxFileSize:              *mmconfig.FileSettings.MaxFileSize,
 		Telemetry:                enableTelemetry,
 		TelemetryID:              serverID,
 		WebhookUpdate:            []string{},

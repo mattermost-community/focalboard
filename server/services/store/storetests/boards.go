@@ -12,7 +12,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//nolint:dupl
 func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	t.Run("GetBoard", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -38,6 +37,11 @@ func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, fu
 		store, tearDown := setup(t)
 		defer tearDown()
 		testDeleteBoard(t, store)
+	})
+	t.Run("UndeleteBoard", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testUndeleteBoard(t, store)
 	})
 	t.Run("InsertBoardWithAdmin", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -382,15 +386,13 @@ func testPatchBoard(t *testing.T, store store.Store) {
 		boardID := utils.NewID(utils.IDTypeBoard)
 		properties := map[string]interface{}{"prop1": "val1"}
 		cardProperties := []map[string]interface{}{{"prop2": "val2"}}
-		columnCalculations := map[string]interface{}{"calc3": "val3"}
 
 		board := &model.Board{
-			ID:                 boardID,
-			TeamID:             testTeamID,
-			Type:               model.BoardTypeOpen,
-			Properties:         properties,
-			CardProperties:     cardProperties,
-			ColumnCalculations: columnCalculations,
+			ID:             boardID,
+			TeamID:         testTeamID,
+			Type:           model.BoardTypeOpen,
+			Properties:     properties,
+			CardProperties: cardProperties,
 		}
 
 		newBoard, err := store.InsertBoard(board, userID)
@@ -399,7 +401,6 @@ func testPatchBoard(t *testing.T, store store.Store) {
 		require.Equal(t, newBoard.Type, model.BoardTypeOpen)
 		require.Equal(t, properties, newBoard.Properties)
 		require.Equal(t, cardProperties, newBoard.CardProperties)
-		require.Equal(t, columnCalculations, newBoard.ColumnCalculations)
 
 		// wait to avoid hitting pk uniqueness constraint in history
 		time.Sleep(10 * time.Millisecond)
@@ -411,7 +412,6 @@ func testPatchBoard(t *testing.T, store store.Store) {
 		require.Equal(t, model.BoardTypePrivate, patchedBoard.Type)
 		require.Equal(t, properties, patchedBoard.Properties)
 		require.Equal(t, cardProperties, patchedBoard.CardProperties)
-		require.Equal(t, columnCalculations, patchedBoard.ColumnCalculations)
 	})
 
 	t.Run("a patch that removes a card property and updates another should work correctly", func(t *testing.T) {
@@ -804,6 +804,93 @@ func testSearchBoardsForUserAndTeam(t *testing.T, store store.Store) {
 	}
 }
 
+func testUndeleteBoard(t *testing.T, store store.Store) {
+	userID := testUserID
+
+	t.Run("existing id", func(t *testing.T) {
+		boardID := utils.NewID(utils.IDTypeBoard)
+
+		board := &model.Board{
+			ID:     boardID,
+			TeamID: testTeamID,
+			Type:   model.BoardTypeOpen,
+		}
+
+		newBoard, err := store.InsertBoard(board, userID)
+		require.NoError(t, err)
+		require.NotNil(t, newBoard)
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err = store.DeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		board, err = store.GetBoard(boardID)
+		require.Error(t, err)
+		require.Nil(t, board)
+
+		time.Sleep(1 * time.Millisecond)
+		err = store.UndeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		board, err = store.GetBoard(boardID)
+		require.NoError(t, err)
+		require.NotNil(t, board)
+	})
+
+	t.Run("existing id multiple times", func(t *testing.T) {
+		boardID := utils.NewID(utils.IDTypeBoard)
+
+		board := &model.Board{
+			ID:     boardID,
+			TeamID: testTeamID,
+			Type:   model.BoardTypeOpen,
+		}
+
+		newBoard, err := store.InsertBoard(board, userID)
+		require.NoError(t, err)
+		require.NotNil(t, newBoard)
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err = store.DeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		board, err = store.GetBoard(boardID)
+		require.Error(t, err)
+		require.Nil(t, board)
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err = store.UndeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		board, err = store.GetBoard(boardID)
+		require.NoError(t, err)
+		require.NotNil(t, board)
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err = store.UndeleteBoard(boardID, userID)
+		require.NoError(t, err)
+
+		board, err = store.GetBoard(boardID)
+		require.NoError(t, err)
+		require.NotNil(t, board)
+	})
+
+	t.Run("from not existing id", func(t *testing.T) {
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Millisecond)
+		err := store.UndeleteBoard("not-exists", userID)
+		require.NoError(t, err)
+
+		block, err := store.GetBoard("not-exists")
+		require.Error(t, err)
+		require.Nil(t, block)
+	})
+}
+
 func testGetBoardHistory(t *testing.T, store store.Store) {
 	userID := testUserID
 
@@ -820,7 +907,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		rBoard1, err := store.InsertBoard(board, userID)
 		require.NoError(t, err)
 
-		opts := model.QueryBlockHistoryOptions{
+		opts := model.QueryBoardHistoryOptions{
 			Limit:      0,
 			Descending: false,
 		}
@@ -868,7 +955,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		// Updated history
-		opts = model.QueryBlockHistoryOptions{
+		opts = model.QueryBoardHistoryOptions{
 			Limit:      1,
 			Descending: true,
 		}
@@ -884,7 +971,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		// Updated history after delete
-		opts = model.QueryBlockHistoryOptions{
+		opts = model.QueryBoardHistoryOptions{
 			Limit:      0,
 			Descending: true,
 		}
@@ -898,7 +985,7 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 	})
 
 	t.Run("testGetBoardHistory: nonexisting board", func(t *testing.T) {
-		opts := model.QueryBlockHistoryOptions{
+		opts := model.QueryBoardHistoryOptions{
 			Limit:      0,
 			Descending: false,
 		}

@@ -24,7 +24,11 @@ test('OctoClient: get blocks', async () => {
     expect(boards.length).toBe(blocks.length)
 
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(blocks)))
-    const response = await octoClient.exportArchive()
+    let response = await octoClient.exportBoardArchive('board')
+    expect(response.status).toBe(200)
+
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(blocks)))
+    response = await octoClient.exportFullArchive('team')
     expect(response.status).toBe(200)
 
     FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify(blocks)))

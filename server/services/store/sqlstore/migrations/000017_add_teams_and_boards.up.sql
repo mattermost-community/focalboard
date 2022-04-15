@@ -11,17 +11,45 @@ ALTER TABLE {{.prefix}}blocks ADD COLUMN board_id VARCHAR(36);
 ALTER TABLE {{.prefix}}blocks_history ADD COLUMN board_id VARCHAR(36);
 
 {{- /* cleanup incorrect data format in column calculations */ -}}
+{{- /* then move from 'board' type to 'view' type*/ -}}
 {{if .mysql}}
-UPDATE {{.prefix}}blocks SET fields = JSON_SET(fields, '$.columnCalculations', cast('{}' as json))  WHERE fields->'$.columnCalculations' = cast('[]' as json);
-{{end}}
+UPDATE {{.prefix}}blocks SET fields = JSON_SET(fields, '$.columnCalculations', cast('{}' as json)) WHERE fields->'$.columnCalculations' = cast('[]' as json);
 
+UPDATE {{.prefix}}blocks b
+  JOIN (
+    SELECT id, fields->'$.columnCalculations' as board_calculations from {{.prefix}}blocks
+    WHERE fields -> '$.columnCalculations' <> cast('{}' as json)
+  ) AS s on s.id = b.root_id
+  SET fields = JSON_SET(fields, '$.columnCalculations', cast(s.board_calculations as json))
+  WHERE b.fields->'$.viewType' = 'table'
+  AND b.type = 'view';
+{{end}}
 {{if .postgres}}
 UPDATE {{.prefix}}blocks SET fields = fields::jsonb - 'columnCalculations' || '{"columnCalculations": {}}' WHERE fields->>'columnCalculations' = '[]';
-{{end}}
 
+WITH subquery AS (
+  SELECT id, fields->'columnCalculations' as board_calculations from {{.prefix}}blocks
+  WHERE fields ->> 'columnCalculations' <> '{}')
+UPDATE {{.prefix}}blocks b
+    SET fields = b.fields::jsonb|| json_build_object('columnCalculations', s.board_calculations::jsonb)::jsonb
+    FROM subquery AS s
+    WHERE s.id = b.root_id
+    AND b.fields ->> 'viewType' = 'table'
+    AND b.type = 'view';
+{{end}}
 {{if .sqlite}}
 UPDATE {{.prefix}}blocks SET fields = replace(fields, '"columnCalculations":[]', '"columnCalculations":{}');
+
+UPDATE {{.prefix}}blocks AS b
+    SET fields = (
+        SELECT  json_set(a.fields, '$.columnCalculations',json_extract(c.fields,  '$.columnCalculations')) from {{.prefix}}blocks AS a
+        JOIN {{.prefix}}blocks AS c on c.id = a.root_id
+        WHERE a.id = b.id)
+    WHERE json_extract(b.fields,'$.viewType') = 'table'
+    AND b.type = 'view';
 {{end}}
+
+/* TODO: Migrate the columnCalculations at app level and remove it from the boards and boards_history tables */
 
 {{- /* add boards tables */ -}}
 CREATE TABLE {{.prefix}}boards (
@@ -36,7 +64,7 @@ CREATE TABLE {{.prefix}}boards (
     created_by VARCHAR(36),
     modified_by VARCHAR(36),
     type VARCHAR(1) NOT NULL,
-    title TEXT,
+    title TEXT NOT NULL,
     description TEXT,
     icon VARCHAR(256),
     show_description BOOLEAN,
@@ -45,22 +73,21 @@ CREATE TABLE {{.prefix}}boards (
     {{if .mysql}}
     properties JSON,
     card_properties JSON,
-    column_calculations JSON,
     {{end}}
     {{if .postgres}}
     properties JSONB,
     card_properties JSONB,
-    column_calculations JSONB,
     {{end}}
     {{if .sqlite}}
     properties TEXT,
     card_properties TEXT,
-    column_calculations TEXT,
     {{end}}
     create_at BIGINT,
     update_at BIGINT,
     delete_at BIGINT
 ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
+
+CREATE INDEX idx_board_team_id ON {{.prefix}}boards(team_id, is_template);
 
 CREATE TABLE {{.prefix}}boards_history (
     id VARCHAR(36) NOT NULL,
@@ -74,7 +101,7 @@ CREATE TABLE {{.prefix}}boards_history (
     created_by VARCHAR(36),
     modified_by VARCHAR(36),
     type VARCHAR(1) NOT NULL,
-    title TEXT,
+    title TEXT NOT NULL,
     description TEXT,
     icon VARCHAR(256),
     show_description BOOLEAN,
@@ -83,17 +110,14 @@ CREATE TABLE {{.prefix}}boards_history (
     {{if .mysql}}
     properties JSON,
     card_properties JSON,
-    column_calculations JSON,
     {{end}}
     {{if .postgres}}
     properties JSONB,
     card_properties JSONB,
-    column_calculations JSONB,
     {{end}}
     {{if .sqlite}}
     properties TEXT,
     card_properties TEXT,
-    column_calculations TEXT,
     {{end}}
     create_at BIGINT,
     update_at BIGINT,
@@ -107,24 +131,28 @@ CREATE TABLE {{.prefix}}boards_history (
 {{if .plugin}}
   {{if .postgres}}
   INSERT INTO {{.prefix}}boards (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->>'description')::text,
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type,
+                 COALESCE(B.title, ''),
+                (B.fields->>'description')::text,
                  B.fields->>'icon',
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
-                 '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
+                 '{}', B.fields->'cardProperties', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
           INNER JOIN channels AS C ON C.Id=B.channel_id
           WHERE B.type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type, B.title, (B.fields->>'description')::text,
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type,
+                 COALESCE(B.title, ''),
+                 (B.fields->>'description')::text,
                  B.fields->>'icon',
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
-                 '{}', B.fields->'cardProperties', B.fields->'columnCalculations', B.create_at,
+                 '{}', B.fields->'cardProperties', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B
           INNER JOIN channels AS C ON C.Id=B.channel_id
@@ -133,24 +161,28 @@ CREATE TABLE {{.prefix}}boards_history (
   {{end}}
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type,
+                 COALESCE(B.title, ''),
+                 JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')),
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
+                 '{}', B.fields->'$.cardProperties', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
           INNER JOIN Channels AS C ON C.Id=B.channel_id
           WHERE B.type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type, B.title, JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type,
+                 COALESCE(B.title, ''),
+                 JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')),
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', B.fields->'$.cardProperties', B.fields->'$.columnCalculations', B.create_at,
+                 '{}', B.fields->'$.cardProperties', B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B
           INNER JOIN Channels AS C ON C.Id=B.channel_id
@@ -160,23 +192,27 @@ CREATE TABLE {{.prefix}}boards_history (
 {{else}}
   {{if .postgres}}
   INSERT INTO {{.prefix}}boards (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->>'description')::text,
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
+                 COALESCE(B.title, ''),
+                 (fields->>'description')::text,
                  B.fields->>'icon',
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
-                 '{}', fields->'cardProperties', fields->'columnCalculations', create_at,
+                 '{}', fields->'cardProperties', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks AS B
           WHERE type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, (fields->>'description')::text,
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
+                 COALESCE(B.title, ''),
+                 (fields->>'description')::text,
                  B.fields->>'icon',
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
-                 '{}', fields->'cardProperties', fields->'columnCalculations', create_at,
+                 '{}', fields->'cardProperties', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history AS B
           WHERE type='board'
@@ -184,23 +220,27 @@ CREATE TABLE {{.prefix}}boards_history (
   {{end}}
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, JSON_UNQUOTE(JSON_EXTRACT(fields,'$.description')),
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
+                 COALESCE(B.title, ''),
+                 JSON_UNQUOTE(JSON_EXTRACT(fields,'$.description')),
                  JSON_UNQUOTE(JSON_EXTRACT(fields,'$.icon')),
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
+                 '{}', fields->'$.cardProperties', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks AS B
           WHERE type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, JSON_UNQUOTE(JSON_EXTRACT(fields,'$.description')),
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
+                 COALESCE(B.title, ''),
+                 JSON_UNQUOTE(JSON_EXTRACT(fields,'$.description')),
                  JSON_UNQUOTE(JSON_EXTRACT(fields,'$.icon')),
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', fields->'$.cardProperties', fields->'$.columnCalculations', create_at,
+                 '{}', fields->'$.cardProperties', create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history AS B
           WHERE type='board'
@@ -208,19 +248,23 @@ CREATE TABLE {{.prefix}}boards_history (
   {{end}}
   {{if .sqlite}}
   INSERT INTO {{.prefix}}boards
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, json_extract(fields, '$.description'),
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
+                 COALESCE(title, ''),
+                 json_extract(fields, '$.description'),
                  json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
-                 json_extract(fields, '$.templateVer'),
-                 '{}', json_extract(fields, '$.cardProperties'), json_extract(fields, '$.columnCalculations'), create_at,
+                 COALESCE(json_extract(fields, '$.templateVer'), 0),
+                 '{}', json_extract(fields, '$.cardProperties'), create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks
           WHERE type='board'
   ;
   INSERT INTO {{.prefix}}boards_history
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O', title, json_extract(fields, '$.description'),
+      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
+                 COALESCE(title, ''),
+                 json_extract(fields, '$.description'),
                  json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
-                 json_extract(fields, '$.templateVer'),
-                 '{}', json_extract(fields, '$.cardProperties'), json_extract(fields, '$.columnCalculations'), create_at,
+                 COALESCE(json_extract(fields, '$.templateVer'), 0),
+                 '{}', json_extract(fields, '$.cardProperties'), create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history
           WHERE type='board'

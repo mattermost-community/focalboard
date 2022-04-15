@@ -23,9 +23,11 @@ const (
 	InvalidSymbolPassword    = "symbol"
 )
 
+var PasswordHashStrength = 10
+
 // HashPassword generates a hash using the bcrypt.GenerateFromPassword.
 func HashPassword(password string) string {
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), PasswordHashStrength)
 	if err != nil {
 		panic(err)
 	}

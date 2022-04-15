@@ -44,9 +44,16 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 
 	board, err := s.store.GetBoard(boardID)
 	if errors.Is(err, sql.ErrNoRows) {
-		return false
-	}
-	if err != nil {
+		var boards []*model.Board
+		boards, err = s.store.GetBoardHistory(boardID, model.QueryBoardHistoryOptions{Limit: 1, Descending: true})
+		if err != nil {
+			return false
+		}
+		if len(boards) == 0 {
+			return false
+		}
+		board = boards[0]
+	} else if err != nil {
 		s.api.LogError("error getting board",
 			"boardID", boardID,
 			"userID", userID,

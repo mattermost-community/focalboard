@@ -71,7 +71,7 @@ describe('components/table/calculation/CalculationRow', () => {
     })
 
     test('should match snapshot', async () => {
-        board.columnCalculations = {
+        view.fields.columnCalculations = {
             property_2: 'count',
             property_3: 'countValue',
             property_4: 'countUniqueValue',

@@ -14,6 +14,19 @@
             "cwd": "${workspaceFolder}"
         },
         {
+            "name": "Go: Launch Single-user Server",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "buildFlags": "-tags 'json1'",
+            "program": "${workspaceFolder}/server/main",
+            "cwd": "${workspaceFolder}",
+            "args": ["-single-user"],
+			"env": {
+				"FOCALBOARD_SINGLE_USER_TOKEN": "testtest"
+			}
+        },
+        {
             "name": "Go: Launch Windows App",
             "type": "go",
             "request": "launch",

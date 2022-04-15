@@ -344,7 +344,8 @@ func (a *App) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 }
 
 func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBlock *model.Block, modifiedByID string) {
-	if a.notifications == nil {
+	// don't notify if notifications service disabled, or block change is generated via system user.
+	if a.notifications == nil || modifiedByID == model.SystemUserID {
 		return
 	}
 
@@ -355,6 +356,15 @@ func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBl
 		return
 	}
 
+	boardMember, _ := a.GetMemberForBoard(board.ID, modifiedByID)
+	if boardMember == nil {
+		// create temporary guest board member
+		boardMember = &model.BoardMember{
+			BoardID: board.ID,
+			UserID:  modifiedByID,
+		}
+	}
+
 	evt := notify.BlockChangeEvent{
 		Action:       action,
 		TeamID:       board.TeamID,
@@ -362,7 +372,7 @@ func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBl
 		Card:         card,
 		BlockChanged: block,
 		BlockOld:     oldBlock,
-		ModifiedByID: modifiedByID,
+		ModifiedBy:   boardMember,
 	}
 	a.notifications.BlockChanged(evt)
 }

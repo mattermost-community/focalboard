@@ -6,6 +6,10 @@ describe('Login actions', () => {
     const email = Cypress.env('email')
     const password = Cypress.env('password')
 
+    beforeEach(() => {
+        localStorage.setItem('language', 'en')
+    })
+
     it('Can perform login/register actions', () => {
         // Redirects to login page
         cy.log('**Redirects to login page (except plugin mode) **')
