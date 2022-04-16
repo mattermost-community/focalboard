@@ -857,7 +857,7 @@ ul.nav-tabs {
     },
     "createAt" : {
       "type" : "integer",
-      "description" : "The creation time",
+      "description" : "The creation time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
@@ -868,7 +868,7 @@ ul.nav-tabs {
     },
     "deleteAt" : {
       "type" : "integer",
-      "description" : "The deleted time. Set to indicate this block is deleted",
+      "description" : "The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted",
       "format" : "int64",
       "x-go-name" : "DeleteAt"
     },
@@ -912,7 +912,7 @@ ul.nav-tabs {
     },
     "updateAt" : {
       "type" : "integer",
-      "description" : "The last modified time",
+      "description" : "The last modified time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     }
@@ -1012,18 +1012,9 @@ ul.nav-tabs {
       "description" : "The ID of the channel that the board was created from",
       "x-go-name" : "ChannelID"
     },
-    "columnCalculations" : {
-      "type" : "object",
-      "additionalProperties" : {
-        "type" : "object",
-        "properties" : { }
-      },
-      "description" : "The calculations on the board's cards",
-      "x-go-name" : "ColumnCalculations"
-    },
     "createAt" : {
       "type" : "integer",
-      "description" : "The creation time",
+      "description" : "The creation time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
@@ -1034,7 +1025,7 @@ ul.nav-tabs {
     },
     "deleteAt" : {
       "type" : "integer",
-      "description" : "The deleted time. Set to indicate this block is deleted",
+      "description" : "The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted",
       "format" : "int64",
       "x-go-name" : "DeleteAt"
     },
@@ -1098,7 +1089,7 @@ ul.nav-tabs {
     },
     "updateAt" : {
       "type" : "integer",
-      "description" : "The last modified time",
+      "description" : "The last modified time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     }
@@ -1164,9 +1155,9 @@ ul.nav-tabs {
       "x-go-name" : "BoardID"
     },
     "insertAt" : {
-      "type" : "integer",
+      "type" : "string",
       "description" : "The insertion time",
-      "format" : "int64",
+      "format" : "date-time",
       "x-go-name" : "InsertAt"
     },
     "userId" : {
@@ -1224,14 +1215,6 @@ ul.nav-tabs {
       },
       "x-go-name" : "DeletedCardProperties"
     },
-    "deletedColumnCalculations" : {
-      "type" : "array",
-      "description" : "The board deleted column calculations",
-      "items" : {
-        "type" : "string"
-      },
-      "x-go-name" : "DeletedColumnCalculations"
-    },
     "deletedProperties" : {
       "type" : "array",
       "description" : "The board removed properties",
@@ -1275,15 +1258,6 @@ ul.nav-tabs {
       },
       "x-go-name" : "UpdatedCardProperties"
     },
-    "updatedColumnCalculations" : {
-      "type" : "object",
-      "additionalProperties" : {
-        "type" : "object",
-        "properties" : { }
-      },
-      "description" : "The board updated column calculations",
-      "x-go-name" : "UpdatedColumnCalculations"
-    },
     "updatedProperties" : {
       "type" : "object",
       "additionalProperties" : {
@@ -1320,6 +1294,106 @@ ul.nav-tabs {
   "description" : "BoardsAndBlocks is used to operate over boards and blocks at the\nsame time",
   "x-go-package" : "github.com/mattermost/focalboard/server/model"
 };
+    defs["Category"] = {
+  "required" : [ "createAt", "id", "name", "teamID", "updateAt", "userID" ],
+  "type" : "object",
+  "properties" : {
+    "createAt" : {
+      "type" : "integer",
+      "description" : "The creation time in miliseconds since the current epoch",
+      "format" : "int64",
+      "x-go-name" : "CreateAt"
+    },
+    "deleteAt" : {
+      "type" : "integer",
+      "description" : "The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted",
+      "format" : "int64",
+      "x-go-name" : "DeleteAt"
+    },
+    "id" : {
+      "type" : "string",
+      "description" : "The id for this category",
+      "x-go-name" : "ID"
+    },
+    "name" : {
+      "type" : "string",
+      "description" : "The name for this category",
+      "x-go-name" : "Name"
+    },
+    "teamID" : {
+      "type" : "string",
+      "description" : "The team id for this category",
+      "x-go-name" : "TeamID"
+    },
+    "updateAt" : {
+      "type" : "integer",
+      "description" : "The last modified time in miliseconds since the current epoch",
+      "format" : "int64",
+      "x-go-name" : "UpdateAt"
+    },
+    "userID" : {
+      "type" : "string",
+      "description" : "The user's id for this category",
+      "x-go-name" : "UserID"
+    }
+  },
+  "description" : "Category is a board category",
+  "x-go-package" : "github.com/mattermost/focalboard/server/model"
+};
+    defs["CategoryBoards"] = {
+  "required" : [ "boardIDs", "createAt", "id", "name", "teamID", "updateAt", "userID" ],
+  "type" : "object",
+  "properties" : {
+    "boardIDs" : {
+      "type" : "array",
+      "description" : "The IDs of boards in this category",
+      "items" : {
+        "type" : "string"
+      },
+      "x-go-name" : "BoardIDs"
+    },
+    "createAt" : {
+      "type" : "integer",
+      "description" : "The creation time in miliseconds since the current epoch",
+      "format" : "int64",
+      "x-go-name" : "CreateAt"
+    },
+    "deleteAt" : {
+      "type" : "integer",
+      "description" : "The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted",
+      "format" : "int64",
+      "x-go-name" : "DeleteAt"
+    },
+    "id" : {
+      "type" : "string",
+      "description" : "The id for this category",
+      "x-go-name" : "ID"
+    },
+    "name" : {
+      "type" : "string",
+      "description" : "The name for this category",
+      "x-go-name" : "Name"
+    },
+    "teamID" : {
+      "type" : "string",
+      "description" : "The team id for this category",
+      "x-go-name" : "TeamID"
+    },
+    "updateAt" : {
+      "type" : "integer",
+      "description" : "The last modified time in miliseconds since the current epoch",
+      "format" : "int64",
+      "x-go-name" : "UpdateAt"
+    },
+    "userID" : {
+      "type" : "string",
+      "description" : "The user's id for this category",
+      "x-go-name" : "UserID"
+    }
+  },
+  "description" : "CategoryBoards is a board category and associated boards",
+  "x-go-package" : "github.com/mattermost/focalboard/server/model"
+};
     defs["ChangePasswordRequest"] = {
   "required" : [ "newPassword", "oldPassword" ],
   "type" : "object",
@@ -1337,6 +1411,37 @@ ul.nav-tabs {
   },
   "description" : "ChangePasswordRequest is a user password change request",
   "x-go-package" : "github.com/mattermost/focalboard/server/api"
+};
+    defs["ClientConfig"] = {
+  "required" : [ "enablePublicSharedBoards", "featureFlags", "telemetry", "telemetryid" ],
+  "type" : "object",
+  "properties" : {
+    "enablePublicSharedBoards" : {
+      "type" : "boolean",
+      "description" : "Is public shared boards enabled",
+      "x-go-name" : "EnablePublicSharedBoards"
+    },
+    "featureFlags" : {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      },
+      "description" : "The server feature flags",
+      "x-go-name" : "FeatureFlags"
+    },
+    "telemetry" : {
+      "type" : "boolean",
+      "description" : "Is telemetry enabled",
+      "x-go-name" : "Telemetry"
+    },
+    "telemetryid" : {
+      "type" : "string",
+      "description" : "The telemetry ID",
+      "x-go-name" : "TelemetryID"
+    }
+  },
+  "description" : "ClientConfig is the client configuration",
+  "x-go-package" : "github.com/mattermost/focalboard/server/model"
 };
     defs["DeleteBoardsAndBlocks"] = {
   "required" : [ "blocks", "boards" ],
@@ -1448,7 +1553,7 @@ ul.nav-tabs {
     },
     "create_at" : {
       "type" : "integer",
-      "description" : "CreatedAt is the timestamp this notification hint was created",
+      "description" : "CreatedAt is the timestamp this notification hint was created in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
@@ -1459,7 +1564,7 @@ ul.nav-tabs {
     },
     "notify_at" : {
       "type" : "integer",
-      "description" : "NotifyAt is the timestamp this notification should be scheduled",
+      "description" : "NotifyAt is the timestamp this notification should be scheduled in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "NotifyAt"
     }
@@ -1561,7 +1666,7 @@ ul.nav-tabs {
     },
     "update_at" : {
       "type" : "integer",
-      "description" : "Updated time",
+      "description" : "Updated time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     }
@@ -1606,13 +1711,13 @@ ul.nav-tabs {
     },
     "createAt" : {
       "type" : "integer",
-      "description" : "CreatedAt is the timestamp this subscription was created",
+      "description" : "CreatedAt is the timestamp this subscription was created in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
     "deleteAt" : {
       "type" : "integer",
-      "description" : "DeleteAt is the timestamp this subscription was deleted, or zero if not deleted",
+      "description" : "DeleteAt is the timestamp this subscription was deleted in miliseconds since the current epoch, or zero if not deleted",
       "format" : "int64",
       "x-go-name" : "DeleteAt"
     },
@@ -1668,7 +1773,7 @@ ul.nav-tabs {
     },
     "updateAt" : {
       "type" : "integer",
-      "description" : "Updated time",
+      "description" : "Updated time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     }
@@ -1682,13 +1787,13 @@ ul.nav-tabs {
   "properties" : {
     "create_at" : {
       "type" : "integer",
-      "description" : "Created time",
+      "description" : "Created time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "CreateAt"
     },
     "delete_at" : {
       "type" : "integer",
-      "description" : "Deleted time, set to indicate user is deleted",
+      "description" : "Deleted time in miliseconds since the current epoch, set to indicate user is deleted",
       "format" : "int64",
       "x-go-name" : "DeleteAt"
     },
@@ -1718,7 +1823,7 @@ ul.nav-tabs {
     },
     "update_at" : {
       "type" : "integer",
-      "description" : "Updated time",
+      "description" : "Updated time in miliseconds since the current epoch",
       "format" : "int64",
       "x-go-name" : "UpdateAt"
     },
@@ -1791,6 +1896,9 @@ ul.nav-tabs {
                     <li data-group="Default" data-name="createBoard" class="">
                       <a href="#api-Default-createBoard">createBoard</a>
                     </li>
+                    <li data-group="Default" data-name="createCategory" class="">
+                      <a href="#api-Default-createCategory">createCategory</a>
+                    </li>
                     <li data-group="Default" data-name="createSubscription" class="">
                       <a href="#api-Default-createSubscription">createSubscription</a>
                     </li>
@@ -1802,6 +1910,9 @@ ul.nav-tabs {
                     </li>
                     <li data-group="Default" data-name="deleteBoardsAndBlocks" class="">
                       <a href="#api-Default-deleteBoardsAndBlocks">deleteBoardsAndBlocks</a>
+                    </li>
+                    <li data-group="Default" data-name="deleteCategory" class="">
+                      <a href="#api-Default-deleteCategory">deleteCategory</a>
                     </li>
                     <li data-group="Default" data-name="deleteMember" class="">
                       <a href="#api-Default-deleteMember">deleteMember</a>
@@ -1826,6 +1937,9 @@ ul.nav-tabs {
                     </li>
                     <li data-group="Default" data-name="getBoards" class="">
                       <a href="#api-Default-getBoards">getBoards</a>
+                    </li>
+                    <li data-group="Default" data-name="getClientConfig" class="">
+                      <a href="#api-Default-getClientConfig">getClientConfig</a>
                     </li>
                     <li data-group="Default" data-name="getMe" class="">
                       <a href="#api-Default-getMe">getMe</a>
@@ -1856,6 +1970,9 @@ ul.nav-tabs {
                     </li>
                     <li data-group="Default" data-name="getUser" class="">
                       <a href="#api-Default-getUser">getUser</a>
+                    </li>
+                    <li data-group="Default" data-name="getUserCategoryBoards" class="">
+                      <a href="#api-Default-getUserCategoryBoards">getUserCategoryBoards</a>
                     </li>
                     <li data-group="Default" data-name="insertBoardsAndBlocks" class="">
                       <a href="#api-Default-insertBoardsAndBlocks">insertBoardsAndBlocks</a>
@@ -1907,6 +2024,12 @@ ul.nav-tabs {
                     </li>
                     <li data-group="Default" data-name="updateBlocks" class="">
                       <a href="#api-Default-updateBlocks">updateBlocks</a>
+                    </li>
+                    <li data-group="Default" data-name="updateCategory" class="">
+                      <a href="#api-Default-updateCategory">updateCategory</a>
+                    </li>
+                    <li data-group="Default" data-name="updateCategoryBoard" class="">
+                      <a href="#api-Default-updateCategoryBoard">updateCategoryBoard</a>
                     </li>
                     <li data-group="Default" data-name="updateMember" class="">
                       <a href="#api-Default-updateMember">updateMember</a>
@@ -4275,9 +4398,6 @@ $(document).ready(function() {
   } ],
   &quot;modifiedBy&quot; : &quot;modifiedBy&quot;,
   &quot;templateVersion&quot; : 1,
-  &quot;columnCalculations&quot; : {
-    &quot;key&quot; : &quot;{}&quot;
-  },
   &quot;id&quot; : &quot;id&quot;,
   &quot;channelId&quot; : &quot;channelId&quot;,
   &quot;properties&quot; : {
@@ -4703,6 +4823,517 @@ $(document).ready(function() {
                                     </script>
                                   </div>
                                   <input id='responses-Default-createBoard-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-createCategory">
+                      <article id="api-Default-createCategory-0" data-group="User" data-name="createCategory" data-version="0">
+                        <div class="pull-left">
+                          <h1>createCategory</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Create a category for boards</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/teams/{teamID}/categories</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-createCategory-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-createCategory-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-createCategory-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-createCategory-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-createCategory-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-createCategory-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-createCategory-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-createCategory-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-createCategory-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-createCategory-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-createCategory-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-createCategory-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-createCategory-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+-H "Authorization: [[apiKey]]" \
+ -H "Accept: application/json" \
+ -H "Content-Type: application/json" \
+ "http://localhost/api/v2/teams/{teamID}/categories" \
+ -d '{
+  &quot;deleteAt&quot; : 6,
+  &quot;teamID&quot; : &quot;teamID&quot;,
+  &quot;name&quot; : &quot;name&quot;,
+  &quot;updateAt&quot; : 1,
+  &quot;id&quot; : &quot;id&quot;,
+  &quot;userID&quot; : &quot;userID&quot;,
+  &quot;createAt&quot; : 0
+}'
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-createCategory-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        Category body = ; // Category | 
+
+        try {
+            Category result = apiInstance.createCategory(teamID, body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#createCategory");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-createCategory-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        Category body = ; // Category | 
+
+        try {
+            Category result = apiInstance.createCategory(teamID, body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#createCategory");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-createCategory-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-createCategory-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *teamID = teamID_example; // Team ID (default to null)
+Category *body = ; // 
+
+[apiInstance createCategoryWith:teamID
+    body:body
+              completionHandler: ^(Category output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-createCategory-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+var defaultClient = FocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var teamID = teamID_example; // {String} Team ID
+var body = ; // {Category} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.createCategory(teamID, body, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-createCategory-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-createCategory-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class createCategoryExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var teamID = teamID_example;  // String | Team ID (default to null)
+            var body = new Category(); // Category | 
+
+            try {
+                Category result = apiInstance.createCategory(teamID, body);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.createCategory: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-createCategory-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$teamID = teamID_example; // String | Team ID
+$body = ; // Category | 
+
+try {
+    $result = $api_instance->createCategory($teamID, $body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->createCategory: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-createCategory-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $teamID = teamID_example; # String | Team ID
+my $body = WWW::OPenAPIClient::Object::Category->new(); # Category | 
+
+eval {
+    my $result = $api_instance->createCategory(teamID => $teamID, body => $body);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->createCategory: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-createCategory-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+teamID = teamID_example # String | Team ID (default to null)
+body =  # Category | 
+
+try:
+    api_response = api_instance.create_category(teamID, body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->createCategory: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-createCategory-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let teamID = teamID_example; // String
+    let body = ; // Category
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.createCategory(teamID, body, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">teamID*</td>
+<td>
+
+
+    <div id="d2e199_createCategory_teamID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Team ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+<td>
+<p class="marked">category to create</p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "description" : "category to create",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Category"
+      }
+    }
+  },
+  "required" : true
+};
+
+  var schema = findNode('schema',schemaWrapper).schema;
+  if (!schema) {
+    schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_createCategory_body');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_createCategory_body"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-createCategory-title-200"></h3>
+                            <p id="examples-Default-createCategory-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-createCategory-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-createCategory-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-createCategory-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-createCategory-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-createCategory-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-createCategory-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-createCategory-200-schema">
+                                  <div id="responses-Default-createCategory-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "success",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Category"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-createCategory-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-createCategory-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-createCategory-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-Default-createCategory-title-default"></h3>
+                            <p id="examples-Default-createCategory-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-createCategory-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-createCategory-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-createCategory-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-createCategory-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-createCategory-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-createCategory-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-createCategory-default-schema">
+                                  <div id="responses-Default-createCategory-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-createCategory-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-createCategory-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-createCategory-default-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
                         </article>
@@ -6449,6 +7080,430 @@ $(document).ready(function() {
                                     </script>
                                   </div>
                                   <input id='responses-Default-deleteBoardsAndBlocks-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-deleteCategory">
+                      <article id="api-Default-deleteCategory-0" data-group="User" data-name="deleteCategory" data-version="0">
+                        <div class="pull-left">
+                          <h1>deleteCategory</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Delete a category</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="delete"><code><span class="pln">/teams/{teamID}/categories/{categoryID}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-deleteCategory-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-deleteCategory-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-deleteCategory-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-deleteCategory-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-deleteCategory-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-deleteCategory-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-deleteCategory-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-deleteCategory-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-deleteCategory-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-deleteCategory-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-deleteCategory-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-deleteCategory-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-deleteCategory-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X DELETE \
+-H "Authorization: [[apiKey]]" \
+ -H "Accept: application/json" \
+ "http://localhost/api/v2/teams/{teamID}/categories/{categoryID}"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-deleteCategory-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        String categoryID = categoryID_example; // String | Category ID
+
+        try {
+            apiInstance.deleteCategory(teamID, categoryID);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#deleteCategory");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-deleteCategory-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        String categoryID = categoryID_example; // String | Category ID
+
+        try {
+            apiInstance.deleteCategory(teamID, categoryID);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#deleteCategory");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-deleteCategory-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-deleteCategory-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *teamID = teamID_example; // Team ID (default to null)
+String *categoryID = categoryID_example; // Category ID (default to null)
+
+[apiInstance deleteCategoryWith:teamID
+    categoryID:categoryID
+              completionHandler: ^(NSError* error) {
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-deleteCategory-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+var defaultClient = FocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var teamID = teamID_example; // {String} Team ID
+var categoryID = categoryID_example; // {String} Category ID
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.deleteCategory(teamID, categoryID, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-deleteCategory-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-deleteCategory-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class deleteCategoryExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var teamID = teamID_example;  // String | Team ID (default to null)
+            var categoryID = categoryID_example;  // String | Category ID (default to null)
+
+            try {
+                apiInstance.deleteCategory(teamID, categoryID);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.deleteCategory: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-deleteCategory-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$teamID = teamID_example; // String | Team ID
+$categoryID = categoryID_example; // String | Category ID
+
+try {
+    $api_instance->deleteCategory($teamID, $categoryID);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->deleteCategory: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-deleteCategory-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $teamID = teamID_example; # String | Team ID
+my $categoryID = categoryID_example; # String | Category ID
+
+eval {
+    $api_instance->deleteCategory(teamID => $teamID, categoryID => $categoryID);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->deleteCategory: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-deleteCategory-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+teamID = teamID_example # String | Team ID (default to null)
+categoryID = categoryID_example # String | Category ID (default to null)
+
+try:
+    api_instance.delete_category(teamID, categoryID)
+except ApiException as e:
+    print("Exception when calling DefaultApi->deleteCategory: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-deleteCategory-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let teamID = teamID_example; // String
+    let categoryID = categoryID_example; // String
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.deleteCategory(teamID, categoryID, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">teamID*</td>
+<td>
+
+
+    <div id="d2e199_deleteCategory_teamID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Team ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                  <tr><td style="width:150px;">categoryID*</td>
+<td>
+
+
+    <div id="d2e199_deleteCategory_categoryID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Category ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-deleteCategory-title-200"></h3>
+                            <p id="examples-Default-deleteCategory-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-deleteCategory-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-deleteCategory-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-deleteCategory-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-deleteCategory-200" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-deleteCategory-200-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-Default-deleteCategory-title-default"></h3>
+                            <p id="examples-Default-deleteCategory-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-deleteCategory-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-deleteCategory-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-deleteCategory-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-deleteCategory-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-deleteCategory-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-deleteCategory-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-deleteCategory-default-schema">
+                                  <div id="responses-Default-deleteCategory-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-deleteCategory-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-deleteCategory-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-deleteCategory-default-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
                         </article>
@@ -10229,6 +11284,370 @@ Team ID
                                     </script>
                                   </div>
                                   <input id='responses-Default-getBoards-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-getClientConfig">
+                      <article id="api-Default-getClientConfig-0" data-group="User" data-name="getClientConfig" data-version="0">
+                        <div class="pull-left">
+                          <h1>getClientConfig</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns the client configuration</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/clientConfig</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-getClientConfig-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-getClientConfig-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-getClientConfig-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-getClientConfig-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-getClientConfig-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-getClientConfig-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-getClientConfig-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-getClientConfig-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-getClientConfig-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-getClientConfig-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-getClientConfig-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-getClientConfig-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-getClientConfig-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET \
+ -H "Accept: application/json" \
+ "http://localhost/api/v2/clientConfig"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-getClientConfig-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+
+        try {
+            ClientConfig result = apiInstance.getClientConfig();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#getClientConfig");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-getClientConfig-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+
+        try {
+            ClientConfig result = apiInstance.getClientConfig();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#getClientConfig");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-getClientConfig-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-getClientConfig-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+[apiInstance getClientConfigWithCompletionHandler: 
+              ^(ClientConfig output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getClientConfig-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getClientConfig(callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-getClientConfig-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-getClientConfig-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class getClientConfigExample
+    {
+        public void main()
+        {
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+
+            try {
+                ClientConfig result = apiInstance.getClientConfig();
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.getClientConfig: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getClientConfig-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+
+try {
+    $result = $api_instance->getClientConfig();
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->getClientConfig: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getClientConfig-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+
+eval {
+    my $result = $api_instance->getClientConfig();
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->getClientConfig: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getClientConfig-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+
+try:
+    api_response = api_instance.get_client_config()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->getClientConfig: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getClientConfig-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.getClientConfig(&context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-getClientConfig-title-200"></h3>
+                            <p id="examples-Default-getClientConfig-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-getClientConfig-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-getClientConfig-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-getClientConfig-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getClientConfig-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-getClientConfig-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getClientConfig-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-getClientConfig-200-schema">
+                                  <div id="responses-Default-getClientConfig-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "success",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ClientConfig"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-getClientConfig-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-getClientConfig-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-getClientConfig-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-Default-getClientConfig-title-default"></h3>
+                            <p id="examples-Default-getClientConfig-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-getClientConfig-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-getClientConfig-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-getClientConfig-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getClientConfig-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-getClientConfig-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getClientConfig-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-getClientConfig-default-schema">
+                                  <div id="responses-Default-getClientConfig-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-getClientConfig-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-getClientConfig-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-getClientConfig-default-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
                         </article>
@@ -14636,6 +16055,453 @@ User ID
                         </article>
                       </div>
                       <hr>
+                    <div id="api-Default-getUserCategoryBoards">
+                      <article id="api-Default-getUserCategoryBoards-0" data-group="User" data-name="getUserCategoryBoards" data-version="0">
+                        <div class="pull-left">
+                          <h1>getUserCategoryBoards</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Gets the user&#39;s board categories</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/teams/{teamID}/categories</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-getUserCategoryBoards-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-getUserCategoryBoards-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-getUserCategoryBoards-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-getUserCategoryBoards-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-getUserCategoryBoards-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-getUserCategoryBoards-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-getUserCategoryBoards-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-getUserCategoryBoards-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-getUserCategoryBoards-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-getUserCategoryBoards-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-getUserCategoryBoards-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-getUserCategoryBoards-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-getUserCategoryBoards-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET \
+-H "Authorization: [[apiKey]]" \
+ -H "Accept: application/json" \
+ "http://localhost/api/v2/teams/{teamID}/categories"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+
+        try {
+            array[CategoryBoards] result = apiInstance.getUserCategoryBoards(teamID);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#getUserCategoryBoards");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+
+        try {
+            array[CategoryBoards] result = apiInstance.getUserCategoryBoards(teamID);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#getUserCategoryBoards");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *teamID = teamID_example; // Team ID (default to null)
+
+[apiInstance getUserCategoryBoardsWith:teamID
+              completionHandler: ^(array[CategoryBoards] output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+var defaultClient = FocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var teamID = teamID_example; // {String} Team ID
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getUserCategoryBoards(teamID, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class getUserCategoryBoardsExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var teamID = teamID_example;  // String | Team ID (default to null)
+
+            try {
+                array[CategoryBoards] result = apiInstance.getUserCategoryBoards(teamID);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.getUserCategoryBoards: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$teamID = teamID_example; // String | Team ID
+
+try {
+    $result = $api_instance->getUserCategoryBoards($teamID);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->getUserCategoryBoards: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $teamID = teamID_example; # String | Team ID
+
+eval {
+    my $result = $api_instance->getUserCategoryBoards(teamID => $teamID);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->getUserCategoryBoards: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+teamID = teamID_example # String | Team ID (default to null)
+
+try:
+    api_response = api_instance.get_user_category_boards(teamID)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->getUserCategoryBoards: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getUserCategoryBoards-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let teamID = teamID_example; // String
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.getUserCategoryBoards(teamID, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">teamID*</td>
+<td>
+
+
+    <div id="d2e199_getUserCategoryBoards_teamID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Team ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-getUserCategoryBoards-title-200"></h3>
+                            <p id="examples-Default-getUserCategoryBoards-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-getUserCategoryBoards-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-getUserCategoryBoards-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-getUserCategoryBoards-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getUserCategoryBoards-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-getUserCategoryBoards-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getUserCategoryBoards-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-getUserCategoryBoards-200-schema">
+                                  <div id="responses-Default-getUserCategoryBoards-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "success",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "type" : "array",
+        "items" : {
+          "$ref" : "#/components/schemas/CategoryBoards"
+        }
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-getUserCategoryBoards-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-getUserCategoryBoards-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-getUserCategoryBoards-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-Default-getUserCategoryBoards-title-default"></h3>
+                            <p id="examples-Default-getUserCategoryBoards-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-getUserCategoryBoards-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-getUserCategoryBoards-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-getUserCategoryBoards-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getUserCategoryBoards-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-getUserCategoryBoards-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getUserCategoryBoards-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-getUserCategoryBoards-default-schema">
+                                  <div id="responses-Default-getUserCategoryBoards-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-getUserCategoryBoards-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-getUserCategoryBoards-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-getUserCategoryBoards-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-Default-insertBoardsAndBlocks">
                       <article id="api-Default-insertBoardsAndBlocks-0" data-group="User" data-name="insertBoardsAndBlocks" data-version="0">
                         <div class="pull-left">
@@ -14725,9 +16591,6 @@ User ID
     } ],
     &quot;modifiedBy&quot; : &quot;modifiedBy&quot;,
     &quot;templateVersion&quot; : 1,
-    &quot;columnCalculations&quot; : {
-      &quot;key&quot; : &quot;{}&quot;
-    },
     &quot;id&quot; : &quot;id&quot;,
     &quot;channelId&quot; : &quot;channelId&quot;,
     &quot;properties&quot; : {
@@ -14752,9 +16615,6 @@ User ID
     } ],
     &quot;modifiedBy&quot; : &quot;modifiedBy&quot;,
     &quot;templateVersion&quot; : 1,
-    &quot;columnCalculations&quot; : {
-      &quot;key&quot; : &quot;{}&quot;
-    },
     &quot;id&quot; : &quot;id&quot;,
     &quot;channelId&quot; : &quot;channelId&quot;,
     &quot;properties&quot; : {
@@ -18432,11 +20292,7 @@ $(document).ready(function() {
   &quot;updatedProperties&quot; : {
     &quot;key&quot; : &quot;{}&quot;
   },
-  &quot;deletedColumnCalculations&quot; : [ &quot;deletedColumnCalculations&quot;, &quot;deletedColumnCalculations&quot; ],
   &quot;icon&quot; : &quot;icon&quot;,
-  &quot;updatedColumnCalculations&quot; : {
-    &quot;key&quot; : &quot;{}&quot;
-  },
   &quot;deletedCardProperties&quot; : [ &quot;deletedCardProperties&quot;, &quot;deletedCardProperties&quot; ],
   &quot;description&quot; : &quot;description&quot;,
   &quot;updatedCardProperties&quot; : [ {
@@ -18979,11 +20835,7 @@ $(document).ready(function() {
     &quot;updatedProperties&quot; : {
       &quot;key&quot; : &quot;{}&quot;
     },
-    &quot;deletedColumnCalculations&quot; : [ &quot;deletedColumnCalculations&quot;, &quot;deletedColumnCalculations&quot; ],
     &quot;icon&quot; : &quot;icon&quot;,
-    &quot;updatedColumnCalculations&quot; : {
-      &quot;key&quot; : &quot;{}&quot;
-    },
     &quot;deletedCardProperties&quot; : [ &quot;deletedCardProperties&quot;, &quot;deletedCardProperties&quot; ],
     &quot;description&quot; : &quot;description&quot;,
     &quot;updatedCardProperties&quot; : [ {
@@ -18999,11 +20851,7 @@ $(document).ready(function() {
     &quot;updatedProperties&quot; : {
       &quot;key&quot; : &quot;{}&quot;
     },
-    &quot;deletedColumnCalculations&quot; : [ &quot;deletedColumnCalculations&quot;, &quot;deletedColumnCalculations&quot; ],
     &quot;icon&quot; : &quot;icon&quot;,
-    &quot;updatedColumnCalculations&quot; : {
-      &quot;key&quot; : &quot;{}&quot;
-    },
     &quot;deletedCardProperties&quot; : [ &quot;deletedCardProperties&quot;, &quot;deletedCardProperties&quot; ],
     &quot;description&quot; : &quot;description&quot;,
     &quot;updatedCardProperties&quot; : [ {
@@ -22604,6 +24452,1007 @@ $(document).ready(function() {
                                     </script>
                                   </div>
                                   <input id='responses-Default-updateBlocks-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-updateCategory">
+                      <article id="api-Default-updateCategory-0" data-group="User" data-name="updateCategory" data-version="0">
+                        <div class="pull-left">
+                          <h1>updateCategory</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Create a category for boards</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="put"><code><span class="pln">/teams/{teamID}/categories/{categoryID}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-updateCategory-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-updateCategory-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-updateCategory-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-updateCategory-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-updateCategory-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-updateCategory-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-updateCategory-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-updateCategory-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-updateCategory-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-updateCategory-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-updateCategory-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-updateCategory-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-updateCategory-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X PUT \
+-H "Authorization: [[apiKey]]" \
+ -H "Accept: application/json" \
+ -H "Content-Type: application/json" \
+ "http://localhost/api/v2/teams/{teamID}/categories/{categoryID}" \
+ -d '{
+  &quot;deleteAt&quot; : 6,
+  &quot;teamID&quot; : &quot;teamID&quot;,
+  &quot;name&quot; : &quot;name&quot;,
+  &quot;updateAt&quot; : 1,
+  &quot;id&quot; : &quot;id&quot;,
+  &quot;userID&quot; : &quot;userID&quot;,
+  &quot;createAt&quot; : 0
+}'
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-updateCategory-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        String categoryID = categoryID_example; // String | Category ID
+        Category body = ; // Category | 
+
+        try {
+            Category result = apiInstance.updateCategory(teamID, categoryID, body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#updateCategory");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-updateCategory-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        String categoryID = categoryID_example; // String | Category ID
+        Category body = ; // Category | 
+
+        try {
+            Category result = apiInstance.updateCategory(teamID, categoryID, body);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#updateCategory");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-updateCategory-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-updateCategory-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *teamID = teamID_example; // Team ID (default to null)
+String *categoryID = categoryID_example; // Category ID (default to null)
+Category *body = ; // 
+
+[apiInstance updateCategoryWith:teamID
+    categoryID:categoryID
+    body:body
+              completionHandler: ^(Category output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateCategory-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+var defaultClient = FocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var teamID = teamID_example; // {String} Team ID
+var categoryID = categoryID_example; // {String} Category ID
+var body = ; // {Category} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.updateCategory(teamID, categoryID, body, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-updateCategory-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-updateCategory-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class updateCategoryExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var teamID = teamID_example;  // String | Team ID (default to null)
+            var categoryID = categoryID_example;  // String | Category ID (default to null)
+            var body = new Category(); // Category | 
+
+            try {
+                Category result = apiInstance.updateCategory(teamID, categoryID, body);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.updateCategory: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateCategory-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$teamID = teamID_example; // String | Team ID
+$categoryID = categoryID_example; // String | Category ID
+$body = ; // Category | 
+
+try {
+    $result = $api_instance->updateCategory($teamID, $categoryID, $body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->updateCategory: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateCategory-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $teamID = teamID_example; # String | Team ID
+my $categoryID = categoryID_example; # String | Category ID
+my $body = WWW::OPenAPIClient::Object::Category->new(); # Category | 
+
+eval {
+    my $result = $api_instance->updateCategory(teamID => $teamID, categoryID => $categoryID, body => $body);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->updateCategory: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateCategory-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+teamID = teamID_example # String | Team ID (default to null)
+categoryID = categoryID_example # String | Category ID (default to null)
+body =  # Category | 
+
+try:
+    api_response = api_instance.update_category(teamID, categoryID, body)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->updateCategory: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateCategory-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let teamID = teamID_example; // String
+    let categoryID = categoryID_example; // String
+    let body = ; // Category
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.updateCategory(teamID, categoryID, body, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">teamID*</td>
+<td>
+
+
+    <div id="d2e199_updateCategory_teamID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Team ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                  <tr><td style="width:150px;">categoryID*</td>
+<td>
+
+
+    <div id="d2e199_updateCategory_categoryID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Category ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+<td>
+<p class="marked">category to update</p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "description" : "category to update",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Category"
+      }
+    }
+  },
+  "required" : true
+};
+
+  var schema = findNode('schema',schemaWrapper).schema;
+  if (!schema) {
+    schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_updateCategory_body');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_updateCategory_body"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-updateCategory-title-200"></h3>
+                            <p id="examples-Default-updateCategory-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-updateCategory-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-updateCategory-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-updateCategory-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-updateCategory-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-updateCategory-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-updateCategory-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-updateCategory-200-schema">
+                                  <div id="responses-Default-updateCategory-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "success",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/Category"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-updateCategory-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-updateCategory-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-updateCategory-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-Default-updateCategory-title-default"></h3>
+                            <p id="examples-Default-updateCategory-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-updateCategory-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-updateCategory-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-updateCategory-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-updateCategory-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-updateCategory-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-updateCategory-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-updateCategory-default-schema">
+                                  <div id="responses-Default-updateCategory-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-updateCategory-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-updateCategory-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-updateCategory-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-updateCategoryBoard">
+                      <article id="api-Default-updateCategoryBoard-0" data-group="User" data-name="updateCategoryBoard" data-version="0">
+                        <div class="pull-left">
+                          <h1>updateCategoryBoard</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Set the category of a board</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/teams/{teamID}/categories/{categoryID}/boards/{boardID}</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-updateCategoryBoard-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-updateCategoryBoard-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-updateCategoryBoard-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-updateCategoryBoard-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-updateCategoryBoard-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-updateCategoryBoard-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-updateCategoryBoard-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-updateCategoryBoard-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-updateCategoryBoard-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-updateCategoryBoard-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-updateCategoryBoard-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-updateCategoryBoard-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-updateCategoryBoard-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+-H "Authorization: [[apiKey]]" \
+ -H "Accept: application/json" \
+ "http://localhost/api/v2/teams/{teamID}/categories/{categoryID}/boards/{boardID}"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-updateCategoryBoard-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        String categoryID = categoryID_example; // String | Category ID
+        String boardID = boardID_example; // String | Board ID
+
+        try {
+            apiInstance.updateCategoryBoard(teamID, categoryID, boardID);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#updateCategoryBoard");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-updateCategoryBoard-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String teamID = teamID_example; // String | Team ID
+        String categoryID = categoryID_example; // String | Category ID
+        String boardID = boardID_example; // String | Board ID
+
+        try {
+            apiInstance.updateCategoryBoard(teamID, categoryID, boardID);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#updateCategoryBoard");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-updateCategoryBoard-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-updateCategoryBoard-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *teamID = teamID_example; // Team ID (default to null)
+String *categoryID = categoryID_example; // Category ID (default to null)
+String *boardID = boardID_example; // Board ID (default to null)
+
+[apiInstance updateCategoryBoardWith:teamID
+    categoryID:categoryID
+    boardID:boardID
+              completionHandler: ^(NSError* error) {
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateCategoryBoard-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+var defaultClient = FocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var teamID = teamID_example; // {String} Team ID
+var categoryID = categoryID_example; // {String} Category ID
+var boardID = boardID_example; // {String} Board ID
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.updateCategoryBoard(teamID, categoryID, boardID, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-updateCategoryBoard-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-updateCategoryBoard-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class updateCategoryBoardExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var teamID = teamID_example;  // String | Team ID (default to null)
+            var categoryID = categoryID_example;  // String | Category ID (default to null)
+            var boardID = boardID_example;  // String | Board ID (default to null)
+
+            try {
+                apiInstance.updateCategoryBoard(teamID, categoryID, boardID);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.updateCategoryBoard: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateCategoryBoard-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$teamID = teamID_example; // String | Team ID
+$categoryID = categoryID_example; // String | Category ID
+$boardID = boardID_example; // String | Board ID
+
+try {
+    $api_instance->updateCategoryBoard($teamID, $categoryID, $boardID);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->updateCategoryBoard: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateCategoryBoard-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $teamID = teamID_example; # String | Team ID
+my $categoryID = categoryID_example; # String | Category ID
+my $boardID = boardID_example; # String | Board ID
+
+eval {
+    $api_instance->updateCategoryBoard(teamID => $teamID, categoryID => $categoryID, boardID => $boardID);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->updateCategoryBoard: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateCategoryBoard-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+teamID = teamID_example # String | Team ID (default to null)
+categoryID = categoryID_example # String | Category ID (default to null)
+boardID = boardID_example # String | Board ID (default to null)
+
+try:
+    api_instance.update_category_board(teamID, categoryID, boardID)
+except ApiException as e:
+    print("Exception when calling DefaultApi->updateCategoryBoard: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateCategoryBoard-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let teamID = teamID_example; // String
+    let categoryID = categoryID_example; // String
+    let boardID = boardID_example; // String
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.updateCategoryBoard(teamID, categoryID, boardID, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">teamID*</td>
+<td>
+
+
+    <div id="d2e199_updateCategoryBoard_teamID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Team ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                  <tr><td style="width:150px;">categoryID*</td>
+<td>
+
+
+    <div id="d2e199_updateCategoryBoard_categoryID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Category ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                  <tr><td style="width:150px;">boardID*</td>
+<td>
+
+
+    <div id="d2e199_updateCategoryBoard_boardID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Board ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-updateCategoryBoard-title-200"></h3>
+                            <p id="examples-Default-updateCategoryBoard-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-updateCategoryBoard-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-updateCategoryBoard-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-updateCategoryBoard-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-updateCategoryBoard-200" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-updateCategoryBoard-200-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-Default-updateCategoryBoard-title-default"></h3>
+                            <p id="examples-Default-updateCategoryBoard-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-updateCategoryBoard-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-updateCategoryBoard-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-updateCategoryBoard-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-updateCategoryBoard-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-updateCategoryBoard-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-updateCategoryBoard-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-updateCategoryBoard-default-schema">
+                                  <div id="responses-Default-updateCategoryBoard-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-updateCategoryBoard-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-updateCategoryBoard-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-updateCategoryBoard-default-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
                         </article>

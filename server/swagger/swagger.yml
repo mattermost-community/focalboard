@@ -10,7 +10,7 @@ definitions:
         type: string
         x-go-name: BoardID
       createAt:
-        description: The creation time
+        description: The creation time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
@@ -19,7 +19,7 @@ definitions:
         type: string
         x-go-name: CreatedBy
       deleteAt:
-        description: The deleted time. Set to indicate this block is deleted
+        description: The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted
         format: int64
         type: integer
         x-go-name: DeleteAt
@@ -53,7 +53,7 @@ definitions:
       type:
         $ref: '#/definitions/BlockType'
       updateAt:
-        description: The last modified time
+        description: The last modified time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
@@ -140,14 +140,8 @@ definitions:
         description: The ID of the channel that the board was created from
         type: string
         x-go-name: ChannelID
-      columnCalculations:
-        additionalProperties:
-          type: object
-        description: The calculations on the board's cards
-        type: object
-        x-go-name: ColumnCalculations
       createAt:
-        description: The creation time
+        description: The creation time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
@@ -156,7 +150,7 @@ definitions:
         type: string
         x-go-name: CreatedBy
       deleteAt:
-        description: The deleted time. Set to indicate this block is deleted
+        description: The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted
         format: int64
         type: integer
         x-go-name: DeleteAt
@@ -206,7 +200,7 @@ definitions:
       type:
         $ref: '#/definitions/BoardType'
       updateAt:
-        description: The last modified time
+        description: The last modified time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
@@ -221,8 +215,7 @@ definitions:
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
   BoardMember:
-    description: BoardMember stores the information of the membership of a user on
-      a board
+    description: BoardMember stores the information of the membership of a user on a board
     properties:
       boardId:
         description: The ID of the board
@@ -262,8 +255,7 @@ definitions:
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
   BoardMemberHistoryEntry:
-    description: BoardMemberHistoryEntry stores the information of the membership
-      of a user on a board
+    description: BoardMemberHistoryEntry stores the information of the membership of a user on a board
     properties:
       action:
         description: The action that added this history entry (created or deleted)
@@ -275,8 +267,8 @@ definitions:
         x-go-name: BoardID
       insertAt:
         description: The insertion time
-        format: int64
-        type: integer
+        format: date-time
+        type: string
         x-go-name: InsertAt
       userId:
         description: The ID of the user
@@ -300,20 +292,17 @@ definitions:
         type: string
         x-go-name: CreatedBy
       descendantFirstUpdateAt:
-        description: The earliest time a descendant of this board was added, modified,
-          or deleted
+        description: The earliest time a descendant of this board was added, modified, or deleted
         format: int64
         type: integer
         x-go-name: DescendantFirstUpdateAt
       descendantLastUpdateAt:
-        description: The most recent time a descendant of this board was added, modified,
-          or deleted
+        description: The most recent time a descendant of this board was added, modified, or deleted
         format: int64
         type: integer
         x-go-name: DescendantLastUpdateAt
       lastModifiedBy:
-        description: The ID of the user that last modified the most recently modified
-          descendant
+        description: The ID of the user that last modified the most recently modified descendant
         type: string
         x-go-name: LastModifiedBy
     required:
@@ -333,12 +322,6 @@ definitions:
           type: string
         type: array
         x-go-name: DeletedCardProperties
-      deletedColumnCalculations:
-        description: The board deleted column calculations
-        items:
-          type: string
-        type: array
-        x-go-name: DeletedColumnCalculations
       deletedProperties:
         description: The board removed properties
         items:
@@ -371,12 +354,6 @@ definitions:
           type: object
         type: array
         x-go-name: UpdatedCardProperties
-      updatedColumnCalculations:
-        additionalProperties:
-          type: object
-        description: The board updated column calculations
-        type: object
-        x-go-name: UpdatedColumnCalculations
       updatedProperties:
         additionalProperties:
           type: object
@@ -407,6 +384,99 @@ definitions:
         x-go-name: Boards
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
+  Category:
+    description: Category is a board category
+    properties:
+      createAt:
+        description: The creation time in miliseconds since the current epoch
+        format: int64
+        type: integer
+        x-go-name: CreateAt
+      deleteAt:
+        description: The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted
+        format: int64
+        type: integer
+        x-go-name: DeleteAt
+      id:
+        description: The id for this category
+        type: string
+        x-go-name: ID
+      name:
+        description: The name for this category
+        type: string
+        x-go-name: Name
+      teamID:
+        description: The team id for this category
+        type: string
+        x-go-name: TeamID
+      updateAt:
+        description: The last modified time in miliseconds since the current epoch
+        format: int64
+        type: integer
+        x-go-name: UpdateAt
+      userID:
+        description: The user's id for this category
+        type: string
+        x-go-name: UserID
+    required:
+    - id
+    - name
+    - userID
+    - teamID
+    - createAt
+    - updateAt
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
+  CategoryBoards:
+    description: CategoryBoards is a board category and associated boards
+    properties:
+      boardIDs:
+        description: The IDs of boards in this category
+        items:
+          type: string
+        type: array
+        x-go-name: BoardIDs
+      createAt:
+        description: The creation time in miliseconds since the current epoch
+        format: int64
+        type: integer
+        x-go-name: CreateAt
+      deleteAt:
+        description: The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted
+        format: int64
+        type: integer
+        x-go-name: DeleteAt
+      id:
+        description: The id for this category
+        type: string
+        x-go-name: ID
+      name:
+        description: The name for this category
+        type: string
+        x-go-name: Name
+      teamID:
+        description: The team id for this category
+        type: string
+        x-go-name: TeamID
+      updateAt:
+        description: The last modified time in miliseconds since the current epoch
+        format: int64
+        type: integer
+        x-go-name: UpdateAt
+      userID:
+        description: The user's id for this category
+        type: string
+        x-go-name: UserID
+    required:
+    - id
+    - name
+    - userID
+    - teamID
+    - createAt
+    - updateAt
+    - boardIDs
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
   ChangePasswordRequest:
     description: ChangePasswordRequest is a user password change request
     properties:
@@ -423,6 +493,34 @@ definitions:
     - newPassword
     type: object
     x-go-package: github.com/mattermost/focalboard/server/api
+  ClientConfig:
+    description: ClientConfig is the client configuration
+    properties:
+      enablePublicSharedBoards:
+        description: Is public shared boards enabled
+        type: boolean
+        x-go-name: EnablePublicSharedBoards
+      featureFlags:
+        additionalProperties:
+          type: string
+        description: The server feature flags
+        type: object
+        x-go-name: FeatureFlags
+      telemetry:
+        description: Is telemetry enabled
+        type: boolean
+        x-go-name: Telemetry
+      telemetryid:
+        description: The telemetry ID
+        type: string
+        x-go-name: TelemetryID
+    required:
+    - telemetry
+    - telemetryid
+    - enablePublicSharedBoards
+    - featureFlags
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
   DeleteBoardsAndBlocks:
     description: |-
       DeleteBoardsAndBlocks is used to list the boards and blocks to
@@ -517,7 +615,7 @@ definitions:
       block_type:
         $ref: '#/definitions/BlockType'
       create_at:
-        description: CreatedAt is the timestamp this notification hint was created
+        description: CreatedAt is the timestamp this notification hint was created in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
@@ -526,7 +624,7 @@ definitions:
         type: string
         x-go-name: ModifiedByID
       notify_at:
-        description: NotifyAt is the timestamp this notification should be scheduled
+        description: NotifyAt is the timestamp this notification should be scheduled in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: NotifyAt
@@ -619,7 +717,7 @@ definitions:
         type: string
         x-go-name: Token
       update_at:
-        description: Updated time
+        description: Updated time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
@@ -632,8 +730,7 @@ definitions:
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
   Subscriber:
-    description: Subscriber is an entity (e.g. user, channel) that can subscribe to
-      events from boards, cards, etc
+    description: Subscriber is an entity (e.g. user, channel) that can subscribe to events from boards, cards, etc
     properties:
       notified_at:
         description: NotifiedAt is the timestamp this subscriber was last notified
@@ -663,19 +760,17 @@ definitions:
       blockType:
         $ref: '#/definitions/BlockType'
       createAt:
-        description: CreatedAt is the timestamp this subscription was created
+        description: CreatedAt is the timestamp this subscription was created in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
       deleteAt:
-        description: DeleteAt is the timestamp this subscription was deleted, or zero
-          if not deleted
+        description: DeleteAt is the timestamp this subscription was deleted in miliseconds since the current epoch, or zero if not deleted
         format: int64
         type: integer
         x-go-name: DeleteAt
       notifiedAt:
-        description: NotifiedAt is the timestamp of the last notification sent for
-          this subscription
+        description: NotifiedAt is the timestamp of the last notification sent for this subscription
         format: int64
         type: integer
         x-go-name: NotifiedAt
@@ -722,7 +817,7 @@ definitions:
         type: string
         x-go-name: Title
       updateAt:
-        description: Updated time
+        description: Updated time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
@@ -737,12 +832,12 @@ definitions:
     description: User is a user
     properties:
       create_at:
-        description: Created time
+        description: Created time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: CreateAt
       delete_at:
-        description: Deleted time, set to indicate user is deleted
+        description: Deleted time in miliseconds since the current epoch, set to indicate user is deleted
         format: int64
         type: integer
         x-go-name: DeleteAt
@@ -765,7 +860,7 @@ definitions:
         type: object
         x-go-name: Props
       update_at:
-        description: Updated time
+        description: Updated time in miliseconds since the current epoch
         format: int64
         type: integer
         x-go-name: UpdateAt
@@ -1516,6 +1611,21 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
+  /clientConfig:
+    get:
+      description: Returns the client configuration
+      operationId: getClientConfig
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/ClientConfig'
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
   /login:
     post:
       description: Login user
@@ -1602,8 +1712,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
-      summary: Creates a subscription to a block for a user. The user will receive
-        change notifications for the block.
+      summary: Creates a subscription to a block for a user. The user will receive change notifications for the block.
   /subscriptions/{blockID}/{subscriberID}:
     delete:
       operationId: deleteSubscription
@@ -1629,8 +1738,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
-      summary: Deletes a subscription a user has for a a block. The user will no longer
-        receive change notifications for the block.
+      summary: Deletes a subscription a user has for a a block. The user will no longer receive change notifications for the block.
   /subscriptions/{subscriberID}:
     get:
       operationId: getSubscriptions
@@ -1861,6 +1969,149 @@ paths:
             $ref: '#/definitions/ErrorResponse'
       security:
       - BearerAuth: []
+  /teams/{teamID}/categories:
+    get:
+      description: Gets the user's board categories
+      operationId: getUserCategoryBoards
+      parameters:
+      - description: Team ID
+        in: path
+        name: teamID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            items:
+              $ref: '#/definitions/CategoryBoards'
+            type: array
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+    post:
+      description: Create a category for boards
+      operationId: createCategory
+      parameters:
+      - description: Team ID
+        in: path
+        name: teamID
+        required: true
+        type: string
+      - description: category to create
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/Category'
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /teams/{teamID}/categories/{categoryID}:
+    delete:
+      description: Delete a category
+      operationId: deleteCategory
+      parameters:
+      - description: Team ID
+        in: path
+        name: teamID
+        required: true
+        type: string
+      - description: Category ID
+        in: path
+        name: categoryID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+    put:
+      description: Create a category for boards
+      operationId: updateCategory
+      parameters:
+      - description: Team ID
+        in: path
+        name: teamID
+        required: true
+        type: string
+      - description: Category ID
+        in: path
+        name: categoryID
+        required: true
+        type: string
+      - description: category to update
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: '#/definitions/Category'
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+  /teams/{teamID}/categories/{categoryID}/boards/{boardID}:
+    post:
+      description: Set the category of a board
+      operationId: updateCategoryBoard
+      parameters:
+      - description: Team ID
+        in: path
+        name: teamID
+        required: true
+        type: string
+      - description: Category ID
+        in: path
+        name: categoryID
+        required: true
+        type: string
+      - description: Board ID
+        in: path
+        name: boardID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        default:
+          description: internal error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
   /teams/{teamID}/regenerate_signup_token:
     post:
       description: Regenerates the signup token for the root team
@@ -2060,8 +2311,7 @@ schemes:
 - https
 securityDefinitions:
   BearerAuth:
-    description: 'Pass session token using Bearer authentication, e.g. set header
-      "Authorization: Bearer <session token>"'
+    description: 'Pass session token using Bearer authentication, e.g. set header "Authorization: Bearer <session token>"'
     in: header
     name: Authorization
     type: apiKey

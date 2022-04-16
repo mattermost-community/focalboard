@@ -6,14 +6,36 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 )
 
+// Category is a board category
+// swagger:model
 type Category struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	UserID   string `json:"userID"`
-	TeamID   string `json:"teamID"`
-	CreateAt int64  `json:"createAt"`
-	UpdateAt int64  `json:"updateAt"`
-	DeleteAt int64  `json:"deleteAt"`
+	// The id for this category
+	// required: true
+	ID string `json:"id"`
+
+	// The name for this category
+	// required: true
+	Name string `json:"name"`
+
+	// The user's id for this category
+	// required: true
+	UserID string `json:"userID"`
+
+	// The team id for this category
+	// required: true
+	TeamID string `json:"teamID"`
+
+	// The creation time in miliseconds since the current epoch
+	// required: true
+	CreateAt int64 `json:"createAt"`
+
+	// The last modified time in miliseconds since the current epoch
+	// required: true
+	UpdateAt int64 `json:"updateAt"`
+
+	// The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted
+	// required: false
+	DeleteAt int64 `json:"deleteAt"`
 }
 
 func (c *Category) Hydrate() {
