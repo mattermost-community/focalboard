@@ -9,8 +9,10 @@ import DeleteIcon from '../../widgets/icons/delete'
 import EditIcon from '../../widgets/icons/edit'
 import DeleteBoardDialog from '../sidebar/deleteBoardDialog'
 
+import BoardPermissionGate from '../permissions/boardPermissionGate'
+
 import './boardTemplateSelectorItem.scss'
-import {Constants} from "../../constants"
+import {Constants, Permission} from "../../constants"
 
 type Props = {
     isActive: boolean
@@ -43,19 +45,31 @@ const BoardTemplateSelectorItem = (props: Props) => {
             {/* don't show template menu options for default templates */}
             {template.teamId !== Constants.globalTeamId &&
                 <div className='actions'>
-                    <IconButton
-                        icon={<DeleteIcon/>}
-                        title={intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete'})}
-                        onClick={(e: React.MouseEvent) => {
-                            e.stopPropagation()
-                            setDeleteOpen(true)
-                        }}
-                    />
-                    <IconButton
-                        icon={<EditIcon/>}
-                        title={intl.formatMessage({id: 'BoardTemplateSelector.edit-template', defaultMessage: 'Edit'})}
-                        onClick={onEditHandler}
-                    />
+                    <BoardPermissionGate 
+                        boardId={template.id}
+                        teamId={template.teamId}
+                        permissions={[Permission.DeleteBoard]}
+                    >            
+                        <IconButton
+                            icon={<DeleteIcon/>}
+                            title={intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete'})}
+                            onClick={(e: React.MouseEvent) => {
+                                e.stopPropagation()
+                                setDeleteOpen(true)
+                            }}
+                        />
+                    </BoardPermissionGate>
+                    <BoardPermissionGate 
+                        boardId={template.id}
+                        teamId={template.teamId}
+                        permissions={[Permission.ManageBoardCards, Permission.ManageBoardProperties]}
+                    >            
+                        <IconButton
+                            icon={<EditIcon/>}
+                            title={intl.formatMessage({id: 'BoardTemplateSelector.edit-template', defaultMessage: 'Edit'})}
+                            onClick={onEditHandler}
+                        />
+                    </BoardPermissionGate>
                 </div>}
             {deleteOpen &&
             <DeleteBoardDialog
