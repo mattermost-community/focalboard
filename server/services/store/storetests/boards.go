@@ -751,21 +751,21 @@ func testSearchBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "",
-			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID},
+			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID, board5.ID},
 		},
 		{
 			Name:             "should find all with term board",
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "board",
-			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID},
+			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID, , board5.ID},
 		},
 		{
 			Name:             "should find only public as per the term, wether user is a member or not",
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "public",
-			ExpectedBoardIDs: []string{board1.ID, board2.ID},
+			ExpectedBoardIDs: []string{board1.ID, board2.ID, board5.ID},
 		},
 		{
 			Name:             "should find only private as per the term, wether user is a member or not",
@@ -773,13 +773,6 @@ func testSearchBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			UserID:           userID,
 			Term:             "priv",
 			ExpectedBoardIDs: []string{board3.ID},
-		},
-		{
-			Name:             "should find the only board in team 2",
-			TeamID:           teamID2,
-			UserID:           userID,
-			Term:             "",
-			ExpectedBoardIDs: []string{board5.ID},
 		},
 		{
 			Name:             "should find no board in team 2 with a non matching term",
