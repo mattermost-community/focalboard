@@ -211,7 +211,7 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 	featureFlags := parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 
 	return &config.Configuration{
-		ServerRoot:               baseURL,
+		ServerRoot:               baseURL + "/plugins/focalboard",
 		Port:                     -1,
 		DBType:                   *mmconfig.SqlSettings.DriverName,
 		DBConfigString:           *mmconfig.SqlSettings.DataSource,

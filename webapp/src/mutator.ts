@@ -856,6 +856,19 @@ class Mutator {
         )
     }
 
+    async changeViewColumnCalculations(boardId: string, viewId: string, oldCalculations: Record<string, string>, calculations: Record<string, string>, description = 'updated kanban calculations'): Promise<void> {
+        await undoManager.perform(
+            async () => {
+                await octoClient.patchBlock(boardId, viewId, {updatedFields: {columnCalculations: calculations}})
+            },
+            async () => {
+                await octoClient.patchBlock(boardId, viewId, {updatedFields: {columnCalculations: oldCalculations}})
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
     async changeViewCardOrder(boardId: string, viewId: string, oldCardOrder: string[], cardOrder: string[], description = 'reorder'): Promise<void> {
         await undoManager.perform(
             async () => {
