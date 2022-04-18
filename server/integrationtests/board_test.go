@@ -410,7 +410,7 @@ func TestSearchBoards(t *testing.T) {
 				Name:        "user2 can only see the public boards, as he's not a member of any",
 				Client:      th.Client2,
 				Term:        "board",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, board5.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID},
 			},
 		}
 
