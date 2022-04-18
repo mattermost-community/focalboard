@@ -44,7 +44,9 @@ func TestSharing(t *testing.T) {
 
 		sharing, resp := th.Client.GetSharing(boardID)
 		require.NoError(t, resp.Error)
-		require.Nil(t, sharing)
+		require.NotNil(t, sharing)
+		require.False(t, sharing.Enabled)
+		require.Empty(t, sharing.ID)
 	})
 
 	t.Run("POST sharing, config = false", func(t *testing.T) {
