@@ -2566,7 +2566,14 @@ func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
 	//   '200':
 	//     description: success
 	//     schema:
-	//         "$ref": "#/definitions/OnboardingResponse"
+	//       type: object
+	//       properties:
+	//         teamID:
+	//           type: string
+	//           description: Team ID
+	//         boardID:
+	//           type: string
+	//           description: Board ID
 	//   default:
 	//     description: internal error
 	//     schema:
