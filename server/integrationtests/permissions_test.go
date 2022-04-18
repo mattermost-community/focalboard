@@ -169,14 +169,6 @@ func setupData(t *testing.T, th *TestHelper) TestData {
 	_, err = th.Server.App().AddMemberToBoard(&model.BoardMember{BoardID: board2.ID, UserID: userAdminID, SchemeAdmin: true})
 	require.NoError(t, err)
 
-	fmt.Println("privateBoard members:")
-	boardMembers, err := th.Server.App().GetMembersForBoard(board2.ID)
-	require.NoError(t, err)
-	require.NotNil(t, boardMembers)
-	for _, boardMember = range boardMembers {
-		fmt.Printf("board: %s, user: %s, isAdmin: %v\n", boardMember.BoardID, boardMember.UserID, boardMember.SchemeAdmin)
-	}
-
 	return TestData{
 		publicBoard:     board1,
 		privateBoard:    board2,
