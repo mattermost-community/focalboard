@@ -18,7 +18,6 @@ const (
 	testBoardID = "board-id"
 )
 
-//nolint:dupl
 func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	t.Run("InsertBlock", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -55,11 +54,6 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetSubTree2(t, store)
 	})
-	t.Run("GetSubTree3", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testGetSubTree3(t, store)
-	})
 	t.Run("GetBlocks", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
@@ -74,6 +68,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		store, tearDown := setup(t)
 		defer tearDown()
 		testDuplicateBlock(t, store)
+	})
+	t.Run("RunDataRetention", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testRunDataRetention(t, store)
 	})
 	t.Run("GetBlockMetadata", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -198,6 +197,7 @@ func testInsertBlock(t *testing.T, store store.Store) {
 		// inserting
 		err := store.InsertBlock(&block, "user-id-1")
 		require.NoError(t, err)
+		expectedTime := time.Now()
 
 		retrievedBlock, err := store.GetBlock("id-10")
 		assert.NoError(t, err)
@@ -205,8 +205,8 @@ func testInsertBlock(t *testing.T, store store.Store) {
 		assert.Equal(t, "board-id-1", retrievedBlock.BoardID)
 		assert.Equal(t, "user-id-1", retrievedBlock.CreatedBy)
 		assert.Equal(t, "user-id-1", retrievedBlock.ModifiedBy)
-		assert.WithinDurationf(t, time.Now(), utils.GetTimeForMillis(retrievedBlock.CreateAt), 1*time.Second, "create time should be current time")
-		assert.WithinDurationf(t, time.Now(), utils.GetTimeForMillis(retrievedBlock.UpdateAt), 1*time.Second, "update time should be current time")
+		assert.WithinDurationf(t, expectedTime, utils.GetTimeForMillis(retrievedBlock.CreateAt), 1*time.Second, "create time should be current time")
+		assert.WithinDurationf(t, expectedTime, utils.GetTimeForMillis(retrievedBlock.UpdateAt), 1*time.Second, "update time should be current time")
 	})
 }
 
@@ -512,47 +512,6 @@ func testGetSubTree2(t *testing.T, store store.Store) {
 	})
 }
 
-func testGetSubTree3(t *testing.T, store store.Store) {
-	boardID := testBoardID
-	blocks, err := store.GetBlocksForBoard(boardID)
-	require.NoError(t, err)
-	initialCount := len(blocks)
-
-	InsertBlocks(t, store, subtreeSampleBlocks, "user-id-1")
-	time.Sleep(1 * time.Millisecond)
-	defer DeleteBlocks(t, store, subtreeSampleBlocks, "test")
-
-	blocks, err = store.GetBlocksForBoard(boardID)
-	require.NoError(t, err)
-	require.Len(t, blocks, initialCount+6)
-
-	t.Run("from board id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(boardID, "parent", model.QuerySubtreeOptions{})
-		require.NoError(t, err)
-		require.Len(t, blocks, 5)
-		require.True(t, ContainsBlockWithID(blocks, "parent"))
-		require.True(t, ContainsBlockWithID(blocks, "child1"))
-		require.True(t, ContainsBlockWithID(blocks, "child2"))
-		require.True(t, ContainsBlockWithID(blocks, "grandchild1"))
-		require.True(t, ContainsBlockWithID(blocks, "grandchild2"))
-	})
-
-	t.Run("from child id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(boardID, "child1", model.QuerySubtreeOptions{})
-		require.NoError(t, err)
-		require.Len(t, blocks, 3)
-		require.True(t, ContainsBlockWithID(blocks, "child1"))
-		require.True(t, ContainsBlockWithID(blocks, "grandchild1"))
-		require.True(t, ContainsBlockWithID(blocks, "greatgrandchild1"))
-	})
-
-	t.Run("from not existing id", func(t *testing.T) {
-		blocks, err = store.GetSubTree3(boardID, "not-exists", model.QuerySubtreeOptions{})
-		require.NoError(t, err)
-		require.Len(t, blocks, 0)
-	})
-}
-
 func testDeleteBlock(t *testing.T, store store.Store) {
 	userID := testUserID
 	boardID := testBoardID
@@ -841,6 +800,56 @@ func testGetBlock(t *testing.T, store store.Store) {
 	})
 }
 
+func testRunDataRetention(t *testing.T, store store.Store) {
+	validBoard := model.Board{
+		ID:         "board-id-test",
+		IsTemplate: false,
+		ModifiedBy: "user-id-1",
+		TeamID:     "team-id",
+	}
+	board, err := store.InsertBoard(&validBoard, "user-id-1")
+	require.NoError(t, err)
+
+	validBlock := model.Block{
+		ID:         "id-test",
+		BoardID:    board.ID,
+		ModifiedBy: "user-id-1",
+	}
+
+	validBlock2 := model.Block{
+		ID:         "id-test2",
+		BoardID:    board.ID,
+		ModifiedBy: "user-id-1",
+	}
+
+	newBlocks := []model.Block{validBlock, validBlock2}
+
+	err = store.InsertBlocks(newBlocks, "user-id-1")
+	require.NoError(t, err)
+
+	blocks, err := store.GetBlocksWithBoardID(board.ID)
+	require.NoError(t, err)
+	require.Len(t, blocks, len(newBlocks))
+	initialCount := len(blocks)
+
+	t.Run("test no deletions", func(t *testing.T) {
+		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(-time.Hour*1)), 10)
+		require.NoError(t, err)
+		require.Equal(t, int64(0), deletions)
+	})
+
+	t.Run("test all deletions", func(t *testing.T) {
+		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(time.Hour*1)), 10)
+		require.NoError(t, err)
+		require.True(t, deletions > int64(initialCount))
+
+		// expect all blocks to be deleted.
+		blocks, errBlocks := store.GetBlocksWithBoardID(board.ID)
+		require.NoError(t, errBlocks)
+		require.Equal(t, 0, len(blocks))
+	})
+}
+
 func testDuplicateBlock(t *testing.T, store store.Store) {
 	InsertBlocks(t, store, subtreeSampleBlocks, "user-id-1")
 	time.Sleep(1 * time.Millisecond)
@@ -849,14 +858,14 @@ func testDuplicateBlock(t *testing.T, store store.Store) {
 	t.Run("duplicate existing block as no template", func(t *testing.T) {
 		blocks, err := store.DuplicateBlock(testBoardID, "child1", testUserID, false)
 		require.NoError(t, err)
-		require.Len(t, blocks, 3)
+		require.Len(t, blocks, 2)
 		require.Equal(t, false, blocks[0].Fields["isTemplate"])
 	})
 
 	t.Run("duplicate existing block as template", func(t *testing.T) {
 		blocks, err := store.DuplicateBlock(testBoardID, "child1", testUserID, true)
 		require.NoError(t, err)
-		require.Len(t, blocks, 3)
+		require.Len(t, blocks, 2)
 		require.Equal(t, true, blocks[0].Fields["isTemplate"])
 	})
 

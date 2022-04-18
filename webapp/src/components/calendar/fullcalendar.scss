@@ -204,9 +204,13 @@
     }
 
     .fc-event-title {
+        display: -webkit-box; // stylelint-disable-line
         font-size: 14px;
-        overflow: unset;
         white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical; // stylelint-disable-line
     }
 
     .fc-day-sat,
@@ -224,8 +228,8 @@
         text-align: center;
     }
 
-    .fc-day-today {
-        background: transparent;
+    .fc-daygrid-day.fc-day-today {
+        background-color: unset;
 
         .fc-daygrid-day-number {
             .dateDisplay {

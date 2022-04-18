@@ -43,15 +43,15 @@ type Block struct {
 	// required: false
 	Fields map[string]interface{} `json:"fields"`
 
-	// The creation time
+	// The creation time in miliseconds since the current epoch
 	// required: true
 	CreateAt int64 `json:"createAt"`
 
-	// The last modified time
+	// The last modified time in miliseconds since the current epoch
 	// required: true
 	UpdateAt int64 `json:"updateAt"`
 
-	// The deleted time. Set to indicate this block is deleted
+	// The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted
 	// required: false
 	DeleteAt int64 `json:"deleteAt"`
 
@@ -181,6 +181,14 @@ type QuerySubtreeOptions struct {
 
 // QueryBlockHistoryOptions are query options that can be passed to GetBlockHistory.
 type QueryBlockHistoryOptions struct {
+	BeforeUpdateAt int64  // if non-zero then filter for records with update_at less than BeforeUpdateAt
+	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
+	Limit          uint64 // if non-zero then limit the number of returned records
+	Descending     bool   // if true then the records are sorted by insert_at in descending order
+}
+
+// QueryBoardHistoryOptions are query options that can be passed to GetBoardHistory.
+type QueryBoardHistoryOptions struct {
 	BeforeUpdateAt int64  // if non-zero then filter for records with update_at less than BeforeUpdateAt
 	AfterUpdateAt  int64  // if non-zero then filter for records with update_at greater than AfterUpdateAt
 	Limit          uint64 // if non-zero then limit the number of returned records

@@ -37,9 +37,10 @@ type Configuration struct {
 	FilesDriver              string            `json:"filesdriver" mapstructure:"filesdriver"`
 	FilesS3Config            AmazonS3Config    `json:"filess3config" mapstructure:"filess3config"`
 	FilesPath                string            `json:"filespath" mapstructure:"filespath"`
+	MaxFileSize              int64             `json:"maxfilesize" mapstructure:"mafilesize"`
 	Telemetry                bool              `json:"telemetry" mapstructure:"telemetry"`
 	TelemetryID              string            `json:"telemetryid" mapstructure:"telemetryid"`
-	PrometheusAddress        string            `json:"prometheus_address" mapstructure:"prometheus_address"`
+	PrometheusAddress        string            `json:"prometheusaddress" mapstructure:"prometheusaddress"`
 	WebhookUpdate            []string          `json:"webhook_update" mapstructure:"webhook_update"`
 	Secret                   string            `json:"secret" mapstructure:"secret"`
 	SessionExpireTime        int64             `json:"session_expire_time" mapstructure:"session_expire_time"`
@@ -49,6 +50,8 @@ type Configuration struct {
 	LocalModeSocketLocation  string            `json:"localModeSocketLocation" mapstructure:"localModeSocketLocation"`
 	EnablePublicSharedBoards bool              `json:"enablePublicSharedBoards" mapstructure:"enablePublicSharedBoards"`
 	FeatureFlags             map[string]string `json:"featureFlags" mapstructure:"featureFlags"`
+	EnableDataRetention      bool              `json:"enable_data_retention" mapstructure:"enable_data_retention"`
+	DataRetentionDays        int               `json:"data_retention_days" mapstructure:"data_retention_days"`
 
 	AuthMode string `json:"authMode" mapstructure:"authMode"`
 
@@ -94,6 +97,9 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	viper.SetDefault("AuthMode", "native")
 	viper.SetDefault("NotifyFreqCardSeconds", 120)    // 2 minutes after last card edit
 	viper.SetDefault("NotifyFreqBoardSeconds", 86400) // 1 day after last card edit
+	viper.SetDefault("EnableDataRetention", false)
+	viper.SetDefault("DataRetentionDays", 365) // 1 year is default
+	viper.SetDefault("PrometheusAddress", "")
 
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {             // Handle errors reading the config file

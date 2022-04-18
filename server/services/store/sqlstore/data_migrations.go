@@ -238,7 +238,7 @@ func (s *SQLStore) updateCategoryID(db sq.BaseRunner, oldID, newID string) error
 	// update category boards table
 
 	rows, err = s.getQueryBuilder(db).
-		Update(s.tablePrefix+"category_blocks").
+		Update(s.tablePrefix+"category_boards").
 		Set("category_id", newID).
 		Where(sq.Eq{"category_id": oldID}).
 		Query()
@@ -258,7 +258,7 @@ func (s *SQLStore) updateCategoryID(db sq.BaseRunner, oldID, newID string) error
 
 func (s *SQLStore) updateCategoryBlocksIDs(db sq.BaseRunner) error {
 	// fetch all category IDs
-	oldCategoryIDs, err := s.getIDs(db, "category_blocks")
+	oldCategoryIDs, err := s.getIDs(db, "category_boards")
 	if err != nil {
 		return err
 	}
@@ -284,7 +284,7 @@ func (s *SQLStore) updateCategoryBlocksIDs(db sq.BaseRunner) error {
 func (s *SQLStore) updateCategoryBlocksID(db sq.BaseRunner, oldID, newID string) error {
 	// update in category table
 	rows, err := s.getQueryBuilder(db).
-		Update(s.tablePrefix+"category_blocks").
+		Update(s.tablePrefix+"category_boards").
 		Set("id", newID).
 		Where(sq.Eq{"id": oldID}).
 		Query()

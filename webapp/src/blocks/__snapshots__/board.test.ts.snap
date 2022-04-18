@@ -20,10 +20,8 @@ Array [
     "boardPatches": Array [
       Object {
         "deletedCardProperties": Array [],
-        "deletedColumnCalculations": Array [],
         "deletedProperties": Array [],
         "updatedCardProperties": Array [],
-        "updatedColumnCalculations": Object {},
         "updatedProperties": Object {},
       },
     ],
@@ -46,10 +44,8 @@ Array [
     "boardPatches": Array [
       Object {
         "deletedCardProperties": Array [],
-        "deletedColumnCalculations": Array [],
         "deletedProperties": Array [],
         "updatedCardProperties": Array [],
-        "updatedColumnCalculations": Object {},
         "updatedProperties": Object {},
       },
     ],
@@ -75,10 +71,8 @@ Array [
     "boardPatches": Array [
       Object {
         "deletedCardProperties": Array [],
-        "deletedColumnCalculations": Array [],
         "deletedProperties": Array [],
         "updatedCardProperties": Array [],
-        "updatedColumnCalculations": Object {},
         "updatedProperties": Object {},
       },
     ],
@@ -99,10 +93,8 @@ Array [
     "boardPatches": Array [
       Object {
         "deletedCardProperties": Array [],
-        "deletedColumnCalculations": Array [],
         "deletedProperties": Array [],
         "updatedCardProperties": Array [],
-        "updatedColumnCalculations": Object {},
         "updatedProperties": Object {},
       },
     ],
@@ -114,7 +106,6 @@ exports[`board tests correctly generate patches from two boards should add card 
 Array [
   Object {
     "deletedCardProperties": Array [],
-    "deletedColumnCalculations": Array [],
     "deletedProperties": Array [],
     "updatedCardProperties": Array [
       Object {
@@ -130,17 +121,14 @@ Array [
         "type": "select",
       },
     ],
-    "updatedColumnCalculations": Object {},
     "updatedProperties": Object {},
   },
   Object {
     "deletedCardProperties": Array [
       "new-property-id",
     ],
-    "deletedColumnCalculations": Array [],
     "deletedProperties": Array [],
     "updatedCardProperties": Array [],
-    "updatedColumnCalculations": Object {},
     "updatedProperties": Object {},
   },
 ]
@@ -150,7 +138,6 @@ exports[`board tests correctly generate patches from two boards should add card 
 Array [
   Object {
     "deletedCardProperties": Array [],
-    "deletedColumnCalculations": Array [],
     "deletedProperties": Array [],
     "updatedCardProperties": Array [
       Object {
@@ -166,12 +153,10 @@ Array [
         "type": "select",
       },
     ],
-    "updatedColumnCalculations": Object {},
     "updatedProperties": Object {},
   },
   Object {
     "deletedCardProperties": Array [],
-    "deletedColumnCalculations": Array [],
     "deletedProperties": Array [],
     "updatedCardProperties": Array [
       Object {
@@ -187,7 +172,6 @@ Array [
         "type": "select",
       },
     ],
-    "updatedColumnCalculations": Object {},
     "updatedProperties": Object {},
   },
 ]
@@ -197,7 +181,6 @@ exports[`board tests correctly generate patches from two boards should add card 
 Array [
   Object {
     "deletedCardProperties": Array [],
-    "deletedColumnCalculations": Array [],
     "deletedProperties": Array [],
     "updatedCardProperties": Array [
       Object {
@@ -213,12 +196,10 @@ Array [
         "type": "select",
       },
     ],
-    "updatedColumnCalculations": Object {},
     "updatedProperties": Object {},
   },
   Object {
     "deletedCardProperties": Array [],
-    "deletedColumnCalculations": Array [],
     "deletedProperties": Array [],
     "updatedCardProperties": Array [
       Object {
@@ -234,7 +215,6 @@ Array [
         "type": "select",
       },
     ],
-    "updatedColumnCalculations": Object {},
     "updatedProperties": Object {},
   },
 ]
@@ -244,22 +224,18 @@ exports[`board tests correctly generate patches from two boards should add prope
 Array [
   Object {
     "deletedCardProperties": Array [],
-    "deletedColumnCalculations": Array [],
     "deletedProperties": Array [],
     "updatedCardProperties": Array [],
-    "updatedColumnCalculations": Object {},
     "updatedProperties": Object {
       "prop1": "val1",
     },
   },
   Object {
     "deletedCardProperties": Array [],
-    "deletedColumnCalculations": Array [],
     "deletedProperties": Array [
       "prop1",
     ],
     "updatedCardProperties": Array [],
-    "updatedColumnCalculations": Object {},
     "updatedProperties": Object {},
   },
 ]
@@ -269,43 +245,14 @@ exports[`board tests correctly generate patches from two boards should generate 
 Array [
   Object {
     "deletedCardProperties": Array [],
-    "deletedColumnCalculations": Array [],
     "deletedProperties": Array [],
     "updatedCardProperties": Array [],
-    "updatedColumnCalculations": Object {},
     "updatedProperties": Object {},
   },
   Object {
     "deletedCardProperties": Array [],
-    "deletedColumnCalculations": Array [],
     "deletedProperties": Array [],
     "updatedCardProperties": Array [],
-    "updatedColumnCalculations": Object {},
-    "updatedProperties": Object {},
-  },
-]
-`;
-
-exports[`board tests correctly generate patches from two boards should update a column calculation on the redo and revert it on the undo 1`] = `
-Array [
-  Object {
-    "deletedCardProperties": Array [],
-    "deletedColumnCalculations": Array [],
-    "deletedProperties": Array [],
-    "updatedCardProperties": Array [],
-    "updatedColumnCalculations": Object {
-      "cal1": "val1",
-    },
-    "updatedProperties": Object {},
-  },
-  Object {
-    "deletedCardProperties": Array [],
-    "deletedColumnCalculations": Array [],
-    "deletedProperties": Array [],
-    "updatedCardProperties": Array [],
-    "updatedColumnCalculations": Object {
-      "cal1": "another-val1",
-    },
     "updatedProperties": Object {},
   },
 ]

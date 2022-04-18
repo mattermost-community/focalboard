@@ -22,8 +22,8 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) AddUpdateCategoryBlock(userID string, categoryID string, blockID string) error {
-	return s.addUpdateCategoryBlock(s.db, userID, categoryID, blockID)
+func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, blockID string) error {
+	return s.addUpdateCategoryBoard(s.db, userID, categoryID, blockID)
 
 }
 
@@ -315,7 +315,7 @@ func (s *SQLStore) GetBoardAndCardByID(blockID string) (*model.Board, *model.Blo
 
 }
 
-func (s *SQLStore) GetBoardHistory(boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error) {
+func (s *SQLStore) GetBoardHistory(boardID string, opts model.QueryBoardHistoryOptions) ([]*model.Board, error) {
 	return s.getBoardHistory(s.db, boardID, opts)
 
 }
@@ -385,11 +385,6 @@ func (s *SQLStore) GetSubTree2(boardID string, blockID string, opts model.QueryS
 
 }
 
-func (s *SQLStore) GetSubTree3(boardID string, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
-	return s.getSubTree3(s.db, boardID, blockID, opts)
-
-}
-
 func (s *SQLStore) GetSubscribersCountForBlock(blockID string) (int, error) {
 	return s.getSubscribersCountForBlock(s.db, blockID)
 
@@ -455,8 +450,8 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 
 }
 
-func (s *SQLStore) GetUserCategoryBlocks(userID string, teamID string) ([]model.CategoryBlocks, error) {
-	return s.getUserCategoryBlocks(s.db, userID, teamID)
+func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.CategoryBoards, error) {
+	return s.getUserCategoryBoards(s.db, userID, teamID)
 
 }
 
@@ -653,6 +648,30 @@ func (s *SQLStore) RemoveDefaultTemplates(boards []*model.Board) error {
 
 }
 
+func (s *SQLStore) RunDataRetention(globalRetentionDate int64, batchSize int64) (int64, error) {
+	if s.dbType == model.SqliteDBType {
+		return s.runDataRetention(s.db, globalRetentionDate, batchSize)
+	}
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return 0, txErr
+	}
+	result, err := s.runDataRetention(tx, globalRetentionDate, batchSize)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "RunDataRetention"))
+		}
+		return 0, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return 0, err
+	}
+
+	return result, nil
+
+}
+
 func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error) {
 	return s.saveMember(s.db, bm)
 
@@ -685,6 +704,30 @@ func (s *SQLStore) UndeleteBlock(blockID string, modifiedBy string) error {
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "UndeleteBlock"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (s *SQLStore) UndeleteBoard(boardID string, modifiedBy string) error {
+	if s.dbType == model.SqliteDBType {
+		return s.undeleteBoard(s.db, boardID, modifiedBy)
+	}
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.undeleteBoard(tx, boardID, modifiedBy)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "UndeleteBoard"))
 		}
 		return err
 	}

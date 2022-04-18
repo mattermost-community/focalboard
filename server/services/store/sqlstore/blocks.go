@@ -4,9 +4,13 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
+	"github.com/pkg/errors"
 
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq" // postgres driver
@@ -160,60 +164,6 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string,
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error(`getSubTree ERROR`, mlog.Err(err))
-
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-
-	return s.blocksFromRows(rows)
-}
-
-// getSubTree3 returns blocks within 3 levels of the given blockID.
-func (s *SQLStore) getSubTree3(db sq.BaseRunner, boardID string, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
-	// This first subquery returns repeated blocks
-	query := s.getQueryBuilder(db).Select(
-		"l3.id",
-		"l3.parent_id",
-		"l3.created_by",
-		"l3.modified_by",
-		"l3."+s.escapeField("schema"),
-		"l3.type",
-		"l3.title",
-		"l3.fields",
-		s.timestampToCharField("l3.insert_at", "insertAt"),
-		"l3.create_at",
-		"l3.update_at",
-		"l3.delete_at",
-		"l3.board_id",
-	).
-		From(s.tablePrefix + "blocks" + " as l1").
-		Join(s.tablePrefix + "blocks" + " as l2 on l2.parent_id = l1.id or l2.id = l1.id").
-		Join(s.tablePrefix + "blocks" + " as l3 on l3.parent_id = l2.id or l3.id = l2.id").
-		Where(sq.Eq{"l1.id": blockID}).
-		Where(sq.Eq{"l3.board_id": boardID}).
-		OrderBy("insertAt,l3.id")
-
-	if opts.BeforeUpdateAt != 0 {
-		query = query.Where(sq.LtOrEq{"update_at": opts.BeforeUpdateAt})
-	}
-
-	if opts.AfterUpdateAt != 0 {
-		query = query.Where(sq.GtOrEq{"update_at": opts.AfterUpdateAt})
-	}
-
-	if s.dbType == model.PostgresDBType {
-		query = query.Options("DISTINCT ON (insertAt,l3.id)")
-	} else {
-		query = query.Distinct()
-	}
-
-	if opts.Limit != 0 {
-		query = query.Limit(opts.Limit)
-	}
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`getSubTree3 ERROR`, mlog.Err(err))
 
 		return nil, err
 	}
@@ -798,8 +748,115 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 	return nil
 }
 
+func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, batchSize int64) (int64, error) {
+	mlog.Info("Start Boards Data Retention",
+		mlog.String("Global Retention Date", time.Unix(globalRetentionDate/1000, 0).String()),
+		mlog.Int64("Raw Date", globalRetentionDate))
+	deleteTables := map[string]string{
+		"blocks":         "board_id",
+		"blocks_history": "board_id",
+		"boards":         "id",
+		"boards_history": "id",
+		"board_members":  "board_id",
+		"sharing":        "id",
+	}
+
+	subBuilder := s.getQueryBuilder(db).
+		Select("board_id, MAX(update_at) AS maxDate").
+		From(s.tablePrefix + "blocks").
+		GroupBy("board_id")
+
+	subQuery, _, _ := subBuilder.ToSql()
+
+	builder := s.getQueryBuilder(db).
+		Select("id").
+		From(s.tablePrefix + "boards").
+		LeftJoin("( " + subQuery + " ) As subquery ON (subquery.board_id = id)").
+		Where(sq.Lt{"maxDate": globalRetentionDate}).
+		Where(sq.NotEq{"team_id": "0"}).
+		Where(sq.Eq{"is_template": false})
+
+	rows, err := builder.Query()
+	if err != nil {
+		s.logger.Error(`dataRetention subquery ERROR`, mlog.Err(err))
+		return 0, err
+	}
+	defer s.CloseRows(rows)
+	deleteIds, err := idsFromRows(rows)
+	if err != nil {
+		return 0, err
+	}
+
+	totalAffected := 0
+	if len(deleteIds) > 0 {
+		mlog.Debug("Data Retention DeleteIDs " + strings.Join(deleteIds, ", "))
+		for table, field := range deleteTables {
+			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds, batchSize)
+			if err != nil {
+				return int64(totalAffected), err
+			}
+			totalAffected += int(affected)
+		}
+	}
+	mlog.Info("Complete Boards Data Retention", mlog.Int("total deletion ids", len(deleteIds)), mlog.Int("TotalAffected", totalAffected))
+	return int64(totalAffected), nil
+}
+
+func idsFromRows(rows *sql.Rows) ([]string, error) {
+	deleteIds := []string{}
+	for rows.Next() {
+		var boardID string
+		err := rows.Scan(
+			&boardID,
+		)
+		if err != nil {
+			return nil, err
+		}
+		deleteIds = append(deleteIds, boardID)
+	}
+	return deleteIds, nil
+}
+
+// genericRetentionPoliciesDeletion actually executes the DELETE query using a sq.SelectBuilder
+// which selects the rows to delete.
+func (s *SQLStore) genericRetentionPoliciesDeletion(
+	db sq.BaseRunner,
+	table string,
+	deleteColumn string,
+	deleteIds []string,
+	batchSize int64,
+) (int64, error) {
+	whereClause := deleteColumn + ` IN ('` + strings.Join(deleteIds, `','`) + `')`
+	deleteQuery := s.getQueryBuilder(db).
+		Delete(s.tablePrefix + table).
+		Where(whereClause)
+	s1, _, _ := deleteQuery.ToSql()
+	mlog.Debug(s1)
+
+	var totalRowsAffected int64
+	var batchRowsAffected int64
+	for {
+		result, err := deleteQuery.Exec()
+		if err != nil {
+			return 0, errors.Wrap(err, "failed to delete "+table)
+		}
+
+		batchRowsAffected, err = result.RowsAffected()
+		if err != nil {
+			return 0, errors.Wrap(err, "failed to get rows affected for "+table)
+		}
+		totalRowsAffected += batchRowsAffected
+		if batchRowsAffected != batchSize {
+			break
+		}
+	}
+
+	mlog.Debug("Rows Affected" + strconv.FormatInt(totalRowsAffected, 10))
+	return totalRowsAffected, nil
+}
+
 func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
-	blocks, err := s.getSubTree3(db, boardID, blockID, model.QuerySubtreeOptions{})
+	blocks, err := s.getSubTree2(db, boardID, blockID, model.QuerySubtreeOptions{})
 	if err != nil {
 		return nil, err
 	}

@@ -139,7 +139,7 @@ func isValidPassword(password string) error {
 }
 
 func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/login login
+	// swagger:operation POST /login login
 	//
 	// Login user
 	//
@@ -168,6 +168,11 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
+
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
 	}
 
 	if len(a.singleUserToken) > 0 {
@@ -215,7 +220,7 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/logout logout
+	// swagger:operation POST /logout logout
 	//
 	// Logout user
 	//
@@ -233,6 +238,11 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
+
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
 	}
 
 	if len(a.singleUserToken) > 0 {
@@ -261,7 +271,7 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/register register
+	// swagger:operation POST /register register
 	//
 	// Register new user
 	//
@@ -286,6 +296,11 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
+
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
 	}
 
 	if len(a.singleUserToken) > 0 {
@@ -354,7 +369,7 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/users/{userID}/changepassword changePassword
+	// swagger:operation POST /users/{userID}/changepassword changePassword
 	//
 	// Change a user's password
 	//
@@ -388,6 +403,11 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
 		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+	}
+
+	if a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		return
 	}
 
 	if len(a.singleUserToken) > 0 {

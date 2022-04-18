@@ -282,35 +282,46 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 	return nil
 }
 
-func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
+func (a *App) GetLastBlockHistoryEntry(blockID string) (*model.Block, error) {
 	blocks, err := a.store.GetBlockHistory(blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
 	if err != nil {
-		return err
+		return nil, err
+	}
+	if len(blocks) == 0 {
+		return nil, nil
+	}
+	return &blocks[0], nil
+}
+
+func (a *App) UndeleteBlock(blockID string, modifiedBy string) (*model.Block, error) {
+	blocks, err := a.store.GetBlockHistory(blockID, model.QueryBlockHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return nil, err
 	}
 
 	if len(blocks) == 0 {
 		// undeleting non-existing block not considered an error
-		return nil
+		return nil, nil
 	}
 
 	err = a.store.UndeleteBlock(blockID, modifiedBy)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	block, err := a.store.GetBlock(blockID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if block == nil {
 		a.logger.Error("Error loading the block after undelete, not propagating through websockets or notifications")
-		return nil
+		return nil, nil
 	}
 
 	board, err := a.store.GetBoard(block.BoardID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
@@ -321,7 +332,7 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) error {
 		return nil
 	})
 
-	return nil
+	return block, nil
 }
 
 func (a *App) GetBlockCountsByType() (map[string]int64, error) {
@@ -333,7 +344,8 @@ func (a *App) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 }
 
 func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBlock *model.Block, modifiedByID string) {
-	if a.notifications == nil {
+	// don't notify if notifications service disabled, or block change is generated via system user.
+	if a.notifications == nil || modifiedByID == model.SystemUserID {
 		return
 	}
 
@@ -344,6 +356,15 @@ func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBl
 		return
 	}
 
+	boardMember, _ := a.GetMemberForBoard(board.ID, modifiedByID)
+	if boardMember == nil {
+		// create temporary guest board member
+		boardMember = &model.BoardMember{
+			BoardID: board.ID,
+			UserID:  modifiedByID,
+		}
+	}
+
 	evt := notify.BlockChangeEvent{
 		Action:       action,
 		TeamID:       board.TeamID,
@@ -351,7 +372,7 @@ func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBl
 		Card:         card,
 		BlockChanged: block,
 		BlockOld:     oldBlock,
-		ModifiedByID: modifiedByID,
+		ModifiedBy:   boardMember,
 	}
 	a.notifications.BlockChanged(evt)
 }

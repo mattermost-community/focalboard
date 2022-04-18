@@ -52,7 +52,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-
+            position: relative;
             font-size: 14px;
             line-height: 24px;
             font-weight: 400;
@@ -99,6 +99,16 @@
 
         * > .menu-option.bold-menu-text {
             font-weight: bold;
+        }
+    }
+
+    .menu-option__check {
+        position: absolute;
+        left: 14px;
+        color: rgba(var(--button-bg-rgb), 1);
+
+        svg {
+            stroke: currentColor;
         }
     }
 

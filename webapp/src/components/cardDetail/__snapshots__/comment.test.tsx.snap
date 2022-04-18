@@ -53,9 +53,13 @@ exports[`components/cardDetail/comment return comment 1`] = `
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class=""
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -79,8 +83,12 @@ exports[`components/cardDetail/comment return comment 1`] = `
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class=""
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -159,9 +167,13 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class=""
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
@@ -185,8 +197,12 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class=""
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >

@@ -8,9 +8,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class="Icon"
+      class=""
     >
-      i
+      <div
+        class="Icon"
+      >
+        i
+      </div>
     </div>
     <div
       class="menu-name"
@@ -45,15 +49,19 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <svg
-                  class="CheckIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  class=""
                 >
-                  <polyline
-                    points="20,60 40,80 80,40"
-                  />
-                </svg>
+                  <svg
+                    class="CheckIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="20,60 40,80 80,40"
+                    />
+                  </svg>
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -70,9 +78,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-pencil-outline EditIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -89,9 +101,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -115,8 +131,12 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -142,9 +162,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class="Icon"
+      class=""
     >
-      i
+      <div
+        class="Icon"
+      >
+        i
+      </div>
     </div>
     <div
       class="menu-name"
@@ -179,15 +203,19 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <svg
-                  class="CheckIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  class=""
                 >
-                  <polyline
-                    points="20,60 40,80 80,40"
-                  />
-                </svg>
+                  <svg
+                    class="CheckIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="20,60 40,80 80,40"
+                    />
+                  </svg>
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -204,9 +232,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-pencil-outline EditIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -223,9 +255,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -249,8 +285,12 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -276,9 +316,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class="Icon"
+      class=""
     >
-      i
+      <div
+        class="Icon"
+      >
+        i
+      </div>
     </div>
     <div
       class="menu-name"
@@ -311,9 +355,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class="Icon"
+      class=""
     >
-      i
+      <div
+        class="Icon"
+      >
+        i
+      </div>
     </div>
     <div
       class="menu-name"
@@ -348,15 +396,19 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <svg
-                  class="CheckIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  class=""
                 >
-                  <polyline
-                    points="20,60 40,80 80,40"
-                  />
-                </svg>
+                  <svg
+                    class="CheckIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="20,60 40,80 80,40"
+                    />
+                  </svg>
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -373,9 +425,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-pencil-outline EditIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -392,9 +448,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -418,8 +478,12 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >
@@ -445,9 +509,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class="Icon"
+      class=""
     >
-      i
+      <div
+        class="Icon"
+      >
+        i
+      </div>
     </div>
     <div
       class="menu-name"
@@ -482,15 +550,19 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <svg
-                  class="CheckIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  class=""
                 >
-                  <polyline
-                    points="20,60 40,80 80,40"
-                  />
-                </svg>
+                  <svg
+                    class="CheckIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="20,60 40,80 80,40"
+                    />
+                  </svg>
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -507,9 +579,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-pencil-outline EditIcon"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -526,9 +602,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 class="MenuOption TextOption menu-option"
                 role="button"
               >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+                <div
+                  class=""
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -552,8 +632,12 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class="noicon"
-              />
+                class=""
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
               <div
                 class="menu-name"
               >

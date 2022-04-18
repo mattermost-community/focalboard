@@ -53,6 +53,10 @@ func (a *App) SetConfig(config *config.Configuration) {
 	a.config = config
 }
 
+func (a *App) GetConfig() *config.Configuration {
+	return a.config
+}
+
 func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) *App {
 	app := &App{
 		config:              config,

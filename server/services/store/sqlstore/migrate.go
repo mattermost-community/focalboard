@@ -10,7 +10,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/utils"
 
-	"path/filepath"
 	"strconv"
 	"text/template"
 
@@ -147,7 +146,7 @@ func (s *SQLStore) Migrate() error {
 	migrationAssets := &embedded.AssetSource{
 		Names: assetNamesForDriver,
 		AssetFunc: func(name string) ([]byte, error) {
-			asset, mErr := assets.ReadFile(filepath.Join("migrations", name))
+			asset, mErr := assets.ReadFile("migrations/" + name)
 			if mErr != nil {
 				return nil, mErr
 			}
@@ -491,7 +490,7 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 		return err
 	}
 
-	s.logger.Info(fmt.Sprintf("Migrating %d teamless boards to a team", len(boards)))
+	s.logger.Info("Migrating teamless boards to a team", mlog.Int("count", len(boards)))
 
 	// cache for best suitable team for a DM. Since a DM can
 	// contain multiple boards, caching this avoids

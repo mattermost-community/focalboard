@@ -36,6 +36,8 @@ import SearchIcon from '../../widgets/icons/search'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
+import {useHasPermissions} from '../../hooks/permissions'
+
 import TeamPermissionsRow from './teamPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
 
@@ -105,10 +107,14 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const intl = useIntl()
     const match = useRouteMatch<{teamId?: string, boardId: string, viewId: string}>()
 
+    const hasSharePermissions = useHasPermissions(board.teamId, boardId, [Permission.ShareBoard])
+
     const loadData = async () => {
-        const newSharing = await client.getSharing(boardId)
-        setSharing(newSharing)
-        setWasCopiedPublic(false)
+        if( hasSharePermissions ){
+            const newSharing = await client.getSharing(boardId)
+            setSharing(newSharing)
+            setWasCopiedPublic(false)
+        }
     }
 
     const createSharingInfo = () => {

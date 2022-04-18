@@ -11,11 +11,14 @@ import (
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
+	"github.com/mattermost/focalboard/server/services/auth"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
+	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/stretchr/testify/require"
@@ -25,6 +28,16 @@ const (
 	user1Username = "user1"
 	user2Username = "user2"
 	password      = "Pa$$word"
+)
+
+const (
+	userAnon         string = "anon"
+	userNoTeamMember string = "no-team-member"
+	userTeamMember   string = "team-member"
+	userViewer       string = "viewer"
+	userCommenter    string = "commenter"
+	userEditor       string = "editor"
+	userAdmin        string = "admin"
 )
 
 type LicenseType int
@@ -40,6 +53,19 @@ type TestHelper struct {
 	Server  *server.Server
 	Client  *client.Client
 	Client2 *client.Client
+}
+
+type FakePermissionPluginAPI struct{}
+
+func (*FakePermissionPluginAPI) LogError(str string, params ...interface{}) {}
+func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool {
+	if userID == userNoTeamMember {
+		return false
+	}
+	if teamID == "empty-team" {
+		return false
+	}
+	return true
 }
 
 func getTestConfig() (*config.Configuration, error) {
@@ -135,6 +161,42 @@ func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *
 	return srv
 }
 
+func newTestServerPluginMode() *server.Server {
+	cfg, err := getTestConfig()
+	if err != nil {
+		panic(err)
+	}
+	cfg.AuthMode = "mattermost"
+	cfg.EnablePublicSharedBoards = true
+
+	logger, _ := mlog.NewLogger()
+	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
+		panic(err)
+	}
+	innerStore, err := server.NewStore(cfg, logger)
+	if err != nil {
+		panic(err)
+	}
+
+	db := NewPluginTestStore(innerStore)
+
+	permissionsService := mmpermissions.New(db, &FakePermissionPluginAPI{})
+
+	params := server.Params{
+		Cfg:                cfg,
+		DBStore:            db,
+		Logger:             logger,
+		PermissionsService: permissionsService,
+	}
+
+	srv, err := server.New(params)
+	if err != nil {
+		panic(err)
+	}
+
+	return srv
+}
+
 func SetupTestHelperWithToken(t *testing.T) *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{T: t}
@@ -146,6 +208,13 @@ func SetupTestHelperWithToken(t *testing.T) *TestHelper {
 
 func SetupTestHelper(t *testing.T) *TestHelper {
 	return SetupTestHelperWithLicense(t, LicenseNone)
+}
+
+func SetupTestHelperPluginMode(t *testing.T) *TestHelper {
+	th := &TestHelper{T: t}
+	th.Server = newTestServerPluginMode()
+	th.Start()
+	return th
 }
 
 func SetupTestHelperWithLicense(t *testing.T, licenseType LicenseType) *TestHelper {
@@ -194,13 +263,16 @@ func (th *TestHelper) Start() *TestHelper {
 // InitBasic starts the test server and initializes the clients of the
 // helper, registering them and logging them into the system.
 func (th *TestHelper) InitBasic() *TestHelper {
+	// Reduce password has strength for unit tests to dramatically speed up account creation and login
+	auth.PasswordHashStrength = 4
+
 	th.Start()
 
 	// user1
 	th.RegisterAndLogin(th.Client, user1Username, "user1@sample.com", password, "")
 
 	// get token
-	team, resp := th.Client.GetTeam("0")
+	team, resp := th.Client.GetTeam(model.GlobalTeamID)
 	th.CheckOK(resp)
 	require.NotNil(th.T, team)
 	require.NotNil(th.T, team.SignupToken)
@@ -313,6 +385,11 @@ func (th *TestHelper) CheckUnauthorized(r *client.Response) {
 
 func (th *TestHelper) CheckForbidden(r *client.Response) {
 	require.Equal(th.T, http.StatusForbidden, r.StatusCode)
+	require.Error(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckRequestEntityTooLarge(r *client.Response) {
+	require.Equal(th.T, http.StatusRequestEntityTooLarge, r.StatusCode)
 	require.Error(th.T, r.Error)
 }
 

@@ -74,9 +74,9 @@ card3.boardId = fakeBoard.id
 
 const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, create_at: 0, update_at: 0, is_bot: false}
 
-const categoryAttribute1 = TestBlockFactory.createCategoryBlocks()
+const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
 categoryAttribute1.name = 'Category 1'
-categoryAttribute1.blockIDs = [board.id]
+categoryAttribute1.boardIDs = [board.id]
 
 jest.mock('react-router-dom', () => {
     const originalModule = jest.requireActual('react-router-dom')

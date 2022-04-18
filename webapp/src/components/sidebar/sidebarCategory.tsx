@@ -13,7 +13,7 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
 import './sidebarCategory.scss'
-import {Category, CategoryBlocks} from '../../store/sidebar'
+import {Category, CategoryBoards} from '../../store/sidebar'
 import ChevronDown from '../../widgets/icons/chevronDown'
 import ChevronRight from '../../widgets/icons/chevronRight'
 import CreateNewFolder from '../../widgets/icons/newFolder'
@@ -37,9 +37,9 @@ type Props = {
     activeCategoryId?: string
     activeBoardID?: string
     hideSidebar: () => void
-    categoryBlocks: CategoryBlocks
+    categoryBoards: CategoryBoards
     boards: Board[]
-    allCategories: Array<CategoryBlocks>
+    allCategories: Array<CategoryBoards>
 }
 
 const SidebarCategory = (props: Props) => {
@@ -76,14 +76,14 @@ const SidebarCategory = (props: Props) => {
         props.hideSidebar()
     }, [match, history])
 
-    const blocks = props.categoryBlocks.blockIDs || []
+    const blocks = props.categoryBoards.boardIDs || []
 
     const handleCreateNewCategory = () => {
         setShowCreateCategoryModal(true)
     }
 
     const handleDeleteCategory = async () => {
-        await mutator.deleteCategory(teamID, props.categoryBlocks.id)
+        await mutator.deleteCategory(teamID, props.categoryBoards.id)
     }
 
     const handleUpdateCategory = async () => {
@@ -101,7 +101,7 @@ const SidebarCategory = (props: Props) => {
                 defaultMessage: 'Boards in <b>{categoryName}</b> will move back to the Boards categories. You\'re not removed from any boards.',
             },
             {
-                categoryName: props.categoryBlocks.name,
+                categoryName: props.categoryBoards.name,
                 b: (...chunks) => <b>{chunks}</b>,
             },
         ),
@@ -140,7 +140,7 @@ const SidebarCategory = (props: Props) => {
     return (
         <div className='SidebarCategory'>
             <div
-                className={`octo-sidebar-item category ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBlocks.id === props.activeCategoryId ? 'active' : ''}`}
+                className={`octo-sidebar-item category ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
             >
                 <IconButton
                     icon={collapsed ? <ChevronRight/> : <ChevronDown/>}
@@ -148,9 +148,9 @@ const SidebarCategory = (props: Props) => {
                 />
                 <div
                     className='octo-sidebar-title category-title'
-                    title={props.categoryBlocks.name}
+                    title={props.categoryBoards.name}
                 >
-                    {props.categoryBlocks.name}
+                    {props.categoryBoards.name}
                 </div>
                 <MenuWrapper
                     className={categoryMenuOpen ? 'menuOpen' : ''}
@@ -166,7 +166,7 @@ const SidebarCategory = (props: Props) => {
                             onClick={handleCreateNewCategory}
                         />
                         {
-                            props.categoryBlocks.id !== '' &&
+                            props.categoryBoards.id !== '' &&
                             <React.Fragment>
                                 <Menu.Text
                                     id='deleteCategory'
@@ -201,7 +201,7 @@ const SidebarCategory = (props: Props) => {
                     <SidebarBoardItem
                         key={board.id}
                         board={board}
-                        categoryBlocks={props.categoryBlocks}
+                        categoryBoards={props.categoryBoards}
                         allCategories={props.allCategories}
                         isActive={board.id === props.activeBoardID}
                         showBoard={showBoard}
@@ -243,7 +243,7 @@ const SidebarCategory = (props: Props) => {
             {
                 showUpdateCategoryModal && (
                     <CreateCategory
-                        initialValue={props.categoryBlocks.name}
+                        initialValue={props.categoryBoards.name}
                         title={(
                             <FormattedMessage
                                 id='SidebarCategories.CategoryMenu.Update'
@@ -259,7 +259,7 @@ const SidebarCategory = (props: Props) => {
 
                             const category: Category = {
                                 name,
-                                id: props.categoryBlocks.id,
+                                id: props.categoryBoards.id,
                                 userID: me.id,
                                 teamID,
                             } as Category
