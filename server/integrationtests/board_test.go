@@ -1712,6 +1712,75 @@ func TestGetTemplates(t *testing.T) {
 	})
 }
 
+func TestDuplicateBoard(t *testing.T) {
+	t.Run("create and duplicate public board", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "Public board"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:  title,
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypeOpen, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+
+		newBlocks := []model.Block{
+			{
+				ID:       utils.NewID(utils.IDTypeBlock),
+				BoardID:  board.ID,
+				CreateAt: 1,
+				UpdateAt: 1,
+				Title:    "View 1",
+				Type:     model.TypeView,
+			},
+		}
+
+		newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks)
+		require.NoError(t, resp.Error)
+		require.Len(t, newBlocks, 1)
+
+		newUserMember := &model.BoardMember{
+			UserID:       th.GetUser2().ID,
+			BoardID:      board.ID,
+			SchemeEditor: true,
+		}
+		th.Client.AddMemberToBoard(newUserMember)
+
+		members, err := th.Server.App().GetMembersForBoard(board.ID)
+		require.NoError(t, err)
+		require.Len(t, members, 2)
+
+		// Duplicate the board
+		rBoardsAndBlock, resp := th.Client.DuplicateBoard(board.ID, false, teamID)
+		th.CheckOK(resp)
+		require.NotNil(t, rBoardsAndBlock)
+		require.Equal(t, len(rBoardsAndBlock.Boards), 1)
+		require.Equal(t, len(rBoardsAndBlock.Blocks), 1)
+		duplicateBoard := rBoardsAndBlock.Boards[0]
+		require.Equal(t, duplicateBoard.Type, model.BoardTypePrivate, "Duplicated board should be private")
+
+		members, err = th.Server.App().GetMembersForBoard(duplicateBoard.ID)
+		require.NoError(t, err)
+		require.Len(t, members, 1, "Duplicated board should only have one member")
+		require.Equal(t, me.ID, members[0].UserID)
+		require.Equal(t, duplicateBoard.ID, members[0].BoardID)
+		require.True(t, members[0].SchemeAdmin)
+	})
+}
+
 func TestJoinBoard(t *testing.T) {
 	t.Run("create and join public board", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()

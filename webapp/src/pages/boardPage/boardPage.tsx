@@ -61,7 +61,7 @@ const BoardPage = (props: Props): JSX.Element => {
             }
 
             dispatch(fetchUserBlockSubscriptions(me!.id))
-        }, [teamId])
+        }, [me?.id])
     }
 
     // TODO: Make this less brittle. This only works because this is the root render function
