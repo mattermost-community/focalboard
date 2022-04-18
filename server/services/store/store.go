@@ -3,12 +3,6 @@
 package store
 
 import (
-<<<<<<< HEAD
-=======
-	"database/sql"
-	"errors"
-	"fmt"
->>>>>>> upstream/main
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
