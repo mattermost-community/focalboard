@@ -1,38 +1,18 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package main
 
 import (
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/server"
-	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/ws"
 	serverModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 
 	"github.com/stretchr/testify/assert"
 )
-
-type TestHelper struct {
-	Server *server.Server
-}
-
-func SetupTestHelper() *TestHelper {
-	th := &TestHelper{}
-	th.Server = newTestServer()
-	return th
-}
-
-func newTestServer() *server.Server {
-	srv, err := server.New(server.Params{
-		Cfg: &config.Configuration{},
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	return srv
-}
 
 func TestConfigurationNullConfiguration(t *testing.T) {
 	plugin := &Plugin{}
@@ -53,16 +33,24 @@ func TestOnConfigurationChange(t *testing.T) {
 		Directory: &stringRef,
 		Plugins:   basePlugins,
 	}
+	falseRef := false
+	intRef := 365
+	baseDataRetentionSettings := &serverModel.DataRetentionSettings{
+		EnableBoardsDeletion: &falseRef,
+		BoardsRetentionDays:  &intRef,
+	}
 
 	baseConfig := &serverModel.Config{
-		FeatureFlags:   baseFeatureFlags,
-		PluginSettings: *basePluginSettings,
+		FeatureFlags:          baseFeatureFlags,
+		PluginSettings:        *basePluginSettings,
+		DataRetentionSettings: *baseDataRetentionSettings,
 	}
 
 	t.Run("Test Load Plugin Success", func(t *testing.T) {
-		th := SetupTestHelper()
+		th := SetupTestHelper(t)
 		api := &plugintest.API{}
 		api.On("GetUnsanitizedConfig").Return(baseConfig)
+		api.On("GetConfig").Return(baseConfig)
 
 		p := Plugin{}
 		p.SetAPI(api)
