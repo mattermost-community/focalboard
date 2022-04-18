@@ -9,8 +9,6 @@ import FullCalendar, {EventChangeArg, EventInput, EventContentArg, DayCellConten
 import interactionPlugin from '@fullcalendar/interaction'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
-import {act} from 'react-dom/test-utils'
-
 import mutator from '../../mutator'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
@@ -220,33 +218,29 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         )
     }, [dateDisplayProperty, canAddCards])
 
-    const fullcalendar = (
-        <FullCalendar
-            key ={activeView.id}
-            dayCellContent={dayCellContent}
-            dayMaxEventRows={5}
-            initialDate={initialDate}
-            plugins={[dayGridPlugin, interactionPlugin]}
-            initialView='dayGridMonth'
-            events={myEventsList}
-            editable={isEditable()}
-            eventResizableFromStart={isEditable()}
-            headerToolbar={toolbar}
-            buttonText={buttonText}
-            eventContent={renderEventContent}
-            eventChange={eventChange}
-
-            selectable={isSelectable}
-            selectMirror={true}
-            select={onNewEvent}
-        />
-    )
-
     return (
         <div
             className='CalendarContainer'
         >
-            {fullcalendar}
+            <FullCalendar
+                key ={activeView.id}
+                dayCellContent={dayCellContent}
+                dayMaxEventRows={5}
+                initialDate={initialDate}
+                plugins={[dayGridPlugin, interactionPlugin]}
+                initialView='dayGridMonth'
+                events={myEventsList}
+                editable={isEditable()}
+                eventResizableFromStart={isEditable()}
+                headerToolbar={toolbar}
+                buttonText={buttonText}
+                eventContent={renderEventContent}
+                eventChange={eventChange}
+
+                selectable={isSelectable}
+                selectMirror={true}
+                select={onNewEvent}
+            />
         </div>
     )
 }
