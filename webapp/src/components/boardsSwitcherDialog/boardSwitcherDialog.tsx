@@ -15,7 +15,6 @@ import {useAppSelector} from '../../store/hooks'
 import {getAllTeams, getCurrentTeam, Team} from '../../store/teams'
 import {getMe} from '../../store/users'
 import {BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
-import Tooltip from "../../widgets/tooltip"
 
 type Props = {
     onClose: () => void

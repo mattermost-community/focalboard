@@ -13,8 +13,6 @@ import {createMemoryHistory, History} from "history"
 
 import {Router} from "react-router-dom"
 
-import {mocked} from "jest-mock"
-
 import {Team} from "../../store/teams"
 import {TestBlockFactory} from "../../test/testBlockFactory"
 
