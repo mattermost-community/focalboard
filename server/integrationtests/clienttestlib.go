@@ -30,7 +30,7 @@ const (
 	password      = "Pa$$word"
 )
 
-var (
+const (
 	userAnon         string = "anon"
 	userNoTeamMember string = "no-team-member"
 	userTeamMember   string = "team-member"

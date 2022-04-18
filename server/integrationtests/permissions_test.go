@@ -571,6 +571,7 @@ func TestPermissionsDuplicateBoard(t *testing.T) {
 		{"/boards/{PUBLIC_TEMPLATE_ID}/duplicate?toTeam=other-team", methodPost, "", userEditor, http.StatusOK, 1},
 		{"/boards/{PUBLIC_TEMPLATE_ID}/duplicate?toTeam=other-team", methodPost, "", userAdmin, http.StatusOK, 1},
 	}
+	runTestCases(t, ttCases, testData, clients)
 
 	// In empty team
 	ttCases = []TestCase{
