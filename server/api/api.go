@@ -2898,6 +2898,11 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if toTeam != "" && !a.permissions.HasPermissionToTeam(userID, toTeam, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
 	if board.IsTemplate && board.Type == model.BoardTypeOpen {
 		if board.TeamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})

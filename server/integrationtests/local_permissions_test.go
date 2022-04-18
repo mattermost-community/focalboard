@@ -897,43 +897,43 @@ func TestLocalPermissionsUpdateBoardMember(t *testing.T) {
 	}
 
 	ttCases := []TestCase{
-		{"/boards/{PRIVATE_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateBoard.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateBoard.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateBoard.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateBoard.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateBoard.ID), userEditor, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateBoard.ID), userAdmin, http.StatusOK, 1},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateBoard.ID), userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateBoard.ID), userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateBoard.ID), userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateBoard.ID), userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateBoard.ID), userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateBoard.ID), userAdmin, http.StatusOK, 1},
 
-		{"/boards/{PUBLIC_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicBoard.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicBoard.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicBoard.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicBoard.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicBoard.ID), userEditor, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicBoard.ID), userAdmin, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicBoard.ID), userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicBoard.ID), userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicBoard.ID), userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicBoard.ID), userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicBoard.ID), userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicBoard.ID), userAdmin, http.StatusOK, 1},
 
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateTemplate.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateTemplate.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateTemplate.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateTemplate.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateTemplate.ID), userEditor, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.privateTemplate.ID), userAdmin, http.StatusOK, 1},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateTemplate.ID), userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateTemplate.ID), userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateTemplate.ID), userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.privateTemplate.ID), userAdmin, http.StatusOK, 1},
 
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicTemplate.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicTemplate.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicTemplate.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicTemplate.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicTemplate.ID), userEditor, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/viewer", methodPut, boardMemberJSON(testData.publicTemplate.ID), userAdmin, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicTemplate.ID), userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicTemplate.ID), userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicTemplate.ID), userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_VIEWER_ID}", methodPut, boardMemberJSON(testData.publicTemplate.ID), userAdmin, http.StatusOK, 1},
 
 		// Invalid boardID/memberID combination
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/team-member", methodPut, "", userAdmin, http.StatusBadRequest, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodPut, "", userAdmin, http.StatusBadRequest, 0},
 
 		// Invalid boardID
-		{"/boards/invalid/members/viewer", methodPut, "", userAdmin, http.StatusBadRequest, 0},
+		{"/boards/invalid/members/{USER_VIEWER_ID}", methodPut, "", userAdmin, http.StatusBadRequest, 0},
 
 		// Invalid memberID
 		{"/boards/{PUBLIC_TEMPLATE_ID}/members/invalid", methodPut, "", userAdmin, http.StatusBadRequest, 0},
@@ -957,43 +957,43 @@ func TestLocalPermissionsDeleteBoardMember(t *testing.T) {
 	require.NoError(t, err)
 
 	ttCases := []TestCase{
-		{"/boards/{PRIVATE_BOARD_ID}/members/team-member", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/team-member", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/team-member", methodDelete, "", userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/team-member", methodDelete, "", userViewer, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/team-member", methodDelete, "", userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/team-member", methodDelete, "", userEditor, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/members/team-member", methodDelete, "", userAdmin, http.StatusOK, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userAdmin, http.StatusOK, 0},
 
-		{"/boards/{PUBLIC_BOARD_ID}/members/team-member", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/team-member", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/team-member", methodDelete, "", userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/team-member", methodDelete, "", userViewer, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/team-member", methodDelete, "", userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/team-member", methodDelete, "", userEditor, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/members/team-member", methodDelete, "", userAdmin, http.StatusOK, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userAdmin, http.StatusOK, 0},
 
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/team-member", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/team-member", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/team-member", methodDelete, "", userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/team-member", methodDelete, "", userViewer, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/team-member", methodDelete, "", userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/team-member", methodDelete, "", userEditor, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/members/team-member", methodDelete, "", userAdmin, http.StatusOK, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userAdmin, http.StatusOK, 0},
 
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/team-member", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/team-member", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/team-member", methodDelete, "", userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/team-member", methodDelete, "", userViewer, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/team-member", methodDelete, "", userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/team-member", methodDelete, "", userEditor, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/team-member", methodDelete, "", userAdmin, http.StatusOK, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userAdmin, http.StatusOK, 0},
 
 		// Invalid boardID/memberID combination
-		{"/boards/{PUBLIC_TEMPLATE_ID}/members/team-member", methodDelete, "", userAdmin, http.StatusOK, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/members/{USER_TEAM_MEMBER_ID}", methodDelete, "", userAdmin, http.StatusOK, 0},
 
 		// Invalid boardID
-		{"/boards/invalid/members/viewer", methodDelete, "", userAdmin, http.StatusNotFound, 0},
+		{"/boards/invalid/members/{USER_VIEWER_ID}", methodDelete, "", userAdmin, http.StatusNotFound, 0},
 
 		// Invalid memberID
 		{"/boards/{PUBLIC_TEMPLATE_ID}/members/invalid", methodDelete, "", userAdmin, http.StatusOK, 0},
@@ -1389,29 +1389,29 @@ func TestLocalPermissionsGetUser(t *testing.T) {
 	testData := setupData(t, th)
 
 	ttCases := []TestCase{
-		{"/users/" + userNoTeamMemberID, methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/users/" + userNoTeamMemberID, methodGet, "", userNoTeamMember, http.StatusOK, 1},
-		{"/users/" + userNoTeamMemberID, methodGet, "", userTeamMember, http.StatusOK, 1},
-		{"/users/" + userNoTeamMemberID, methodGet, "", userViewer, http.StatusOK, 1},
-		{"/users/" + userNoTeamMemberID, methodGet, "", userCommenter, http.StatusOK, 1},
-		{"/users/" + userNoTeamMemberID, methodGet, "", userEditor, http.StatusOK, 1},
-		{"/users/" + userNoTeamMemberID, methodGet, "", userAdmin, http.StatusOK, 1},
+		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userAdmin, http.StatusOK, 1},
 
-		{"/users/" + userTeamMemberID, methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/users/" + userTeamMemberID, methodGet, "", userNoTeamMember, http.StatusOK, 1},
-		{"/users/" + userTeamMemberID, methodGet, "", userTeamMember, http.StatusOK, 1},
-		{"/users/" + userTeamMemberID, methodGet, "", userViewer, http.StatusOK, 1},
-		{"/users/" + userTeamMemberID, methodGet, "", userCommenter, http.StatusOK, 1},
-		{"/users/" + userTeamMemberID, methodGet, "", userEditor, http.StatusOK, 1},
-		{"/users/" + userTeamMemberID, methodGet, "", userAdmin, http.StatusOK, 1},
+		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userAdmin, http.StatusOK, 1},
 
-		{"/users/" + userViewerID, methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/users/" + userViewerID, methodGet, "", userNoTeamMember, http.StatusOK, 1},
-		{"/users/" + userViewerID, methodGet, "", userTeamMember, http.StatusOK, 1},
-		{"/users/" + userViewerID, methodGet, "", userViewer, http.StatusOK, 1},
-		{"/users/" + userViewerID, methodGet, "", userCommenter, http.StatusOK, 1},
-		{"/users/" + userViewerID, methodGet, "", userEditor, http.StatusOK, 1},
-		{"/users/" + userViewerID, methodGet, "", userAdmin, http.StatusOK, 1},
+		{"/users/{USER_VIEWER_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/users/{USER_VIEWER_ID}", methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/users/{USER_VIEWER_ID}", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/users/{USER_VIEWER_ID}", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/users/{USER_VIEWER_ID}", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/users/{USER_VIEWER_ID}", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/users/{USER_VIEWER_ID}", methodGet, "", userAdmin, http.StatusOK, 1},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1428,8 +1428,8 @@ func TestLocalPermissionsUserChangePassword(t *testing.T) {
 	})
 
 	ttCases := []TestCase{
-		{"/users/" + userAdminID + "/changepassword", methodPost, postBody, userAnon, http.StatusUnauthorized, 0},
-		{"/users/" + userAdminID + "/changepassword", methodPost, postBody, userAdmin, http.StatusOK, 0},
+		{"/users/{USER_ADMIN_ID}/changepassword", methodPost, postBody, userAnon, http.StatusUnauthorized, 0},
+		{"/users/{USER_ADMIN_ID}/changepassword", methodPost, postBody, userAdmin, http.StatusOK, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1443,13 +1443,13 @@ func TestLocalPermissionsUpdateUserConfig(t *testing.T) {
 	patch := toJSON(t, model.UserPropPatch{UpdatedFields: map[string]string{"test": "test"}})
 
 	ttCases := []TestCase{
-		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userAnon, http.StatusUnauthorized, 0},
-		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userNoTeamMember, http.StatusForbidden, 0},
-		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userTeamMember, http.StatusOK, 1},
-		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userViewer, http.StatusForbidden, 0},
-		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userCommenter, http.StatusForbidden, 0},
-		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userEditor, http.StatusForbidden, 0},
-		{"/users/" + userTeamMemberID + "/config", methodPut, patch, userAdmin, http.StatusForbidden, 0},
+		{"/users/{USER_TEAM_MEMBER_ID}/config", methodPut, patch, userAnon, http.StatusUnauthorized, 0},
+		{"/users/{USER_TEAM_MEMBER_ID}/config", methodPut, patch, userNoTeamMember, http.StatusForbidden, 0},
+		{"/users/{USER_TEAM_MEMBER_ID}/config", methodPut, patch, userTeamMember, http.StatusOK, 1},
+		{"/users/{USER_TEAM_MEMBER_ID}/config", methodPut, patch, userViewer, http.StatusForbidden, 0},
+		{"/users/{USER_TEAM_MEMBER_ID}/config", methodPut, patch, userCommenter, http.StatusForbidden, 0},
+		{"/users/{USER_TEAM_MEMBER_ID}/config", methodPut, patch, userEditor, http.StatusForbidden, 0},
+		{"/users/{USER_TEAM_MEMBER_ID}/config", methodPut, patch, userAdmin, http.StatusForbidden, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
@@ -1893,13 +1893,13 @@ func TestLocalPermissionsGetSubscriptions(t *testing.T) {
 	testData := setupData(t, th)
 
 	ttCases := []TestCase{
-		{"/subscriptions/" + userAnonID, methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/subscriptions/" + userNoTeamMemberID, methodGet, "", userNoTeamMember, http.StatusOK, 0},
-		{"/subscriptions/" + userTeamMemberID, methodGet, "", userTeamMember, http.StatusOK, 0},
-		{"/subscriptions/" + userViewerID, methodGet, "", userViewer, http.StatusOK, 0},
-		{"/subscriptions/" + userCommenterID, methodGet, "", userCommenter, http.StatusOK, 0},
-		{"/subscriptions/" + userEditorID, methodGet, "", userEditor, http.StatusOK, 0},
-		{"/subscriptions/" + userAdminID, methodGet, "", userAdmin, http.StatusOK, 0},
+		{"/subscriptions/{USER_ANON_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/subscriptions/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userNoTeamMember, http.StatusOK, 0},
+		{"/subscriptions/{USER_TEAM_MEMBER_ID}", methodGet, "", userTeamMember, http.StatusOK, 0},
+		{"/subscriptions/{USER_VIEWER_ID}", methodGet, "", userViewer, http.StatusOK, 0},
+		{"/subscriptions/{USER_COMMENTER_ID}", methodGet, "", userCommenter, http.StatusOK, 0},
+		{"/subscriptions/{USER_EDITOR_ID}", methodGet, "", userEditor, http.StatusOK, 0},
+		{"/subscriptions/{USER_ADMIN_ID}", methodGet, "", userAdmin, http.StatusOK, 0},
 
 		{"/subscriptions/other", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
 		{"/subscriptions/other", methodGet, "", userTeamMember, http.StatusForbidden, 0},
@@ -1947,13 +1947,13 @@ func TestLocalPermissionsDeleteSubscription(t *testing.T) {
 	require.NoError(t, err)
 
 	ttCases := []TestCase{
-		{"/subscriptions/block-3/" + userAnonID, methodDelete, "", userAnon, http.StatusUnauthorized, 0},
-		{"/subscriptions/block-3/" + userNoTeamMemberID, methodDelete, "", userNoTeamMember, http.StatusOK, 0},
-		{"/subscriptions/block-3/" + userTeamMemberID, methodDelete, "", userTeamMember, http.StatusOK, 0},
-		{"/subscriptions/block-3/" + userViewerID, methodDelete, "", userViewer, http.StatusOK, 0},
-		{"/subscriptions/block-3/" + userCommenterID, methodDelete, "", userCommenter, http.StatusOK, 0},
-		{"/subscriptions/block-3/" + userEditorID, methodDelete, "", userEditor, http.StatusOK, 0},
-		{"/subscriptions/block-3/" + userAdminID, methodDelete, "", userAdmin, http.StatusOK, 0},
+		{"/subscriptions/block-3/{USER_ANON_ID}", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
+		{"/subscriptions/block-3/{USER_NO_TEAM_MEMBER_ID}", methodDelete, "", userNoTeamMember, http.StatusOK, 0},
+		{"/subscriptions/block-3/{USER_TEAM_MEMBER_ID}", methodDelete, "", userTeamMember, http.StatusOK, 0},
+		{"/subscriptions/block-3/{USER_VIEWER_ID}", methodDelete, "", userViewer, http.StatusOK, 0},
+		{"/subscriptions/block-3/{USER_COMMENTER_ID}", methodDelete, "", userCommenter, http.StatusOK, 0},
+		{"/subscriptions/block-3/{USER_EDITOR_ID}", methodDelete, "", userEditor, http.StatusOK, 0},
+		{"/subscriptions/block-3/{USER_ADMIN_ID}", methodDelete, "", userAdmin, http.StatusOK, 0},
 
 		{"/subscriptions/block-3/other", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
 		{"/subscriptions/block-3/other", methodDelete, "", userTeamMember, http.StatusForbidden, 0},
