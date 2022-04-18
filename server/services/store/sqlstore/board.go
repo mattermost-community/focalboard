@@ -292,7 +292,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	}
 
 	existingBoard, err := s.getBoard(db, board.ID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil && !s.IsErrNotFound(err) {
 		return nil, fmt.Errorf("insertBoard error occurred while fetching existing board %s: %w", board.ID, err)
 	}
 

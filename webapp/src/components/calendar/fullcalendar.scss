@@ -228,8 +228,8 @@
         text-align: center;
     }
 
-    .fc-day-today {
-        background: transparent;
+    .fc-daygrid-day.fc-day-today {
+        background-color: unset;
 
         .fc-daygrid-day-number {
             .dateDisplay {
