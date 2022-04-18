@@ -1638,7 +1638,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !a.app.GetClientConfig().EnablePublicSharedBoards {
-		a.logger.Info(
+		a.logger.Warn(
 			"Attempt to turn on sharing for board via API failed, sharing off in configuration.",
 			mlog.String("boardID", sharing.ID),
 			mlog.String("userID", userID))
@@ -4102,7 +4102,7 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 // Response helpers
 
 func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message string, sourceError error) {
-	if code == http.StatusUnauthorized {
+	if code == http.StatusUnauthorized || code == http.StatusForbidden {
 		a.logger.Debug("API DEBUG",
 			mlog.Int("code", code),
 			mlog.Err(sourceError),
