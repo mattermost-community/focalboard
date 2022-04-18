@@ -38,7 +38,7 @@ func IsErrNotFound(err error) bool {
 		return true
 	}
 
-	// check if this is a store.ErrNotFound
+	// check if this is a model.ErrNotFound
 	var nf *ErrNotFound
 	if errors.As(err, &nf) {
 		return true
