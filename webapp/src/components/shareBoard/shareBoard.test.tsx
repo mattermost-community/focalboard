@@ -98,9 +98,9 @@ card3.boardId = fakeBoard.id
 
 const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, create_at: 0, update_at: 0, is_bot: false}
 
-const categoryAttribute1 = TestBlockFactory.createCategoryBlocks()
+const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
 categoryAttribute1.name = 'Category 1'
-categoryAttribute1.blockIDs = [board.id]
+categoryAttribute1.boardIDs = [board.id]
 
 describe('src/components/shareBoard/shareBoard', () => {
     const w = (window as any)
@@ -180,7 +180,12 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('should match snapshot', async () => {
-        mockedOctoClient.getSharing.mockResolvedValue(undefined)
+        const sharing:ISharing = {
+            id: '',
+            enabled: false,
+            token: '',
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
         let container
         await act(async () => {
             const result = render(
@@ -356,7 +361,12 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(container).toMatchSnapshot()
     })
     test('return shareBoardComponent and click Switch without sharing', async () => {
-        mockedOctoClient.getSharing.mockResolvedValue(undefined)
+        const sharing:ISharing = {
+            id: '',
+            enabled: false,
+            token: '',
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
         mockedUtils.createGuid.mockReturnValue('aToken')
         let container: Element | undefined
         await act(async () => {

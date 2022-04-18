@@ -8,7 +8,7 @@ import {IUser, UserConfigPatch} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
-import {Category, CategoryBlocks} from './store/sidebar'
+import {Category, CategoryBoards} from './store/sidebar'
 import {Team} from './store/teams'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
@@ -721,14 +721,14 @@ class OctoClient {
         })
     }
 
-    async getSidebarCategories(teamID: string): Promise<Array<CategoryBlocks>> {
+    async getSidebarCategories(teamID: string): Promise<Array<CategoryBoards>> {
         const path = `/api/v2/teams/${teamID}/categories`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
         }
 
-        return (await this.getJson(response, [])) as Array<CategoryBlocks>
+        return (await this.getJson(response, [])) as Array<CategoryBoards>
     }
 
     async createSidebarCategory(category: Category): Promise<Response> {
@@ -759,8 +759,8 @@ class OctoClient {
         })
     }
 
-    async moveBlockToCategory(teamID: string, blockID: string, toCategoryID: string, fromCategoryID: string): Promise<Response> {
-        const url = `/api/v2/teams/${teamID}/categories/${toCategoryID || '0'}/blocks/${blockID}`
+    async moveBoardToCategory(teamID: string, boardID: string, toCategoryID: string, fromCategoryID: string): Promise<Response> {
+        const url = `/api/v2/teams/${teamID}/categories/${toCategoryID || '0'}/boards/${boardID}`
         const payload = {
             fromCategoryID,
         }

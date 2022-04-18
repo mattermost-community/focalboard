@@ -494,22 +494,22 @@ func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
 	pa.sendUserMessageSkipCluster(websocketActionUpdateCategory, payload, category.UserID)
 }
 
-func (pa *PluginAdapter) BroadcastCategoryBlockChange(teamID, userID string, blockCategory model.BlockCategoryWebsocketData) {
+func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boardCategory model.BoardCategoryWebsocketData) {
 	pa.logger.Debug(
-		"BroadcastCategoryBlockChange",
+		"BroadcastCategoryBoardChange",
 		mlog.String("userID", userID),
 		mlog.String("teamID", teamID),
-		mlog.String("categoryID", blockCategory.CategoryID),
-		mlog.String("blockID", blockCategory.BlockID),
+		mlog.String("categoryID", boardCategory.CategoryID),
+		mlog.String("blockID", boardCategory.BoardID),
 	)
 
 	message := UpdateCategoryMessage{
-		Action:          websocketActionUpdateCategoryBlock,
+		Action:          websocketActionUpdateCategoryBoard,
 		TeamID:          teamID,
-		BlockCategories: &blockCategory,
+		BoardCategories: &boardCategory,
 	}
 
-	pa.sendTeamMessage(websocketActionUpdateCategoryBlock, teamID, utils.StructToMap(message))
+	pa.sendTeamMessage(websocketActionUpdateCategoryBoard, teamID, utils.StructToMap(message))
 }
 
 func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {
@@ -524,7 +524,7 @@ func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {
 }
 
 func (pa *PluginAdapter) BroadcastBoardChange(teamID string, board *model.Board) {
-	pa.logger.Info("BroadcastingBoardChange",
+	pa.logger.Debug("BroadcastingBoardChange",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", board.ID),
 	)
@@ -550,7 +550,7 @@ func (pa *PluginAdapter) BroadcastBoardDelete(teamID, boardID string) {
 }
 
 func (pa *PluginAdapter) BroadcastMemberChange(teamID, boardID string, member *model.BoardMember) {
-	pa.logger.Info("BroadcastingMemberChange",
+	pa.logger.Debug("BroadcastingMemberChange",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", boardID),
 		mlog.String("userID", member.UserID),
@@ -566,7 +566,7 @@ func (pa *PluginAdapter) BroadcastMemberChange(teamID, boardID string, member *m
 }
 
 func (pa *PluginAdapter) BroadcastMemberDelete(teamID, boardID, userID string) {
-	pa.logger.Info("BroadcastingMemberDelete",
+	pa.logger.Debug("BroadcastingMemberDelete",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", boardID),
 		mlog.String("userID", userID),

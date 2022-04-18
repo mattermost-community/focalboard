@@ -22,8 +22,8 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) AddUpdateCategoryBlock(userID string, categoryID string, blockID string) error {
-	return s.addUpdateCategoryBlock(s.db, userID, categoryID, blockID)
+func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, blockID string) error {
+	return s.addUpdateCategoryBoard(s.db, userID, categoryID, blockID)
 
 }
 
@@ -450,8 +450,8 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 
 }
 
-func (s *SQLStore) GetUserCategoryBlocks(userID string, teamID string) ([]model.CategoryBlocks, error) {
-	return s.getUserCategoryBlocks(s.db, userID, teamID)
+func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.CategoryBoards, error) {
+	return s.getUserCategoryBoards(s.db, userID, teamID)
 
 }
 
@@ -645,6 +645,30 @@ func (s *SQLStore) RefreshSession(session *model.Session) error {
 
 func (s *SQLStore) RemoveDefaultTemplates(boards []*model.Board) error {
 	return s.removeDefaultTemplates(s.db, boards)
+
+}
+
+func (s *SQLStore) RunDataRetention(globalRetentionDate int64, batchSize int64) (int64, error) {
+	if s.dbType == model.SqliteDBType {
+		return s.runDataRetention(s.db, globalRetentionDate, batchSize)
+	}
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return 0, txErr
+	}
+	result, err := s.runDataRetention(tx, globalRetentionDate, batchSize)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "RunDataRetention"))
+		}
+		return 0, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return 0, err
+	}
+
+	return result, nil
 
 }
 

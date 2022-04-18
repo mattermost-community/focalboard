@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 	"path"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/server"
@@ -37,6 +39,8 @@ const (
 	notifyFreqCardSecondsKey  = "notify_freq_card_seconds"
 	notifyFreqBoardSecondsKey = "notify_freq_board_seconds"
 )
+
+var ErrInsufficientLicense = errors.New("appropriate license required")
 
 type BoardsEmbed struct {
 	OriginalPath string `json:"originalPath"`
@@ -122,7 +126,9 @@ func (p *Plugin) OnActivate() error {
 	backendParams := notifyBackendParams{
 		cfg:         cfg,
 		client:      client,
+		store:       db,
 		permissions: permissionsService,
+		wsAdapter:   p.wsPluginAdapter,
 		serverRoot:  baseURL + "/boards",
 		logger:      logger,
 	}
@@ -135,7 +141,7 @@ func (p *Plugin) OnActivate() error {
 	}
 	notifyBackends = append(notifyBackends, mentionsBackend)
 
-	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams, db, p.wsPluginAdapter)
+	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams)
 	if err2 != nil {
 		return fmt.Errorf("error creating subscription notifications backend: %w", err2)
 	}
@@ -234,6 +240,8 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		FeatureFlags:             featureFlags,
 		NotifyFreqCardSeconds:    getPluginSettingInt(mmconfig, notifyFreqCardSecondsKey, 120),
 		NotifyFreqBoardSeconds:   getPluginSettingInt(mmconfig, notifyFreqBoardSecondsKey, 86400),
+		EnableDataRetention:      *mmconfig.DataRetentionSettings.EnableBoardsDeletion,
+		DataRetentionDays:        *mmconfig.DataRetentionSettings.BoardsRetentionDays,
 	}
 }
 
@@ -499,4 +507,25 @@ func isBoardsLink(link string) bool {
 
 	teamID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
 	return teamID != "" && boardID != "" && viewID != "" && cardID != ""
+}
+
+func (p *Plugin) RunDataRetention(nowTime, batchSize int64) (int64, error) {
+	p.server.Logger().Debug("Boards RunDataRetention")
+	license := p.server.Store().GetLicense()
+	if license == nil || !(*license.Features.DataRetention) {
+		return 0, ErrInsufficientLicense
+	}
+
+	if p.server.Config().EnableDataRetention {
+		boardsRetentionDays := p.server.Config().DataRetentionDays
+		endTimeBoards := convertDaysToCutoff(boardsRetentionDays, time.Unix(nowTime/1000, 0))
+		return p.server.Store().RunDataRetention(endTimeBoards, batchSize)
+	}
+	return 0, nil
+}
+
+func convertDaysToCutoff(days int, now time.Time) int64 {
+	upToStartOfDay := now.AddDate(0, 0, -days)
+	cutoffDate := time.Date(upToStartOfDay.Year(), upToStartOfDay.Month(), upToStartOfDay.Day(), 0, 0, 0, 0, time.Local)
+	return cutoffDate.UnixNano() / int64(time.Millisecond)
 }

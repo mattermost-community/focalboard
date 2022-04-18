@@ -8,18 +8,18 @@ import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
-import {getSortedBoards} from '../../store/boards'
+import {getMySortedBoards} from '../../store/boards'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 
 import './sidebar.scss'
 
 import {
-    BlockCategoryWebsocketData,
+    BoardCategoryWebsocketData,
     Category,
-    CategoryBlocks,
+    CategoryBoards,
     fetchSidebarCategories,
-    getSidebarCategories, updateBlockCategories,
+    getSidebarCategories, updateBoardCategories,
     updateCategories,
 } from '../../store/sidebar'
 
@@ -53,9 +53,9 @@ const Sidebar = (props: Props) => {
     const [isHidden, setHidden] = useState(false)
     const [userHidden, setUserHidden] = useState(false)
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
-    const boards = useAppSelector(getSortedBoards)
+    const boards = useAppSelector(getMySortedBoards)
     const dispatch = useAppDispatch()
-    const partialCategories = useAppSelector<Array<CategoryBlocks>>(getSidebarCategories)
+    const partialCategories = useAppSelector<Array<CategoryBoards>>(getSidebarCategories)
     const sidebarCategories = addMissingItems(partialCategories, boards)
 
     useEffect(() => {
@@ -63,8 +63,8 @@ const Sidebar = (props: Props) => {
             dispatch(updateCategories(categories))
         }, 'category')
 
-        wsClient.addOnChange((_: WSClient, blockCategories: Array<BlockCategoryWebsocketData>) => {
-            dispatch(updateBlockCategories(blockCategories))
+        wsClient.addOnChange((_: WSClient, blockCategories: Array<BoardCategoryWebsocketData>) => {
+            dispatch(updateBoardCategories(blockCategories))
         }, 'blockCategories')
     }, [])
 
@@ -182,7 +182,7 @@ const Sidebar = (props: Props) => {
                             hideSidebar={hideSidebar}
                             key={category.id}
                             activeBoardID={props.activeBoardId}
-                            categoryBlocks={category}
+                            categoryBoards={category}
                             boards={boards}
                             allCategories={sidebarCategories}
                         />

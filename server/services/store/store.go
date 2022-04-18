@@ -3,11 +3,13 @@
 package store
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -113,8 +115,8 @@ type Store interface {
 	UpdateCategory(category model.Category) error
 	DeleteCategory(categoryID, userID, teamID string) error
 
-	GetUserCategoryBlocks(userID, teamID string) ([]model.CategoryBlocks, error)
-	AddUpdateCategoryBlock(userID, categoryID, blockID string) error
+	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error)
+	AddUpdateCategoryBoard(userID, categoryID, blockID string) error
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(blockID string, subscriberID string) error
@@ -131,6 +133,9 @@ type Store interface {
 
 	RemoveDefaultTemplates(boards []*model.Board) error
 	GetTemplateBoards(teamID, userID string) ([]*model.Board, error)
+
+	// @withTransaction
+	RunDataRetention(globalRetentionDate int64, batchSize int64) (int64, error)
 
 	DBType() string
 
@@ -161,6 +166,15 @@ func IsErrNotFound(err error) bool {
 		return false
 	}
 
+	// check if this is a store.ErrNotFound
 	var nf *ErrNotFound
-	return errors.As(err, &nf)
+	if errors.As(err, &nf) {
+		return true
+	}
+
+	// check if this is a sql.ErrNotFound
+	if errors.Is(err, sql.ErrNoRows) {
+		return true
+	}
+	return false
 }

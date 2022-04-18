@@ -18,6 +18,7 @@ type Params struct {
 	IsPlugin         bool
 	NewMutexFn       MutexFactory
 	PluginAPI        *plugin.API
+	SkipTemplateInit bool
 }
 
 func (p Params) CheckValid() error {

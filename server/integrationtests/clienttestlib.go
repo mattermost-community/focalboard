@@ -11,6 +11,7 @@ import (
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
+	"github.com/mattermost/focalboard/server/services/auth"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
 	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
@@ -262,6 +263,9 @@ func (th *TestHelper) Start() *TestHelper {
 // InitBasic starts the test server and initializes the clients of the
 // helper, registering them and logging them into the system.
 func (th *TestHelper) InitBasic() *TestHelper {
+	// Reduce password has strength for unit tests to dramatically speed up account creation and login
+	auth.PasswordHashStrength = 4
+
 	th.Start()
 
 	// user1

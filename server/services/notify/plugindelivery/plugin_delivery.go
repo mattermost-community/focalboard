@@ -4,8 +4,6 @@
 package plugindelivery
 
 import (
-	"github.com/mattermost/focalboard/server/services/permissions"
-
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -39,17 +37,21 @@ type PluginAPI interface {
 
 // PluginDelivery provides ability to send notifications to direct message channels via Mattermost plugin API.
 type PluginDelivery struct {
-	botID       string
-	serverRoot  string
-	api         PluginAPI
-	permissions permissions.PermissionsService
+	botID      string
+	serverRoot string
+	api        PluginAPI
 }
 
-func New(botID string, serverRoot string, api PluginAPI, permissions permissions.PermissionsService) *PluginDelivery {
+func New(botID string, serverRoot string, api PluginAPI) *PluginDelivery {
 	return &PluginDelivery{
-		botID:       botID,
-		serverRoot:  serverRoot,
-		api:         api,
-		permissions: permissions,
+		botID:      botID,
+		serverRoot: serverRoot,
+		api:        api,
 	}
+}
+
+// IsErrNotFound returns true if `err` or one of its wrapped children are the `ErrNotFound`
+// as defined in the plugin API.
+func (pd *PluginDelivery) IsErrNotFound(err error) bool {
+	return pd.api.IsErrNotFound(err)
 }
