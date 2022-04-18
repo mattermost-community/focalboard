@@ -404,7 +404,7 @@ func TestSearchBoards(t *testing.T) {
 				Name:        "case insensitive",
 				Client:      th.Client,
 				Term:        "UBLI",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, board5.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID},
 			},
 			{
 				Name:        "user2 can only see the public boards, as he's not a member of any",
