@@ -28,9 +28,9 @@ describe('components/sidebarSidebar', () => {
     const board = TestBlockFactory.createBoard()
     board.id = 'board1'
 
-    const categoryAttribute1 = TestBlockFactory.createCategoryBlocks()
+    const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
     categoryAttribute1.name = 'Category 1'
-    categoryAttribute1.blockIDs = [board.id]
+    categoryAttribute1.boardIDs = [board.id]
 
     test('sidebar hidden', () => {
         const store = mockStore({

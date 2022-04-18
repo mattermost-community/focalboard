@@ -15,6 +15,7 @@ import {MemoryRouter, Router} from 'react-router-dom'
 import Mutator from '../../mutator'
 import {Utils} from '../../utils'
 import {Team} from '../../store/teams'
+import {IUser} from '../../user'
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
 
 import BoardTemplateSelector from './boardTemplateSelector'
@@ -47,6 +48,15 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
         updateAt: 0,
         modifiedBy: 'user-1',
     }
+    const me: IUser = {
+        id: 'user-id-1', 
+        username: 'username_1', 
+        email: '', 
+        props: {}, 
+        create_at: 0, 
+        update_at: 0, 
+        is_bot: false
+    }
     const template1Title = 'Template 1'
     const globalTemplateTitle = 'Template Global'
     const boardTitle = 'Board 1'
@@ -59,9 +69,8 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                 current: team1,
             },
             users: {
-                me: {
-                    id: 'user_id_1',
-                },
+                me,
+                boardUsers: [me],
             },
             boards: {
                 boards: [
@@ -88,6 +97,14 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                         dateDisplayPropertyId: 'id-5',
                     },
                 ],
+                membersInBoards: {
+                    ['1']: {userId: me.id, schemeAdmin: true},
+                    ['2']: {userId: me.id, schemeAdmin: true},
+                },
+                myBoardMemberships: {
+                    ['1']: {userId: me.id, schemeAdmin: true},
+                    ['2']: {userId: me.id, schemeAdmin: true},
+                },
                 cards: [],
                 views: [],
             },

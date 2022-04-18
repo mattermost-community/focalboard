@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	APIURLSuffix = "/api/v1"
+	APIURLSuffix = "/api/v2"
 )
 
 type RequestReaderError struct {
@@ -682,4 +682,43 @@ func (c *Client) GetTemplatesForTeam(teamID string) ([]*model.Board, *Response) 
 	defer closeBody(r)
 
 	return model.BoardsFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) ExportBoardArchive(boardID string) ([]byte, *Response) {
+	r, err := c.DoAPIGet(c.GetBoardRoute(boardID)+"/archive/export", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	buf, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	return buf, BuildResponse(r)
+}
+
+func (c *Client) ImportArchive(teamID string, data io.Reader) *Response {
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	part, err := writer.CreateFormFile(api.UploadFormFileKey, "file")
+	if err != nil {
+		return &Response{Error: err}
+	}
+	if _, err = io.Copy(part, data); err != nil {
+		return &Response{Error: err}
+	}
+	writer.Close()
+
+	opt := func(r *http.Request) {
+		r.Header.Add("Content-Type", writer.FormDataContentType())
+	}
+
+	r, err := c.doAPIRequestReader(http.MethodPost, c.APIURL+c.GetTeamRoute(teamID)+"/archive/import", body, "", opt)
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return BuildResponse(r)
 }

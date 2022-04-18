@@ -22,8 +22,8 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) AddUpdateCategoryBlock(userID string, categoryID string, blockID string) error {
-	return s.addUpdateCategoryBlock(s.db, userID, categoryID, blockID)
+func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, blockID string) error {
+	return s.addUpdateCategoryBoard(s.db, userID, categoryID, blockID)
 
 }
 
@@ -450,8 +450,8 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 
 }
 
-func (s *SQLStore) GetUserCategoryBlocks(userID string, teamID string) ([]model.CategoryBlocks, error) {
-	return s.getUserCategoryBlocks(s.db, userID, teamID)
+func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.CategoryBoards, error) {
+	return s.getUserCategoryBoards(s.db, userID, teamID)
 
 }
 

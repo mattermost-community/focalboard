@@ -15,7 +15,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './sidebarBoardItem.scss'
-import {CategoryBlocks} from '../../store/sidebar'
+import {CategoryBoards} from '../../store/sidebar'
 import CreateNewFolder from '../../widgets/icons/newFolder'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoardViews, getCurrentViewId} from '../../store/views'
@@ -45,9 +45,9 @@ const iconForViewType = (viewType: IViewType): JSX.Element => {
 
 type Props = {
     isActive: boolean
-    categoryBlocks: CategoryBlocks
+    categoryBoards: CategoryBoards
     board: Board
-    allCategories: Array<CategoryBlocks>
+    allCategories: Array<CategoryBoards>
     onDeleteRequest: (board: Board) => void
     showBoard: (boardId: string) => void
     showView: (viewId: string, boardId: string) => void
@@ -66,16 +66,16 @@ const SidebarBoardItem = (props: Props) => {
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const history = useHistory()
 
-    const generateMoveToCategoryOptions = (blockID: string) => {
+    const generateMoveToCategoryOptions = (boardID: string) => {
         return props.allCategories.map((category) => (
             <Menu.Text
                 key={category.id}
                 id={category.id}
                 name={category.name}
-                icon={category.id === props.categoryBlocks.id ? <Check/> : <Folder/>}
+                icon={category.id === props.categoryBoards.id ? <Check/> : <Folder/>}
                 onClick={async (toCategoryID) => {
-                    const fromCategoryID = props.categoryBlocks.id
-                    await mutator.moveBlockToCategory(teamID, blockID, toCategoryID, fromCategoryID)
+                    const fromCategoryID = props.categoryBoards.id
+                    await mutator.moveBoardToCategory(teamID, boardID, toCategoryID, fromCategoryID)
                 }}
             />
         ))

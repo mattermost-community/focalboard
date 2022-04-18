@@ -15,11 +15,11 @@ import {Utils} from '../../utils'
 import './sidebar.scss'
 
 import {
-    BlockCategoryWebsocketData,
+    BoardCategoryWebsocketData,
     Category,
-    CategoryBlocks,
+    CategoryBoards,
     fetchSidebarCategories,
-    getSidebarCategories, updateBlockCategories,
+    getSidebarCategories, updateBoardCategories,
     updateCategories,
 } from '../../store/sidebar'
 
@@ -55,7 +55,7 @@ const Sidebar = (props: Props) => {
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
     const boards = useAppSelector(getSortedBoards)
     const dispatch = useAppDispatch()
-    const partialCategories = useAppSelector<Array<CategoryBlocks>>(getSidebarCategories)
+    const partialCategories = useAppSelector<Array<CategoryBoards>>(getSidebarCategories)
     const sidebarCategories = addMissingItems(partialCategories, boards)
 
     useEffect(() => {
@@ -63,8 +63,8 @@ const Sidebar = (props: Props) => {
             dispatch(updateCategories(categories))
         }, 'category')
 
-        wsClient.addOnChange((_: WSClient, blockCategories: Array<BlockCategoryWebsocketData>) => {
-            dispatch(updateBlockCategories(blockCategories))
+        wsClient.addOnChange((_: WSClient, blockCategories: Array<BoardCategoryWebsocketData>) => {
+            dispatch(updateBoardCategories(blockCategories))
         }, 'blockCategories')
     }, [])
 
@@ -182,7 +182,7 @@ const Sidebar = (props: Props) => {
                             hideSidebar={hideSidebar}
                             key={category.id}
                             activeBoardID={props.activeBoardId}
-                            categoryBlocks={category}
+                            categoryBoards={category}
                             boards={boards}
                             allCategories={sidebarCategories}
                         />

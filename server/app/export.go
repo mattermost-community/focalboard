@@ -184,19 +184,8 @@ func (a *App) writeArchiveFile(zw *zip.Writer, filename string, boardID string, 
 	return err
 }
 
-// getBoardsForArchive fetches all the specified boards, or all boards in the workspace/team
-// if `boardIDs` is empty.
+// getBoardsForArchive fetches all the specified boards.
 func (a *App) getBoardsForArchive(boardIDs []string) ([]model.Board, error) {
-	if len(boardIDs) == 0 {
-		// TODO: implement this
-		// boards, err := a.GetAllBoards("", "board")
-		// if err != nil {
-		// 	return nil, fmt.Errorf("could not fetch all boards: %w", err)
-		// }
-		// return boards, nil
-		return []model.Board{}, nil
-	}
-
 	boards := make([]model.Board, 0, len(boardIDs))
 
 	for _, id := range boardIDs {

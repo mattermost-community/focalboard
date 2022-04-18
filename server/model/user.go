@@ -42,15 +42,15 @@ type User struct {
 	// required: true
 	Props map[string]interface{} `json:"props"`
 
-	// Created time
+	// Created time in miliseconds since the current epoch
 	// required: true
 	CreateAt int64 `json:"create_at,omitempty"`
 
-	// Updated time
+	// Updated time in miliseconds since the current epoch
 	// required: true
 	UpdateAt int64 `json:"update_at,omitempty"`
 
-	// Deleted time, set to indicate user is deleted
+	// Deleted time in miliseconds since the current epoch, set to indicate user is deleted
 	// required: true
 	DeleteAt int64 `json:"delete_at"`
 

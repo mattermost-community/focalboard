@@ -119,21 +119,23 @@ const CardDialog = (props: Props): JSX.Element => {
                     onClick={handleDeleteButtonOnClick}
                 />
             </BoardPermissionGate>
-            <Menu.Text
-                icon={<LinkIcon/>}
-                id='copy'
-                name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
-                onClick={() => {
-                    let cardLink = window.location.href
+            {me?.id !== 'single-user' &&
+                <Menu.Text
+                    icon={<LinkIcon/>}
+                    id='copy'
+                    name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
+                    onClick={() => {
+                        let cardLink = window.location.href
 
-                    if (!cardLink.includes(props.cardId)) {
-                        cardLink += `/${props.cardId}`
-                    }
+                        if (!cardLink.includes(props.cardId)) {
+                            cardLink += `/${props.cardId}`
+                        }
 
-                    Utils.copyTextToClipboard(cardLink)
-                    sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                }}
-            />
+                        Utils.copyTextToClipboard(cardLink)
+                        sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                    }}
+                />
+            }
             {!isTemplate &&
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                     <Menu.Text

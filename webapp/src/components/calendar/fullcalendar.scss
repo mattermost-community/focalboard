@@ -204,9 +204,13 @@
     }
 
     .fc-event-title {
+        display: -webkit-box; // stylelint-disable-line
         font-size: 14px;
-        overflow: unset;
         white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical; // stylelint-disable-line
     }
 
     .fc-day-sat,

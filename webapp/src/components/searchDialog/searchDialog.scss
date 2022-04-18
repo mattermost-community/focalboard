@@ -119,18 +119,29 @@
 
             .MagnifyIcon {
                 position: absolute;
-                left: 4px;
-                font-size: 22px;
-                top: 6px;
+                left: 10px;
+                font-size: 18px;
+                top: 10px;
+                width: 20px;
+                height: 20px;
+                opacity: 0.48;
             }
 
             .searchQuery {
                 height: 40px;
                 font-size: 14px;
                 border-radius: 4px;
-                border: 2px solid rgb(var(--button-bg-rgb));
-                padding: 0 33px;
+                border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+                background: var(--center-channel-bg);
+                color: var(--center-channel-color);
+                padding: 0 34px;
                 flex: 1;
+                transition: border 0.15s ease-in;
+
+                &:focus {
+                    padding: 0 33px;
+                    border: 2px solid var(--button-bg);
+                }
             }
         }
     }
