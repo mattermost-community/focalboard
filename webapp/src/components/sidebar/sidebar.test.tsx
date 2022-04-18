@@ -42,6 +42,9 @@ describe('components/sidebarSidebar', () => {
                 boards: {
                     [board.id]: board,
                 },
+                myBoardMemberships: {
+                    [board.id]: board,
+                },
             },
             views: {
                 views: [],
@@ -92,6 +95,9 @@ describe('components/sidebarSidebar', () => {
                 boards: {
                     [board.id]: board,
                 },
+                myBoardMemberships: {
+                    [board.id]: board,
+                }
             },
             views: {
                 views: [],
