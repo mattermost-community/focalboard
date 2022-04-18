@@ -187,13 +187,13 @@ export default class Plugin {
             // This handles the user selecting a team from the team sidebar.
             const currentTeamID = mmStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
-                prevTeamID = currentTeamID
-                store.dispatch(setTeam(currentTeamID))
-                if (window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
+                if (prevTeamID && window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
                     console.log("REDIRECTING HERE")
                     browserHistory.push(`/team/${currentTeamID}`)
                     wsClient.subscribeToTeam(currentTeamID)
                 }
+                prevTeamID = currentTeamID
+                store.dispatch(setTeam(currentTeamID))
             }
         })
 
