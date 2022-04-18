@@ -1,7 +1,6 @@
 package app
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 
@@ -17,7 +16,7 @@ var (
 
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil, nil
 	}
 	if err != nil {
@@ -214,7 +213,7 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 
 func (a *App) DeleteBoard(boardID, userID string) error {
 	board, err := a.store.GetBoard(boardID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil
 	}
 	if err != nil {
@@ -246,7 +245,7 @@ func (a *App) GetMemberForBoard(boardID string, userID string) (*model.BoardMemb
 
 func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, error) {
 	board, err := a.store.GetBoard(member.BoardID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil, nil
 	}
 	if err != nil {
@@ -254,7 +253,7 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 	}
 
 	existingMembership, err := a.store.GetMemberForBoard(member.BoardID, member.UserID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil && !model.IsErrNotFound(err) {
 		return nil, err
 	}
 
@@ -276,7 +275,7 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 
 func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, error) {
 	board, bErr := a.store.GetBoard(member.BoardID)
-	if errors.Is(bErr, sql.ErrNoRows) {
+	if model.IsErrNotFound(bErr) {
 		return nil, nil
 	}
 	if bErr != nil {
@@ -284,7 +283,7 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 	}
 
 	oldMember, err := a.store.GetMemberForBoard(member.BoardID, member.UserID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil, nil
 	}
 	if err != nil {
@@ -331,7 +330,7 @@ func (a *App) isLastAdmin(userID, boardID string) (bool, error) {
 
 func (a *App) DeleteBoardMember(boardID, userID string) error {
 	board, bErr := a.store.GetBoard(boardID)
-	if errors.Is(bErr, sql.ErrNoRows) {
+	if model.IsErrNotFound(bErr) {
 		return nil
 	}
 	if bErr != nil {
@@ -339,7 +338,7 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	}
 
 	oldMember, err := a.store.GetMemberForBoard(boardID, userID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil
 	}
 	if err != nil {

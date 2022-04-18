@@ -1,15 +1,12 @@
 package app
 
 import (
-	"database/sql"
-	"errors"
-
 	"github.com/mattermost/focalboard/server/model"
 )
 
 func (a *App) GetSharing(boardID string) (*model.Sharing, error) {
 	sharing, err := a.store.GetSharing(boardID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil, nil
 	}
 	if err != nil {

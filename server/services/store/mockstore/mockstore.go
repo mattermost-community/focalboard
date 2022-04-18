@@ -1014,20 +1014,6 @@ func (mr *MockStoreMockRecorder) InsertBoardWithAdmin(arg0, arg1 interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertBoardWithAdmin", reflect.TypeOf((*MockStore)(nil).InsertBoardWithAdmin), arg0, arg1)
 }
 
-// IsErrNotFound mocks base method.
-func (m *MockStore) IsErrNotFound(arg0 error) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsErrNotFound", arg0)
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// IsErrNotFound indicates an expected call of IsErrNotFound.
-func (mr *MockStoreMockRecorder) IsErrNotFound(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsErrNotFound", reflect.TypeOf((*MockStore)(nil).IsErrNotFound), arg0)
-}
-
 // PatchBlock mocks base method.
 func (m *MockStore) PatchBlock(arg0 string, arg1 *model.BlockPatch, arg2 string) error {
 	m.ctrl.T.Helper()
