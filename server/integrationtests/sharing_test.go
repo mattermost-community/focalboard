@@ -43,7 +43,7 @@ func TestSharing(t *testing.T) {
 		require.Nil(t, s)
 
 		sharing, resp := th.Client.GetSharing(boardID)
-		th.CheckNotFound(resp)
+		require.NoError(t, resp.Error)
 		require.Nil(t, sharing)
 	})
 
