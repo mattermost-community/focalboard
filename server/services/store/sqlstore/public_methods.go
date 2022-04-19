@@ -653,7 +653,7 @@ func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
 
 }
 
-func (s *SQLStore) SearchBoardsForUser(term string, userID string, teamID string) ([]*model.Board, error) {
+func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Board, error) {
 	return s.searchBoardsForUser(s.db, term, userID)
 
 }
