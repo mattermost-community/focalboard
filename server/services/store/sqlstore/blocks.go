@@ -756,8 +756,9 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 		"blocks_history": "board_id",
 		"boards":         "id",
 		"boards_history": "id",
-		"board_members":  "board_id",
-		"sharing":        "id",
+		// "board_members":         "board_id",
+		// "board_members_hsitory": "board_id",
+		"sharing": "id",
 	}
 
 	subBuilder := s.getQueryBuilder(db).
@@ -826,7 +827,6 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 	deleteIds []string,
 	batchSize int64,
 ) (int64, error) {
-
 	whereClause := deleteColumn + ` IN ('` + strings.Join(deleteIds, `','`) + `')`
 	deleteQuery := s.getQueryBuilder(db).
 		Delete(s.tablePrefix + table).
@@ -840,9 +840,13 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 			Limit(uint64(batchSize))
 
 		selectString, _, _ := selectQuery.ToSql()
+
+		s.logger.Debug(selectString)
 		deleteQuery = s.getQueryBuilder(db).
 			Delete(s.tablePrefix + table).
 			Where(`id IN ('` + selectString + `')`)
+		deleteString, _, _ := deleteQuery.ToSql()
+		s.logger.Debug(deleteString)
 	}
 
 	var totalRowsAffected int64
