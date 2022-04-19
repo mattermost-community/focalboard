@@ -11,8 +11,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    with:
-      path: './focalboard'
+      with:
+        path: './focalboard'
 
     - name: Checkout
       uses: actions/checkout@v3
