@@ -30,6 +30,7 @@ jobs:
         go-version: 1.16
 
     - name: Lint server
+      uses: golangci/golangci-lint-action@v2
       run: make server-lint
 
     - name: "Test server: ${{matrix['db']}}"
