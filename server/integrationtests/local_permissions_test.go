@@ -467,7 +467,7 @@ func TestLocalPermissionsPatchBoardBlocks(t *testing.T) {
 	counter := 0
 	newBlocksPatchJSON := func(blockID string) string {
 		counter++
-		newTitle := "New Title"
+		newTitle := "New Patch Block Title"
 		return toJSON(t, model.BlockPatchBatch{
 			BlockIDs: []string{blockID},
 			BlockPatches: []model.BlockPatch{
@@ -518,7 +518,7 @@ func TestLocalPermissionsPatchBoardBlock(t *testing.T) {
 	clients := setupLocalClients(th)
 	testData := setupData(t, th)
 
-	newTitle := "New Title"
+	newTitle := "New Patch Title"
 	patchJSON := toJSON(t, model.BlockPatch{Title: &newTitle})
 
 	ttCases := []TestCase{
@@ -1485,7 +1485,7 @@ func TestLocalPermissionsUpdateBoardsAndBlocks(t *testing.T) {
 	clients := setupLocalClients(th)
 	testData := setupData(t, th)
 
-	newTitle := "new title"
+	newTitle := "New Block Title"
 	bab := toJSON(t, model.PatchBoardsAndBlocks{
 		BoardIDs:     []string{testData.publicBoard.ID},
 		BoardPatches: []*model.BoardPatch{{Title: &newTitle}},

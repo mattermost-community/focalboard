@@ -92,7 +92,10 @@ func setupData(t *testing.T, th *TestHelper) TestData {
 	require.NoError(t, err)
 	err = th.Server.App().InsertBlock(model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, userAdminID)
 	require.NoError(t, err)
-	customTemplate2, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate}, userAdminID, true)
+	customTemplate2, err := th.Server.App().CreateBoard(
+		&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate},
+		userAdminID,
+		true)
 	require.NoError(t, err)
 	err = th.Server.App().InsertBlock(model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, userAdminID)
 	require.NoError(t, err)
@@ -713,7 +716,7 @@ func TestPermissionsPatchBoardBlocks(t *testing.T) {
 	counter := 0
 	newBlocksPatchJSON := func(blockID string) string {
 		counter++
-		newTitle := "New Title"
+		newTitle := "New Patch Block Title"
 		return toJSON(t, model.BlockPatchBatch{
 			BlockIDs: []string{blockID},
 			BlockPatches: []model.BlockPatch{
@@ -764,7 +767,7 @@ func TestPermissionsPatchBoardBlock(t *testing.T) {
 	clients := setupClients(th)
 	testData := setupData(t, th)
 
-	newTitle := "New Title"
+	newTitle := "New Patch Title"
 	patchJSON := toJSON(t, model.BlockPatch{Title: &newTitle})
 
 	ttCases := []TestCase{
@@ -1739,7 +1742,7 @@ func TestPermissionsUpdateBoardsAndBlocks(t *testing.T) {
 	clients := setupClients(th)
 	testData := setupData(t, th)
 
-	newTitle := "new title"
+	newTitle := "New Block Title"
 	bab := toJSON(t, model.PatchBoardsAndBlocks{
 		BoardIDs:     []string{testData.publicBoard.ID},
 		BoardPatches: []*model.BoardPatch{{Title: &newTitle}},
