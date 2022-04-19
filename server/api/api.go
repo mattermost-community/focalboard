@@ -3166,7 +3166,7 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("teamID", teamID)
 
 	// retrieve boards list
-	boards, err := a.app.SearchBoardsForUserAndTeam(term, userID, teamID)
+	boards, err := a.app.SearchBoardsForUser(term, userID, teamID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

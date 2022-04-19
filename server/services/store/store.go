@@ -99,7 +99,7 @@ type Store interface {
 	GetBoardMemberHistory(boardID, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error)
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
 	GetMembersForUser(userID string) ([]*model.BoardMember, error)
-	SearchBoardsForUserAndTeam(term, userID, teamID string) ([]*model.Board, error)
+	SearchBoardsForUser(term, userID, teamID string) ([]*model.Board, error)
 
 	// @withTransaction
 	CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, []*model.BoardMember, error)
