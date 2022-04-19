@@ -11,14 +11,14 @@ jobs:
     name: server
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
-          go-version: 1.16
-      - uses: actions/checkout@v2
+          go-version: 1.18.1
+      - uses: actions/checkout@v3
       - run: make templates-archive
       - name: server-lint
-        uses: golangci/golangci-lint-action@v2
+        uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.41
+          version: v1.45.2
           working-directory: server
           skip-go-installation: true
