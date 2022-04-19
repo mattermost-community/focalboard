@@ -1,0 +1,78 @@
+name: Mattermost
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  mattermost:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    with:
+      path: './focalboard'
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        repository: mattermost/mattermost-server
+        path: './mattermost-server'
+
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        repository: mattermost/mattermost-webapp
+        path: './mattermost-webapp'
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.16
+
+    - name: Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16.1.0
+
+    - name: npm ci
+      run: cd focalboard/webapp; npm ci --no-optional
+
+    - name: apt-get update
+      run: sudo apt-get update
+
+    - name: apt-get install libpng-dev
+      run: sudo apt-get install libpng-dev
+
+    - name: Build webapp
+      run: cd focalboard; make webapp
+
+    - name: npm ci plugin dependencies
+      run: cd focalboard/mattermost-plugin/webapp; npm ci --no-optional
+
+    - name: Build plugin
+      run: cd focalboard/mattermost-plugin; make dist
+      env:
+        BUILD_NUMBER: ${{ github.run_id }}
+
+    - name: Setup Mattermost-webapp paths
+      run: |
+        mkdir -p mattermost-webapp/dist
+        cd mattermost-server
+        ln -nfs ../mattermost-webapp/dist client
+
+    - name: Run Mattermost-server
+      run: cd mattermost-server; make run
+
+    - name: Deploy plugin
+      run: cd focalboard/mattermost-plugin; make deploy
+
+    - name: Rename plugin file
+      run: cd focalboard/mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz
+
+    - name: Upload plugin artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: mattermost-plugin-focalboard.tar.gz
+        path: ${{ github.workspace }}/focalboard/mattermost-plugin/dist/mattermost-plugin-focalboard.tar.gz
