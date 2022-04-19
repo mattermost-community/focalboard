@@ -10,6 +10,8 @@ jobs:
   golangci:
     name: plugin
     runs-on: ubuntu-18.04
+    env:
+      working-directory: ./mattermost-plugin/server
     steps:
       - uses: actions/setup-go@v3
         with:
@@ -19,4 +21,4 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.45.2
-          working-directory: ./mattermost-plugin/server/
+          # working-directory: mattermost-plugin/server

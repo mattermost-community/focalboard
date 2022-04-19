@@ -5,8 +5,6 @@ run:
 linters-settings:
   gofmt:
     simplify: true
-  goimports:
-    local-prefixes: github.com/mattermost/mattermost-starter-template
   golint:
     min-confidence: 0
   govet:
@@ -70,12 +68,12 @@ linters:
 
 issues:
   exclude-rules:
-    - path: server/manifest.go
+    - path: manifest.go
       linters:
         - deadcode
         - unused
         - varcheck
-    - path: server/configuration.go
+    - path: configuration.go
       linters:
         - unused
     - path: _test\.go
