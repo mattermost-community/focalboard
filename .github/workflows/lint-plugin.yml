@@ -19,5 +19,5 @@ jobs:
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.41
-          working-directory: mattermost-plugin
+          working-directory: mattermost-plugin/server
           skip-go-installation: true
