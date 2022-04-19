@@ -16,7 +16,7 @@ jobs:
           go-version: 1.18.1
       - uses: actions/checkout@v3
       - name: plugin-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v3.1
         with:
           version: v1.45.2
           working-directory: mattermost-plugin/server
