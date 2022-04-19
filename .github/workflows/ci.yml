@@ -29,8 +29,14 @@ jobs:
       with:
         go-version: 1.16
 
-    - name: Lint server
+    - name: Set up golangci
       uses: golangci/golangci-lint-action@v2
+      with:
+        with:
+          version: v1.45.2
+          skip-go-installation: true
+
+    - name: Lint server
       run: make server-lint
 
     - name: "Test server: ${{matrix['db']}}"
