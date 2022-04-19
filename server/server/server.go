@@ -357,6 +357,10 @@ func (s *Server) App() *app.App {
 	return s.app
 }
 
+func (s *Server) Store() store.Store {
+	return s.store
+}
+
 func (s *Server) UpdateAppConfig() {
 	s.app.SetConfig(s.config)
 }
