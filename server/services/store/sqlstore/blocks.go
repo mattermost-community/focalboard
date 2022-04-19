@@ -747,18 +747,52 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 	return nil
 }
 
+type RetentionTableDeletionInfo struct {
+	Table         string
+	PrimaryKeys   []string
+	BoardIdColumn string
+}
+
 func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, batchSize int64) (int64, error) {
 	s.logger.Info("Start Boards Data Retention",
 		mlog.String("Global Retention Date", time.Unix(globalRetentionDate/1000, 0).String()),
 		mlog.Int64("Raw Date", globalRetentionDate))
-	deleteTables := map[string]string{
-		"blocks":         "board_id",
-		"blocks_history": "board_id",
-		"boards":         "id",
-		"boards_history": "id",
-		// "board_members":         "board_id",
-		// "board_members_hsitory": "board_id",
-		"sharing": "id",
+	deleteTables := []RetentionTableDeletionInfo{
+		{
+			Table:         "blocks",
+			PrimaryKeys:   []string{"id"},
+			BoardIdColumn: "board_id",
+		},
+		{
+			Table:         "blocks_history",
+			PrimaryKeys:   []string{"id"},
+			BoardIdColumn: "board_id",
+		},
+		{
+			Table:         "boards",
+			PrimaryKeys:   []string{"id"},
+			BoardIdColumn: "id",
+		},
+		{
+			Table:         "boards_history",
+			PrimaryKeys:   []string{"id"},
+			BoardIdColumn: "id",
+		},
+		{
+			Table:         "board_members",
+			PrimaryKeys:   []string{"user_id", "board_id"},
+			BoardIdColumn: "board_id",
+		},
+		{
+			Table:         "board_members_history",
+			PrimaryKeys:   []string{"user_id", "board_id"},
+			BoardIdColumn: "board_id",
+		},
+		{
+			Table:         "sharing",
+			PrimaryKeys:   []string{"id"},
+			BoardIdColumn: "board_id",
+		},
 	}
 
 	subBuilder := s.getQueryBuilder(db).
@@ -789,8 +823,8 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 
 	totalAffected := 0
 	if len(deleteIds) > 0 {
-		for table, field := range deleteTables {
-			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds, batchSize)
+		for table := range deleteTables {
+			affected, err := s.genericRetentionPoliciesDeletion(db, table, deleteIds, batchSize)
 			if err != nil {
 				return int64(totalAffected), err
 			}
@@ -822,44 +856,59 @@ func idsFromRows(rows *sql.Rows) ([]string, error) {
 // which selects the rows to delete.
 func (s *SQLStore) genericRetentionPoliciesDeletion(
 	db sq.BaseRunner,
-	table string,
-	deleteColumn string,
+	table RetentionTableDeletionInfo,
 	deleteIds []string,
 	batchSize int64,
 ) (int64, error) {
-	whereClause := deleteColumn + ` IN ('` + strings.Join(deleteIds, `','`) + `')`
+	whereClause := table.BoardIdColumn + " IN ('" + strings.Join(deleteIds, "','") + "')"
 	deleteQuery := s.getQueryBuilder(db).
-		Delete(s.tablePrefix + table).
-		Where(whereClause).
-		Limit(uint64(batchSize))
-	if s.dbType != model.MysqlDBType {
-		selectQuery := s.getQueryBuilder(db).
-			Select("id").
-			From(s.tablePrefix + table).
-			Where(whereClause).
-			Limit(uint64(batchSize))
+		Delete(s.tablePrefix + table.Table).
+		Where(whereClause)
 
-		selectString, _, _ := selectQuery.ToSql()
+	if batchSize > 0 {
+		deleteQuery.Limit(uint64(batchSize))
+		primaryKeysStr := "(" + strings.Join(table.PrimaryKeys, ",") + ")"
+		if s.dbType != model.MysqlDBType {
+			selectQuery := s.getQueryBuilder(db).
+				Select(primaryKeysStr).
+				From(s.tablePrefix + table.Table).
+				Where(whereClause).
+				Limit(uint64(batchSize))
 
-		s.logger.Debug(selectString)
-		deleteQuery = s.getQueryBuilder(db).
-			Delete(s.tablePrefix + table).
-			Where(`id IN (` + selectString + `)`)
-		deleteString, _, _ := deleteQuery.ToSql()
-		s.logger.Debug(deleteString)
+			selectString, _, _ := selectQuery.ToSql()
+
+			s.logger.Debug(selectString)
+			deleteQuery = s.getQueryBuilder(db).
+				Delete(s.tablePrefix + table.Table).
+				Where(primaryKeysStr + " IN (" + selectString + ")")
+			deleteString, _, _ := deleteQuery.ToSql()
+			s.logger.Debug(deleteString)
+		}
 	}
+
+	// 	// MySQL does not support the LIMIT clause in a subquery with IN
+	// 	clauses := make([]string, len(r.PrimaryKeys))
+	// 	for i, key := range r.PrimaryKeys {
+	// 		clauses[i] = r.Table + "." + key + " = A." + key
+	// 	}
+	// 	joinClause := strings.Join(clauses, " AND ")
+	// 	query = `
+	// 	DELETE ` + r.Table + ` FROM ` + r.Table + ` INNER JOIN (
+	// 	` + query + `
+	// 	) AS A ON ` + joinClause
+	// }
 
 	var totalRowsAffected int64
 	var batchRowsAffected int64
 	for {
 		result, err := deleteQuery.Exec()
 		if err != nil {
-			return 0, errors.Wrap(err, "failed to delete "+table)
+			return 0, errors.Wrap(err, "failed to delete "+table.Table)
 		}
 
 		batchRowsAffected, err = result.RowsAffected()
 		if err != nil {
-			return 0, errors.Wrap(err, "failed to get rows affected for "+table)
+			return 0, errors.Wrap(err, "failed to get rows affected for "+table.Table)
 		}
 		totalRowsAffected += batchRowsAffected
 		if batchRowsAffected != batchSize {

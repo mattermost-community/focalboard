@@ -821,8 +821,19 @@ func testRunDataRetention(t *testing.T, store store.Store) {
 		BoardID:    board.ID,
 		ModifiedBy: "user-id-1",
 	}
+	validBlock3 := model.Block{
+		ID:         "id-test3",
+		BoardID:    board.ID,
+		ModifiedBy: "user-id-1",
+	}
 
-	newBlocks := []model.Block{validBlock, validBlock2}
+	validBlock4 := model.Block{
+		ID:         "id-test4",
+		BoardID:    board.ID,
+		ModifiedBy: "user-id-1",
+	}
+
+	newBlocks := []model.Block{validBlock, validBlock2, validBlock3, validBlock4}
 
 	err = store.InsertBlocks(newBlocks, "user-id-1")
 	require.NoError(t, err)
@@ -839,7 +850,7 @@ func testRunDataRetention(t *testing.T, store store.Store) {
 	})
 
 	t.Run("test all deletions", func(t *testing.T) {
-		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(time.Hour*1)), 10)
+		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(time.Hour*1)), 2)
 		require.NoError(t, err)
 		require.True(t, deletions > int64(initialCount))
 
