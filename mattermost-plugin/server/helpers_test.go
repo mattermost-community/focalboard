@@ -11,6 +11,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
 	"github.com/mattermost/focalboard/server/services/store/mockstore"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -26,13 +27,13 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 	defer ctrl.Finish()
 	mockStore := mockstore.NewMockStore(ctrl)
 
-	th.Server = newTestServer(t, mockStore)
+	th.Server = newTestServer(mockStore)
 	th.Store = mockStore
 
 	return th
 }
 
-func newTestServer(t *testing.T, mockStore *mockstore.MockStore) *server.Server {
+func newTestServer(mockStore *mockstore.MockStore) *server.Server {
 	config := &config.Configuration{
 		EnableDataRetention: false,
 		DataRetentionDays:   10,
@@ -42,6 +43,9 @@ func newTestServer(t *testing.T, mockStore *mockstore.MockStore) *server.Server 
 	}
 
 	logger, err := mlog.NewLogger()
+	if err != nil {
+		panic(err)
+	}
 	if err = logger.Configure("", config.LoggingCfgJSON, nil); err != nil {
 		panic(err)
 	}
