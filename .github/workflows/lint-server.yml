@@ -19,6 +19,6 @@ jobs:
       - name: server-lint
         uses: golangci/golangci-lint-action@v2
         with:
-          version: v1.41
+          version: v1.45.2
           working-directory: server
           skip-go-installation: true

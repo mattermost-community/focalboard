@@ -18,6 +18,6 @@ jobs:
       - name: plugin-lint
         uses: golangci/golangci-lint-action@v2
         with:
-          version: v1.41
+          version: v1.45.2
           working-directory: mattermost-plugin/server
           skip-go-installation: true
