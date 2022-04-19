@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -749,7 +748,7 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 }
 
 func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64, batchSize int64) (int64, error) {
-	mlog.Info("Start Boards Data Retention",
+	s.logger.Info("Start Boards Data Retention",
 		mlog.String("Global Retention Date", time.Unix(globalRetentionDate/1000, 0).String()),
 		mlog.Int64("Raw Date", globalRetentionDate))
 	deleteTables := map[string]string{
@@ -789,7 +788,6 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 
 	totalAffected := 0
 	if len(deleteIds) > 0 {
-		mlog.Debug("Data Retention DeleteIDs " + strings.Join(deleteIds, ", "))
 		for table, field := range deleteTables {
 			affected, err := s.genericRetentionPoliciesDeletion(db, table, field, deleteIds, batchSize)
 			if err != nil {
@@ -798,7 +796,9 @@ func (s *SQLStore) runDataRetention(db sq.BaseRunner, globalRetentionDate int64,
 			totalAffected += int(affected)
 		}
 	}
-	mlog.Info("Complete Boards Data Retention", mlog.Int("total deletion ids", len(deleteIds)), mlog.Int("TotalAffected", totalAffected))
+	s.logger.Info("Complete Boards Data Retention",
+		mlog.Int("Total deletion ids", len(deleteIds)),
+		mlog.Int("TotalAffected", totalAffected))
 	return int64(totalAffected), nil
 }
 
@@ -829,9 +829,8 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 	whereClause := deleteColumn + ` IN ('` + strings.Join(deleteIds, `','`) + `')`
 	deleteQuery := s.getQueryBuilder(db).
 		Delete(s.tablePrefix + table).
-		Where(whereClause)
-	s1, _, _ := deleteQuery.ToSql()
-	mlog.Debug(s1)
+		Where(whereClause).
+		Limit(uint64(batchSize))
 
 	var totalRowsAffected int64
 	var batchRowsAffected int64
@@ -850,8 +849,6 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 			break
 		}
 	}
-
-	mlog.Debug("Rows Affected" + strconv.FormatInt(totalRowsAffected, 10))
 	return totalRowsAffected, nil
 }
 
