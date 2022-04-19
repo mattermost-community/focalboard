@@ -1588,8 +1588,20 @@ func TestLocalPermissionsRegister(t *testing.T) {
 	clients := setupLocalClients(th)
 	testData := setupData(t, th)
 
+	team, resp := th.Client.GetTeam(model.GlobalTeamID)
+	th.CheckOK(resp)
+	require.NotNil(th.T, team)
+	require.NotNil(th.T, team.SignupToken)
+
+	postData := toJSON(t, api.RegisterRequest{
+		Username: "newuser",
+		Email:    "newuser@test.com",
+		Password: password,
+		Token:    team.SignupToken,
+	})
+
 	ttCases := []TestCase{
-		{"/register", methodPost, "", userAnon, http.StatusInternalServerError, 0},
+		{"/register", methodPost, postData, userAnon, http.StatusOK, 0},
 	}
 	runTestCases(t, ttCases, testData, clients)
 }
