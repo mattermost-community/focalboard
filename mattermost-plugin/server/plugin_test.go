@@ -23,7 +23,7 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 
 	// In the future we could report back on the status of our DB, or our cache
 	// (e.g. Redis) by performing a simple PING, and include them in the response.
-	io.WriteString(w, "Hello, world!")
+	_, _ = io.WriteString(w, "Hello, world!")
 }
 
 func TestServeHTTP(t *testing.T) {
