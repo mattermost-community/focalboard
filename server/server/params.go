@@ -21,7 +21,6 @@ type Params struct {
 	WSAdapter          ws.Adapter
 	NotifyBackends     []notify.Backend
 	PermissionsService permissions.PermissionsService
-	SkipTemplateInit   bool
 }
 
 func (p Params) CheckValid() error {

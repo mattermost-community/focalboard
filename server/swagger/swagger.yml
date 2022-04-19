@@ -1779,7 +1779,14 @@ paths:
         "200":
           description: success
           schema:
-            $ref: '#/definitions/OnboardingResponse'
+            properties:
+              boardID:
+                description: Board ID
+                type: string
+              teamID:
+                description: Team ID
+                type: string
+            type: object
         default:
           description: internal error
           schema:

@@ -88,11 +88,6 @@ func (p *Plugin) OnConfigurationChange() error { //nolint
 
 	// handle feature flags
 	p.server.Config().FeatureFlags = parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
-
-	// handle Data Retention settings
-	p.server.Config().EnableDataRetention = *mmconfig.DataRetentionSettings.EnableBoardsDeletion
-	p.server.Config().DataRetentionDays = *mmconfig.DataRetentionSettings.BoardsRetentionDays
-
 	p.server.UpdateAppConfig()
 	p.wsPluginAdapter.BroadcastConfigChange(*p.server.App().GetClientConfig())
 	return nil
