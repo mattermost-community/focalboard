@@ -1,8 +1,10 @@
 package app
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"path/filepath"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -10,6 +12,10 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+)
+
+const (
+	MaxLastViewedBoardsToRemember = 10
 )
 
 var ErrBlocksFromMultipleBoards = errors.New("the block set contain blocks from multiple boards")
@@ -422,6 +428,81 @@ func (a *App) GetBlockCountsByType() (map[string]int64, error) {
 
 func (a *App) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 	return a.store.GetBlocksForBoard(boardID)
+}
+
+func (a *App) SetLastVisitedUserBoards(userID, boardID string) {
+	lastVisitedBoards, err := a.getUserLastVisitedBoards(userID)
+	if err != nil {
+		return
+	}
+
+	delete(lastVisitedBoards, boardID)
+	lastVisitedBoards[boardID] = utils.GetMillis()
+
+	if len(lastVisitedBoards) > MaxLastViewedBoardsToRemember {
+		a.truncateUserLastVisitedBoards(&lastVisitedBoards)
+	}
+
+	_ = a.saveUserLastVisitedBoards(userID, lastVisitedBoards)
+}
+
+func (a *App) getUserLastVisitedBoards(userID string) (map[string]int64, error) {
+	user, err := a.store.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	props := user.Props
+	rawLastVisitedBoards := props["lastVisitedBoards"]
+	var lastVisitedBoards map[string]int64
+
+	if rawLastVisitedBoards == nil {
+		lastVisitedBoards = map[string]int64{}
+	} else {
+		if err := json.Unmarshal([]byte(rawLastVisitedBoards.(string)), &lastVisitedBoards); err != nil {
+			a.logger.Error("error occurred unmarshalling user's last visited boards data", mlog.Err(err))
+			return nil, err
+		}
+	}
+
+	return lastVisitedBoards, nil
+}
+
+func (a *App) truncateUserLastVisitedBoards(lastVisitedBoards *map[string]int64) {
+	// Remove the one smallest element.
+	// Since we truncate as soon as we have more than MAX_LAST_VIEWED_BOARDS_TO_REMEMBER entries,
+	// removing the smallest entry is fine.
+	var keyToRemove string
+	var smallestValue int64 = math.MaxInt64
+	for key, value := range *lastVisitedBoards {
+		if value < smallestValue {
+			smallestValue = value
+			keyToRemove = key
+		}
+	}
+
+	delete(*lastVisitedBoards, keyToRemove)
+}
+
+func (a *App) saveUserLastVisitedBoards(userID string, lastVisitedBoards map[string]int64) error {
+	bytes, err := json.Marshal(lastVisitedBoards)
+	if err != nil {
+		a.logger.Error("error occurred unmarshalling user's last visited boards data", mlog.String("data", string(bytes)), mlog.Err(err))
+		return err
+	}
+
+	patch := model.UserPropPatch{
+		UpdatedFields: map[string]string{
+			"lastVisitedBoards": string(bytes),
+		},
+	}
+
+	if err := a.store.PatchUserProps(userID, patch); err != nil {
+		a.logger.Error("error updating lastVisitedBoards", mlog.String("userID", userID), mlog.Err(err))
+		return err
+	}
+
+	return nil
 }
 
 func (a *App) notifyBlockChanged(action notify.Action, block *model.Block, oldBlock *model.Block, modifiedByID string) {

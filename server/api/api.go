@@ -361,6 +361,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
 		}
+		defer a.app.SetLastVisitedUserBoards(userID, boardID)
 	case blockID != "":
 		block, err = a.app.GetBlockByID(blockID)
 		if err != nil {
