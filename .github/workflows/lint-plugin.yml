@@ -20,4 +20,3 @@ jobs:
         with:
           version: v1.45.2
           working-directory: mattermost-plugin
-          skip-go-installation: true
