@@ -406,7 +406,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -427,7 +427,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -448,7 +448,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -469,7 +469,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -490,7 +490,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -511,7 +511,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -532,7 +532,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -553,7 +553,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -574,7 +574,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -595,7 +595,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -616,7 +616,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -637,7 +637,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -658,7 +658,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -679,7 +679,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <div
                       class="noicon"
@@ -708,7 +708,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
