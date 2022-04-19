@@ -844,7 +844,7 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 		s.logger.Debug(selectString)
 		deleteQuery = s.getQueryBuilder(db).
 			Delete(s.tablePrefix + table).
-			Where(`id IN ('` + selectString + `')`)
+			Where(`id IN (` + selectString + `)`)
 		deleteString, _, _ := deleteQuery.ToSql()
 		s.logger.Debug(deleteString)
 	}
