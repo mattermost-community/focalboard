@@ -826,11 +826,24 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 	deleteIds []string,
 	batchSize int64,
 ) (int64, error) {
+
 	whereClause := deleteColumn + ` IN ('` + strings.Join(deleteIds, `','`) + `')`
 	deleteQuery := s.getQueryBuilder(db).
 		Delete(s.tablePrefix + table).
 		Where(whereClause).
 		Limit(uint64(batchSize))
+	if s.dbType != model.MysqlDBType {
+		selectQuery := s.getQueryBuilder(db).
+			Select("id").
+			From(s.tablePrefix + table).
+			Where(whereClause).
+			Limit(uint64(batchSize))
+
+		selectString, _, _ := selectQuery.ToSql()
+		deleteQuery = s.getQueryBuilder(db).
+			Delete(s.tablePrefix + table).
+			Where(`id IN ('` + selectString + `')`)
+	}
 
 	var totalRowsAffected int64
 	var batchRowsAffected int64
