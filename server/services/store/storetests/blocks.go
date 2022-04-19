@@ -69,11 +69,6 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testDuplicateBlock(t, store)
 	})
-	t.Run("RunDataRetention", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testRunDataRetention(t, store)
-	})
 	t.Run("GetBlockMetadata", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()

@@ -13,22 +13,29 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	boardID    = "board-id-test"
+	categoryID = "category-id-test"
+)
+
 func StoreTestDataRetention(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	t.Run("RunDataRetention", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testRunDataRetention(t, store)
+		testRunDataRetention(t, store, 0)
+		testRunDataRetention(t, store, 2)
+		testRunDataRetention(t, store, 10)
 	})
 }
 
-func testRunDataRetention(t *testing.T, store store.Store) {
+func LoadData(t *testing.T, store store.Store) {
 	validBoard := model.Board{
-		ID:         "board-id-test",
+		ID:         boardID,
 		IsTemplate: false,
 		ModifiedBy: testUserID,
 		TeamID:     testTeamID,
 	}
-	board, err := store.InsertBoard(&validBoard, "user-id-1")
+	board, err := store.InsertBoard(&validBoard, testUserID)
 	require.NoError(t, err)
 
 	validBlock := model.Block{
@@ -56,28 +63,70 @@ func testRunDataRetention(t *testing.T, store store.Store) {
 
 	newBlocks := []model.Block{validBlock, validBlock2, validBlock3, validBlock4}
 
-	err = store.InsertBlocks(newBlocks, "user-id-1")
+	err = store.InsertBlocks(newBlocks, testUserID)
 	require.NoError(t, err)
 
-	blocks, err := store.GetBlocksWithBoardID(board.ID)
+	member := &model.BoardMember{
+		UserID:      testUserID,
+		BoardID:     boardID,
+		SchemeAdmin: true,
+	}
+	_, err = store.SaveMember(member)
 	require.NoError(t, err)
-	require.Len(t, blocks, len(newBlocks))
+
+	sharing := model.Sharing{
+		ID:      boardID,
+		Enabled: true,
+		Token:   "testToken",
+	}
+	err = store.UpsertSharing(sharing)
+	require.NoError(t, err)
+
+	category := model.Category{
+		ID:     categoryID,
+		Name:   "TestCategory",
+		UserID: testUserID,
+		TeamID: testTeamID,
+	}
+	err = store.CreateCategory(category)
+	err = store.AddUpdateCategoryBoard(testUserID, categoryID, boardID)
+	require.NoError(t, err)
+}
+
+func testRunDataRetention(t *testing.T, store store.Store, batchSize int) {
+	LoadData(t, store)
+
+	blocks, err := store.GetBlocksWithBoardID(boardID)
+	require.NoError(t, err)
+	require.Len(t, blocks, 4)
 	initialCount := len(blocks)
 
 	t.Run("test no deletions", func(t *testing.T) {
-		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(-time.Hour*1)), 10)
+		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(-time.Hour*1)), int64(batchSize))
 		require.NoError(t, err)
 		require.Equal(t, int64(0), deletions)
 	})
 
 	t.Run("test all deletions", func(t *testing.T) {
-		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(time.Hour*1)), 2)
+		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(time.Hour*1)), int64(batchSize))
 		require.NoError(t, err)
 		require.True(t, deletions > int64(initialCount))
 
 		// expect all blocks to be deleted.
-		blocks, errBlocks := store.GetBlocksWithBoardID(board.ID)
+		blocks, errBlocks := store.GetBlocksWithBoardID(boardID)
 		require.NoError(t, errBlocks)
 		require.Equal(t, 0, len(blocks))
+
+		member, err := store.GetMemberForBoard(boardID, testUserID)
+		require.NoError(t, err)
+		require.Nil(t, member)
+
+		sharing, err := store.GetSharing(boardID)
+		require.NoError(t, err)
+		require.Nil(t, sharing)
+
+		category, err := store.GetUserCategoryBoards(boardID, testTeamID)
+		require.NoError(t, err)
+		require.Nil(t, category)
 	})
 }

@@ -131,22 +131,22 @@ func idsFromRows(rows *sql.Rows) ([]string, error) {
 // which selects the rows to delete.
 func (s *SQLStore) genericRetentionPoliciesDeletion(
 	db sq.BaseRunner,
-	table RetentionTableDeletionInfo,
+	info RetentionTableDeletionInfo,
 	deleteIds []string,
 	batchSize int64,
 ) (int64, error) {
-	whereClause := table.BoardIDColumn + " IN ('" + strings.Join(deleteIds, "','") + "')"
+	whereClause := info.BoardIDColumn + " IN ('" + strings.Join(deleteIds, "','") + "')"
 	deleteQuery := s.getQueryBuilder(db).
-		Delete(s.tablePrefix + table.Table).
+		Delete(s.tablePrefix + info.Table).
 		Where(whereClause)
 
 	if batchSize > 0 {
 		deleteQuery.Limit(uint64(batchSize))
-		primaryKeysStr := "(" + strings.Join(table.PrimaryKeys, ",") + ")"
+		primaryKeysStr := "(" + strings.Join(info.PrimaryKeys, ",") + ")"
 		if s.dbType != model.MysqlDBType {
 			selectQuery := s.getQueryBuilder(db).
 				Select(primaryKeysStr).
-				From(s.tablePrefix + table.Table).
+				From(s.tablePrefix + info.Table).
 				Where(whereClause).
 				Limit(uint64(batchSize))
 
@@ -154,36 +154,24 @@ func (s *SQLStore) genericRetentionPoliciesDeletion(
 
 			s.logger.Debug(selectString)
 			deleteQuery = s.getQueryBuilder(db).
-				Delete(s.tablePrefix + table.Table).
+				Delete(s.tablePrefix + info.Table).
 				Where(primaryKeysStr + " IN (" + selectString + ")")
 			deleteString, _, _ := deleteQuery.ToSql()
 			s.logger.Debug(deleteString)
 		}
 	}
 
-	// 	// MySQL does not support the LIMIT clause in a subquery with IN
-	// 	clauses := make([]string, len(r.PrimaryKeys))
-	// 	for i, key := range r.PrimaryKeys {
-	// 		clauses[i] = r.Table + "." + key + " = A." + key
-	// 	}
-	// 	joinClause := strings.Join(clauses, " AND ")
-	// 	query = `
-	// 	DELETE ` + r.Table + ` FROM ` + r.Table + ` INNER JOIN (
-	// 	` + query + `
-	// 	) AS A ON ` + joinClause
-	// }
-
 	var totalRowsAffected int64
 	var batchRowsAffected int64
 	for {
 		result, err := deleteQuery.Exec()
 		if err != nil {
-			return 0, errors.Wrap(err, "failed to delete "+table.Table)
+			return 0, errors.Wrap(err, "failed to delete "+info.Table)
 		}
 
 		batchRowsAffected, err = result.RowsAffected()
 		if err != nil {
-			return 0, errors.Wrap(err, "failed to get rows affected for "+table.Table)
+			return 0, errors.Wrap(err, "failed to get rows affected for "+info.Table)
 		}
 		totalRowsAffected += batchRowsAffected
 		if batchRowsAffected != batchSize {
