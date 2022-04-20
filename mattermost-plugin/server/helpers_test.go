@@ -61,7 +61,6 @@ func newTestServer(mockStore *mockstore.MockStore) *server.Server {
 		DBStore:            mockStore,
 		Logger:             logger,
 		PermissionsService: permissionsService,
-		SkipTemplateInit:   true,
 	})
 	if err != nil {
 		panic(err)
