@@ -56,6 +56,7 @@ jobs:
         make config-reset
         sed -i -e 's/"EnableLocalMode": false/"EnableLocalMode": true/g' config/config.json
         sed -i -e 's/"EnableUploads": false/"EnableUploads": true/g' config/config.json
+        sed -i -e 's/"MaxFileSize": .*/"MaxFileSize": 904857600,/g' config/config.json
 
     - name: Run Mattermost-server
       run: cd mattermost-server; make run
