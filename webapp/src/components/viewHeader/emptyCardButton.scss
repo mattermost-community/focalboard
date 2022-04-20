@@ -1,4 +1,4 @@
-@-moz-document url-prefix() {
+@-moz-document url-prefix('') {
     .MenuOption .TextOption .menu-option .bold-menu-text {
         display: flex;
         flex-direction: row;
@@ -19,6 +19,4 @@
             height: 18px;
         }
     }
-
-    
 }
