@@ -172,7 +172,7 @@ func testDeleteSubscription(t *testing.T, s store.Store) {
 	t.Run("delete non-existent subscription", func(t *testing.T) {
 		err := s.DeleteSubscription("bogus", "bogus")
 		require.Error(t, err, "delete non-existent subscription should error")
-		require.True(t, model.IsErrNotFound(err))
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 	})
 }
 
@@ -241,7 +241,7 @@ func testGetSubscription(t *testing.T, s store.Store) {
 	t.Run("get non-existent subscription", func(t *testing.T) {
 		sub, err := s.GetSubscription("bogus", "bogus")
 		require.Error(t, err, "get non-existent subscription should error")
-		require.True(t, model.IsErrNotFound(err))
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, sub, "get subscription should return nil")
 	})
 }
