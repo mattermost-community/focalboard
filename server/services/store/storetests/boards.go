@@ -1,7 +1,6 @@
 package storetests
 
 import (
-	"database/sql"
 	"testing"
 	"time"
 
@@ -106,7 +105,7 @@ func testGetBoard(t *testing.T, store store.Store) {
 
 	t.Run("nonexisting board", func(t *testing.T) {
 		rBoard, err := store.GetBoard("nonexistent-id")
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, rBoard)
 	})
 }
@@ -237,7 +236,7 @@ func testInsertBoard(t *testing.T, store store.Store) {
 		require.Error(t, err)
 
 		rBoard, err := store.GetBoard(board.ID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, rBoard)
 	})
 
@@ -479,7 +478,7 @@ func testDeleteBoard(t *testing.T, store store.Store) {
 		require.NoError(t, store.DeleteBoard(boardID, userID))
 
 		r2Board, err := store.GetBoard(boardID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, r2Board)
 	})
 }
@@ -569,7 +568,7 @@ func testGetMemberForBoard(t *testing.T, store store.Store) {
 
 	t.Run("should return a no rows error for nonexisting membership", func(t *testing.T) {
 		bm, err := store.GetMemberForBoard(boardID, userID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, bm)
 	})
 
@@ -674,7 +673,7 @@ func testDeleteMember(t *testing.T, store store.Store) {
 		require.NoError(t, store.DeleteMember(boardID, userID))
 
 		rbm, err := store.GetMemberForBoard(boardID, userID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, rbm)
 
 		memberHistory, err = store.GetBoardMemberHistory(boardID, userID, 0)
