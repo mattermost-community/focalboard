@@ -87,7 +87,15 @@ jobs:
       run: cd focalboard/mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz
 
     - name: Upload plugin artifact
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: mattermost-plugin-focalboard.tar.gz
         path: ${{ github.workspace }}/focalboard/mattermost-plugin/dist/mattermost-plugin-focalboard.tar.gz
+
+    - name: Upload Cypress output
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-output
+        path: |
+          ${{ github.workspace }}/focalboard/webapp/cypress/logs/
+          ${{ github.workspace }}/focalboard/webapp/cypress/screenshots/
