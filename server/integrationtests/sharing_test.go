@@ -1,7 +1,6 @@
 package integrationtests
 
 import (
-	"net/http"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -43,8 +42,10 @@ func TestSharing(t *testing.T) {
 		require.Nil(t, s)
 
 		sharing, resp := th.Client.GetSharing(boardID)
-		th.CheckNotFound(resp)
-		require.Nil(t, sharing)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, sharing)
+		require.False(t, sharing.Enabled)
+		require.Empty(t, sharing.ID)
 	})
 
 	t.Run("POST sharing, config = false", func(t *testing.T) {
@@ -62,10 +63,12 @@ func TestSharing(t *testing.T) {
 
 		t.Run("GET sharing", func(t *testing.T) {
 			sharing, resp := th.Client.GetSharing(boardID)
-			// Expect not found error
-			require.Error(t, resp.Error)
-			require.Equal(t, resp.StatusCode, http.StatusNotFound)
-			require.Nil(t, sharing)
+			// Expect empty sharing object
+			require.NoError(t, resp.Error)
+			require.NotNil(t, sharing)
+			require.False(t, sharing.Enabled)
+			require.Empty(t, sharing.ID)
+			require.Empty(t, sharing.Token)
 		})
 	})
 

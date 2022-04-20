@@ -1,9 +1,6 @@
 package sqlstore
 
 import (
-	"database/sql"
-	"errors"
-
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
 )
@@ -17,7 +14,7 @@ func (s *SQLStore) getSystemSetting(db sq.BaseRunner, key string) (string, error
 
 	var result string
 	err := scanner.Scan(&result)
-	if err != nil && !errors.Is(sql.ErrNoRows, err) {
+	if err != nil && !model.IsErrNotFound(err) {
 		return "", err
 	}
 

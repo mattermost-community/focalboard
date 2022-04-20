@@ -141,17 +141,20 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	// Get Files API
 	apiv2.HandleFunc("/files/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
 
-	// Subscriptions
+	// Subscription APIs
 	apiv2.HandleFunc("/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
 	apiv2.HandleFunc("/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
 	apiv2.HandleFunc("/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
 
-	// onboarding tour endpoints
+	// Onboarding tour endpoints APIs
 	apiv2.HandleFunc("/teams/{teamID}/onboard", a.sessionRequired(a.handleOnboard)).Methods(http.MethodPost)
 
-	// archives
+	// Archive APIs
 	apiv2.HandleFunc("/boards/{boardID}/archive/export", a.sessionRequired(a.handleArchiveExportBoard)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
+
+	// System APIs
+	r.HandleFunc("/hello", a.handleHello).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -1545,7 +1548,7 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if sharing == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		jsonStringResponse(w, http.StatusOK, "{}")
 		return
 	}
 
@@ -1638,7 +1641,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !a.app.GetClientConfig().EnablePublicSharedBoards {
-		a.logger.Info(
+		a.logger.Warn(
 			"Attempt to turn on sharing for board via API failed, sharing off in configuration.",
 			mlog.String("boardID", sharing.ID),
 			mlog.String("userID", userID))
@@ -2566,7 +2569,14 @@ func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
 	//   '200':
 	//     description: success
 	//     schema:
-	//         "$ref": "#/definitions/OnboardingResponse"
+	//       type: object
+	//       properties:
+	//         teamID:
+	//           type: string
+	//           description: Team ID
+	//         boardID:
+	//           type: string
+	//           description: Board ID
 	//   default:
 	//     description: internal error
 	//     schema:
@@ -2898,6 +2908,11 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if toTeam != "" && !a.permissions.HasPermissionToTeam(userID, toTeam, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
 	if board.IsTemplate && board.Type == model.BoardTypeOpen {
 		if board.TeamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
@@ -3166,7 +3181,7 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("teamID", teamID)
 
 	// retrieve boards list
-	boards, err := a.app.SearchBoardsForUserAndTeam(term, userID, teamID)
+	boards, err := a.app.SearchBoardsForUser(term, userID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -4099,10 +4114,24 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 	auditRec.Success()
 }
 
+func (a *API) handleHello(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /hello hello
+	//
+	// Responds with `Hello` if the web service is running.
+	//
+	// ---
+	// produces:
+	// - text/plain
+	// responses:
+	//   '200':
+	//     description: success
+	stringResponse(w, "Hello")
+}
+
 // Response helpers
 
 func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message string, sourceError error) {
-	if code == http.StatusUnauthorized {
+	if code == http.StatusUnauthorized || code == http.StatusForbidden {
 		a.logger.Debug("API DEBUG",
 			mlog.Int("code", code),
 			mlog.Err(sourceError),
@@ -4125,6 +4154,11 @@ func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message
 	}
 	w.WriteHeader(code)
 	_, _ = w.Write(data)
+}
+
+func stringResponse(w http.ResponseWriter, message string) {
+	w.Header().Set("Content-Type", "text/plain")
+	_, _ = fmt.Fprint(w, message)
 }
 
 func jsonStringResponse(w http.ResponseWriter, code int, message string) { //nolint:unparam

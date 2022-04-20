@@ -3,35 +3,38 @@ package main
 import (
 	"testing"
 
+	"github.com/mattermost/focalboard/server/integrationtests"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
-	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/ws"
+
 	serverModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 type TestHelper struct {
 	Server *server.Server
 }
 
-func SetupTestHelper() *TestHelper {
+func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	th := &TestHelper{}
 	th.Server = newTestServer()
-	return th
+
+	err := th.Server.Start()
+	require.NoError(t, err, "Server start should not error")
+
+	tearDown := func() {
+		err := th.Server.Shutdown()
+		require.NoError(t, err, "Server shutdown should not error")
+	}
+	return th, tearDown
 }
 
 func newTestServer() *server.Server {
-	srv, err := server.New(server.Params{
-		Cfg: &config.Configuration{},
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	return srv
+	return integrationtests.NewTestServerPluginMode()
 }
 
 func TestConfigurationNullConfiguration(t *testing.T) {
@@ -60,9 +63,11 @@ func TestOnConfigurationChange(t *testing.T) {
 	}
 
 	t.Run("Test Load Plugin Success", func(t *testing.T) {
-		th := SetupTestHelper()
+		th, tearDown := SetupTestHelper(t)
+		defer tearDown()
 		api := &plugintest.API{}
 		api.On("GetUnsanitizedConfig").Return(baseConfig)
+		api.On("GetConfig").Return(baseConfig)
 
 		p := Plugin{}
 		p.SetAPI(api)

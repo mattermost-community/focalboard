@@ -410,6 +410,14 @@ func (c *Client) GetMe() (*model.User, *Response) {
 	return me, BuildResponse(r)
 }
 
+func (c *Client) GetUserID() string {
+	me, _ := c.GetMe()
+	if me == nil {
+		return ""
+	}
+	return me.ID
+}
+
 func (c *Client) GetUserRoute(id string) string {
 	return fmt.Sprintf("/users/%s", id)
 }

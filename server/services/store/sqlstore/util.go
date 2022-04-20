@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -21,7 +20,7 @@ func (s *SQLStore) CloseRows(rows *sql.Rows) {
 }
 
 func (s *SQLStore) IsErrNotFound(err error) bool {
-	return store.IsErrNotFound(err)
+	return model.IsErrNotFound(err)
 }
 
 func PrepareNewTestDatabase() (dbType string, connectionString string, err error) {

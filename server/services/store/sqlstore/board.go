@@ -3,7 +3,6 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -292,7 +291,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	}
 
 	existingBoard, err := s.getBoard(db, board.ID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil && !model.IsErrNotFound(err) {
 		return nil, fmt.Errorf("insertBoard error occurred while fetching existing board %s: %w", board.ID, err)
 	}
 
@@ -466,7 +465,7 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 	}
 
 	oldMember, err := s.getMemberForBoard(db, bm.BoardID, bm.UserID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil && !model.IsErrNotFound(err) {
 		return nil, err
 	}
 
@@ -597,17 +596,16 @@ func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*mode
 	return s.boardMembersFromRows(rows)
 }
 
-// searchBoardsForUserAndTeam returns all boards that match with the
+// searchBoardsForUser returns all boards that match with the
 // term that are either private and which the user is a member of, or
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
-func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, teamID string) ([]*model.Board, error) {
+func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term, userID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
 		Distinct().
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
-		Where(sq.Eq{"b.team_id": teamID}).
 		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
@@ -635,7 +633,7 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`searchBoardsForUserAndTeam ERROR`, mlog.Err(err))
+		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)

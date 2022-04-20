@@ -4,9 +4,6 @@
 package mmpermissions
 
 import (
-	"database/sql"
-	"errors"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/permissions"
 
@@ -43,7 +40,7 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 	}
 
 	board, err := s.store.GetBoard(boardID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		var boards []*model.Board
 		boards, err = s.store.GetBoardHistory(boardID, model.QueryBoardHistoryOptions{Limit: 1, Descending: true})
 		if err != nil {
@@ -69,7 +66,7 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 	}
 
 	member, err := s.store.GetMemberForBoard(boardID, userID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return false
 	}
 	if err != nil {

@@ -165,6 +165,28 @@ func TestCreateBoard(t *testing.T) {
 			require.Equal(t, board.ID, members[0].BoardID)
 			require.True(t, members[0].SchemeAdmin)
 		})
+
+		t.Run("creator should be able to access the public board and its blocks", func(t *testing.T) {
+			rbBoard, resp := th.Client.GetBoard(board.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, rbBoard)
+			require.Equal(t, board, rbBoard)
+
+			rBlocks, resp := th.Client.GetBlocksForBoard(board.ID)
+			th.CheckOK(resp)
+			require.NotNil(t, rBlocks)
+		})
+
+		t.Run("A non-member user should be able to access the public board but not its blocks", func(t *testing.T) {
+			rbBoard, resp := th.Client2.GetBoard(board.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, rbBoard)
+			require.Equal(t, board, rbBoard)
+
+			rBlocks, resp := th.Client2.GetBlocksForBoard(board.ID)
+			th.CheckForbidden(resp)
+			require.Nil(t, rBlocks)
+		})
 	})
 
 	t.Run("create private board", func(t *testing.T) {
@@ -173,7 +195,7 @@ func TestCreateBoard(t *testing.T) {
 
 		me := th.GetUser1()
 
-		title := "board title"
+		title := "private board title"
 		teamID := testTeamID
 		newBoard := &model.Board{
 			Title:  title,
@@ -198,13 +220,34 @@ func TestCreateBoard(t *testing.T) {
 			require.Equal(t, board.ID, members[0].BoardID)
 			require.True(t, members[0].SchemeAdmin)
 		})
+
+		t.Run("creator should be able to access the private board and its blocks", func(t *testing.T) {
+			rbBoard, resp := th.Client.GetBoard(board.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, rbBoard)
+			require.Equal(t, board, rbBoard)
+
+			rBlocks, resp := th.Client.GetBlocksForBoard(board.ID)
+			th.CheckOK(resp)
+			require.NotNil(t, rBlocks)
+		})
+
+		t.Run("unauthorized user should not be able to access the private board or its blocks", func(t *testing.T) {
+			rbBoard, resp := th.Client2.GetBoard(board.ID, "")
+			th.CheckForbidden(resp)
+			require.Nil(t, rbBoard)
+
+			rBlocks, resp := th.Client2.GetBlocksForBoard(board.ID)
+			th.CheckForbidden(resp)
+			require.Nil(t, rBlocks)
+		})
 	})
 
 	t.Run("create invalid board", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
 
-		title := "board title"
+		title := "invalid board title"
 		teamID := testTeamID
 		user1 := th.GetUser1()
 
@@ -252,6 +295,120 @@ func TestCreateBoard(t *testing.T) {
 			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID)
 			require.NoError(t, err)
 			require.Empty(t, boards)
+		})
+	})
+}
+
+func TestCreateBoardTemplate(t *testing.T) {
+	t.Run("create public board template", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "board template 1"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:      title,
+			Type:       model.BoardTypeOpen,
+			TeamID:     teamID,
+			IsTemplate: true,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypeOpen, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+
+		t.Run("creating a board template should make the creator an admin", func(t *testing.T) {
+			members, err := th.Server.App().GetMembersForBoard(board.ID)
+			require.NoError(t, err)
+			require.Len(t, members, 1)
+			require.Equal(t, me.ID, members[0].UserID)
+			require.Equal(t, board.ID, members[0].BoardID)
+			require.True(t, members[0].SchemeAdmin)
+		})
+
+		t.Run("creator should be able to access the public board template and its blocks", func(t *testing.T) {
+			rbBoard, resp := th.Client.GetBoard(board.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, rbBoard)
+			require.Equal(t, board, rbBoard)
+
+			rBlocks, resp := th.Client.GetBlocksForBoard(board.ID)
+			th.CheckOK(resp)
+			require.NotNil(t, rBlocks)
+		})
+
+		t.Run("another user should be able to access the public board template and its blocks", func(t *testing.T) {
+			rbBoard, resp := th.Client2.GetBoard(board.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, rbBoard)
+			require.Equal(t, board, rbBoard)
+
+			rBlocks, resp := th.Client2.GetBlocksForBoard(board.ID)
+			th.CheckOK(resp)
+			require.NotNil(t, rBlocks)
+		})
+	})
+
+	t.Run("create private board template", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "private board template title"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:      title,
+			Type:       model.BoardTypePrivate,
+			TeamID:     teamID,
+			IsTemplate: true,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypePrivate, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+
+		t.Run("creating a board template should make the creator an admin", func(t *testing.T) {
+			members, err := th.Server.App().GetMembersForBoard(board.ID)
+			require.NoError(t, err)
+			require.Len(t, members, 1)
+			require.Equal(t, me.ID, members[0].UserID)
+			require.Equal(t, board.ID, members[0].BoardID)
+			require.True(t, members[0].SchemeAdmin)
+		})
+
+		t.Run("creator should be able to access the private board template and its blocks", func(t *testing.T) {
+			rbBoard, resp := th.Client.GetBoard(board.ID, "")
+			th.CheckOK(resp)
+			require.NotNil(t, rbBoard)
+			require.Equal(t, board, rbBoard)
+
+			rBlocks, resp := th.Client.GetBlocksForBoard(board.ID)
+			th.CheckOK(resp)
+			require.NotNil(t, rBlocks)
+		})
+
+		t.Run("unauthorized user should not be able to access the private board template or its blocks", func(t *testing.T) {
+			rbBoard, resp := th.Client2.GetBoard(board.ID, "")
+			th.CheckForbidden(resp)
+			require.Nil(t, rbBoard)
+
+			rBlocks, resp := th.Client2.GetBlocksForBoard(board.ID)
+			th.CheckForbidden(resp)
+			require.Nil(t, rBlocks)
 		})
 	})
 }
@@ -386,25 +543,25 @@ func TestSearchBoards(t *testing.T) {
 				Name:        "should return all boards where user1 is member or that are public",
 				Client:      th.Client,
 				Term:        "board",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID, board5.ID},
 			},
 			{
 				Name:        "matching a full word",
 				Client:      th.Client,
 				Term:        "admin",
-				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID, board5.ID},
 			},
 			{
 				Name:        "matching part of the word",
 				Client:      th.Client,
 				Term:        "ubli",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, board5.ID},
 			},
 			{
 				Name:        "case insensitive",
 				Client:      th.Client,
 				Term:        "UBLI",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, board5.ID},
 			},
 			{
 				Name:        "user2 can only see the public boards, as he's not a member of any",
@@ -1709,6 +1866,75 @@ func TestGetTemplates(t *testing.T) {
 			require.Equal(t, len(rBoardsAndBlock.Blocks), len(rBlocks2))
 		}
 		t.Log("\n\n")
+	})
+}
+
+func TestDuplicateBoard(t *testing.T) {
+	t.Run("create and duplicate public board", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "Public board"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:  title,
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypeOpen, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+
+		newBlocks := []model.Block{
+			{
+				ID:       utils.NewID(utils.IDTypeBlock),
+				BoardID:  board.ID,
+				CreateAt: 1,
+				UpdateAt: 1,
+				Title:    "View 1",
+				Type:     model.TypeView,
+			},
+		}
+
+		newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks)
+		require.NoError(t, resp.Error)
+		require.Len(t, newBlocks, 1)
+
+		newUserMember := &model.BoardMember{
+			UserID:       th.GetUser2().ID,
+			BoardID:      board.ID,
+			SchemeEditor: true,
+		}
+		th.Client.AddMemberToBoard(newUserMember)
+
+		members, err := th.Server.App().GetMembersForBoard(board.ID)
+		require.NoError(t, err)
+		require.Len(t, members, 2)
+
+		// Duplicate the board
+		rBoardsAndBlock, resp := th.Client.DuplicateBoard(board.ID, false, teamID)
+		th.CheckOK(resp)
+		require.NotNil(t, rBoardsAndBlock)
+		require.Equal(t, len(rBoardsAndBlock.Boards), 1)
+		require.Equal(t, len(rBoardsAndBlock.Blocks), 1)
+		duplicateBoard := rBoardsAndBlock.Boards[0]
+		require.Equal(t, duplicateBoard.Type, model.BoardTypePrivate, "Duplicated board should be private")
+
+		members, err = th.Server.App().GetMembersForBoard(duplicateBoard.ID)
+		require.NoError(t, err)
+		require.Len(t, members, 1, "Duplicated board should only have one member")
+		require.Equal(t, me.ID, members[0].UserID)
+		require.Equal(t, duplicateBoard.ID, members[0].BoardID)
+		require.True(t, members[0].SchemeAdmin)
 	})
 }
 
