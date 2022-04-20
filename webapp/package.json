@@ -20,7 +20,9 @@
 		"cypress:run:firefox": "cypress run --browser firefox",
 		"cypress:run:edge": "cypress run --browser edge",
 		"cypress:run:electron": "cypress run --browser electron",
-		"cypress:open": "cypress open"
+		"cypress:open": "cypress open",
+		"cypress-mm:open": "cypress open -C cypress-mattermost.json",
+		"cypress-mm:run": "cypress run -C cypress-mattermost.json"
 	},
 	"dependencies": {
 		"@draft-js-plugins/editor": "^4.1.2",

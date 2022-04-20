@@ -62,7 +62,11 @@ jobs:
       run: cd mattermost-server; make run
 
     - name: Create test user
-      run: cd mattermost-server; bin/mmctl --local user create --email testuser@test.com --username testuser --password TestPass1
+      run: |
+        cd mattermost-server
+        bin/mmctl --local user create --email testuser@test.com --username testuser --password TestPass1
+        bin/mmctl --local team create --name test --display_name "Test Team"
+        bin/mmctl --local team users add test testuser
 
     - name: Deploy plugin
       run: |
@@ -73,6 +77,11 @@ jobs:
         make deploy
       env:
         BUILD_NUMBER: ${{ github.run_id }}
+
+    - name: Cypress Mattermost tests
+      run: |
+        cd focalboard/webapp
+        npm run cypress-mm:run
 
     - name: Rename plugin file
       run: cd focalboard/mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz

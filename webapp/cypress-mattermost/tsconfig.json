@@ -1,0 +1,14 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "noEmit": true,
+        "types": [
+            "cypress",
+            "cypress-real-events",
+            "@testing-library/cypress"
+        ]
+    },
+    "include": [
+        "**/*.ts"
+    ]
+}

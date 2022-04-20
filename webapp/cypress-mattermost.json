@@ -1,0 +1,17 @@
+{
+    "chromeWebSecurity": false,
+    "baseUrl": "http://localhost:8065",
+    "integrationFolder": "cypress-mattermost/integration",
+    "pluginsFile": "cypress-mattermost/plugins/index.js",
+    "testFiles": [
+        "**/*.ts"
+    ],
+    "env": {
+        "username": "testuser",
+        "password": "TestPass1",
+        "email": "testuser@test.com"
+    },
+    "video": false,
+    "viewportWidth": 1600,
+    "viewportHeight": 1200
+}
