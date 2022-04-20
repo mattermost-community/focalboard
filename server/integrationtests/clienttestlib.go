@@ -171,7 +171,7 @@ func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *
 	return srv
 }
 
-func newTestServerPluginMode() *server.Server {
+func NewTestServerPluginMode() *server.Server {
 	cfg, err := getTestConfig()
 	if err != nil {
 		panic(err)
@@ -259,7 +259,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 
 func SetupTestHelperPluginMode(t *testing.T) *TestHelper {
 	th := &TestHelper{T: t}
-	th.Server = newTestServerPluginMode()
+	th.Server = NewTestServerPluginMode()
 	th.Start()
 	return th
 }
