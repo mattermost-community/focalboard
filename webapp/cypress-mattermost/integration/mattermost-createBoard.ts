@@ -71,6 +71,8 @@ describe('Create board actions', () => {
             type(username)
         cy.get('#loginPassword').type(password)
         cy.get('#loginButton').click()
+        cy.wait(1000)
+        cy.screenshot()
         return true
     }
 
