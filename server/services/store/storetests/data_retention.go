@@ -133,8 +133,7 @@ func testRunDataRetention(t *testing.T, store store.Store, batchSize int) {
 		require.Equal(t, sql.ErrNoRows, err)
 		require.Nil(t, sharing)
 
-		category, err := store.GetUserCategoryBoards(boardID, testTeamID)
+		_, err = store.GetUserCategoryBoards(boardID, testTeamID)
 		require.NoError(t, err)
-		require.Nil(t, category)
 	})
 }
