@@ -194,10 +194,13 @@ describe('Create and delete board / card', () => {
         cy.get('.ViewHeader').contains('New').click()
         cy.get('.CardDetail').should('exist')
 
-        cy.log('**Add comment**')
-        cy.get('.CommentsList').findAllByTestId('preview-element').click()
+        cy.wait(1000)
 
-        cy.get('.MarkdownEditorInput').should('exist').
+        cy.log('**Add comment**')
+        cy.get('.CommentsList').
+            findAllByTestId('preview-element').
+            click().
+            get('.CommentsList .MarkdownEditorInput').
             type('Test Text')
             
         cy.log('**Cut comment**')
