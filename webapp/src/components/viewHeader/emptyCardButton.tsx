@@ -17,6 +17,8 @@ import {useAppSelector} from '../../store/hooks'
 import {getCurrentView} from '../../store/views'
 import {getCurrentBoardId} from '../../store/boards'
 
+import './emptyCardButton.scss'
+
 type Props = {
     addCard: () => void
 }
