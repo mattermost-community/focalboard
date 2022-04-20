@@ -24,6 +24,7 @@ export const useHasPermissions = (teamId: string, boardId: string, permissions: 
 
     const adminPermissions = [Permission.ManageBoardType, Permission.DeleteBoard, Permission.ShareBoard, Permission.ManageBoardRoles]
     const editorPermissions = [Permission.ManageBoardCards, Permission.ManageBoardProperties]
+    const commenterPermissions = [Permission.CommentBoardCards]
     const viewerPermissions = [Permission.ViewBoard]
 
     for (const permission of permissions) {
@@ -31,6 +32,9 @@ export const useHasPermissions = (teamId: string, boardId: string, permissions: 
             return true
         }
         if (editorPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor)) {
+            return true
+        }
+        if (commenterPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter)) {
             return true
         }
         if (viewerPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter || member.schemeViewer)) {

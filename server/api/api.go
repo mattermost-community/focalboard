@@ -806,13 +806,6 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	boardID := mux.Vars(r)["boardID"]
 	userID := getUserID(r)
 
-	// in phase 1 we use "manage_board_cards", but we would have to
-	// check on specific actions for phase 2
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
-		return
-	}
-
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -827,12 +820,20 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	hasComments := false
+	hasContents := false
 	for _, block := range blocks {
 		// Error checking
 		if len(block.Type) < 1 {
 			message := fmt.Sprintf("missing type for block id %s", block.ID)
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
 			return
+		}
+
+		if block.Type == model.TypeComment {
+			hasComments = true
+		} else {
+			hasContents = true
 		}
 
 		if block.CreateAt < 1 {
@@ -850,6 +851,19 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		if block.BoardID != boardID {
 			message := fmt.Sprintf("invalid BoardID for block id %s", block.ID)
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
+			return
+		}
+	}
+
+	if hasContents {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+			return
+		}
+	}
+	if hasComments {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionCommentBoardCards) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to post card comments"})
 			return
 		}
 	}
@@ -1399,6 +1413,13 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
+	}
+
+	if block.Type == model.TypeComment || (patch.Type != nil && *patch.Type == model.TypeComment) {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionCommentBoardCards) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to comment cards"})
+			return
+		}
 	}
 
 	auditRec := a.makeAuditRecord(r, "patchBlock", audit.Fail)
@@ -3021,9 +3042,16 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
-		return
+	if block.Type == model.TypeComment {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionCommentBoardCards) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to comment board cards"})
+			return
+		}
+	} else {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board cards"})
+			return
+		}
 	}
 
 	auditRec := a.makeAuditRecord(r, "duplicateBlock", audit.Fail)

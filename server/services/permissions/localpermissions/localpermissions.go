@@ -53,6 +53,8 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 		return member.SchemeAdmin
 	case model.PermissionManageBoardCards, model.PermissionManageBoardProperties:
 		return member.SchemeAdmin || member.SchemeEditor
+	case model.PermissionCommentBoardCards:
+		return member.SchemeAdmin || member.SchemeEditor || member.SchemeCommenter
 	case model.PermissionViewBoard:
 		return member.SchemeAdmin || member.SchemeEditor || member.SchemeCommenter || member.SchemeViewer
 	default:

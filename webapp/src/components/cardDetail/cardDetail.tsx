@@ -57,6 +57,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
         }
     }, [card.title, title])
     const canEditBoardCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
+    const canCommentBoardCards = useHasCurrentBoardPermissions([Permission.CommentBoardCards])
 
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
@@ -149,7 +150,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     comments={comments}
                     boardId={card.boardId}
                     cardId={card.id}
-                    readonly={props.readonly || !canEditBoardCards}
+                    readonly={props.readonly || !canCommentBoardCards}
                 />
             </div>
 
