@@ -74,7 +74,7 @@ jobs:
         export MM_ADMIN_USERNAME=testuser
         export MM_ADMIN_PASSWORD=TestPass1
         cd focalboard/mattermost-plugin
-        make deploy
+        MM_SERVICESETTINGS_ENABLEDEVELOPER=1 make deploy
       env:
         BUILD_NUMBER: ${{ github.run_id }}
 
@@ -93,6 +93,7 @@ jobs:
         path: ${{ github.workspace }}/focalboard/mattermost-plugin/dist/mattermost-plugin-focalboard.tar.gz
 
     - name: Upload Cypress output
+      if: always()
       uses: actions/upload-artifact@v3
       with:
         name: cypress-output
