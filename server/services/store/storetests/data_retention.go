@@ -3,6 +3,7 @@
 package storetests
 
 import (
+	"database/sql"
 	"testing"
 	"time"
 
@@ -22,6 +23,16 @@ func StoreTestDataRetention(t *testing.T, setup func(t *testing.T) (store.Store,
 	t.Run("RunDataRetention", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
+
+		category := model.Category{
+			ID:     categoryID,
+			Name:   "TestCategory",
+			UserID: testUserID,
+			TeamID: testTeamID,
+		}
+		err := store.CreateCategory(category)
+		require.NoError(t, err)
+
 		testRunDataRetention(t, store, 0)
 		testRunDataRetention(t, store, 2)
 		testRunDataRetention(t, store, 10)
@@ -82,13 +93,6 @@ func LoadData(t *testing.T, store store.Store) {
 	err = store.UpsertSharing(sharing)
 	require.NoError(t, err)
 
-	category := model.Category{
-		ID:     categoryID,
-		Name:   "TestCategory",
-		UserID: testUserID,
-		TeamID: testTeamID,
-	}
-	err = store.CreateCategory(category)
 	err = store.AddUpdateCategoryBoard(testUserID, categoryID, boardID)
 	require.NoError(t, err)
 }
@@ -117,8 +121,10 @@ func testRunDataRetention(t *testing.T, store store.Store, batchSize int) {
 		require.NoError(t, errBlocks)
 		require.Equal(t, 0, len(blocks))
 
+		// GetMemberForBoard throws error on now rows found
 		member, err := store.GetMemberForBoard(boardID, testUserID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.Equal(t, sql.ErrNoRows, err)
 		require.Nil(t, member)
 
 		sharing, err := store.GetSharing(boardID)
