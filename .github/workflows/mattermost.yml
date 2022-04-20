@@ -1,11 +1,10 @@
-name: Mattermost
+name: Mattermost Deploy
 
 on:
   workflow_dispatch:
 
 jobs:
-
-  mattermost:
+  mattermost-deploy:
     runs-on: ubuntu-18.04
 
     steps:
