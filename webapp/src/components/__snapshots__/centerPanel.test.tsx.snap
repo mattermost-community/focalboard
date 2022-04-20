@@ -87,53 +87,6 @@ exports[`components/centerPanel return centerPanel and click on card to show car
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -643,53 +596,6 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -1118,53 +1024,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -1749,53 +1608,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -2380,53 +2192,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -3011,53 +2776,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -3642,53 +3360,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -4273,53 +3944,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -4904,53 +4528,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -5535,53 +5112,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -6166,53 +5696,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -6797,53 +6280,6 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -7106,53 +6542,6 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -8137,53 +7526,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

@@ -64,8 +64,7 @@ const MarkdownEditor = (props: Props): JSX.Element => {
 
     const element = (
         <div className={`MarkdownEditor octo-editor ${props.className || ''} ${isEditing ? 'active' : ''}`}>
-            {!isEditing && previewElement}
-            {editorElement}
+            {isEditing ? editorElement : previewElement}
         </div>
     )
 

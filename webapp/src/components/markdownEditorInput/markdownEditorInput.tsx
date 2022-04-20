@@ -36,7 +36,7 @@ type Props = {
 }
 
 const MarkdownEditorInput = (props: Props): ReactElement => {
-    const {onChange, onFocus, onBlur, initialText, id, isEditing} = props
+    const {onChange, onFocus, onBlur, initialText, id} = props
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const mentions: MentionData[] = useMemo(() => boardUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`, is_bot: user.is_bot})), [boardUsers])
     const ref = useRef<Editor>(null)
@@ -142,10 +142,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         setSuggestions(defaultSuggestionsFilter(value, mentions))
     }, [mentions])
 
-    let className = 'MarkdownEditorInput'
-    if (!isEditing) {
-        className += ' MarkdownEditorInput--IsNotEditing'
-    }
+    const className = 'MarkdownEditorInput'
 
     return (
         <div
