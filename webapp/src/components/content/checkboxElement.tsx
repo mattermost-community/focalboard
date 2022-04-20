@@ -86,6 +86,7 @@ const CheckboxElement = (props: Props) => {
                 }}
                 readonly={readonly}
                 spellCheck={true}
+                className=''
             />
         </div>
     )

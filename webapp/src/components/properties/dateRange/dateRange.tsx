@@ -197,6 +197,7 @@ function DateRange(props: Props): JSX.Element {
                                     onCancel={() => {
                                         setFromInput(getDisplayDate(dateFrom))
                                     }}
+                                    className=''
                                 />
                                 {dateTo &&
                                     <Editable
@@ -225,6 +226,7 @@ function DateRange(props: Props): JSX.Element {
                                         onCancel={() => {
                                             setToInput(getDisplayDate(dateTo))
                                         }}
+                                        className=''
                                     />
                                 }
                             </div>

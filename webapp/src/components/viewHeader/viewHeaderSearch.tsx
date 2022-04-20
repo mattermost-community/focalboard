@@ -80,6 +80,7 @@ const ViewHeaderSearch = (): JSX.Element => {
                     }
                     debouncedDispatchSearchText(searchValue)
                 }}
+                className=''
             />
         )
     }

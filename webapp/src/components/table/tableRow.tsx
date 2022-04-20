@@ -125,6 +125,7 @@ const TableRow = (props: Props) => {
                         onCancel={() => setTitle(card.title || '')}
                         readonly={props.readonly}
                         spellCheck={true}
+                        className=''
                     />
                 </div>
 
