@@ -183,4 +183,37 @@ describe('Create and delete board / card', () => {
 
         cy.get('.Kanban').invoke('scrollLeft').should('equal', 0)
     })
+
+    it('GH-2520 make cut/undo/redo work in comments', () => {
+        // Visit a page and create new empty board
+        cy.visit('/')
+        cy.uiCreateEmptyBoard()
+
+        // Create card
+        cy.log('**Create card**')
+        cy.get('.ViewHeader').contains('New').click()
+        cy.get('.CardDetail').should('exist')
+
+        cy.log('**Add comment**')
+        cy.get('.CommentsList').findAllByTestId('preview-element').click()
+
+        cy.get('.MarkdownEditorInput').should('exist').
+            type('Test Text')
+            
+        cy.log('**Cut comment**')
+        cy.get('.CommentsList .MarkdownEditorInput').
+            type('{selectAll}').
+            trigger('cut').
+            should('have.text', '')
+            
+        cy.log('**Undo comment**')
+        cy.get('.CommentsList .MarkdownEditorInput').
+            type('{meta+z}').
+            should('have.text', 'Test Text')
+            
+        cy.log('**Redo comment**')
+        cy.get('.CommentsList .MarkdownEditorInput').
+            type('{shift+meta+z}').
+            should('have.text', '')
+    })
 })
