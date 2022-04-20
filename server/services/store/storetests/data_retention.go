@@ -135,6 +135,6 @@ func testRunDataRetention(t *testing.T, store store.Store, batchSize int) {
 
 		category, err := store.GetUserCategoryBoards(boardID, testTeamID)
 		require.NoError(t, err)
-		require.Nil(t, category)
+		require.Empty(t, category)
 	})
 }
