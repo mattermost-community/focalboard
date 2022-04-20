@@ -12,10 +12,14 @@ describe('Create board actions', () => {
     it('Can create board', {
         defaultCommandTimeout: 20000
     }, () => {
-        loginUser()
-        // skipGettingStarted()
-
+        cy.log('**Login**')
         cy.visit('/boards/welcome')
+        cy.get('#loginId', {timeout: 20000}).
+            should('exist').
+            type(username)
+        cy.get('#loginPassword').type(password)
+        cy.get('#loginButton').click()
+
         cy.contains(`No thanks, I'll figure it out myself`, {timeout: 20000}).should('exist').click()
 
         // Select template
@@ -59,8 +63,7 @@ describe('Create board actions', () => {
         cy.log('**Close card dialog**')
         cy.get('.Dialog Button[title=\'Close dialog\']').
             should('be.visible').
-            click().
-            wait(500)
+            click()
     })
 
     const loginUser = () => {
