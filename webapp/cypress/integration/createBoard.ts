@@ -185,6 +185,8 @@ describe('Create and delete board / card', () => {
     })
 
     it('GH-2520 make cut/undo/redo work in comments', () => {
+        const isMAC = navigator.userAgent.indexOf("Mac") !== -1
+        const ctrlKey = isMAC ? 'meta' : 'ctrl'
         // Visit a page and create new empty board
         cy.visit('/')
         cy.uiCreateEmptyBoard()
@@ -211,12 +213,12 @@ describe('Create and delete board / card', () => {
             
         cy.log('**Undo comment**')
         cy.get('.CommentsList .MarkdownEditorInput').
-            type('{meta+z}').
+            type(`{${ctrlKey}+z}`).
             should('have.text', 'Test Text')
             
         cy.log('**Redo comment**')
         cy.get('.CommentsList .MarkdownEditorInput').
-            type('{shift+meta+z}').
+            type(`{shift+${ctrlKey}+z}`).
             should('have.text', '')
     })
 })
