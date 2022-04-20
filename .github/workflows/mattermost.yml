@@ -38,12 +38,6 @@ jobs:
     - name: npm ci focalboard/webapp
       run: cd focalboard/webapp; npm ci --no-optional
 
-    - name: apt-get update
-      run: sudo apt-get update
-
-    - name: apt-get install libpng-dev
-      run: sudo apt-get install libpng-dev
-
     - name: Build focalboard/webapp
       run: cd focalboard; make webapp
 
@@ -59,6 +53,7 @@ jobs:
     - name: Configure Mattermost-server
       run: |
         cd mattermost-server
+        make config-reset
         sed -i -e 's/"EnableLocalMode": false/"EnableLocalMode": true/g' config/config.json
         sed -i -e 's/"EnableUploads": false/"EnableUploads": true/g' config/config.json
 
