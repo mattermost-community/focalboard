@@ -33,11 +33,9 @@ func TestOnConfigurationChange(t *testing.T) {
 		Directory: &stringRef,
 		Plugins:   basePlugins,
 	}
-	falseRef := false
 	intRef := 365
 	baseDataRetentionSettings := &serverModel.DataRetentionSettings{
-		EnableBoardsDeletion: &falseRef,
-		BoardsRetentionDays:  &intRef,
+		BoardsRetentionDays: &intRef,
 	}
 
 	baseConfig := &serverModel.Config{

@@ -127,8 +127,10 @@ func testRunDataRetention(t *testing.T, store store.Store, batchSize int) {
 		require.Equal(t, sql.ErrNoRows, err)
 		require.Nil(t, member)
 
+		// GetSharing throws error on now rows found
 		sharing, err := store.GetSharing(boardID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.Equal(t, sql.ErrNoRows, err)
 		require.Nil(t, sharing)
 
 		category, err := store.GetUserCategoryBoards(boardID, testTeamID)

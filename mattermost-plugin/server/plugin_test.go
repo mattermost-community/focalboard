@@ -54,7 +54,6 @@ func TestServeHTTP(t *testing.T) {
 func TestSetConfiguration(t *testing.T) {
 	plugin := Plugin{}
 	boolTrue := true
-	boolFalse := false
 	stringRef := ""
 
 	baseFeatureFlags := &model.FeatureFlags{}
@@ -78,8 +77,7 @@ func TestSetConfiguration(t *testing.T) {
 
 	days := 365
 	baseDataRetentionSettings := &model.DataRetentionSettings{
-		EnableBoardsDeletion: &boolFalse,
-		BoardsRetentionDays:  &days,
+		BoardsRetentionDays: &days,
 	}
 
 	baseConfig := &model.Config{

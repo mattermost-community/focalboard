@@ -90,7 +90,11 @@ func (p *Plugin) OnConfigurationChange() error { //nolint
 	p.server.Config().FeatureFlags = parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 
 	// handle Data Retention settings
-	p.server.Config().EnableDataRetention = *mmconfig.DataRetentionSettings.EnableBoardsDeletion
+	enableBoardsDeletion := false
+	if mmconfig.DataRetentionSettings.EnableBoardsDeletion != nil {
+		enableBoardsDeletion = true
+	}
+	p.server.Config().EnableDataRetention = enableBoardsDeletion
 	p.server.Config().DataRetentionDays = *mmconfig.DataRetentionSettings.BoardsRetentionDays
 
 	p.server.UpdateAppConfig()
