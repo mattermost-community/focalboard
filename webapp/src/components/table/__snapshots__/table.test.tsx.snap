@@ -154,7 +154,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
                 i
               </div>
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled"
                 spellcheck="true"
                 title="title"
@@ -242,7 +242,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
                 i
               </div>
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled"
                 spellcheck="true"
                 title="title"
@@ -542,7 +542,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
                 i
               </div>
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled"
                 spellcheck="true"
                 title="title"
@@ -634,7 +634,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
                 i
               </div>
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled"
                 spellcheck="true"
                 title="title"
@@ -938,7 +938,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
                 i
               </div>
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled"
                 spellcheck="true"
                 title="title"
@@ -1026,7 +1026,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
                 i
               </div>
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled"
                 spellcheck="true"
                 title="title"
@@ -1326,7 +1326,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
                 i
               </div>
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled"
                 spellcheck="true"
                 title="title"
@@ -1414,7 +1414,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
                 i
               </div>
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled"
                 spellcheck="true"
                 title="title"
@@ -1690,7 +1690,7 @@ exports[`components/table/Table should match snapshot 1`] = `
                 i
               </div>
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled"
                 spellcheck="true"
                 title="title"
@@ -2164,7 +2164,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
                 i
               </div>
               <input
-                class="Editable readonly undefined"
+                class="Editable readonly "
                 placeholder="Untitled"
                 readonly=""
                 spellcheck="true"
@@ -2399,7 +2399,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
                 i
               </div>
               <input
-                class="Editable readonly undefined"
+                class="Editable readonly "
                 placeholder="Untitled"
                 readonly=""
                 spellcheck="true"

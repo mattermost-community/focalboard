@@ -3,7 +3,7 @@
 exports[`components/viewHeader/ViewHeaderSearch return input after click on search button 1`] = `
 <div>
   <input
-    class="Editable undefined"
+    class="Editable "
     placeholder="Search text"
     value=""
   />
@@ -26,7 +26,7 @@ exports[`components/viewHeader/ViewHeaderSearch return search menu 1`] = `
 exports[`components/viewHeader/ViewHeaderSearch search text after input after click on search button and search text 1`] = `
 <div>
   <input
-    class="Editable undefined"
+    class="Editable "
     placeholder="Search text"
     title="Hello"
     value="Hello"

@@ -21,7 +21,7 @@ exports[`components/table/TableRow should match snapshot 1`] = `
           i
         </div>
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="Untitled"
           spellcheck="true"
           title="title"
@@ -66,7 +66,7 @@ exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
           i
         </div>
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="Untitled"
           spellcheck="true"
           title="title"
@@ -111,7 +111,7 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
           i
         </div>
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="Untitled"
           spellcheck="true"
           title="title"
@@ -194,7 +194,7 @@ exports[`components/table/TableRow should match snapshot, isSelected 1`] = `
           i
         </div>
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="Untitled"
           spellcheck="true"
           title="title"
@@ -239,7 +239,7 @@ exports[`components/table/TableRow should match snapshot, read-only 1`] = `
           i
         </div>
         <input
-          class="Editable readonly undefined"
+          class="Editable readonly "
           placeholder="Untitled"
           readonly=""
           spellcheck="true"
@@ -285,7 +285,7 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
           i
         </div>
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="Untitled"
           spellcheck="true"
           title="title"

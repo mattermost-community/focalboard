@@ -24,7 +24,7 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           class="Label propColorOrange "
         >
           <input
-            class="Editable undefined"
+            class="Editable "
             placeholder="New Select"
             spellcheck="true"
             title="New Q1"
@@ -76,7 +76,7 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           class="Label propColorBlue "
         >
           <input
-            class="Editable undefined"
+            class="Editable "
             placeholder="New Select"
             spellcheck="true"
             title="Q2"
@@ -310,7 +310,7 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           class="Label propColorOrange "
         >
           <input
-            class="Editable undefined"
+            class="Editable "
             placeholder="New Select"
             spellcheck="true"
             title="Q1"
@@ -523,7 +523,7 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           class="Label propColorBlue "
         >
           <input
-            class="Editable undefined"
+            class="Editable "
             placeholder="New Select"
             spellcheck="true"
             title="Q2"
@@ -757,7 +757,7 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           class="Label propColorOrange "
         >
           <input
-            class="Editable undefined"
+            class="Editable "
             placeholder="New Select"
             spellcheck="true"
             title="Q1"
@@ -809,7 +809,7 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           class="Label propColorBlue "
         >
           <input
-            class="Editable undefined"
+            class="Editable "
             placeholder="New Select"
             spellcheck="true"
             title="Q2"
@@ -1043,7 +1043,7 @@ exports[`src/component/kanban/kanban should match snapshot without permissions 1
           class="Label propColorOrange "
         >
           <input
-            class="Editable readonly undefined"
+            class="Editable readonly "
             placeholder="New Select"
             readonly=""
             spellcheck="true"
@@ -1076,7 +1076,7 @@ exports[`src/component/kanban/kanban should match snapshot without permissions 1
           class="Label propColorBlue "
         >
           <input
-            class="Editable readonly undefined"
+            class="Editable readonly "
             placeholder="New Select"
             readonly=""
             spellcheck="true"
