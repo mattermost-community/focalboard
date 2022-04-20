@@ -8,24 +8,24 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
-    - name: Checkout
+    - name: Checkout Focalboard
       uses: actions/checkout@v3
       with:
         path: './focalboard'
 
-    - name: Checkout
+    - name: Checkout Mattermost-server
       uses: actions/checkout@v3
       with:
         repository: mattermost/mattermost-server
         path: './mattermost-server'
 
-    - name: Checkout
+    - name: Checkout Mattermost-webapp
       uses: actions/checkout@v3
       with:
         repository: mattermost/mattermost-webapp
         path: './mattermost-webapp'
 
-    - name: Set up Go
+    - name: Setup Go
       uses: actions/setup-go@v2
       with:
         go-version: 1.16
@@ -35,7 +35,7 @@ jobs:
       with:
         node-version: 16.1.0
 
-    - name: npm ci
+    - name: npm ci focalboard/webapp
       run: cd focalboard/webapp; npm ci --no-optional
 
     - name: apt-get update
@@ -44,16 +44,11 @@ jobs:
     - name: apt-get install libpng-dev
       run: sudo apt-get install libpng-dev
 
-    - name: Build webapp
+    - name: Build focalboard/webapp
       run: cd focalboard; make webapp
 
-    - name: npm ci plugin dependencies
+    - name: npm ci focalboard/mattermost-plugin
       run: cd focalboard/mattermost-plugin/webapp; npm ci --no-optional
-
-    - name: Build plugin
-      run: cd focalboard/mattermost-plugin; make dist
-      env:
-        BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Setup Mattermost-webapp paths
       run: |
@@ -61,11 +56,27 @@ jobs:
         cd mattermost-server
         ln -nfs ../mattermost-webapp/dist client
 
+    - name: Configure Mattermost-server
+      run: |
+        cd mattermost-server
+        sed -i -e 's/"EnableLocalMode": false/"EnableLocalMode": true/g' config/config.json
+        sed -i -e 's/"EnableUploads": false/"EnableUploads": true/g' config/config.json
+
     - name: Run Mattermost-server
       run: cd mattermost-server; make run
 
+    - name: Create test user
+      run: cd mattermost-server; bin/mmctl --local user create --email testuser@test.com --username testuser --password TestPass1
+
     - name: Deploy plugin
-      run: cd focalboard/mattermost-plugin; make deploy
+      run: |
+        export MM_SERVICESETTINGS_SITEURL=http://localhost:8065
+        export MM_ADMIN_USERNAME=testuser
+        export MM_ADMIN_PASSWORD=TestPass1
+        cd focalboard/mattermost-plugin
+        make deploy
+      env:
+        BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Rename plugin file
       run: cd focalboard/mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz
