@@ -164,6 +164,9 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorItem should trigg
                 class="CompassIcon icon-close CloseIcon"
               />
             </button>
+            <div
+              class="toolbar--right"
+            />
           </div>
           <div
             class="container"

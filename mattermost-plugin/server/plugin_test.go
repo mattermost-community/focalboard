@@ -12,8 +12,9 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/mattermost-server/v6/model"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mattermost/mattermost-server/v6/model"
 )
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
@@ -27,16 +28,15 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func TestServeHTTP(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
 	assert := assert.New(t)
-	th := SetupTestHelper(t)
-	plugin := Plugin{}
-
-	testHandler := http.HandlerFunc(testHandler)
-	th.Server.GetRootRouter().Handle("/", testHandler)
-
-	plugin.server = th.Server
+	plugin := Plugin{
+		server: th.Server,
+	}
 	w := httptest.NewRecorder()
-	r := httptest.NewRequest(http.MethodGet, "/", nil)
+	r := httptest.NewRequest(http.MethodGet, "/hello", nil)
 
 	// plugin.server.
 	plugin.ServeHTTP(nil, w, r)
@@ -48,11 +48,16 @@ func TestServeHTTP(t *testing.T) {
 	assert.Nil(err)
 	bodyString := string(bodyBytes)
 
-	assert.Equal("Hello, world!", bodyString)
+	assert.Equal("Hello", bodyString)
 }
 
 func TestSetConfiguration(t *testing.T) {
-	plugin := Plugin{}
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	plugin := Plugin{
+		server: th.Server,
+	}
 	boolTrue := true
 	stringRef := ""
 
@@ -68,11 +73,10 @@ func TestSetConfiguration(t *testing.T) {
 	}
 
 	directory := "testDirectory"
-	maxFileSize := int64(1048576000)
 	baseFileSettings := &model.FileSettings{
 		DriverName:  &driverName,
 		Directory:   &directory,
-		MaxFileSize: &maxFileSize,
+		MaxFileSize: model.NewInt64(1024 * 1024),
 	}
 
 	days := 365
@@ -129,7 +133,8 @@ func TestSetConfiguration(t *testing.T) {
 }
 
 func TestRunDataRetention(t *testing.T) {
-	th := SetupTestHelper(t)
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
 	plugin := Plugin{}
 	plugin.server = th.Server
 

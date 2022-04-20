@@ -3,7 +3,6 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -292,7 +291,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	}
 
 	existingBoard, err := s.getBoard(db, board.ID)
-	if err != nil && !s.IsErrNotFound(err) {
+	if err != nil && !model.IsErrNotFound(err) {
 		return nil, fmt.Errorf("insertBoard error occurred while fetching existing board %s: %w", board.ID, err)
 	}
 
@@ -466,7 +465,7 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 	}
 
 	oldMember, err := s.getMemberForBoard(db, bm.BoardID, bm.UserID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil && !model.IsErrNotFound(err) {
 		return nil, err
 	}
 

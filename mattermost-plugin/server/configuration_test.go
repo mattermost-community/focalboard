@@ -8,6 +8,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/ws"
+
 	serverModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 
@@ -45,7 +46,8 @@ func TestOnConfigurationChange(t *testing.T) {
 	}
 
 	t.Run("Test Load Plugin Success", func(t *testing.T) {
-		th := SetupTestHelper(t)
+		th, tearDown := SetupTestHelper(t)
+		defer tearDown()
 		api := &plugintest.API{}
 		api.On("GetUnsanitizedConfig").Return(baseConfig)
 		api.On("GetConfig").Return(baseConfig)

@@ -66,6 +66,7 @@
     .ValueSelector {
         padding: 4px 0;
         background-color: rgba(var(--center-channel-color-rgb), 0.08);
+        width: auto;
     }
 
     .ValueSelector__menu {

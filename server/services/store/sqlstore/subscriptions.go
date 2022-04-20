@@ -8,7 +8,6 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -114,7 +113,7 @@ func (s *SQLStore) deleteSubscription(db sq.BaseRunner, blockID string, subscrib
 	}
 
 	if count == 0 {
-		return store.NewErrNotFound(blockID + "," + subscriberID)
+		return model.NewErrNotFound(blockID + "," + subscriberID)
 	}
 
 	return nil
@@ -150,7 +149,7 @@ func (s *SQLStore) getSubscription(db sq.BaseRunner, blockID string, subscriberI
 		return nil, err
 	}
 	if len(subscriptions) == 0 {
-		return nil, store.NewErrNotFound(blockID + "," + subscriberID)
+		return nil, model.NewErrNotFound(blockID + "," + subscriberID)
 	}
 	return subscriptions[0], nil
 }
