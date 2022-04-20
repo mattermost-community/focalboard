@@ -20,7 +20,7 @@ func TestServeHTTP(t *testing.T) {
 		server: th.Server,
 	}
 	w := httptest.NewRecorder()
-	r := httptest.NewRequest(http.MethodGet, "/", nil)
+	r := httptest.NewRequest(http.MethodGet, "/hello", nil)
 
 	plugin.ServeHTTP(nil, w, r)
 
@@ -31,9 +31,7 @@ func TestServeHTTP(t *testing.T) {
 	assert.Nil(err)
 	bodyString := string(bodyBytes)
 
-	// TODO: fix this; where is `Hello World` text generated?
-	// assert.Equal("Hello, world!", bodyString)
-	assert.Equal("", bodyString)
+	assert.Equal("Hello", bodyString)
 }
 
 func TestSetConfiguration(t *testing.T) {
