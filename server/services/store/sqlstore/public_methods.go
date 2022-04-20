@@ -23,7 +23,26 @@ import (
 )
 
 func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, blockID string) error {
-	return s.addUpdateCategoryBoard(s.db, userID, categoryID, blockID)
+	if s.dbType == model.SqliteDBType {
+		return s.addUpdateCategoryBoard(s.db, userID, categoryID, blockID)
+	}
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.addUpdateCategoryBoard(tx, userID, categoryID, blockID)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "AddUpdateCategoryBoard"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 
 }
 
