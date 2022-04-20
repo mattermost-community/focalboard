@@ -698,7 +698,7 @@ func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
 
 func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Board, error) {
 	return s.searchBoardsForUser(s.db, term, userID)
-	
+
 }
 
 func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
