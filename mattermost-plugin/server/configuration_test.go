@@ -6,15 +6,39 @@ package main
 import (
 	"testing"
 
+	"github.com/mattermost/focalboard/server/integrationtests"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/ws"
 
 	serverModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
+type TestHelper struct {
+	Server *server.Server
+}
+
+func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
+	th := &TestHelper{}
+	th.Server = newTestServer()
+
+	err := th.Server.Start()
+	require.NoError(t, err, "Server start should not error")
+
+	tearDown := func() {
+		err := th.Server.Shutdown()
+		require.NoError(t, err, "Server shutdown should not error")
+	}
+	return th, tearDown
+}
+
+func newTestServer() *server.Server {
+	return integrationtests.NewTestServerPluginMode()
+}
 func TestConfigurationNullConfiguration(t *testing.T) {
 	plugin := &Plugin{}
 	assert.NotNil(t, plugin.getConfiguration())

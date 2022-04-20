@@ -6,81 +6,65 @@ package main
 import (
 	"testing"
 
-	"github.com/mattermost/focalboard/server/integrationtests"
+	"github.com/golang/mock/gomock"
 	"github.com/mattermost/focalboard/server/server"
-	"github.com/stretchr/testify/require"
+	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
+	"github.com/mattermost/focalboard/server/services/store/mockstore"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-type TestHelper struct {
+type TestHelperMockStore struct {
 	Server *server.Server
-	// Store  *mockstore.MockStore
+	Store  *mockstore.MockStore
 }
 
-// func SetupTestHelper(t *testing.T) *TestHelper {
-// 	th := &TestHelper{}
+func SetupTestHelperMockStore(t *testing.T) *TestHelperMockStore {
+	th := &TestHelperMockStore{}
 
-// 	ctrl := gomock.NewController(t)
-// 	defer ctrl.Finish()
-// 	mockStore := mockstore.NewMockStore(ctrl)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockStore := mockstore.NewMockStore(ctrl)
 
-// 	th.Server = newTestServer(mockStore)
-// 	th.Store = mockStore
+	th.Server = newTestServerMock(mockStore)
+	th.Store = mockStore
 
-// 	return th
-// }
+	return th
+}
 
-func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
-	th := &TestHelper{}
-	th.Server = newTestServer()
-
-	err := th.Server.Start()
-	require.NoError(t, err, "Server start should not error")
-
-	tearDown := func() {
-		err := th.Server.Shutdown()
-		require.NoError(t, err, "Server shutdown should not error")
+func newTestServerMock(mockStore *mockstore.MockStore) *server.Server {
+	config := &config.Configuration{
+		EnableDataRetention: false,
+		DataRetentionDays:   10,
+		FilesDriver:         "local",
+		FilesPath:           "./files",
+		WebPath:             "/",
 	}
-	return th, tearDown
+
+	logger, err := mlog.NewLogger()
+	if err != nil {
+		panic(err)
+	}
+	if err = logger.Configure("", config.LoggingCfgJSON, nil); err != nil {
+		panic(err)
+	}
+
+	mockStore.EXPECT().GetTeam(gomock.Any()).Return(nil, nil).AnyTimes()
+	mockStore.EXPECT().UpsertTeamSignupToken(gomock.Any()).AnyTimes()
+	mockStore.EXPECT().GetSystemSettings().AnyTimes()
+	mockStore.EXPECT().SetSystemSetting(gomock.Any(), gomock.Any()).AnyTimes()
+
+	permissionsService := localpermissions.New(mockStore, logger)
+
+	srv, err := server.New(server.Params{
+		Cfg:                config,
+		DBStore:            mockStore,
+		Logger:             logger,
+		PermissionsService: permissionsService,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return srv
 }
-
-func newTestServer() *server.Server {
-	return integrationtests.NewTestServerPluginMode()
-}
-
-// func newTestServer(mockStore *mockstore.MockStore) *server.Server {
-// 	config := &config.Configuration{
-// 		EnableDataRetention: false,
-// 		DataRetentionDays:   10,
-// 		FilesDriver:         "local",
-// 		FilesPath:           "./files",
-// 		WebPath:             "/",
-// 	}
-
-// 	logger, err := mlog.NewLogger()
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	if err = logger.Configure("", config.LoggingCfgJSON, nil); err != nil {
-// 		panic(err)
-// 	}
-
-// 	mockStore.EXPECT().GetTeam(gomock.Any()).Return(nil, nil).AnyTimes()
-// 	mockStore.EXPECT().UpsertTeamSignupToken(gomock.Any()).AnyTimes()
-// 	mockStore.EXPECT().GetSystemSettings().AnyTimes()
-// 	mockStore.EXPECT().SetSystemSetting(gomock.Any(), gomock.Any()).AnyTimes()
-
-// 	permissionsService := localpermissions.New(mockStore, logger)
-
-// 	srv, err := server.New(server.Params{
-// 		Cfg:                config,
-// 		DBStore:            mockStore,
-// 		Logger:             logger,
-// 		PermissionsService: permissionsService,
-// 		SkipTemplateInit:   true,
-// 	})
-// 	if err != nil {
-// 		panic(err)
-// 	}
-
-// 	return srv
-// }

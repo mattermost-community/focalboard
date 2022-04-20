@@ -4,7 +4,6 @@
 package main
 
 import (
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -12,20 +11,9 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/assert"
-
 	"github.com/mattermost/mattermost-server/v6/model"
+	"github.com/stretchr/testify/assert"
 )
-
-func testHandler(w http.ResponseWriter, r *http.Request) {
-	// A very simple health check.
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-
-	// In the future we could report back on the status of our DB, or our cache
-	// (e.g. Redis) by performing a simple PING, and include them in the response.
-	_, _ = io.WriteString(w, "Hello, world!")
-}
 
 func TestServeHTTP(t *testing.T) {
 	th, tearDown := SetupTestHelper(t)
@@ -38,7 +26,6 @@ func TestServeHTTP(t *testing.T) {
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodGet, "/hello", nil)
 
-	// plugin.server.
 	plugin.ServeHTTP(nil, w, r)
 
 	result := w.Result()
@@ -133,8 +120,7 @@ func TestSetConfiguration(t *testing.T) {
 }
 
 func TestRunDataRetention(t *testing.T) {
-	th, tearDown := SetupTestHelper(t)
-	defer tearDown()
+	th := SetupTestHelperMockStore(t)
 	plugin := Plugin{}
 	plugin.server = th.Server
 
