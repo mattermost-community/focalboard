@@ -13,13 +13,14 @@ describe('Create board actions', () => {
         defaultCommandTimeout: 20000
     }, () => {
         cy.log('**Login**')
-        cy.visit('/boards/welcome')
+        cy.visit('/boards')
         cy.get('#loginId', {timeout: 20000}).
             should('exist').
             type(username)
         cy.get('#loginPassword').type(password)
         cy.get('#loginButton').click()
 
+        cy.log('**Boards welcome screen**')
         cy.contains(`No thanks, I'll figure it out myself`, {timeout: 20000}).should('exist').click()
 
         // Select template
