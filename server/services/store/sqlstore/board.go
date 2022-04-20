@@ -314,8 +314,8 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		"show_description": board.ShowDescription,
 		"is_template":      board.IsTemplate,
 		"template_version": board.TemplateVersion,
-		"properties":       propertiesBytes,
-		"card_properties":  cardPropertiesBytes,
+		"properties":       string(propertiesBytes),
+		"card_properties":  string(cardPropertiesBytes),
 		"create_at":        board.CreateAt,
 		"update_at":        now,
 		"delete_at":        board.DeleteAt,
@@ -332,8 +332,8 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Set("show_description", board.ShowDescription).
 			Set("is_template", board.IsTemplate).
 			Set("template_version", board.TemplateVersion).
-			Set("properties", propertiesBytes).
-			Set("card_properties", cardPropertiesBytes).
+			Set("properties", string(propertiesBytes)).
+			Set("card_properties", string(cardPropertiesBytes)).
 			Set("update_at", now).
 			Set("delete_at", board.DeleteAt)
 
@@ -405,8 +405,8 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		"show_description": board.ShowDescription,
 		"is_template":      board.IsTemplate,
 		"template_version": board.TemplateVersion,
-		"properties":       propertiesBytes,
-		"card_properties":  cardPropertiesBytes,
+		"properties":       string(propertiesBytes),
+		"card_properties":  string(cardPropertiesBytes),
 		"create_at":        board.CreateAt,
 		"update_at":        now,
 		"delete_at":        now,
