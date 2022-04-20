@@ -24,12 +24,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <span
-              class="text-heading5"
-            >
-              Share Board
-            </span>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
           </div>
         </div>
         <div
@@ -246,12 +250,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <span
-              class="text-heading5"
-            >
-              Share Board
-            </span>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
           </div>
         </div>
         <div
@@ -468,12 +476,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <span
-              class="text-heading5"
-            >
-              Share Board
-            </span>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
           </div>
         </div>
         <div
@@ -713,12 +725,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <span
-              class="text-heading5"
-            >
-              Share Board
-            </span>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
           </div>
         </div>
         <div
@@ -958,12 +974,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <span
-              class="text-heading5"
-            >
-              Share Board
-            </span>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
           </div>
         </div>
         <div
@@ -1203,12 +1223,16 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <span
-              class="text-heading5"
-            >
-              Share Board
-            </span>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
           </div>
         </div>
         <div
@@ -1425,12 +1449,16 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <span
-              class="text-heading5"
-            >
-              Share Board
-            </span>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
           </div>
         </div>
         <div
@@ -1647,12 +1675,16 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <span
-              class="text-heading5"
-            >
-              Share Board
-            </span>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
           </div>
         </div>
         <div
@@ -1869,12 +1901,16 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <span
-              class="text-heading5"
-            >
-              Share Board
-            </span>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
           </div>
         </div>
         <div
