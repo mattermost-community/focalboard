@@ -68,7 +68,7 @@ func New(params Params) (*SQLStore, error) {
 }
 
 // computeBinaryParam returns whether the data source uses binary_parameters
-// when using Postgres
+// when using Postgres.
 func (s *SQLStore) computeBinaryParam() (bool, error) {
 	if s.dbType != model.PostgresDBType {
 		return false, nil
