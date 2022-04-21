@@ -11,7 +11,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/permissions"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/wiggin77/merror"
 
@@ -83,7 +82,7 @@ func (n *notifier) loop() {
 	for {
 		hint, err := n.store.GetNextNotificationHint(false)
 		switch {
-		case n.store.IsErrNotFound(err):
+		case model.IsErrNotFound(err):
 			// no hints in table; wait up to an hour or when `onNotifyHint` is called again
 			nextNotify = time.Now().Add(time.Hour * 1)
 			n.logger.Debug("notify loop - no hints in queue", mlog.Time("next_check", nextNotify))
@@ -132,7 +131,7 @@ func (n *notifier) notify() {
 
 	hint, err = n.store.GetNextNotificationHint(true)
 	if err != nil {
-		if store.IsErrNotFound(err) {
+		if model.IsErrNotFound(err) {
 			// Expected when multiple nodes in a cluster try to process the same hint at the same time.
 			// This simply means the other node won. Returning here will simply try fetching another hint.
 			return

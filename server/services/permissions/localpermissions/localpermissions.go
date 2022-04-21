@@ -4,9 +4,6 @@
 package localpermissions
 
 import (
-	"database/sql"
-	"errors"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/permissions"
 
@@ -39,7 +36,7 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 	}
 
 	member, err := s.store.GetMemberForBoard(boardID, userID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return false
 	}
 	if err != nil {

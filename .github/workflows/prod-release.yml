@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
@@ -27,12 +27,12 @@ jobs:
       run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.16
+        go-version: 1.18.1
 
     - name: Setup Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: 16.1.0
 
@@ -51,13 +51,13 @@ jobs:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload server package
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: focalboard-server-linux-amd64.tar.gz
         path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
 
     - name: Upload app package
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: focalboard-linux.tar.gz
         path: ${{ github.workspace }}/linux/dist/focalboard-linux.tar.gz
@@ -68,7 +68,7 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
@@ -86,9 +86,9 @@ jobs:
       run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.16
+        go-version: 1.18.1
 
     - name: List Xcode versions
       run: ls -n /Applications/ | grep Xcode*
@@ -100,7 +100,7 @@ jobs:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload macOS package
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: focalboard-mac.zip
         path: ${{ github.workspace }}/mac/dist/focalboard-mac.zip
@@ -110,7 +110,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
@@ -125,15 +125,15 @@ jobs:
       run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_PROD_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
 
     - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v1.1
 
     - name: npm ci
       run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.16
+        go-version: 1.18.1
 
     - name: Setup NuGet
       uses: nuget/setup-nuget@v1
@@ -149,13 +149,13 @@ jobs:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Upload app msix package
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: focalboard.msix
         path: ${{ github.workspace }}/win-wpf/focalboard.msix
 
     - name: Upload app zip package
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: focalboard-win.zip
         path: ${{ github.workspace }}/win-wpf/dist/focalboard-win.zip
@@ -165,7 +165,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Replace token 1 server
       run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
@@ -183,12 +183,12 @@ jobs:
       run: cd webapp; npm ci --no-optional
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.16
+        go-version: 1.18.1
 
     - name: Set up Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: 16.1.0
 
@@ -207,7 +207,7 @@ jobs:
       run: cd mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz
 
     - name: Upload plugin artifact
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: mattermost-plugin-focalboard.tar.gz
         path: ${{ github.workspace }}/mattermost-plugin/dist/mattermost-plugin-focalboard.tar.gz

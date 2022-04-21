@@ -82,3 +82,4 @@ export const {reducer} = teamSlice
 
 export const getCurrentTeam = (state: RootState): Team|null => state.teams.current
 export const getFirstTeam = (state: RootState): Team|null => state.teams.allTeams[0]
+export const getAllTeams = (state: RootState): Array<Team> => state.teams.allTeams

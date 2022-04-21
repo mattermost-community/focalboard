@@ -1,9 +1,6 @@
 package app
 
 import (
-	"database/sql"
-	"errors"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -38,7 +35,7 @@ func (a *App) GetRootTeam() (*model.Team, error) {
 
 func (a *App) GetTeam(id string) (*model.Team, error) {
 	team, err := a.store.GetTeam(id)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil, nil
 	}
 	if err != nil {
