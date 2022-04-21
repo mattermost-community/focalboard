@@ -229,6 +229,10 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 		board.Title = *p.Title
 	}
 
+	if p.DefaultRole != nil {
+		board.DefaultRole = *p.DefaultRole
+	}
+
 	if p.Description != nil {
 		board.Description = *p.Description
 	}

@@ -20,13 +20,14 @@ import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import mutator from '../../mutator'
 
-function updateBoardType(board: Board, newType: string) {
-    if (board.type === newType) {
+function updateBoardType(board: Board, newType: string, newDefaultRole: string) {
+    if (board.type === newType && board.defaultRole == newDefaultRole) {
         return
     }
 
     const newBoard = createBoard(board)
     newBoard.type = newType
+    newBoard.defaultRole = newDefaultRole
 
     mutator.updateBoard(newBoard, board, 'update board type')
 }
@@ -36,7 +37,16 @@ const TeamPermissionsRow = (): JSX.Element => {
     const team = useAppSelector(getCurrentTeam)
     const board = useAppSelector(getCurrentBoard)
 
-    const currentRole = board.type === BoardTypeOpen ? 'Editor' : 'None'
+    let currentRoleName = intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})
+    if (board.type === BoardTypeOpen && board.defaultRole === 'admin') {
+        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})
+    }else if (board.type === BoardTypeOpen && board.defaultRole === 'editor') {
+        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})
+    }else if (board.type === BoardTypeOpen && board.defaultRole === 'commenter') {
+        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})
+    }else if (board.type === BoardTypeOpen && board.defaultRole === 'viewer') {
+        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})
+    }
 
     return (
         <div className='user-item'>
@@ -51,7 +61,7 @@ const TeamPermissionsRow = (): JSX.Element => {
                 <BoardPermissionGate permissions={[Permission.ManageBoardType]}>
                     <MenuWrapper>
                         <button className='user-item__button'>
-                            {currentRole}
+                            {currentRoleName}
                             <CompassIcon
                                 icon='chevron-down'
                                 className='CompassIcon'
@@ -59,18 +69,39 @@ const TeamPermissionsRow = (): JSX.Element => {
                         </button>
                         <Menu position='left'>
                             <Menu.Text
+                                id='Admin'
+                                check={board.defaultRole === 'admin'}
+                                icon={board.type === BoardTypeOpen && board.defaultRole === 'admin' ? <CheckIcon/> : null}
+                                name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
+                                onClick={() => updateBoardType(board, BoardTypeOpen, 'admin')}
+                            />
+                            <Menu.Text
                                 id='Editor'
-                                check={true}
-                                icon={currentRole === 'Editor' ? <CheckIcon/> : null}
+                                check={board.defaultRole === '' || board.defaultRole === 'editor' }
+                                icon={board.type === BoardTypeOpen && board.defaultRole === 'editor' ? <CheckIcon/> : null}
                                 name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
-                                onClick={() => updateBoardType(board, BoardTypeOpen)}
+                                onClick={() => updateBoardType(board, BoardTypeOpen, 'editor')}
+                            />
+                            <Menu.Text
+                                id='Commenter'
+                                check={board.defaultRole === 'commenter'}
+                                icon={board.type === BoardTypeOpen && board.defaultRole === 'commenter' ? <CheckIcon/> : null}
+                                name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
+                                onClick={() => updateBoardType(board, BoardTypeOpen, 'commenter')}
+                            />
+                            <Menu.Text
+                                id='Viewer'
+                                check={board.defaultRole === 'viewer'}
+                                icon={board.type === BoardTypeOpen && board.defaultRole === 'viewer' ? <CheckIcon/> : null}
+                                name={intl.formatMessage({id: 'BoardMember.schemeViwer', defaultMessage: 'Viewer'})}
+                                onClick={() => updateBoardType(board, BoardTypeOpen, 'viewer')}
                             />
                             <Menu.Text
                                 id='None'
                                 check={true}
-                                icon={currentRole === 'None' ? <CheckIcon/> : null}
+                                icon={board.type === BoardTypePrivate ? <CheckIcon/> : null}
                                 name={intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})}
-                                onClick={() => updateBoardType(board, BoardTypePrivate)}
+                                onClick={() => updateBoardType(board, BoardTypePrivate, 'editor')}
                             />
                         </Menu>
                     </MenuWrapper>
@@ -79,7 +110,7 @@ const TeamPermissionsRow = (): JSX.Element => {
                     permissions={[Permission.ManageBoardType]}
                     invert={true}
                 >
-                    <span>{currentRole}</span>
+                    <span>{currentRoleName}</span>
                 </BoardPermissionGate>
             </div>
         </div>
