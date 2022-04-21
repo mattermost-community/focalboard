@@ -1945,7 +1945,7 @@ func TestJoinBoard(t *testing.T) {
 
 		me := th.GetUser1()
 
-		title := "Public board"
+		title := "Test Public board"
 		teamID := testTeamID
 		newBoard := &model.Board{
 			Title:  title,
@@ -1980,7 +1980,7 @@ func TestJoinBoard(t *testing.T) {
 
 		me := th.GetUser1()
 
-		title := "Public board"
+		title := "Public board for commenters"
 		teamID := testTeamID
 		newBoard := &model.Board{
 			Title:       title,
@@ -2020,7 +2020,7 @@ func TestJoinBoard(t *testing.T) {
 
 		me := th.GetUser1()
 
-		title := "Public board"
+		title := "Public board for editors"
 		teamID := testTeamID
 		newBoard := &model.Board{
 			Title:  title,
