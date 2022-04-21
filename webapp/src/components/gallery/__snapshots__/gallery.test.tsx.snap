@@ -140,7 +140,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <i
                       class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -161,7 +161,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <i
                       class="CompassIcon icon-content-copy content-copy"
@@ -184,7 +184,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <i
                       class="CompassIcon icon-link-variant LinkIcon"
@@ -213,7 +213,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -315,7 +315,7 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <i
                       class="CompassIcon icon-link-variant LinkIcon"
@@ -344,7 +344,7 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"

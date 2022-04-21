@@ -39,7 +39,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="CardIcon Icon"
@@ -84,7 +84,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-plus AddIcon"
@@ -113,7 +113,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -175,7 +175,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="CardIcon Icon"
@@ -220,7 +220,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-plus AddIcon"
@@ -249,7 +249,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -311,7 +311,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="CardIcon Icon"
@@ -356,7 +356,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-plus AddIcon"
@@ -385,7 +385,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"

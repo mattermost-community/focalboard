@@ -163,7 +163,7 @@ func safeCallListener(listener MentionListener, userID string, evt notify.BlockC
 func (b *Backend) deliverMentionNotification(username string, extract string, evt notify.BlockChangeEvent) (string, error) {
 	mentionedUser, err := b.delivery.UserByUsername(username)
 	if err != nil {
-		if b.delivery.IsErrNotFound(err) {
+		if model.IsErrNotFound(err) {
 			// not really an error; could just be someone typed "@sometext"
 			return "", nil
 		} else {
@@ -186,7 +186,7 @@ func (b *Backend) deliverMentionNotification(username string, extract string, ev
 			}
 			// add mentioned user to board (if not already a member)
 			member, err := b.store.GetMemberForBoard(evt.Board.ID, mentionedUser.Id)
-			if member == nil || b.store.IsErrNotFound(err) {
+			if member == nil || model.IsErrNotFound(err) {
 				// currently all memberships are created as editors by default
 				newBoardMember := &model.BoardMember{
 					UserID:       mentionedUser.Id,

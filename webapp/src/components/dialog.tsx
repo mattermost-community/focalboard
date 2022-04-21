@@ -57,15 +57,17 @@ const Dialog = (props: Props) => {
                                 size='medium'
                             />
                         }
-                        {toolbar && <div>{toolbar}</div>}
-                        {toolsMenu && <MenuWrapper>
-                            <IconButton
-                                size='medium'
-                                icon={<OptionsIcon/>}
-                            />
-                            {toolsMenu}
-                        </MenuWrapper>
-                        }
+                        <div className='toolbar--right'>
+                            {toolbar && <div>{toolbar}</div>}
+                            {toolsMenu && <MenuWrapper>
+                                <IconButton
+                                    size='medium'
+                                    icon={<OptionsIcon/>}
+                                />
+                                {toolsMenu}
+                            </MenuWrapper>
+                            }
+                        </div>
                     </div>
                     {props.children}
                 </div>

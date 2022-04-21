@@ -124,13 +124,13 @@ func testDeleteNotificationHint(t *testing.T, store store.Store) {
 
 		// check the notification hint was deleted
 		hint, err = store.GetNotificationHint(hintNew.BlockID)
-		require.True(t, store.IsErrNotFound(err), "error should be of type store.ErrNotFound")
+		require.True(t, model.IsErrNotFound(err), "error should be of type store.ErrNotFound")
 		assert.Nil(t, hint)
 	})
 
 	t.Run("delete non-existent notification hint", func(t *testing.T) {
 		err := store.DeleteNotificationHint("bogus")
-		require.True(t, store.IsErrNotFound(err), "error should be of type store.ErrNotFound")
+		require.True(t, model.IsErrNotFound(err), "error should be of type store.ErrNotFound")
 	})
 }
 
@@ -152,7 +152,7 @@ func testGetNotificationHint(t *testing.T, store store.Store) {
 
 	t.Run("get non-existent notification hint", func(t *testing.T) {
 		hint, err := store.GetNotificationHint("bogus")
-		require.True(t, store.IsErrNotFound(err), "error should be of type store.ErrNotFound")
+		require.True(t, model.IsErrNotFound(err), "error should be of type store.ErrNotFound")
 		assert.Nil(t, hint, "hint should be nil")
 	})
 }
@@ -199,7 +199,7 @@ func testGetNextNotificationHint(t *testing.T, store store.Store) {
 
 		for {
 			hint, err2 := store.GetNextNotificationHint(false)
-			if store.IsErrNotFound(err2) {
+			if model.IsErrNotFound(err2) {
 				break
 			}
 			require.NoError(t, err2, "get next notification hint should not error")
@@ -209,7 +209,7 @@ func testGetNextNotificationHint(t *testing.T, store store.Store) {
 		}
 
 		_, err = store.GetNextNotificationHint(false)
-		require.True(t, store.IsErrNotFound(err), "error should be of type store.ErrNotFound")
+		require.True(t, model.IsErrNotFound(err), "error should be of type store.ErrNotFound")
 	})
 
 	t.Run("get next notification hint and remove", func(t *testing.T) {
@@ -232,14 +232,14 @@ func testGetNextNotificationHint(t *testing.T, store store.Store) {
 
 		// should be no hint left
 		_, err = store.GetNextNotificationHint(false)
-		require.True(t, store.IsErrNotFound(err), "error should be of type store.ErrNotFound")
+		require.True(t, model.IsErrNotFound(err), "error should be of type store.ErrNotFound")
 	})
 }
 
 func emptyNotificationHintTable(store store.Store) error {
 	for {
 		hint, err := store.GetNextNotificationHint(false)
-		if store.IsErrNotFound(err) {
+		if model.IsErrNotFound(err) {
 			break
 		}
 
