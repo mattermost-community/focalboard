@@ -448,6 +448,90 @@ func TestPermissionsPatchBoard(t *testing.T) {
 	runTestCases(t, ttCases, testData, clients)
 }
 
+func TestPermissionsPatchBoardType(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	clients := setupClients(th)
+	testData := setupData(t, th)
+
+	ttCases := []TestCase{
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
+func TestPermissionsPatchBoardDefaultRole(t *testing.T) {
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
+	clients := setupClients(th)
+	testData := setupData(t, th)
+
+	ttCases := []TestCase{
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"defaultRole\": \"vieiwer\"}", userAdmin, http.StatusOK, 1},
+	}
+	runTestCases(t, ttCases, testData, clients)
+}
+
 func TestPermissionsDeleteBoard(t *testing.T) {
 	th := SetupTestHelperPluginMode(t)
 	defer th.TearDown()

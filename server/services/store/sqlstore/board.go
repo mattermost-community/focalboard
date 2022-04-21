@@ -31,6 +31,7 @@ func boardFields(prefix string) []string {
 		"COALESCE(created_by, '')",
 		"modified_by",
 		"type",
+		"default_role",
 		"title",
 		"description",
 		"icon",
@@ -67,6 +68,7 @@ func boardHistoryFields() []string {
 		"COALESCE(created_by, '')",
 		"COALESCE(modified_by, '')",
 		"type",
+		"default_role",
 		"COALESCE(title, '')",
 		"COALESCE(description, '')",
 		"COALESCE(icon, '')",
@@ -108,6 +110,7 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			&board.CreatedBy,
 			&board.ModifiedBy,
 			&board.Type,
+			&board.DefaultRole,
 			&board.Title,
 			&board.Description,
 			&board.Icon,
@@ -308,6 +311,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		"modified_by":      userID,
 		"type":             board.Type,
 		"title":            board.Title,
+		"default_role":     board.DefaultRole,
 		"description":      board.Description,
 		"icon":             board.Icon,
 		"show_description": board.ShowDescription,
@@ -325,6 +329,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Where(sq.Eq{"id": board.ID}).
 			Set("modified_by", userID).
 			Set("type", board.Type).
+			Set("default_role", board.DefaultRole).
 			Set("title", board.Title).
 			Set("description", board.Description).
 			Set("icon", board.Icon).
@@ -398,6 +403,7 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		"created_by":       board.CreatedBy,
 		"modified_by":      userID,
 		"type":             board.Type,
+		"default_role":     board.DefaultRole,
 		"title":            board.Title,
 		"description":      board.Description,
 		"icon":             board.Icon,
@@ -711,6 +717,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		"modified_by",
 		"type",
 		"title",
+		"default_role",
 		"description",
 		"icon",
 		"show_description",
@@ -730,6 +737,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		board.CreatedBy,
 		modifiedBy,
 		board.Type,
+		board.DefaultRole,
 		board.Title,
 		board.Description,
 		board.Icon,

@@ -40,6 +40,10 @@ type Board struct {
 	// required: true
 	Type BoardType `json:"type"`
 
+	// The default role applied when somebody joins the board
+	// required: true
+	DefaultRole string `json:"defaultRole"`
+
 	// The title of the board
 	// required: false
 	Title string `json:"title"`
@@ -91,6 +95,10 @@ type BoardPatch struct {
 	// The type of the board
 	// required: false
 	Type *BoardType `json:"type"`
+
+	// The default role applied when somebody joins the board
+	// required: false
+	DefaultRole *string `json:"defaultRole"`
 
 	// The title of the board
 	// required: false
