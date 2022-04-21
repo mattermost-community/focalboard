@@ -3579,7 +3579,7 @@ table>tbody>tr:nth-of-type(odd) {
 
 @media (min-width: 768px) {
     .homepage__twocol .twocol__single {
-        flex: 0 0 calc(50% - 2rem);
+        flex: 0 0 calc(50% - 3rem);
         max-width: 50%;
     }
 }
