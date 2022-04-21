@@ -58,6 +58,12 @@ describe('src/components/gallery/Gallery', () => {
         comments: {
             comments: {},
         },
+        users: {
+            me: {
+                id: 'user_id_1',
+                props: {},
+            },
+        }
     }
     const store = mockStateStore([], state)
     beforeEach(() => {

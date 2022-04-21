@@ -17,19 +17,19 @@ interface Category {
     deleteAt: number
 }
 
-interface CategoryBlocks extends Category {
-    blockIDs: Array<string>
+interface CategoryBoards extends Category {
+    boardIDs: Array<string>
 }
 
-interface BlockCategoryWebsocketData {
-    blockID: string
+interface BoardCategoryWebsocketData {
+    boardID: string
     categoryID: string
 }
 
-export const DefaultCategory: CategoryBlocks = {
+export const DefaultCategory: CategoryBoards = {
     id: '',
     name: 'Boards',
-} as CategoryBlocks
+} as CategoryBoards
 
 export const fetchSidebarCategories = createAsyncThunk(
     'sidebarCategories/fetch',
@@ -40,7 +40,7 @@ export const fetchSidebarCategories = createAsyncThunk(
 )
 
 type Sidebar = {
-    categoryAttributes: Array<CategoryBlocks>
+    categoryAttributes: Array<CategoryBoards>
 }
 
 const sidebarSlice = createSlice({
@@ -55,7 +55,7 @@ const sidebarSlice = createSlice({
                 if (index === -1) {
                     state.categoryAttributes.push({
                         ...updatedCategory,
-                        blockIDs: [],
+                        boardIDs: [],
                     })
                 } else if (updatedCategory.deleteAt) {
                     // when category is deleted
@@ -70,17 +70,17 @@ const sidebarSlice = createSlice({
                 }
             })
         },
-        updateBlockCategories: (state, action: PayloadAction<Array<BlockCategoryWebsocketData>>) => {
-            action.payload.forEach((blockCategory) => {
+        updateBoardCategories: (state, action: PayloadAction<Array<BoardCategoryWebsocketData>>) => {
+            action.payload.forEach((boardCategory) => {
                 for (let i = 0; i < state.categoryAttributes.length; i++) {
                     const categoryAttribute = state.categoryAttributes[i]
 
-                    // first we remove the block from list of blocks
-                    categoryAttribute.blockIDs = categoryAttribute.blockIDs.filter((blockID) => blockID !== blockCategory.blockID)
+                    // first we remove the board from list of boards
+                    categoryAttribute.boardIDs = categoryAttribute.boardIDs.filter((boardID) => boardID !== boardCategory.boardID)
 
                     // then we add it if this is the target category
-                    if (categoryAttribute.id === blockCategory.categoryID) {
-                        categoryAttribute.blockIDs.push(blockCategory.blockID)
+                    if (categoryAttribute.id === boardCategory.categoryID) {
+                        categoryAttribute.boardIDs.push(boardCategory.boardID)
                     }
                 }
             })
@@ -94,13 +94,13 @@ const sidebarSlice = createSlice({
 })
 
 export const getSidebarCategories = createSelector(
-    (state: RootState): Array<CategoryBlocks> => state.sidebar.categoryAttributes,
+    (state: RootState): Array<CategoryBoards> => state.sidebar.categoryAttributes,
     (sidebarCategories) => sidebarCategories,
 )
 
 export const {reducer} = sidebarSlice
 
-export const {updateCategories, updateBlockCategories} = sidebarSlice.actions
+export const {updateCategories, updateBoardCategories} = sidebarSlice.actions
 
-export {Category, CategoryBlocks, BlockCategoryWebsocketData}
+export {Category, CategoryBoards, BoardCategoryWebsocketData}
 

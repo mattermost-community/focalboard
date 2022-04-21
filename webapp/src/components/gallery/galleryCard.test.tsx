@@ -85,6 +85,12 @@ describe('src/components/gallery/GalleryCard', () => {
                     comments: {},
                     commentsByCard: {},
                 },
+                users: {
+                    me: {
+                        id: 'user_id_1',
+                        props: {},
+                    },
+                },
             }
             store = mockStateStore([], state)
         })
@@ -264,6 +270,12 @@ describe('src/components/gallery/GalleryCard', () => {
                         [board.id]: {userId: 'user_id_1', schemeAdmin: true},
                     },
                 },
+                users: {
+                    me: {
+                        id: 'user_id_1',
+                        props: {},
+                    },
+                },
             }
             store = mockStateStore([], state)
         })
@@ -330,6 +342,12 @@ describe('src/components/gallery/GalleryCard', () => {
                         [board.id]: {userId: 'user_id_1', schemeAdmin: true},
                     },
                 },
+                users: {
+                    me: {
+                        id: 'user_id_1',
+                        props: {},
+                    },
+                },
             }
             store = mockStateStore([], state)
         })
@@ -389,6 +407,12 @@ describe('src/components/gallery/GalleryCard', () => {
                     templates: [],
                     myBoardMemberships: {
                         [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
+                },
+                users: {
+                    me: {
+                        id: 'user_id_1',
+                        props: {},
                     },
                 },
             }
@@ -469,6 +493,12 @@ describe('src/components/gallery/GalleryCard', () => {
                     templates: [],
                     myBoardMemberships: {
                         [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                    },
+                },
+                users: {
+                    me: {
+                        id: 'user_id_1',
+                        props: {},
                     },
                 },
             }

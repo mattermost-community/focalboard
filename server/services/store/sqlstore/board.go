@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -27,8 +28,8 @@ func boardFields(prefix string) []string {
 	fields := []string{
 		"id",
 		"team_id",
-		"channel_id",
-		"created_by",
+		"COALESCE(channel_id, '')",
+		"COALESCE(created_by, '')",
 		"modified_by",
 		"type",
 		"title",
@@ -39,7 +40,6 @@ func boardFields(prefix string) []string {
 		"template_version",
 		"COALESCE(properties, '{}')",
 		"COALESCE(card_properties, '[]')",
-		"COALESCE(column_calculations, '{}')",
 		"create_at",
 		"update_at",
 		"delete_at",
@@ -76,7 +76,6 @@ func boardHistoryFields() []string {
 		"template_version",
 		"COALESCE(properties, '{}')",
 		"COALESCE(card_properties, '[]')",
-		"COALESCE(column_calculations, '{}')",
 		"COALESCE(create_at, 0)",
 		"COALESCE(update_at, 0)",
 		"COALESCE(delete_at, 0)",
@@ -102,7 +101,6 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 		var board model.Board
 		var propertiesBytes []byte
 		var cardPropertiesBytes []byte
-		var columnCalculationsBytes []byte
 
 		err := rows.Scan(
 			&board.ID,
@@ -119,7 +117,6 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			&board.TemplateVersion,
 			&propertiesBytes,
 			&cardPropertiesBytes,
-			&columnCalculationsBytes,
 			&board.CreateAt,
 			&board.UpdateAt,
 			&board.DeleteAt,
@@ -137,11 +134,6 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 		err = json.Unmarshal(cardPropertiesBytes, &board.CardProperties)
 		if err != nil {
 			s.logger.Error("board card properties unmarshal error", mlog.Err(err))
-			return nil, err
-		}
-		err = json.Unmarshal(columnCalculationsBytes, &board.ColumnCalculations)
-		if err != nil {
-			s.logger.Error("board column calculation unmarshal error", mlog.Err(err))
 			return nil, err
 		}
 
@@ -181,16 +173,28 @@ func (s *SQLStore) boardMemberHistoryEntriesFromRows(rows *sql.Rows) ([]*model.B
 
 	for rows.Next() {
 		var boardMemberHistoryEntry model.BoardMemberHistoryEntry
+		var insertAt sql.NullString
 
 		err := rows.Scan(
 			&boardMemberHistoryEntry.BoardID,
 			&boardMemberHistoryEntry.UserID,
 			&boardMemberHistoryEntry.Action,
-			&boardMemberHistoryEntry.InsertAt,
+			&insertAt,
 		)
 		if err != nil {
 			return nil, err
 		}
+
+		// parse the insert_at timestamp which is different based on database type.
+		dateTemplate := "2006-01-02T15:04:05Z0700"
+		if s.dbType == model.MysqlDBType {
+			dateTemplate = "2006-01-02 15:04:05.000000"
+		}
+		ts, err := time.Parse(dateTemplate, insertAt.String)
+		if err != nil {
+			return nil, fmt.Errorf("cannot parse datetime '%s' for board_members_history scan: %w", insertAt.String, err)
+		}
+		boardMemberHistoryEntry.InsertAt = ts
 
 		boardMemberHistoryEntries = append(boardMemberHistoryEntries, &boardMemberHistoryEntry)
 	}
@@ -287,20 +291,9 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		return nil, err
 	}
 
-	columnCalculationsBytes, err := json.Marshal(board.ColumnCalculations)
-	if err != nil {
-		s.logger.Error(
-			"failed to marshal board.ColumnCalculations",
-			mlog.String("board_id", board.ID),
-			mlog.String("board.ColumnCalculations", fmt.Sprintf("%v", board.ColumnCalculations)),
-			mlog.Err(err),
-		)
-		return nil, err
-	}
-
 	existingBoard, err := s.getBoard(db, board.ID)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return nil, err
+		return nil, fmt.Errorf("insertBoard error occurred while fetching existing board %s: %w", board.ID, err)
 	}
 
 	insertQuery := s.getQueryBuilder(db).Insert("").
@@ -309,24 +302,23 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	now := utils.GetMillis()
 
 	insertQueryValues := map[string]interface{}{
-		"id":                  board.ID,
-		"team_id":             board.TeamID,
-		"channel_id":          board.ChannelID,
-		"created_by":          board.CreatedBy,
-		"modified_by":         userID,
-		"type":                board.Type,
-		"title":               board.Title,
-		"description":         board.Description,
-		"icon":                board.Icon,
-		"show_description":    board.ShowDescription,
-		"is_template":         board.IsTemplate,
-		"template_version":    board.TemplateVersion,
-		"properties":          propertiesBytes,
-		"card_properties":     cardPropertiesBytes,
-		"column_calculations": columnCalculationsBytes,
-		"create_at":           board.CreateAt,
-		"update_at":           now,
-		"delete_at":           board.DeleteAt,
+		"id":               board.ID,
+		"team_id":          board.TeamID,
+		"channel_id":       board.ChannelID,
+		"created_by":       board.CreatedBy,
+		"modified_by":      userID,
+		"type":             board.Type,
+		"title":            board.Title,
+		"description":      board.Description,
+		"icon":             board.Icon,
+		"show_description": board.ShowDescription,
+		"is_template":      board.IsTemplate,
+		"template_version": board.TemplateVersion,
+		"properties":       propertiesBytes,
+		"card_properties":  cardPropertiesBytes,
+		"create_at":        board.CreateAt,
+		"update_at":        now,
+		"delete_at":        board.DeleteAt,
 	}
 
 	if existingBoard != nil {
@@ -342,13 +334,12 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Set("template_version", board.TemplateVersion).
 			Set("properties", propertiesBytes).
 			Set("card_properties", cardPropertiesBytes).
-			Set("column_calculations", columnCalculationsBytes).
 			Set("update_at", now).
 			Set("delete_at", board.DeleteAt)
 
 		if _, err := query.Exec(); err != nil {
 			s.logger.Error(`InsertBoard error occurred while updating existing board`, mlog.String("boardID", board.ID), mlog.Err(err))
-			return nil, err
+			return nil, fmt.Errorf("insertBoard error occurred while updating existing board %s: %w", board.ID, err)
 		}
 	} else {
 		insertQueryValues["created_by"] = userID
@@ -357,7 +348,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 
 		query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "boards")
 		if _, err := query.Exec(); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("insertBoard error occurred while inserting board %s: %w", board.ID, err)
 		}
 	}
 
@@ -365,7 +356,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "boards_history")
 	if _, err := query.Exec(); err != nil {
 		s.logger.Error("failed to insert board history", mlog.String("board_id", board.ID), mlog.Err(err))
-		return nil, err
+		return nil, fmt.Errorf("failed to insert board %s history: %w", board.ID, err)
 	}
 
 	return s.getBoard(db, board.ID)
@@ -400,30 +391,25 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 	if err != nil {
 		return err
 	}
-	columnCalculationsBytes, err := json.Marshal(board.ColumnCalculations)
-	if err != nil {
-		return err
-	}
 
 	insertQueryValues := map[string]interface{}{
-		"id":                  board.ID,
-		"team_id":             board.TeamID,
-		"channel_id":          board.ChannelID,
-		"created_by":          board.CreatedBy,
-		"modified_by":         userID,
-		"type":                board.Type,
-		"title":               board.Title,
-		"description":         board.Description,
-		"icon":                board.Icon,
-		"show_description":    board.ShowDescription,
-		"is_template":         board.IsTemplate,
-		"template_version":    board.TemplateVersion,
-		"properties":          propertiesBytes,
-		"card_properties":     cardPropertiesBytes,
-		"column_calculations": columnCalculationsBytes,
-		"create_at":           board.CreateAt,
-		"update_at":           now,
-		"delete_at":           now,
+		"id":               board.ID,
+		"team_id":          board.TeamID,
+		"channel_id":       board.ChannelID,
+		"created_by":       board.CreatedBy,
+		"modified_by":      userID,
+		"type":             board.Type,
+		"title":            board.Title,
+		"description":      board.Description,
+		"icon":             board.Icon,
+		"show_description": board.ShowDescription,
+		"is_template":      board.IsTemplate,
+		"template_version": board.TemplateVersion,
+		"properties":       propertiesBytes,
+		"card_properties":  cardPropertiesBytes,
+		"create_at":        board.CreateAt,
+		"update_at":        now,
+		"delete_at":        now,
 	}
 
 	// writing board history
@@ -462,7 +448,7 @@ func (s *SQLStore) insertBoardWithAdmin(db sq.BaseRunner, board *model.Board, us
 
 	nbm, err := s.saveMember(db, bm)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("cannot save member %s while inserting board %s: %w", bm.UserID, bm.BoardID, err)
 	}
 
 	return newBoard, nbm, nil
@@ -507,8 +493,8 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 	if oldMember == nil {
 		addToMembersHistory := s.getQueryBuilder(db).
 			Insert(s.tablePrefix+"board_members_history").
-			Columns("board_id", "user_id", "action", "insert_at").
-			Values(bm.BoardID, bm.UserID, "created", model.GetMillis())
+			Columns("board_id", "user_id", "action").
+			Values(bm.BoardID, bm.UserID, "created")
 
 		if _, err := addToMembersHistory.Exec(); err != nil {
 			return nil, err
@@ -537,8 +523,8 @@ func (s *SQLStore) deleteMember(db sq.BaseRunner, boardID, userID string) error 
 	if rowsAffected > 0 {
 		addToMembersHistory := s.getQueryBuilder(db).
 			Insert(s.tablePrefix+"board_members_history").
-			Columns("board_id", "user_id", "action", "insert_at").
-			Values(boardID, userID, "deleted", model.GetMillis())
+			Columns("board_id", "user_id", "action").
+			Values(boardID, userID, "deleted")
 
 		if _, err := addToMembersHistory.Exec(); err != nil {
 			return err
@@ -657,7 +643,7 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 	return s.boardsFromRows(rows)
 }
 
-func (s *SQLStore) getBoardHistory(db sq.BaseRunner, boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Board, error) {
+func (s *SQLStore) getBoardHistory(db sq.BaseRunner, boardID string, opts model.QueryBoardHistoryOptions) ([]*model.Board, error) {
 	var order string
 	if opts.Descending {
 		order = " DESC "
@@ -689,6 +675,91 @@ func (s *SQLStore) getBoardHistory(db sq.BaseRunner, boardID string, opts model.
 	defer s.CloseRows(rows)
 
 	return s.boardsFromRows(rows)
+}
+
+func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy string) error {
+	boards, err := s.getBoardHistory(db, boardID, model.QueryBoardHistoryOptions{Limit: 1, Descending: true})
+	if err != nil {
+		return err
+	}
+
+	if len(boards) == 0 {
+		s.logger.Warn("undeleteBlock board not found", mlog.String("board_id", boardID))
+		return nil // undeleting non-existing board is not considered an error (for now)
+	}
+	board := boards[0]
+
+	if board.DeleteAt == 0 {
+		s.logger.Warn("undeleteBlock board not deleted", mlog.String("board_id", board.ID))
+		return nil // undeleting not deleted board is not considered an error (for now)
+	}
+
+	propertiesJSON, err := json.Marshal(board.Properties)
+	if err != nil {
+		return err
+	}
+
+	cardPropertiesJSON, err := json.Marshal(board.CardProperties)
+	if err != nil {
+		return err
+	}
+
+	now := utils.GetMillis()
+	columns := []string{
+		"id",
+		"team_id",
+		"channel_id",
+		"created_by",
+		"modified_by",
+		"type",
+		"title",
+		"description",
+		"icon",
+		"show_description",
+		"is_template",
+		"template_version",
+		"properties",
+		"card_properties",
+		"create_at",
+		"update_at",
+		"delete_at",
+	}
+
+	values := []interface{}{
+		board.ID,
+		board.TeamID,
+		"",
+		board.CreatedBy,
+		modifiedBy,
+		board.Type,
+		board.Title,
+		board.Description,
+		board.Icon,
+		board.ShowDescription,
+		board.IsTemplate,
+		board.TemplateVersion,
+		propertiesJSON,
+		cardPropertiesJSON,
+		board.CreateAt,
+		now,
+		0,
+	}
+	insertHistoryQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "boards_history").
+		Columns(columns...).
+		Values(values...)
+	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "boards").
+		Columns(columns...).
+		Values(values...)
+
+	if _, err := insertHistoryQuery.Exec(); err != nil {
+		return err
+	}
+
+	if _, err := insertQuery.Exec(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *SQLStore) getBoardMemberHistory(db sq.BaseRunner, boardID, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error) {

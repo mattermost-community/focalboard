@@ -4004,29 +4004,3 @@ footer.site-footer .secondary-footer__social li:focus svg path {
         margin-left: 2.5rem;
     }
 }
-
-
-/*Alternate Grey Footer*/
-footer.site-footer-2 {
-    background: #FAFAFA;
-}
-
-footer.site-footer-2 small,
-footer.site-footer-2 small a {
-    color: var(--denim03);
-}
-
-footer.site-footer-2 .footer-menu__single a,
-footer.site-footer-2 .footer-menu__single a:visited {
-    color: var(--black05);
-}
-
-footer.site-footer-2 .secondary-footer__social li svg path,
-footer.site-footer-2 .secondary-footer__social li svg path {
-    fill: #186CDA;
-}
-
-footer.site-footer-2 .secondary-footer__social li:hover svg path,
-footer.site-footer-2 .secondary-footer__social li:focus svg path {
-    fill: var(--denim03);
-}

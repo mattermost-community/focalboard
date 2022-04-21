@@ -72,14 +72,6 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                             ))
                         }
                     </Menu.SubMenu>
-                    <Menu.Text
-                        id='export'
-                        name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
-                        onClick={async () => {
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ExportArchive)
-                            Archiver.exportFullArchive()
-                        }}
-                    />
                     <Menu.SubMenu
                         id='lang'
                         name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}

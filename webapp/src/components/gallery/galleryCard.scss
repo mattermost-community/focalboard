@@ -81,6 +81,14 @@
         .octo-icon {
             margin-right: 5px;
         }
+
+        .octo-titletext {
+            display: -webkit-box; // stylelint-disable-line
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical; // stylelint-disable-line
+        }
     }
 
     .gallery-props {

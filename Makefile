@@ -36,7 +36,7 @@ ci: server-test
 	cd webapp; npm run cypress:ci
 
 templates-archive: ## Build templates archive file
-	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive" 
+	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
 
 server: templates-archive ## Build server for local environment.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
@@ -120,6 +120,11 @@ server-test-sqlite: export FB_UNIT_TESTING=1
 server-test-sqlite: templates-archive ## Run server tests using sqlite
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
 
+server-test-mini-sqlite: export FB_UNIT_TESTING=1
+
+server-test-mini-sqlite: templates-archive ## Run server tests using sqlite
+	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
+
 server-test-mysql: export FB_UNIT_TESTING=1
 server-test-mysql: export FB_STORE_TEST_DB_TYPE=mysql
 server-test-mysql: export FB_STORE_TEST_DOCKER_PORT=44445
@@ -164,7 +169,8 @@ mac-app: server-mac webapp ## Build Mac application.
 	cp app-config.json mac/resources/config.json
 	cp -R webapp/pack mac/resources/pack
 	mkdir -p mac/temp
-	xcodebuild archive -workspace mac/Focalboard.xcworkspace -scheme Focalboard -archivePath mac/temp/focalboard.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" CODE_SIGNING_ALLOWED="NO"
+	xcodebuild archive -workspace mac/Focalboard.xcworkspace -scheme Focalboard -archivePath mac/temp/focalboard.xcarchive CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED="NO" CODE_SIGNING_ALLOWED="NO" \
+		|| { echo "xcodebuild failed, did you install the full Xcode and not just the CLI tools?"; exit 1; }
 	mkdir -p mac/dist
 	cp -R mac/temp/focalboard.xcarchive/Products/Applications/Focalboard.app mac/dist/
 	# xcodebuild -exportArchive -archivePath mac/temp/focalboard.xcarchive -exportPath mac/dist -exportOptionsPlist mac/export.plist
