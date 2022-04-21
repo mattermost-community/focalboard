@@ -41,11 +41,11 @@ jobs:
     - name: npm ci focalboard/mattermost-plugin
       run: cd focalboard/mattermost-plugin/webapp; npm ci --no-optional
 
-    - name: Setup Mattermost-webapp paths
-      run: make mm-setup-local
+    - name: Setup Mattermost
+      run: cd focalboard; make mm-setup-local
 
     - name: Deploy plugin
-      run: make mm-deploy-local
+      run: cd focalboard; make mm-deploy-local
 
     - name: Cypress Mattermost tests
       run: |
