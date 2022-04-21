@@ -8,7 +8,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <div
         class="Icon"
@@ -50,7 +50,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="CheckIcon Icon"
@@ -79,7 +79,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-pencil-outline EditIcon"
@@ -102,7 +102,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -131,7 +131,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -162,7 +162,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <div
         class="Icon"
@@ -204,7 +204,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="CheckIcon Icon"
@@ -233,7 +233,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-pencil-outline EditIcon"
@@ -256,7 +256,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -285,7 +285,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -316,7 +316,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <div
         class="Icon"
@@ -355,7 +355,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <div
         class="Icon"
@@ -397,7 +397,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="CheckIcon Icon"
@@ -426,7 +426,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-pencil-outline EditIcon"
@@ -449,7 +449,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -478,7 +478,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -509,7 +509,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <div
         class="Icon"
@@ -551,7 +551,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="CheckIcon Icon"
@@ -580,7 +580,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-pencil-outline EditIcon"
@@ -603,7 +603,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -632,7 +632,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"

@@ -10,9 +10,10 @@ import (
 	mockpermissions "github.com/mattermost/focalboard/server/services/permissions/mocks"
 	"github.com/mattermost/focalboard/server/services/store/mockstore"
 	"github.com/mattermost/focalboard/server/utils"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type TestHelper struct {

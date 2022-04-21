@@ -61,7 +61,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -82,7 +82,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -103,7 +103,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -124,7 +124,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -145,7 +145,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -166,7 +166,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -194,7 +194,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -221,7 +221,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -321,7 +321,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -399,7 +399,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -452,7 +452,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -479,7 +479,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -500,7 +500,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -521,7 +521,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -542,7 +542,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -563,7 +563,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -584,7 +584,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -605,7 +605,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -626,7 +626,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -647,7 +647,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -668,7 +668,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -689,7 +689,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -710,7 +710,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -731,7 +731,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -752,7 +752,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -773,7 +773,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -794,7 +794,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -822,7 +822,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -902,7 +902,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -1000,7 +1000,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -1100,7 +1100,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -1178,7 +1178,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -1255,7 +1255,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -1282,7 +1282,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -1303,7 +1303,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -1324,7 +1324,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -1352,7 +1352,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                         role="button"
                       >
                         <div
-                          class=""
+                          class="d-flex"
                         >
                           <div
                             class="noicon"
@@ -1408,7 +1408,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"

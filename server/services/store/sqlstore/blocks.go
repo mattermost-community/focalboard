@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	sq "github.com/Masterminds/squirrel"
@@ -632,7 +631,7 @@ func (s *SQLStore) getBoardAndCardByID(db sq.BaseRunner, blockID string) (board 
 	}
 
 	if len(blocks) == 0 {
-		return nil, nil, store.NewErrNotFound(blockID)
+		return nil, nil, model.NewErrNotFound(blockID)
 	}
 
 	return s.getBoardAndCard(db, &blocks[0])

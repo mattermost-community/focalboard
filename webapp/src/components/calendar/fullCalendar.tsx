@@ -223,6 +223,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
             className='CalendarContainer'
         >
             <FullCalendar
+                key={activeView.id}
                 dayCellContent={dayCellContent}
                 dayMaxEventRows={5}
                 initialDate={initialDate}

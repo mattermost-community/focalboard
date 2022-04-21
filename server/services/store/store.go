@@ -3,9 +3,6 @@
 package store
 
 import (
-	"database/sql"
-	"errors"
-	"fmt"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -99,7 +96,7 @@ type Store interface {
 	GetBoardMemberHistory(boardID, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error)
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
 	GetMembersForUser(userID string) ([]*model.BoardMember, error)
-	SearchBoardsForUser(term, userID, teamID string) ([]*model.Board, error)
+	SearchBoardsForUser(term, userID string) ([]*model.Board, error)
 
 	// @withTransaction
 	CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, []*model.BoardMember, error)
@@ -116,6 +113,8 @@ type Store interface {
 	DeleteCategory(categoryID, userID, teamID string) error
 
 	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error)
+
+	// @withTransaction
 	AddUpdateCategoryBoard(userID, categoryID, blockID string) error
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
@@ -136,42 +135,5 @@ type Store interface {
 
 	DBType() string
 
-	IsErrNotFound(err error) bool
-
 	GetLicense() *mmModel.License
-}
-
-// ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.
-type ErrNotFound struct {
-	resource string
-}
-
-// NewErrNotFound creates a new ErrNotFound instance.
-func NewErrNotFound(resource string) *ErrNotFound {
-	return &ErrNotFound{
-		resource: resource,
-	}
-}
-
-func (nf *ErrNotFound) Error() string {
-	return fmt.Sprintf("{%s} not found", nf.resource)
-}
-
-// IsErrNotFound returns true if `err` is or wraps a ErrNotFound.
-func IsErrNotFound(err error) bool {
-	if err == nil {
-		return false
-	}
-
-	// check if this is a store.ErrNotFound
-	var nf *ErrNotFound
-	if errors.As(err, &nf) {
-		return true
-	}
-
-	// check if this is a sql.ErrNotFound
-	if errors.Is(err, sql.ErrNoRows) {
-		return true
-	}
-	return false
 }

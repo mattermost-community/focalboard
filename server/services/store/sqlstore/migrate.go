@@ -557,7 +557,7 @@ func (s *SQLStore) getDMBoards(tx sq.BaseRunner) ([]*model.Board, error) {
 	}
 
 	boards, err := s.getBoardsByCondition(tx, conditions)
-	if err != nil && errors.Is(err, sql.ErrNoRows) {
+	if err != nil && model.IsErrNotFound(err) {
 		return []*model.Board{}, nil
 	}
 

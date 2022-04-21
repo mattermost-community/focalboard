@@ -6,6 +6,8 @@ package plugindelivery
 import (
 	"strings"
 
+	"github.com/mattermost/focalboard/server/model"
+
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -21,7 +23,7 @@ func (pd *PluginDelivery) UserByUsername(username string) (*mm_model.User, error
 	trimmed := username
 	for ok {
 		user, err = pd.api.GetUserByUsername(trimmed)
-		if err != nil && !isErrNotFound(err) {
+		if err != nil && !model.IsErrNotFound(err) {
 			return nil, err
 		}
 
@@ -50,11 +52,4 @@ func trimUsernameSpecialChar(word string) (string, bool) {
 	}
 
 	return word, false
-}
-
-// isErrNotFound returns true if the error is a plugin.ErrNotFound. The pluginAPI converts
-// AppError to the plugin.ErrNotFound var.
-// TODO: add a `IsErrNotFound` method to the plugin API.
-func isErrNotFound(err error) bool {
-	return err != nil && err.Error() == "not found"
 }
