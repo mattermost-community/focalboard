@@ -21,6 +21,7 @@ type SQLStore struct {
 	tablePrefix      string
 	connectionString string
 	isPlugin         bool
+	isSingleUser     bool
 	logger           *mlog.Logger
 	NewMutexFn       MutexFactory
 	pluginAPI        *plugin.API
@@ -45,6 +46,7 @@ func New(params Params) (*SQLStore, error) {
 		connectionString: params.ConnectionString,
 		logger:           params.Logger,
 		isPlugin:         params.IsPlugin,
+		isSingleUser:     params.IsSingleUser,
 		NewMutexFn:       params.NewMutexFn,
 		pluginAPI:        params.PluginAPI,
 	}
