@@ -845,9 +845,9 @@ func TestLocalPermissionsDuplicateBoardBlock(t *testing.T) {
 }
 
 func TestLocalPermissionsDuplicateBoardComment(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
+	th := SetupTestHelperLocalMode(t)
 	defer th.TearDown()
-	clients := setupClients(th)
+	clients := setupLocalClients(th)
 	testData := setupData(t, th)
 
 	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: model.TypeComment, BoardID: testData.publicTemplate.ID}, userAdmin)
