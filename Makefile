@@ -215,7 +215,7 @@ mm-setup-local:
 	cd ../mattermost-server && ln -nfs ../mattermost-webapp/dist client
 
 	echo Configuring Mattermost-server
-	cd ../mattermost-server && make config-reset
+	$(MAKE) -C ../mattermost-server/ config-reset
 	cd ../mattermost-server && sed -i -e 's/"EnableLocalMode": false/"EnableLocalMode": true/g' config/config.json
 	cd ../mattermost-server && sed -i -e 's/"EnableUploads": false/"EnableUploads": true/g' config/config.json
 	cd ../mattermost-server && sed -i -e 's/"MaxFileSize": .*/"MaxFileSize": 904857600,/g' config/config.json
