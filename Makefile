@@ -215,10 +215,15 @@ mm-setup-local:
 	cd ../mattermost-server && ln -nfs ../mattermost-webapp/dist client
 
 	echo Configuring Mattermost-server
-	$(MAKE) -C ../mattermost-server/ config-reset
+	cd ../mattermost-server && $(MAKE) config-reset
 	cd ../mattermost-server && sed -i -e 's/"EnableLocalMode": false/"EnableLocalMode": true/g' config/config.json
 	cd ../mattermost-server && sed -i -e 's/"EnableUploads": false/"EnableUploads": true/g' config/config.json
 	cd ../mattermost-server && sed -i -e 's/"MaxFileSize": .*/"MaxFileSize": 904857600,/g' config/config.json
+
+	echo Starting Mattermost-server
+	cd ../mattermost-server && $(MAKE) run
+
+	echo Configuring test user
 	cd ../mattermost-server && bin/mmctl --local user create --email testuser@test.com --username testuser --password TestPass1
 	cd ../mattermost-server && bin/mmctl --local team create --name test --display_name "Test Team"
 	cd ../mattermost-server && bin/mmctl --local team users add test testuser
