@@ -72,24 +72,4 @@ describe('Create board actions', () => {
 
         cy.screenshot()
     })
-
-    const loginUser = () => {
-        cy.log('**Login**')
-        cy.visit('/login')
-        cy.get('#loginId').
-            should('exist').
-            type(username)
-        cy.get('#loginPassword').type(password)
-        cy.get('#loginButton').click()
-        cy.wait(1000)
-        cy.screenshot()
-        return true
-    }
-
-    const skipGettingStarted = () => {
-        cy.log('**Skip getting started in Channels**')
-        cy.visit('test/tips')
-        cy.get('.NextStepsView__button').should('exist').click()
-        cy.get('.title').contains('Test Team').should('exist')
-    }
 })
