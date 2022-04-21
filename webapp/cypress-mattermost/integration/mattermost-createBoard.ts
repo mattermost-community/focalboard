@@ -32,6 +32,8 @@ describe('Create board actions', () => {
 
         cy.get('.BoardComponent').should('exist')
 
+        cy.screenshot()
+
         // Change Title
         cy.get('.Editable.title').
             type('{selectall}').
@@ -60,11 +62,15 @@ describe('Create board actions', () => {
             type(cardTitle).
             should('have.value', cardTitle)
 
+        cy.screenshot()
+
         // Close card dialog
         cy.log('**Close card dialog**')
         cy.get('.Dialog Button[title=\'Close dialog\']').
             should('be.visible').
             click()
+
+        cy.screenshot()
     })
 
     const loginUser = () => {
