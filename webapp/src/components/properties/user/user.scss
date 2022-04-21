@@ -1,8 +1,14 @@
 .UserProperty {
+    padding: 4px 8px;
     margin-right: 20px;
-    min-width: 120px;
+    min-width: 180px;
     display: flex;
     align-items: center;
+    border-radius: 4px;
+
+    &:hover {
+        background-color: rgba(var(--center-channel-color-rgb), 0.08);
+    }
 
     &.readonly {
         overflow: hidden;

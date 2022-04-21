@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/services/config"
@@ -13,7 +12,6 @@ import (
 	"github.com/mattermost/focalboard/server/ws"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
-	apierrors "github.com/mattermost/mattermost-plugin-api/errors"
 
 	"github.com/mattermost/mattermost-server/v6/model"
 
@@ -122,8 +120,4 @@ func (da *pluginAPIAdapter) GetChannelByID(channelID string) (*model.Channel, er
 
 func (da *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*model.ChannelMember, error) {
 	return da.client.Channel.GetMember(channelID, userID)
-}
-
-func (da *pluginAPIAdapter) IsErrNotFound(err error) bool {
-	return errors.Is(err, apierrors.ErrNotFound)
 }

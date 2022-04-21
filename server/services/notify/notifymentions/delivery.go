@@ -15,5 +15,4 @@ import (
 type MentionDelivery interface {
 	MentionDeliver(mentionedUser *mm_model.User, extract string, evt notify.BlockChangeEvent) (string, error)
 	UserByUsername(mentionUsername string) (*mm_model.User, error)
-	IsErrNotFound(err error) bool
 }

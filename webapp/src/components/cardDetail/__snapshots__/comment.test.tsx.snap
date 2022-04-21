@@ -54,7 +54,7 @@ exports[`components/cardDetail/comment return comment 1`] = `
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <i
                       class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -83,7 +83,7 @@ exports[`components/cardDetail/comment return comment 1`] = `
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -168,7 +168,7 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <i
                       class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -197,7 +197,7 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"

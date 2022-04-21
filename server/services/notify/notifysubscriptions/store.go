@@ -27,6 +27,4 @@ type Store interface {
 
 	UpsertNotificationHint(hint *model.NotificationHint, notificationFreq time.Duration) (*model.NotificationHint, error)
 	GetNextNotificationHint(remove bool) (*model.NotificationHint, error)
-
-	IsErrNotFound(err error) bool
 }

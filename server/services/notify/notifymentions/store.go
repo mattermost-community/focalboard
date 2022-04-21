@@ -11,6 +11,4 @@ type Store interface {
 	SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
-
-	IsErrNotFound(err error) bool
 }

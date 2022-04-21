@@ -77,6 +77,11 @@
             justify-content: space-between;
         }
 
+        .toolbar--right {
+            display: flex;
+            gap: 8px;
+        }
+
         > .content {
             display: flex;
             flex-direction: column;
