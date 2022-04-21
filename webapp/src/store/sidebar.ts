@@ -68,8 +68,8 @@ const sidebarSlice = createSlice({
                         updateAt: updatedCategory.updateAt,
                     }
                 }
-
             })
+            
             // sort categories alphabetically
             state.categoryAttributes.sort((a, b) => a.name.localeCompare(b.name))
         },
