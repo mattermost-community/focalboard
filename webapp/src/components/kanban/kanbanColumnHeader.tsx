@@ -126,7 +126,6 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         }}
                         readonly={props.readonly || !canEditBoardProperties}
                         spellCheck={true}
-                        className=''
                     />
                 </Label>}
             <KanbanCalculation

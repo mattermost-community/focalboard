@@ -129,7 +129,6 @@ const ViewHeader = (props: Props) => {
                     readonly={props.readonly || !canEditBoardProperties}
                     spellCheck={true}
                     autoExpand={false}
-                    className=''
                 />
                 <div>
                     <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
