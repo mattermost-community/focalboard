@@ -14,21 +14,21 @@ describe('Create board actions', () => {
     }, () => {
         cy.log('**Login**')
         cy.visit('/boards')
-        cy.get('#loginId', {timeout: 20000}).
+        cy.get('#loginId').
             should('exist').
             type(username)
         cy.get('#loginPassword').type(password)
         cy.get('#loginButton').click()
 
         cy.log('**Boards welcome screen**')
-        cy.contains(`No thanks, I'll figure it out myself`, {timeout: 20000}).should('exist').click()
+        cy.contains(`No thanks, I'll figure it out myself`).should('exist').click()
 
         // Select template
         cy.log('**Create board from tempalte**')
-        cy.get('.BoardTemplateSelectorItem').contains('Project Tasks ', {timeout: 10000}).
+        cy.get('.BoardTemplateSelectorItem').contains('Project Tasks ').
             should('exist').
             click()
-        cy.contains(`Use this template`, {timeout: 10000}).click()
+        cy.contains(`Use this template`).should('exist').click({force: true})
 
         cy.get('.BoardComponent').should('exist')
 
@@ -76,7 +76,7 @@ describe('Create board actions', () => {
     const loginUser = () => {
         cy.log('**Login**')
         cy.visit('/login')
-        cy.get('#loginId', {timeout: 20000}).
+        cy.get('#loginId').
             should('exist').
             type(username)
         cy.get('#loginPassword').type(password)
@@ -89,7 +89,7 @@ describe('Create board actions', () => {
     const skipGettingStarted = () => {
         cy.log('**Skip getting started in Channels**')
         cy.visit('test/tips')
-        cy.get('.NextStepsView__button', {timeout: 20000}).should('exist').click()
-        cy.get('.title').contains('Test Team', {timeout: 20000}).should('exist')
+        cy.get('.NextStepsView__button').should('exist').click()
+        cy.get('.title').contains('Test Team').should('exist')
     }
 })
