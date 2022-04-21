@@ -22,7 +22,7 @@ func (pd *PluginDelivery) SubscriptionDeliverSlackAttachments(subscriberID strin
 	// check subscriber is member of channel
 	_, err := pd.api.GetUserByID(subscriberID)
 	if err != nil {
-		if pd.api.IsErrNotFound(err) {
+		if model.IsErrNotFound(err) {
 			// subscriber is not a member of the channel; fail silently.
 			return nil
 		}

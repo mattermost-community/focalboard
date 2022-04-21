@@ -7,6 +7,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/mattermost/focalboard/server/model"
+
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -90,7 +92,7 @@ func newPlugAPIMock(users map[string]*mm_model.User) pluginAPIMock {
 func (m pluginAPIMock) GetUserByUsername(name string) (*mm_model.User, error) {
 	user, ok := m.users[name]
 	if !ok {
-		return nil, ErrNotFound{}
+		return nil, model.NewErrNotFound(name)
 	}
 	return user, nil
 }
@@ -109,7 +111,7 @@ func (m pluginAPIMock) GetUserByID(userID string) (*mm_model.User, error) {
 			return user, nil
 		}
 	}
-	return nil, ErrNotFound{}
+	return nil, model.NewErrNotFound(userID)
 }
 
 func (m pluginAPIMock) GetTeamMember(teamID string, userID string) (*mm_model.TeamMember, error) {
@@ -119,7 +121,7 @@ func (m pluginAPIMock) GetTeamMember(teamID string, userID string) (*mm_model.Te
 	}
 
 	if teamID != defTeamID {
-		return nil, ErrNotFound{}
+		return nil, model.NewErrNotFound(teamID)
 	}
 
 	member := &mm_model.TeamMember{
@@ -130,19 +132,9 @@ func (m pluginAPIMock) GetTeamMember(teamID string, userID string) (*mm_model.Te
 }
 
 func (m pluginAPIMock) GetChannelByID(channelID string) (*mm_model.Channel, error) {
-	return nil, ErrNotFound{}
+	return nil, model.NewErrNotFound(channelID)
 }
 
 func (m pluginAPIMock) GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error) {
-	return nil, ErrNotFound{}
-}
-
-func (m pluginAPIMock) IsErrNotFound(err error) bool {
-	return false
-}
-
-type ErrNotFound struct{}
-
-func (e ErrNotFound) Error() string {
-	return "not found"
+	return nil, model.NewErrNotFound(userID)
 }

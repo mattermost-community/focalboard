@@ -180,7 +180,12 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('should match snapshot', async () => {
-        mockedOctoClient.getSharing.mockResolvedValue(undefined)
+        const sharing:ISharing = {
+            id: '',
+            enabled: false,
+            token: '',
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
         let container
         await act(async () => {
             const result = render(
@@ -356,7 +361,12 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(container).toMatchSnapshot()
     })
     test('return shareBoardComponent and click Switch without sharing', async () => {
-        mockedOctoClient.getSharing.mockResolvedValue(undefined)
+        const sharing:ISharing = {
+            id: '',
+            enabled: false,
+            token: '',
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
         mockedUtils.createGuid.mockReturnValue('aToken')
         let container: Element | undefined
         await act(async () => {

@@ -12,7 +12,7 @@ import SearchDialog from '../searchDialog/searchDialog'
 import Globe from '../../widgets/icons/globe'
 import LockOutline from '../../widgets/icons/lockOutline'
 import {useAppSelector} from '../../store/hooks'
-import {getCurrentTeam} from '../../store/teams'
+import {getAllTeams, getCurrentTeam, Team} from '../../store/teams'
 import {getMe} from '../../store/users'
 import {BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
 
@@ -38,14 +38,17 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const history = useHistory()
 
-    const selectBoard = async (boardId: string): Promise<void> => {
+    const selectBoard = async (teamId: string, boardId: string): Promise<void> => {
         if (!me) {
             return
         }
-        const newPath = generatePath(match.path, {...match.params, boardId, viewId: undefined})
+        const newPath = generatePath(match.path, {...match.params, teamId, boardId, viewId: undefined})
         history.push(newPath)
         props.onClose()
     }
+
+    const teamsById:Record<string, Team> = {}
+    useAppSelector(getAllTeams).forEach((t) => teamsById[t.id] = t)
 
     const searchHandler = async (query: string): Promise<Array<ReactNode>> => {
         if (query.trim().length === 0 || !team) {
@@ -54,17 +57,22 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
 
         const items = await octoClient.search(team.id, query)
         const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
-        return items.map((item) => (
-            <div
-                key={item.id}
-                className='blockSearchResult'
-                onClick={() => selectBoard(item.id)}
-            >
-                {item.type === BoardTypeOpen && <Globe/>}
-                {item.type === BoardTypePrivate && <LockOutline/>}
-                <span>{item.title || untitledBoardTitle}</span>
-            </div>
-        ))
+        return items.map((item) => {
+            const resultTitle = item.title || untitledBoardTitle
+            const teamTitle = teamsById[item.teamId].title
+            return (
+                <div
+                    key={item.id}
+                    className='blockSearchResult'
+                    onClick={() => selectBoard(item.teamId, item.id)}
+                >
+                    {item.type === BoardTypeOpen && <Globe/>}
+                    {item.type === BoardTypePrivate && <LockOutline/>}
+                    <span className='resultTitle'>{resultTitle}</span>
+                    <span className='teamTitle'>{teamTitle}</span>
+                </div>
+            )
+        })
     }
 
     return (

@@ -80,7 +80,7 @@ func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 			// import file/image;  dir is the old board id
 			boardID, ok := boardMap[dir]
 			if !ok {
-				a.logger.Error("skipping orphan image in archive",
+				a.logger.Warn("skipping orphan image in archive",
 					mlog.String("dir", dir),
 					mlog.String("filename", filename),
 				)

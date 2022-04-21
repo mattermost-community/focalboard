@@ -21,7 +21,7 @@ Object {
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="TableIcon Icon"
@@ -60,7 +60,7 @@ Object {
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="TableIcon Icon"
@@ -104,7 +104,7 @@ Object {
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-content-copy content-copy"
@@ -127,7 +127,7 @@ Object {
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -180,7 +180,7 @@ Object {
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -217,7 +217,7 @@ Object {
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <svg
                   class="TableIcon Icon"
@@ -256,7 +256,7 @@ Object {
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <svg
                   class="TableIcon Icon"
@@ -300,7 +300,7 @@ Object {
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <i
                   class="CompassIcon icon-content-copy content-copy"
@@ -323,7 +323,7 @@ Object {
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <i
                   class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -376,7 +376,7 @@ Object {
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -470,7 +470,7 @@ Object {
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="TableIcon Icon"
@@ -509,7 +509,7 @@ Object {
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="TableIcon Icon"
@@ -562,7 +562,7 @@ Object {
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -599,7 +599,7 @@ Object {
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <svg
                   class="TableIcon Icon"
@@ -638,7 +638,7 @@ Object {
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <svg
                   class="TableIcon Icon"
@@ -691,7 +691,7 @@ Object {
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"

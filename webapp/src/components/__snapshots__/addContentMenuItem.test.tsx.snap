@@ -8,7 +8,7 @@ exports[`components/addContentMenuItem return a checkbox menu item 1`] = `
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <svg
         class="CheckIcon Icon"
@@ -40,7 +40,7 @@ exports[`components/addContentMenuItem return a divider menu item 1`] = `
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <svg
         class="DividerIcon Icon"
@@ -72,7 +72,7 @@ exports[`components/addContentMenuItem return a text menu item 1`] = `
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <svg
         class="TextIcon Icon"
@@ -106,7 +106,7 @@ exports[`components/addContentMenuItem return an image menu item 1`] = `
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <svg
         class="ImageIcon Icon"

@@ -63,7 +63,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="HideIcon Icon"
@@ -92,7 +92,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -294,7 +294,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
