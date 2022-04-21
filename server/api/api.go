@@ -1415,13 +1415,6 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if block.Type == model.TypeComment || (patch.Type != nil && *patch.Type == model.TypeComment) {
-		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionCommentBoardCards) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to comment cards"})
-			return
-		}
-	}
-
 	auditRec := a.makeAuditRecord(r, "patchBlock", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("boardID", boardID)
