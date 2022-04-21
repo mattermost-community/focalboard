@@ -3252,6 +3252,10 @@ header.with-notification-bar {
     padding: 0 20px;
 }
 
+.homepage .header__links--right a:hover {
+    color: var(--marigold03) !important;
+}
+
 .header__links--right a:hover,
 .header__links--right a:focus {
     color: #186CDA;
@@ -3464,8 +3468,28 @@ table>tbody>tr:nth-of-type(odd) {
     background-color: #f9f9f9;
 }
 
+.doc-content,
+.sidebar {
+    -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
 .doc-content {
     margin: 50px 0 0;
+}
+
+.doc-content h2,
+.doc-content h3 {
+    margin-top: 3rem;
+}
+
+.doc-content h3 {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.doc-content img  {
+    border: 1px solid var(--black01);
 }
 
 .doc-content .edit-github {
@@ -3673,7 +3697,8 @@ table>tbody>tr:nth-of-type(odd) {
 }
 
 .homepage__section p a:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    color: var(--marigold04);
 }
 
 .homepage-search {
