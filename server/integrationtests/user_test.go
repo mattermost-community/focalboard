@@ -17,6 +17,7 @@ const (
 )
 
 func TestUserRegister(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelper(t).Start()
 	defer th.TearDown()
 
@@ -37,6 +38,7 @@ func TestUserRegister(t *testing.T) {
 }
 
 func TestUserLogin(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelper(t).Start()
 	defer th.TearDown()
 
@@ -79,6 +81,7 @@ func TestUserLogin(t *testing.T) {
 }
 
 func TestGetMe(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelper(t).Start()
 	defer th.TearDown()
 
@@ -121,6 +124,7 @@ func TestGetMe(t *testing.T) {
 }
 
 func TestGetUser(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelper(t).Start()
 	defer th.TearDown()
 
@@ -166,6 +170,7 @@ func TestGetUser(t *testing.T) {
 }
 
 func TestUserChangePassword(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelper(t).Start()
 	defer th.TearDown()
 
@@ -212,6 +217,7 @@ func randomBytes(t *testing.T, n int) []byte {
 }
 
 func TestTeamUploadFile(t *testing.T) {
+	t.Parallel()
 	t.Run("no permission", func(t *testing.T) { // native auth, but not login
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()

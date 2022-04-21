@@ -10,6 +10,7 @@ import (
 )
 
 func TestUploadFile(t *testing.T) {
+	t.Parallel()
 	const (
 		testTeamID = "team-id"
 	)

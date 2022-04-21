@@ -10,6 +10,7 @@ import (
 )
 
 func TestExportBoard(t *testing.T) {
+	t.Parallel()
 	t.Run("export single board", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()

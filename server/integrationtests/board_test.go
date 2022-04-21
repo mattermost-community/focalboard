@@ -18,6 +18,7 @@ const (
 )
 
 func TestGetBoards(t *testing.T) {
+	t.Parallel()
 	t.Run("a non authenticated client should be rejected", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
@@ -118,6 +119,7 @@ func TestGetBoards(t *testing.T) {
 }
 
 func TestCreateBoard(t *testing.T) {
+	t.Parallel()
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
@@ -300,6 +302,7 @@ func TestCreateBoard(t *testing.T) {
 }
 
 func TestCreateBoardTemplate(t *testing.T) {
+	t.Parallel()
 	t.Run("create public board template", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
@@ -414,6 +417,7 @@ func TestCreateBoardTemplate(t *testing.T) {
 }
 
 func TestGetAllBlocksForBoard(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelperWithToken(t).Start()
 	defer th.TearDown()
 
@@ -476,6 +480,7 @@ func TestGetAllBlocksForBoard(t *testing.T) {
 }
 
 func TestSearchBoards(t *testing.T) {
+	t.Parallel()
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
@@ -588,6 +593,7 @@ func TestSearchBoards(t *testing.T) {
 }
 
 func TestGetBoard(t *testing.T) {
+	t.Parallel()
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
@@ -703,6 +709,7 @@ func TestGetBoard(t *testing.T) {
 }
 
 func TestGetBoardMetadata(t *testing.T) {
+	t.Parallel()
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
 		th := SetupTestHelperWithLicense(t, LicenseEnterprise).InitBasic()
 		defer th.TearDown()
@@ -882,6 +889,7 @@ func TestGetBoardMetadata(t *testing.T) {
 }
 
 func TestPatchBoard(t *testing.T) {
+	t.Parallel()
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
@@ -997,6 +1005,7 @@ func TestPatchBoard(t *testing.T) {
 }
 
 func TestDeleteBoard(t *testing.T) {
+	t.Parallel()
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
@@ -1074,6 +1083,7 @@ func TestDeleteBoard(t *testing.T) {
 }
 
 func TestUndeleteBoard(t *testing.T) {
+	t.Parallel()
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
@@ -1196,6 +1206,7 @@ func TestUndeleteBoard(t *testing.T) {
 }
 
 func TestGetMembersForBoard(t *testing.T) {
+	t.Parallel()
 	teamID := testTeamID
 
 	createBoardWithUsers := func(th *TestHelper) *model.Board {
@@ -1468,6 +1479,7 @@ func TestAddMember(t *testing.T) {
 }
 
 func TestUpdateMember(t *testing.T) {
+	t.Parallel()
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
@@ -1598,6 +1610,7 @@ func TestUpdateMember(t *testing.T) {
 }
 
 func TestDeleteMember(t *testing.T) {
+	t.Parallel()
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
@@ -1817,6 +1830,7 @@ func TestDeleteMember(t *testing.T) {
 }
 
 func TestGetTemplates(t *testing.T) {
+	t.Parallel()
 	t.Run("should be able to retrieve built-in templates", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
@@ -1870,6 +1884,7 @@ func TestGetTemplates(t *testing.T) {
 }
 
 func TestDuplicateBoard(t *testing.T) {
+	t.Parallel()
 	t.Run("create and duplicate public board", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
@@ -1939,6 +1954,7 @@ func TestDuplicateBoard(t *testing.T) {
 }
 
 func TestJoinBoard(t *testing.T) {
+	t.Parallel()
 	t.Run("create and join public board", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()

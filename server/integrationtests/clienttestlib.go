@@ -2,6 +2,8 @@ package integrationtests
 
 import (
 	"errors"
+	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"testing"
@@ -78,6 +80,20 @@ func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string
 	return true
 }
 
+func getFreePort() (int, error) {
+	addr, err := net.ResolveTCPAddr("tcp", "localhost:0")
+	if err != nil {
+		return 0, err
+	}
+
+	l, err := net.ListenTCP("tcp", addr)
+	if err != nil {
+		return 0, err
+	}
+	defer l.Close()
+	return l.Addr().(*net.TCPAddr).Port, nil
+}
+
 func getTestConfig() (*config.Configuration, error) {
 	dbType, connectionString, err := sqlstore.PrepareNewTestDatabase()
 	if err != nil {
@@ -106,9 +122,14 @@ func getTestConfig() (*config.Configuration, error) {
 		}
 	}`
 
+	freePort, err := getFreePort()
+	if err != nil {
+		return nil, err
+	}
+
 	return &config.Configuration{
-		ServerRoot:        "http://localhost:8888",
-		Port:              8888,
+		ServerRoot:        fmt.Sprintf("http://localhost:%d", freePort),
+		Port:              freePort,
 		DBType:            dbType,
 		DBConfigString:    connectionString,
 		DBTablePrefix:     "test_",

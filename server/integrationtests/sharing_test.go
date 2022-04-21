@@ -9,6 +9,7 @@ import (
 )
 
 func TestSharing(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelper(t).InitBasic()
 	defer th.TearDown()
 

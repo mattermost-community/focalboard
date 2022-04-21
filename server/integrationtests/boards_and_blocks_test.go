@@ -9,6 +9,7 @@ import (
 )
 
 func TestCreateBoardsAndBlocks(t *testing.T) {
+	t.Parallel()
 	teamID := testTeamID
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
@@ -164,6 +165,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 }
 
 func TestPatchBoardsAndBlocks(t *testing.T) {
+	t.Parallel()
 	teamID := "team-id"
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
@@ -657,6 +659,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 }
 
 func TestDeleteBoardsAndBlocks(t *testing.T) {
+	t.Parallel()
 	teamID := "team-id"
 
 	t.Run("a non authenticated user should be rejected", func(t *testing.T) {

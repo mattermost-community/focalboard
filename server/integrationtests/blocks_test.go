@@ -11,6 +11,7 @@ import (
 )
 
 func TestGetBlocks(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelperWithToken(t).Start()
 	defer th.TearDown()
 
@@ -53,6 +54,7 @@ func TestGetBlocks(t *testing.T) {
 }
 
 func TestPostBlock(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelperWithToken(t).Start()
 	defer th.TearDown()
 
@@ -162,6 +164,7 @@ func TestPostBlock(t *testing.T) {
 }
 
 func TestPatchBlock(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelperWithToken(t).Start()
 	defer th.TearDown()
 
@@ -260,6 +263,7 @@ func TestPatchBlock(t *testing.T) {
 }
 
 func TestDeleteBlock(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelperWithToken(t).Start()
 	defer th.TearDown()
 
@@ -311,6 +315,7 @@ func TestDeleteBlock(t *testing.T) {
 }
 
 func TestUndeleteBlock(t *testing.T) {
+	t.Parallel()
 	th := SetupTestHelper(t).InitBasic()
 	defer th.TearDown()
 
