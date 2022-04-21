@@ -219,9 +219,9 @@ mm-setup-local:
 	cd ../mattermost-server && sed -i -e 's/"EnableLocalMode": false/"EnableLocalMode": true/g' config/config.json
 	cd ../mattermost-server && sed -i -e 's/"EnableUploads": false/"EnableUploads": true/g' config/config.json
 	cd ../mattermost-server && sed -i -e 's/"MaxFileSize": .*/"MaxFileSize": 904857600,/g' config/config.json
-	../mattermost-server/bin/mmctl --local user create --email testuser@test.com --username testuser --password TestPass1
-	../mattermost-server/bin/mmctl --local team create --name test --display_name "Test Team"
-	../mattermost-server/bin/mmctl --local team users add test testuser
+	cd ../mattermost-server && bin/mmctl --local user create --email testuser@test.com --username testuser --password TestPass1
+	cd ../mattermost-server && bin/mmctl --local team create --name test --display_name "Test Team"
+	cd ../mattermost-server && bin/mmctl --local team users add test testuser
 
 mm-deploy-local: webapp
 	cd mattermost-plugin && MM_SERVICESETTINGS_SITEURL=http://localhost:8065 MM_ADMIN_USERNAME=testuser MM_ADMIN_PASSWORD=TestPass1 MM_SERVICESETTINGS_ENABLEDEVELOPER=1 make deploy
