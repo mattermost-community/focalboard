@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/utils"
 )
 
@@ -144,19 +145,22 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	if err != nil {
 		return nil, nil, err
 	}
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		teamID := ""
 		for _, board := range bab.Boards {
 			teamID = board.TeamID
 			a.wsAdapter.BroadcastBoardChange(teamID, board)
 		}
 		for _, block := range bab.Blocks {
-			a.wsAdapter.BroadcastBlockChange(teamID, block)
+			blk := block
+			a.wsAdapter.BroadcastBlockChange(teamID, blk)
+			a.notifyBlockChanged(notify.Add, &blk, nil, userID)
 		}
 		for _, member := range members {
 			a.wsAdapter.BroadcastMemberChange(teamID, member.BoardID, member)
 		}
-	}()
+		return nil
+	})
 	return bab, members, err
 }
 
@@ -187,13 +191,14 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(newBoard.TeamID, newBoard)
 
 		if addMember {
 			a.wsAdapter.BroadcastMemberChange(newBoard.TeamID, newBoard.ID, member)
 		}
-	}()
+		return nil
+	})
 
 	return newBoard, nil
 }
@@ -204,9 +209,10 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(updatedBoard.TeamID, updatedBoard)
-	}()
+		return nil
+	})
 
 	return updatedBoard, nil
 }
@@ -224,9 +230,10 @@ func (a *App) DeleteBoard(boardID, userID string) error {
 		return err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardDelete(board.TeamID, boardID)
-	}()
+		return nil
+	})
 
 	return nil
 }
@@ -266,9 +273,10 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberChange(board.TeamID, member.BoardID, member)
-	}()
+		return nil
+	})
 
 	return newMember, nil
 }
@@ -307,9 +315,10 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberChange(board.TeamID, member.BoardID, member)
-	}()
+		return nil
+	})
 
 	return newMember, nil
 }
@@ -361,9 +370,10 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 		return err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberDelete(board.TeamID, boardID, userID)
-	}()
+		return nil
+	})
 
 	return nil
 }

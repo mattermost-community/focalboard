@@ -1,57 +1,33 @@
-<div class="homepage__intro">
-    <div class="container-fluid">
-		<div class="homepage-intro__text text-left mt-4 mb-4">
-			<h2>
-				Focalboard: Project Tracking for Software Development Teams
-			</h2>
+<div class="homepage__intro homepage__section">
+	<div class="container-fluid">
+		<div class="homepage-intro__text text-left">
+			<h1>
+				Project & Task Management for Software Development Teams
+			</h1>
 
 			<p>
-				Focalboard helps your software development team stay aligned to complete tasks, reach milestones, and achieve goals.
-                Plan every project and hit every milestone with this open source alternative to tools like Asana, Trello, and Notion.
+				Focalboard is an open source alternative to tools like Asana, Trello, and Notion. Available as a
+				stand-alone application or integrated into the Mattermost platform, Focalboard helps developers stay
+				aligned to complete tasks, reach milestones, and achieve their goals.
 			</p>
-
-            <p>
-                <b>For Teams</b>: Check out <a href="https://mattermost.com/boards/">Mattermost Boards</a> with integrated collaboration, for <a href="https://customers.mattermost.com/cloud/signup?utm_source=focalboard&utm_campaign=focalboard">cloud</a> or <a href="https://mattermost.com/deploy/?utm_source=focalboard&utm_campaign=focalboard">self-hosted</a>.
-            </p>
-
-            <p>
-                <b>For Individuals</b>: Get <a href="download/personal-edition/desktop/">Personal Desktop</a>, a stand-alone single-user app for <a href="https://apps.apple.com/app/apple-store/id1556908618?pt=2114704&ct=website&mt=8">Mac</a>, <a href="https://www.microsoft.com/store/apps/9NLN2T0SX9VF?cid=website">Windows</a>, and <a href="download/personal-edition/desktop/#linux-desktop">Linux</a>.
-            </p>
-
-            <p>
-                <b>For Developers</b>: Fork the source code on <a href="https://github.com/mattermost/focalboard">GitHub</a> and install <a href="download/personal-edition/ubuntu/">personal server</a> for development.
-            </p>
-        </div>
+		</div>
 
 		<p class="text-center">
 			<a href="download/personal-edition">
-				<img src="https://user-images.githubusercontent.com/46905241/121941290-ee355280-cd03-11eb-9b9f-f6f524e4103e.gif" style="width: 100%; max-width: 1200px" />
+				<img src="https://user-images.githubusercontent.com/46905241/121941290-ee355280-cd03-11eb-9b9f-f6f524e4103e.gif"
+					style="width: 100%; max-width: 1200px" />
 			</a>
 		</p>
-
-		<div class="homepage-intro__text">
-			<p>
-				Focalboard is open source! <a href="https://github.com/mattermost/focalboard" target='_blank'>Check out the source code</a> on GitHub, and contribute to the future of this project.
-                Join the discussion on the <a href="https://community.mattermost.com">Mattermost community</a> to interact with other Mattermost and Focalboard contributors and users.
-			</p>
-
-			<p>
-                Mattermost is hiring! Focalboard was built by a passionate group of developers at Mattermost.
-                We're looking for more talented engineers, designers, product managers, and other roles to join our rapidly growing team.
-                Find out more on our <a href="https://mattermost.com/careers/?utm_source=focalboard" target="_blank">careers page</a>.
-            </p>
-        </div>
-
 		{{ if .Site.Params.search.enable }}
-			<div class="homepage-search row">
-				<div class="homepage-search__input col-sm-9">
-					<img src="img/search-icon.svg" width="24px" height="24px" alt="Search icon">
-					<input type="text" class="transparent" placeholder="Search developer documentation">
-				</div>
-				<div class="homepage-search__button col-sm-3">
-					<input type="button" class="btn btn-white btn-shadow form-control" value="Get Started">
-				</div>
+		<div class="homepage-search row">
+			<div class="homepage-search__input col-sm-9">
+				<img src="img/search-icon.svg" width="24px" height="24px" alt="Search icon">
+				<input type="text" class="transparent" placeholder="Search developer documentation">
 			</div>
+			<div class="homepage-search__button col-sm-3">
+				<input type="button" class="btn btn-white btn-shadow form-control" value="Get Started">
+			</div>
+		</div>
 		{{ end }}
-    </div>
+	</div>
 </div>

@@ -130,7 +130,11 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 
 		userID, err := b.deliverMentionNotification(username, extract, evt)
 		if err != nil {
-			merr.Append(fmt.Errorf("cannot deliver notification for @%s: %w", username, err))
+			if errors.Is(err, ErrMentionPermission) {
+				b.logger.Debug("Cannot deliver notification", mlog.String("user", username), mlog.Err(err))
+			} else {
+				merr.Append(fmt.Errorf("cannot deliver notification for @%s: %w", username, err))
+			}
 		}
 
 		if userID == "" {
