@@ -309,11 +309,6 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 }
 
 func TestPermissionsGetTeamBoards(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
 	ttCases := []TestCase{
 		{"/teams/test-team/boards", methodGet, "", userAnon, http.StatusUnauthorized, 0},
 		{"/teams/test-team/boards", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
@@ -323,15 +318,26 @@ func TestPermissionsGetTeamBoards(t *testing.T) {
 		{"/teams/test-team/boards", methodGet, "", userEditor, http.StatusOK, 2},
 		{"/teams/test-team/boards", methodGet, "", userAdmin, http.StatusOK, 2},
 	}
-	runTestCases(t, ttCases, testData, clients)
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases[1].expectedStatusCode = http.StatusOK
+		ttCases[1].totalResults = 1
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsSearchTeamBoards(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
 	ttCases := []TestCase{
 		// Search boards
 		{"/teams/test-team/boards/search?q=b", methodGet, "", userAnon, http.StatusUnauthorized, 0},
@@ -342,17 +348,29 @@ func TestPermissionsSearchTeamBoards(t *testing.T) {
 		{"/teams/test-team/boards/search?q=b", methodGet, "", userEditor, http.StatusOK, 2},
 		{"/teams/test-team/boards/search?q=b", methodGet, "", userAdmin, http.StatusOK, 2},
 	}
-	runTestCases(t, ttCases, testData, clients)
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases[1].expectedStatusCode = http.StatusOK
+		ttCases[1].totalResults = 1
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsGetTeamTemplates(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
-	err := th.Server.App().InitTemplates()
-	require.NoError(t, err, "InitTemplates should succeed")
+	extraSetup := func(t *testing.T, th *TestHelper) {
+		err := th.Server.App().InitTemplates()
+		require.NoError(t, err, "InitTemplates should succeed")
+	}
 
 	builtInTemplateCount := 7
 
@@ -374,15 +392,28 @@ func TestPermissionsGetTeamTemplates(t *testing.T) {
 		{"/teams/0/templates", methodGet, "", userEditor, http.StatusOK, builtInTemplateCount},
 		{"/teams/0/templates", methodGet, "", userAdmin, http.StatusOK, builtInTemplateCount},
 	}
-	runTestCases(t, ttCases, testData, clients)
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th)
+		ttCases[1].expectedStatusCode = http.StatusOK
+		ttCases[1].totalResults = 1
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsCreateBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
 	publicBoard := toJSON(t, model.Board{Title: "Board To Create", TeamID: "test-team", Type: model.BoardTypeOpen})
 	privateBoard := toJSON(t, model.Board{Title: "Board To Create", TeamID: "test-team", Type: model.BoardTypeOpen})
 
@@ -397,15 +428,27 @@ func TestPermissionsCreateBoard(t *testing.T) {
 		{"/boards", methodPost, privateBoard, userNoTeamMember, http.StatusForbidden, 0},
 		{"/boards", methodPost, privateBoard, userTeamMember, http.StatusOK, 1},
 	}
-	runTestCases(t, ttCases, testData, clients)
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases[1].expectedStatusCode = http.StatusOK
+		ttCases[1].totalResults = 1
+		ttCases[4].expectedStatusCode = http.StatusOK
+		ttCases[4].totalResults = 1
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsGetBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
 		{"/boards/{PRIVATE_BOARD_ID}", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
@@ -444,15 +487,27 @@ func TestPermissionsGetBoard(t *testing.T) {
 		{"/boards/{PRIVATE_BOARD_ID}?read_token=invalid", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
 		{"/boards/{PRIVATE_BOARD_ID}?read_token=valid", methodGet, "", userTeamMember, http.StatusOK, 1},
 	}
-	runTestCases(t, ttCases, testData, clients)
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases[8].expectedStatusCode = http.StatusOK
+		ttCases[8].totalResults = 1
+		ttCases[22].expectedStatusCode = http.StatusOK
+		ttCases[22].totalResults = 1
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsPatchBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"title\": \"test\"}", userAnon, http.StatusUnauthorized, 0},
 		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"title\": \"test\"}", userNoTeamMember, http.StatusForbidden, 0},
@@ -486,15 +541,24 @@ func TestPermissionsPatchBoard(t *testing.T) {
 		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"title\": \"test\"}", userEditor, http.StatusOK, 1},
 		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"title\": \"test\"}", userAdmin, http.StatusOK, 1},
 	}
-	runTestCases(t, ttCases, testData, clients)
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsDeleteBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
 		{"/boards/{PRIVATE_BOARD_ID}", methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
@@ -528,15 +592,24 @@ func TestPermissionsDeleteBoard(t *testing.T) {
 		{"/boards/{PUBLIC_TEMPLATE_ID}", methodDelete, "", userEditor, http.StatusForbidden, 0},
 		{"/boards/{PUBLIC_TEMPLATE_ID}", methodDelete, "", userAdmin, http.StatusOK, 0},
 	}
-	runTestCases(t, ttCases, testData, clients)
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsDuplicateBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
 	// In same team
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
@@ -571,7 +644,22 @@ func TestPermissionsDuplicateBoard(t *testing.T) {
 		{"/boards/{PUBLIC_TEMPLATE_ID}/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
 		{"/boards/{PUBLIC_TEMPLATE_ID}/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
 	}
-	runTestCases(t, ttCases, testData, clients)
+	t.Run("plugin-same-team", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local-same-team", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases[22].expectedStatusCode = http.StatusOK
+		ttCases[22].totalResults = 1
+		runTestCases(t, ttCases, testData, clients)
+	})
 
 	// In other team
 	ttCases = []TestCase{
@@ -607,7 +695,22 @@ func TestPermissionsDuplicateBoard(t *testing.T) {
 		{"/boards/{PUBLIC_TEMPLATE_ID}/duplicate?toTeam=other-team", methodPost, "", userEditor, http.StatusOK, 1},
 		{"/boards/{PUBLIC_TEMPLATE_ID}/duplicate?toTeam=other-team", methodPost, "", userAdmin, http.StatusOK, 1},
 	}
-	runTestCases(t, ttCases, testData, clients)
+	t.Run("plugin-other-team", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local-other-team", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases[22].expectedStatusCode = http.StatusOK
+		ttCases[22].totalResults = 1
+		runTestCases(t, ttCases, testData, clients)
+	})
 
 	// In empty team
 	ttCases = []TestCase{
@@ -643,15 +746,16 @@ func TestPermissionsDuplicateBoard(t *testing.T) {
 		{"/boards/{PUBLIC_TEMPLATE_ID}/duplicate?toTeam=empty-team", methodPost, "", userEditor, http.StatusForbidden, 0},
 		{"/boards/{PUBLIC_TEMPLATE_ID}/duplicate?toTeam=empty-team", methodPost, "", userAdmin, http.StatusForbidden, 0},
 	}
-	runTestCases(t, ttCases, testData, clients)
+	t.Run("plugin-empty-team", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsGetBoardBlocks(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodGet, "", userAnon, http.StatusUnauthorized, 0},
 		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
@@ -690,73 +794,94 @@ func TestPermissionsGetBoardBlocks(t *testing.T) {
 		{"/boards/{PRIVATE_BOARD_ID}/blocks?read_token=invalid", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
 		{"/boards/{PRIVATE_BOARD_ID}/blocks?read_token=valid", methodGet, "", userTeamMember, http.StatusOK, 1},
 	}
-	runTestCases(t, ttCases, testData, clients)
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases[22].expectedStatusCode = http.StatusOK
+		ttCases[22].totalResults = 1
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsCreateBoardBlocks(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
+	ttCasesF := func(testData TestData) []TestCase {
+		counter := 0
+		newBlockJSON := func(boardID string) string {
+			counter++
+			return toJSON(t, []*model.Block{{
+				ID:       fmt.Sprintf("%d", counter),
+				Title:    "Board To Create",
+				BoardID:  boardID,
+				Type:     "card",
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+			}})
+		}
 
-	counter := 0
-	newBlockJSON := func(boardID string) string {
-		counter++
-		return toJSON(t, []*model.Block{{
-			ID:       fmt.Sprintf("%d", counter),
-			Title:    "Board To Create",
-			BoardID:  boardID,
-			Type:     "card",
-			CreateAt: model.GetMillis(),
-			UpdateAt: model.GetMillis(),
-		}})
+		return []TestCase{
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAnon, http.StatusUnauthorized, 0},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userViewer, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userCommenter, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userEditor, http.StatusOK, 1},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAdmin, http.StatusOK, 1},
+
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAnon, http.StatusUnauthorized, 0},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userViewer, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userCommenter, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userEditor, http.StatusOK, 1},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAdmin, http.StatusOK, 1},
+
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userViewer, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userCommenter, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userEditor, http.StatusOK, 1},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAdmin, http.StatusOK, 1},
+
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userViewer, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userCommenter, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userEditor, http.StatusOK, 1},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAdmin, http.StatusOK, 1},
+		}
 	}
 
-	ttCases := []TestCase{
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userEditor, http.StatusOK, 1},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAdmin, http.StatusOK, 1},
-
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userEditor, http.StatusOK, 1},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAdmin, http.StatusOK, 1},
-
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userEditor, http.StatusOK, 1},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAdmin, http.StatusOK, 1},
-
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userViewer, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userEditor, http.StatusOK, 1},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAdmin, http.StatusOK, 1},
-	}
-	runTestCases(t, ttCases, testData, clients)
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		ttCases := ttCasesF(testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases := ttCasesF(testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsPatchBoardBlocks(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
-	counter := 0
 	newBlocksPatchJSON := func(blockID string) string {
-		counter++
 		newTitle := "New Patch Block Title"
 		return toJSON(t, model.BlockPatchBatch{
 			BlockIDs: []string{blockID},
@@ -799,15 +924,24 @@ func TestPermissionsPatchBoardBlocks(t *testing.T) {
 		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1"), userEditor, http.StatusOK, 0},
 		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPatch, newBlocksPatchJSON("block-1"), userAdmin, http.StatusOK, 0},
 	}
-	runTestCases(t, ttCases, testData, clients)
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsPatchBoardBlock(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
 	newTitle := "New Patch Title"
 	patchJSON := toJSON(t, model.BlockPatch{Title: &newTitle})
 
@@ -847,23 +981,34 @@ func TestPermissionsPatchBoardBlock(t *testing.T) {
 		// Invalid boardID/blockID combination
 		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-3", methodPatch, patchJSON, userAdmin, http.StatusNotFound, 0},
 	}
-	runTestCases(t, ttCases, testData, clients)
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsDeleteBoardBlock(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
-	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
-	require.NoError(t, err)
+	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
+		err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
+		require.NoError(t, err)
+	}
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-4", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
@@ -901,39 +1046,52 @@ func TestPermissionsDeleteBoardBlock(t *testing.T) {
 		// Invalid boardID/blockID combination
 		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-3", methodDelete, "", userAdmin, http.StatusNotFound, 0},
 	}
-	runTestCases(t, ttCases, testData, clients)
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsUndeleteBoardBlock(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
-	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-1", userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-2", userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-3", userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-4", userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-5", userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-6", userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-7", userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().DeleteBlock("block-8", userAdmin)
-	require.NoError(t, err)
+	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
+		err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().DeleteBlock("block-1", userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().DeleteBlock("block-2", userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().DeleteBlock("block-3", userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().DeleteBlock("block-4", userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().DeleteBlock("block-5", userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().DeleteBlock("block-6", userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().DeleteBlock("block-7", userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().DeleteBlock("block-8", userAdmin)
+		require.NoError(t, err)
+	}
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-4/undelete", methodPost, "", userAnon, http.StatusUnauthorized, 0},
@@ -971,23 +1129,36 @@ func TestPermissionsUndeleteBoardBlock(t *testing.T) {
 		// Invalid boardID/blockID combination
 		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-3/undelete", methodPost, "", userAdmin, http.StatusNotFound, 0},
 	}
-	runTestCases(t, ttCases, testData, clients)
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsUndeleteBoard(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
-	err := th.Server.App().DeleteBoard(testData.publicBoard.ID, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().DeleteBoard(testData.privateBoard.ID, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().DeleteBoard(testData.publicTemplate.ID, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().DeleteBoard(testData.privateTemplate.ID, userAdmin)
-	require.NoError(t, err)
+	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
+		err := th.Server.App().DeleteBoard(testData.publicBoard.ID, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().DeleteBoard(testData.privateBoard.ID, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().DeleteBoard(testData.publicTemplate.ID, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().DeleteBoard(testData.privateTemplate.ID, userAdmin)
+		require.NoError(t, err)
+	}
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/undelete", methodPost, "", userAnon, http.StatusUnauthorized, 0},
@@ -1022,23 +1193,36 @@ func TestPermissionsUndeleteBoard(t *testing.T) {
 		{"/boards/{PUBLIC_TEMPLATE_ID}/undelete", methodPost, "", userEditor, http.StatusForbidden, 0},
 		{"/boards/{PUBLIC_TEMPLATE_ID}/undelete", methodPost, "", userAdmin, http.StatusOK, 0},
 	}
-	runTestCases(t, ttCases, testData, clients)
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsDuplicateBoardBlock(t *testing.T) {
-	th := SetupTestHelperPluginMode(t)
-	defer th.TearDown()
-	clients := setupClients(th)
-	testData := setupData(t, th)
-
-	err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
-	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
-	require.NoError(t, err)
+	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
+		err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
+		require.NoError(t, err)
+	}
 
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-4/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
@@ -1076,7 +1260,23 @@ func TestPermissionsDuplicateBoardBlock(t *testing.T) {
 		// Invalid boardID/blockID combination
 		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-3/duplicate", methodPost, "", userAdmin, http.StatusNotFound, 0},
 	}
-	runTestCases(t, ttCases, testData, clients)
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
 }
 
 func TestPermissionsGetBoardMembers(t *testing.T) {
