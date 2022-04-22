@@ -2203,23 +2203,21 @@ func TestPermissionsUpdateUserConfig(t *testing.T) {
 }
 
 func TestPermissionsCreateBoardsAndBlocks(t *testing.T) {
-	ttCasesF := func(t *testing.T, testData TestData) []TestCase {
-		bab := toJSON(t, model.BoardsAndBlocks{
-			Boards: []*model.Board{{ID: "test", Title: "Test Board", TeamID: "test-team"}},
-			Blocks: []model.Block{
-				{ID: "test-block", BoardID: "test", Type: "card", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
-			},
-		})
+	bab := toJSON(t, model.BoardsAndBlocks{
+		Boards: []*model.Board{{ID: "test", Title: "Test Board", TeamID: "test-team"}},
+		Blocks: []model.Block{
+			{ID: "test-block", BoardID: "test", Type: "card", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
+		},
+	})
 
-		return []TestCase{
-			{"/boards-and-blocks", methodPost, bab, userAnon, http.StatusUnauthorized, 0},
-			{"/boards-and-blocks", methodPost, bab, userNoTeamMember, http.StatusForbidden, 0},
-			{"/boards-and-blocks", methodPost, bab, userTeamMember, http.StatusOK, 1},
-			{"/boards-and-blocks", methodPost, bab, userViewer, http.StatusOK, 1},
-			{"/boards-and-blocks", methodPost, bab, userCommenter, http.StatusOK, 1},
-			{"/boards-and-blocks", methodPost, bab, userEditor, http.StatusOK, 1},
-			{"/boards-and-blocks", methodPost, bab, userAdmin, http.StatusOK, 1},
-		}
+	ttCases := []TestCase{
+		{"/boards-and-blocks", methodPost, bab, userAnon, http.StatusUnauthorized, 0},
+		{"/boards-and-blocks", methodPost, bab, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards-and-blocks", methodPost, bab, userTeamMember, http.StatusOK, 1},
+		{"/boards-and-blocks", methodPost, bab, userViewer, http.StatusOK, 1},
+		{"/boards-and-blocks", methodPost, bab, userCommenter, http.StatusOK, 1},
+		{"/boards-and-blocks", methodPost, bab, userEditor, http.StatusOK, 1},
+		{"/boards-and-blocks", methodPost, bab, userAdmin, http.StatusOK, 1},
 	}
 
 	t.Run("plugin", func(t *testing.T) {
@@ -2227,7 +2225,6 @@ func TestPermissionsCreateBoardsAndBlocks(t *testing.T) {
 		defer th.TearDown()
 		clients := setupClients(th)
 		testData := setupData(t, th)
-		ttCases := ttCasesF(t, testData)
 		runTestCases(t, ttCases, testData, clients)
 	})
 	t.Run("local", func(t *testing.T) {
@@ -2235,7 +2232,6 @@ func TestPermissionsCreateBoardsAndBlocks(t *testing.T) {
 		defer th.TearDown()
 		clients := setupLocalClients(th)
 		testData := setupData(t, th)
-		ttCases := ttCasesF(t, testData)
 		ttCases[1].expectedStatusCode = http.StatusOK
 		ttCases[1].totalResults = 1
 		runTestCases(t, ttCases, testData, clients)
@@ -2556,7 +2552,7 @@ func TestPermissionsCreateCategory(t *testing.T) {
 }
 
 func TestPermissionsUpdateCategory(t *testing.T) {
-	ttCasesF := func(testData TestData, extraData map[string]string) []TestCase {
+	ttCasesF := func(extraData map[string]string) []TestCase {
 		category := func(userID string, categoryID string) string {
 			return toJSON(t, model.Category{
 				ID:       categoryID,
@@ -2636,7 +2632,7 @@ func TestPermissionsUpdateCategory(t *testing.T) {
 		clients := setupClients(th)
 		testData := setupData(t, th)
 		extraData := extraSetup(t, th)
-		ttCases := ttCasesF(testData, extraData)
+		ttCases := ttCasesF(extraData)
 		runTestCases(t, ttCases, testData, clients)
 	})
 	t.Run("local", func(t *testing.T) {
@@ -2645,13 +2641,13 @@ func TestPermissionsUpdateCategory(t *testing.T) {
 		clients := setupLocalClients(th)
 		testData := setupData(t, th)
 		extraData := extraSetup(t, th)
-		ttCases := ttCasesF(testData, extraData)
+		ttCases := ttCasesF(extraData)
 		runTestCases(t, ttCases, testData, clients)
 	})
 }
 
 func TestPermissionsDeleteCategory(t *testing.T) {
-	ttCasesF := func(testData TestData, extraData map[string]string) []TestCase {
+	ttCasesF := func(extraData map[string]string) []TestCase {
 		return []TestCase{
 			{"/teams/other-team/categories/any", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
 			{"/teams/other-team/categories/" + extraData["noTeamMember"], methodDelete, "", userNoTeamMember, http.StatusBadRequest, 0},
@@ -2712,7 +2708,7 @@ func TestPermissionsDeleteCategory(t *testing.T) {
 		clients := setupClients(th)
 		testData := setupData(t, th)
 		extraData := extraSetup(t, th)
-		ttCases := ttCasesF(testData, extraData)
+		ttCases := ttCasesF(extraData)
 		runTestCases(t, ttCases, testData, clients)
 	})
 	t.Run("local", func(t *testing.T) {
@@ -2721,7 +2717,7 @@ func TestPermissionsDeleteCategory(t *testing.T) {
 		clients := setupLocalClients(th)
 		testData := setupData(t, th)
 		extraData := extraSetup(t, th)
-		ttCases := ttCasesF(testData, extraData)
+		ttCases := ttCasesF(extraData)
 		runTestCases(t, ttCases, testData, clients)
 	})
 }
