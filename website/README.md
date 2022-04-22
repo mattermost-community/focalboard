@@ -32,3 +32,10 @@ make run
 ```
 
 3. Go to http://localhost:1313 to see the running server
+
+## Production Notes
+
+### For Assets (stylesheets, scripts, images)
+
+If there are changes, please make sure that you change files names or update the version in the asset URL’s query string to help override the browser cache.
+The main stylesheet (styles.css) can change quite frequently, so to update the version across all pages, you can go into `layouts/partials/head.html` and adjust the `version` query param.
