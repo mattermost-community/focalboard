@@ -54,37 +54,36 @@ pygmentsStyle = "manni"
     # You can add custom links before or after the default links
     # Assign a weight to define the order
 
-    # prepended links
-    #[[menu.prepend]]
-    #  url = "http://gohugo.io"
-    #  name = "Hugo"
-    #  weight = 10
+    [[menu.postpend]]
+      url = "https://developers.mattermost.com/contribute/focalboard/"
+      name = "Contribute"
+      weight = 1
+
+    [[menu.postpend]]
+      url = "https://github.com/mattermost/focalboard"
+      name = "Github"
+      weight = 2
 
     # postpended links
     [[menu.postpend]]
       url = "/download/personal-edition"
       name = "Download"
-      weight = 1
-
-    [[menu.postpend]]
-      url = "/guide/user"
-      name = "User's Guide"
-      weight = 2
-
-    [[menu.postpend]]
-      url = "https://mattermost.github.io/focalboard/"
-      name = "Contribute"
       weight = 3
 
     [[menu.postpend]]
-      url = "/blog"
-      name = "Blog"
+      url = "/guide/user"
+      name = "User Guide"
       weight = 4
 
     [[menu.postpend]]
       url = "/feedback"
       name = "Feedback"
       weight = 5
+
+    [[menu.postpend]]
+      url = "https://mattermost.com/"
+      name = "Mattermost"
+      weight = 6
 
     # Workaround to add draft status to menu items
     [[params.navigation.drafts]]
@@ -125,7 +124,7 @@ pygmentsStyle = "manni"
   [[params.intro.item]]
     title = "Contribute"
     description = "Help build the future of productivity and submit code directly to the Focalboard open-source project."
-    url = "https://mattermost.github.io/focalboard/"
+    url = "https://developers.mattermost.com/contribute/focalboard/"
     button = "Start Contributing"
     icon = "/img/contribute-icon.svg"
     draft = false
