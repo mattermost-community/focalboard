@@ -29,10 +29,6 @@ type PluginAPI interface {
 
 	// GetChannelMember gets a channel member by userID.
 	GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error)
-
-	// IsErrNotFound returns true if `err` or one of its wrapped children are the `ErrNotFound`
-	// as defined in the plugin API.
-	IsErrNotFound(err error) bool
 }
 
 // PluginDelivery provides ability to send notifications to direct message channels via Mattermost plugin API.
@@ -48,10 +44,4 @@ func New(botID string, serverRoot string, api PluginAPI) *PluginDelivery {
 		serverRoot: serverRoot,
 		api:        api,
 	}
-}
-
-// IsErrNotFound returns true if `err` or one of its wrapped children are the `ErrNotFound`
-// as defined in the plugin API.
-func (pd *PluginDelivery) IsErrNotFound(err error) bool {
-	return pd.api.IsErrNotFound(err)
 }

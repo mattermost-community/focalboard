@@ -136,6 +136,8 @@ server-test-mysql: templates-archive ## Run server tests using mysql
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml run start_dependencies
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v coverpkg=./... -coverprofile=test-mysql-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func test-mysql-profile.coverage
+	cd mattermost-plugin/server; go test -tags '$(BUILD_TAGS)' -race -v coverpkg=./... -coverprofile=test-mysql-profile.coverage -count=1 -timeout=30m ./...
+	cd mattermost-plugin/server; go tool cover -func test-mysql-profile.coverage
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
 
 server-test-postgres: export FB_UNIT_TESTING=1
@@ -148,6 +150,8 @@ server-test-postgres: templates-archive ## Run server tests using postgres
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml run start_dependencies
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v coverpkg=./... -coverprofile=test-postgres-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func test-postgres-profile.coverage
+  cd mattermost-plugin/server; go test -tags '$(BUILD_TAGS)' -race -v coverpkg=./... -coverprofile=test-postgres-profile.coverage -count=1 -timeout=30m ./...
+	cd mattermost-plugin/server; go tool cover -func test-postgres-profile.coverage
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
 
 webapp: ## Build webapp.

@@ -1,20 +1,65 @@
-<div class="homepage-boxes text-center">
-    <div class="row">
-        {{ range .Site.Params.intro.item }}
-        <div class="col-md-4 homepage-boxes__box box-dropshadow">
-            <div class="homepage-boxes__icon">
-                <img src="{{ .icon }}" width="57px" height="53px" alt="">
-            </div>
-            <h4>{{ .title }}</h4>
-            <p>
-                {{ .description }}
-            </p>
-            {{ if or (eq $.Site.BuildDrafts true) (eq .draft false) }}
-            <a href="{{ .url }}" class="btn btn-primary btn-shadow btn-xs">{{ .button }}</a>
-            {{ else }}
-            <span class="btn btn-secondary btn-shadow btn-md">Coming Soon</a>
-            {{ end }}
+<div class="homepage__section homepage__threecol">
+    <div class="threecol__single">
+        <div class="threecol__image">
+            <img src="img/developers-icon.svg" alt="Developers Icon" />
         </div>
-        {{ end }}
+        <div class="threecol__copy">
+            <h4>For Developers</h4>
+            <p>
+                Fork the source code on <a href="https://github.com/mattermost/focalboard" target="_blank">GitHub</a> and install <a href="/download/personal-edition/ubuntu/">personal server</a> for
+                development.
+            </p>
+        </div>
+    </div>
+    <div class="threecol__single">
+        <div class="threecol__image">
+            <img src="img/single-users-icon.svg" alt="Single User Icon" />
+        </div>
+        <div class="threecol__copy">
+            <h4>For Single Users</h4>
+            <p>
+                Get <a href="/download/personal-edition/desktop/">Personal Desktop</a>, a stand-alone single-user app for <a href="/download/personal-edition/desktop/#linux-desktop">Mac</a>, <a
+                    href="/download/personal-edition/desktop/#linux-desktop">Windows</a>, and <a href="/download/personal-edition/desktop/#linux-desktop">Linux</a>.
+            </p>
+        </div>
+    </div>
+    <div class="threecol__single">
+        <div class="threecol__image">
+            <img src="img/teams-icon.svg" alt="Teams Icon" />
+        </div>
+        <div class="threecol__copy">
+            <h4>For Teams</h4>
+            <p>
+                Check out <a href="https://mattermost.com/boards/" target="_blank">Mattermost Boards</a> with integrated collaboration, for <a href="https://customers.mattermost.com/cloud/signup?utm_source=focalboard&utm_campaign=focalboard" target="_blank">cloud</a> or <a
+                    href="https://mattermost.com/deploy/?utm_source=focalboard&utm_campaign=focalboard" target="_blank">self-hosted</a>.
+            </p>
+        </div>
+    </div>
+</div>
+<div class="homepage__section homepage__twocol">
+    <div class="twocol__single twocol__image">
+        <img src="https://user-images.githubusercontent.com/10912003/164514752-7ec8cbbd-844d-47b3-964f-dcf2e18e60b5.png" alt="Illustration of unzipping zipper revealing the code behind the focalboard interface" />
+    </div>
+    <div class="twocol__single twocol__copy">
+        <h2>Focalboard is 100% Open Source</h2>
+        <p>
+            <a href="https://github.com/mattermost/focalboard" target="_blank">Check out the source code on GitHub</a>, and contribute to the future of this project. Join
+            the discussion
+            on the <a href="https://community.mattermost.com/core/channels/focalboard" target="_blank">Mattermost community</a> to interact with other Mattermost and Focalboard contributors
+            and users.
+        </p>
+    </div>
+</div>
+<div class="homepage__section homepage__twocol">
+    <div class="twocol__single twocol__copy">
+        <h2>Interested in joining the team?</h2>
+        <p>
+            Focalboard was built by a passionate group of developers at Mattermost. We're looking for more talented
+            engineers, designers, product managers, and other roles to join our rapidly growing team. Find out more
+            on the Mattermost <a href="https://mattermost.com/careers/" target="_blank">careers page</a>.
+        </p>
+    </div>
+    <div class="twocol__single twocol__image">
+        <img src="https://user-images.githubusercontent.com/10912003/164514748-fb39c516-c71e-445b-85bf-d75814053c3c.png" alt="Illustration of people with varying skin tones." />
     </div>
 </div>

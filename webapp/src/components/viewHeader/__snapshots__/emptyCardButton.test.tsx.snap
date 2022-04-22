@@ -8,7 +8,7 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton 1`] = `
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <svg
         class="CardIcon Icon"
@@ -56,7 +56,7 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <svg
         class="CardIcon Icon"
@@ -107,7 +107,7 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="CheckIcon Icon"
@@ -142,7 +142,7 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -173,7 +173,7 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and addCar
     role="button"
   >
     <div
-      class=""
+      class="d-flex"
     >
       <svg
         class="CardIcon Icon"

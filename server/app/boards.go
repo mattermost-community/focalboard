@@ -1,11 +1,11 @@
 package app
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/utils"
 )
 
@@ -17,7 +17,7 @@ var (
 
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil, nil
 	}
 	if err != nil {
@@ -145,19 +145,22 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	if err != nil {
 		return nil, nil, err
 	}
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		teamID := ""
 		for _, board := range bab.Boards {
 			teamID = board.TeamID
 			a.wsAdapter.BroadcastBoardChange(teamID, board)
 		}
 		for _, block := range bab.Blocks {
-			a.wsAdapter.BroadcastBlockChange(teamID, block)
+			blk := block
+			a.wsAdapter.BroadcastBlockChange(teamID, blk)
+			a.notifyBlockChanged(notify.Add, &blk, nil, userID)
 		}
 		for _, member := range members {
 			a.wsAdapter.BroadcastMemberChange(teamID, member.BoardID, member)
 		}
-	}()
+		return nil
+	})
 	return bab, members, err
 }
 
@@ -188,13 +191,14 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(newBoard.TeamID, newBoard)
 
 		if addMember {
 			a.wsAdapter.BroadcastMemberChange(newBoard.TeamID, newBoard.ID, member)
 		}
-	}()
+		return nil
+	})
 
 	return newBoard, nil
 }
@@ -205,16 +209,17 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(updatedBoard.TeamID, updatedBoard)
-	}()
+		return nil
+	})
 
 	return updatedBoard, nil
 }
 
 func (a *App) DeleteBoard(boardID, userID string) error {
 	board, err := a.store.GetBoard(boardID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil
 	}
 	if err != nil {
@@ -225,9 +230,10 @@ func (a *App) DeleteBoard(boardID, userID string) error {
 		return err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardDelete(board.TeamID, boardID)
-	}()
+		return nil
+	})
 
 	return nil
 }
@@ -246,7 +252,7 @@ func (a *App) GetMemberForBoard(boardID string, userID string) (*model.BoardMemb
 
 func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, error) {
 	board, err := a.store.GetBoard(member.BoardID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil, nil
 	}
 	if err != nil {
@@ -254,7 +260,7 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 	}
 
 	existingMembership, err := a.store.GetMemberForBoard(member.BoardID, member.UserID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil && !model.IsErrNotFound(err) {
 		return nil, err
 	}
 
@@ -267,16 +273,17 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberChange(board.TeamID, member.BoardID, member)
-	}()
+		return nil
+	})
 
 	return newMember, nil
 }
 
 func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, error) {
 	board, bErr := a.store.GetBoard(member.BoardID)
-	if errors.Is(bErr, sql.ErrNoRows) {
+	if model.IsErrNotFound(bErr) {
 		return nil, nil
 	}
 	if bErr != nil {
@@ -284,7 +291,7 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 	}
 
 	oldMember, err := a.store.GetMemberForBoard(member.BoardID, member.UserID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil, nil
 	}
 	if err != nil {
@@ -308,9 +315,10 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberChange(board.TeamID, member.BoardID, member)
-	}()
+		return nil
+	})
 
 	return newMember, nil
 }
@@ -331,7 +339,7 @@ func (a *App) isLastAdmin(userID, boardID string) (bool, error) {
 
 func (a *App) DeleteBoardMember(boardID, userID string) error {
 	board, bErr := a.store.GetBoard(boardID)
-	if errors.Is(bErr, sql.ErrNoRows) {
+	if model.IsErrNotFound(bErr) {
 		return nil
 	}
 	if bErr != nil {
@@ -339,7 +347,7 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	}
 
 	oldMember, err := a.store.GetMemberForBoard(boardID, userID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return nil
 	}
 	if err != nil {
@@ -362,15 +370,16 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 		return err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberDelete(board.TeamID, boardID, userID)
-	}()
+		return nil
+	})
 
 	return nil
 }
 
-func (a *App) SearchBoardsForUser(term, userID, teamID string) ([]*model.Board, error) {
-	return a.store.SearchBoardsForUser(term, userID, teamID)
+func (a *App) SearchBoardsForUser(term, userID string) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUser(term, userID)
 }
 
 func (a *App) UndeleteBoard(boardID string, modifiedBy string) error {

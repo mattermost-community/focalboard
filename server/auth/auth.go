@@ -2,8 +2,6 @@
 package auth
 
 import (
-	"database/sql"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/permissions"
@@ -49,7 +47,7 @@ func (a *Auth) GetSession(token string) (*model.Session, error) {
 // IsValidReadToken validates the read token for a board.
 func (a *Auth) IsValidReadToken(boardID string, readToken string) (bool, error) {
 	sharing, err := a.store.GetSharing(boardID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return false, nil
 	}
 	if err != nil {

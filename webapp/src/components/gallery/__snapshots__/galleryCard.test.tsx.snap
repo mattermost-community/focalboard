@@ -63,7 +63,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -84,7 +84,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-content-copy content-copy"
@@ -107,7 +107,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-link-variant LinkIcon"
@@ -136,7 +136,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -211,7 +211,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -232,7 +232,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-content-copy content-copy"
@@ -255,7 +255,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-link-variant LinkIcon"
@@ -284,7 +284,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -397,7 +397,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -418,7 +418,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-content-copy content-copy"
@@ -441,7 +441,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-link-variant LinkIcon"
@@ -470,7 +470,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -549,7 +549,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -570,7 +570,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-content-copy content-copy"
@@ -593,7 +593,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-link-variant LinkIcon"
@@ -622,7 +622,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -867,7 +867,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -888,7 +888,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-content-copy content-copy"
@@ -911,7 +911,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-link-variant LinkIcon"
@@ -940,7 +940,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"

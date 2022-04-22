@@ -10,7 +10,6 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -103,7 +102,7 @@ func (s *SQLStore) deleteNotificationHint(db sq.BaseRunner, blockID string) erro
 	}
 
 	if count == 0 {
-		return store.NewErrNotFound(blockID)
+		return model.NewErrNotFound(blockID)
 	}
 
 	return nil
@@ -135,7 +134,7 @@ func (s *SQLStore) getNotificationHint(db sq.BaseRunner, blockID string) (*model
 		return nil, err
 	}
 	if len(hint) == 0 {
-		return nil, store.NewErrNotFound(blockID)
+		return nil, model.NewErrNotFound(blockID)
 	}
 	return hint[0], nil
 }
@@ -166,7 +165,7 @@ func (s *SQLStore) getNextNotificationHint(db sq.BaseRunner, remove bool) (*mode
 		return nil, err
 	}
 	if len(hints) == 0 {
-		return nil, store.NewErrNotFound("")
+		return nil, model.NewErrNotFound("")
 	}
 
 	hint := hints[0]
@@ -187,7 +186,7 @@ func (s *SQLStore) getNextNotificationHint(db sq.BaseRunner, remove bool) (*mode
 		if rows == 0 {
 			// another node likely has grabbed this hint for processing concurrently; let that node handle it
 			// and we'll return an error here so we try again.
-			return nil, store.NewErrNotFound(hint.BlockID)
+			return nil, model.NewErrNotFound(hint.BlockID)
 		}
 	}
 
