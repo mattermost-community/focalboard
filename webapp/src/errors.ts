@@ -8,7 +8,7 @@ import {UserSettings} from './userSettings'
 enum ErrorId {
     TeamUndefined = 'team-undefined',
     NotLoggedIn = 'not-logged-in',
-    InvalidReadToken = 'invalid-read-token',
+    InvalidReadOnlyBoard = 'invalid-read-only-board',
     BoardNotFound = 'board-not-found',
 }
 
@@ -80,8 +80,8 @@ function errorDefFromId(id: ErrorId | null): ErrorDef {
         errDef.button1Fill = true
         break
     }
-    case ErrorId.InvalidReadToken: {
-        errDef.title = intl.formatMessage({id: 'error.invalid-read-token', defaultMessage: 'Sorry, you don’t have access to this board. Log in to access Boards.'})
+    case ErrorId.InvalidReadOnlyBoard: {
+        errDef.title = intl.formatMessage({id: 'error.invalid-read-only-board', defaultMessage: 'You don’t have access to this board. Log in to access Boards.'})
         errDef.button1Enabled = true
         errDef.button1Text = intl.formatMessage({id: 'error.go-login', defaultMessage: 'Login'})
         errDef.button1Redirect = window.location.origin + '/login'
