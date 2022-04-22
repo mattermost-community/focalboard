@@ -12,15 +12,7 @@
         </div>
         <ul class="header__links--right">
             {{ range .Site.Menus.postpend }}
-                {{ $drafts := index $.Site.Params.navigation.drafts 0}}
-                {{ $draft := index $drafts .Name }}
-                {{ if or (eq $.Site.BuildDrafts true) (eq $draft false) }}
-                    {{ if eq (lower .Name) $.Section }}
-                        <li class="active"><a href="{{ .URL }}">{{ .Name | markdownify }}</a></li>
-                    {{ else }}
-                        <li><a href="{{ .URL }}">{{ .Name | markdownify }}</a></li>
-                    {{ end }}
-                {{ end }}
+                <li><a class="external" rel="noopener" href="{{ .URL }}">{{ .Name }}</a></li>
             {{ end }}
         </ul>
     </div>
