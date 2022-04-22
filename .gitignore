@@ -68,3 +68,4 @@ mattermost-plugin/dist
 docker/certs
 docker/data
 server/**/*.coverage
+mattermost-plugin/**/*.coverage
