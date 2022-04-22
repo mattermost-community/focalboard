@@ -81,7 +81,7 @@ function errorDefFromId(id: ErrorId | null): ErrorDef {
         break
     }
     case ErrorId.InvalidReadOnlyBoard: {
-        errDef.title = intl.formatMessage({id: 'error.invalid-read-only-board', defaultMessage: 'You don’t have access to this board. Log in to access Boards.'})
+        errDef.title = intl.formatMessage({id: 'error.invalid-read-only-board', defaultMessage: 'You don\’t have access to this board. Log in to access Boards.'})
         errDef.button1Enabled = true
         errDef.button1Text = intl.formatMessage({id: 'error.go-login', defaultMessage: 'Login'})
         errDef.button1Redirect = window.location.origin + '/login'
