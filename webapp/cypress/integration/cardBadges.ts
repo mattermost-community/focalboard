@@ -7,6 +7,7 @@ describe('Card badges', () => {
         cy.apiResetBoards()
         cy.apiGetMe().then((userID) => cy.apiSkipTour(userID))
         localStorage.setItem('welcomePageViewed', 'true')
+        localStorage.setItem('language', 'en')
     })
 
     it('Shows and hides card badges', () => {

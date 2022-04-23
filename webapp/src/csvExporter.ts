@@ -10,6 +10,7 @@ import {Utils} from './utils'
 import {IAppWindow} from './types'
 
 declare let window: IAppWindow
+const hashSignToken = '___hash_sign___'
 
 class CsvExporter {
     static exportTableCsv(board: Board, activeView: BoardView, cards: Card[], intl: IntlShape, view?: BoardView): void {
@@ -28,8 +29,9 @@ class CsvExporter {
             csvContent += encodedRow + '\r\n'
         })
 
+        const encodedUri = encodeURI(csvContent).replace(hashSignToken, '%23')
+
         const filename = `${Utils.sanitizeFilename(viewToExport.title || 'Untitled')}.csv`
-        const encodedUri = encodeURI(csvContent)
         const link = document.createElement('a')
         link.style.display = 'none'
         link.setAttribute('href', encodedUri)
@@ -47,17 +49,17 @@ class CsvExporter {
     }
 
     private static encodeText(text: string): string {
-        return text.replace(/"/g, '""')
+        return text.replace(/"/g, '""').replace(/#/g, hashSignToken)
     }
 
     private static generateTableArray(board: Board, cards: Card[], viewToExport: BoardView, intl: IntlShape): string[][] {
         const rows: string[][] = []
-        const visibleProperties = board.fields.cardProperties.filter((template: IPropertyTemplate) => viewToExport.fields.visiblePropertyIds.includes(template.id))
+        const visibleProperties = board.cardProperties.filter((template: IPropertyTemplate) => viewToExport.fields.visiblePropertyIds.includes(template.id))
 
         if (viewToExport.fields.viewType === 'calendar' &&
             viewToExport.fields.dateDisplayPropertyId &&
             !viewToExport.fields.visiblePropertyIds.includes(viewToExport.fields.dateDisplayPropertyId)) {
-            const dateDisplay = board.fields.cardProperties.find((template: IPropertyTemplate) => viewToExport.fields.dateDisplayPropertyId === template.id)
+            const dateDisplay = board.cardProperties.find((template: IPropertyTemplate) => viewToExport.fields.dateDisplayPropertyId === template.id)
             if (dateDisplay) {
                 visibleProperties.push(dateDisplay)
             }

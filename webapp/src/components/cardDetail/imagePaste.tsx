@@ -2,12 +2,15 @@
 // See LICENSE.txt for license information.
 
 import {useEffect, useCallback} from 'react'
+import {useIntl} from 'react-intl'
 
 import {ImageBlock, createImageBlock} from '../../blocks/imageBlock'
+import {sendFlashMessage} from '../flashMessages'
 import octoClient from '../../octoClient'
 import mutator from '../../mutator'
 
-export default function useImagePaste(cardId: string, contentOrder: Array<string | string[]>, rootId: string): void {
+export default function useImagePaste(boardId: string, cardId: string, contentOrder: Array<string | string[]>): void {
+    const intl = useIntl()
     const uploadItems = useCallback(async (items: FileList) => {
         let newImage: File|null = null
         const uploads: Promise<string|undefined>[] = []
@@ -19,31 +22,37 @@ export default function useImagePaste(cardId: string, contentOrder: Array<string
         for (const item of items) {
             newImage = item
             if (newImage?.type.indexOf('image/') === 0) {
-                uploads.push(octoClient.uploadFile(rootId, newImage))
+                uploads.push(octoClient.uploadFile(boardId, newImage))
             }
         }
 
         const uploaded = await Promise.all(uploads)
         const blocksToInsert: ImageBlock[] = []
+        let someFilesNotUploaded = false
         for (const fileId of uploaded) {
             if (!fileId) {
+                someFilesNotUploaded = true
                 continue
             }
             const block = createImageBlock()
             block.parentId = cardId
-            block.rootId = rootId
+            block.boardId = boardId
             block.fields.fileId = fileId || ''
             blocksToInsert.push(block)
         }
 
+        if (someFilesNotUploaded) {
+            sendFlashMessage({content: intl.formatMessage({id: 'imagePaste.upload-failed', defaultMessage: 'Some files not uploaded. File size limit reached'}), severity: 'normal'})
+        }
+
         mutator.performAsUndoGroup(async () => {
-            const newContentBlocks = await mutator.insertBlocks(blocksToInsert, 'pasted images')
+            const newContentBlocks = await mutator.insertBlocks(boardId, blocksToInsert, 'pasted images')
             const newContentOrder = JSON.parse(JSON.stringify(contentOrder))
             newContentOrder.push(...newContentBlocks.map((b: ImageBlock) => b.id))
 
-            await mutator.changeCardContentOrder(cardId, contentOrder, newContentOrder, 'paste image')
+            await mutator.changeCardContentOrder(boardId, cardId, contentOrder, newContentOrder, 'paste image')
         })
-    }, [cardId, contentOrder, rootId])
+    }, [cardId, contentOrder, boardId])
 
     const onDrop = useCallback((event: DragEvent): void => {
         if (event.dataTransfer) {
@@ -66,5 +75,5 @@ export default function useImagePaste(cardId: string, contentOrder: Array<string
             document.removeEventListener('paste', onPaste)
             document.removeEventListener('drop', onDrop)
         }
-    }, [uploadItems])
+    }, [uploadItems, onPaste, onDrop])
 }

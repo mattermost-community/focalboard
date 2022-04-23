@@ -39,7 +39,7 @@ exports[`components/cardDetail/comment return comment 1`] = `
           />
         </button>
         <div
-          class="Menu noselect left"
+          class="Menu noselect left "
         >
           <div
             class="menu-contents"
@@ -47,22 +47,28 @@ exports[`components/cardDetail/comment return comment 1`] = `
             <div
               class="menu-options"
             >
-              <div
-                aria-label="Delete"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+              <div>
                 <div
-                  class="menu-name"
+                  aria-label="Delete"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Delete
+                  <div
+                    class="d-flex"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
-                <div
-                  class="noicon"
-                />
               </div>
             </div>
             <div
@@ -77,8 +83,12 @@ exports[`components/cardDetail/comment return comment 1`] = `
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class="d-flex"
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >
@@ -143,7 +153,7 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
           />
         </button>
         <div
-          class="Menu noselect left"
+          class="Menu noselect left "
         >
           <div
             class="menu-contents"
@@ -151,22 +161,28 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
             <div
               class="menu-options"
             >
-              <div
-                aria-label="Delete"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <i
-                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                />
+              <div>
                 <div
-                  class="menu-name"
+                  aria-label="Delete"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Delete
+                  <div
+                    class="d-flex"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
-                <div
-                  class="noicon"
-                />
               </div>
             </div>
             <div
@@ -181,8 +197,12 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
+                  class="d-flex"
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
                 <div
                   class="menu-name"
                 >

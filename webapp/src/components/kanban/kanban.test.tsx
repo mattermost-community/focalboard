@@ -6,7 +6,7 @@ import '@testing-library/jest-dom'
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {MemoryRouter} from 'react-router-dom'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import userEvent from '@testing-library/user-event'
 
 import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
@@ -76,6 +76,18 @@ describe('src/component/kanban/kanban', () => {
         cards: {
             cards: [card1, card2, card3],
         },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: 'board_id_1',
+            boards: {
+                board_id_1: {id: 'board_id_1'},
+            },
+            myBoardMemberships: {
+                board_id_1: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
         contents: {},
         comments: {
             comments: {},
@@ -90,6 +102,40 @@ describe('src/component/kanban/kanban', () => {
     test('should match snapshot', () => {
         const {container} = render(wrapDNDIntl(
             <ReduxProvider store={store}>
+                <Kanban
+                    board={board}
+                    activeView={activeView}
+                    cards={[card1, card2, card3]}
+                    groupByProperty={groupProperty}
+                    visibleGroups={[
+                        {
+                            option: optionQ1,
+                            cards: [card1, card2],
+                        }, {
+                            option: optionQ2,
+                            cards: [card3],
+                        },
+                    ]}
+                    hiddenGroups={[
+                        {
+                            option: optionQ3,
+                            cards: [],
+                        },
+                    ]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    onCardClicked={jest.fn()}
+                    addCard={jest.fn()}
+                    showCard={jest.fn()}
+                />
+            </ReduxProvider>,
+        ), {wrapper: MemoryRouter})
+        expect(container).toMatchSnapshot()
+    })
+    test('should match snapshot without permissions', () => {
+        const localStore = mockStateStore([], {...state, teams: {current: undefined}})
+        const {container} = render(wrapDNDIntl(
+            <ReduxProvider store={localStore}>
                 <Kanban
                     board={board}
                     activeView={activeView}
@@ -404,7 +450,7 @@ describe('src/component/kanban/kanban', () => {
         fireEvent.blur(inputTitle)
 
         await waitFor(async () => {
-            expect(mockedchangePropertyOptionValue).toBeCalledWith(board, groupProperty, optionQ1, 'New Q1')
+            expect(mockedchangePropertyOptionValue).toBeCalledWith(board.id, board.cardProperties, groupProperty, optionQ1, 'New Q1')
         })
 
         expect(container).toMatchSnapshot()

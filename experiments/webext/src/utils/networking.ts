@@ -10,7 +10,7 @@ declare global {
 }
 
 async function request(method: string, host: string, resource: string, body: any, token: string | null) {
-  const response = await fetch(`${host}/api/v1/${resource}`, {
+  const response = await fetch(`${host}/api/v2/${resource}`, {
     'credentials': 'include',
     'headers': {
       'Accept': 'application/json',
@@ -38,7 +38,7 @@ export async function logIn(host: string, username: string, password: string) {
 
 export async function getBoards(host: string, token: string) {
   const json = await request('GET', host, 'workspaces/0/blocks?type=board', null, token) as Board[]
-  return json.filter(board => !board.fields.isTemplate)
+  return json.filter(board => !board.isTemplate)
 }
 
 export async function findUrlPropertyId(host: string, token: string, boardId: string) {

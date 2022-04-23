@@ -4,7 +4,6 @@
 package storetests
 
 import (
-	"database/sql"
 	"testing"
 	"time"
 
@@ -19,7 +18,7 @@ func StoreTestUserStore(t *testing.T, setup func(t *testing.T) (store.Store, fun
 	t.Run("SetGetSystemSettings", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testGetWorkspaceUsers(t, store)
+		testGetTeamUsers(t, store)
 	})
 
 	t.Run("CreateAndGetUser", func(t *testing.T) {
@@ -46,11 +45,11 @@ func StoreTestUserStore(t *testing.T, setup func(t *testing.T) (store.Store, fun
 	})
 }
 
-func testGetWorkspaceUsers(t *testing.T, store store.Store) {
-	t.Run("GetWorkspaceUSers", func(t *testing.T) {
-		users, err := store.GetUsersByWorkspace("workspace_1")
+func testGetTeamUsers(t *testing.T, store store.Store) {
+	t.Run("GetTeamUSers", func(t *testing.T) {
+		users, err := store.GetUsersByTeam("team_1")
 		require.Equal(t, 0, len(users))
-		require.Equal(t, sql.ErrNoRows, err)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 
 		userID := utils.NewID(utils.IDTypeUser)
 
@@ -67,7 +66,7 @@ func testGetWorkspaceUsers(t *testing.T, store store.Store) {
 			})
 		}()
 
-		users, err = store.GetUsersByWorkspace("workspace_1")
+		users, err = store.GetUsersByTeam("team_1")
 		require.Equal(t, 1, len(users))
 		require.Equal(t, "darth.vader", users[0].Username)
 		require.NoError(t, err)

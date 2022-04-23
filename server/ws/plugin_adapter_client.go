@@ -12,7 +12,7 @@ type PluginAdapterClient struct {
 	inactiveAt int64
 	webConnID  string
 	userID     string
-	workspaces []string
+	teams      []string
 	blocks     []string
 	mu         sync.RWMutex
 }
@@ -25,24 +25,24 @@ func (pac *PluginAdapterClient) hasExpired(threshold time.Duration) bool {
 	return !mmModel.GetTimeForMillis(atomic.LoadInt64(&pac.inactiveAt)).Add(threshold).After(time.Now())
 }
 
-func (pac *PluginAdapterClient) subscribeToWorkspace(workspaceID string) {
+func (pac *PluginAdapterClient) subscribeToTeam(teamID string) {
 	pac.mu.Lock()
 	defer pac.mu.Unlock()
 
-	pac.workspaces = append(pac.workspaces, workspaceID)
+	pac.teams = append(pac.teams, teamID)
 }
 
-func (pac *PluginAdapterClient) unsubscribeFromWorkspace(workspaceID string) {
+func (pac *PluginAdapterClient) unsubscribeFromTeam(teamID string) {
 	pac.mu.Lock()
 	defer pac.mu.Unlock()
 
-	newClientWorkspaces := []string{}
-	for _, id := range pac.workspaces {
-		if id != workspaceID {
-			newClientWorkspaces = append(newClientWorkspaces, id)
+	newClientTeams := []string{}
+	for _, id := range pac.teams {
+		if id != teamID {
+			newClientTeams = append(newClientTeams, id)
 		}
 	}
-	pac.workspaces = newClientWorkspaces
+	pac.teams = newClientTeams
 }
 
 func (pac *PluginAdapterClient) unsubscribeFromBlock(blockID string) {
@@ -58,12 +58,12 @@ func (pac *PluginAdapterClient) unsubscribeFromBlock(blockID string) {
 	pac.blocks = newClientBlocks
 }
 
-func (pac *PluginAdapterClient) isSubscribedToWorkspace(workspaceID string) bool {
+func (pac *PluginAdapterClient) isSubscribedToTeam(teamID string) bool {
 	pac.mu.RLock()
 	defer pac.mu.RUnlock()
 
-	for _, id := range pac.workspaces {
-		if id == workspaceID {
+	for _, id := range pac.teams {
+		if id == teamID {
 			return true
 		}
 	}

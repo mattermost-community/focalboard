@@ -13,6 +13,7 @@ import {getCardContents} from '../store/contents'
 import {useAppSelector} from '../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
+import CompassIcon from '../widgets/icons/compassIcon'
 import DeleteIcon from '../widgets/icons/delete'
 import LinkIcon from '../widgets/icons/Link'
 import Menu from '../widgets/menu'
@@ -25,6 +26,9 @@ import {getUserBlockSubscriptionList} from '../store/initialLoad'
 
 import {IUser} from '../user'
 import {getMe} from '../store/users'
+import {Permission} from '../constants'
+
+import BoardPermissionGate from './permissions/boardPermissionGate'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
@@ -62,7 +66,8 @@ const CardDialog = (props: Props): JSX.Element => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.AddTemplateFromCard, {board: props.board.id, view: activeView.id, card: props.cardId})
         await mutator.duplicateCard(
             props.cardId,
-            board,
+            board.id,
+            card.fields.isTemplate,
             intl.formatMessage({id: 'Mutator.new-template-from-card', defaultMessage: 'new template from card'}),
             true,
             async (newCardId) => {
@@ -106,33 +111,43 @@ const CardDialog = (props: Props): JSX.Element => {
 
     const menu = (
         <Menu position='left'>
-            <Menu.Text
-                id='delete'
-                icon={<DeleteIcon/>}
-                name='Delete'
-                onClick={handleDeleteButtonOnClick}
-            />
-            <Menu.Text
-                icon={<LinkIcon/>}
-                id='copy'
-                name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
-                onClick={() => {
-                    let cardLink = window.location.href
-
-                    if (!cardLink.includes(props.cardId)) {
-                        cardLink += `/${props.cardId}`
-                    }
-
-                    Utils.copyTextToClipboard(cardLink)
-                    sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                }}
-            />
-            {!isTemplate &&
+            <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                 <Menu.Text
-                    id='makeTemplate'
-                    name='New template from card'
-                    onClick={makeTemplateClicked}
+                    id='delete'
+                    icon={<DeleteIcon/>}
+                    name='Delete'
+                    onClick={handleDeleteButtonOnClick}
                 />
+            </BoardPermissionGate>
+            {me?.id !== 'single-user' &&
+                <Menu.Text
+                    icon={<LinkIcon/>}
+                    id='copy'
+                    name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
+                    onClick={() => {
+                        let cardLink = window.location.href
+
+                        if (!cardLink.includes(props.cardId)) {
+                            cardLink += `/${props.cardId}`
+                        }
+
+                        Utils.copyTextToClipboard(cardLink)
+                        sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                    }}
+                />
+            }
+            {!isTemplate &&
+                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                    <Menu.Text
+                        id='makeTemplate'
+                        icon={
+                            <CompassIcon
+                                icon='plus'
+                            />}
+                        name='New template from card'
+                        onClick={makeTemplateClicked}
+                    />
+                </BoardPermissionGate>
             }
         </Menu>
     )
@@ -141,6 +156,7 @@ const CardDialog = (props: Props): JSX.Element => {
         const followBtn = (
             <Button
                 className='cardFollowBtn follow'
+                size='medium'
                 onClick={() => mutator.followBlock(props.cardId, 'card', me!.id)}
             >
                 {intl.formatMessage({id: 'CardDetail.Follow', defaultMessage: 'Follow'})}
@@ -166,6 +182,7 @@ const CardDialog = (props: Props): JSX.Element => {
     return (
         <>
             <Dialog
+                className='cardDialog'
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && menu}
                 toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar}

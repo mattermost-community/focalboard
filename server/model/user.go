@@ -6,7 +6,9 @@ import (
 )
 
 const (
-	SingleUser = "single-user"
+	SingleUser   = "single-user"
+	GlobalTeamID = "0"
+	SystemUserID = "system"
 )
 
 // User is a user
@@ -40,23 +42,29 @@ type User struct {
 	// required: true
 	Props map[string]interface{} `json:"props"`
 
-	// Created time
+	// Created time in miliseconds since the current epoch
 	// required: true
 	CreateAt int64 `json:"create_at,omitempty"`
 
-	// Updated time
+	// Updated time in miliseconds since the current epoch
 	// required: true
 	UpdateAt int64 `json:"update_at,omitempty"`
 
-	// Deleted time, set to indicate user is deleted
+	// Deleted time in miliseconds since the current epoch, set to indicate user is deleted
 	// required: true
 	DeleteAt int64 `json:"delete_at"`
 
 	// If the user is a bot or not
 	// required: true
 	IsBot bool `json:"is_bot"`
+
+	// If the user is a guest or not
+	// required: true
+	IsGuest bool `json:"is_guest"`
 }
 
+// UserPropPatch is a user property patch
+// swagger:model
 type UserPropPatch struct {
 	// The user prop updated fields
 	// required: false

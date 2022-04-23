@@ -17,15 +17,15 @@ import (
 	"time"
 
     "github.com/mattermost/focalboard/server/model"
-    "github.com/mattermost/focalboard/server/services/store"
 
     "github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 {{range $index, $element := .Methods}}
 func (s *SQLStore) {{$index}}({{$element.Params | joinParamsWithType}}) {{$element.Results | joinResultsForSignature}} {
     {{- if $element.WithTransaction}}
-    	if s.dbType == sqliteDBType {
+    	if s.dbType == model.SqliteDBType {
     	    return s.{{$index | renameStoreMethod}}(s.db, {{$element.Params | joinParams}})
     	}
     	tx, txErr := s.db.BeginTx(context.Background(), nil)

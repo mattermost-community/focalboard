@@ -21,8 +21,7 @@ type Props = {
 }
 
 const Dialog = (props: Props) => {
-    const {toolsMenu} = props
-    const {toolbar, title} = props
+    const {toolsMenu, toolbar, title} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
@@ -58,15 +57,17 @@ const Dialog = (props: Props) => {
                                 size='medium'
                             />
                         }
-                        {toolbar && <div className='cardToolbar'>{toolbar}</div>}
-                        {toolsMenu && <MenuWrapper>
-                            <IconButton
-                                size='medium'
-                                icon={<OptionsIcon/>}
-                            />
-                            {toolsMenu}
-                        </MenuWrapper>
-                        }
+                        <div className='toolbar--right'>
+                            {toolbar && <div>{toolbar}</div>}
+                            {toolsMenu && <MenuWrapper>
+                                <IconButton
+                                    size='medium'
+                                    icon={<OptionsIcon/>}
+                                />
+                                {toolsMenu}
+                            </MenuWrapper>
+                            }
+                        </div>
                     </div>
                     {props.children}
                 </div>

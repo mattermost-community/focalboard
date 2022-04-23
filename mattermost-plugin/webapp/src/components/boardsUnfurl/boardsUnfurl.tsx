@@ -36,17 +36,34 @@ function mapStateToProps(state: GlobalState) {
     }
 }
 
+class FocalboardEmbeddedData {
+    teamID: string
+    cardID: string
+    boardID: string
+    readToken: string
+    originalPath: string
+
+    constructor(rawData: string) {
+        const parsed = JSON.parse(rawData)
+        this.teamID = parsed.teamID || parsed.workspaceID
+        this.cardID = parsed.cardID
+        this.boardID = parsed.boardID
+        this.readToken = parsed.readToken
+        this.originalPath = parsed.originalPath
+    }
+}
+
 const BoardsUnfurl = (props: Props): JSX.Element => {
     if (!props.embed || !props.embed.data) {
         return <></>
     }
 
     const {embed, locale} = props
-    const focalboardInformation = JSON.parse(embed.data)
-    const {workspaceID, cardID, boardID, readToken, originalPath} = focalboardInformation
+    const focalboardInformation: FocalboardEmbeddedData = new FocalboardEmbeddedData(embed.data)
+    const {teamID, cardID, boardID, readToken, originalPath} = focalboardInformation
     const baseURL = window.location.origin
 
-    if (!workspaceID || !cardID || !boardID) {
+    if (!teamID || !cardID || !boardID) {
         return <></>
     }
 
@@ -57,20 +74,19 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const [cards, boards] = await Promise.all(
+            const [cards, fetchedBoard] = await Promise.all(
                 [
-                    octoClient.getBlocksWithBlockID(cardID, workspaceID, readToken),
-                    octoClient.getBlocksWithBlockID(boardID, workspaceID, readToken),
+                    octoClient.getBlocksWithBlockID(cardID, boardID, readToken),
+                    octoClient.getBoard(boardID),
                 ],
             )
             const [firstCard] = cards as Card[]
-            const [firstBoard] = boards as Board[]
-            if (!firstCard || !firstBoard) {
+            if (!firstCard || !fetchedBoard) {
                 setLoading(false)
                 return null
             }
             setCard(firstCard)
-            setBoard(firstBoard)
+            setBoard(fetchedBoard)
 
             if (firstCard.fields.contentOrder.length) {
                 let [firstContentBlockID] = firstCard.fields?.contentOrder
@@ -79,7 +95,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                     [firstContentBlockID] = firstContentBlockID
                 }
 
-                const contentBlock = await octoClient.getBlocksWithBlockID(firstContentBlockID, workspaceID, readToken) as ContentBlock[]
+                const contentBlock = await octoClient.getBlocksWithBlockID(firstContentBlockID, boardID, readToken) as ContentBlock[]
                 const [firstContentBlock] = contentBlock
                 if (!firstContentBlock) {
                     setLoading(false)
@@ -103,8 +119,8 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
         let totalNumberOfCheckBoxes = 0
 
         // We will just display the first 3 or less select/multi-select properties and do a +n for remainder if any remainder
-        for (let i = 0; i < board.fields.cardProperties.length; i++) {
-            const optionInBoard = board.fields.cardProperties[i]
+        for (let i = 0; i < board.cardProperties.length; i++) {
+            const optionInBoard = board.cardProperties[i]
             let valueToLookUp = card.fields.properties[optionInBoard.id]
 
             // Since these are always set and not included in the card properties
@@ -132,7 +148,11 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                 continue
             }
 
-            propertiesToDisplay.push({optionName: optionInBoard.name, optionValue: optionSelected.value, optionValueColour: optionSelected.color})
+            propertiesToDisplay.push({
+                optionName: optionInBoard.name,
+                optionValue: optionSelected.value,
+                optionValueColour: optionSelected.color,
+            })
         }
         remainder += (Object.keys(card.fields.properties).length - propertiesToDisplay.length - totalNumberOfCheckBoxes)
         html = Utils.htmlFromMarkdown(content?.title || '')

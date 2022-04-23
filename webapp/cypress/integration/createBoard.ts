@@ -11,6 +11,7 @@ describe('Create and delete board / card', () => {
         cy.apiResetBoards()
         cy.apiGetMe().then((userID) => cy.apiSkipTour(userID))
         localStorage.setItem('welcomePageViewed', 'true')
+        localStorage.setItem('language', 'en')
     })
 
     it('MM-T4274 Create an Empty Board', () => {
@@ -29,7 +30,7 @@ describe('Create and delete board / card', () => {
         // Create empty board
         cy.contains('Create empty board').should('exist').click({force: true})
         cy.get('.BoardComponent').should('exist')
-        cy.get('.Editable.title').invoke('attr', 'placeholder').should('contain', 'Untitled board')
+        cy.get('.Editable.title').invoke('attr', 'placeholder').should('contain', 'Untitled Board')
 
         // Change Title
         cy.get('.Editable.title').
@@ -71,7 +72,12 @@ describe('Create and delete board / card', () => {
         cy.log('**Create card**')
         cy.get('.ViewHeader').contains('New').click()
         cy.get('.CardDetail').should('exist')
-
+        
+        //Check title has focus when card is created
+        cy.log('**Check title has focus when card is created**')
+        cy.get('.CardDetail .EditableArea.title').
+            should('have.focus')
+        
         // Change card title
         cy.log('**Change card title**')
         // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -98,8 +104,7 @@ describe('Create and delete board / card', () => {
         // Create table view
         cy.log('**Create table view**')
         cy.get('.ViewHeader').get('.DropdownIcon').first().parent().click()
-        cy.get('.ViewHeader').contains('Add view').click()
-        cy.get('.ViewHeader').contains('Add view').click()
+        cy.get('.ViewHeader').contains('Add view').realHover()
         cy.get('.ViewHeader').
             contains('Add view').
             parent().
@@ -131,7 +136,6 @@ describe('Create and delete board / card', () => {
         cy.get('.Sidebar .octo-sidebar-list').
             contains(boardTitle).
             parent().
-            parent().
             find('.MenuWrapper').
             find('button.IconButton').
             click({force: true})
@@ -143,6 +147,7 @@ describe('Create and delete board / card', () => {
     it('MM-T4433 Scrolls the kanban board when dragging card to edge', () => {
         // Visit a page and create new empty board
         cy.visit('/')
+        cy.wait(500)
         cy.uiCreateEmptyBoard()
 
         // Create 10 empty groups

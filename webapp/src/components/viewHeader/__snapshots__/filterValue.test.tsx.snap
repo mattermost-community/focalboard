@@ -16,7 +16,7 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
       </span>
     </button>
     <div
-      class="Menu noselect bottom"
+      class="Menu noselect bottom "
     >
       <div
         class="menu-contents"
@@ -24,25 +24,27 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
         <div
           class="menu-options"
         >
-          <div
-            aria-label="Status"
-            class="MenuOption SwitchOption menu-option"
-            role="button"
-          >
+          <div>
             <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
-            >
-              Status
-            </div>
-            <div
-              class="Switch override-main size--small on"
+              aria-label="Status"
+              class="MenuOption SwitchOption menu-option"
+              role="button"
             >
               <div
-                class="octo-switch-inner"
+                class="noicon"
               />
+              <div
+                class="menu-name"
+              >
+                Status
+              </div>
+              <div
+                class="Switch override-main size--small on"
+              >
+                <div
+                  class="octo-switch-inner"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -58,8 +60,12 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
             role="button"
           >
             <div
-              class="noicon"
-            />
+              class="d-flex"
+            >
+              <div
+                class="noicon"
+              />
+            </div>
             <div
               class="menu-name"
             >

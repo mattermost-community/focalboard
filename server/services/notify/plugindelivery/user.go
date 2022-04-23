@@ -6,6 +6,8 @@ package plugindelivery
 import (
 	"strings"
 
+	"github.com/mattermost/focalboard/server/model"
+
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -13,15 +15,15 @@ const (
 	usernameSpecialChars = ".-_ "
 )
 
-func teamMemberFromUsername(api PluginAPI, username string, teamID string) (*mm_model.TeamMember, error) {
+func (pd *PluginDelivery) UserByUsername(username string) (*mm_model.User, error) {
 	// check for usernames that might have trailing punctuation
 	var user *mm_model.User
 	var err error
 	ok := true
 	trimmed := username
 	for ok {
-		user, err = api.GetUserByUsername(trimmed)
-		if err != nil && !isErrNotFound(err) {
+		user, err = pd.api.GetUserByUsername(trimmed)
+		if err != nil && !model.IsErrNotFound(err) {
 			return nil, err
 		}
 
@@ -36,13 +38,7 @@ func teamMemberFromUsername(api PluginAPI, username string, teamID string) (*mm_
 		return nil, err
 	}
 
-	// make sure user is member of team.
-	member, err := api.GetTeamMember(teamID, user.Id)
-	if err != nil {
-		return nil, err
-	}
-
-	return member, nil
+	return user, nil
 }
 
 // trimUsernameSpecialChar tries to remove the last character from word if it
@@ -56,11 +52,4 @@ func trimUsernameSpecialChar(word string) (string, bool) {
 	}
 
 	return word, false
-}
-
-// isErrNotFound returns true if the error is a plugin.ErrNotFound. The pluginAPI converts
-// AppError to the plugin.ErrNotFound var.
-// TODO: add a `IsErrNotFound` method to the plugin API.
-func isErrNotFound(err error) bool {
-	return err != nil && err.Error() == "not found"
 }

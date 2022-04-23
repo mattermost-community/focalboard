@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useMemo} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
@@ -8,7 +8,8 @@ import {Card} from '../../blocks/card'
 import {ContentBlock} from '../../blocks/contentBlock'
 import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
-import {getCardComments} from '../../store/comments'
+import {IUser} from '../../user'
+import {getMe} from '../../store/users'
 import {getCardContents} from '../../store/contents'
 import {useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -21,6 +22,7 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Tooltip from '../../widgets/tooltip'
+import {Permission} from '../../constants'
 import {CardDetailProvider} from '../cardDetail/cardDetailContext'
 import ContentElement from '../content/contentElement'
 import ImageElement from '../content/imageElement'
@@ -28,6 +30,8 @@ import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
 import './galleryCard.scss'
 import CardBadges from '../cardBadges'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 type Props = {
     board: Board
@@ -47,22 +51,20 @@ const GalleryCard = (props: Props) => {
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
     const contents = useAppSelector(getCardContents(card.id))
-    const comments = useAppSelector(getCardComments(card.id))
+    const me = useAppSelector<IUser|null>(getMe)
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
-    let image: ContentBlock | undefined
-    for (let i = 0; i < contents.length; ++i) {
-        if (Array.isArray(contents[i])) {
-            image = (contents[i] as ContentBlock[]).find((c) => c.type === 'image')
-        } else if ((contents[i] as ContentBlock).type === 'image') {
-            image = contents[i] as ContentBlock
+    const image: ContentBlock|undefined = useMemo(() => {
+        for (let i = 0; i < contents.length; ++i) {
+            if (Array.isArray(contents[i])) {
+                return (contents[i] as ContentBlock[]).find((c) => c.type === 'image')
+            } else if ((contents[i] as ContentBlock).type === 'image') {
+                return contents[i] as ContentBlock
+            }
         }
-
-        if (image) {
-            break
-        }
-    }
+        return undefined
+    }, [contents])
 
     let className = props.isSelected ? 'GalleryCard selected' : 'GalleryCard'
     if (isOver) {
@@ -83,36 +85,40 @@ const GalleryCard = (props: Props) => {
                 >
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
-                        <Menu.Text
-                            icon={<DeleteIcon/>}
-                            id='delete'
-                            name={intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
-                            onClick={() => mutator.deleteBlock(card, 'delete card')}
-                        />
-                        <Menu.Text
-                            icon={<DuplicateIcon/>}
-                            id='duplicate'
-                            name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
-                            onClick={() => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
-                                mutator.duplicateCard(card.id, board)
-                            }}
-                        />
-                        <Menu.Text
-                            icon={<LinkIcon/>}
-                            id='copy'
-                            name={intl.formatMessage({id: 'GalleryCard.copyLink', defaultMessage: 'Copy link'})}
-                            onClick={() => {
-                                let cardLink = window.location.href
+                        <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                            <Menu.Text
+                                icon={<DeleteIcon/>}
+                                id='delete'
+                                name={intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
+                                onClick={() => mutator.deleteBlock(card, 'delete card')}
+                            />
+                            <Menu.Text
+                                icon={<DuplicateIcon/>}
+                                id='duplicate'
+                                name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
+                                onClick={() => {
+                                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                                    mutator.duplicateCard(card.id, board.id)
+                                }}
+                            />
+                        </BoardPermissionGate>
+                        {me?.id !== 'single-user' &&
+                            <Menu.Text
+                                icon={<LinkIcon/>}
+                                id='copy'
+                                name={intl.formatMessage({id: 'GalleryCard.copyLink', defaultMessage: 'Copy link'})}
+                                onClick={() => {
+                                    let cardLink = window.location.href
 
-                                if (!cardLink.includes(card.id)) {
-                                    cardLink += `/${card.id}`
-                                }
+                                    if (!cardLink.includes(card.id)) {
+                                        cardLink += `/${card.id}`
+                                    }
 
-                                Utils.copyTextToClipboard(cardLink)
-                                sendFlashMessage({content: intl.formatMessage({id: 'GalleryCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                            }}
-                        />
+                                    Utils.copyTextToClipboard(cardLink)
+                                    sendFlashMessage({content: intl.formatMessage({id: 'GalleryCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                                }}
+                            />
+                        }
                     </Menu>
                 </MenuWrapper>
             }
@@ -150,7 +156,10 @@ const GalleryCard = (props: Props) => {
             {props.visibleTitle &&
                 <div className='gallery-title'>
                     { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
-                    <div key='__title'>
+                    <div
+                        key='__title'
+                        className='octo-titletext'
+                    >
                         {card.title ||
                             <FormattedMessage
                                 id='KanbanCard.untitled'
@@ -167,8 +176,6 @@ const GalleryCard = (props: Props) => {
                             placement='top'
                         >
                             <PropertyValueElement
-                                contents={contents}
-                                comments={comments}
                                 board={board}
                                 readOnly={true}
                                 card={card}

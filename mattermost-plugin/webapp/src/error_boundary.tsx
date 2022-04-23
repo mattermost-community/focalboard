@@ -3,26 +3,44 @@
 
 import React from 'react'
 
-type Props = {}
+import {Utils} from '../../../webapp/src/utils'
+
 type State = {
     hasError: boolean
 }
 
-export default class ErrorBoundary<Props, State> extends React.Component {
-    state = {hasError: false}
+type Props = {
+    children: React.ReactNode
+}
 
-    static getDerivedStateFromError(error: Error) {
+export default class ErrorBoundary extends React.Component<Props, State> {
+    state = {hasError: false}
+    msg = 'Redirecting to error page...'
+
+    handleError = (): void => {
+        const url = Utils.getBaseURL() + '/error?id=unknown'
+        Utils.log('error boundary redirecting to ' + url)
+        window.location.replace(url)
+    }
+
+    static getDerivedStateFromError(/*error: Error*/): State {
         return {hasError: true}
     }
 
-    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-        console.log(error, errorInfo)
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+        Utils.logError(error + ': ' + errorInfo)
     }
 
-    render() {
+    shouldComponentUpdate(): boolean {
+        return true
+    }
+
+    render(): React.ReactNode {
         if (this.state.hasError) {
-            return <span>Something went wrong.</span>
+            this.handleError()
+            return <span>{this.msg}</span>
         }
         return this.props.children
     }
 }
+

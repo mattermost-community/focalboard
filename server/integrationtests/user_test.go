@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/mattermost/focalboard/server/api"
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/stretchr/testify/require"
 )
@@ -16,7 +17,7 @@ const (
 )
 
 func TestUserRegister(t *testing.T) {
-	th := SetupTestHelperWithoutToken().InitBasic()
+	th := SetupTestHelper(t).Start()
 	defer th.TearDown()
 
 	// register
@@ -29,14 +30,14 @@ func TestUserRegister(t *testing.T) {
 	require.NoError(t, resp.Error)
 	require.True(t, success)
 
-	// register again will failed
+	// register again will fail
 	success, resp = th.Client.Register(registerRequest)
 	require.Error(t, resp.Error)
 	require.False(t, success)
 }
 
 func TestUserLogin(t *testing.T) {
-	th := SetupTestHelperWithoutToken().InitBasic()
+	th := SetupTestHelper(t).Start()
 	defer th.TearDown()
 
 	t.Run("with nonexist user", func(t *testing.T) {
@@ -78,7 +79,7 @@ func TestUserLogin(t *testing.T) {
 }
 
 func TestGetMe(t *testing.T) {
-	th := SetupTestHelperWithoutToken().InitBasic()
+	th := SetupTestHelper(t).Start()
 	defer th.TearDown()
 
 	t.Run("not login yet", func(t *testing.T) {
@@ -120,7 +121,7 @@ func TestGetMe(t *testing.T) {
 }
 
 func TestGetUser(t *testing.T) {
-	th := SetupTestHelperWithoutToken().InitBasic()
+	th := SetupTestHelper(t).Start()
 	defer th.TearDown()
 
 	// register
@@ -165,7 +166,7 @@ func TestGetUser(t *testing.T) {
 }
 
 func TestUserChangePassword(t *testing.T) {
-	th := SetupTestHelperWithoutToken().InitBasic()
+	th := SetupTestHelper(t).Start()
 	defer th.TearDown()
 
 	// register
@@ -210,30 +211,58 @@ func randomBytes(t *testing.T, n int) []byte {
 	return bb
 }
 
-func TestWorkspaceUploadFile(t *testing.T) {
+func TestTeamUploadFile(t *testing.T) {
 	t.Run("no permission", func(t *testing.T) { // native auth, but not login
-		th := SetupTestHelperWithoutToken().InitBasic()
+		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
 
-		workspaceID := "0"
-		rootID := utils.NewID(utils.IDTypeBlock)
+		teamID := "0"
+		boardID := utils.NewID(utils.IDTypeBoard)
 		data := randomBytes(t, 1024)
-		result, resp := th.Client.WorkspaceUploadFile(workspaceID, rootID, bytes.NewReader(data))
+		result, resp := th.Client.TeamUploadFile(teamID, boardID, bytes.NewReader(data))
 		require.Error(t, resp.Error)
 		require.Nil(t, result)
 	})
 
-	t.Run("success", func(t *testing.T) { // single token auth
-		th := SetupTestHelper().InitBasic()
+	t.Run("a board admin should be able to update a file", func(t *testing.T) { // single token auth
+		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
 
-		workspaceID := "0"
-		rootID := utils.NewID(utils.IDTypeBlock)
+		teamID := "0"
+		newBoard := &model.Board{
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NotNil(t, board)
+
 		data := randomBytes(t, 1024)
-		result, resp := th.Client.WorkspaceUploadFile(workspaceID, rootID, bytes.NewReader(data))
-		require.NoError(t, resp.Error)
+		result, resp := th.Client.TeamUploadFile(teamID, board.ID, bytes.NewReader(data))
+		th.CheckOK(resp)
 		require.NotNil(t, result)
 		require.NotEmpty(t, result.FileID)
 		// TODO get the uploaded file
+	})
+
+	t.Run("user that doesn't belong to the board should not be able to upload a file", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		teamID := "0"
+		newBoard := &model.Board{
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NotNil(t, board)
+
+		data := randomBytes(t, 1024)
+
+		// a user that doesn't belong to the board tries to upload the file
+		result, resp := th.Client2.TeamUploadFile(teamID, board.ID, bytes.NewReader(data))
+		th.CheckForbidden(resp)
+		require.Nil(t, result)
 	})
 }

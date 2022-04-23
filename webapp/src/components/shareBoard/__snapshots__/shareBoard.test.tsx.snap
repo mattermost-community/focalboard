@@ -15,11 +15,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-            Share Board
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -29,9 +24,153 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
+          </div>
         </div>
         <div
-          class="tabs-modal"
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-4-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-4-placeholder"
+                  >
+                    Select...
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-controls="react-select-4-listbox"
+                      aria-describedby="react-select-4-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-owns="react-select-4-listbox"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-4-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
+          class="tabs-content"
         >
           <div>
             <div
@@ -43,21 +182,12 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                 <div
                   class="text-heading2"
                 >
-                  Publish to the web
+                  Share internally
                 </div>
                 <div
                   class="text-light"
                 >
-                  Publish and share a “read only” link with everyone on the web
-                </div>
-              </div>
-              <div>
-                <div
-                  class="Switch override-main size--medium on"
-                >
-                  <div
-                    class="octo-switch-inner"
-                  />
+                  Users who have permissions will be able to use this link
                 </div>
               </div>
             </div>
@@ -70,29 +200,15 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             >
               <a
                 class="shareUrl"
-                href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+                href="http://localhost/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/workspace/1/shared/1/1?r=oneToken
+                http://localhost/1/1
               </a>
-              <div
-                class="octo-tooltip tooltip-top"
-                data-tooltip="Regenerate token"
-              >
-                <button
-                  aria-label="Regenerate token"
-                  title="Regenerate token"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-refresh undefined"
-                  />
-                </button>
-              </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy internal link"
               type="button"
             >
               <i
@@ -125,11 +241,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-            Share Board
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -139,9 +250,153 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
+          </div>
         </div>
         <div
-          class="tabs-modal"
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-4-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-4-placeholder"
+                  >
+                    Select...
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-controls="react-select-4-listbox"
+                      aria-describedby="react-select-4-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-owns="react-select-4-listbox"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-4-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
+          class="tabs-content"
         >
           <div>
             <div
@@ -153,21 +408,12 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                 <div
                   class="text-heading2"
                 >
-                  Publish to the web
+                  Share internally
                 </div>
                 <div
                   class="text-light"
                 >
-                  Publish and share a “read only” link with everyone on the web
-                </div>
-              </div>
-              <div>
-                <div
-                  class="Switch override-main size--medium on"
-                >
-                  <div
-                    class="octo-switch-inner"
-                  />
+                  Users who have permissions will be able to use this link
                 </div>
               </div>
             </div>
@@ -180,29 +426,15 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             >
               <a
                 class="shareUrl"
-                href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+                href="http://localhost/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/workspace/1/shared/1/1?r=oneToken
+                http://localhost/1/1
               </a>
-              <div
-                class="octo-tooltip tooltip-top"
-                data-tooltip="Regenerate token"
-              >
-                <button
-                  aria-label="Regenerate token"
-                  title="Regenerate token"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-refresh undefined"
-                  />
-                </button>
-              </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy internal link"
               type="button"
             >
               <i
@@ -235,11 +467,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-            Share Board
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -249,9 +476,153 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
+          </div>
         </div>
         <div
-          class="tabs-modal"
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-5-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-5-placeholder"
+                  >
+                    Select...
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-controls="react-select-5-listbox"
+                      aria-describedby="react-select-5-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-owns="react-select-5-listbox"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-5-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item false"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item tab-item--active"
+          >
+            Publish
+          </button>
+        </div>
+        <div
+          class="tabs-content"
         >
           <div>
             <div
@@ -290,11 +661,11 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
             >
               <a
                 class="shareUrl"
-                href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+                href="http://localhost/shared/1/1?r=anotherToken"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/workspace/1/shared/1/1?r=oneToken
+                http://localhost/shared/1/1?r=anotherToken
               </a>
               <div
                 class="octo-tooltip tooltip-top"
@@ -312,7 +683,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
               </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy public link"
               type="button"
             >
               <i
@@ -345,11 +716,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-            Share Board
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -359,9 +725,153 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
+          </div>
         </div>
         <div
-          class="tabs-modal"
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-6-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-6-placeholder"
+                  >
+                    Select...
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-controls="react-select-6-listbox"
+                      aria-describedby="react-select-6-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-owns="react-select-6-listbox"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-6-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item false"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item tab-item--active"
+          >
+            Publish
+          </button>
+        </div>
+        <div
+          class="tabs-content"
         >
           <div>
             <div
@@ -400,11 +910,11 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
             >
               <a
                 class="shareUrl"
-                href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+                href="http://localhost/shared/1/1?r=oneToken"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/workspace/1/shared/1/1?r=oneToken
+                http://localhost/shared/1/1?r=oneToken
               </a>
               <div
                 class="octo-tooltip tooltip-top"
@@ -422,7 +932,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
               </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy public link"
               type="button"
             >
               <i
@@ -455,11 +965,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-            Share Board
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -469,9 +974,153 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
+          </div>
         </div>
         <div
-          class="tabs-modal"
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-7-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-7-placeholder"
+                  >
+                    Select...
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-controls="react-select-7-listbox"
+                      aria-describedby="react-select-7-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-owns="react-select-7-listbox"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-7-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item false"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item tab-item--active"
+          >
+            Publish
+          </button>
+        </div>
+        <div
+          class="tabs-content"
         >
           <div>
             <div
@@ -510,11 +1159,11 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
             >
               <a
                 class="shareUrl"
-                href="http://localhost/workspace/1/shared/1/1?r=aToken"
+                href="http://localhost/shared/1/1?r=aToken"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/workspace/1/shared/1/1?r=aToken
+                http://localhost/shared/1/1?r=aToken
               </a>
               <div
                 class="octo-tooltip tooltip-top"
@@ -532,7 +1181,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
               </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy public link"
               type="button"
             >
               <i
@@ -565,11 +1214,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-            Share Board
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -579,9 +1223,153 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
+          </div>
         </div>
         <div
-          class="tabs-modal"
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-2-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-2-placeholder"
+                  >
+                    Select...
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-controls="react-select-2-listbox"
+                      aria-describedby="react-select-2-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-owns="react-select-2-listbox"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-2-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
+          class="tabs-content"
         >
           <div>
             <div
@@ -593,24 +1381,42 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
                 <div
                   class="text-heading2"
                 >
-                  Publish to the web
+                  Share internally
                 </div>
                 <div
                   class="text-light"
                 >
-                  Publish and share a “read only” link with everyone on the web
-                </div>
-              </div>
-              <div>
-                <div
-                  class="Switch override-main size--medium"
-                >
-                  <div
-                    class="octo-switch-inner"
-                  />
+                  Users who have permissions will be able to use this link
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/1/1"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/1/1
+              </a>
+            </div>
+            <button
+              title="Copy internal link"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
+              <span>
+                Copy link
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -634,11 +1440,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-            Share Board
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -648,9 +1449,153 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
+          </div>
         </div>
         <div
-          class="tabs-modal"
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-3-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-3-placeholder"
+                  >
+                    Select...
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-controls="react-select-3-listbox"
+                      aria-describedby="react-select-3-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-owns="react-select-3-listbox"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-3-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
+          class="tabs-content"
         >
           <div>
             <div
@@ -662,21 +1607,12 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                 <div
                   class="text-heading2"
                 >
-                  Publish to the web
+                  Share internally
                 </div>
                 <div
                   class="text-light"
                 >
-                  Publish and share a “read only” link with everyone on the web
-                </div>
-              </div>
-              <div>
-                <div
-                  class="Switch override-main size--medium on"
-                >
-                  <div
-                    class="octo-switch-inner"
-                  />
+                  Users who have permissions will be able to use this link
                 </div>
               </div>
             </div>
@@ -689,29 +1625,15 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               <a
                 class="shareUrl"
-                href="http://localhost/workspace/1/shared/1/1?r=oneToken"
+                href="http://localhost/1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/workspace/1/shared/1/1?r=oneToken
+                http://localhost/1/1
               </a>
-              <div
-                class="octo-tooltip tooltip-top"
-                data-tooltip="Regenerate token"
-              >
-                <button
-                  aria-label="Regenerate token"
-                  title="Regenerate token"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-refresh undefined"
-                  />
-                </button>
-              </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy internal link"
               type="button"
             >
               <i
@@ -744,11 +1666,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-            Share Board
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -758,9 +1675,153 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
+          </div>
         </div>
         <div
-          class="tabs-modal"
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-9-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-9-placeholder"
+                  >
+                    Select...
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-controls="react-select-9-listbox"
+                      aria-describedby="react-select-9-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-owns="react-select-9-listbox"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-9-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
+          class="tabs-content"
         >
           <div>
             <div
@@ -772,21 +1833,12 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                 <div
                   class="text-heading2"
                 >
-                  Publish to the web
+                  Share internally
                 </div>
                 <div
                   class="text-light"
                 >
-                  Publish and share a “read only” link with everyone on the web
-                </div>
-              </div>
-              <div>
-                <div
-                  class="Switch override-main size--medium on"
-                >
-                  <div
-                    class="octo-switch-inner"
-                  />
+                  Users who have permissions will be able to use this link
                 </div>
               </div>
             </div>
@@ -799,29 +1851,15 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               <a
                 class="shareUrl"
-                href="http://localhost/test-subpath/plugins/boards/workspace/1/shared/1/1?r=oneToken"
+                href="http://localhost/test-subpath/plugins/boards1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/test-subpath/plugins/boards/workspace/1/shared/1/1?r=oneToken
+                http://localhost/test-subpath/plugins/boards1/1
               </a>
-              <div
-                class="octo-tooltip tooltip-top"
-                data-tooltip="Regenerate token"
-              >
-                <button
-                  aria-label="Regenerate token"
-                  title="Regenerate token"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-refresh undefined"
-                  />
-                </button>
-              </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy internal link"
               type="button"
             >
               <i
@@ -854,11 +1892,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <h1
-            class="text-heading5 mt-2"
-          >
-            Share Board
-          </h1>
           <button
             aria-label="Close dialog"
             title="Close dialog"
@@ -868,9 +1901,153 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
+          </div>
         </div>
         <div
-          class="tabs-modal"
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-8-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-8-placeholder"
+                  >
+                    Select...
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-controls="react-select-8-listbox"
+                      aria-describedby="react-select-8-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-owns="react-select-8-listbox"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-8-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
+          class="tabs-content"
         >
           <div>
             <div
@@ -882,21 +2059,12 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                 <div
                   class="text-heading2"
                 >
-                  Publish to the web
+                  Share internally
                 </div>
                 <div
                   class="text-light"
                 >
-                  Publish and share a “read only” link with everyone on the web
-                </div>
-              </div>
-              <div>
-                <div
-                  class="Switch override-main size--medium on"
-                >
-                  <div
-                    class="octo-switch-inner"
-                  />
+                  Users who have permissions will be able to use this link
                 </div>
               </div>
             </div>
@@ -909,29 +2077,15 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               <a
                 class="shareUrl"
-                href="http://localhost/test-subpath/plugins/boards/shared/1/1?r=oneToken"
+                href="http://localhost/test-subpath/plugins/boards1/1"
                 rel="noreferrer"
                 target="_blank"
               >
-                http://localhost/test-subpath/plugins/boards/shared/1/1?r=oneToken
+                http://localhost/test-subpath/plugins/boards1/1
               </a>
-              <div
-                class="octo-tooltip tooltip-top"
-                data-tooltip="Regenerate token"
-              >
-                <button
-                  aria-label="Regenerate token"
-                  title="Regenerate token"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-refresh undefined"
-                  />
-                </button>
-              </div>
             </div>
             <button
-              title="Copy link"
+              title="Copy internal link"
               type="button"
             >
               <i

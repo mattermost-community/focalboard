@@ -14,6 +14,7 @@ import (
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
@@ -29,16 +30,17 @@ import (
 )
 
 const (
-	boardsFeatureFlagName     = "BoardsFeatureFlags"
-	pluginName                = "focalboard"
-	sharedBoardsName          = "enablepublicsharedboards"
+	boardsFeatureFlagName = "BoardsFeatureFlags"
+	pluginName            = "focalboard"
+	sharedBoardsName      = "enablepublicsharedboards"
+
 	notifyFreqCardSecondsKey  = "notify_freq_card_seconds"
 	notifyFreqBoardSecondsKey = "notify_freq_board_seconds"
 )
 
 type BoardsEmbed struct {
 	OriginalPath string `json:"originalPath"`
-	WorkspaceID  string `json:"workspaceID"`
+	TeamID       string `json:"teamID"`
 	ViewID       string `json:"viewID"`
 	BoardID      string `json:"boardID"`
 	CardID       string `json:"cardID"`
@@ -97,6 +99,7 @@ func (p *Plugin) OnActivate() error {
 		NewMutexFn: func(name string) (*cluster.Mutex, error) {
 			return cluster.NewMutex(p.API, name)
 		},
+		PluginAPI: &p.API,
 	}
 
 	var db store.Store
@@ -112,13 +115,18 @@ func (p *Plugin) OnActivate() error {
 		db = layeredStore
 	}
 
-	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db), logger)
+	permissionsService := mmpermissions.New(db, p.API)
+
+	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db, permissionsService), db, logger)
 
 	backendParams := notifyBackendParams{
-		cfg:        cfg,
-		client:     client,
-		serverRoot: baseURL + "/boards",
-		logger:     logger,
+		cfg:         cfg,
+		client:      client,
+		store:       db,
+		permissions: permissionsService,
+		wsAdapter:   p.wsPluginAdapter,
+		serverRoot:  baseURL + "/boards",
+		logger:      logger,
 	}
 
 	var notifyBackends []notify.Backend
@@ -129,7 +137,7 @@ func (p *Plugin) OnActivate() error {
 	}
 	notifyBackends = append(notifyBackends, mentionsBackend)
 
-	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams, db, p.wsPluginAdapter)
+	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams)
 	if err2 != nil {
 		return fmt.Errorf("error creating subscription notifications backend: %w", err2)
 	}
@@ -137,13 +145,14 @@ func (p *Plugin) OnActivate() error {
 	mentionsBackend.AddListener(subscriptionsBackend)
 
 	params := server.Params{
-		Cfg:             cfg,
-		SingleUserToken: "",
-		DBStore:         db,
-		Logger:          logger,
-		ServerID:        serverID,
-		WSAdapter:       p.wsPluginAdapter,
-		NotifyBackends:  notifyBackends,
+		Cfg:                cfg,
+		SingleUserToken:    "",
+		DBStore:            db,
+		Logger:             logger,
+		ServerID:           serverID,
+		WSAdapter:          p.wsPluginAdapter,
+		NotifyBackends:     notifyBackends,
+		PermissionsService: permissionsService,
 	}
 
 	server, err := server.New(params)
@@ -213,6 +222,7 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		FilesDriver:              *mmconfig.FileSettings.DriverName,
 		FilesPath:                *mmconfig.FileSettings.Directory,
 		FilesS3Config:            filesS3Config,
+		MaxFileSize:              *mmconfig.FileSettings.MaxFileSize,
 		Telemetry:                enableTelemetry,
 		TelemetryID:              serverID,
 		WebhookUpdate:            []string{},
@@ -373,11 +383,11 @@ func postWithBoardsEmbed(post *mmModel.Post) *mmModel.Post {
 		return post
 	}
 
-	workspaceID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
+	teamID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
 
-	if workspaceID != "" && boardID != "" && viewID != "" && cardID != "" {
+	if teamID != "" && boardID != "" && viewID != "" && cardID != "" {
 		b, _ := json.Marshal(BoardsEmbed{
-			WorkspaceID:  workspaceID,
+			TeamID:       teamID,
 			BoardID:      boardID,
 			ViewID:       viewID,
 			CardID:       cardID,
@@ -430,7 +440,7 @@ func getFirstLinkAndShortenAllBoardsLink(postMessage string) (firstLink, newPost
 	return firstLink, newPostMessage
 }
 
-func returnBoardsParams(pathArray []string) (workspaceID, boardID, viewID, cardID string) {
+func returnBoardsParams(pathArray []string) (teamID, boardID, viewID, cardID string) {
 	// The reason we are doing this search for the first instance of boards or plugins is to take into account URL subpaths
 	index := -1
 	for i := 0; i < len(pathArray); i++ {
@@ -441,7 +451,7 @@ func returnBoardsParams(pathArray []string) (workspaceID, boardID, viewID, cardI
 	}
 
 	if index == -1 {
-		return workspaceID, boardID, viewID, cardID
+		return teamID, boardID, viewID, cardID
 	}
 
 	// If at index, the parameter in the path is boards,
@@ -450,27 +460,27 @@ func returnBoardsParams(pathArray []string) (workspaceID, boardID, viewID, cardI
 	// If at index, the parameter in the path is plugins,
 	// then we've copied this from a shared board
 
-	// For card links copied on a non-shared board, the path looks like {...Mattermost Url}.../boards/workspace/workspaceID/boardID/viewID/cardID
+	// For card links copied on a non-shared board, the path looks like {...Mattermost Url}.../boards/team/teamID/boardID/viewID/cardID
 
 	// For card links copied on a shared board, the path looks like
-	// {...Mattermost Url}.../plugins/focalboard/workspace/workspaceID/shared/boardID/viewID/cardID?r=read_token
+	// {...Mattermost Url}.../plugins/focalboard/team/teamID/shared/boardID/viewID/cardID?r=read_token
 
 	// This is a non-shared board card link
-	if len(pathArray)-index == 6 && pathArray[index] == "boards" && pathArray[index+1] == "workspace" {
-		workspaceID = pathArray[index+2]
+	if len(pathArray)-index == 6 && pathArray[index] == "boards" && pathArray[index+1] == "team" {
+		teamID = pathArray[index+2]
 		boardID = pathArray[index+3]
 		viewID = pathArray[index+4]
 		cardID = pathArray[index+5]
 	} else if len(pathArray)-index == 8 && pathArray[index] == "plugins" &&
 		pathArray[index+1] == "focalboard" &&
-		pathArray[index+2] == "workspace" &&
+		pathArray[index+2] == "team" &&
 		pathArray[index+4] == "shared" { // This is a shared board card link
-		workspaceID = pathArray[index+3]
+		teamID = pathArray[index+3]
 		boardID = pathArray[index+5]
 		viewID = pathArray[index+6]
 		cardID = pathArray[index+7]
 	}
-	return workspaceID, boardID, viewID, cardID
+	return teamID, boardID, viewID, cardID
 }
 
 func isBoardsLink(link string) bool {
@@ -489,6 +499,6 @@ func isBoardsLink(link string) bool {
 		return false
 	}
 
-	workspaceID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
-	return workspaceID != "" && boardID != "" && viewID != "" && cardID != ""
+	teamID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
+	return teamID != "" && boardID != "" && viewID != "" && cardID != ""
 }

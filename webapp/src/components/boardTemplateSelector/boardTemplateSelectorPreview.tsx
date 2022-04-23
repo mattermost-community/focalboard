@@ -27,29 +27,35 @@ const BoardTemplateSelectorPreview = (props: Props) => {
     const [activeTemplateCards, setActiveTemplateCards] = useState<Card[]>([])
 
     useEffect(() => {
+        let isSubscribed = true
         if (activeTemplate) {
             setActiveTemplateCards([])
             setActiveView(null)
             setActiveTemplateCards([])
-            octoClient.getSubtree(activeTemplate.id, activeView?.fields.viewType === 'gallery' ? 3 : 2, activeTemplate.workspaceId).then((blocks) => {
-                const cards = blocks.filter((b) => b.type === 'card')
-                const views = blocks.filter((b) => b.type === 'view').sort((a, b) => a.title.localeCompare(b.title))
-                if (views.length > 0) {
-                    setActiveView(views[0] as BoardView)
-                }
-                if (cards.length > 0) {
-                    setActiveTemplateCards(cards as Card[])
+            octoClient.getAllBlocks(activeTemplate.id).then((blocks) => {
+                if (isSubscribed) {
+                    const cards = blocks.filter((b) => b.type === 'card')
+                    const views = blocks.filter((b) => b.type === 'view').sort((a, b) => a.title.localeCompare(b.title))
+                    if (views.length > 0) {
+                        setActiveView(views[0] as BoardView)
+                    }
+                    if (cards.length > 0) {
+                        setActiveTemplateCards(cards as Card[])
+                    }
                 }
             })
+        }
+        return () => {
+            isSubscribed = false
         }
     }, [activeTemplate])
 
     const dateDisplayProperty = useMemo(() => {
-        return activeTemplate?.fields.cardProperties.find((o) => o.id === activeView?.fields.dateDisplayPropertyId)
+        return activeTemplate?.cardProperties.find((o) => o.id === activeView?.fields.dateDisplayPropertyId)
     }, [activeView, activeTemplate])
 
     const groupByProperty = useMemo(() => {
-        return activeTemplate?.fields.cardProperties.find((o) => o.id === activeView?.fields.groupById) || activeTemplate?.fields.cardProperties[0]
+        return activeTemplate?.cardProperties.find((o) => o.id === activeView?.fields.groupById) || activeTemplate?.cardProperties[0]
     }, [activeView, activeTemplate])
 
     const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(() => {

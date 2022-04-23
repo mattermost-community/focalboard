@@ -20,7 +20,8 @@
 
     .IconButton {
         display: none;
-        margin-right: 4px;
+        margin: 0 0 0 4px;
+        flex: 0 0 24px;
 
         &:hover {
             background-color: rgb(var(--center-channel-color-rgb), 0.1);

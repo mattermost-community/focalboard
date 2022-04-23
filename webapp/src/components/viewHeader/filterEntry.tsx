@@ -29,7 +29,7 @@ const FilterEntry = (props: Props): JSX.Element => {
     const {board, view, filter} = props
     const intl = useIntl()
 
-    const template = board.fields.cardProperties.find((o: IPropertyTemplate) => o.id === filter.propertyId)
+    const template = board.cardProperties.find((o: IPropertyTemplate) => o.id === filter.propertyId)
     const propertyName = template ? template.name : '(unknown)'
     const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
     return (
@@ -40,7 +40,7 @@ const FilterEntry = (props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{propertyName}</Button>
                 <Menu>
-                    {board.fields.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect').map((o: IPropertyTemplate) => (
+                    {board.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect').map((o: IPropertyTemplate) => (
                         <Menu.Text
                             key={o.id}
                             id={o.id}
@@ -54,7 +54,7 @@ const FilterEntry = (props: Props): JSX.Element => {
                                 if (newFilter.propertyId !== optionId) {
                                     newFilter.propertyId = optionId
                                     newFilter.values = []
-                                    mutator.changeViewFilter(view.id, view.fields.filter, filterGroup)
+                                    mutator.changeViewFilter(props.board.id, view.id, view.fields.filter, filterGroup)
                                 }
                             }}
                         />))}
@@ -96,7 +96,7 @@ const FilterEntry = (props: Props): JSX.Element => {
                 onClick={() => {
                     const filterGroup = createFilterGroup(view.fields.filter)
                     filterGroup.filters = filterGroup.filters.filter((o) => isAFilterGroupInstance(o) || !areFilterClausesEqual(o, filter))
-                    mutator.changeViewFilter(view.id, view.fields.filter, filterGroup)
+                    mutator.changeViewFilter(props.board.id, view.id, view.fields.filter, filterGroup)
                 }}
             >
                 <FormattedMessage

@@ -24,7 +24,10 @@ describe('components/viewHeader/newCardButton', () => {
                 username: 'username_1'},
         },
         boards: {
-            current: board,
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
         },
         cards: {
             templates: [],

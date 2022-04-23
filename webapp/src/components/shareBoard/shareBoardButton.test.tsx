@@ -21,6 +21,7 @@ describe('src/components/shareBoard/shareBoard', () => {
             wrapDNDIntl(
                 <ShareBoardButton
                     boardId={board.id}
+                    enableSharedBoards={true}
                 />))
 
         const renderer = result.container

@@ -4,6 +4,20 @@ Focalboard is an open source, self-hosted alternative to Trello, Notion, Asana a
 
 This changelog summarizes updates to our open source project. You can also find the [latest releases and release notes on GitHub here](https://github.com/mattermost/focalboard/releases).
 
+## v0.15 Release - March, 2022
+* Onboarding tour. Thanks @harshilsharma63! @jespino!
+* Channel intro link to Boards. Thanks @sbishel!
+* Improved share board UI. Thanks @sbishel!
+* New error pages. Thanks @wiggin77! @asaadmahmood!
+* In-app links to import Help Docs. Thanks @justinegeffen! @sbishel!
+* Toggle to hide empty groups for TableView. Thanks @vish9812!
+* Removed transactions from sqlite backend to prevent locking issues. Thanks @jespino!
+* Update readme with accurate Linux standalone app build instructions. Thanks @wiggin77!
+* Change wrapping in React.memo. Thanks @kamre!
+* Don't use property value for key construction. Thanks @kamre!
+* Updated comment box alignment. Thanks @asaadmahmood!
+* Show "(Deleted User)" instead of UUID when user not found. Thanks @akkivasu!
+
 ## v0.14 Release - February, 2022
 * Template selector dialog. Thanks @jespino!
 * New standard templates. Thanks @wiggin77!

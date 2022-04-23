@@ -1,13 +1,13 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify/notifymentions"
 	"github.com/mattermost/focalboard/server/services/notify/notifysubscriptions"
 	"github.com/mattermost/focalboard/server/services/notify/plugindelivery"
+	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/ws"
 
@@ -25,10 +25,13 @@ const (
 )
 
 type notifyBackendParams struct {
-	cfg        *config.Configuration
-	client     *pluginapi.Client
-	serverRoot string
-	logger     *mlog.Logger
+	cfg         *config.Configuration
+	client      *pluginapi.Client
+	permissions permissions.PermissionsService
+	store       store.Store
+	wsAdapter   ws.Adapter
+	serverRoot  string
+	logger      *mlog.Logger
 }
 
 func createMentionsNotifyBackend(params notifyBackendParams) (*notifymentions.Backend, error) {
@@ -37,14 +40,20 @@ func createMentionsNotifyBackend(params notifyBackendParams) (*notifymentions.Ba
 		return nil, err
 	}
 
-	backend := notifymentions.New(delivery, params.logger)
+	backendParams := notifymentions.BackendParams{
+		Store:       params.store,
+		Permissions: params.permissions,
+		Delivery:    delivery,
+		WSAdapter:   params.wsAdapter,
+		Logger:      params.logger,
+	}
+
+	backend := notifymentions.New(backendParams)
 
 	return backend, nil
 }
 
-func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.Store,
-	wsPluginAdapter ws.PluginAdapterInterface) (*notifysubscriptions.Backend, error) {
-	//
+func createSubscriptionsNotifyBackend(params notifyBackendParams) (*notifysubscriptions.Backend, error) {
 	delivery, err := createDelivery(params.client, params.serverRoot)
 	if err != nil {
 		return nil, err
@@ -52,9 +61,10 @@ func createSubscriptionsNotifyBackend(params notifyBackendParams, store store.St
 
 	backendParams := notifysubscriptions.BackendParams{
 		ServerRoot:             params.serverRoot,
-		Store:                  store,
+		Store:                  params.store,
+		Permissions:            params.permissions,
 		Delivery:               delivery,
-		WSAdapter:              wsPluginAdapter,
+		WSAdapter:              params.wsAdapter,
 		Logger:                 params.logger,
 		NotifyFreqCardSeconds:  params.cfg.NotifyFreqCardSeconds,
 		NotifyFreqBoardSeconds: params.cfg.NotifyFreqBoardSeconds,
@@ -110,8 +120,4 @@ func (da *pluginAPIAdapter) GetChannelByID(channelID string) (*model.Channel, er
 
 func (da *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*model.ChannelMember, error) {
 	return da.client.Channel.GetMember(channelID, userID)
-}
-
-func (da *pluginAPIAdapter) IsErrNotFound(err error) bool {
-	return errors.Is(err, pluginapi.ErrNotFound)
 }

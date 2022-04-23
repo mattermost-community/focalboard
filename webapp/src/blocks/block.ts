@@ -6,14 +6,15 @@ import difference from 'lodash/difference'
 import {Utils} from '../utils'
 
 const contentBlockTypes = ['text', 'image', 'divider', 'checkbox'] as const
+
+// ToDo: remove type board
 const blockTypes = [...contentBlockTypes, 'board', 'view', 'card', 'comment', 'unknown'] as const
 type ContentBlockTypes = typeof contentBlockTypes[number]
 type BlockTypes = typeof blockTypes[number]
 
 interface BlockPatch {
-    workspaceId?: string
+    boardId?: string
     parentId?: string
-    rootId?: string
     schema?: number
     type?: BlockTypes
     title?: string
@@ -25,9 +26,8 @@ interface BlockPatch {
 
 interface Block {
     id: string
-    workspaceId: string
+    boardId: string
     parentId: string
-    rootId: string
     createdBy: string
     modifiedBy: string
 
@@ -47,9 +47,8 @@ function createBlock(block?: Block): Block {
     return {
         id: block?.id || Utils.createGuid(Utils.blockTypeToIDType(block?.type)),
         schema: 1,
-        workspaceId: block?.workspaceId || '',
+        boardId: block?.boardId || '',
         parentId: block?.parentId || '',
-        rootId: block?.rootId || '',
         createdBy: block?.createdBy || '',
         modifiedBy: block?.modifiedBy || '',
         type: block?.type || 'unknown',
@@ -61,7 +60,7 @@ function createBlock(block?: Block): Block {
     }
 }
 
-// createPatchesFromBlock creates two BlockPatch instances, one that
+// createPatchesFromBlocks creates two BlockPatch instances, one that
 // contains the delta to update the block and another one for the undo
 // action, in case it happens
 function createPatchesFromBlocks(newBlock: Block, oldBlock: Block): BlockPatch[] {
