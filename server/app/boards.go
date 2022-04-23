@@ -150,6 +150,9 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 
 	// copy any file attachments from the duplicated blocks.
 	if err = a.CopyCardFiles(boardID, bab.Blocks); err != nil {
+		if err := a.store.DeleteBoardsAndBlocks(bab, userID); err != nil {
+			a.logger.Error("Cannot delete board after duplication error when copying block's files", mlog.String("boardID", bab.Boards[0].ID), mlog.Err(err)) 
+		}
 		return nil, nil, fmt.Errorf("could not copy files while duplicating board %s: %w", boardID, err)
 	}
 
