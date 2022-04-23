@@ -175,6 +175,9 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 			BlockPatches: blockPatches,
 		}
 		if err = a.store.PatchBlocks(patches, userID); err != nil {
+			if err := a.store.DeleteBoardsAndBlocks(bab, userID); err != nil {
+				a.logger.Error("Cannot delete board after duplication error when updating block's file info", mlog.String("boardID", bab.Boards[0].ID), mlog.Err(err)) 
+			}
 			return nil, nil, fmt.Errorf("could not patch file IDs while duplicating board %s: %w", boardID, err)
 		}
 	}
