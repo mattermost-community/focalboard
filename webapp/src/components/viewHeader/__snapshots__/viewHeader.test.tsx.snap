@@ -9,7 +9,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="viewSelector"
     >
       <input
-        class="Editable undefined"
+        class="Editable "
         placeholder="Untitled View"
         spellcheck="true"
         title="view title"
@@ -155,7 +155,7 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
       class="viewSelector"
     >
       <input
-        class="Editable readonly undefined"
+        class="Editable readonly "
         placeholder="Untitled View"
         readonly=""
         spellcheck="true"
@@ -203,7 +203,7 @@ exports[`components/viewHeader/viewHeader return viewHeader without permissions 
       class="viewSelector"
     >
       <input
-        class="Editable readonly undefined"
+        class="Editable readonly "
         placeholder="Untitled View"
         readonly=""
         spellcheck="true"
