@@ -3432,7 +3432,7 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 		UserID:          userID,
 		BoardID:         boardID,
 		SchemeAdmin:     board.DefaultRole == model.BoardRoleAdmin,
-		SchemeEditor:    board.DefaultRole == "" || board.DefaultRole == model.BoardRoleEditor,
+		SchemeEditor:    board.DefaultRole == model.BoardRoleNone || board.DefaultRole == model.BoardRoleEditor,
 		SchemeCommenter: board.DefaultRole == model.BoardRoleCommenter,
 		SchemeViewer:    board.DefaultRole == model.BoardRoleViewer,
 	}
