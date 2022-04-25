@@ -268,7 +268,7 @@ func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID stri
 }
 
 func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, error) {
-	propertiesBytes, err := json.Marshal(board.Properties)
+	propertiesBytes, err := s.MarshalJSONB(board.Properties)
 	if err != nil {
 		s.logger.Error(
 			"failed to marshal board.Properties",
@@ -279,7 +279,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		return nil, err
 	}
 
-	cardPropertiesBytes, err := json.Marshal(board.CardProperties)
+	cardPropertiesBytes, err := s.MarshalJSONB(board.CardProperties)
 	if err != nil {
 		s.logger.Error(
 			"failed to marshal board.CardProperties",
@@ -382,11 +382,11 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		return err
 	}
 
-	propertiesBytes, err := json.Marshal(board.Properties)
+	propertiesBytes, err := s.MarshalJSONB(board.Properties)
 	if err != nil {
 		return err
 	}
-	cardPropertiesBytes, err := json.Marshal(board.CardProperties)
+	cardPropertiesBytes, err := s.MarshalJSONB(board.CardProperties)
 	if err != nil {
 		return err
 	}
@@ -692,12 +692,12 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		return nil // undeleting not deleted board is not considered an error (for now)
 	}
 
-	propertiesJSON, err := json.Marshal(board.Properties)
+	propertiesJSON, err := s.MarshalJSONB(board.Properties)
 	if err != nil {
 		return err
 	}
 
-	cardPropertiesJSON, err := json.Marshal(board.CardProperties)
+	cardPropertiesJSON, err := s.MarshalJSONB(board.CardProperties)
 	if err != nil {
 		return err
 	}
