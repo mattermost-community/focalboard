@@ -67,3 +67,5 @@ mattermost-plugin/dist
 .idea
 docker/certs
 docker/data
+server/**/*.coverage
+mattermost-plugin/**/*.coverage
