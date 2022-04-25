@@ -44,13 +44,7 @@ func newTestServerMock(mockStore *mockstore.MockStore) *server.Server {
 		WebPath:             "/",
 	}
 
-	logger, err := mlog.NewLogger()
-	if err != nil {
-		panic(err)
-	}
-	if err = logger.Configure("", config.LoggingCfgJSON, nil); err != nil {
-		panic(err)
-	}
+	logger := mlog.CreateConsoleTestLogger(true, mlog.LvlDebug)
 
 	mockStore.EXPECT().GetTeam(gomock.Any()).Return(nil, nil).AnyTimes()
 	mockStore.EXPECT().UpsertTeamSignupToken(gomock.Any()).AnyTimes()
