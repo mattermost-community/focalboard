@@ -3431,10 +3431,10 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 	newBoardMember := &model.BoardMember{
 		UserID:          userID,
 		BoardID:         boardID,
-		SchemeAdmin:     board.DefaultRole == "admin",
-		SchemeEditor:    board.DefaultRole == "" || board.DefaultRole == "editor",
-		SchemeCommenter: board.DefaultRole == "commenter",
-		SchemeViewer:    board.DefaultRole == "viewer",
+		SchemeAdmin:     board.DefaultRole == model.BoardRoleAdmin,
+		SchemeEditor:    board.DefaultRole == "" || board.DefaultRole == model.BoardRoleEditor,
+		SchemeCommenter: board.DefaultRole == model.BoardRoleCommenter,
+		SchemeViewer:    board.DefaultRole == model.BoardRoleViewer,
 	}
 
 	auditRec := a.makeAuditRecord(r, "joinBoard", audit.Fail)

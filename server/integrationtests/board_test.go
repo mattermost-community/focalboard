@@ -1962,7 +1962,7 @@ func TestJoinBoard(t *testing.T) {
 		require.Equal(t, teamID, board.TeamID)
 		require.Equal(t, me.ID, board.CreatedBy)
 		require.Equal(t, me.ID, board.ModifiedBy)
-		require.Equal(t, "", board.DefaultRole)
+		require.Equal(t, model.BoardRoleNone, board.DefaultRole)
 
 		member, resp := th.Client2.JoinBoard(board.ID)
 		th.CheckOK(resp)
@@ -1987,7 +1987,7 @@ func TestJoinBoard(t *testing.T) {
 			Title:       title,
 			Type:        model.BoardTypeOpen,
 			TeamID:      teamID,
-			DefaultRole: "commenter",
+			DefaultRole: model.BoardRoleCommenter,
 		}
 		board, resp := th.Client.CreateBoard(newBoard)
 		th.CheckOK(resp)

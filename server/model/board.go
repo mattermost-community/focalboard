@@ -7,10 +7,19 @@ import (
 )
 
 type BoardType string
+type BoardRole string
 
 const (
 	BoardTypeOpen    BoardType = "O"
 	BoardTypePrivate BoardType = "P"
+)
+
+const (
+	BoardRoleNone      BoardRole = ""
+	BoardRoleViewer    BoardRole = "viewer"
+	BoardRoleCommenter BoardRole = "commenter"
+	BoardRoleEditor    BoardRole = "editor"
+	BoardRoleAdmin     BoardRole = "admin"
 )
 
 // Board groups a set of blocks and its layout
@@ -42,7 +51,7 @@ type Board struct {
 
 	// The default role applied when somebody joins the board
 	// required: true
-	DefaultRole string `json:"defaultRole"`
+	DefaultRole BoardRole `json:"defaultRole"`
 
 	// The title of the board
 	// required: false
@@ -98,7 +107,7 @@ type BoardPatch struct {
 
 	// The default role applied when somebody joins the board
 	// required: false
-	DefaultRole *string `json:"defaultRole"`
+	DefaultRole *BoardRole `json:"defaultRole"`
 
 	// The title of the board
 	// required: false
@@ -308,9 +317,17 @@ func IsBoardTypeValid(t BoardType) bool {
 	return t == BoardTypeOpen || t == BoardTypePrivate
 }
 
+func IsBoardDefaultRoleValid(r BoardRole) bool {
+	return r == BoardRoleNone || r == BoardRoleAdmin || r == BoardRoleEditor || r == BoardRoleCommenter || r == BoardRoleViewer
+}
+
 func (p *BoardPatch) IsValid() error {
 	if p.Type != nil && !IsBoardTypeValid(*p.Type) {
 		return InvalidBoardErr{"invalid-board-type"}
+	}
+
+	if p.DefaultRole != nil && !IsBoardDefaultRoleValid(*p.DefaultRole) {
+		return InvalidBoardErr{"invalid-board-default-role"}
 	}
 
 	return nil
@@ -332,6 +349,11 @@ func (b *Board) IsValid() error {
 	if !IsBoardTypeValid(b.Type) {
 		return InvalidBoardErr{"invalid-board-type"}
 	}
+
+	if !IsBoardDefaultRoleValid(b.DefaultRole) {
+		return InvalidBoardErr{"invalid-board-default-role"}
+	}
+
 	return nil
 }
 
