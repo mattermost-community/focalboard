@@ -11,7 +11,7 @@ exports[`components/content/checkboxElement should change title 1`] = `
       value="off"
     />
     <input
-      class="Editable undefined"
+      class="Editable "
       placeholder="Edit text..."
       spellcheck="true"
       title="new title"
@@ -33,7 +33,7 @@ exports[`components/content/checkboxElement should match snapshot 1`] = `
       value="off"
     />
     <input
-      class="Editable undefined"
+      class="Editable "
       placeholder="Edit text..."
       spellcheck="true"
       title="test-title"
@@ -55,7 +55,7 @@ exports[`components/content/checkboxElement should match snapshot when read only
       value="off"
     />
     <input
-      class="Editable readonly undefined"
+      class="Editable readonly "
       placeholder="Edit text..."
       readonly=""
       spellcheck="true"
@@ -77,7 +77,7 @@ exports[`components/content/checkboxElement should toggle value 1`] = `
       value="on"
     />
     <input
-      class="Editable undefined"
+      class="Editable "
       placeholder="Edit text..."
       spellcheck="true"
       title="test-title"
