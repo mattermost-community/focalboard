@@ -87,12 +87,12 @@ function customHistory() {
             }
 
             const pathName = event.data.message?.pathName
-            if (!pathName || !pathName.startsWith(windowAny.frontendBaseURL)) {
+            if (!pathName || !pathName.startsWith('/boards')) {
                 return
             }
 
             Utils.log(`Navigating Boards to ${pathName}`)
-            history.replace(pathName.replace(windowAny.frontendBaseURL, ''))
+            history.replace(pathName.replace('/boards', ''))
         })
     }
     return {
