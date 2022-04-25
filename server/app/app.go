@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	blockChangeNotifierQueueSize       = 100
+	blockChangeNotifierQueueSize       = 1000
 	blockChangeNotifierPoolSize        = 10
 	blockChangeNotifierShutdownTimeout = time.Second * 10
 )

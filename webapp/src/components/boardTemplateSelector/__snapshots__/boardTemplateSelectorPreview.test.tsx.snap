@@ -47,7 +47,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           class="viewSelector"
         >
           <input
-            class="Editable undefined"
+            class="Editable "
             placeholder="Untitled View"
             spellcheck="true"
             title="View"
@@ -239,7 +239,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             class="Label propColorOrange "
           >
             <input
-              class="Editable undefined"
+              class="Editable "
               placeholder="New Select"
               spellcheck="true"
               title="Q1"
@@ -291,7 +291,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             class="Label propColorBlue "
           >
             <input
-              class="Editable undefined"
+              class="Editable "
               placeholder="New Select"
               spellcheck="true"
               title="Q2"

@@ -431,7 +431,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled View"
                 spellcheck="true"
                 title="view title"
@@ -623,7 +623,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable undefined"
+                  class="Editable "
                   placeholder="New Select"
                   spellcheck="true"
                   title="value 2"
@@ -992,7 +992,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable readonly undefined"
+                class="Editable readonly "
                 placeholder="Untitled View"
                 readonly=""
                 spellcheck="true"
@@ -1071,7 +1071,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable readonly undefined"
+                  class="Editable readonly "
                   placeholder="New Select"
                   readonly=""
                   spellcheck="true"
@@ -1648,7 +1648,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled View"
                 spellcheck="true"
                 title="view title"
@@ -1840,7 +1840,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable undefined"
+                  class="Editable "
                   placeholder="New Select"
                   spellcheck="true"
                   title="value 2"
@@ -2209,7 +2209,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable readonly undefined"
+                class="Editable readonly "
                 placeholder="Untitled View"
                 readonly=""
                 spellcheck="true"
@@ -2288,7 +2288,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable readonly undefined"
+                  class="Editable readonly "
                   placeholder="New Select"
                   readonly=""
                   spellcheck="true"
