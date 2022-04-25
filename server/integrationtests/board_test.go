@@ -1962,6 +1962,7 @@ func TestJoinBoard(t *testing.T) {
 		require.Equal(t, teamID, board.TeamID)
 		require.Equal(t, me.ID, board.CreatedBy)
 		require.Equal(t, me.ID, board.ModifiedBy)
+		require.Equal(t, "", board.DefaultRole)
 
 		member, resp := th.Client2.JoinBoard(board.ID)
 		th.CheckOK(resp)
