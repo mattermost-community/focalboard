@@ -73,6 +73,22 @@ type DeleteBoardsAndBlocks struct {
 	Blocks []string `json:"blocks"`
 }
 
+func NewDeleteBoardsAndBlocksFromBabs(babs *BoardsAndBlocks) *DeleteBoardsAndBlocks {
+	boardIDs := make([]string, 0, len(babs.Boards))
+	blockIDs := make([]string, 0, len(babs.Boards))
+
+	for _, board := range babs.Boards {
+		boardIDs = append(boardIDs, board.ID)
+	}
+	for _, block := range babs.Blocks {
+		blockIDs = append(blockIDs, block.ID)
+	}
+	return &DeleteBoardsAndBlocks{
+		Boards: boardIDs,
+		Blocks: blockIDs,
+	}
+}
+
 func (dbab *DeleteBoardsAndBlocks) IsValid() error {
 	if len(dbab.Boards) == 0 {
 		return ErrNoBoardsInBoardsAndBlocks
