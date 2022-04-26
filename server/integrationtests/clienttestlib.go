@@ -38,6 +38,7 @@ const (
 	userCommenter    string = "commenter"
 	userEditor       string = "editor"
 	userAdmin        string = "admin"
+	userGuest        string = "guest"
 )
 
 var (
@@ -48,6 +49,7 @@ var (
 	userCommenterID    = userCommenter
 	userEditorID       = userEditor
 	userAdminID        = userAdmin
+	userGuestID        = userGuest
 )
 
 type LicenseType int

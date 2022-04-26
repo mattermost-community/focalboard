@@ -263,7 +263,7 @@ func TestCreateBoard(t *testing.T) {
 			th.CheckBadRequest(resp)
 			require.Nil(t, board)
 
-			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID)
+			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID, true)
 			require.NoError(t, err)
 			require.Empty(t, boards)
 		})
@@ -277,7 +277,7 @@ func TestCreateBoard(t *testing.T) {
 			th.CheckBadRequest(resp)
 			require.Nil(t, board)
 
-			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID)
+			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID, true)
 			require.NoError(t, err)
 			require.Empty(t, boards)
 		})
@@ -292,7 +292,7 @@ func TestCreateBoard(t *testing.T) {
 			th.CheckForbidden(resp)
 			require.Nil(t, board)
 
-			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID)
+			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID, true)
 			require.NoError(t, err)
 			require.Empty(t, boards)
 		})

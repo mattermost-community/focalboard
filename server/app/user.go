@@ -22,3 +22,11 @@ func (a *App) UpdateUserConfig(userID string, patch model.UserPropPatch) (map[st
 
 	return user.Props, nil
 }
+
+func (a *App) UserIsGuest(userID string) (bool, error) {
+	user, err := a.store.GetUserByID(userID)
+	if err != nil {
+		return false, err
+	}
+	return user.IsGuest, nil
+}

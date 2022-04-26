@@ -86,7 +86,7 @@ type Store interface {
 	// @withTransaction
 	PatchBoard(boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error)
 	GetBoard(id string) (*model.Board, error)
-	GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error)
+	GetBoardsForUserAndTeam(userID, teamID string, includePublicBoards bool) ([]*model.Board, error)
 	// @withTransaction
 	DeleteBoard(boardID, userID string) error
 
@@ -96,7 +96,7 @@ type Store interface {
 	GetBoardMemberHistory(boardID, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error)
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
 	GetMembersForUser(userID string) ([]*model.BoardMember, error)
-	SearchBoardsForUser(term, userID string) ([]*model.Board, error)
+	SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error)
 
 	// @withTransaction
 	CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, []*model.BoardMember, error)

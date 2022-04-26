@@ -320,6 +320,15 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
 				return
 			}
+			isGuest, err := a.userIsGuest(userID)
+			if err != nil {
+				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+				return
+			}
+			if isGuest {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"guest are not allowed to get board templates"})
+				return
+			}
 		} else {
 			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
@@ -2145,8 +2154,14 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("teamID", teamID)
 
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
 	// retrieve boards list
-	boards, err := a.app.GetBoardsForUserAndTeam(userID, teamID)
+	boards, err := a.app.GetBoardsForUserAndTeam(userID, teamID, !isGuest)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -2203,6 +2218,16 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 
 	if teamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if isGuest {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to templates"})
 		return
 	}
 
@@ -2513,6 +2538,16 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if isGuest {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		return
+	}
+
 	if err = newBoard.IsValid(); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
@@ -2585,6 +2620,16 @@ func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		return
+	}
+
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if isGuest {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
 		return
 	}
@@ -2664,6 +2709,15 @@ func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
 		} else {
 			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+				return
+			}
+			isGuest, err := a.userIsGuest(userID)
+			if err != nil {
+				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+				return
+			}
+			if isGuest {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"guest are not allowed to get public board information"})
 				return
 			}
 		}
@@ -2925,6 +2979,16 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if isGuest {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		return
+	}
+
 	auditRec := a.makeAuditRecord(r, "duplicateBoard", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("boardID", boardID)
@@ -3180,8 +3244,14 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("teamID", teamID)
 
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
 	// retrieve boards list
-	boards, err := a.app.SearchBoardsForUser(term, userID)
+	boards, err := a.app.SearchBoardsForUser(term, userID, !isGuest)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -3425,6 +3495,16 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 
 	if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", nil)
+		return
+	}
+
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if isGuest {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"guests not allowed to join boards"})
 		return
 	}
 
@@ -3791,6 +3871,16 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if isGuest {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		return
+	}
+
 	for _, block := range newBab.Blocks {
 		// Error checking
 		if len(block.Type) < 1 {
@@ -4126,6 +4216,13 @@ func (a *API) handleHello(w http.ResponseWriter, r *http.Request) {
 	//   '200':
 	//     description: success
 	stringResponse(w, "Hello")
+}
+
+func (a *API) userIsGuest(userID string) (bool, error) {
+	if a.singleUserToken != "" {
+		return false, nil
+	}
+	return a.app.UserIsGuest(userID)
 }
 
 // Response helpers

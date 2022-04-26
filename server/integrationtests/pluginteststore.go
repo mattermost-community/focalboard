@@ -71,6 +71,15 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 				CreateAt: model.GetMillis(),
 				UpdateAt: model.GetMillis(),
 			},
+			"guest": {
+				ID:       "guest",
+				Props:    map[string]interface{}{},
+				Username: "guest",
+				Email:    "guest@sample.com",
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+				IsGuest:  true,
+			},
 		},
 		testTeam:  &model.Team{ID: "test-team", Title: "Test Team"},
 		otherTeam: &model.Team{ID: "other-team", Title: "Other Team"},
@@ -107,6 +116,8 @@ func (s *PluginTestStore) GetTeamsForUser(userID string) ([]*model.Team, error) 
 		return []*model.Team{s.testTeam, s.otherTeam}, nil
 	case "admin":
 		return []*model.Team{s.testTeam, s.otherTeam}, nil
+	case "guest":
+		return []*model.Team{s.testTeam}, nil
 	}
 	return nil, errTestStore
 }
@@ -167,6 +178,7 @@ func (s *PluginTestStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 			s.users["commenter"],
 			s.users["editor"],
 			s.users["admin"],
+			s.users["guest"],
 		}, nil
 	case teamID == s.otherTeam.ID:
 		return []*model.User{

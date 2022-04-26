@@ -54,7 +54,7 @@ func TestExportBoard(t *testing.T) {
 		require.NoError(t, resp.Error)
 
 		// check for test card
-		boardsImported, err := th.Server.App().GetBoardsForUserAndTeam(th.GetUser1().ID, model.GlobalTeamID)
+		boardsImported, err := th.Server.App().GetBoardsForUserAndTeam(th.GetUser1().ID, model.GlobalTeamID, true)
 		require.NoError(t, err)
 		require.Len(t, boardsImported, 1)
 		boardImported := boardsImported[0]
