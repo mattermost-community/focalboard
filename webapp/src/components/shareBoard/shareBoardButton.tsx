@@ -6,19 +6,30 @@ import {FormattedMessage} from 'react-intl'
 
 import Button from '../../widgets/buttons/button'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
-
-import CompassIcon from '../../widgets/icons/compassIcon'
+import {useAppSelector} from '../../store/hooks'
+import {getCurrentBoard} from '../../store/boards'
+import Globe from '../../widgets/icons/globe'
+import LockOutline from '../../widgets/icons/lockOutline'
+import {BoardTypeOpen} from '../../blocks/board'
 
 import './shareBoardButton.scss'
 
 import ShareBoardDialog from './shareBoard'
 
 type Props = {
-    boardId: string
     enableSharedBoards: boolean
 }
 const ShareBoardButton = (props: Props) => {
     const [showShareDialog, setShowShareDialog] = useState(false)
+    const board = useAppSelector(getCurrentBoard)
+
+    const iconForBoardType = () => {
+        if(board.type == BoardTypeOpen) {
+            return <Globe/>
+        } else {
+            return <LockOutline/>
+        }
+    }
 
     return (
         <div className='ShareBoardButton'>
@@ -26,14 +37,9 @@ const ShareBoardButton = (props: Props) => {
                 title='Share board'
                 size='medium'
                 emphasis='primary'
-                icon={
-                    <CompassIcon
-                        icon='globe'
-                        className='CompassIcon'
-                    />
-                }
+                icon={iconForBoardType()}
                 onClick={() => {
-                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardOpenModal, {board: props.boardId})
+                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardOpenModal, {board: board.id})
                     setShowShareDialog(!showShareDialog)
                 }}
             >

@@ -415,7 +415,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-globe CompassIcon"
+                    class="CompassIcon icon-lock-outline LockOutlineIcon"
                   />
                   <span>
                     Share
@@ -1632,7 +1632,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-globe CompassIcon"
+                    class="CompassIcon icon-lock-outline LockOutlineIcon"
                   />
                   <span>
                     Share
