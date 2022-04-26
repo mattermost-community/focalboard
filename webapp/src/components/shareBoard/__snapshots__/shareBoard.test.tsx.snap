@@ -126,9 +126,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             <div
               class="user-item__content"
             >
-              <i
-                class="CompassIcon icon-mattermost user-item__img"
-              />
               <div
                 class="ml-3"
               >
@@ -352,9 +349,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             <div
               class="user-item__content"
             >
-              <i
-                class="CompassIcon icon-mattermost user-item__img"
-              />
               <div
                 class="ml-3"
               >
@@ -578,9 +572,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
             <div
               class="user-item__content"
             >
-              <i
-                class="CompassIcon icon-mattermost user-item__img"
-              />
               <div
                 class="ml-3"
               >
@@ -827,9 +818,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
             <div
               class="user-item__content"
             >
-              <i
-                class="CompassIcon icon-mattermost user-item__img"
-              />
               <div
                 class="ml-3"
               >
@@ -1076,9 +1064,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
             <div
               class="user-item__content"
             >
-              <i
-                class="CompassIcon icon-mattermost user-item__img"
-              />
               <div
                 class="ml-3"
               >
@@ -1325,9 +1310,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
             <div
               class="user-item__content"
             >
-              <i
-                class="CompassIcon icon-mattermost user-item__img"
-              />
               <div
                 class="ml-3"
               >
@@ -1551,9 +1533,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             <div
               class="user-item__content"
             >
-              <i
-                class="CompassIcon icon-mattermost user-item__img"
-              />
               <div
                 class="ml-3"
               >
@@ -1777,9 +1756,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             <div
               class="user-item__content"
             >
-              <i
-                class="CompassIcon icon-mattermost user-item__img"
-              />
               <div
                 class="ml-3"
               >
@@ -2003,9 +1979,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             <div
               class="user-item__content"
             >
-              <i
-                class="CompassIcon icon-mattermost user-item__img"
-              />
               <div
                 class="ml-3"
               >
