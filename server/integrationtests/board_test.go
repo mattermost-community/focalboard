@@ -1465,6 +1465,35 @@ func TestAddMember(t *testing.T) {
 		require.True(t, members[0].SchemeAdmin)
 		require.True(t, members[0].SchemeEditor)
 	})
+
+	t.Run("should always set the updated member as viewer if the user is a guest", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+
+		newBoard := &model.Board{
+			Title:  "title",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, err := th.Server.App().CreateBoard(newBoard, userAdmin, true)
+		require.NoError(t, err)
+
+		newMember := &model.BoardMember{
+			UserID:       userGuest,
+			BoardID:      board.ID,
+			SchemeAdmin:  true,
+			SchemeEditor: true,
+		}
+
+		member, resp := clients.Admin.AddMemberToBoard(newMember)
+		th.CheckOK(resp)
+		require.Equal(t, newMember.UserID, member.UserID)
+		require.Equal(t, newMember.BoardID, member.BoardID)
+		require.False(t, member.SchemeAdmin)
+		require.False(t, member.SchemeEditor)
+		require.True(t, member.SchemeViewer)
+	})
 }
 
 func TestUpdateMember(t *testing.T) {
@@ -1594,6 +1623,43 @@ func TestUpdateMember(t *testing.T) {
 		require.NoError(t, err)
 		require.Len(t, members, 1)
 		require.True(t, members[0].SchemeAdmin)
+	})
+
+	t.Run("should always set the updated member as viewer if the user is a guest", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+
+		newBoard := &model.Board{
+			Title:  "title",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, err := th.Server.App().CreateBoard(newBoard, userAdmin, true)
+		require.NoError(t, err)
+
+		newGuestMember := &model.BoardMember{
+			UserID:       userGuest,
+			BoardID:      board.ID,
+			SchemeViewer: true,
+		}
+		guestMember, err := th.Server.App().AddMemberToBoard(newGuestMember)
+		require.NoError(t, err)
+		require.NotNil(t, guestMember)
+		require.True(t, guestMember.SchemeViewer)
+
+		memberUpdate := &model.BoardMember{
+			UserID:       userGuest,
+			BoardID:      board.ID,
+			SchemeAdmin:  true,
+			SchemeEditor: true,
+		}
+
+		updatedGuestMember, resp := clients.Admin.UpdateBoardMember(memberUpdate)
+		th.CheckOK(resp)
+		require.False(t, updatedGuestMember.SchemeEditor)
+		require.False(t, updatedGuestMember.SchemeAdmin)
+		require.True(t, updatedGuestMember.SchemeViewer)
 	})
 }
 

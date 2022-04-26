@@ -3414,6 +3414,19 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 		SchemeEditor: true,
 	}
 
+	isGuest, err := a.userIsGuest(reqBoardMember.UserID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	if isGuest {
+		newBoardMember.SchemeAdmin = false
+		newBoardMember.SchemeEditor = false
+		newBoardMember.SchemeCommenter = false
+		newBoardMember.SchemeViewer = true
+	}
+
 	auditRec := a.makeAuditRecord(r, "addMember", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("boardID", boardID)
@@ -3680,6 +3693,19 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 		SchemeEditor:    reqBoardMember.SchemeEditor,
 		SchemeCommenter: reqBoardMember.SchemeCommenter,
 		SchemeViewer:    reqBoardMember.SchemeViewer,
+	}
+
+	isGuest, err := a.userIsGuest(paramsUserID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	if isGuest {
+		newBoardMember.SchemeAdmin = false
+		newBoardMember.SchemeEditor = false
+		newBoardMember.SchemeCommenter = false
+		newBoardMember.SchemeViewer = true
 	}
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
