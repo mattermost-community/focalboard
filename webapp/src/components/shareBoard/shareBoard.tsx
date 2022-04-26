@@ -267,10 +267,12 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const formatOptionLabel = (user: IUser) => {
         return(
             <div className='user-item'>
-                <img
-                    src={Utils.getProfilePicture(user.id)}
-                    className='user-item__img'
-                />
+                {Utils.isFocalboardPlugin() &&
+                    <img
+                        src={Utils.getProfilePicture(user.id)}
+                        className='user-item__img'
+                    />
+                }
                 <div className='ml-3'>
                     <strong>{user.username}</strong>
                     <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
