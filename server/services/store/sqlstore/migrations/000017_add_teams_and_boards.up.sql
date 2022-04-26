@@ -131,7 +131,11 @@ CREATE TABLE {{.prefix}}boards_history (
 {{if .plugin}}
   {{if .postgres}}
   INSERT INTO {{.prefix}}boards (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type,
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by,
+                 CASE
+                     WHEN C.type = 'O' THEN 'O'
+                     ELSE 'P'
+                 END,
                  COALESCE(B.title, ''),
                 (B.fields->>'description')::text,
                  B.fields->>'icon',
@@ -145,7 +149,11 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE B.type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type,
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by,
+                 CASE
+                     WHEN C.type = 'O' THEN 'O'
+                     ELSE 'P'
+                 END,
                  COALESCE(B.title, ''),
                  (B.fields->>'description')::text,
                  B.fields->>'icon',
@@ -161,7 +169,11 @@ CREATE TABLE {{.prefix}}boards_history (
   {{end}}
   {{if .mysql}}
   INSERT INTO {{.prefix}}boards (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type,
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by,
+                 CASE
+                     WHEN C.Type = 'O' THEN 'O'
+                     ELSE 'P'
+                 END,
                  COALESCE(B.title, ''),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')),
@@ -175,7 +187,11 @@ CREATE TABLE {{.prefix}}boards_history (
           WHERE B.type='board'
   );
   INSERT INTO {{.prefix}}boards_history (
-      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type,
+      SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by,
+                 CASE
+                     WHEN C.Type = 'O' THEN 'O'
+                     ELSE 'P'
+                 END,
                  COALESCE(B.title, ''),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')),
