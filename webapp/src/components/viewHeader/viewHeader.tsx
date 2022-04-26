@@ -34,6 +34,8 @@ import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
+import changeViews from '../../../static/changeViews.gif'
+
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
@@ -44,6 +46,7 @@ import ViewHeaderSearch from './viewHeaderSearch'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
+import {Utils} from "../../utils"
 
 type Props = {
     board: Board
@@ -114,6 +117,8 @@ const ViewHeader = (props: Props) => {
 
     return (
         <div className='ViewHeader'>
+            <img src={Utils.buildURL(changeViews, true)}/>
+
             <div className='viewSelector'>
                 <Editable
                     value={viewTitle}
