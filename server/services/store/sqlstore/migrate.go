@@ -136,11 +136,12 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	params := map[string]interface{}{
-		"prefix":   s.tablePrefix,
-		"postgres": s.dbType == model.PostgresDBType,
-		"sqlite":   s.dbType == model.SqliteDBType,
-		"mysql":    s.dbType == model.MysqlDBType,
-		"plugin":   s.isPlugin,
+		"prefix":     s.tablePrefix,
+		"postgres":   s.dbType == model.PostgresDBType,
+		"sqlite":     s.dbType == model.SqliteDBType,
+		"mysql":      s.dbType == model.MysqlDBType,
+		"plugin":     s.isPlugin,
+		"singleUser": s.isSingleUser,
 	}
 
 	migrationAssets := &embedded.AssetSource{

@@ -174,12 +174,15 @@
         max-height: 282px;
         overflow: auto;
         border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+
+        .user-item {
+            justify-content: space-between;
+        }
     }
 
     .user-item {
         display: flex;
         align-items: center;
-        justify-content: space-between;
         height: 56px;
         padding: 0 16px;
 

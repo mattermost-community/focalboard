@@ -119,7 +119,7 @@ function createBoard(board?: Board): Board {
         channelId: board?.channelId || '',
         createdBy: board?.createdBy || '',
         modifiedBy: board?.modifiedBy || '',
-        type: board?.type || 'P',
+        type: board?.type || BoardTypePrivate,
         title: board?.title || '',
         description: board?.description || '',
         icon: board?.icon || '',

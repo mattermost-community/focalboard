@@ -186,49 +186,63 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 	return blocks, nil
 }
 
-func (a *App) CopyCardFiles(sourceBoardID string, blocks []model.Block) error {
+func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []model.Block) error {
 	// Images attached in cards have a path comprising the card's board ID.
 	// When we create a template from this board, we need to copy the files
 	// with the new board ID in path.
 	// Not doing so causing images in templates (and boards created from this
 	// template) to fail to load.
 
-	// look up ID of source board, which may be different than the blocks.
-	board, err := a.GetBlockByID(sourceBoardID)
-	if err != nil || board == nil {
-		return fmt.Errorf("cannot fetch board %s for CopyCardFiles: %w", sourceBoardID, err)
+	// look up ID of source sourceBoard, which may be different than the blocks.
+	sourceBoard, err := a.GetBoard(sourceBoardID)
+	if err != nil || sourceBoard == nil {
+		return fmt.Errorf("cannot fetch source board %s for CopyCardFiles: %w", sourceBoardID, err)
 	}
 
-	for i := range blocks {
-		block := blocks[i]
+	var destTeamID string
+	var destBoardID string
+
+	for i := range copiedBlocks {
+		block := copiedBlocks[i]
 
 		fileName, ok := block.Fields["fileId"]
-		if block.Type == model.TypeImage && ok {
-			// create unique filename in case we are copying cards within the same board.
-			ext := filepath.Ext(fileName.(string))
-			destFilename := utils.NewID(utils.IDTypeNone) + ext
+		if !ok || fileName == "" {
+			continue // doesn't have a file attachment
+		}
 
-			sourceFilePath := filepath.Join(sourceBoardID, fileName.(string))
-			destinationFilePath := filepath.Join(block.BoardID, destFilename)
+		// create unique filename in case we are copying cards within the same board.
+		ext := filepath.Ext(fileName.(string))
+		destFilename := utils.NewID(utils.IDTypeNone) + ext
 
-			a.logger.Debug(
-				"Copying card file",
+		if destBoardID == "" || block.BoardID != destBoardID {
+			destBoardID = block.BoardID
+			destBoard, err := a.GetBoard(destBoardID)
+			if err != nil {
+				return fmt.Errorf("cannot fetch destination board %s for CopyCardFiles: %w", sourceBoardID, err)
+			}
+			destTeamID = destBoard.TeamID
+		}
+
+		sourceFilePath := filepath.Join(sourceBoard.TeamID, sourceBoard.ID, fileName.(string))
+		destinationFilePath := filepath.Join(destTeamID, block.BoardID, destFilename)
+
+		a.logger.Debug(
+			"Copying card file",
+			mlog.String("sourceFilePath", sourceFilePath),
+			mlog.String("destinationFilePath", destinationFilePath),
+		)
+
+		if err := a.filesBackend.CopyFile(sourceFilePath, destinationFilePath); err != nil {
+			a.logger.Error(
+				"CopyCardFiles failed to copy file",
 				mlog.String("sourceFilePath", sourceFilePath),
 				mlog.String("destinationFilePath", destinationFilePath),
+				mlog.Err(err),
 			)
 
-			if err := a.filesBackend.CopyFile(sourceFilePath, destinationFilePath); err != nil {
-				a.logger.Error(
-					"CopyCardFiles failed to copy file",
-					mlog.String("sourceFilePath", sourceFilePath),
-					mlog.String("destinationFilePath", destinationFilePath),
-					mlog.Err(err),
-				)
-
-				return err
-			}
-			block.Fields["fileId"] = destFilename
+			return err
 		}
+		block.Fields["fileId"] = destFilename
 	}
 
 	return nil
