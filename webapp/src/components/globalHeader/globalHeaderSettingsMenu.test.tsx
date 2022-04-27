@@ -20,7 +20,6 @@ import client from '../../octoClient'
 
 import GlobalHeaderSettingsMenu from './globalHeaderSettingsMenu'
 
-
 jest.mock('../../telemetry/telemetryClient')
 jest.mock('../../octoClient')
 const mockedTelemetry = mocked(TelemetryClient, true)

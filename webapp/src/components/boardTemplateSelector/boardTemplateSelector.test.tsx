@@ -22,7 +22,6 @@ import client from '../../octoClient'
 
 import BoardTemplateSelector from './boardTemplateSelector'
 
-
 jest.mock('react-router-dom', () => {
     const originalModule = jest.requireActual('react-router-dom')
 
@@ -69,7 +68,6 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
     beforeAll(mockDOM)
     beforeEach(() => {
         jest.clearAllMocks()
-        // mockedOctoClient.getAllBlocks.mockResolvedValue([])
         const state = {
             teams: {
                 current: team1,
