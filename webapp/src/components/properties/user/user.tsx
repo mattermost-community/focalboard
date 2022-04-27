@@ -8,6 +8,7 @@ import {CSSObject} from '@emotion/serialize'
 import {IUser} from '../../../user'
 import {getBoardUsersList, getBoardUsers} from '../../../store/users'
 import {useAppSelector} from '../../../store/hooks'
+import GuestBadge from '../../../widgets/guestBadge'
 
 import './user.scss'
 import {getSelectBaseStyle} from '../../../theme'
@@ -67,6 +68,7 @@ const formatOptionLabel = (user: any) => {
                 />
             )}
             {user.username}
+            <GuestBadge show={user.is_guest}/>
         </div>
     )
 }

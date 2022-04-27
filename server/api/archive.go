@@ -126,7 +126,7 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("TeamID", teamID)
 
-	isGuest, err := a.app.UserIsGuest(userID)
+	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -202,7 +202,7 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isGuest, err := a.app.UserIsGuest(userID)
+	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

@@ -55,8 +55,7 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
 		From("Users").
-		Where(sq.Eq{"deleteAt": 0}).
-		Where(sq.NotEq{"roles": "system_guest"})
+		Where(sq.Eq{"deleteAt": 0})
 	row := query.QueryRow()
 
 	var count int
@@ -258,7 +257,6 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 		Join("TeamMembers as tm ON tm.UserID = u.ID").
 		LeftJoin("Bots b ON ( b.UserId = Users.ID )").
 		Where(sq.Eq{"u.deleteAt": 0}).
-		Where(sq.NotEq{"u.roles": "system_guest"}).
 		Where(sq.Eq{"tm.TeamId": teamID})
 
 	rows, err := query.Query()
@@ -290,7 +288,6 @@ func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery strin
 			sq.Like{"u.lastname": "%" + searchQuery + "%"},
 		}).
 		Where(sq.Eq{"tm.TeamId": teamID}).
-		Where(sq.NotEq{"u.roles": "system_guest"}).
 		OrderBy("u.username").
 		Limit(10)
 

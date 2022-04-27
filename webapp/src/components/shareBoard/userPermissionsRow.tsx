@@ -14,6 +14,7 @@ import {BoardMember} from '../../blocks/board'
 import {IUser} from '../../user'
 import {Utils} from '../../utils'
 import {Permission} from '../../constants'
+import GuestBadge from '../../widgets/guestBadge'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
@@ -48,6 +49,7 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                     <strong>{user.username}</strong>
                     <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                     {isMe && <strong className='ml-2 text-light'>{intl.formatMessage({id: 'ShareBoard.userPermissionsYouText', defaultMessage: '(You)'})}</strong>}
+                    <GuestBadge show={user.is_guest}/>
                 </div>
             </div>
             <div>

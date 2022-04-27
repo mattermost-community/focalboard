@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {FC} from 'react'
-import {useIntl} from 'react-intl'
+import {useIntl, FormattedMessage} from 'react-intl'
 
 import {Block} from '../../blocks/block'
 import mutator from '../../mutator'
@@ -14,6 +14,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import {getUser} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 import Tooltip from '../../widgets/tooltip'
+import GuestBadge from '../../widgets/guestBadge'
 
 import './comment.scss'
 
@@ -42,6 +43,8 @@ const Comment: FC<Props> = (props: Props) => {
                     src={userImageUrl}
                 />
                 <div className='comment-username'>{user?.username}</div>
+                <GuestBadge show={user?.is_guest}/>
+
                 <Tooltip title={Utils.displayDateTime(date, intl)}>
                     <div className='comment-date'>
                         {Utils.relativeDisplayDateTime(date, intl)}

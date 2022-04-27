@@ -11,6 +11,7 @@ import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 import {getMySortedBoards} from '../../store/boards'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
+import {IUser} from "../../user"
 
 import './sidebar.scss'
 
@@ -28,6 +29,7 @@ import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
 import wsClient, {WSClient} from '../../wsclient'
 
 import {getCurrentTeam} from '../../store/teams'
+import {getMe} from '../../store/users'
 
 import {Constants} from "../../constants"
 
@@ -56,6 +58,7 @@ const Sidebar = (props: Props) => {
     const boards = useAppSelector(getMySortedBoards)
     const dispatch = useAppDispatch()
     const partialCategories = useAppSelector<Array<CategoryBoards>>(getSidebarCategories)
+    const me = useAppSelector<IUser|null>(getMe)
     const sidebarCategories = addMissingItems(partialCategories, boards)
 
     useEffect(() => {
@@ -173,7 +176,10 @@ const Sidebar = (props: Props) => {
                 </div>
             }
 
-            <BoardsSwitcher onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}/>
+            <BoardsSwitcher
+                onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}
+                userIsGuest={me?.is_guest}
+            />
 
             <div className='octo-sidebar-list'>
                 {
