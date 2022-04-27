@@ -459,10 +459,10 @@ func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (st
 
 func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[string][]string, error) {
 	query := s.getQueryBuilder(tx).
-		Select("teammembers.userid", "teammembers.teamid").
-		From("channelmembers").
-		Join("teammembers ON channelmembers.userid = teammembers.userid").
-		Where(sq.Eq{"channelid": board.ChannelID})
+		Select("TeamMembers.UserId", "TeamMembers.TeamId").
+		From("ChannelMembers").
+		Join("TeamMembers ON ChannelMembers.UserId = TeamMembers.UserId").
+		Where(sq.Eq{"ChannelId": board.ChannelID})
 
 	rows, err := query.Query()
 	if err != nil {
