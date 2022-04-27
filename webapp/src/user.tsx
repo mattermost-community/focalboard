@@ -10,7 +10,7 @@ interface IUser {
     create_at: number,
     update_at: number,
     is_bot: boolean,
-    is_guest: boolean,
+    is_guest?: boolean,
 }
 
 interface UserWorkspace {

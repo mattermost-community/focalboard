@@ -5,6 +5,7 @@ import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
 import {getCurrentTeam} from '../store/teams'
+import {getMe} from '../store/users'
 import {getCurrentBoard, isLoadingBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentViewId, getCurrentViewDisplayBy} from '../store/views'
@@ -15,9 +16,11 @@ import {getClientConfig, setClientConfig} from '../store/clientConfig'
 import wsClient, {WSClient} from '../wsclient'
 import {ClientConfig} from '../config/clientConfig'
 import {Utils} from '../utils'
+import {IUser} from '../user'
 
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
+import GuestNoBoards from './guestNoBoards'
 
 import Sidebar from './sidebar/sidebar'
 import './workspace.scss'
@@ -39,6 +42,7 @@ function CenterContent(props: Props) {
     const clientConfig = useAppSelector(getClientConfig)
     const history = useHistory()
     const dispatch = useAppDispatch()
+    const me = useAppSelector<IUser|null>(getMe)
 
     const showCard = useCallback((cardId?: string) => {
         const params = {...match.params, cardId}
@@ -89,6 +93,10 @@ function CenterContent(props: Props) {
 
     if (board || isLoading) {
         return null
+    }
+
+    if (me?.is_guest) {
+        return <GuestNoBoards/>
     }
 
     return (
