@@ -15,9 +15,9 @@ import {getSelectBaseStyle} from '../../../theme'
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
 type Props = {
-    value: string,
+    value: string | string[],
     readonly: boolean,
-    onChange: (value: string) => void,
+    onChange: (value: string[]) => void,
 }
 
 const selectStyles = {
@@ -74,16 +74,21 @@ const formatOptionLabel = (user: any) => {
 const UserProperty = (props: Props): JSX.Element => {
     const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
 
-    const user = boardUsersById[props.value]
+    let users: IUser[] = []
+    if(typeof props.value === 'string') {
+        users = [boardUsersById[props.value]]
+    } else if(Array.isArray(props.value)) {
+        users = props.value.map(id => boardUsersById[id])
+    }
 
     if (props.readonly) {
-        return (<div className='UserProperty octo-propertyvalue readonly'>{user ? formatOptionLabel(user) : props.value}</div>)
+        return (<div className='UserProperty octo-propertyvalue readonly'>{users ? users.map(user => formatOptionLabel(user)) : props.value}</div>)
     }
 
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
-
     return (
         <Select
+            isMulti
             options={boardUsers}
             isSearchable={true}
             isClearable={true}
@@ -95,12 +100,15 @@ const UserProperty = (props: Props): JSX.Element => {
             placeholder={'Empty'}
             getOptionLabel={(o: IUser) => o.username}
             getOptionValue={(a: IUser) => a.id}
-            value={boardUsersById[props.value] || null}
+            value={users}
             onChange={(item, action) => {
+                console.log(action)
                 if (action.action === 'select-option') {
-                    props.onChange(item?.id || '')
+                    props.onChange(item.map(a => a.id) || [])
                 } else if (action.action === 'clear') {
-                    props.onChange('')
+                    props.onChange([])
+                } else if(action.action === 'remove-value') {
+                    props.onChange(item.filter(a => a.id !== action.removedValue.id).map(b => b.id) || [])
                 }
             }}
         />

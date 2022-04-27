@@ -170,7 +170,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     } else if (propertyTemplate.type === 'person') {
         return (
             <UserProperty
-                value={propertyValue?.toString()}
+                value={propertyValue}
                 readonly={readOnly}
                 onChange={onChangeUser}
             />
