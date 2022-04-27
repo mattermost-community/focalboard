@@ -49,13 +49,14 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
         modifiedBy: 'user-1',
     }
     const me: IUser = {
-        id: 'user-id-1', 
-        username: 'username_1', 
-        email: '', 
-        props: {}, 
-        create_at: 0, 
-        update_at: 0, 
-        is_bot: false
+        id: 'user-id-1',
+        username: 'username_1',
+        email: '',
+        props: {},
+        create_at: 0,
+        update_at: 0,
+        is_bot: false,
+        is_guest: false,
     }
     const template1Title = 'Template 1'
     const globalTemplateTitle = 'Template Global'

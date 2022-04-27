@@ -68,7 +68,7 @@ const formatOptionLabel = (user: any) => {
                 />
             )}
             {user.username}
-            <GuestBadge show={user.is_guest}/>
+            <GuestBadge show={Boolean(user?.is_guest)}/>
         </div>
     )
 }

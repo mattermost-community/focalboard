@@ -94,13 +94,14 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
     }
 
     const me: IUser = {
-        id: 'user-id-1', 
-        username: 'username_1', 
-        email: '', 
-        props: {}, 
-        create_at: 0, 
-        update_at: 0, 
-        is_bot: false
+        id: 'user-id-1',
+        username: 'username_1',
+        email: '',
+        props: {},
+        create_at: 0,
+        update_at: 0,
+        is_bot: false,
+        is_guest: false,
     }
 
     let store:MockStoreEnhanced<unknown, unknown>

@@ -10,6 +10,8 @@ import configureStore from 'redux-mock-store'
 import {IUser} from '../../../user'
 import {createCard} from '../../../blocks/card'
 
+import {wrapIntl} from '../../../testUtils'
+
 import CreatedBy from './createdBy'
 
 describe('components/properties/createdBy', () => {
@@ -26,7 +28,30 @@ describe('components/properties/createdBy', () => {
             },
         })
 
-        const component = (
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <CreatedBy userID='user-id-1'/>
+            </ReduxProvider>
+        )
+
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('should match snapshot as guest', () => {
+        const card = createCard()
+        card.createdBy = 'user-id-1'
+
+        const mockStore = configureStore([])
+        const store = mockStore({
+            users: {
+                boardUsers: {
+                    'user-id-1': {username: 'username_1', is_guest: true} as IUser,
+                },
+            },
+        })
+
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <CreatedBy userID='user-id-1'/>
             </ReduxProvider>
