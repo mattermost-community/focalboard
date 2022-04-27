@@ -11,7 +11,7 @@ type Props = {
 }
 
 const GuestBadge = (props: Props) => {
-    if (props.show === false) {
+    if (!props.show) {
         return null
     }
     return (

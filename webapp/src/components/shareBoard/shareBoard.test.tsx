@@ -112,7 +112,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         },
         users: {
             me,
-            boardUsers: [me],
+            boardUsers: {[me.id]: me},
             blockSubscriptions: [],
         },
         boards: {

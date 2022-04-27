@@ -101,7 +101,7 @@ describe('src/components/workspace', () => {
         },
         users: {
             me,
-            boardUsers: [me],
+            boardUsers: {[me.id]: me},
             blockSubscriptions: [],
         },
         boards: {
@@ -225,7 +225,7 @@ describe('src/components/workspace', () => {
         const emptyStore = mockStateStore([], {
             users: {
                 me,
-                boardUsers: [me],
+                boardUsers: {[me.id]: me},
             },
             teams: {
                 current: {id: 'team-id', title: 'Test Team'},
@@ -303,7 +303,7 @@ describe('src/components/workspace', () => {
                     update_at: 0,
                     is_bot: false,
                 },
-                boardUsers: [me],
+                boardUsers: {[me.id]: me},
                 blockSubscriptions: [],
             },
             boards: {
@@ -394,7 +394,7 @@ describe('src/components/workspace', () => {
                     update_at: 0,
                     is_bot: false,
                 },
-                boardUsers: [me],
+                boardUsers: {[me.id]: me},
                 blockSubscriptions: [],
             },
             boards: {
@@ -490,7 +490,7 @@ describe('src/components/workspace', () => {
                     update_at: 0,
                     is_bot: false,
                 },
-                boardUsers: [me],
+                boardUsers: {[me.id]: me},
                 blockSubscriptions: [],
             },
             boards: {

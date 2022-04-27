@@ -48,9 +48,9 @@ describe('components/cardDetail/CommentsList', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             boards: {
                 boards: {
@@ -105,9 +105,9 @@ describe('components/cardDetail/CommentsList', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
         })
 

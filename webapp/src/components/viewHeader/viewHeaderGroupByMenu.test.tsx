@@ -65,9 +65,9 @@ describe('components/viewHeader/viewHeaderGroupByMenu', () => {
                     id: 'user-id-1',
                     username: 'username_1',
                 },
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             boards: {
                 current: board.id,

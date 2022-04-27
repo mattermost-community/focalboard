@@ -11,7 +11,7 @@ import GuestBadge from './guestBadge'
 
 describe('widgets/guestBadge', () => {
     test('should match the snapshot on show', () => {
-        const {container} = render(wrapIntl(<GuestBadge/>))
+        const {container} = render(wrapIntl(<GuestBadge show={true}/>))
         expect(container).toMatchSnapshot()
     })
 

@@ -71,7 +71,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             },
             users: {
                 me,
-                boardUsers: [me],
+                boardUsers: {[me.id]: me},
             },
             boards: {
                 boards: [

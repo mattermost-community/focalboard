@@ -80,6 +80,29 @@ describe('components/properties/user', () => {
         expect(container).toMatchSnapshot()
     })
 
+    test('not readonly guest user', async () => {
+        const store = mockStore({...state, users: {boardUsers: {'user-id-1': {...state.users.boardUsers['user-id-1'], is_guest: true}}}})
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <UserProperty
+                    value={'user-id-1'}
+                    readonly={false}
+                    onChange={() => {
+                    }}
+                />
+            </ReduxProvider>,
+        )
+
+        const renderResult = render(component)
+        const container = await waitFor(() => {
+            if (!renderResult.container) {
+                return Promise.reject(new Error('container not found'))
+            }
+            return Promise.resolve(renderResult.container)
+        })
+        expect(container).toMatchSnapshot()
+    })
+
     test('readonly view', async () => {
         const store = mockStore(state)
         const component = wrapIntl(
