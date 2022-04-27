@@ -3422,9 +3422,6 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 
 	if isGuest {
 		newBoardMember.SchemeAdmin = false
-		newBoardMember.SchemeEditor = false
-		newBoardMember.SchemeCommenter = false
-		newBoardMember.SchemeViewer = true
 	}
 
 	auditRec := a.makeAuditRecord(r, "addMember", audit.Fail)
@@ -3703,9 +3700,6 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 
 	if isGuest {
 		newBoardMember.SchemeAdmin = false
-		newBoardMember.SchemeEditor = false
-		newBoardMember.SchemeCommenter = false
-		newBoardMember.SchemeViewer = true
 	}
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
