@@ -12,6 +12,7 @@ import {useAppSelector} from '../../../store/hooks'
 import {getLastCardContent} from '../../../store/contents'
 import {getLastCardComment} from '../../../store/comments'
 import './lastModifiedBy.scss'
+import UserProperty from '../user/user'
 
 type Props = {
     card: Card,
@@ -32,8 +33,14 @@ const LastModifiedBy = (props: Props): JSX.Element => {
     }
 
     return (
-        <div className='LastModifiedBy octo-propertyvalue readonly'>
-            {(boardUsersById && boardUsersById[latestBlock.modifiedBy]?.username) || latestBlock.modifiedBy}
+        <div>
+            {(boardUsersById &&
+                <UserProperty
+                    value={boardUsersById[latestBlock.modifiedBy]?.id}
+                    readonly={true} // created by is an immutable property, so will always be readonly
+                    onChange={() => { }} // since created by is immutable, we don't need to handle onChange
+                />
+            ) || latestBlock.modifiedBy}
         </div>
     )
 }
