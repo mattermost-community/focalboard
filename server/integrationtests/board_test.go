@@ -629,7 +629,6 @@ func TestSearchBoards(t *testing.T) {
 
 		require.ElementsMatch(t, []string{b1.ID}, boardIDs)
 	})
-
 }
 
 func TestGetBoard(t *testing.T) {
