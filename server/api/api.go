@@ -3202,7 +3202,6 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	for _, board := range boards {
 		if teamIDs[board.TeamID] {
 			resultBoards = append(resultBoards, board)
-			break
 		}
 	}
 
