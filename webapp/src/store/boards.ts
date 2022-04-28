@@ -3,13 +3,13 @@
 
 import {createSlice, PayloadAction, createAsyncThunk, createSelector} from '@reduxjs/toolkit'
 
-import {default as client} from '../octoClient'
+import octoClient, {default as client} from '../octoClient'
 import {Board, BoardMember} from '../blocks/board'
 import {IUser} from '../user'
 
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from './initialLoad'
 
-import {addBoardUsers} from './users'
+import {addBoardUsers, setBoardUsers} from './users'
 
 import {RootState} from './index'
 
@@ -25,23 +25,23 @@ type BoardsState = {
 export const fetchBoardMembers = createAsyncThunk(
     'boardMembers/fetch',
     async ({teamId, boardId}: {teamId: string, boardId: string}, thunkAPI: any) => {
+        const allTeamUsers = await octoClient.getTeamUsers()
+        console.log(allTeamUsers)
+
         const members = await client.getBoardMembers(teamId, boardId)
-        const boardUsers = thunkAPI.getState().users.boardUsers as {[key: string]: IUser}
-        const newUsers = [] as IUser[]
+        const users = [] as IUser[]
 
         /* eslint-disable no-await-in-loop */
         for (const member of members) {
-            const memberFromStore = boardUsers[member.userId]
-            if (!memberFromStore) {
-                const user = await client.getUser(member.userId)
-                if (user) {
-                    newUsers.push(user)
-                }
+            // TODO #2968 we should fetch this in bulk
+            const user = await client.getUser(member.userId)
+            if (user) {
+                users.push(user)
             }
         }
         /* eslint-enable no-await-in-loop */
 
-        thunkAPI.dispatch(addBoardUsers(newUsers))
+        thunkAPI.dispatch(setBoardUsers(users))
         return members
     },
 )
