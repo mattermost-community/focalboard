@@ -39,9 +39,14 @@ jobs:
     #   env:
     #     COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #   run: goveralls -coverprofile=server-${{matrix['db']}}-profile.covprofile -service=github
+    #
     - uses: shogo82148/actions-goveralls@v1
       with:
-        path-to-profile: server-${{matrix['db']}}-profile.covprofile
+        path-to-profile: server/server-${{matrix['db']}}-profile.covprofile
+
+    - uses: shogo82148/actions-goveralls@v1
+      with:
+        path-to-profile: server/plugin-${{matrix['db']}}-profile.covprofile
 
   ci-ubuntu-webapp:
     runs-on: ubuntu-18.04
