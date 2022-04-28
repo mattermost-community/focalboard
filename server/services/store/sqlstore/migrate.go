@@ -57,6 +57,16 @@ func appendMultipleStatementsFlag(connectionString string) (string, error) {
 	return config.FormatDSN(), nil
 }
 
+// resetReadTimeout removes the timeout contraint from the MySQL dsn.
+func resetReadTimeout(dataSource string) (string, error) {
+	config, err := mysqldriver.ParseDSN(dataSource)
+	if err != nil {
+		return "", err
+	}
+	config.ReadTimeout = 0
+	return config.FormatDSN(), nil
+}
+
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
 // enabled.
@@ -64,7 +74,12 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	connectionString := s.connectionString
 	if s.dbType == model.MysqlDBType {
 		var err error
-		connectionString, err = appendMultipleStatementsFlag(s.connectionString)
+		connectionString, err = resetReadTimeout(connectionString)
+		if err != nil {
+			return nil, err
+		}
+
+		connectionString, err = appendMultipleStatementsFlag(connectionString)
 		if err != nil {
 			return nil, err
 		}
