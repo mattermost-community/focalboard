@@ -291,8 +291,7 @@ func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery strin
 		}).
 		Where(sq.Eq{"tm.TeamId": teamID}).
 		Where(sq.NotEq{"u.roles": "system_guest"}).
-		OrderBy("u.username").
-		Limit(10)
+		OrderBy("u.username")
 
 	rows, err := query.Query()
 	if err != nil {

@@ -281,6 +281,12 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         )
     }
 
+    const membersCount = Object.keys(members).length    
+    const searchAndFilterTeamUsers = async(inputValue: string) => {
+        const teamMembers = await client.searchTeamUsers(inputValue)
+        return teamMembers.filter(u => members[u.id] == null)
+    }
+
     const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
 
     return (
@@ -294,11 +300,12 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     <div className='share-input'>
                         <SearchIcon/>
                         <Select
+                            key={membersCount}
                             styles={styles}
                             value={selectedUser}
                             className={'userSearchInput'}
                             cacheOptions={true}
-                            loadOptions={(inputValue: string) => client.searchTeamUsers(inputValue)}
+                            loadOptions={searchAndFilterTeamUsers}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
                             formatOptionLabel={formatOptionLabel}
