@@ -228,11 +228,25 @@ func TestGetUserIDsForTeam(t *testing.T) {
 	wg.Wait()
 
 	t.Run("should find that only user1 is connected to team 1", func(t *testing.T) {
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID1, teamID1).
+			Return(true).
+			Times(1)
+
 		userIDs := th.pa.getUserIDsForTeam(teamID1)
 		require.ElementsMatch(t, []string{userID1}, userIDs)
 	})
 
 	t.Run("should find that both users are connected to team 2", func(t *testing.T) {
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID1, teamID2).
+			Return(true).
+			Times(1)
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID2, teamID2).
+			Return(true).
+			Times(1)
+
 		userIDs := th.pa.getUserIDsForTeam(teamID2)
 		require.ElementsMatch(t, []string{userID1, userID2}, userIDs)
 	})
@@ -240,11 +254,21 @@ func TestGetUserIDsForTeam(t *testing.T) {
 	t.Run("should ignore user1 if webConn 2 inactive when getting team 2 user ids", func(t *testing.T) {
 		th.pa.OnWebSocketDisconnect(webConnID2, userID1)
 
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID2, teamID2).
+			Return(true).
+			Times(1)
+
 		userIDs := th.pa.getUserIDsForTeam(teamID2)
 		require.ElementsMatch(t, []string{userID2}, userIDs)
 	})
 
 	t.Run("should still find user 1 in team 1 after the webConn 2 disconnection", func(t *testing.T) {
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID1, teamID1).
+			Return(true).
+			Times(1)
+
 		userIDs := th.pa.getUserIDsForTeam(teamID1)
 		require.ElementsMatch(t, []string{userID1}, userIDs)
 	})
@@ -252,8 +276,33 @@ func TestGetUserIDsForTeam(t *testing.T) {
 	t.Run("should find again both users if the webConn 2 comes back", func(t *testing.T) {
 		th.pa.OnWebSocketConnect(webConnID2, userID1)
 
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID1, teamID2).
+			Return(true).
+			Times(1)
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID2, teamID2).
+			Return(true).
+			Times(1)
+
 		userIDs := th.pa.getUserIDsForTeam(teamID2)
 		require.ElementsMatch(t, []string{userID1, userID2}, userIDs)
+	})
+
+	t.Run("should only find user 1 if user 2 has an active connection but is not a team member anymore", func(t *testing.T) {
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID1, teamID2).
+			Return(true).
+			Times(1)
+
+		// userID2 does not have team access
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID2, teamID2).
+			Return(false).
+			Times(1)
+
+		userIDs := th.pa.getUserIDsForTeam(teamID2)
+		require.ElementsMatch(t, []string{userID1}, userIDs)
 	})
 }
 
@@ -305,6 +354,11 @@ func TestGetUserIDsForTeamAndBoard(t *testing.T) {
 			Return(mockedMembers, nil).
 			Times(1)
 
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID1, teamID1).
+			Return(true).
+			Times(1)
+
 		userIDs := th.pa.getUserIDsForTeamAndBoard(teamID1, boardID1)
 		require.ElementsMatch(t, []string{userID1}, userIDs)
 	})
@@ -316,6 +370,15 @@ func TestGetUserIDsForTeamAndBoard(t *testing.T) {
 			Return(mockedMembers, nil).
 			Times(1)
 
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID1, teamID2).
+			Return(true).
+			Times(1)
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID2, teamID2).
+			Return(true).
+			Times(1)
+
 		userIDs := th.pa.getUserIDsForTeamAndBoard(teamID2, boardID2)
 		require.ElementsMatch(t, []string{userID1, userID2}, userIDs)
 	})
@@ -325,6 +388,11 @@ func TestGetUserIDsForTeamAndBoard(t *testing.T) {
 		th.store.EXPECT().
 			GetMembersForBoard(boardID2).
 			Return(mockedMembers, nil).
+			Times(1)
+
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID1, teamID2).
+			Return(true).
 			Times(1)
 
 		userIDs := th.pa.getUserIDsForTeamAndBoard(teamID2, boardID2)
@@ -341,6 +409,11 @@ func TestGetUserIDsForTeamAndBoard(t *testing.T) {
 			Return(mockedMembers, nil).
 			Times(1)
 
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID1, teamID2).
+			Return(true).
+			Times(1)
+
 		userIDs := th.pa.getUserIDsForTeamAndBoard(teamID2, boardID2)
 		require.ElementsMatch(t, []string{userID1}, userIDs)
 	})
@@ -353,8 +426,39 @@ func TestGetUserIDsForTeamAndBoard(t *testing.T) {
 			Return(mockedMembers, nil).
 			Times(1)
 
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID1, teamID2).
+			Return(true).
+			Times(1)
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID2, teamID2).
+			Return(true).
+			Times(1)
+
 		userIDs := th.pa.getUserIDsForTeamAndBoard(teamID2, boardID2, userID3)
 		require.ElementsMatch(t, []string{userID1, userID2, userID3}, userIDs)
+	})
+
+	t.Run("should not include a user that, although present, has no team access anymore", func(t *testing.T) {
+		mockedMembers := []*model.BoardMember{{UserID: userID1}, {UserID: userID2}}
+		th.store.EXPECT().
+			GetMembersForBoard(boardID2).
+			Return(mockedMembers, nil).
+			Times(1)
+
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID1, teamID2).
+			Return(true).
+			Times(1)
+
+		// userID2 has no team access
+		th.auth.EXPECT().
+			DoesUserHaveTeamAccess(userID2, teamID2).
+			Return(false).
+			Times(1)
+
+		userIDs := th.pa.getUserIDsForTeamAndBoard(teamID2, boardID2)
+		require.ElementsMatch(t, []string{userID1}, userIDs)
 	})
 }
 

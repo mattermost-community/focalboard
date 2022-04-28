@@ -266,7 +266,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
             <div>
               <div
                 aria-label="Product tour"
-                class="MenuOption TextOption menu-option"
+                class="MenuOption TextOption menu-option product-tour"
                 role="button"
               >
                 <div
@@ -825,7 +825,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
             <div>
               <div
                 aria-label="Product tour"
-                class="MenuOption TextOption menu-option"
+                class="MenuOption TextOption menu-option product-tour"
                 role="button"
               >
                 <div
@@ -1003,7 +1003,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
             <div>
               <div
                 aria-label="Product tour"
-                class="MenuOption TextOption menu-option"
+                class="MenuOption TextOption menu-option product-tour"
                 role="button"
               >
                 <div

@@ -5,7 +5,10 @@ import (
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/utils"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 var (
@@ -144,19 +147,62 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	if err != nil {
 		return nil, nil, err
 	}
-	go func() {
+
+	// copy any file attachments from the duplicated blocks.
+	if err = a.CopyCardFiles(boardID, bab.Blocks); err != nil {
+		dbab := model.NewDeleteBoardsAndBlocksFromBabs(bab)
+		if err = a.store.DeleteBoardsAndBlocks(dbab, userID); err != nil {
+			a.logger.Error("Cannot delete board after duplication error when copying block's files", mlog.String("boardID", bab.Boards[0].ID), mlog.Err(err))
+		}
+		return nil, nil, fmt.Errorf("could not copy files while duplicating board %s: %w", boardID, err)
+	}
+
+	// bab.Blocks now has updated file ids for any blocks containing files.  We need to store them.
+	blockIDs := make([]string, 0)
+	blockPatches := make([]model.BlockPatch, 0)
+
+	for _, block := range bab.Blocks {
+		if fileID, ok := block.Fields["fileId"]; ok {
+			blockIDs = append(blockIDs, block.ID)
+			blockPatches = append(blockPatches, model.BlockPatch{
+				UpdatedFields: map[string]interface{}{
+					"fileId": fileID,
+				},
+			})
+		}
+	}
+	a.logger.Debug("Duplicate boards patching file IDs", mlog.Int("count", len(blockIDs)))
+
+	if len(blockIDs) != 0 {
+		patches := &model.BlockPatchBatch{
+			BlockIDs:     blockIDs,
+			BlockPatches: blockPatches,
+		}
+		if err = a.store.PatchBlocks(patches, userID); err != nil {
+			dbab := model.NewDeleteBoardsAndBlocksFromBabs(bab)
+			if err = a.store.DeleteBoardsAndBlocks(dbab, userID); err != nil {
+				a.logger.Error("Cannot delete board after duplication error when updating block's file info", mlog.String("boardID", bab.Boards[0].ID), mlog.Err(err))
+			}
+			return nil, nil, fmt.Errorf("could not patch file IDs while duplicating board %s: %w", boardID, err)
+		}
+	}
+
+	a.blockChangeNotifier.Enqueue(func() error {
 		teamID := ""
 		for _, board := range bab.Boards {
 			teamID = board.TeamID
 			a.wsAdapter.BroadcastBoardChange(teamID, board)
 		}
 		for _, block := range bab.Blocks {
-			a.wsAdapter.BroadcastBlockChange(teamID, block)
+			blk := block
+			a.wsAdapter.BroadcastBlockChange(teamID, blk)
+			a.notifyBlockChanged(notify.Add, &blk, nil, userID)
 		}
 		for _, member := range members {
 			a.wsAdapter.BroadcastMemberChange(teamID, member.BoardID, member)
 		}
-	}()
+		return nil
+	})
 	return bab, members, err
 }
 
@@ -187,13 +233,14 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(newBoard.TeamID, newBoard)
 
 		if addMember {
 			a.wsAdapter.BroadcastMemberChange(newBoard.TeamID, newBoard.ID, member)
 		}
-	}()
+		return nil
+	})
 
 	return newBoard, nil
 }
@@ -204,9 +251,10 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(updatedBoard.TeamID, updatedBoard)
-	}()
+		return nil
+	})
 
 	return updatedBoard, nil
 }
@@ -224,9 +272,10 @@ func (a *App) DeleteBoard(boardID, userID string) error {
 		return err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardDelete(board.TeamID, boardID)
-	}()
+		return nil
+	})
 
 	return nil
 }
@@ -266,9 +315,10 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberChange(board.TeamID, member.BoardID, member)
-	}()
+		return nil
+	})
 
 	return newMember, nil
 }
@@ -307,9 +357,10 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 		return nil, err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberChange(board.TeamID, member.BoardID, member)
-	}()
+		return nil
+	})
 
 	return newMember, nil
 }
@@ -361,9 +412,10 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 		return err
 	}
 
-	go func() {
+	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberDelete(board.TeamID, boardID, userID)
-	}()
+		return nil
+	})
 
 	return nil
 }

@@ -29,6 +29,7 @@ func TestPrepareOnboardingTour(t *testing.T) {
 		th.Store.EXPECT().DuplicateBoard(welcomeBoard.ID, userID, teamID, false).Return(&model.BoardsAndBlocks{Boards: []*model.Board{&welcomeBoard}},
 			nil, nil)
 		th.Store.EXPECT().GetMembersForBoard(welcomeBoard.ID).Return([]*model.BoardMember{}, nil).Times(2)
+		th.Store.EXPECT().GetBoard(welcomeBoard.ID).Return(&welcomeBoard, nil).AnyTimes()
 
 		privateWelcomeBoard := model.Board{
 			ID:         "board_id_1",
@@ -74,6 +75,8 @@ func TestCreateWelcomeBoard(t *testing.T) {
 		th.Store.EXPECT().DuplicateBoard(welcomeBoard.ID, userID, teamID, false).
 			Return(&model.BoardsAndBlocks{Boards: []*model.Board{&welcomeBoard}}, nil, nil)
 		th.Store.EXPECT().GetMembersForBoard(welcomeBoard.ID).Return([]*model.BoardMember{}, nil).Times(2)
+		th.Store.EXPECT().GetBoard(welcomeBoard.ID).Return(&welcomeBoard, nil).AnyTimes()
+
 		privateWelcomeBoard := model.Board{
 			ID:         "board_id_1",
 			Title:      "Welcome to Boards!",

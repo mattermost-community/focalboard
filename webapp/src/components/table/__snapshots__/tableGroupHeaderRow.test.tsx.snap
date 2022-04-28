@@ -29,7 +29,7 @@ exports[`should match snapshot on read only 1`] = `
         class="Label propColorBrown "
       >
         <input
-          class="Editable readonly undefined"
+          class="Editable readonly "
           placeholder="New Select"
           readonly=""
           spellcheck="true"
@@ -79,7 +79,7 @@ exports[`should match snapshot with Group 1`] = `
         class="Label propColorBrown "
       >
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="New Select"
           spellcheck="true"
           title="value 1"
@@ -150,7 +150,7 @@ exports[`should match snapshot, add new 1`] = `
         class="Label propColorBrown "
       >
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="New Select"
           spellcheck="true"
           title="value 1"
@@ -221,7 +221,7 @@ exports[`should match snapshot, edit title 1`] = `
         class="Label propColorBrown "
       >
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="New Select"
           spellcheck="true"
           title="value 1"
@@ -292,7 +292,7 @@ exports[`should match snapshot, hide group 1`] = `
         class="Label propColorBrown "
       >
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="New Select"
           spellcheck="true"
           title="value 1"

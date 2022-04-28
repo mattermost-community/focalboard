@@ -109,7 +109,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         })
     }, [board, props.board.id, card, propertyTemplate.id])
 
-    const onChangeInSelect = useCallback((newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue), [])
+    const onChangeInSelect = useCallback((newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue), [props.board.id, card, propertyTemplate])
     const onChangeColorInSelect = useCallback((option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board.id, board.cardProperties, propertyTemplate, option, colorId), [board, propertyTemplate])
     const onDeleteOptionInSelect = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board.id, board.cardProperties, propertyTemplate, option), [board, propertyTemplate])
 
