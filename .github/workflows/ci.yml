@@ -32,6 +32,17 @@ jobs:
     - name: "Test server: ${{matrix['db']}}"
       run: make server-test-${{matrix['db']}}
 
+    # - name: Install goveralls
+    #   run: go install github.com/mattn/goveralls@latest
+
+    # - name: Send coverage
+    #   env:
+    #     COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   run: goveralls -coverprofile=server-${{matrix['db']}}-profile.covprofile -service=github
+    - uses: shogo82148/actions-goveralls@v1
+      with:
+        path-to-profile: server-${{matrix['db']}}-profile.covprofile
+
   ci-ubuntu-webapp:
     runs-on: ubuntu-18.04
 
