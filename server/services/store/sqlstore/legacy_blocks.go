@@ -156,7 +156,7 @@ func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block
 		s.escapeField("schema"): block.Schema,
 		"type":                  block.Type,
 		"title":                 block.Title,
-		"fields":                string(fieldsJSON),
+		"fields":                fieldsJSON,
 		"delete_at":             block.DeleteAt,
 		"created_by":            block.CreatedBy,
 		"modified_by":           block.ModifiedBy,
@@ -175,7 +175,7 @@ func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block
 			Set(s.escapeField("schema"), block.Schema).
 			Set("type", block.Type).
 			Set("title", block.Title).
-			Set("fields", string(fieldsJSON)).
+			Set("fields", fieldsJSON).
 			Set("update_at", block.UpdateAt).
 			Set("delete_at", block.DeleteAt)
 

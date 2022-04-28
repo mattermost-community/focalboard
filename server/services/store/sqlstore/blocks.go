@@ -273,7 +273,7 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 		s.escapeField("schema"): block.Schema,
 		"type":                  block.Type,
 		"title":                 block.Title,
-		"fields":                string(fieldsJSON),
+		"fields":                fieldsJSON,
 		"delete_at":             block.DeleteAt,
 		"created_by":            userID,
 		"modified_by":           block.ModifiedBy,
@@ -292,7 +292,7 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 			Set(s.escapeField("schema"), block.Schema).
 			Set("type", block.Type).
 			Set("title", block.Title).
-			Set("fields", string(fieldsJSON)).
+			Set("fields", fieldsJSON).
 			Set("update_at", block.UpdateAt).
 			Set("delete_at", block.DeleteAt)
 
@@ -395,7 +395,7 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy stri
 			block.Schema,
 			block.Type,
 			block.Title,
-			string(fieldsJSON),
+			fieldsJSON,
 			modifiedBy,
 			block.CreateAt,
 			now,
@@ -465,7 +465,7 @@ func (s *SQLStore) undeleteBlock(db sq.BaseRunner, blockID string, modifiedBy st
 		block.Schema,
 		block.Type,
 		block.Title,
-		string(fieldsJSON),
+		fieldsJSON,
 		modifiedBy,
 		block.CreateAt,
 		now,
