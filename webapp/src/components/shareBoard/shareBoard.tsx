@@ -26,6 +26,7 @@ import Switch from '../../widgets/switch'
 import Button from '../../widgets/buttons/button'
 import {sendFlashMessage} from '../flashMessages'
 import {Permission} from '../../constants'
+import GuestBadge from '../../widgets/guestBadge'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
@@ -88,6 +89,29 @@ function isLastAdmin(members: BoardMember[]) {
     }
     return true
 }
+
+const imageURLForUser = (window as any).Components?.imageURLForUser
+
+const formatOptionLabel = (user: any) => {
+    let profileImg
+    if (imageURLForUser) {
+        profileImg = imageURLForUser(user.id)
+    }
+
+    return (
+        <div className='ShareBoard-user-selector-item'>
+            {profileImg && (
+                <img
+                    alt='ShareBoard-user-selector-avatar'
+                    src={profileImg}
+                />
+            )}
+            {user.username}
+            <GuestBadge show={Boolean(user?.is_guest)}/>
+        </div>
+    )
+}
+
 
 export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopiedPublic, setWasCopiedPublic] = useState(false)
@@ -281,7 +305,9 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             value={selectedUser}
                             className={'userSearchInput'}
                             cacheOptions={true}
+                            formatOptionLabel={formatOptionLabel}
                             loadOptions={(inputValue: string) => client.searchTeamUsers(inputValue)}
+                            filterOption={(o) => !members[o.value]}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
                             getOptionValue={(u) => u.id}
