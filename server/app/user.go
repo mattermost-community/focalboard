@@ -23,6 +23,6 @@ func (a *App) UpdateUserConfig(userID string, patch model.UserPropPatch) (map[st
 	return user.Props, nil
 }
 
-func (a *App) GetUserBoardsInsights(userID string) ([]*model.BoardInsight, error) {
-	return a.store.GetUserBoardsInsights()
+func (a *App) GetUserBoardsInsights(userID string, duration string) ([]*model.BoardInsight, error) {
+	return a.store.GetUserBoardsInsights(userID, duration)
 }

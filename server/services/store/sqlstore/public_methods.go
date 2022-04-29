@@ -449,8 +449,8 @@ func (s *SQLStore) GetTeamsForUser(userID string) ([]*model.Team, error) {
 
 }
 
-func (s *SQLStore) GetTeamBoardsInsights(teamID string) ([]*model.BoardInsight, error) {
-	return s.getTeamBoardsInsights(s.db, teamID)
+func (s *SQLStore) GetTeamBoardsInsights(teamID string, duration string) ([]*model.BoardInsight, error) {
+	return s.getTeamBoardsInsights(s.db, teamID, duration)
 }
 
 func (s *SQLStore) GetTemplateBoards(teamID string, userID string) ([]*model.Board, error) {
@@ -483,8 +483,8 @@ func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 
 }
 
-func (s *SQLStore) GetUserBoardsInsights(userID string) ([]*model.BoardInsight, error) {
-	return s.getUserBoardsInsights(s.db, userID)
+func (s *SQLStore) GetUserBoardsInsights(userID string, duration string) ([]*model.BoardInsight, error) {
+	return s.getUserBoardsInsights(s.db, userID, duration)
 }
 
 func (s *SQLStore) InsertBlock(block *model.Block, userID string) error {

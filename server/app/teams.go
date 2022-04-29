@@ -64,6 +64,6 @@ func (a *App) GetTeamCount() (int64, error) {
 	return a.store.GetTeamCount()
 }
 
-func (a *App) GetTeamBoardsInsights(teamID string) ([]*model.BoardInsight, error) {
-	return a.store.GetTeamBoardsInsights()
+func (a *App) GetTeamBoardsInsights(teamID string, duration string) ([]*model.BoardInsight, error) {
+	return a.store.GetTeamBoardsInsights(teamID, duration)
 }

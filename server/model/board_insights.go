@@ -17,7 +17,7 @@ type BoardInsight struct {
 
 	// IDs of users active on the board
 	// required: true
-	ActiveUsers []string `json:"activeUsers"`
+	ActiveUsers string `json:"activeUsers"`
 
 	// ID of user who created the board
 	// required: true

@@ -71,7 +71,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2 := r.PathPrefix("/api/v2").Subrouter()
 	apiv2.Use(a.panicHandler)
 	apiv2.Use(a.requireCSRFToken)
-
 	// Board APIs
 	apiv2.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
@@ -110,6 +109,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/teams/{teamID}/users", a.sessionRequired(a.handleGetTeamUsers)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/archive/export", a.sessionRequired(a.handleArchiveExportTeam)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
+	apiv2.HandleFunc("/teams/{teamID}/boards/insights", a.sessionRequired(a.handleTeamBoardsInsights)).Methods("GET")
 
 	// User APIs
 	apiv2.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
@@ -117,6 +117,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
 	apiv2.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
 	apiv2.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
+	apiv2.HandleFunc("/users/{userID}/boards/insights", a.sessionRequired(a.handleUserBoardsInsights)).Methods("GET")
 
 	// BoardsAndBlocks APIs
 	apiv2.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handleCreateBoardsAndBlocks)).Methods("POST")
@@ -2037,6 +2038,129 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, data)
 
 	auditRec.AddMeta("fileID", fileID)
+	auditRec.Success()
+}
+func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /teams/{teamID}/boards/insights getTeamUsers
+	//
+	// Returns team boards insights
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: duration
+	//   in: query
+	//   description: duration of data to calculate insights for
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/BoardInsight"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	userID := getUserID(r)
+	query := r.URL.Query()
+	duration := query.Get("duration")
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getTeamBoardsInsights", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+
+	boardsInsights, err := a.app.GetTeamBoardsInsights(teamID, duration)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "duration="+duration, err)
+		return
+	}
+
+	data, err := json.Marshal(boardsInsights)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.AddMeta("boardInsightCount", len(boardsInsights))
+	auditRec.Success()
+}
+
+func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /teams/{teamID}/boards/insights getTeamUsers
+	//
+	// Returns user boards insights
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: userID
+	//   in: path
+	//   description: User ID
+	//   required: true
+	//   type: string
+	// - name: duration
+	//   in: query
+	//   description: duration of data to calculate insights for
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/BoardInsight"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	vars := mux.Vars(r)
+	userID := vars["userID"]
+	query := r.URL.Query()
+	duration := query.Get("duration")
+
+	auditRec := a.makeAuditRecord(r, "getUserBoardsInsights", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+
+	boardsInsights, err := a.app.GetUserBoardsInsights(userID, duration)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "duration="+duration, err)
+		return
+	}
+
+	data, err := json.Marshal(boardsInsights)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.AddMeta("boardInsightCount", len(boardsInsights))
 	auditRec.Success()
 }
 

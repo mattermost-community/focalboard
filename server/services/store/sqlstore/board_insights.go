@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/mattermost/focalboard/server/model"
 
@@ -10,28 +11,23 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string) ([]*model.BoardInsight, error) {
+func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, duration string) ([]*model.BoardInsight, error) {
+	/**
+	Some squirrel issues to note here are
+	1. https://github.com/Masterminds/squirrel/issues/285 - since we're using 1+ sub queries. When placeholders are counted for second query, the placeholder names are repeated.
+		This is the reason to not use conditional operators in Where clauses which would eventually parametrize the variables.
+	*/
 
 	boardsHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "count(boards_history.id) as count", "boards_history.modified_by", "boards.created_by").
 		From("focalboard_boards_history as boards_history").
 		Join("focalboard_boards as boards on boards_history.id = boards.id").
-		Where(sq.And{
-			sq.Lt{"boards_history.insert_at": "now() - interval '28 day'"},
-			sq.Eq{"boards.team_id": "team_id"},
-			sq.NotEq{"boards_history.modified_by": "system"},
-			sq.Eq{"boards.delete_at": 0},
-		}).
+		Where(fmt.Sprintf("boards_history.insert_at > now() - interval '%s' and boards.team_id = '%s' and boards_history.modified_by != 'system' and boards.delete_at = 0", duration, teamID)).
 		GroupBy("boards_history.id, boards.id, boards_history.modified_by")
 	blocksHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "count(blocks_history.id) as count", "blocks_history.modified_by", "boards.created_by").
 		From("focalboard_blocks_history as blocks_history").
 		Join("focalboard_boards as boards on blocks_history.board_id = boards.id").
-		Where(sq.And{
-			sq.Lt{"boards_history.insert_at": "now() - interval '28 day'"},
-			sq.Eq{"boards.team_id": "team_id"},
-			sq.NotEq{"boards_history.modified_by": "system"},
-			sq.Eq{"boards.delete_at": 0},
-		}).
-		GroupBy("boards_history.id, boards.id, boards_history.modified_by")
+		Where(fmt.Sprintf("blocks_history.insert_at > now() - interval '%s' and boards.team_id = '%s' and blocks_history.modified_by != 'system' and boards.delete_at = 0", duration, teamID)).
+		GroupBy("blocks_history.id, boards.id, blocks_history.modified_by")
 	blocksHistoryQueryString, blocksHistoryQueryargs, err := blocksHistoryQuery.ToSql()
 
 	if err != nil {
@@ -59,28 +55,24 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string) ([]*mo
 	return boardsInsights, nil
 }
 
-func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string) ([]*model.BoardInsight, error) {
+func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, duration string) ([]*model.BoardInsight, error) {
+
+	/**
+	Some squirrel issues to note here are
+	1. https://github.com/Masterminds/squirrel/issues/285 - since we're using 1+ sub queries. When placeholders are counted for second query, the placeholder names are repeated.
+	2. No handlers at the moment for nested conditions with 'in' operator in squirrel - for the final where clause to shortlist user's boards.
+	*/
 
 	boardsHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "count(boards_history.id) as count", "boards_history.modified_by", "boards.created_by").
 		From("focalboard_boards_history as boards_history").
 		Join("focalboard_boards as boards on boards_history.id = boards.id").
-		Where(sq.And{
-			sq.Lt{"boards_history.insert_at": "now() - interval '28 day'"},
-			sq.Eq{"boards.team_id": "team_id"},
-			sq.NotEq{"boards_history.modified_by": "system"},
-			sq.Eq{"boards.delete_at": 0},
-		}).
+		Where(fmt.Sprintf("boards_history.insert_at > now() - interval '%s' and boards_history.modified_by != 'system' and boards.delete_at = 0", duration)).
 		GroupBy("boards_history.id, boards.id, boards_history.modified_by")
 	blocksHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "count(blocks_history.id) as count", "blocks_history.modified_by", "boards.created_by").
 		From("focalboard_blocks_history as blocks_history").
 		Join("focalboard_boards as boards on blocks_history.board_id = boards.id").
-		Where(sq.And{
-			sq.Lt{"boards_history.insert_at": "now() - interval '28 day'"},
-			sq.Eq{"boards.team_id": "team_id"},
-			sq.NotEq{"boards_history.modified_by": "system"},
-			sq.Eq{"boards.delete_at": 0},
-		}).
-		GroupBy("boards_history.id, boards.id, boards_history.modified_by")
+		Where(fmt.Sprintf("blocks_history.insert_at > now() - interval '%s' and blocks_history.modified_by != 'system' and boards.delete_at = 0", duration)).
+		GroupBy("blocks_history.id, boards.id, blocks_history.modified_by")
 	blocksHistoryQueryString, blocksHistoryQueryargs, err := blocksHistoryQuery.ToSql()
 
 	if err != nil {
@@ -95,8 +87,8 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string) ([]*mo
 
 	userInsights := s.getQueryBuilder(db).Select("*").
 		FromSelect(insights, "insights").
-		// TODO: clean the following where clause, couldn't find appropriate nested conditions with 'in' operator in squirrel
-		Where("created_by = '" + userID + "' or position('58wh73bt1inkdbnzyjciboe8ic' in active_users) > 0").
+		// TODO: clean the following where clause
+		Where(fmt.Sprintf("created_by = '%s' or position('58wh73bt1inkdbnzyjciboe8ic' in active_users) > 0", userID)).
 		Limit(4)
 
 	rows, err := userInsights.Query()

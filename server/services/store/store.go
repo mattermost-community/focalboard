@@ -61,7 +61,7 @@ type Store interface {
 	GetUsersByTeam(teamID string) ([]*model.User, error)
 	SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error)
 	PatchUserProps(userID string, patch model.UserPropPatch) error
-	GetUserBoardsInsights(userID string) ([]*model.BoardInsight, error)
+	GetUserBoardsInsights(userID string, duration string) ([]*model.BoardInsight, error)
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
@@ -80,7 +80,7 @@ type Store interface {
 	GetTeamsForUser(userID string) ([]*model.Team, error)
 	GetAllTeams() ([]*model.Team, error)
 	GetTeamCount() (int64, error)
-	GetTeamBoardsInsights(teamID string) []*model.BoardInsight
+	GetTeamBoardsInsights(teamID string, duration string) ([]*model.BoardInsight, error)
 
 	InsertBoard(board *model.Board, userID string) (*model.Board, error)
 	// @withTransaction
