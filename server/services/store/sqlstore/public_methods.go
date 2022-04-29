@@ -46,6 +46,11 @@ func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, bloc
 
 }
 
+func (s *SQLStore) CanSeeUser(seerID string, seenID string) (bool, error) {
+	return s.canSeeUser(s.db, seerID, seenID)
+
+}
+
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
 	return s.cleanUpSessions(s.db, expireTime)
 
@@ -474,8 +479,8 @@ func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.
 
 }
 
-func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
-	return s.getUsersByTeam(s.db, teamID)
+func (s *SQLStore) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
+	return s.getUsersByTeam(s.db, teamID, asGuestID)
 
 }
 
@@ -701,8 +706,8 @@ func (s *SQLStore) SearchBoardsForUser(term string, userID string, includePublic
 
 }
 
-func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
-	return s.searchUsersByTeam(s.db, teamID, searchQuery)
+func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
+	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID)
 
 }
 

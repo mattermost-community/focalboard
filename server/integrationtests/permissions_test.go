@@ -2046,7 +2046,7 @@ func TestPermissionsGetTeamUsers(t *testing.T) {
 			{"/teams/test-team/users", methodGet, "", userCommenter, http.StatusOK, 6},
 			{"/teams/test-team/users", methodGet, "", userEditor, http.StatusOK, 6},
 			{"/teams/test-team/users", methodGet, "", userAdmin, http.StatusOK, 6},
-			{"/teams/test-team/users", methodGet, "", userGuest, http.StatusOK, 6},
+			{"/teams/test-team/users", methodGet, "", userGuest, http.StatusOK, 5},
 
 			{"/teams/empty-team/users", methodGet, "", userAnon, http.StatusUnauthorized, 0},
 			{"/teams/empty-team/users", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
@@ -2230,7 +2230,7 @@ func TestPermissionsGetUser(t *testing.T) {
 		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userCommenter, http.StatusOK, 1},
 		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userEditor, http.StatusOK, 1},
 		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userAdmin, http.StatusOK, 1},
-		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userGuest, http.StatusOK, 1},
+		{"/users/{USER_NO_TEAM_MEMBER_ID}", methodGet, "", userGuest, http.StatusNotFound, 0},
 
 		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
 		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userNoTeamMember, http.StatusOK, 1},
@@ -2239,7 +2239,7 @@ func TestPermissionsGetUser(t *testing.T) {
 		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userCommenter, http.StatusOK, 1},
 		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userEditor, http.StatusOK, 1},
 		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userAdmin, http.StatusOK, 1},
-		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userGuest, http.StatusOK, 1},
+		{"/users/{USER_TEAM_MEMBER_ID}", methodGet, "", userGuest, http.StatusNotFound, 0},
 
 		{"/users/{USER_VIEWER_ID}", methodGet, "", userAnon, http.StatusUnauthorized, 0},
 		{"/users/{USER_VIEWER_ID}", methodGet, "", userNoTeamMember, http.StatusOK, 1},

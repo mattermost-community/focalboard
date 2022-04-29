@@ -1015,6 +1015,19 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	canSeeUser, err := a.app.CanSeeUser(session.UserID, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if !canSeeUser {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
 	userData, err := json.Marshal(user)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -2096,7 +2109,17 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "getUsers", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
-	users, err := a.app.SearchTeamUsers(teamID, searchQuery)
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	asGuestUser := ""
+	if isGuest {
+		asGuestUser = userID
+	}
+
+	users, err := a.app.SearchTeamUsers(teamID, searchQuery, asGuestUser)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "searchQuery="+searchQuery, err)
 		return

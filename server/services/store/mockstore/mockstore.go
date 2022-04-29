@@ -50,6 +50,21 @@ func (mr *MockStoreMockRecorder) AddUpdateCategoryBoard(arg0, arg1, arg2 interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddUpdateCategoryBoard", reflect.TypeOf((*MockStore)(nil).AddUpdateCategoryBoard), arg0, arg1, arg2)
 }
 
+// CanSeeUser mocks base method.
+func (m *MockStore) CanSeeUser(arg0, arg1 string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CanSeeUser", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CanSeeUser indicates an expected call of CanSeeUser.
+func (mr *MockStoreMockRecorder) CanSeeUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CanSeeUser", reflect.TypeOf((*MockStore)(nil).CanSeeUser), arg0, arg1)
+}
+
 // CleanUpSessions mocks base method.
 func (m *MockStore) CleanUpSessions(arg0 int64) error {
 	m.ctrl.T.Helper()
@@ -941,18 +956,18 @@ func (mr *MockStoreMockRecorder) GetUserCategoryBoards(arg0, arg1 interface{}) *
 }
 
 // GetUsersByTeam mocks base method.
-func (m *MockStore) GetUsersByTeam(arg0 string) ([]*model.User, error) {
+func (m *MockStore) GetUsersByTeam(arg0, arg1 string) ([]*model.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUsersByTeam", arg0)
+	ret := m.ctrl.Call(m, "GetUsersByTeam", arg0, arg1)
 	ret0, _ := ret[0].([]*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetUsersByTeam indicates an expected call of GetUsersByTeam.
-func (mr *MockStoreMockRecorder) GetUsersByTeam(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetUsersByTeam(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersByTeam", reflect.TypeOf((*MockStore)(nil).GetUsersByTeam), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersByTeam", reflect.TypeOf((*MockStore)(nil).GetUsersByTeam), arg0, arg1)
 }
 
 // InsertBlock mocks base method.
@@ -1160,18 +1175,18 @@ func (mr *MockStoreMockRecorder) SearchBoardsForUser(arg0, arg1, arg2 interface{
 }
 
 // SearchUsersByTeam mocks base method.
-func (m *MockStore) SearchUsersByTeam(arg0, arg1 string) ([]*model.User, error) {
+func (m *MockStore) SearchUsersByTeam(arg0, arg1, arg2 string) ([]*model.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchUsersByTeam", arg0, arg1)
+	ret := m.ctrl.Call(m, "SearchUsersByTeam", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchUsersByTeam indicates an expected call of SearchUsersByTeam.
-func (mr *MockStoreMockRecorder) SearchUsersByTeam(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) SearchUsersByTeam(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUsersByTeam", reflect.TypeOf((*MockStore)(nil).SearchUsersByTeam), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUsersByTeam", reflect.TypeOf((*MockStore)(nil).SearchUsersByTeam), arg0, arg1, arg2)
 }
 
 // SetSystemSetting mocks base method.

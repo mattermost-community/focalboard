@@ -58,8 +58,8 @@ type Store interface {
 	UpdateUser(user *model.User) error
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
-	GetUsersByTeam(teamID string) ([]*model.User, error)
-	SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error)
+	GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error)
+	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error)
 	PatchUserProps(userID string, patch model.UserPropPatch) error
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
@@ -97,6 +97,7 @@ type Store interface {
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
 	GetMembersForUser(userID string) ([]*model.BoardMember, error)
 	SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error)
+	CanSeeUser(seerID string, seenID string) (bool, error)
 
 	// @withTransaction
 	CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, []*model.BoardMember, error)

@@ -27,20 +27,22 @@ func (pe NotSupportedError) Error() string {
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
-	dbType    string
-	mmDB      *sql.DB
-	logger    *mlog.Logger
-	pluginAPI plugin.API
+	dbType      string
+	mmDB        *sql.DB
+	logger      *mlog.Logger
+	pluginAPI   plugin.API
+	tablePrefix string
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API) (*MattermostAuthLayer, error) {
+func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API, tablePrefix string) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
-		Store:     store,
-		dbType:    dbType,
-		mmDB:      db,
-		logger:    logger,
-		pluginAPI: pluginAPI,
+		Store:       store,
+		dbType:      dbType,
+		mmDB:        db,
+		logger:      logger,
+		pluginAPI:   pluginAPI,
+		tablePrefix: tablePrefix,
 	}
 
 	return layer, nil
@@ -249,15 +251,32 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 	return builder.RunWith(s.mmDB)
 }
 
-func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, error) {
+func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("u.id", "u.username", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
 		From("Users as u").
-		Join("TeamMembers as tm ON tm.UserID = u.ID").
 		LeftJoin("Bots b ON ( b.UserId = Users.ID )").
-		Where(sq.Eq{"u.deleteAt": 0}).
-		Where(sq.Eq{"tm.TeamId": teamID})
+		Where(sq.Eq{"u.deleteAt": 0})
+
+	if asGuestID == "" {
+		query = query.
+			Join("TeamMembers as tm ON tm.UserID = u.ID").
+			Where(sq.Eq{"tm.TeamId": teamID})
+	} else {
+		boards, err := s.GetBoardsForUserAndTeam(asGuestID, teamID, false)
+		if err != nil {
+			return nil, err
+		}
+
+		boardsIDs := []string{}
+		for _, board := range boards {
+			boardsIDs = append(boardsIDs, board.ID)
+		}
+		query = query.
+			Join(s.tablePrefix + "board_members as bm ON bm.UserID = u.ID").
+			Where(sq.Eq{"bm.BoardId": boardsIDs})
+	}
 
 	rows, err := query.Query()
 	if err != nil {
@@ -273,12 +292,11 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 	return users, nil
 }
 
-func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
+func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("u.id", "u.username", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
 		From("Users as u").
-		Join("TeamMembers as tm ON tm.UserID = u.id").
 		LeftJoin("Bots b ON ( b.UserId = u.id )").
 		Where(sq.Eq{"u.deleteAt": 0}).
 		Where(sq.Or{
@@ -287,9 +305,26 @@ func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery strin
 			sq.Like{"u.firstname": "%" + searchQuery + "%"},
 			sq.Like{"u.lastname": "%" + searchQuery + "%"},
 		}).
-		Where(sq.Eq{"tm.TeamId": teamID}).
 		OrderBy("u.username").
 		Limit(10)
+
+	if asGuestID == "" {
+		query = query.
+			Join("TeamMembers as tm ON tm.UserID = u.id").
+			Where(sq.Eq{"tm.TeamId": teamID})
+	} else {
+		boards, err := s.GetBoardsForUserAndTeam(asGuestID, teamID, false)
+		if err != nil {
+			return nil, err
+		}
+		boardsIDs := []string{}
+		for _, board := range boards {
+			boardsIDs = append(boardsIDs, board.ID)
+		}
+		query = query.
+			Join(s.tablePrefix + "board_members as bm ON bm.UserID = u.ID").
+			Where(sq.Eq{"bm.BoardId": boardsIDs})
+	}
 
 	rows, err := query.Query()
 	if err != nil {
@@ -383,4 +418,68 @@ func mmUserToFbUser(mmUser *mmModel.User) model.User {
 
 func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 	return s.pluginAPI.GetLicense()
+}
+
+func (s *MattermostAuthLayer) CanSeeUser(seerID string, seenID string) (bool, error) {
+	mmuser, appErr := s.pluginAPI.GetUser(seerID)
+	if appErr != nil {
+		return false, appErr
+	}
+	if !mmuser.IsGuest() {
+		return true, nil
+	}
+
+	query := s.getQueryBuilder().
+		Select("1").
+		From(s.tablePrefix + "board_members AS BM1").
+		Join(s.tablePrefix + "board_members AS BM2 ON BM1.BoardID=BM2.BoardID").
+		LeftJoin("Bots b ON ( b.UserId = u.id )").
+		Where(sq.Or{
+			sq.And{
+				sq.Eq{"BM1.UserID": seerID},
+				sq.Eq{"BM2.UserID": seenID},
+			},
+			sq.And{
+				sq.Eq{"BM1.UserID": seenID},
+				sq.Eq{"BM2.UserID": seerID},
+			},
+		}).Limit(1)
+
+	rows, err := query.Query()
+	if err != nil {
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	for rows.Next() {
+		return true, err
+	}
+
+	query = s.getQueryBuilder().
+		Select("1").
+		From("ChannelMembers AS CM1").
+		Join("ChannelMembers AS CM2 ON CM1.BoardID=CM2.BoardID").
+		LeftJoin("Bots b ON ( b.UserId = u.id )").
+		Where(sq.Or{
+			sq.And{
+				sq.Eq{"CM1.UserID": seerID},
+				sq.Eq{"CM2.UserID": seenID},
+			},
+			sq.And{
+				sq.Eq{"CM1.UserID": seenID},
+				sq.Eq{"CM2.UserID": seerID},
+			},
+		}).Limit(1)
+
+	rows, err = query.Query()
+	if err != nil {
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	for rows.Next() {
+		return true, err
+	}
+
+	return false, nil
 }

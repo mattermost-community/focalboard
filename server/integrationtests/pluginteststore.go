@@ -169,7 +169,16 @@ func (s *PluginTestStore) PatchUserProps(userID string, patch model.UserPropPatc
 	return nil
 }
 
-func (s *PluginTestStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
+func (s *PluginTestStore) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
+	if asGuestID == "guest" {
+		return []*model.User{
+			s.users["viewer"],
+			s.users["commenter"],
+			s.users["editor"],
+			s.users["admin"],
+			s.users["guest"],
+		}, nil
+	}
 	switch {
 	case teamID == s.testTeam.ID:
 		return []*model.User{
@@ -194,9 +203,9 @@ func (s *PluginTestStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
+func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
 	users := []*model.User{}
-	teamUsers, err := s.GetUsersByTeam(teamID)
+	teamUsers, err := s.GetUsersByTeam(teamID, asGuestID)
 	if err != nil {
 		return nil, err
 	}
@@ -207,4 +216,30 @@ func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string) (
 		}
 	}
 	return users, nil
+}
+
+func (s *PluginTestStore) CanSeeUser(seerID string, seenID string) (bool, error) {
+	user, err := s.GetUserByID(seerID)
+	if err != nil {
+		return false, err
+	}
+	if !user.IsGuest {
+		return true, nil
+	}
+	seerMembers, err := s.GetMembersForUser(seerID)
+	if err != nil {
+		return false, err
+	}
+	seenMembers, err := s.GetMembersForUser(seenID)
+	if err != nil {
+		return false, err
+	}
+	for _, seerMember := range seerMembers {
+		for _, seenMember := range seenMembers {
+			if seerMember.BoardID == seenMember.BoardID {
+				return true, nil
+			}
+		}
+	}
+	return false, nil
 }
