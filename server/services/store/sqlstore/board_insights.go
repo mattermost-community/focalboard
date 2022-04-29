@@ -88,7 +88,7 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, durati
 	userInsights := s.getQueryBuilder(db).Select("*").
 		FromSelect(insights, "insights").
 		// TODO: clean the following where clause
-		Where(fmt.Sprintf("created_by = '%s' or position('58wh73bt1inkdbnzyjciboe8ic' in active_users) > 0", userID)).
+		Where(fmt.Sprintf("created_by = '%s' or position('%s' in active_users) > 0", userID, userID)).
 		Limit(4)
 
 	rows, err := userInsights.Query()
