@@ -300,7 +300,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     <div className='share-input'>
                         <SearchIcon/>
                         <Select
-                            key={membersCount}
+                            key={JSON.stringify(membersCount)}
                             styles={styles}
                             value={selectedUser}
                             className={'userSearchInput'}
