@@ -102,67 +102,73 @@ func (p *Plugin) OnActivate() error {
 		PluginAPI: &p.API,
 	}
 
-	var db store.Store
-	db, err = sqlstore.New(storeParams)
-	if err != nil {
-		return fmt.Errorf("error initializing the DB: %w", err)
-	}
-	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API)
-		if err2 != nil {
-			return fmt.Errorf("error initializing the DB: %w", err2)
+	go func() {
+		var db store.Store
+		db, err = sqlstore.New(storeParams)
+		if err != nil {
+			panic(fmt.Errorf("error initializing the DB: %w", err))
 		}
-		db = layeredStore
-	}
+		if cfg.AuthMode == server.MattermostAuthMod {
+			layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API)
+			if err2 != nil {
+				panic(fmt.Errorf("error initializing the DB: %w", err2))
+			}
+			db = layeredStore
+		}
 
-	permissionsService := mmpermissions.New(db, p.API)
+		permissionsService := mmpermissions.New(db, p.API)
 
-	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db, permissionsService), db, logger)
+		p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db, permissionsService), db, logger)
 
-	backendParams := notifyBackendParams{
-		cfg:         cfg,
-		client:      client,
-		store:       db,
-		permissions: permissionsService,
-		wsAdapter:   p.wsPluginAdapter,
-		serverRoot:  baseURL + "/boards",
-		logger:      logger,
-	}
+		backendParams := notifyBackendParams{
+			cfg:         cfg,
+			client:      client,
+			store:       db,
+			permissions: permissionsService,
+			wsAdapter:   p.wsPluginAdapter,
+			serverRoot:  baseURL + "/boards",
+			logger:      logger,
+		}
 
-	var notifyBackends []notify.Backend
+		var notifyBackends []notify.Backend
 
-	mentionsBackend, err := createMentionsNotifyBackend(backendParams)
-	if err != nil {
-		return fmt.Errorf("error creating mention notifications backend: %w", err)
-	}
-	notifyBackends = append(notifyBackends, mentionsBackend)
+		mentionsBackend, err := createMentionsNotifyBackend(backendParams)
+		if err != nil {
+			panic(fmt.Errorf("error creating mention notifications backend: %w", err))
+		}
+		notifyBackends = append(notifyBackends, mentionsBackend)
 
-	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams)
-	if err2 != nil {
-		return fmt.Errorf("error creating subscription notifications backend: %w", err2)
-	}
-	notifyBackends = append(notifyBackends, subscriptionsBackend)
-	mentionsBackend.AddListener(subscriptionsBackend)
+		subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams)
+		if err2 != nil {
+			panic(fmt.Errorf("error creating subscription notifications backend: %w", err2))
+		}
+		notifyBackends = append(notifyBackends, subscriptionsBackend)
+		mentionsBackend.AddListener(subscriptionsBackend)
 
-	params := server.Params{
-		Cfg:                cfg,
-		SingleUserToken:    "",
-		DBStore:            db,
-		Logger:             logger,
-		ServerID:           serverID,
-		WSAdapter:          p.wsPluginAdapter,
-		NotifyBackends:     notifyBackends,
-		PermissionsService: permissionsService,
-	}
+		params := server.Params{
+			Cfg:                cfg,
+			SingleUserToken:    "",
+			DBStore:            db,
+			Logger:             logger,
+			ServerID:           serverID,
+			WSAdapter:          p.wsPluginAdapter,
+			NotifyBackends:     notifyBackends,
+			PermissionsService: permissionsService,
+		}
 
-	server, err := server.New(params)
-	if err != nil {
-		fmt.Println("ERROR INITIALIZING THE SERVER", err)
-		return err
-	}
+		server, err := server.New(params)
+		if err != nil {
+			fmt.Println("ERROR INITIALIZING THE SERVER", err)
+			panic(err)
+		}
 
-	p.server = server
-	return server.Start()
+		p.server = server
+		if err := server.Start(); err != nil {
+			panic(err)
+		}
+	}()
+
+	return nil
 }
 
 func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, serverID string) *config.Configuration {
@@ -287,27 +293,43 @@ func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {
 }
 
 func (p *Plugin) OnWebSocketConnect(webConnID, userID string) {
-	p.wsPluginAdapter.OnWebSocketConnect(webConnID, userID)
+	if p.server != nil {
+		p.wsPluginAdapter.OnWebSocketConnect(webConnID, userID)
+	}
 }
 
 func (p *Plugin) OnWebSocketDisconnect(webConnID, userID string) {
-	p.wsPluginAdapter.OnWebSocketDisconnect(webConnID, userID)
+	if p.server != nil {
+		p.wsPluginAdapter.OnWebSocketDisconnect(webConnID, userID)
+	}
 }
 
 func (p *Plugin) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
-	p.wsPluginAdapter.WebSocketMessageHasBeenPosted(webConnID, userID, req)
+	if p.server != nil {
+		p.wsPluginAdapter.WebSocketMessageHasBeenPosted(webConnID, userID, req)
+	}
 }
 
 func (p *Plugin) OnDeactivate() error {
+	if p.server == nil {
+		return fmt.Errorf("deactivating focalboard when server is not ready yet")
+	}
 	return p.server.Shutdown()
 }
 
 func (p *Plugin) OnPluginClusterEvent(_ *plugin.Context, ev mmModel.PluginClusterEvent) {
-	p.wsPluginAdapter.HandleClusterEvent(ev)
+	if p.server != nil {
+		p.wsPluginAdapter.HandleClusterEvent(ev)
+	}
 }
 
 // ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.
 func (p *Plugin) ServeHTTP(_ *plugin.Context, w http.ResponseWriter, r *http.Request) {
+	if p.server == nil {
+		http.Error(w, http.StatusText(http.StatusServiceUnavailable), http.StatusServiceUnavailable)
+		return
+	}
+
 	router := p.server.GetRootRouter()
 	router.ServeHTTP(w, r)
 }
@@ -354,10 +376,18 @@ func defaultLoggingConfig() string {
 }
 
 func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) {
+	if p.server == nil {
+		return post, ""
+	}
+
 	return postWithBoardsEmbed(post), ""
 }
 
 func (p *Plugin) MessageWillBeUpdated(_ *plugin.Context, newPost, _ *mmModel.Post) (*mmModel.Post, string) {
+	if p.server == nil {
+		return newPost, ""
+	}
+
 	return postWithBoardsEmbed(newPost), ""
 }
 
