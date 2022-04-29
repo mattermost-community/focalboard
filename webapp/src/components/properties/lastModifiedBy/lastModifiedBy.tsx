@@ -3,11 +3,9 @@
 
 import React from 'react'
 
-import {IUser} from '../../../user'
 import {Card} from '../../../blocks/card'
 import {Board} from '../../../blocks/board'
 import {Block} from '../../../blocks/block'
-import {getBoardUsers} from '../../../store/users'
 import {useAppSelector} from '../../../store/hooks'
 import {getLastCardContent} from '../../../store/contents'
 import {getLastCardComment} from '../../../store/comments'
