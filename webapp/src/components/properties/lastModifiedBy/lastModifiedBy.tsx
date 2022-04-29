@@ -20,7 +20,6 @@ type Props = {
 }
 
 const LastModifiedBy = (props: Props): JSX.Element => {
-    const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
     const lastContent = useAppSelector(getLastCardContent(props.card.id || '')) as Block
     const lastComment = useAppSelector(getLastCardComment(props.card.id)) as Block
 
@@ -34,13 +33,11 @@ const LastModifiedBy = (props: Props): JSX.Element => {
 
     return (
         <div>
-            {(boardUsersById &&
-                <UserProperty
-                    value={boardUsersById[latestBlock.modifiedBy]?.id}
-                    readonly={true} // created by is an immutable property, so will always be readonly
-                    onChange={() => { }} // since created by is immutable, we don't need to handle onChange
-                />
-            ) || latestBlock.modifiedBy}
+            <UserProperty
+                value={latestBlock.modifiedBy}
+                readonly={true} // created by is an immutable property, so will always be readonly
+                onChange={() => { }} // since created by is immutable, we don't need to handle onChange
+            />
         </div>
     )
 }
