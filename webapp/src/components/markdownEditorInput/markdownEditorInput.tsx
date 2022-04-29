@@ -22,6 +22,10 @@ import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin
 
 import './markdownEditorInput.scss'
 
+import {getCurrentBoard} from "../../store/boards"
+import {Board, BoardTypeOpen} from "../../blocks/board"
+import {getCurrentTeam, getTeamMembers, Team} from "../../store/teams"
+
 import Entry from './entryComponent/entryComponent'
 
 const imageURLForUser = (window as any).Components?.imageURLForUser
@@ -38,7 +42,20 @@ type Props = {
 const MarkdownEditorInput = (props: Props): ReactElement => {
     const {onChange, onFocus, onBlur, initialText, id, isEditing} = props
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
-    const mentions: MentionData[] = useMemo(() => boardUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`, is_bot: user.is_bot})), [boardUsers])
+    const board = useAppSelector(getCurrentBoard)
+    const team = useAppSelector(getCurrentTeam)
+    console.log(board)
+    console.log(team)
+
+    let mentionUsers: Array<IUser>
+    if (team && board && board.type === BoardTypeOpen) {
+        mentionUsers = boardUsers
+    } else {
+        mentionUsers = boardUsers
+    }
+    // const mentionUsers = team && board.type === BoardTypeOpen ? useAppSelector(getTeamMembers(team.id)) : boardUsers
+    // console.log(mentionUsers)
+    const mentions: MentionData[] = mentionUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`, is_bot: user.is_bot}))
     const ref = useRef<Editor>(null)
 
     const generateEditorState = (text?: string) => {

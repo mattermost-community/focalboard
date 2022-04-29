@@ -31,6 +31,7 @@ import BackwardCompatibilityQueryParamsRedirect from './backwardCompatibilityQue
 import WebsocketConnection from './websocketConnection'
 
 import './boardPage.scss'
+import {getTeamMembers, setTeamMembers} from "../../store/teams"
 
 type Props = {
     readonly?: boolean
@@ -73,6 +74,16 @@ const BoardPage = (props: Props): JSX.Element => {
         if (windowAny.setTeamInSidebar) {
             windowAny.setTeamInSidebar(teamId)
         }
+    }, [teamId])
+
+    const existingTeamMembers = useAppSelector(getTeamMembers(teamId))
+
+    useEffect(() => {
+        if (existingTeamMembers.length > 0) {
+            return
+        }
+
+        octoClient.getTeamUsers().then((members) => dispatch(setTeamMembers({teamId, members})))
     }, [teamId])
 
     const loadAction: (boardId: string) => any = useMemo(() => {

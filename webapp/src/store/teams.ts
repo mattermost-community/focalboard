@@ -1,11 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSelector, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 import octoClient from '../octoClient'
 
 import {Utils} from '../utils'
+
+import {IUser} from "../user"
 
 import {initialLoad} from './initialLoad'
 
@@ -37,6 +39,7 @@ export const refreshCurrentTeam = createAsyncThunk(
 type TeamState = {
     current: Team | null
     allTeams: Array<Team>
+    allTeamMembers: Record<string, Array<IUser>>
 }
 
 const teamSlice = createSlice({
@@ -44,6 +47,7 @@ const teamSlice = createSlice({
     initialState: {
         current: null,
         allTeams: [],
+        allTeamMembers: {},
     } as TeamState,
     reducers: {
         setTeam: (state, action: PayloadAction<string>) => {
@@ -60,6 +64,12 @@ const teamSlice = createSlice({
 
             state.current = team
         },
+        setTeamMembers: (state, action: PayloadAction<{teamId: string, members: Array<IUser>}>) => {
+            console.log('Set team members called for teamID: ' + action.payload.teamId)
+            console.log(action.payload.members)
+
+            state.allTeamMembers[action.payload.teamId] = action.payload.members
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
@@ -77,9 +87,13 @@ const teamSlice = createSlice({
     },
 })
 
-export const {setTeam} = teamSlice.actions
+export const {setTeam, setTeamMembers} = teamSlice.actions
 export const {reducer} = teamSlice
 
 export const getCurrentTeam = (state: RootState): Team|null => state.teams.current
 export const getFirstTeam = (state: RootState): Team|null => state.teams.allTeams[0]
 export const getAllTeams = (state: RootState): Array<Team> => state.teams.allTeams
+
+export function getTeamMembers(teamID: string): (state: RootState) => Array<IUser> {
+    return (state: RootState) => state.teams.allTeamMembers[teamID] || []
+}
