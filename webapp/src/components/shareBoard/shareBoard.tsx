@@ -1,12 +1,15 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState, useEffect} from 'react'
+import React, {useState, useCallback, useEffect} from 'react'
 
 import {useIntl, FormattedMessage} from 'react-intl'
 import {generatePath, useRouteMatch} from 'react-router'
 import Select from 'react-select/async'
+import FilterOptionOption from 'react-select'
 import {CSSObject} from '@emotion/serialize'
+
+// import {filter} from 'lodash'
 
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
@@ -281,13 +284,14 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         )
     }
 
-    const membersCount = Object.keys(members).length    
-    const searchAndFilterTeamUsers = async(inputValue: string) => {
-        const teamMembers = await client.searchTeamUsers(inputValue)
-        return teamMembers.filter(u => members[u.id] == null)
-    }
-
     const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
+
+    const filterOption = useCallback((option) => {
+        if(members[option.value]){
+            return false 
+        }
+        return true
+    }, [members])
 
     return (
         <Dialog
@@ -300,12 +304,12 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     <div className='share-input'>
                         <SearchIcon/>
                         <Select
-                            key={JSON.stringify(membersCount)}
+                            filterOption={filterOption}
                             styles={styles}
                             value={selectedUser}
                             className={'userSearchInput'}
                             cacheOptions={true}
-                            loadOptions={searchAndFilterTeamUsers}
+                            loadOptions={(inputValue: string) => client.searchTeamUsers(inputValue)}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
                             formatOptionLabel={formatOptionLabel}

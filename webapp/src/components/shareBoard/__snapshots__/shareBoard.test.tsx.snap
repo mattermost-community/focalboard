@@ -97,7 +97,22 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                 </div>
                 <div
                   class=" css-1hb7zxy-IndicatorsContainer"
-                />
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -308,7 +323,22 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                 </div>
                 <div
                   class=" css-1hb7zxy-IndicatorsContainer"
-                />
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -519,7 +549,22 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
                 </div>
                 <div
                   class=" css-1hb7zxy-IndicatorsContainer"
-                />
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1785,7 +1830,22 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
                 </div>
                 <div
                   class=" css-1hb7zxy-IndicatorsContainer"
-                />
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2019,7 +2079,22 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
                 </div>
                 <div
                   class=" css-1hb7zxy-IndicatorsContainer"
-                />
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2253,7 +2328,22 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
                 </div>
                 <div
                   class=" css-1hb7zxy-IndicatorsContainer"
-                />
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2464,7 +2554,22 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                 </div>
                 <div
                   class=" css-1hb7zxy-IndicatorsContainer"
-                />
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2675,7 +2780,22 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                 </div>
                 <div
                   class=" css-1hb7zxy-IndicatorsContainer"
-                />
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2886,7 +3006,22 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                 </div>
                 <div
                   class=" css-1hb7zxy-IndicatorsContainer"
-                />
+                >
+                  <div
+                    aria-hidden="true"
+                    class=" css-byrije-loadingIndicator"
+                  >
+                    <span
+                      class="css-1xtdfmb-LoadingDot"
+                    />
+                    <span
+                      class="css-zoievk-LoadingDot"
+                    />
+                    <span
+                      class="css-x748d8-LoadingDot"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
