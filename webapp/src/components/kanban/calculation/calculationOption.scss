@@ -2,8 +2,8 @@
     color: rgba(var(--center-channel-color-rgb), 1);
     min-height: 36px;
     max-width: 220px;
-    width: 200px;
-    padding: 2px 12px;
+    width: 240px;
+    padding: 2px 20px;
     cursor: pointer;
     position: relative;
     display: flex;
@@ -21,11 +21,12 @@
     }
 
     .drops {
-        padding: 2px 14px;
+        max-width: 220px;
+        width: 240px;
+        padding: 2px 20px;
         height: 36px;
         display: flex;
         align-items: center;
-        width: 200px;
 
         &.active,
         &.active:hover {
@@ -36,7 +37,7 @@
 
     .customs:hover,
     .drops:hover {
-        background: rgba(var(--center-channel-color-rgb), 0.1);
+        background: rgba(var(--center-channel-color-rgb), 0.08);
     }
 
     .dropdown-submenu {
