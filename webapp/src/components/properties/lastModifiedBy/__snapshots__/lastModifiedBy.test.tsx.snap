@@ -2,15 +2,13 @@
 
 exports[`components/properties/lastModifiedBy should match snapshot 1`] = `
 <div>
-  <div>
+  <div
+    class="UserProperty octo-propertyvalue readonly"
+  >
     <div
-      class="UserProperty octo-propertyvalue readonly"
+      class="UserProperty-item"
     >
-      <div
-        class="UserProperty-item"
-      >
-        username_1
-      </div>
+      username_1
     </div>
   </div>
 </div>

@@ -1388,15 +1388,13 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             class="octo-table-cell"
             style="width: 100px;"
           >
-            <div>
+            <div
+              class="UserProperty octo-propertyvalue readonly"
+            >
               <div
-                class="UserProperty octo-propertyvalue readonly"
+                class="UserProperty-item"
               >
-                <div
-                  class="UserProperty-item"
-                >
-                  username_4
-                </div>
+                username_4
               </div>
             </div>
           </div>
@@ -1482,15 +1480,13 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             class="octo-table-cell"
             style="width: 100px;"
           >
-            <div>
+            <div
+              class="UserProperty octo-propertyvalue readonly"
+            >
               <div
-                class="UserProperty octo-propertyvalue readonly"
+                class="UserProperty-item"
               >
-                <div
-                  class="UserProperty-item"
-                >
-                  username_3
-                </div>
+                username_3
               </div>
             </div>
           </div>
