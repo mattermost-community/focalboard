@@ -3,16 +3,18 @@
         flex: 0 0 auto;
         display: flex;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
         min-width: 300px;
+        min-height: 28px;
     }
 
     > .add-buttons {
         flex-direction: row;
-        min-height: 36px;
         color: rgba(var(--center-channel-color-rgb), 0.4);
         width: 100%;
         align-items: flex-start;
+        position: absolute;
+        top: -28px;
 
         .Icon:last-child {
             margin-left: 6px;
@@ -23,7 +25,6 @@
         }
 
         .Button {
-            min-height: 28px;
             display: none;
             line-height: 1;
         }
@@ -36,12 +37,14 @@
     }
 
     .IconSelector {
-        margin-right: 10px;
+        margin-right: 8px;
     }
 
     .Editable {
         margin-bottom: 0;
         flex-grow: 1;
+        font-size: 25px;
+        line-height: 30px;
     }
 
     >.description>* {
