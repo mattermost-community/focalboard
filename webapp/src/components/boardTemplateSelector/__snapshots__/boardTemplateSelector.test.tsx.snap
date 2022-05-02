@@ -89,6 +89,42 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           </div>
         </div>
         <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
+          </span>
+          <div
+            class="actions"
+          >
+            <button
+              aria-label="Delete"
+              title="Delete"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+              />
+            </button>
+            <button
+              aria-label="Edit"
+              title="Edit"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-pencil-outline EditIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
           class="new-template"
         >
           <span
@@ -189,6 +225,42 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             class="template-name"
           >
             Template 1
+          </span>
+          <div
+            class="actions"
+          >
+            <button
+              aria-label="Delete"
+              title="Delete"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+              />
+            </button>
+            <button
+              aria-label="Edit"
+              title="Edit"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-pencil-outline EditIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
           </span>
           <div
             class="actions"
@@ -339,6 +411,42 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           </div>
         </div>
         <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
+          </span>
+          <div
+            class="actions"
+          >
+            <button
+              aria-label="Delete"
+              title="Delete"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+              />
+            </button>
+            <button
+              aria-label="Edit"
+              title="Edit"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-pencil-outline EditIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
           class="new-template"
         >
           <span
@@ -449,6 +557,42 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
             class="template-name"
           >
             Template 1
+          </span>
+          <div
+            class="actions"
+          >
+            <button
+              aria-label="Delete"
+              title="Delete"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+              />
+            </button>
+            <button
+              aria-label="Edit"
+              title="Edit"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-pencil-outline EditIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
           </span>
           <div
             class="actions"

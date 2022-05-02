@@ -98,6 +98,7 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                     {me?.is_guest !== true &&
                         <Menu.Text
                             id='product-tour'
+                            className='product-tour'
                             name={intl.formatMessage({id: 'Sidebar.product-tour', defaultMessage: 'Product tour'})}
                             onClick={async () => {
                                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.StartTour)
@@ -111,6 +112,7 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
 
                                 const patch: UserConfigPatch = {
                                     updatedFields: {
+                                        [UserPropPrefix + 'onboardingTourStarted']: '1',
                                         [UserPropPrefix + 'onboardingTourStep']: '0',
                                         [UserPropPrefix + 'tourCategory']: 'onboarding',
                                     },

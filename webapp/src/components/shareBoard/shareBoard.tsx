@@ -288,6 +288,23 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         </span>
     )
 
+    const formatOptionLabel = (user: IUser) => {
+        return(
+            <div className='user-item'>
+                {Utils.isFocalboardPlugin() &&
+                    <img
+                        src={Utils.getProfilePicture(user.id)}
+                        className='user-item__img'
+                    />
+                }
+                <div className='ml-3'>
+                    <strong>{user.username}</strong>
+                    <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
+                </div>
+            </div>
+        )
+    }
+
     const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
 
     return (
@@ -310,6 +327,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             filterOption={(o) => !members[o.value]}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
+                            formatOptionLabel={formatOptionLabel}
                             getOptionValue={(u) => u.id}
                             getOptionLabel={(u) => u.username}
                             isMulti={false}
