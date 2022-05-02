@@ -777,7 +777,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			UserID:           userID,
 			Term:             "board",
 			IncludePublic:    false,
-			ExpectedBoardIDs: []string{board1.ID, board2.ID},
+			ExpectedBoardIDs: []string{board1.ID, board3.ID, board5.ID},
 		},
 		{
 			Name:             "should find only public as per the term, wether user is a member or not",
