@@ -6,10 +6,7 @@ import React, {useState, useCallback, useEffect} from 'react'
 import {useIntl, FormattedMessage} from 'react-intl'
 import {generatePath, useRouteMatch} from 'react-router'
 import Select from 'react-select/async'
-import FilterOptionOption from 'react-select'
 import {CSSObject} from '@emotion/serialize'
-
-// import {filter} from 'lodash'
 
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
