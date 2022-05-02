@@ -1,5 +1,10 @@
 package model
 
+import (
+	"encoding/json"
+	"io"
+)
+
 // BoardInsight gives insight into activities in a Board
 // swagger:model
 type BoardInsight struct {
@@ -22,4 +27,10 @@ type BoardInsight struct {
 	// ID of user who created the board
 	// required: true
 	CreatedBy string `json:"createdBy"`
+}
+
+func BoardInsightsFromJSON(data io.Reader) []BoardInsight {
+	var boardInsights []BoardInsight
+	_ = json.NewDecoder(data).Decode(&boardInsights)
+	return boardInsights
 }

@@ -206,6 +206,26 @@ func (c *Client) GetTeam(teamID string) (*model.Team, *Response) {
 	return model.TeamFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) GetTeamBoardsInsights(teamID string, duration string) ([]model.BoardInsight, *Response) {
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/insights?duration="+duration, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardInsightsFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) GetUserBoardsInsights(userID string, duration string) ([]model.BoardInsight, *Response) {
+	r, err := c.DoAPIGet(c.GetUserRoute(userID)+"/boards/insights?duration="+duration, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardInsightsFromJSON(r.Body), BuildResponse(r)
+}
+
 func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
 	r, err := c.DoAPIGet(c.GetBlocksRoute(boardID), "")
 	if err != nil {
