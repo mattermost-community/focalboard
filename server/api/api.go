@@ -320,7 +320,8 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
 				return
 			}
-			isGuest, err := a.userIsGuest(userID)
+			var isGuest bool
+			isGuest, err = a.userIsGuest(userID)
 			if err != nil {
 				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 				return
@@ -329,11 +330,9 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"guest are not allowed to get board templates"})
 				return
 			}
-		} else {
-			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
-				return
-			}
+		} else if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			return
 		}
 	}
 
@@ -2734,7 +2733,8 @@ func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 				return
 			}
-			isGuest, err := a.userIsGuest(userID)
+			var isGuest bool
+			isGuest, err = a.userIsGuest(userID)
 			if err != nil {
 				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 				return
