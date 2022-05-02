@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 
 import {useIntl, FormattedMessage} from 'react-intl'
 import {generatePath, useRouteMatch} from 'react-router'
@@ -91,27 +91,6 @@ function isLastAdmin(members: BoardMember[]) {
 }
 
 const imageURLForUser = (window as any).Components?.imageURLForUser
-
-const formatOptionLabel = (user: any) => {
-    let profileImg
-    if (imageURLForUser) {
-        profileImg = imageURLForUser(user.id)
-    }
-
-    return (
-        <div className='ShareBoard-user-selector-item'>
-            {profileImg && (
-                <img
-                    alt='ShareBoard-user-selector-avatar'
-                    src={profileImg}
-                />
-            )}
-            {user.username}
-            <GuestBadge show={Boolean(user?.is_guest)}/>
-        </div>
-    )
-}
-
 
 export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopiedPublic, setWasCopiedPublic] = useState(false)
@@ -288,22 +267,22 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         </span>
     )
 
-    const formatOptionLabel = (user: IUser) => {
-        return(
+    const formatOptionLabel = useCallback((user: IUser) => {
+        return (
             <div className='user-item'>
                 {Utils.isFocalboardPlugin() &&
                     <img
                         src={Utils.getProfilePicture(user.id)}
                         className='user-item__img'
-                    />
-                }
+                    />}
                 <div className='ml-3'>
                     <strong>{user.username}</strong>
                     <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
+                    <GuestBadge show={Boolean(user?.is_guest)}/>
                 </div>
             </div>
         )
-    }
+    }, [])
 
     const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
 
@@ -327,7 +306,6 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             filterOption={(o) => !members[o.value]}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
-                            formatOptionLabel={formatOptionLabel}
                             getOptionValue={(u) => u.id}
                             getOptionLabel={(u) => u.username}
                             isMulti={false}
