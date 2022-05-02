@@ -1414,7 +1414,7 @@ func TestPermissionsCreateBoardMembers(t *testing.T) {
 		boardMemberJSON := func(boardID string) string {
 			return toJSON(t, model.BoardMember{
 				BoardID:      boardID,
-				UserID:       userTeamMember,
+				UserID:       userTeamMemberID,
 				SchemeEditor: true,
 			})
 		}

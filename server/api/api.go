@@ -3437,15 +3437,16 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 		SchemeEditor: true,
 	}
 
-	isGuest, err := a.userIsGuest(reqBoardMember.UserID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
+	// TODO: Review this after the default role PR is merged
+	// isGuest, err := a.userIsGuest(reqBoardMember.UserID)
+	// if err != nil {
+	// 	a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+	// 	return
+	// }
 
-	if isGuest {
-		newBoardMember.SchemeAdmin = false
-	}
+	// if isGuest {
+	// 	newBoardMember.SchemeAdmin = false
+	// }
 
 	auditRec := a.makeAuditRecord(r, "addMember", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)

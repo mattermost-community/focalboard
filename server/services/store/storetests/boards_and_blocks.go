@@ -41,7 +41,7 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 	teamID := testTeamID
 	userID := testUserID
 
-	boards, err := store.GetBoardsForUserAndTeam(userID, teamID)
+	boards, err := store.GetBoardsForUserAndTeam(userID, teamID, true)
 	require.Nil(t, err)
 	require.Empty(t, boards)
 
