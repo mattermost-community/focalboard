@@ -9,7 +9,6 @@ import {Block} from '../../../blocks/block'
 import {useAppSelector} from '../../../store/hooks'
 import {getLastCardContent} from '../../../store/contents'
 import {getLastCardComment} from '../../../store/comments'
-import './lastModifiedBy.scss'
 import UserProperty from '../user/user'
 
 type Props = {
@@ -30,13 +29,11 @@ const LastModifiedBy = (props: Props): JSX.Element => {
     }
 
     return (
-        <div>
-            <UserProperty
-                value={latestBlock.modifiedBy}
-                readonly={true} // created by is an immutable property, so will always be readonly
-                onChange={() => { }} // since created by is immutable, we don't need to handle onChange
-            />
-        </div>
+        <UserProperty
+            value={latestBlock.modifiedBy}
+            readonly={true} // created by is an immutable property, so will always be readonly
+            onChange={() => { }} // since created by is immutable, we don't need to handle onChange
+        />
     )
 }
 
