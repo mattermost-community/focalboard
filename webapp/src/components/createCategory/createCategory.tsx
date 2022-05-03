@@ -63,7 +63,6 @@ const CreateCategory = (props: Props): JSX.Element => {
                         filled={Boolean(name)}
                         onClick={() => props.onCreate(name)}
                         disabled={!name}
-                        submit={true}
                     >
                         {props.initialValue ? updateText : createText}
                     </Button>
