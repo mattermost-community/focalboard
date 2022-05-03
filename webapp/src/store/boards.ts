@@ -3,7 +3,7 @@
 
 import {createSlice, PayloadAction, createAsyncThunk, createSelector} from '@reduxjs/toolkit'
 
-import octoClient, {default as client} from '../octoClient'
+import {default as client} from '../octoClient'
 import {Board, BoardMember} from '../blocks/board'
 import {IUser} from '../user'
 
@@ -25,9 +25,6 @@ type BoardsState = {
 export const fetchBoardMembers = createAsyncThunk(
     'boardMembers/fetch',
     async ({teamId, boardId}: {teamId: string, boardId: string}, thunkAPI: any) => {
-        const allTeamUsers = await octoClient.getTeamUsers()
-        console.log(allTeamUsers)
-
         const members = await client.getBoardMembers(teamId, boardId)
         const users = [] as IUser[]
 

@@ -25,7 +25,7 @@ import Button from '../widgets/buttons/button'
 import {getUserBlockSubscriptionList} from '../store/initialLoad'
 
 import {IUser} from '../user'
-import {getBoardUsers, getMe} from '../store/users'
+import {getMe} from '../store/users'
 import {Permission} from '../constants'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
@@ -178,8 +178,6 @@ const CardDialog = (props: Props): JSX.Element => {
     const followingCards = useAppSelector(getUserBlockSubscriptionList)
     const isFollowingCard = Boolean(followingCards.find((following) => following.blockId === props.cardId))
     const toolbar = followActionButton(isFollowingCard)
-
-    console.log(useAppSelector(getBoardUsers))
 
     return (
         <>
