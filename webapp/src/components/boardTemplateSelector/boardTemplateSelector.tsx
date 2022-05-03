@@ -85,6 +85,7 @@ const BoardTemplateSelector = (props: Props) => {
 
         const patch: UserConfigPatch = {
             updatedFields: {
+                [UserPropPrefix + 'onboardingTourStarted']: '1',
                 [UserPropPrefix + 'onboardingTourStep']: BaseTourSteps.OPEN_A_CARD.toString(),
                 [UserPropPrefix + 'tourCategory']: TOUR_BASE,
             },

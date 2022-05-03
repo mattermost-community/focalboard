@@ -148,7 +148,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -1179,7 +1179,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -1810,7 +1810,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -2441,7 +2441,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -3072,7 +3072,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -3703,7 +3703,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -4334,7 +4334,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -4965,7 +4965,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -5596,7 +5596,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -6227,7 +6227,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -6858,7 +6858,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -7167,7 +7167,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -7659,7 +7659,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
@@ -8198,7 +8198,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
               type="button"
             >
               <i
-                class="CompassIcon icon-globe CompassIcon"
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
               />
               <span>
                 Share
