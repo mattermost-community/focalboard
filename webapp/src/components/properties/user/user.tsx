@@ -102,7 +102,6 @@ const UserProperty = (props: Props): JSX.Element => {
             getOptionValue={(a: IUser) => a.id}
             value={users}
             onChange={(item, action) => {
-                console.log(action)
                 if (action.action === 'select-option') {
                     props.onChange(item.map(a => a.id) || [])
                 } else if (action.action === 'clear') {
