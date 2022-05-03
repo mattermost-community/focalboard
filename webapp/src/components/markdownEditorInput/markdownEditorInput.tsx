@@ -15,6 +15,8 @@ import React, {
     useState,
 } from 'react'
 
+import {debounce} from "lodash"
+
 import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
 import {getBoardUsersList} from '../../store/users'
@@ -51,7 +53,9 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const board = useAppSelector(getCurrentBoard)
     const ref = useRef<Editor>(null)
 
-    const foo = async (term: string) => {
+    const [suggestions, setSuggestions] = useState<Array<MentionUser>>([])
+
+    const loadSuggestions = async (term: string) => {
         let users: Array<IUser>
 
         if (board && board.type === BoardTypeOpen) {
@@ -60,14 +64,21 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             users = boardUsers
         }
 
-        const mentions = users.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`, is_bot: user.is_bot}))
+        const mentions = users.map(
+            (user) => ({
+                name: user.username,
+                avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`,
+                is_bot: user.is_bot}
+            ))
         setSuggestions(mentions)
     }
 
-    const [suggestions, setSuggestions] = useState<Array<MentionUser>>([])
+    const debouncedLoadSuggestion = useMemo(() => debounce(loadSuggestions, 200), [])
 
     useEffect(() => {
-        foo('')
+        // Get the ball rolling. Searching for empty string
+        // returns first 10 users in alphabetical order.
+        debouncedLoadSuggestion('')
     }, [])
 
 
@@ -173,8 +184,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     }, [])
 
     const onSearchChange = useCallback(({value}: { value: string }) => {
-        foo(value)
-        // setSuggestions(defaultSuggestionsFilter(value, mentions))
+        debouncedLoadSuggestion(value)
     }, [suggestions])
 
     let className = 'MarkdownEditorInput'
