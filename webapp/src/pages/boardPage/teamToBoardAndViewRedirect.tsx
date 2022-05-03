@@ -3,7 +3,7 @@
 import {useEffect} from 'react'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
-import {getCurrentBoardId} from '../../store/boards'
+import {getBoards, getCurrentBoardId} from '../../store/boards'
 import {setCurrent as setCurrentView, getCurrentBoardViews} from '../../store/views'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {UserSettings} from '../../userSettings'
@@ -17,23 +17,34 @@ const TeamToBoardAndViewRedirect = (): null => {
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const categories = useAppSelector(getSidebarCategories)
+    const boards = useAppSelector(getBoards)
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
 
     useEffect(() => {
         let boardID = match.params.boardId
         if (!match.params.boardId) {
             // first preference is for last visited board
-            boardID = UserSettings.lastBoardId[teamId]
+            if (boards[UserSettings.lastBoardId[teamId]]) {
+                boardID = UserSettings.lastBoardId[teamId]
+            }
 
             // if last visited board is unavailable, use the first board in categories list
             if (!boardID && categories.length > 0) {
-                // a category may exist without any boards.
-                // find the first category with a board and pick it's first board
-                const categoryWithBoards = categories.find((category) => category.boardIDs.length > 0)
+                let goToBoardID: string | null = null
+
+                for (const category of categories) {
+                    for (const categoryBoardID of category.boardIDs) {
+                        if (boards[categoryBoardID]) {
+                            // pick the first category board that exists
+                            goToBoardID = categoryBoardID
+                            break
+                        }
+                    }
+                }
 
                 // there may even be no boards at all
-                if (categoryWithBoards) {
-                    boardID = categoryWithBoards.boardIDs[0]
+                if (goToBoardID) {
+                    boardID = goToBoardID
                 }
             }
 

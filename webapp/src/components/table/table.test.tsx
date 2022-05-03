@@ -303,7 +303,6 @@ describe('components/table/Table extended', () => {
 
     test('should match snapshot with UpdatedAt', async () => {
         const board = TestBlockFactory.createBoard()
-
         const dateUpdatedId = Utils.createGuid(IDType.User)
         board.cardProperties.push({
             id: dateUpdatedId,

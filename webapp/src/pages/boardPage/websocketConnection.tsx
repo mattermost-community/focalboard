@@ -131,7 +131,7 @@ const WebsocketConnection = (props: Props) => {
             wsClient.removeOnReconnect(() => dispatch(props.loadAction(props.boardId)))
             wsClient.removeOnStateChange(updateWebsocketState)
         }
-    }, [props.teamId, props.readonly, props.boardId, props.loadAction])
+    }, [me?.id, props.teamId, props.readonly, props.boardId, props.loadAction])
 
     if (websocketClosed) {
         return (
