@@ -12,6 +12,10 @@ type BoardInsight struct {
 	// required: true
 	BoardID string `json:"boardID"`
 
+	// icon of the board
+	// required: false
+	Icon string `json:"icon"`
+
 	// Title of the board
 	// required: false
 	Title string `json:"title"`
