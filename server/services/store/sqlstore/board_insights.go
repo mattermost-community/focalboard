@@ -18,13 +18,15 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, durati
 		This is the reason to not use conditional operators in Where clauses which would eventually parametrize the variables.
 	*/
 
-	boardsHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon", "count(boards_history.id) as count", "boards_history.modified_by", "boards.created_by").
+	boardsHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon",
+		"count(boards_history.id) as count", "boards_history.modified_by", "boards.created_by").
 		From(s.tablePrefix + "boards_history as boards_history").
 		Join(s.tablePrefix + "boards as boards on boards_history.id = boards.id").
 		Where(fmt.Sprintf("boards_history.insert_at > %s and boards.team_id = '%s' and boards_history.modified_by != 'system' and boards.delete_at = 0",
 			s.durationSelector(duration), teamID)).
 		GroupBy("boards_history.id, boards.id, boards_history.modified_by")
-	blocksHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon", "count(blocks_history.id) as count", "blocks_history.modified_by", "boards.created_by").
+	blocksHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon",
+		"count(blocks_history.id) as count", "blocks_history.modified_by", "boards.created_by").
 		From(s.tablePrefix + "blocks_history as blocks_history").
 		Join(s.tablePrefix + "boards as boards on blocks_history.board_id = boards.id").
 		Where(fmt.Sprintf("blocks_history.insert_at > %s and boards.team_id = '%s' and blocks_history.modified_by != 'system' and boards.delete_at = 0",
@@ -65,12 +67,14 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, durati
 	2. No handlers at the moment for nested conditions with 'in' operator in squirrel - for the final where clause to shortlist user's boards.
 	*/
 
-	boardsHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon", "count(boards_history.id) as count", "boards_history.modified_by", "boards.created_by").
+	boardsHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon",
+		"count(boards_history.id) as count", "boards_history.modified_by", "boards.created_by").
 		From(s.tablePrefix + "boards_history as boards_history").
 		Join(s.tablePrefix + "boards as boards on boards_history.id = boards.id").
 		Where(fmt.Sprintf("boards_history.insert_at > %s and boards_history.modified_by != 'system' and boards.delete_at = 0", s.durationSelector(duration))).
 		GroupBy("boards_history.id, boards.id, boards_history.modified_by")
-	blocksHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon", "count(blocks_history.id) as count", "blocks_history.modified_by", "boards.created_by").
+	blocksHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon",
+		"count(blocks_history.id) as count", "blocks_history.modified_by", "boards.created_by").
 		From(s.tablePrefix + "blocks_history as blocks_history").
 		Join(s.tablePrefix + "boards as boards on blocks_history.board_id = boards.id").
 		Where(fmt.Sprintf("blocks_history.insert_at > %s and blocks_history.modified_by != 'system' and boards.delete_at = 0", s.durationSelector(duration))).
