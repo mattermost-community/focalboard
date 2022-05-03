@@ -3,15 +3,13 @@
 
 import React from 'react'
 
-import {IUser} from '../../../user'
 import {Card} from '../../../blocks/card'
 import {Board} from '../../../blocks/board'
 import {Block} from '../../../blocks/block'
-import {getBoardUsers} from '../../../store/users'
 import {useAppSelector} from '../../../store/hooks'
 import {getLastCardContent} from '../../../store/contents'
 import {getLastCardComment} from '../../../store/comments'
-import './lastModifiedBy.scss'
+import UserProperty from '../user/user'
 
 type Props = {
     card: Card,
@@ -19,7 +17,6 @@ type Props = {
 }
 
 const LastModifiedBy = (props: Props): JSX.Element => {
-    const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
     const lastContent = useAppSelector(getLastCardContent(props.card.id || '')) as Block
     const lastComment = useAppSelector(getLastCardComment(props.card.id)) as Block
 
@@ -32,9 +29,11 @@ const LastModifiedBy = (props: Props): JSX.Element => {
     }
 
     return (
-        <div className='LastModifiedBy octo-propertyvalue readonly'>
-            {(boardUsersById && boardUsersById[latestBlock.modifiedBy]?.username) || latestBlock.modifiedBy}
-        </div>
+        <UserProperty
+            value={latestBlock.modifiedBy}
+            readonly={true} // created by is an immutable property, so will always be readonly
+            onChange={() => { }} // since created by is immutable, we don't need to handle onChange
+        />
     )
 }
 
