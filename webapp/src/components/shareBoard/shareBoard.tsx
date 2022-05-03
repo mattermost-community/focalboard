@@ -8,9 +8,9 @@ import {generatePath, useRouteMatch} from 'react-router'
 import Select from 'react-select/async'
 import {CSSObject} from '@emotion/serialize'
 
-import {useAppSelector} from '../../store/hooks'
-import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
-import {getMe, getBoardUsersList} from '../../store/users'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
+import {fetchBoardMembers, getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
+import {getMe, getBoardUsersList, removeBoardUsers} from '../../store/users'
 
 import {Utils, IDType} from '../../utils'
 import Tooltip from '../../widgets/tooltip'
@@ -200,12 +200,15 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         mutator.updateBoardMember(newMember, member)
     }
 
-    const onDeleteBoardMember = (member: BoardMember) => {
+    const dispatch = useAppDispatch()
+
+    const onDeleteBoardMember = async (member: BoardMember) => {
         if (member.userId === me?.id && isLastAdmin(Object.values(members))) {
             sendFlashMessage({content: intl.formatMessage({id: 'shareBoard.lastAdmin', defaultMessage: 'Boards must have at least one Administrator'}), severity: 'low'})
             return
         }
-        mutator.deleteBoardMember(member)
+        await mutator.deleteBoardMember(member)
+        dispatch(removeBoardUsers([member]))
     }
 
     useEffect(() => {

@@ -381,7 +381,7 @@ class Mutator {
     }
 
     async deleteBoardMember(member: BoardMember, description = 'delete board member'): Promise<void> {
-        await undoManager.perform(
+        return undoManager.perform(
             async () => {
                 await octoClient.deleteBoardMember(member)
             },
