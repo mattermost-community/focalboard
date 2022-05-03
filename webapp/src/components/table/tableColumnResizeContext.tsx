@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {createContext, ReactElement, ReactNode, useCallback, useContext, useMemo} from 'react'
-import {DragLayerMonitor, useDragLayer} from 'react-dnd'
 
 import {Constants} from '../../constants'
 
@@ -9,6 +8,8 @@ export type ColumnResizeContextType = {
     updateRef: (cardId: string, columnId: string, element: HTMLDivElement | null) => void
     cellRef: (columnId: string) => HTMLDivElement | undefined
     width: (columnId: string) => number
+    updateOffset: (columnId: string, offset: number) => void
+    updateWidth: (columnId: string, width: number) => void
 }
 
 const ColumnResizeContext = createContext<ColumnResizeContextType | null>(null)
@@ -24,6 +25,7 @@ export function useColumnResize(): ColumnResizeContextType {
 export type ColumnResizeProviderProps = {
     children: ReactNode
     columnWidths: Record<string, number>
+    onResizeColumn: (columnId: string, width: number) => void
 }
 
 const columnWidth = (columnId: string, columnWidths: Record<string, number>, offset: number): string => {
@@ -31,7 +33,7 @@ const columnWidth = (columnId: string, columnWidths: Record<string, number>, off
 }
 
 export const ColumnResizeProvider = (props: ColumnResizeProviderProps): ReactElement => {
-    const {children, columnWidths} = props
+    const {children, columnWidths, onResizeColumn} = props
 
     type ElementsMap = Map<string, HTMLDivElement>
     const columns = useMemo(() => new Map<string, ElementsMap>(), [])
@@ -42,25 +44,6 @@ export const ColumnResizeProvider = (props: ColumnResizeProviderProps): ReactEle
             element.style.width = width
         }
     }, [columnWidths])
-
-    const collect = useCallback((monitor: DragLayerMonitor<{id: string, width: number}>) => {
-        if (monitor.getItemType() === 'horizontalGrip') {
-            const difference = monitor.getDifferenceFromInitialOffset()
-            if (difference) {
-                const offset = difference.x
-                const {id: columnId, width: itemWidth} = monitor.getItem()
-                const width = columnWidths[columnId]
-                const elements = columns.get(columnId)
-                if (elements && itemWidth === width) {
-                    updateWidth(columnId, elements, offset)
-                }
-                return offset
-            }
-        }
-        return 0
-    }, [updateWidth, columnWidths])
-
-    useDragLayer(collect)
 
     const contextValue = useMemo((): ColumnResizeContextType => ({
         updateRef: (cardId, columnId, element) => {
@@ -86,7 +69,16 @@ export const ColumnResizeProvider = (props: ColumnResizeProviderProps): ReactEle
         width: (columnId) => {
             return Math.max(Constants.minColumnWidth, (columnWidths[columnId] || 0))
         },
-    }), [columnWidths])
+        updateOffset: (columnId, offset) => {
+            const elements = columns.get(columnId)
+            if (elements) {
+                updateWidth(columnId, elements, offset)
+            }
+        },
+        updateWidth: (columnId, width) => {
+            onResizeColumn(columnId, width)
+        }
+    }), [columnWidths, onResizeColumn])
 
     return (
         <ColumnResizeContext.Provider value={contextValue}>

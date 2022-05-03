@@ -3,7 +3,6 @@
 import React, {useCallback} from 'react'
 
 import {FormattedMessage} from 'react-intl'
-import {useDrop} from 'react-dnd'
 
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
 import {createBoardView, BoardView} from '../../blocks/boardView'
@@ -47,28 +46,24 @@ const Table = (props: Props): JSX.Element => {
     const canEditCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const dispatch = useAppDispatch()
 
-    const [, drop] = useDrop(() => ({
-        accept: 'horizontalGrip',
-        drop: async (item: { id: string }, monitor) => {
-            const columnWidths = {...activeView.fields.columnWidths}
-            const finalOffset = monitor.getDifferenceFromInitialOffset()?.x || 0
-            const newWidth = Math.max(Constants.minColumnWidth, (columnWidths[item.id] || 0) + (finalOffset || 0))
-            if (newWidth !== columnWidths[item.id]) {
-                Utils.log(`Resize of column finished: prev=${columnWidths[item.id]}, new=${newWidth}`)
+    const resizeColumn = useCallback(async (columnId: string, width: number) => {
+        const columnWidths = {...activeView.fields.columnWidths}
+        const newWidth = Math.max(Constants.minColumnWidth, width)
+        if (newWidth !== columnWidths[columnId]) {
+            Utils.log(`Resize of column finished: prev=${columnWidths[columnId]}, new=${newWidth}`)
 
-                columnWidths[item.id] = newWidth
+            columnWidths[columnId] = newWidth
 
-                const newView = createBoardView(activeView)
-                newView.fields.columnWidths = columnWidths
-                try {
-                    dispatch(updateView(newView))
-                    await mutator.updateBlock(board.id, newView, activeView, 'resize column')
-                } catch {
-                    dispatch(updateView(activeView))
-                }
+            const newView = createBoardView(activeView)
+            newView.fields.columnWidths = columnWidths
+            try {
+                dispatch(updateView(newView))
+                await mutator.updateBlock(board.id, newView, activeView, 'resize column')
+            } catch {
+                dispatch(updateView(activeView))
             }
-        },
-    }), [activeView])
+        }
+    }, [activeView])
 
     const hideGroup = useCallback((groupById: string): void => {
         const index: number = activeView.fields.collapsedOptionIds.indexOf(groupById)
@@ -172,11 +167,11 @@ const Table = (props: Props): JSX.Element => {
     }, [board, groupByProperty])
 
     return (
-        <div
-            className='Table'
-            ref={drop}
-        >
-            <ColumnResizeProvider columnWidths={activeView.fields.columnWidths}>
+        <div className='Table'>
+            <ColumnResizeProvider
+                columnWidths={activeView.fields.columnWidths}
+                onResizeColumn={resizeColumn}
+            >
                 <div className='octo-table-body'>
                     <TableHeaders
                         board={board}
