@@ -3,10 +3,7 @@
 import Editor from '@draft-js-plugins/editor'
 import createEmojiPlugin from '@draft-js-plugins/emoji'
 import '@draft-js-plugins/emoji/lib/plugin.css'
-import createMentionPlugin, {
-    defaultSuggestionsFilter,
-    MentionData,
-} from '@draft-js-plugins/mention'
+import createMentionPlugin from '@draft-js-plugins/mention'
 import '@draft-js-plugins/mention/lib/plugin.css'
 import {ContentState, DraftHandleValue, EditorState, getDefaultKeyBinding} from 'draft-js'
 import React, {
