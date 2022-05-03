@@ -233,14 +233,12 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []model.Block) er
 		)
 
 		if err := a.filesBackend.CopyFile(sourceFilePath, destinationFilePath); err != nil {
-			a.logger.Error(
+			a.logger.Warn(
 				"CopyCardFiles failed to copy file",
 				mlog.String("sourceFilePath", sourceFilePath),
 				mlog.String("destinationFilePath", destinationFilePath),
 				mlog.Err(err),
 			)
-
-			return err
 		}
 		block.Fields["fileId"] = destFilename
 	}
