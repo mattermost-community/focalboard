@@ -215,7 +215,10 @@ func (s *MattermostAuthLayer) GetTeamsForUser(userID string) ([]*model.Team, err
 		Select("t.Id", "t.DisplayName").
 		From("Teams as t").
 		Join("TeamMembers as tm on t.Id=tm.TeamId").
-		Where(sq.Eq{"tm.UserId": userID})
+		Where(sq.Eq{
+			"tm.UserId":   userID,
+			"tm.DeleteAt": 0,
+		})
 
 	rows, err := query.Query()
 	if err != nil {
