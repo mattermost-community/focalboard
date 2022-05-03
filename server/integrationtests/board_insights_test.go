@@ -10,7 +10,6 @@ import (
 )
 
 func TestTeamBoardsInsights(t *testing.T) {
-
 	t.Run("Boards with activity should be included in insights", func(t *testing.T) {
 		th := SetupTestHelperWithToken(t).Start()
 		defer th.TearDown()
@@ -58,7 +57,6 @@ func TestTeamBoardsInsights(t *testing.T) {
 }
 
 func TestUserBoardsInsights(t *testing.T) {
-
 	t.Run("Boards with activity should be included in insights", func(t *testing.T) {
 		th := SetupTestHelperWithToken(t).Start()
 		defer th.TearDown()

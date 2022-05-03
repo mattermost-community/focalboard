@@ -120,7 +120,7 @@ func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam
 	return fieldName
 }
 
-func (s *SQLStore) durationSelector(interval string) string { //nolint:unparam
+func (s *SQLStore) durationSelector(interval string) string {
 	if s.dbType == model.SqliteDBType {
 		return fmt.Sprintf("datetime('now', '-%s')", interval)
 	}
@@ -133,7 +133,7 @@ func (s *SQLStore) durationSelector(interval string) string { //nolint:unparam
 	return ""
 }
 
-func (s *SQLStore) concatenationSelector(field string, delimiter string) string { //nolint:unparam
+func (s *SQLStore) concatenationSelector(field string, delimiter string) string {
 	if s.dbType == model.SqliteDBType {
 		return fmt.Sprintf("group_concat(%s)", field)
 	}
@@ -146,7 +146,7 @@ func (s *SQLStore) concatenationSelector(field string, delimiter string) string 
 	return ""
 }
 
-func (s *SQLStore) elementInColumn(cellValue string, column string) string { //nolint:unparam
+func (s *SQLStore) elementInColumn(cellValue string, column string) string {
 	if s.dbType == model.SqliteDBType || s.dbType == model.MysqlDBType {
 		return fmt.Sprintf("instr(%s, '%s') > 0", column, cellValue)
 	}

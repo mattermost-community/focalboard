@@ -21,12 +21,14 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, durati
 	boardsHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "count(boards_history.id) as count", "boards_history.modified_by", "boards.created_by").
 		From(s.tablePrefix + "boards_history as boards_history").
 		Join(s.tablePrefix + "boards as boards on boards_history.id = boards.id").
-		Where(fmt.Sprintf("boards_history.insert_at > %s and boards.team_id = '%s' and boards_history.modified_by != 'system' and boards.delete_at = 0", s.durationSelector(duration), teamID)).
+		Where(fmt.Sprintf("boards_history.insert_at > %s and boards.team_id = '%s' and boards_history.modified_by != 'system' and boards.delete_at = 0",
+			s.durationSelector(duration), teamID)).
 		GroupBy("boards_history.id, boards.id, boards_history.modified_by")
 	blocksHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "count(blocks_history.id) as count", "blocks_history.modified_by", "boards.created_by").
 		From(s.tablePrefix + "blocks_history as blocks_history").
 		Join(s.tablePrefix + "boards as boards on blocks_history.board_id = boards.id").
-		Where(fmt.Sprintf("blocks_history.insert_at > %s and boards.team_id = '%s' and blocks_history.modified_by != 'system' and boards.delete_at = 0", s.durationSelector(duration), teamID)).
+		Where(fmt.Sprintf("blocks_history.insert_at > %s and boards.team_id = '%s' and blocks_history.modified_by != 'system' and boards.delete_at = 0",
+			s.durationSelector(duration), teamID)).
 		GroupBy("blocks_history.id, boards.id, blocks_history.modified_by")
 	blocksHistoryQueryString, blocksHistoryQueryargs, err := blocksHistoryQuery.ToSql()
 
@@ -34,7 +36,8 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, durati
 		return nil, err
 	}
 	boardsAndBlocksHistoryQuery := boardsHistoryQuery.Suffix("UNION ALL "+blocksHistoryQueryString, blocksHistoryQueryargs...)
-	insights := s.getQueryBuilder(db).Select("id", "title", "sum(count) as activity_count", fmt.Sprintf("%s as active_users", s.concatenationSelector("distinct modified_by", ",")), "created_by").
+	insights := s.getQueryBuilder(db).Select("id", "title", "sum(count) as activity_count",
+		fmt.Sprintf("%s as active_users", s.concatenationSelector("distinct modified_by", ",")), "created_by").
 		FromSelect(boardsAndBlocksHistoryQuery, "boards_and_blocks_history").
 		GroupBy("id, title, created_by").
 		OrderBy("activity_count desc").
@@ -56,7 +59,6 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, durati
 }
 
 func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, duration string) ([]*model.BoardInsight, error) {
-
 	/**
 	Some squirrel issues to note here are
 	1. https://github.com/Masterminds/squirrel/issues/285 - since we're using 1+ sub queries. When placeholders are counted for second query, the placeholder names are repeated.
@@ -79,7 +81,8 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, durati
 		return nil, err
 	}
 	boardsAndBlocksHistoryQuery := boardsHistoryQuery.Suffix("UNION ALL "+blocksHistoryQueryString, blocksHistoryQueryargs...)
-	insights := s.getQueryBuilder(db).Select("id", "title", "sum(count) as activity_count", fmt.Sprintf("%s as active_users", s.concatenationSelector("distinct modified_by", ",")), "created_by").
+	insights := s.getQueryBuilder(db).Select("id", "title", "sum(count) as activity_count",
+		fmt.Sprintf("%s as active_users", s.concatenationSelector("distinct modified_by", ",")), "created_by").
 		FromSelect(boardsAndBlocksHistoryQuery, "boards_and_blocks_history").
 		GroupBy("id, title, created_by").
 		OrderBy("activity_count desc")
@@ -106,7 +109,6 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, durati
 }
 
 func boardsInsightsFromRows(rows *sql.Rows) ([]*model.BoardInsight, error) {
-
 	boardsInsights := []*model.BoardInsight{}
 	for rows.Next() {
 		var boardInsight model.BoardInsight
@@ -121,10 +123,6 @@ func boardsInsightsFromRows(rows *sql.Rows) ([]*model.BoardInsight, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err != nil {
-			return nil, err
-		}
-
 		boardsInsights = append(boardsInsights, &boardInsight)
 	}
 	return boardsInsights, nil
