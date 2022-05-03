@@ -149,6 +149,7 @@ const SidebarCategory = (props: Props) => {
                 <div
                     className='octo-sidebar-title category-title'
                     title={props.categoryBoards.name}
+                    onClick={() => setCollapsed(!collapsed)}
                 >
                     {props.categoryBoards.name}
                 </div>
