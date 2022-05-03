@@ -150,7 +150,7 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 
 	// copy any file attachments from the duplicated blocks.
 	if err = a.CopyCardFiles(boardID, bab.Blocks); err != nil {
-		a.logger.Warn("Could not copy files while duplicating board", mlog.String("BoardID", boardID), mlog.Err(err))
+		a.logger.Error("Could not copy files while duplicating board", mlog.String("BoardID", boardID), mlog.Err(err))
 	}
 
 	// bab.Blocks now has updated file ids for any blocks containing files.  We need to store them.
