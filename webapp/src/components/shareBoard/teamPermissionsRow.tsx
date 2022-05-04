@@ -15,6 +15,7 @@ import {useAppSelector} from '../../store/hooks'
 import {getCurrentTeam} from '../../store/teams'
 import {getCurrentBoard} from '../../store/boards'
 import {Permission} from '../../constants'
+import {Utils} from '../../utils'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
@@ -41,10 +42,12 @@ const TeamPermissionsRow = (): JSX.Element => {
     return (
         <div className='user-item'>
             <div className='user-item__content'>
-                <CompassIcon
-                    icon='mattermost'
-                    className='user-item__img'
-                />
+                {Utils.isFocalboardPlugin() &&
+                    <CompassIcon
+                        icon='mattermost'
+                        className='user-item__img'
+                    />
+                }
                 <div className='ml-3'><strong>{intl.formatMessage({id: 'ShareBoard.teamPermissionsText', defaultMessage: 'Everyone at {teamName} Team'}, {teamName: team?.title})}</strong></div>
             </div>
             <div>
