@@ -42,6 +42,7 @@ type PluginDelivery struct {
 	api        PluginAPI
 }
 
+// New creates a PluginDelivery instance.
 func New(botID string, serverRoot string, api PluginAPI) *PluginDelivery {
 	return &PluginDelivery{
 		botID:      botID,
