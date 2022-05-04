@@ -1,4 +1,5 @@
 @import 'typography';
+@import 'modifiers';
 
 html {
     height: 100%;
@@ -59,7 +60,7 @@ html {
 
     a {
         text-decoration: none;
-        color: var(--link-color-rgb);
+        color: rgb(var(--link-color-rgb));
     }
 
     hr {
