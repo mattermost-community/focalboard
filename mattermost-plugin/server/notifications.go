@@ -121,3 +121,7 @@ func (da *pluginAPIAdapter) GetChannelByID(channelID string) (*model.Channel, er
 func (da *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*model.ChannelMember, error) {
 	return da.client.Channel.GetMember(channelID, userID)
 }
+
+func (da *pluginAPIAdapter) CreateMember(teamID string, userID string) (*model.TeamMember, error) {
+	return da.client.Team.CreateMember(teamID, userID)
+}
