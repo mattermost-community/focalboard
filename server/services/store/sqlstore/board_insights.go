@@ -17,35 +17,76 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, durati
 	1. https://github.com/Masterminds/squirrel/issues/285 - since we're using 1+ sub queries. When placeholders are counted for second query, the placeholder names are repeated.
 		This is the reason to not use conditional operators in Where clauses which would eventually parametrize the variables.
 	*/
+	insightsQueryStr := fmt.Sprintf(`select
+		id,
+		title,
+		icon,
+		sum(count) as activity_count,
+		%s as active_users,
+		created_by
+	from
+		(
+			select
+				boards.id,
+				boards.title,
+				boards.icon,
+				count(boards_history.id) as count,
+				boards_history.modified_by,
+				boards.created_by
+			from
+				%[2]vboards_history as boards_history
+				join %[2]vboards as boards on boards_history.id = boards.id
+			where
+				boards_history.insert_at > %[3]s
+				and boards.team_id = %[4]s
+				and boards_history.modified_by != 'system'
+				and boards.delete_at = 0
+			group by
+				boards_history.id,
+				boards.id,
+				boards_history.modified_by
+			UNION
+			ALL
+			select
+				boards.id,
+				boards.title,
+				boards.icon,
+				count(blocks_history.id) as count,
+				blocks_history.modified_by,
+				boards.created_by
+			from
+				%[2]vblocks_history as blocks_history
+				join %[2]vboards as boards on blocks_history.board_id = boards.id
+			where
+				blocks_history.insert_at > %[5]s
+				and boards.team_id = %[6]s
+				and blocks_history.modified_by != 'system'
+				and boards.delete_at = 0
+			group by
+				blocks_history.board_id,
+				boards.id,
+				blocks_history.modified_by
+		) as boards_and_blocks_history
+	group by
+		id,
+		title,
+		icon,
+		created_by
+	order by
+		activity_count desc
+	limit
+		4;`,
+		s.concatenationSelector("distinct modified_by", ","),
+		s.tablePrefix,
+		s.parameterPlaceholder(1),
+		s.parameterPlaceholder(2),
+		s.parameterPlaceholder(3),
+		s.parameterPlaceholder(4),
+	)
 
-	boardsHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon",
-		"count(boards_history.id) as count", "boards_history.modified_by", "boards.created_by").
-		From(s.tablePrefix + "boards_history as boards_history").
-		Join(s.tablePrefix + "boards as boards on boards_history.id = boards.id").
-		Where(fmt.Sprintf("boards_history.insert_at > %s and boards.team_id = '%s' and boards_history.modified_by != 'system' and boards.delete_at = 0",
-			s.durationSelector(duration), teamID)).
-		GroupBy("boards_history.id, boards.id, boards_history.modified_by")
-	blocksHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon",
-		"count(blocks_history.id) as count", "blocks_history.modified_by", "boards.created_by").
-		From(s.tablePrefix + "blocks_history as blocks_history").
-		Join(s.tablePrefix + "boards as boards on blocks_history.board_id = boards.id").
-		Where(fmt.Sprintf("blocks_history.insert_at > %s and boards.team_id = '%s' and blocks_history.modified_by != 'system' and boards.delete_at = 0",
-			s.durationSelector(duration), teamID)).
-		GroupBy("blocks_history.id, boards.id, blocks_history.modified_by")
-	blocksHistoryQueryString, blocksHistoryQueryargs, err := blocksHistoryQuery.ToSql()
-
-	if err != nil {
-		return nil, err
-	}
-	boardsAndBlocksHistoryQuery := boardsHistoryQuery.Suffix("UNION ALL "+blocksHistoryQueryString, blocksHistoryQueryargs...)
-	insights := s.getQueryBuilder(db).Select("id", "title", "icon", "sum(count) as activity_count",
-		fmt.Sprintf("%s as active_users", s.concatenationSelector("distinct modified_by", ",")), "created_by").
-		FromSelect(boardsAndBlocksHistoryQuery, "boards_and_blocks_history").
-		GroupBy("id, title, icon, created_by").
-		OrderBy("activity_count desc").
-		Limit(100)
-
-	rows, err := insights.Query()
+	var args []interface{}
+	args = append(args, s.durationSelector(duration), teamID, s.durationSelector(duration), teamID)
+	rows, err := db.Query(insightsQueryStr, args...)
 
 	if err != nil {
 		s.logger.Error(`Team insights query ERROR`, mlog.Err(err))
@@ -66,41 +107,81 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, durati
 	1. https://github.com/Masterminds/squirrel/issues/285 - since we're using 1+ sub queries. When placeholders are counted for second query, the placeholder names are repeated.
 	2. No handlers at the moment for nested conditions with 'in' operator in squirrel - for the final where clause to shortlist user's boards.
 	*/
+	insightsQueryStr := fmt.Sprintf(`select *
+	from (select
+			id,
+			title,
+			icon,
+			sum(count) as activity_count,
+			%[1]s as active_users,
+			created_by
+		from
+			(
+				select
+					boards.id,
+					boards.title,
+					boards.icon,
+					count(boards_history.id) as count,
+					boards_history.modified_by,
+					boards.created_by
+				from
+					%[2]vboards_history as boards_history
+					join %[2]vboards as boards on boards_history.id = boards.id
+				where
+					boards_history.insert_at > %[3]s
+					and boards_history.modified_by != 'system'
+					and boards.delete_at = 0
+				group by
+					boards_history.id,
+					boards.id,
+					boards_history.modified_by
+				UNION
+				ALL
+				select
+					boards.id,
+					boards.title,
+					boards.icon,
+					count(blocks_history.id) as count,
+					blocks_history.modified_by,
+					boards.created_by
+				from
+					%[2]vblocks_history as blocks_history
+					join %[2]vboards as boards on blocks_history.board_id = boards.id
+				where
+					blocks_history.insert_at > %[4]s
+					and blocks_history.modified_by != 'system'
+					and boards.delete_at = 0
+				group by
+					blocks_history.board_id,
+					boards.id,
+					blocks_history.modified_by
+			) as boards_and_blocks_history
+		group by
+			id,
+			title,
+			icon,
+			created_by
+		order by
+			activity_count desc
+		) as insights
+	where created_by=%[5]s or %[6]s
+	limit 4;
+	`,
+		s.concatenationSelector("distinct modified_by", ","),
+		s.tablePrefix,
+		s.parameterPlaceholder(1),
+		s.parameterPlaceholder(2),
+		s.parameterPlaceholder(3),
+		// 4 below represents parameter count and will be '$4' or '?' depending on db type
+		s.elementInColumn(4, "active_users"),
+	)
 
-	boardsHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon",
-		"count(boards_history.id) as count", "boards_history.modified_by", "boards.created_by").
-		From(s.tablePrefix + "boards_history as boards_history").
-		Join(s.tablePrefix + "boards as boards on boards_history.id = boards.id").
-		Where(fmt.Sprintf("boards_history.insert_at > %s and boards_history.modified_by != 'system' and boards.delete_at = 0", s.durationSelector(duration))).
-		GroupBy("boards_history.id, boards.id, boards_history.modified_by")
-	blocksHistoryQuery := s.getQueryBuilder(db).Select("boards.id", "boards.title", "boards.icon",
-		"count(blocks_history.id) as count", "blocks_history.modified_by", "boards.created_by").
-		From(s.tablePrefix + "blocks_history as blocks_history").
-		Join(s.tablePrefix + "boards as boards on blocks_history.board_id = boards.id").
-		Where(fmt.Sprintf("blocks_history.insert_at > %s and blocks_history.modified_by != 'system' and boards.delete_at = 0", s.durationSelector(duration))).
-		GroupBy("blocks_history.id, boards.id, blocks_history.modified_by")
-	blocksHistoryQueryString, blocksHistoryQueryargs, err := blocksHistoryQuery.ToSql()
+	var args []interface{}
+	args = append(args, s.durationSelector(duration), s.durationSelector(duration), userID, userID)
+	rows, err := db.Query(insightsQueryStr, args...)
 
 	if err != nil {
-		return nil, err
-	}
-	boardsAndBlocksHistoryQuery := boardsHistoryQuery.Suffix("UNION ALL "+blocksHistoryQueryString, blocksHistoryQueryargs...)
-	insights := s.getQueryBuilder(db).Select("id", "title", "icon", "sum(count) as activity_count",
-		fmt.Sprintf("%s as active_users", s.concatenationSelector("distinct modified_by", ",")), "created_by").
-		FromSelect(boardsAndBlocksHistoryQuery, "boards_and_blocks_history").
-		GroupBy("id, title, icon, created_by").
-		OrderBy("activity_count desc")
-
-	userInsights := s.getQueryBuilder(db).Select("*").
-		FromSelect(insights, "insights").
-		// TODO: clean the following where clause
-		Where(fmt.Sprintf("created_by = '%s' or %s", userID, s.elementInColumn(userID, "active_users"))).
-		Limit(100)
-
-	rows, err := userInsights.Query()
-
-	if err != nil {
-		s.logger.Error(`User insights query ERROR`, mlog.Err(err))
+		s.logger.Error(`Team insights query ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)

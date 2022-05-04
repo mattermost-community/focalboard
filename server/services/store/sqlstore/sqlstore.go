@@ -4,6 +4,10 @@ import (
 	"database/sql"
 	"fmt"
 	"net/url"
+	"os"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/mattermost/mattermost-server/v6/plugin"
 
@@ -121,16 +125,22 @@ func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam
 }
 
 func (s *SQLStore) durationSelector(interval string) string {
-	if s.dbType == model.SqliteDBType {
-		return fmt.Sprintf("datetime('now', '-%s')", interval)
+	intervalMagnitudeString := strings.Fields(interval)[0]
+	intervalMagnitude, err := strconv.Atoi(intervalMagnitudeString)
+	if err != nil {
+		// handle error
+		os.Exit(2)
 	}
-	if s.dbType == model.PostgresDBType {
-		return fmt.Sprintf("now() - interval '%s'", interval)
+	if strings.Contains(interval, "day") {
+		return time.Now().AddDate(0, 0, -1*intervalMagnitude).Format(time.RFC3339)
 	}
-	if s.dbType == model.MysqlDBType {
-		return fmt.Sprintf("curdate() - interval %s", interval)
+	if strings.Contains(interval, "month") {
+		return time.Now().AddDate(0, -1*intervalMagnitude, 0).Format(time.RFC3339)
 	}
-	return ""
+	if strings.Contains(interval, "year") {
+		return time.Now().AddDate(-1*intervalMagnitude, 0, 0).Format(time.RFC3339)
+	}
+	return time.Now().Format(time.RFC3339)
 }
 
 func (s *SQLStore) concatenationSelector(field string, delimiter string) string {
@@ -146,15 +156,26 @@ func (s *SQLStore) concatenationSelector(field string, delimiter string) string 
 	return ""
 }
 
-func (s *SQLStore) elementInColumn(cellValue string, column string) string {
+func (s *SQLStore) elementInColumn(parameterCount int, column string) string {
 	if s.dbType == model.SqliteDBType || s.dbType == model.MysqlDBType {
-		return fmt.Sprintf("instr(%s, '%s') > 0", column, cellValue)
+		return fmt.Sprintf("instr(%s, %s) > 0", column, s.parameterPlaceholder(parameterCount))
 	}
 	if s.dbType == model.PostgresDBType {
-		return fmt.Sprintf("position('%s' in %s) > 0", cellValue, column)
+		return fmt.Sprintf("position(%s in %s) > 0", s.parameterPlaceholder(parameterCount), column)
 	}
 	return ""
 }
+
 func (s *SQLStore) getLicense(db sq.BaseRunner) *mmModel.License {
 	return nil
+}
+
+func (s *SQLStore) parameterPlaceholder(count int) string {
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+		return fmt.Sprintf("$%v", count)
+	}
+	if s.dbType == model.MysqlDBType {
+		return "?"
+	}
+	return ""
 }
