@@ -34,7 +34,7 @@ const TableGroup = (props: Props): JSX.Element => {
     const {board, activeView, group, onDropToGroup, groupByProperty} = props
     const groupId = group.option.id
 
-    const [{isOver}, drop] = useDrop<Card, void, {isOver: boolean}>(() => ({
+    const [{isOver}, drop] = useDrop(() => ({
         accept: 'card',
         collect: (monitor) => ({
             isOver: monitor.isOver(),

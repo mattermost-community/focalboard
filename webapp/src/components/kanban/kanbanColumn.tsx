@@ -12,7 +12,7 @@ type Props = {
 }
 
 const KanbanColumn = (props: Props) => {
-    const [{isOver}, drop] = useDrop<Card, void, {isOver: boolean}>(() => ({
+    const [{isOver}, drop] = useDrop(() => ({
         accept: 'card',
         collect: (monitor) => ({
             isOver: monitor.isOver(),
