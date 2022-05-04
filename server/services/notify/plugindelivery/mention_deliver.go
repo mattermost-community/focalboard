@@ -45,7 +45,7 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 		return "", fmt.Errorf("cannot find user: %w", err)
 	}
 
-	channel, err := pd.api.GetDirectChannel(member.UserId, pd.botID)
+	channel, err := pd.getDirectChannel(teamID, member.UserId, pd.botID)
 	if err != nil {
 		return "", fmt.Errorf("cannot get direct channel: %w", err)
 	}
