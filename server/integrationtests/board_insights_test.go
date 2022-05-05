@@ -14,35 +14,50 @@ func TestTeamBoardsInsights(t *testing.T) {
 		th := SetupTestHelperWithToken(t).Start()
 		defer th.TearDown()
 
-		board := th.CreateBoard("team-id", model.BoardTypeOpen)
-
+		board1 := th.CreateBoard("team-id", model.BoardTypeOpen)
+		board2 := th.CreateBoard("team-id", model.BoardTypeOpen)
 		initialID1 := utils.NewID(utils.IDTypeBlock)
 		initialID2 := utils.NewID(utils.IDTypeBlock)
-		newBlocks := []model.Block{
+		initialID3 := utils.NewID(utils.IDTypeBlock)
+		newBlocks1 := []model.Block{
 			{
 				ID:       initialID1,
-				BoardID:  board.ID,
+				BoardID:  board1.ID,
 				CreateAt: 1,
 				UpdateAt: 1,
 				Type:     model.TypeCard,
 			},
 			{
 				ID:       initialID2,
-				BoardID:  board.ID,
+				BoardID:  board1.ID,
 				CreateAt: 1,
 				UpdateAt: 1,
 				Type:     model.TypeCard,
 			},
 		}
-		newBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks)
-		require.NoError(t, resp.Error)
-		require.Len(t, newBlocks, 2)
 
+		newBlocks2 := []model.Block{
+			{
+				ID:       initialID3,
+				BoardID:  board2.ID,
+				CreateAt: 1,
+				UpdateAt: 1,
+				Type:     model.TypeCard,
+			},
+		}
+		newBlocks1, resp := th.Client.InsertBlocks(board1.ID, newBlocks1)
+		require.NoError(t, resp.Error)
+		require.Len(t, newBlocks1, 2)
+		newBlocks2, resp = th.Client.InsertBlocks(board2.ID, newBlocks2)
+		require.NoError(t, resp.Error)
+		require.Len(t, newBlocks2, 1)
 		insights, resp := th.Client.GetTeamBoardsInsights("team-id", "4%20day")
 		require.NoError(t, resp.Error)
-		require.Len(t, insights, 1)
+		require.Len(t, insights, 2)
 
-		require.Equal(t, board.ID, insights[0].BoardID)
+		// following two asserts ensure that boards with activity are ordered by BoardInsight.ActivityCount
+		require.Equal(t, board1.ID, insights[0].BoardID)
+		require.Equal(t, board2.ID, insights[1].BoardID)
 		require.Equal(t, "3", insights[0].ActivityCount)
 	})
 
