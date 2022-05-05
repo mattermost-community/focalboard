@@ -14,7 +14,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -32,13 +32,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -68,13 +67,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -104,13 +102,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -128,7 +125,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -402,7 +398,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -420,13 +416,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -456,13 +451,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -492,13 +486,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -516,7 +509,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -798,7 +790,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -816,13 +808,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -852,13 +843,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -888,13 +878,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -912,7 +901,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -1186,7 +1174,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1204,13 +1192,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1240,13 +1227,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1276,13 +1262,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1300,7 +1285,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -1582,7 +1566,7 @@ exports[`components/table/Table should match snapshot 1`] = `
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1600,13 +1584,12 @@ exports[`components/table/Table should match snapshot 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1636,13 +1619,12 @@ exports[`components/table/Table should match snapshot 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1672,7 +1654,6 @@ exports[`components/table/Table should match snapshot 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -1834,7 +1815,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1852,13 +1833,12 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1888,13 +1868,12 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1924,7 +1903,6 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -2068,7 +2046,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -2088,7 +2066,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -2120,7 +2098,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -2303,7 +2281,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -2323,7 +2301,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -2355,7 +2333,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
