@@ -208,6 +208,11 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		enablePublicSharedBoards = true
 	}
 
+	enableBoardsDeletion := false
+	if mmconfig.DataRetentionSettings.EnableBoardsDeletion != nil {
+		enableBoardsDeletion = true
+	}
+
 	featureFlags := parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 
 	return &config.Configuration{
@@ -236,6 +241,8 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		FeatureFlags:             featureFlags,
 		NotifyFreqCardSeconds:    getPluginSettingInt(mmconfig, notifyFreqCardSecondsKey, 120),
 		NotifyFreqBoardSeconds:   getPluginSettingInt(mmconfig, notifyFreqBoardSecondsKey, 86400),
+		EnableDataRetention:      enableBoardsDeletion,
+		DataRetentionDays:        *mmconfig.DataRetentionSettings.BoardsRetentionDays,
 	}
 }
 

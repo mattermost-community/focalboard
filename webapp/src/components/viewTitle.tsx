@@ -46,7 +46,7 @@ const ViewTitle = (props: Props) => {
                 {!readonly && !board.icon &&
                     <Button
                         emphasis='default'
-                        size='small'
+                        size='xsmall'
                         onClick={onAddRandomIcon}
                         icon={
                             <CompassIcon
@@ -62,7 +62,7 @@ const ViewTitle = (props: Props) => {
                 {!readonly && board.showDescription &&
                     <Button
                         emphasis='default'
-                        size='small'
+                        size='xsmall'
                         onClick={onHideDescription}
                         icon={
                             <CompassIcon
@@ -78,7 +78,7 @@ const ViewTitle = (props: Props) => {
                 {!readonly && !board.showDescription &&
                     <Button
                         emphasis='default'
-                        size='small'
+                        size='xsmall'
                         onClick={onShowDescription}
                         icon={
                             <CompassIcon

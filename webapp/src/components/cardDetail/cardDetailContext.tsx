@@ -7,6 +7,7 @@ import {useIntl} from 'react-intl'
 import {Block} from '../../blocks/block'
 import {Card} from '../../blocks/card'
 import {ContentHandler} from '../content/contentRegistry'
+import octoClient from '../../octoClient'
 import mutator from '../../mutator'
 
 export type AddedBlock = {
@@ -50,14 +51,20 @@ export const CardDetailProvider = (props: CardDetailProps): ReactElement => {
         const typeName = handler.getDisplayText(intl)
         const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
         await mutator.performAsUndoGroup(async () => {
-            const insertedBlock = await mutator.insertBlock(block.boardId, block, description)
-            const contentOrder = card.fields.contentOrder.slice()
-            contentOrder.splice(index, 0, insertedBlock.id)
-            setLastAddedBlock({
-                id: insertedBlock.id,
-                autoAdded: auto,
-            })
-            await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, contentOrder, description)
+
+            const afterRedo = async (newBlock: Block) => {
+                const contentOrder = card.fields.contentOrder.slice()
+                contentOrder.splice(index, 0, newBlock.id)
+                await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
+            }
+
+            const beforeUndo = async () => {
+                const contentOrder = card.fields.contentOrder.slice()
+                await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
+            }
+
+            const insertedBlock = await mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
+            setLastAddedBlock({id: insertedBlock.id, autoAdded: auto})
         })
     }, [card.boardId, card.id, card.fields.contentOrder])
 

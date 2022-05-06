@@ -50,7 +50,7 @@ export const defaultTheme = {
     sidebarTextActiveBorder: '93, 137, 243',
     sidebarWhiteLogo: 'true',
 
-    link: '#0000ee',
+    link: '93, 137, 234',
     linkVisited: '#551a8b',
 
     propDefault: '#fff',

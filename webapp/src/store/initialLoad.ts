@@ -48,6 +48,11 @@ export const initialReadOnlyLoad = createAsyncThunk(
             client.getAllBlocks(boardId),
         ])
 
+        // if no board, read_token invalid
+        if (!board) {
+            throw new Error(ErrorId.InvalidReadOnlyBoard)
+        }
+        
         return {board, blocks}
     },
 )
