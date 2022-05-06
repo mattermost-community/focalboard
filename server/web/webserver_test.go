@@ -1,11 +1,13 @@
 package web
 
 import (
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-	"github.com/stretchr/testify/require"
 	"net/url"
 	"strconv"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 func Test_NewServer(t *testing.T) {
@@ -57,7 +59,6 @@ func Test_NewServer(t *testing.T) {
 	}
 
 	for _, test := range tests {
-
 		t.Run(test.name, func(t *testing.T) {
 			baseURL := ""
 			url, err := url.Parse(test.serverRoot)
@@ -83,7 +84,6 @@ func Test_NewServer(t *testing.T) {
 				expectedServerAddr := ":" + strconv.Itoa(test.port)
 				require.Equalf(t, expectedServerAddr, ws.Server.Addr, "server address not matching!")
 			}
-
 		})
 	}
 }
