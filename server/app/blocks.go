@@ -239,8 +239,6 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []model.Block) er
 				mlog.String("destinationFilePath", destinationFilePath),
 				mlog.Err(err),
 			)
-
-			return err
 		}
 		block.Fields["fileId"] = destFilename
 	}
