@@ -180,10 +180,6 @@ func (a *appAPI) GetMemberForBoard(boardID, userID string) (*model.BoardMember, 
 	return a.store.GetMemberForBoard(boardID, userID)
 }
 
-func (a *appAPI) SaveMember(bm *model.BoardMember) (*model.BoardMember, error) {
-	return a.store.SaveMember(bm)
-}
-
-func (a *appAPI) BroadcastMemberChange(teamID, boardID string, member *model.BoardMember) {
-	a.app.BroadcastMemberChange(teamID, boardID, member)
+func (a *appAPI) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, error) {
+	return a.app.AddMemberToBoard(member)
 }

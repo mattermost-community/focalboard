@@ -6,6 +6,5 @@ import "github.com/mattermost/focalboard/server/model"
 
 type AppAPI interface {
 	GetMemberForBoard(boardID, userID string) (*model.BoardMember, error)
-	SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
-	BroadcastMemberChange(teamID, boardID string, member *model.BoardMember)
+	AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, error)
 }

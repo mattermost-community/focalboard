@@ -193,7 +193,7 @@ func (b *Backend) deliverMentionNotification(username string, extract string, ev
 					BoardID:      evt.Board.ID,
 					SchemeEditor: true,
 				}
-				if member, err = b.appAPI.SaveMember(newBoardMember); err != nil {
+				if _, err = b.appAPI.AddMemberToBoard(newBoardMember); err != nil {
 					return "", fmt.Errorf("cannot add mentioned user %s to board %s: %w", mentionedUser.Id, evt.Board.ID, err)
 				}
 				b.logger.Debug("auto-added mentioned user to board",
@@ -201,7 +201,6 @@ func (b *Backend) deliverMentionNotification(username string, extract string, ev
 					mlog.String("board_id", evt.Board.ID),
 					mlog.String("board_type", string(evt.Board.Type)),
 				)
-				b.appAPI.BroadcastMemberChange(evt.TeamID, evt.Board.ID, member)
 			} else {
 				b.logger.Debug("skipping auto-add mentioned user to board; already a member",
 					mlog.String("user_id", mentionedUser.Id),
