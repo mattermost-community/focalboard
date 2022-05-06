@@ -86,13 +86,14 @@ func boardHistoryFields() []string {
 }
 
 var boardMemberFields = []string{
-	"board_id",
-	"user_id",
-	"roles",
-	"scheme_admin",
-	"scheme_editor",
-	"scheme_commenter",
-	"scheme_viewer",
+	"B.minimum_role",
+	"BM.board_id",
+	"BM.user_id",
+	"BM.roles",
+	"BM.scheme_admin",
+	"BM.scheme_editor",
+	"BM.scheme_commenter",
+	"BM.scheme_viewer",
 }
 
 func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
@@ -152,6 +153,7 @@ func (s *SQLStore) boardMembersFromRows(rows *sql.Rows) ([]*model.BoardMember, e
 		var boardMember model.BoardMember
 
 		err := rows.Scan(
+			&boardMember.MinimumRole,
 			&boardMember.BoardID,
 			&boardMember.UserID,
 			&boardMember.Roles,
@@ -542,9 +544,10 @@ func (s *SQLStore) deleteMember(db sq.BaseRunner, boardID, userID string) error 
 func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (*model.BoardMember, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardMemberFields...).
-		From(s.tablePrefix + "board_members").
-		Where(sq.Eq{"board_id": boardID}).
-		Where(sq.Eq{"user_id": userID})
+		From(s.tablePrefix + "board_members AS BM").
+		LeftJoin(s.tablePrefix + "boards AS B ON B.id=BM.board_id").
+		Where(sq.Eq{"BM.board_id": boardID}).
+		Where(sq.Eq{"BM.user_id": userID})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -568,8 +571,9 @@ func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (
 func (s *SQLStore) getMembersForUser(db sq.BaseRunner, userID string) ([]*model.BoardMember, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardMemberFields...).
-		From(s.tablePrefix + "board_members").
-		Where(sq.Eq{"user_id": userID})
+		From(s.tablePrefix + "board_members AS BM").
+		LeftJoin(s.tablePrefix + "boards AS B ON B.id=BM.board_id").
+		Where(sq.Eq{"BM.user_id": userID})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -589,8 +593,9 @@ func (s *SQLStore) getMembersForUser(db sq.BaseRunner, userID string) ([]*model.
 func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*model.BoardMember, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardMemberFields...).
-		From(s.tablePrefix + "board_members").
-		Where(sq.Eq{"board_id": boardID})
+		From(s.tablePrefix + "board_members AS BM").
+		LeftJoin(s.tablePrefix + "boards AS B ON B.id=BM.board_id").
+		Where(sq.Eq{"BM.board_id": boardID})
 
 	rows, err := query.Query()
 	if err != nil {

@@ -3202,3 +3202,167 @@ func TestPermissionsBoardArchiveImport(t *testing.T) {
 		runTestCases(t, ttCases, testData, clients)
 	})
 }
+
+func TestPermissionsMinimumRolesApplied(t *testing.T) {
+	ttCasesF := func(t *testing.T, th *TestHelper, minimumRole model.BoardRole, testData TestData) []TestCase {
+		counter := 0
+		newBlockJSON := func(boardID string) string {
+			counter++
+			return toJSON(t, []*model.Block{{
+				ID:       fmt.Sprintf("%d", counter),
+				Title:    "Board To Create",
+				BoardID:  boardID,
+				Type:     "card",
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+			}})
+		}
+		_, err := th.Server.App().PatchBoard(&model.BoardPatch{MinimumRole: &minimumRole}, testData.privateBoard.ID, userAdminID)
+		require.NoError(t, err)
+		_, err = th.Server.App().PatchBoard(&model.BoardPatch{MinimumRole: &minimumRole}, testData.publicBoard.ID, userAdminID)
+		require.NoError(t, err)
+		_, err = th.Server.App().PatchBoard(&model.BoardPatch{MinimumRole: &minimumRole}, testData.privateTemplate.ID, userAdminID)
+		require.NoError(t, err)
+		_, err = th.Server.App().PatchBoard(&model.BoardPatch{MinimumRole: &minimumRole}, testData.publicTemplate.ID, userAdminID)
+		require.NoError(t, err)
+
+		if minimumRole == "viewer" || minimumRole == "commenter" {
+			return []TestCase{
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userViewer, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userCommenter, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userViewer, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userCommenter, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userViewer, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userCommenter, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userViewer, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userCommenter, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAdmin, http.StatusOK, 1},
+			}
+		} else {
+			return []TestCase{
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userViewer, http.StatusOK, 1},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userCommenter, http.StatusOK, 1},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userViewer, http.StatusOK, 1},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userCommenter, http.StatusOK, 1},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userViewer, http.StatusOK, 1},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userCommenter, http.StatusOK, 1},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userViewer, http.StatusOK, 1},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userCommenter, http.StatusOK, 1},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAdmin, http.StatusOK, 1},
+			}
+		}
+	}
+
+	t.Run("plugin", func(t *testing.T) {
+		t.Run("minimum role viewer", func(t *testing.T) {
+			th := SetupTestHelperPluginMode(t)
+			defer th.TearDown()
+			clients := setupClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "viewer", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role commenter", func(t *testing.T) {
+			th := SetupTestHelperPluginMode(t)
+			defer th.TearDown()
+			clients := setupClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "commenter", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role editor", func(t *testing.T) {
+			th := SetupTestHelperPluginMode(t)
+			defer th.TearDown()
+			clients := setupClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "editor", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role admin", func(t *testing.T) {
+			th := SetupTestHelperPluginMode(t)
+			defer th.TearDown()
+			clients := setupClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "admin", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+	})
+	t.Run("local", func(t *testing.T) {
+		t.Run("minimum role viewer", func(t *testing.T) {
+			th := SetupTestHelperLocalMode(t)
+			defer th.TearDown()
+			clients := setupLocalClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "viewer", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role commenter", func(t *testing.T) {
+			th := SetupTestHelperLocalMode(t)
+			defer th.TearDown()
+			clients := setupLocalClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "commenter", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role editor", func(t *testing.T) {
+			th := SetupTestHelperLocalMode(t)
+			defer th.TearDown()
+			clients := setupLocalClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "editor", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role admin", func(t *testing.T) {
+			th := SetupTestHelperLocalMode(t)
+			defer th.TearDown()
+			clients := setupLocalClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "admin", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+	})
+}

@@ -157,6 +157,10 @@ type BoardMember struct {
 	// required: false
 	Roles string `json:"roles"`
 
+	// Minimum role because the board configuration
+	// required: false
+	MinimumRole string `json:"minimumRole"`
+
 	// Marks the user as an admin of the board
 	// required: true
 	SchemeAdmin bool `json:"schemeAdmin"`
