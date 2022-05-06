@@ -195,7 +195,7 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 			a.notifyBlockChanged(notify.Add, &blk, nil, userID)
 		}
 		for _, member := range members {
-			a.wsAdapter.BroadcastMemberChange(teamID, member.BoardID, member)
+			a.BroadcastMemberChange(teamID, member.BoardID, member)
 		}
 		return nil
 	})
@@ -233,7 +233,7 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 		a.wsAdapter.BroadcastBoardChange(newBoard.TeamID, newBoard)
 
 		if addMember {
-			a.wsAdapter.BroadcastMemberChange(newBoard.TeamID, newBoard.ID, member)
+			a.BroadcastMemberChange(newBoard.TeamID, newBoard.ID, member)
 		}
 		return nil
 	})
@@ -312,7 +312,7 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
-		a.wsAdapter.BroadcastMemberChange(board.TeamID, member.BoardID, member)
+		a.BroadcastMemberChange(board.TeamID, member.BoardID, member)
 		return nil
 	})
 
@@ -354,7 +354,7 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
-		a.wsAdapter.BroadcastMemberChange(board.TeamID, member.BoardID, member)
+		a.BroadcastMemberChange(board.TeamID, member.BoardID, member)
 		return nil
 	})
 
@@ -452,4 +452,8 @@ func (a *App) UndeleteBoard(boardID string, modifiedBy string) error {
 	})
 
 	return nil
+}
+
+func (a *App) BroadcastMemberChange(teamID, boardID string, member *model.BoardMember) {
+	a.wsAdapter.BroadcastMemberChange(teamID, boardID, member)
 }

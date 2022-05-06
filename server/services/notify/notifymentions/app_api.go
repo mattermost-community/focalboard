@@ -4,7 +4,8 @@ package notifymentions
 
 import "github.com/mattermost/focalboard/server/model"
 
-type Store interface {
+type AppAPI interface {
 	GetMemberForBoard(boardID, userID string) (*model.BoardMember, error)
 	SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
+	BroadcastMemberChange(teamID, boardID string, member *model.BoardMember)
 }

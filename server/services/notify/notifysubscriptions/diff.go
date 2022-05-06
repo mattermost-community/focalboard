@@ -49,7 +49,7 @@ type diffGenerator struct {
 	board *model.Board
 	card  *model.Block
 
-	store        Store
+	store        AppAPI
 	hint         *model.NotificationHint
 	lastNotifyAt int64
 	logger       *mlog.Logger
