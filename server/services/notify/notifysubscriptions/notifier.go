@@ -243,7 +243,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 				mlog.String("subscriber_type", string(sub.SubscriberType)),
 			)
 
-			if err = n.delivery.SubscriptionDeliverSlackAttachments(sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
+			if err = n.delivery.SubscriptionDeliverSlackAttachments(board.TeamID, sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
 				merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
 					sub.SubscriberID, sub.SubscriberType, err))
 			}
