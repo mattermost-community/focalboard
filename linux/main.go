@@ -61,7 +61,8 @@ func runServer(port int) (*server.Server, error) {
 		AuthMode:                "native",
 	}
 
-	db, err := server.NewStore(config, logger)
+	singleUser := len(sessionToken) > 0
+	db, err := server.NewStore(config, singleUser, logger)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER STORE", err)
 		return nil, err

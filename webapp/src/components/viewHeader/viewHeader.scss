@@ -5,7 +5,7 @@
 
     border-bottom: solid 1px rgba(var(--center-channel-color-rgb), 0.16);
     margin: 16px 0 0;
-    padding: 12px 8px;
+    padding: 8px 0;
     color: rgba(var(--center-channel-color-rgb), 0.64);
     align-items: center;
 
@@ -46,8 +46,6 @@
         display: flex;
         flex-direction: row;
         position: relative;
-        padding: 6px 8px;
-        margin: -8px;
 
         .MenuWrapper {
             display: flex;

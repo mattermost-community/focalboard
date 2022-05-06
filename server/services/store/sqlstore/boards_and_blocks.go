@@ -141,6 +141,16 @@ func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID strin
 	if err != nil {
 		return nil, nil, err
 	}
+
+	// todo: server localization
+	if asTemplate == board.IsTemplate {
+		// board -> board or template -> template
+		board.Title += " copy"
+	} else if asTemplate {
+		// template from board
+		board.Title = "New board template"
+	}
+
 	// make new board private
 	board.Type = "P"
 	board.IsTemplate = asTemplate

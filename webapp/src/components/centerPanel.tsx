@@ -375,7 +375,6 @@ const CenterPanel = (props: Props) => {
                     <div className='shareButtonWrapper'>
                         {showShareButton &&
                         <ShareBoardButton
-                            boardId={props.board.id}
                             enableSharedBoards={props.clientConfig?.enablePublicSharedBoards || false}
                         />
                         }
