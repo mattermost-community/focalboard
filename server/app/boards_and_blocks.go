@@ -40,7 +40,7 @@ func (a *App) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string, a
 
 	if addMember {
 		for _, member := range members {
-			a.BroadcastMemberChange(teamID, member.BoardID, member)
+			a.wsAdapter.BroadcastMemberChange(teamID, member.BoardID, member)
 		}
 	}
 
