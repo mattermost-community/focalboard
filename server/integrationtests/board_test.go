@@ -1962,7 +1962,7 @@ func TestJoinBoard(t *testing.T) {
 		require.Equal(t, teamID, board.TeamID)
 		require.Equal(t, me.ID, board.CreatedBy)
 		require.Equal(t, me.ID, board.ModifiedBy)
-		require.Equal(t, model.BoardRoleNone, board.DefaultRole)
+		require.Equal(t, model.BoardRoleNone, board.MinimumRole)
 
 		member, resp := th.Client2.JoinBoard(board.ID)
 		th.CheckOK(resp)
@@ -1975,7 +1975,7 @@ func TestJoinBoard(t *testing.T) {
 		t.Log(string(s))
 	})
 
-	t.Run("create and join public board should match the defaultRole in the membership", func(t *testing.T) {
+	t.Run("create and join public board should match the minimumRole in the membership", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
 
@@ -1987,7 +1987,7 @@ func TestJoinBoard(t *testing.T) {
 			Title:       title,
 			Type:        model.BoardTypeOpen,
 			TeamID:      teamID,
-			DefaultRole: model.BoardRoleCommenter,
+			MinimumRole: model.BoardRoleCommenter,
 		}
 		board, resp := th.Client.CreateBoard(newBoard)
 		th.CheckOK(resp)
@@ -2015,7 +2015,7 @@ func TestJoinBoard(t *testing.T) {
 		t.Log(string(s))
 	})
 
-	t.Run("create and join public board should match editor role in the membership when DefaultRole is empty", func(t *testing.T) {
+	t.Run("create and join public board should match editor role in the membership when MinimumRole is empty", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
 

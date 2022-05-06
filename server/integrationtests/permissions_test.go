@@ -609,8 +609,8 @@ func TestPermissionsPatchBoardType(t *testing.T) {
 	})
 }
 
-func TestPermissionsPatchBoardDefaultRole(t *testing.T) {
-	patch := toJSON(t, map[string]model.BoardRole{"defaultRole": model.BoardRoleViewer})
+func TestPermissionsPatchBoardMinimumRole(t *testing.T) {
+	patch := toJSON(t, map[string]model.BoardRole{"minimumRole": model.BoardRoleViewer})
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userAnon, http.StatusUnauthorized, 0},
 		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userNoTeamMember, http.StatusForbidden, 0},

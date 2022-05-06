@@ -20,7 +20,7 @@ type Board = {
     createdBy: string
     modifiedBy: string
     type: BoardTypes
-    defaultRole: string
+    minimumRole: string
 
     title: string
     description: string
@@ -38,7 +38,7 @@ type Board = {
 
 type BoardPatch = {
     type?: BoardTypes
-    defaultRole?: string
+    minimumRole?: string
     title?: string
     description?: string
     icon?: string
@@ -122,7 +122,7 @@ function createBoard(board?: Board): Board {
         createdBy: board?.createdBy || '',
         modifiedBy: board?.modifiedBy || '',
         type: board?.type || BoardTypePrivate,
-        defaultRole: board?.defaultRole || '',
+        minimumRole: board?.minimumRole || '',
         title: board?.title || '',
         description: board?.description || '',
         icon: board?.icon || '',

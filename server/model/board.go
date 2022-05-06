@@ -49,9 +49,9 @@ type Board struct {
 	// required: true
 	Type BoardType `json:"type"`
 
-	// The default role applied when somebody joins the board
+	// The minimum role applied when somebody joins the board
 	// required: true
-	DefaultRole BoardRole `json:"defaultRole"`
+	MinimumRole BoardRole `json:"minimumRole"`
 
 	// The title of the board
 	// required: false
@@ -105,9 +105,9 @@ type BoardPatch struct {
 	// required: false
 	Type *BoardType `json:"type"`
 
-	// The default role applied when somebody joins the board
+	// The minimum role applied when somebody joins the board
 	// required: false
-	DefaultRole *BoardRole `json:"defaultRole"`
+	MinimumRole *BoardRole `json:"minimumRole"`
 
 	// The title of the board
 	// required: false
@@ -238,8 +238,8 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 		board.Title = *p.Title
 	}
 
-	if p.DefaultRole != nil {
-		board.DefaultRole = *p.DefaultRole
+	if p.MinimumRole != nil {
+		board.MinimumRole = *p.MinimumRole
 	}
 
 	if p.Description != nil {
@@ -317,7 +317,7 @@ func IsBoardTypeValid(t BoardType) bool {
 	return t == BoardTypeOpen || t == BoardTypePrivate
 }
 
-func IsBoardDefaultRoleValid(r BoardRole) bool {
+func IsBoardMinimumRoleValid(r BoardRole) bool {
 	return r == BoardRoleNone || r == BoardRoleAdmin || r == BoardRoleEditor || r == BoardRoleCommenter || r == BoardRoleViewer
 }
 
@@ -326,8 +326,8 @@ func (p *BoardPatch) IsValid() error {
 		return InvalidBoardErr{"invalid-board-type"}
 	}
 
-	if p.DefaultRole != nil && !IsBoardDefaultRoleValid(*p.DefaultRole) {
-		return InvalidBoardErr{"invalid-board-default-role"}
+	if p.MinimumRole != nil && !IsBoardMinimumRoleValid(*p.MinimumRole) {
+		return InvalidBoardErr{"invalid-board-minimum-role"}
 	}
 
 	return nil
@@ -350,8 +350,8 @@ func (b *Board) IsValid() error {
 		return InvalidBoardErr{"invalid-board-type"}
 	}
 
-	if !IsBoardDefaultRoleValid(b.DefaultRole) {
-		return InvalidBoardErr{"invalid-board-default-role"}
+	if !IsBoardMinimumRoleValid(b.MinimumRole) {
+		return InvalidBoardErr{"invalid-board-minimum-role"}
 	}
 
 	return nil
