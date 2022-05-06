@@ -129,23 +129,27 @@ type TestData struct {
 }
 
 func setupData(t *testing.T, th *TestHelper) TestData {
-	customTemplate1, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 1", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypeOpen}, userAdminID, true)
+	customTemplate1, err := th.Server.App().CreateBoard(
+		&model.Board{Title: "Custom template 1", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypeOpen, MinimumRole: "viewer"},
+		userAdminID,
+		true,
+	)
 	require.NoError(t, err)
 	err = th.Server.App().InsertBlock(model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, userAdminID)
 	require.NoError(t, err)
 	customTemplate2, err := th.Server.App().CreateBoard(
-		&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate},
+		&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate, MinimumRole: "viewer"},
 		userAdminID,
 		true)
 	require.NoError(t, err)
 	err = th.Server.App().InsertBlock(model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, userAdminID)
 	require.NoError(t, err)
 
-	board1, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 1", TeamID: "test-team", Type: model.BoardTypeOpen}, userAdminID, true)
+	board1, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 1", TeamID: "test-team", Type: model.BoardTypeOpen, MinimumRole: "viewer"}, userAdminID, true)
 	require.NoError(t, err)
 	err = th.Server.App().InsertBlock(model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID}, userAdminID)
 	require.NoError(t, err)
-	board2, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 2", TeamID: "test-team", Type: model.BoardTypePrivate}, userAdminID, true)
+	board2, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 2", TeamID: "test-team", Type: model.BoardTypePrivate, MinimumRole: "viewer"}, userAdminID, true)
 	require.NoError(t, err)
 
 	rBoard2, err := th.Server.App().GetBoard(board2.ID)
