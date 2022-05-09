@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"net/url"
 
 	"github.com/mattermost/mattermost-server/v6/plugin"
 
@@ -21,9 +22,11 @@ type SQLStore struct {
 	tablePrefix      string
 	connectionString string
 	isPlugin         bool
+	isSingleUser     bool
 	logger           *mlog.Logger
 	NewMutexFn       MutexFactory
 	pluginAPI        *plugin.API
+	isBinaryParam    bool
 }
 
 // MutexFactory is used by the store in plugin mode to generate
@@ -45,17 +48,39 @@ func New(params Params) (*SQLStore, error) {
 		connectionString: params.ConnectionString,
 		logger:           params.Logger,
 		isPlugin:         params.IsPlugin,
+		isSingleUser:     params.IsSingleUser,
 		NewMutexFn:       params.NewMutexFn,
 		pluginAPI:        params.PluginAPI,
 	}
 
-	err := store.Migrate()
+	var err error
+	store.isBinaryParam, err = store.computeBinaryParam()
+	if err != nil {
+		params.Logger.Error(`Cannot compute binary parameter`, mlog.Err(err))
+		return nil, err
+	}
+
+	err = store.Migrate()
 	if err != nil {
 		params.Logger.Error(`Table creation / migration failed`, mlog.Err(err))
 
 		return nil, err
 	}
 	return store, nil
+}
+
+// computeBinaryParam returns whether the data source uses binary_parameters
+// when using Postgres.
+func (s *SQLStore) computeBinaryParam() (bool, error) {
+	if s.dbType != model.PostgresDBType {
+		return false, nil
+	}
+
+	url, err := url.Parse(s.connectionString)
+	if err != nil {
+		return false, err
+	}
+	return url.Query().Get("binary_parameters") == "yes", nil
 }
 
 // Shutdown close the connection with the store.

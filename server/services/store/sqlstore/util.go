@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -23,8 +24,21 @@ func (s *SQLStore) IsErrNotFound(err error) bool {
 	return model.IsErrNotFound(err)
 }
 
+func (s *SQLStore) MarshalJSONB(data interface{}) ([]byte, error) {
+	b, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+
+	if s.isBinaryParam {
+		b = append([]byte{0x01}, b...)
+	}
+
+	return b, nil
+}
+
 func PrepareNewTestDatabase() (dbType string, connectionString string, err error) {
-	dbType = strings.TrimSpace(os.Getenv("FB_STORE_TEST_DB_TYPE"))
+	dbType = strings.TrimSpace(os.Getenv("FOCALBOARD_STORE_TEST_DB_TYPE"))
 	if dbType == "" {
 		dbType = model.SqliteDBType
 	}
@@ -39,7 +53,7 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 		}
 		connectionString = file.Name() + "?_busy_timeout=5000"
 		_ = file.Close()
-	} else if port := strings.TrimSpace(os.Getenv("FB_STORE_TEST_DOCKER_PORT")); port != "" {
+	} else if port := strings.TrimSpace(os.Getenv("FOCALBOARD_STORE_TEST_DOCKER_PORT")); port != "" {
 		// docker unit tests take priority over any DSN env vars
 		var template string
 		switch dbType {
@@ -83,7 +97,7 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 		connectionString = fmt.Sprintf(template, "mmuser", port, dbName)
 	} else {
 		// mysql or postgres need a DSN (connection string)
-		connectionString = strings.TrimSpace(os.Getenv("FB_STORE_TEST_CONN_STRING"))
+		connectionString = strings.TrimSpace(os.Getenv("FOCALBOARD_STORE_TEST_CONN_STRING"))
 	}
 
 	return dbType, connectionString, nil

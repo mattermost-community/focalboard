@@ -21,7 +21,7 @@ exports[`components/table/TableRows should match snapshot, fire events 1`] = `
           i
         </div>
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="Untitled"
           spellcheck="true"
           title="title"

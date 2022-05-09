@@ -1,3 +1,6 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package main
 
 import (
@@ -6,9 +9,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/mattermost/mattermost-server/v6/model"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestServeHTTP(t *testing.T) {
@@ -62,11 +64,17 @@ func TestSetConfiguration(t *testing.T) {
 		MaxFileSize: model.NewInt64(1024 * 1024),
 	}
 
+	days := 365
+	baseDataRetentionSettings := &model.DataRetentionSettings{
+		BoardsRetentionDays: &days,
+	}
+
 	baseConfig := &model.Config{
-		FeatureFlags:   baseFeatureFlags,
-		PluginSettings: *basePluginSettings,
-		SqlSettings:    *baseSQLSettings,
-		FileSettings:   *baseFileSettings,
+		FeatureFlags:          baseFeatureFlags,
+		PluginSettings:        *basePluginSettings,
+		SqlSettings:           *baseSQLSettings,
+		FileSettings:          *baseFileSettings,
+		DataRetentionSettings: *baseDataRetentionSettings,
 	}
 
 	t.Run("test enable telemetry", func(t *testing.T) {

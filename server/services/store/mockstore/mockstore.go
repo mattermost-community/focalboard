@@ -1114,6 +1114,21 @@ func (mr *MockStoreMockRecorder) RemoveDefaultTemplates(arg0 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveDefaultTemplates", reflect.TypeOf((*MockStore)(nil).RemoveDefaultTemplates), arg0)
 }
 
+// RunDataRetention mocks base method.
+func (m *MockStore) RunDataRetention(arg0, arg1 int64) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RunDataRetention", arg0, arg1)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RunDataRetention indicates an expected call of RunDataRetention.
+func (mr *MockStoreMockRecorder) RunDataRetention(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunDataRetention", reflect.TypeOf((*MockStore)(nil).RunDataRetention), arg0, arg1)
+}
+
 // SaveMember mocks base method.
 func (m *MockStore) SaveMember(arg0 *model.BoardMember) (*model.BoardMember, error) {
 	m.ctrl.T.Helper()

@@ -20,8 +20,8 @@ const manifestStr = `
   "support_url": "https://github.com/mattermost/focalboard/issues",
   "release_notes_url": "https://github.com/mattermost/focalboard/releases",
   "icon_path": "assets/starter-template-icon.svg",
-  "version": "0.16.0",
-  "min_server_version": "6.0.0",
+  "version": "0.17.0",
+  "min_server_version": "6.7.0",
   "server": {
     "executables": {
       "darwin-amd64": "server/dist/plugin-darwin-amd64",

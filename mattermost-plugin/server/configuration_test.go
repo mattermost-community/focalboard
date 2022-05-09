@@ -1,3 +1,6 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package main
 
 import (
@@ -36,7 +39,6 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 func newTestServer() *server.Server {
 	return integrationtests.NewTestServerPluginMode()
 }
-
 func TestConfigurationNullConfiguration(t *testing.T) {
 	plugin := &Plugin{}
 	assert.NotNil(t, plugin.getConfiguration())
@@ -56,10 +58,15 @@ func TestOnConfigurationChange(t *testing.T) {
 		Directory: &stringRef,
 		Plugins:   basePlugins,
 	}
+	intRef := 365
+	baseDataRetentionSettings := &serverModel.DataRetentionSettings{
+		BoardsRetentionDays: &intRef,
+	}
 
 	baseConfig := &serverModel.Config{
-		FeatureFlags:   baseFeatureFlags,
-		PluginSettings: *basePluginSettings,
+		FeatureFlags:          baseFeatureFlags,
+		PluginSettings:        *basePluginSettings,
+		DataRetentionSettings: *baseDataRetentionSettings,
 	}
 
 	t.Run("Test Load Plugin Success", func(t *testing.T) {
