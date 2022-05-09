@@ -4,18 +4,16 @@ import React from 'react'
 
 import {useIntl, FormattedMessage} from 'react-intl'
 
-import {getCloudMessageCanceled} from '../../store/users'
 import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
 import Button from '../../widgets/buttons/button'
 
 import CloseIcon from '../../widgets/icons/close'
 
-
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import octoClient from '../../octoClient'
 import {IUser, UserConfigPatch} from '../../user'
-import {getMe, patchProps} from '../../store/users'
+import {getMe, patchProps, getCloudMessageCanceled} from '../../store/users'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
@@ -23,7 +21,6 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../teleme
 import './cloudMessage.scss'
 const signupURL = 'http://mattermost.com/pricing'
 const displayAfter = (1000 * 60 * 60 * 24) //24 hours
-
 
 const CloudMessage = React.memo(() => {
     const intl = useIntl()
@@ -36,7 +33,7 @@ const CloudMessage = React.memo(() => {
         defaultMessage: 'Close dialog',
     })
 
-    const onClose = async() => {
+    const onClose = async () => {
         if (me) {
             const patch: UserConfigPatch = {
                 updatedFields: {
@@ -51,11 +48,11 @@ const CloudMessage = React.memo(() => {
         }
     }
 
-    if(me){
+    if (me) {
         const installTime = Date.now() - me.create_at
-        if(Utils.isFocalboardPlugin() || cloudMessageCanceled || installTime < displayAfter){
+        if (Utils.isFocalboardPlugin() || cloudMessageCanceled || installTime < displayAfter) {
             return null
-        }    
+        }
     }
 
     return (
@@ -67,7 +64,7 @@ const CloudMessage = React.memo(() => {
                 />
                 <FormattedMessage
                     id='CloudMessage.cloud-server'
-                    defaultMessage="Get your own free cloud server."
+                    defaultMessage='Get your own free cloud server.'
                 />
 
                 <Button
