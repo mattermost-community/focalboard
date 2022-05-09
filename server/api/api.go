@@ -3180,12 +3180,6 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("teamID", teamID)
 
-	userTeams, err := a.app.GetTeamsForUser(userID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
 	// retrieve boards list
 	boards, err := a.app.SearchBoardsForUser(term, userID)
 	if err != nil {
@@ -3193,24 +3187,12 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	teamIDs := map[string]bool{}
-	for _, userTeam := range userTeams {
-		teamIDs[userTeam.ID] = true
-	}
-
-	resultBoards := []*model.Board{}
-	for _, board := range boards {
-		if teamIDs[board.TeamID] {
-			resultBoards = append(resultBoards, board)
-		}
-	}
-
 	a.logger.Debug("SearchBoards",
 		mlog.String("teamID", teamID),
-		mlog.Int("boardsCount", len(resultBoards)),
+		mlog.Int("boardsCount", len(boards)),
 	)
 
-	data, err := json.Marshal(resultBoards)
+	data, err := json.Marshal(boards)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -3219,7 +3201,7 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	// response
 	jsonBytesResponse(w, http.StatusOK, data)
 
-	auditRec.AddMeta("boardsCount", len(resultBoards))
+	auditRec.AddMeta("boardsCount", len(boards))
 	auditRec.Success()
 }
 

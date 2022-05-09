@@ -490,7 +490,7 @@ func TestSearchBoards(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
 
-		teamID := "0"
+		teamID := testTeamID
 		user1 := th.GetUser1()
 
 		board1 := &model.Board{
@@ -543,25 +543,25 @@ func TestSearchBoards(t *testing.T) {
 				Name:        "should return all boards where user1 is member or that are public",
 				Client:      th.Client,
 				Term:        "board",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID, board5.ID},
 			},
 			{
 				Name:        "matching a full word",
 				Client:      th.Client,
 				Term:        "admin",
-				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID, board5.ID},
 			},
 			{
 				Name:        "matching part of the word",
 				Client:      th.Client,
 				Term:        "ubli",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, board5.ID},
 			},
 			{
 				Name:        "case insensitive",
 				Client:      th.Client,
 				Term:        "UBLI",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, board5.ID},
 			},
 			{
 				Name:        "user2 can only see the public boards, as he's not a member of any",
