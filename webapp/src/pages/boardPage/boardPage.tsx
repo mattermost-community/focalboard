@@ -60,7 +60,6 @@ const BoardPage = (props: Props): JSX.Element => {
             if (!me) {
                 return
             }
-
             dispatch(fetchUserBlockSubscriptions(me!.id))
         }, [me?.id])
     }

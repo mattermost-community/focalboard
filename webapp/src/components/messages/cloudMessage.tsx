@@ -19,7 +19,7 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
 
 import './cloudMessage.scss'
-const signupURL = 'http://mattermost.com/pricing'
+const signupURL = 'https://mattermost.com/pricing'
 const displayAfter = (1000 * 60 * 60 * 24) //24 hours
 
 const CloudMessage = React.memo(() => {
@@ -48,9 +48,13 @@ const CloudMessage = React.memo(() => {
         }
     }
 
+    if (Utils.isFocalboardPlugin() || cloudMessageCanceled) {
+        return null
+    }
+
     if (me) {
         const installTime = Date.now() - me.create_at
-        if (Utils.isFocalboardPlugin() || cloudMessageCanceled || installTime < displayAfter) {
+        if (installTime < displayAfter) {
             return null
         }
     }
