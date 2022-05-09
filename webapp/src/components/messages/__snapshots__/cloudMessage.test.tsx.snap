@@ -10,15 +10,18 @@ exports[`components/messages/CloudMessage not plugin mode, show message, close m
     <div
       class="banner"
     >
+      <i
+        class="CompassIcon icon-information-outline CompassIcon"
+      />
       Get your own free cloud server.
-      <a
-        class="link"
-        href="https://customers.mattermost.com/cloud/signup"
-        rel="noreferrer"
-        target="_blank"
+      <button
+        title="Learn more"
+        type="button"
       >
-        [Learn more].
-      </a>
+        <span>
+          Learn more
+        </span>
+      </button>
     </div>
     <button
       aria-label="Close dialog"
