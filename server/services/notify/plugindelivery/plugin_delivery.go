@@ -4,8 +4,6 @@
 package plugindelivery
 
 import (
-	"github.com/mattermost/focalboard/server/services/notify"
-
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -56,9 +54,9 @@ func New(botID string, serverRoot string, api PluginAPI) *PluginDelivery {
 	}
 }
 
-func (pd *PluginDelivery) getTeamID(evt notify.BlockChangeEvent) (string, error) {
+func (pd *PluginDelivery) GetTeamIDForWorkspace(workspaceID string) (string, error) {
 	// for now, the workspace ID is also the channel ID
-	channel, err := pd.api.GetChannelByID(evt.Workspace)
+	channel, err := pd.api.GetChannelByID(workspaceID)
 	if err != nil {
 		return "", err
 	}

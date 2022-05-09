@@ -14,4 +14,6 @@ import (
 type SubscriptionDelivery interface {
 	SubscriptionDeliverSlackAttachments(workspaceID string, teamID string, subscriberID string, subscriberType model.SubscriberType,
 		attachments []*mm_model.SlackAttachment) error
+
+	GetTeamIDForWorkspace(workspaceID string) (string, error)
 }

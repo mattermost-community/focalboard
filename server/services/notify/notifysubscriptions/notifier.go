@@ -167,6 +167,12 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		return fmt.Errorf("could not get board & card for block %s: %w", hint.BlockID, err)
 	}
 
+	// need the team ID
+	teamID, err := n.delivery.GetTeamIDForWorkspace(c.WorkspaceID)
+	if err != nil {
+		return fmt.Errorf("could not get team ID for workspace %s: %w", c.WorkspaceID, err)
+	}
+
 	n.logger.Debug("notifySubscribers - subscribers",
 		mlog.Any("hint", hint),
 		mlog.String("board_id", board.ID),
@@ -236,7 +242,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 				mlog.String("subscriber_type", string(sub.SubscriberType)),
 			)
 
-			if err = n.delivery.SubscriptionDeliverSlackAttachments(hint.WorkspaceID, board.TeamID, sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
+			if err = n.delivery.SubscriptionDeliverSlackAttachments(hint.WorkspaceID, teamID, sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
 				merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
 					sub.SubscriberID, sub.SubscriberType, err))
 			}

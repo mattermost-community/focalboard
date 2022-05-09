@@ -17,8 +17,8 @@ var (
 )
 
 // SubscriptionDeliverSlashAttachments notifies a user that changes were made to a block they are subscribed to.
-func (pd *PluginDelivery) SubscriptionDeliverSlackAttachments(workspaceID string, teamID string, subscriberID string, subscriptionType model.SubscriberType,
-	attachments []*mm_model.SlackAttachment) error {
+func (pd *PluginDelivery) SubscriptionDeliverSlackAttachments(workspaceID string, teamID string, subscriberID string,
+	subscriptionType model.SubscriberType, attachments []*mm_model.SlackAttachment) error {
 	// check subscriber is member of channel
 	_, err := pd.api.GetChannelMember(workspaceID, subscriberID)
 	if err != nil {
