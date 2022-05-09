@@ -1,0 +1,30 @@
+.CloudMessage {
+    background-color: var(--sidebar-text-active-border-rgb);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+
+    div {
+        width: 100%;
+    }
+
+    > .banner {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        color: #fff;
+
+        .Button {
+            margin-left: 10px;
+            background-color: rgba(255, 255, 255, 0.16);
+        }
+    }
+
+    .IconButton {
+        float: right;
+        color: #fff;
+    }
+}
