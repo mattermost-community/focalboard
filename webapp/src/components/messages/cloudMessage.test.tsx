@@ -4,7 +4,6 @@
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 
-
 import {render, screen} from '@testing-library/react'
 import {mocked} from 'jest-mock'
 import userEvent from '@testing-library/user-event'
@@ -30,29 +29,27 @@ describe('components/messages/CloudMessage', () => {
         jest.clearAllMocks()
     })
 
-    console.log("Cloud message test")
     const mockedUtils = mocked(Utils, true)
     const mockStore = configureStore([])
 
     test('plugin mode, no display', () => {
-        console.log("Cloud message test - no display")
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)
 
-        const me: IUser = { 
+        const me: IUser = {
             id: 'user-id-1',
             username: 'username_1',
             email: '',
             props: {},
             create_at: 0,
             update_at: 0,
-            is_bot: false
+            is_bot: false,
         }
         const state = {
             users: {
                 me,
             },
         }
-    
+
         const store = mockStore(state)
 
         const component = wrapIntl(
@@ -66,18 +63,16 @@ describe('components/messages/CloudMessage', () => {
     })
 
     test('not plugin mode, close message', () => {
-        console.log("Cloud message test - property set")
-
-        const me: IUser = { 
+        const me: IUser = {
             id: 'user-id-1',
             username: 'username_1',
             email: '',
             props: {
-                focalboard_cloudMessageCanceled: 'true'
+                focalboard_cloudMessageCanceled: 'true',
             },
             create_at: 0,
             update_at: 0,
-            is_bot: false
+            is_bot: false,
         }
         const state = {
             users: {
@@ -98,16 +93,14 @@ describe('components/messages/CloudMessage', () => {
     })
 
     test('not plugin mode, show message, close message', () => {
-        console.log("Cloud message test - propertynot set")
-
-        const me: IUser = { 
+        const me: IUser = {
             id: 'user-id-1',
             username: 'username_1',
             email: '',
             props: {},
             create_at: 0,
             update_at: 0,
-            is_bot: false
+            is_bot: false,
         }
         const state = {
             users: {
@@ -130,7 +123,7 @@ describe('components/messages/CloudMessage', () => {
         userEvent.click(buttonElement)
         expect(mockedOctoClient.patchUserConfig).toBeCalledWith('user-id-1', {
             updatedFields: {
-                'focalboard_cloudMessageCanceled': 'true',
+                focalboard_cloudMessageCanceled: 'true',
             },
         })
     })
