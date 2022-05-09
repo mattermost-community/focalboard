@@ -437,9 +437,10 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model
 		Distinct().
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
-		LeftJoin("TeamMembers as tm on tm.team_id=b.team_id").
+		LeftJoin("TeamMembers as tm on tm.teamid=b.team_id").
 		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Eq{"tm.userID": userID}).
+		Where(sq.Eq{"tm.deleteAt": 0}).
 		Where(sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
 			sq.And{
