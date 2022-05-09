@@ -7,13 +7,21 @@ import {useIntl, FormattedMessage} from 'react-intl'
 import {getCloudMessageCanceled} from '../../store/users'
 import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
+import Button from '../../widgets/buttons/button'
+
 import CloseIcon from '../../widgets/icons/close'
+
+
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import octoClient from '../../octoClient'
 import {IUser, UserConfigPatch} from '../../user'
 import {getMe, patchProps} from '../../store/users'
 
+import CompassIcon from '../../widgets/icons/compassIcon'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
+
 import './cloudMessage.scss'
+const signupURL = 'https://customers.mattermost.com/cloud/signup'
 
 const CloudMessage = React.memo(() => {
     const intl = useIntl()
@@ -48,21 +56,30 @@ const CloudMessage = React.memo(() => {
     return (
         <div className='CloudMessage'>
             <div className='banner'>
+                <CompassIcon
+                    icon='information-outline'
+                    className='CompassIcon'
+                />
                 <FormattedMessage
                     id='CloudMessage.cloud-server'
                     defaultMessage="Get your own free cloud server."
                 />
-                <a
-                    className='link'
-                    href={'https://customers.mattermost.com/cloud/signup'}
-                    target='_blank'
-                    rel='noreferrer'
+
+                <Button
+                    title='Learn more'
+                    size='xsmall'
+                    emphasis='primary'
+                    onClick={() => {
+                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CloudMoreInfo)
+                        window.open(signupURL)
+                    }}
                 >
                     <FormattedMessage
                         id='cloudMessage.learn-more'
-                        defaultMessage='[Learn more].'
+                        defaultMessage='Learn more'
                     />
-                </a>
+                </Button>
+
             </div>
 
             <IconButton
