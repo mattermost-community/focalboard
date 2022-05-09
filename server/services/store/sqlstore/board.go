@@ -86,7 +86,7 @@ func boardHistoryFields() []string {
 }
 
 var boardMemberFields = []string{
-	"B.minimum_role",
+	"COALESCE(B.minimum_role, '')",
 	"BM.board_id",
 	"BM.user_id",
 	"BM.roles",
