@@ -90,8 +90,6 @@ function isLastAdmin(members: BoardMember[]) {
     return true
 }
 
-const imageURLForUser = (window as any).Components?.imageURLForUser
-
 export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopiedPublic, setWasCopiedPublic] = useState(false)
     const [wasCopiedInternal, setWasCopiedInternal] = useState(false)
