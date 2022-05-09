@@ -146,11 +146,8 @@ export const getCloudMessageCanceled = createSelector(
     getMe,
     (me): boolean => {
         if (!me) {
-            console.log("NO ME")
             return false
         }
-        
-        console.log(me)
         return Boolean(me.props?.focalboard_cloudMessageCanceled)
     },
 )
