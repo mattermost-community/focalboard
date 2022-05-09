@@ -1,0 +1,33 @@
+.CloudMessage {
+    background-color: rgba(230, 220, 192, 0.9);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+
+    div {
+        width: 100%;
+    }
+
+    > .banner {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        color: #222;
+
+        a {
+            float: left;
+        }
+    }
+
+    > .banner.error {
+        background-color: rgba(230, 192, 192, 0.9);
+    }
+
+    .IconButton {
+        float: right;
+    }
+}
