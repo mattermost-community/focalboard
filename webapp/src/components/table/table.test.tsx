@@ -3,9 +3,10 @@
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {render} from '@testing-library/react'
+import {render, screen, waitFor} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 import '@testing-library/jest-dom'
+import userEvents from '@testing-library/user-event'
 
 import 'isomorphic-fetch'
 
@@ -531,5 +532,66 @@ describe('components/table/Table extended', () => {
 
         const {container} = render(component)
         expect(container).toMatchSnapshot()
+    })
+
+    test('should delete snapshot', async () => {
+        const board = TestBlockFactory.createBoard()
+
+        const modifiedById = Utils.createGuid(IDType.User)
+        board.cardProperties.push({
+            id: modifiedById,
+            name: 'Last Modified By',
+            type: 'updatedBy',
+            options: [],
+        })
+        const card1 = TestBlockFactory.createCard(board)
+        card1.title = 'card1'
+        const card2 = TestBlockFactory.createCard(board)
+        card2.title = 'card2'
+        const view = TestBlockFactory.createBoardView(board)
+        view.fields.viewType = 'table'
+        view.fields.groupById = undefined
+        view.fields.visiblePropertyIds = ['property1', 'property2', modifiedById]
+        const mockStore = configureStore([])
+        const store = mockStore({
+            ...state,
+            cards: {
+                cards: {
+                    [card1.id]: card1,
+                    [card2.id]: card2,
+                },
+            },
+        })
+
+        const component = wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <Table
+                    board={board}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card1, card2]}
+                    views={[view]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    cardIdToFocusOnRender=''
+                    showCard={jest.fn()}
+                    addCard={jest.fn()}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
+        )
+
+        const {getByTitle, getByRole, getAllByTitle} = render(component)
+        const card1Name = getByTitle(card1.title)
+        userEvents.hover(card1Name)
+        const menuBtn = getAllByTitle('MenuBtn')
+        userEvents.click(menuBtn[0])
+        const deleteBtn = getByRole('button', {name: 'Delete'})
+        userEvents.click(deleteBtn)
+        const dailogDeleteBtn = screen.getByRole('button', {name: 'Delete'})
+        userEvents.click(dailogDeleteBtn)
+        await waitFor(() => {
+            expect(global.fetch).toHaveBeenCalledWith(`http://localhost/api/v1/boards/${board.id}/blocks/${card1.id}`, {"headers": {"Accept": "application/json", "Authorization": "", "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest"}, "method": "DELETE"})
+        })
     })
 })
