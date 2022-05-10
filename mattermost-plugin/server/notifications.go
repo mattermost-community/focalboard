@@ -115,3 +115,7 @@ func (da *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*
 func (da *pluginAPIAdapter) IsErrNotFound(err error) bool {
 	return errors.Is(err, pluginapi.ErrNotFound)
 }
+
+func (da *pluginAPIAdapter) CreateMember(teamID string, userID string) (*model.TeamMember, error) {
+	return da.client.Team.CreateMember(teamID, userID)
+}
