@@ -239,6 +239,7 @@
   "TableHeaderMenu.sort-ascending": "Sort ascending",
   "TableHeaderMenu.sort-descending": "Sort descending",
   "TableRow.open": "Open",
+  "TableRow.delete": "Delete",
   "TopBar.give-feedback": "Give Feedback",
   "URLProperty.copiedLink": "Copied!",
   "URLProperty.copy": "Copy",
