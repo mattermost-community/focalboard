@@ -123,7 +123,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for board %s: %w", evt.Board.ID, err))
 	}
-	if err = b.notifySubscribers(subs, evt.Board.ID, model.TypeBoard, evt.ModifiedByID); err != nil {
+	if err = b.notifySubscribers(c, subs, evt.Board.ID, model.TypeBoard, evt.ModifiedByID); err != nil {
 		merr.Append(fmt.Errorf("cannot notify board subscribers for board %s: %w", evt.Board.ID, err))
 	}
 
@@ -136,7 +136,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for card %s: %w", evt.Card.ID, err))
 	}
-	if err = b.notifySubscribers(subs, evt.Card.ID, model.TypeCard, evt.ModifiedByID); err != nil {
+	if err = b.notifySubscribers(c, subs, evt.Card.ID, model.TypeCard, evt.ModifiedByID); err != nil {
 		merr.Append(fmt.Errorf("cannot notify card subscribers for card %s: %w", evt.Card.ID, err))
 	}
 
@@ -146,7 +146,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		if err != nil {
 			merr.Append(fmt.Errorf("cannot fetch subscribers for block %s: %w", evt.BlockChanged.ID, err))
 		}
-		if err := b.notifySubscribers(subs, evt.BlockChanged.ID, evt.BlockChanged.Type, evt.ModifiedByID); err != nil {
+		if err := b.notifySubscribers(c, subs, evt.BlockChanged.ID, evt.BlockChanged.Type, evt.ModifiedByID); err != nil {
 			merr.Append(fmt.Errorf("cannot notify block subscribers for block %s: %w", evt.BlockChanged.ID, err))
 		}
 	}
@@ -154,12 +154,13 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 }
 
 // notifySubscribers triggers a change notification for subscribers by writing a notification hint to the database.
-func (b *Backend) notifySubscribers(subs []*model.Subscriber, blockID string, idType model.BlockType, modifiedByID string) error {
+func (b *Backend) notifySubscribers(c store.Container, subs []*model.Subscriber, blockID string, idType model.BlockType, modifiedByID string) error {
 	if len(subs) == 0 {
 		return nil
 	}
 
 	hint := &model.NotificationHint{
+		WorkspaceID:  c.WorkspaceID,
 		BlockType:    idType,
 		BlockID:      blockID,
 		ModifiedByID: modifiedByID,

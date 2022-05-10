@@ -112,6 +112,9 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 
 		if userID == "" {
 			// was a `@` followed by something other than a username.
+			b.logger.Debug("Mention notification skipped; not a known username",
+				mlog.String("username", username),
+			)
 			continue
 		}
 
