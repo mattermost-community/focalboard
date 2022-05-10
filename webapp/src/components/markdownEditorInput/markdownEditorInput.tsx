@@ -75,7 +75,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     useEffect(() => {
         // Get the ball rolling. Searching for empty string
         // returns first 10 users in alphabetical order.
-        debouncedLoadSuggestion('')
+        loadSuggestions('')
     }, [])
 
 
