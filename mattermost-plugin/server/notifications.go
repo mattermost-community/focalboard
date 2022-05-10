@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify/notifymentions"
@@ -127,15 +126,20 @@ func (da *pluginAPIAdapter) CreateMember(teamID string, userID string) (*mm_mode
 	return da.client.Team.CreateMember(teamID, userID)
 }
 
+type appIface interface {
+	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
+	AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, error)
+}
+
 // appAPI provides app and store APIs for notification services. Where appropriate calls are made to the
 // app layer to leverage the additional websocket notification logic present there, and other times the
 // store APIs are called directly.
 type appAPI struct {
 	store store.Store
-	app   *app.App
+	app   appIface
 }
 
-func (a *appAPI) init(store store.Store, app *app.App) {
+func (a *appAPI) init(store store.Store, app appIface) {
 	a.store = store
 	a.app = app
 }
