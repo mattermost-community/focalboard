@@ -49,6 +49,7 @@ const SearchDialog = (props: Props): JSX.Element => {
                         <Search/>
                         <input
                             className='searchQuery'
+                            placeholder='Search for boards'
                             type='text'
                             onChange={(e) => debouncedSearchHandler(e.target.value)}
                             autoFocus={true}
