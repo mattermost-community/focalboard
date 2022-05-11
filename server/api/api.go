@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -114,6 +115,8 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	// archives
 	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/export", a.sessionRequired(a.handleArchiveExport)).Methods("GET")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
+
+	apiv1.HandleFunc("/boards/{boardID}/metadata", a.sessionRequired(a.handleGetBoardMetadata)).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -1502,6 +1505,74 @@ func (a *API) getWorkspaceUsers(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, data)
 
 	auditRec.AddMeta("userCount", len(users))
+	auditRec.Success()
+}
+
+func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v1/boards/{boardID}/metadata getBoardMetadata
+	//
+	// Returns a board's metadata
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: boardID
+	//   in: path
+	//   description: Board ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/BoardMetadata"
+	//   '404':
+	//     description: board not found
+	//   '501':
+	//     description: required license not found
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	boardID := mux.Vars(r)["boardID"]
+
+	container, err := a.getContainer(r)
+	if err != nil {
+		a.noContainerErrorResponse(w, r.URL.Path, err)
+		return
+	}
+
+	board, boardMetadata, err := a.app.GetBoardMetadata(*container, boardID)
+	if errors.Is(err, app.ErrInsufficientLicense) {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", err)
+		return
+	}
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if board == nil || boardMetadata == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getBoardMetadata", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+
+	data, err := json.Marshal(boardMetadata)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
 	auditRec.Success()
 }
 
