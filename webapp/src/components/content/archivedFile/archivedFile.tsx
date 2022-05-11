@@ -30,7 +30,7 @@ const ArchivedFile = (props: Props): JSX.Element => {
             <BrokenFile/>
             <div className='fileMetadata'>
                 <p className='filename'>{fileName()}</p>
-                <p>{fileExtension()} {fileSize()}</p>
+                <p className='miscInfo'>{fileExtension()} {fileSize()}</p>
             </div>
         </div>
     )

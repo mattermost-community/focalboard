@@ -6,7 +6,8 @@
     display: flex;
     flex-direction: row;
     color: rgba(var(--center-channel-color-rgb), 0.4);
-
+    height: 75px;
+    overflow: hidden;
 
     .CompassIcon.icon-file-image-broken-outline.BrokenFile {
         font-size: 48px;
@@ -15,6 +16,7 @@
     .fileMetadata {
         display: flex;
         flex-direction: column;
+        overflow: hidden;
     }
 
     .fileMetadata > p {
@@ -23,5 +25,10 @@
 
     .filename {
         font-weight: bold;
+    }
+
+    .filename {
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
