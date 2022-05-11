@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/golang/mock/gomock"
 	"io"
 	"strings"
 	"testing"
@@ -182,6 +183,7 @@ func TestSaveFile(t *testing.T) {
 		fileName := "temp-file-name.txt"
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
+		th.Store.EXPECT().SaveFileInfo(gomock.Any()).Return(nil)
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, "/")
@@ -205,6 +207,7 @@ func TestSaveFile(t *testing.T) {
 		fileName := "temp-file-name.jpeg"
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
+		th.Store.EXPECT().SaveFileInfo(gomock.Any()).Return(nil)
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, "/")
@@ -229,6 +232,7 @@ func TestSaveFile(t *testing.T) {
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
 		mockedError := &TestError{}
+		th.Store.EXPECT().SaveFileInfo(gomock.Any()).Return(nil)
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, "/")
