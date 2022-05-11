@@ -70,6 +70,7 @@ func testGetBoardHistory(t *testing.T, store store.Store, container store.Contai
 		err = store.PatchBlock(container, boardID, patch, userID2)
 		require.NoError(t, err)
 		patchedBoard, err := store.GetBlock(container, board.ID)
+		require.NoError(t, err)
 
 		// Updated history
 		boards, err = store.GetBlockHistory(container, board.ID, opts)
@@ -99,6 +100,7 @@ func testGetBoardHistory(t *testing.T, store store.Store, container store.Contai
 		err = store.PatchBlock(container, boardID, patch2, userID2)
 		require.NoError(t, err)
 		patchBoard2, err := store.GetBlock(container, board.ID)
+		require.NoError(t, err)
 
 		// Updated history
 		opts = model.QueryBlockHistoryOptions{

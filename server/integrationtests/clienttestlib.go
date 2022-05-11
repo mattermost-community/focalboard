@@ -20,12 +20,6 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-// const (
-// 	user1Username = "user1"
-// 	user2Username = "user2"
-// 	password      = "Pa$$word"
-// )
-
 type LicenseType int
 
 const (

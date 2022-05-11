@@ -52,6 +52,7 @@ func TestGetBoardMetadata(t *testing.T) {
 		err = th.Server.App().InsertBlock(container, *board, th.GetUser1().ID)
 		require.NoError(t, err)
 		rBoard, err := th.Server.App().GetBlockByID(container, board.ID)
+		require.NoError(t, err)
 
 		// Check metadata
 		boardMetadata, resp := th.Client.GetBoardMetadata(rBoard.ID, "")
@@ -139,6 +140,7 @@ func TestGetBoardMetadata(t *testing.T) {
 		}
 
 		err = th.Server.App().InsertBlock(container, *board, th.GetUser1().ID)
+		require.NoError(t, err)
 		rBoard, err := th.Server.App().GetBlockByID(container, board.ID)
 		require.NoError(t, err)
 
@@ -165,6 +167,7 @@ func TestGetBoardMetadata(t *testing.T) {
 			RootID:      "board1",
 		}
 		err = th.Server.App().InsertBlock(container, *board, th.GetUser1().ID)
+		require.NoError(t, err)
 		rBoard, err := th.Server.App().GetBlockByID(container, board.ID)
 		require.NoError(t, err)
 
@@ -192,6 +195,7 @@ func TestGetBoardMetadata(t *testing.T) {
 			RootID:      "board1",
 		}
 		err = th.Server.App().InsertBlock(container, *board, th.GetUser1().ID)
+		require.NoError(t, err)
 		rBoard, err := th.Server.App().GetBlockByID(container, board.ID)
 		require.NoError(t, err)
 
