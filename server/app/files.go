@@ -1,7 +1,9 @@
 package app
 
 import (
+	"errors"
 	"fmt"
+	"github.com/mattermost/mattermost-server/v6/model"
 	"io"
 	"path/filepath"
 	"strings"
@@ -20,15 +22,67 @@ func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (
 		fileExtension = ".jpg"
 	}
 
-	createdFilename := fmt.Sprintf(`%s%s`, utils.NewID(utils.IDTypeNone), fileExtension)
-	filePath := filepath.Join(workspaceID, rootID, createdFilename)
+	createdFilename := utils.NewID(utils.IDTypeNone)
+	fullFilename := fmt.Sprintf(`%s%s`, createdFilename, fileExtension)
+	filePath := filepath.Join(workspaceID, rootID, fullFilename)
 
-	_, appErr := a.filesBackend.WriteFile(reader, filePath)
+	fileSize, appErr := a.filesBackend.WriteFile(reader, filePath)
 	if appErr != nil {
 		return "", fmt.Errorf("unable to store the file in the files storage: %w", appErr)
 	}
 
-	return createdFilename, nil
+	now := utils.GetMillis()
+
+	fileInfo := &model.FileInfo{
+		Id:              createdFilename[1:],
+		CreatorId:       "boards",
+		PostId:          " ",
+		ChannelId:       " ",
+		CreateAt:        now,
+		UpdateAt:        now,
+		DeleteAt:        0,
+		Path:            " ",
+		ThumbnailPath:   " ",
+		PreviewPath:     " ",
+		Name:            filename,
+		Extension:       fileExtension,
+		Size:            fileSize,
+		MimeType:        " ",
+		Width:           0,
+		Height:          0,
+		HasPreviewImage: false,
+		MiniPreview:     nil,
+		Content:         "",
+		RemoteId:        nil,
+	}
+	err := a.store.SaveFileInfo(fileInfo)
+	if appErr != nil {
+		return "", err
+	}
+
+	return fullFilename, nil
+}
+
+func (a *App) GetFileInfo(filename string) (*model.FileInfo, error) {
+	if len(filename) == 0 {
+		return nil, errors.New("IsFileArchived: empty filename not allowed")
+	}
+
+	// filename is in the format 7<some-alphanumeric-string>.<extension>
+	// we want to extract the <some-alphanumeric-string> part of this as this
+	// will be the fileinfo id.
+	parts := strings.Split(filename, ".")
+	fileInfoId := parts[0][1:]
+	fileInfo, err := a.store.GetFileInfo(fileInfoId)
+	if err != nil {
+		return nil, err
+	}
+
+	if fileInfo == nil {
+		return nil, nil
+	}
+
+	return fileInfo, nil
 }
 
 func (a *App) GetFileReader(workspaceID, rootID, filename string) (filestore.ReadCloseSeeker, error) {
