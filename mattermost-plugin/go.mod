@@ -4,8 +4,6 @@ go 1.16
 
 replace github.com/mattermost/focalboard/server => ../server
 
-replace github.com/mattermost/mattermost-server/v6 => /Users/harshilsharma/codebase/go/src/github.com/mattermost/mattermost-server
-
 require (
 	github.com/mattermost/focalboard/server v0.0.0-20210525112228-f43e4028dbdc
 	github.com/mattermost/mattermost-plugin-api v0.0.21

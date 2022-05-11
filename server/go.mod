@@ -2,8 +2,6 @@ module github.com/mattermost/focalboard/server
 
 go 1.16
 
-replace github.com/mattermost/mattermost-server/v6 => /Users/harshilsharma/codebase/go/src/github.com/mattermost/mattermost-server
-
 require (
 	github.com/Masterminds/squirrel v1.5.2
 	github.com/go-sql-driver/mysql v1.6.0
