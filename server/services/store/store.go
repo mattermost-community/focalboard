@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
+	mmmodel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 // Conainer represents a container in a store
@@ -100,6 +101,9 @@ type Store interface {
 	DBType() string
 
 	IsErrNotFound(err error) bool
+
+	GetFileInfo(id string) (*mmmodel.FileInfo, error)
+	SaveFileInfo(fileInfo *mmmodel.FileInfo) error
 }
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.
