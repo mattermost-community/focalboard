@@ -153,3 +153,11 @@ type ErrNotFound struct{}
 func (e ErrNotFound) Error() string {
 	return "not found"
 }
+
+func (m pluginAPIMock) CreateMember(teamID string, userID string) (*mm_model.TeamMember, error) {
+	member := &mm_model.TeamMember{
+		UserId: userID,
+		TeamId: teamID,
+	}
+	return member, nil
+}
