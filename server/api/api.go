@@ -608,12 +608,13 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
 	if session.UserID == model.SingleUser {
+		ws, _ := a.app.GetRootWorkspace()
 		now := utils.GetMillis()
 		user = &model.User{
 			ID:       model.SingleUser,
 			Username: model.SingleUser,
 			Email:    model.SingleUser,
-			CreateAt: now,
+			CreateAt: ws.UpdateAt,
 			UpdateAt: now,
 		}
 	} else {
