@@ -1045,12 +1045,13 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
 	if userID == model.SingleUser {
+		ws, _ := a.app.GetRootTeam()
 		now := utils.GetMillis()
 		user = &model.User{
 			ID:       model.SingleUser,
 			Username: model.SingleUser,
 			Email:    model.SingleUser,
-			CreateAt: now,
+			CreateAt: ws.UpdateAt,
 			UpdateAt: now,
 		}
 	} else {
