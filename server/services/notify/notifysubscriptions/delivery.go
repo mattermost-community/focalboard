@@ -12,6 +12,8 @@ import (
 // SubscriptionDelivery provides an interface for delivering subscription notifications to other systems, such as
 // channels server via plugin API.
 type SubscriptionDelivery interface {
-	SubscriptionDeliverSlackAttachments(workspaceID string, subscriberID string, subscriberType model.SubscriberType,
+	SubscriptionDeliverSlackAttachments(workspaceID string, teamID string, subscriberID string, subscriberType model.SubscriberType,
 		attachments []*mm_model.SlackAttachment) error
+
+	GetTeamIDForWorkspace(workspaceID string) (string, error)
 }
