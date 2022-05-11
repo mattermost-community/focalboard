@@ -487,7 +487,7 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 	//   default:
 	//     description: internal error
 	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse
+	//       "$ref": "#/definitions/ErrorResponse"
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {

@@ -57,6 +57,8 @@ type User struct {
 	IsBot bool `json:"is_bot"`
 }
 
+// UserPropPatch is a user property patch
+// swagger:model
 type UserPropPatch struct {
 	// The user prop updated fields
 	// required: false
