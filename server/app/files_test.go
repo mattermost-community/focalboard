@@ -1,10 +1,11 @@
 package app
 
 import (
-	"github.com/golang/mock/gomock"
 	"io"
 	"strings"
 	"testing"
+
+	"github.com/golang/mock/gomock"
 
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
