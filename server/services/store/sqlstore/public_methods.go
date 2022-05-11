@@ -14,6 +14,7 @@ package sqlstore
 
 import (
 	"context"
+	mmmodel "github.com/mattermost/mattermost-server/v6/model"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -143,6 +144,12 @@ func (s *SQLStore) GetBoardAndCardByID(c store.Container, blockID string) (*mode
 
 func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
 	return s.getDefaultTemplateBlocks(s.db)
+
+}
+
+//nolint:typecheck
+func (s *SQLStore) GetFileInfo(id string) (*mmmodel.FileInfo, error) {
+	return s.getFileInfo(s.db, id)
 
 }
 
@@ -372,12 +379,21 @@ func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
 
 }
 
+//nolint:typecheck
+func (s *SQLStore) SaveFileInfo(fileInfo *mmmodel.FileInfo) error {
+	return s.saveFileInfo(s.db, fileInfo)
+
+}
+
 func (s *SQLStore) SetSystemSetting(key string, value string) error {
 	return s.setSystemSetting(s.db, key, value)
 
 }
 
 func (s *SQLStore) UndeleteBlock(c store.Container, blockID string, modifiedBy string) error {
+	if s.dbType == sqliteDBType {
+		return s.undeleteBlock(s.db, c, blockID, modifiedBy)
+	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr

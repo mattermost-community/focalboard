@@ -1,13 +1,16 @@
 package sqlstore
 
 import (
+	"database/sql"
+	"errors"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) SaveFileInfo(fileInfo *model.FileInfo) error {
-	query := s.getQueryBuilder(s.db).
+func (s *SQLStore) saveFileInfo(db sq.BaseRunner, fileInfo *model.FileInfo) error {
+	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"file_info").
 		Columns(
 			"id",
@@ -41,8 +44,8 @@ func (s *SQLStore) SaveFileInfo(fileInfo *model.FileInfo) error {
 	return nil
 }
 
-func (s *SQLStore) GetFileInfo(id string) (*model.FileInfo, error) {
-	query := s.getQueryBuilder(s.db).
+func (s *SQLStore) getFileInfo(db sq.BaseRunner, id string) (*model.FileInfo, error) {
+	query := s.getQueryBuilder(db).
 		Select(
 			"id",
 			"create_at",
@@ -50,6 +53,7 @@ func (s *SQLStore) GetFileInfo(id string) (*model.FileInfo, error) {
 			"name",
 			"extension",
 			"size",
+			"archived",
 		).
 		From(s.tablePrefix + "file_info").
 		Where(sq.Eq{"Id": id})
@@ -65,9 +69,14 @@ func (s *SQLStore) GetFileInfo(id string) (*model.FileInfo, error) {
 		&fileInfo.Name,
 		&fileInfo.Extension,
 		&fileInfo.Size,
+		&fileInfo.Archived,
 	)
 
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+
 		s.logger.Error("error scanning fileinfo row", mlog.String("id", id), mlog.Err(err))
 		return nil, err
 	}

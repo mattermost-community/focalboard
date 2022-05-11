@@ -3,10 +3,11 @@ package app
 import (
 	"errors"
 	"fmt"
-	"github.com/mattermost/mattermost-server/v6/model"
 	"io"
 	"path/filepath"
 	"strings"
+
+	"github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -14,6 +15,8 @@ import (
 
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 )
+
+var errEmptyFilename = errors.New("IsFileArchived: empty filename not allowed")
 
 func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (string, error) {
 	// NOTE: File extension includes the dot
@@ -56,7 +59,7 @@ func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (
 		RemoteId:        nil,
 	}
 	err := a.store.SaveFileInfo(fileInfo)
-	if appErr != nil {
+	if err != nil {
 		return "", err
 	}
 
@@ -65,15 +68,15 @@ func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (
 
 func (a *App) GetFileInfo(filename string) (*model.FileInfo, error) {
 	if len(filename) == 0 {
-		return nil, errors.New("IsFileArchived: empty filename not allowed")
+		return nil, errEmptyFilename
 	}
 
 	// filename is in the format 7<some-alphanumeric-string>.<extension>
 	// we want to extract the <some-alphanumeric-string> part of this as this
 	// will be the fileinfo id.
 	parts := strings.Split(filename, ".")
-	fileInfoId := parts[0][1:]
-	fileInfo, err := a.store.GetFileInfo(fileInfoId)
+	fileInfoID := parts[0][1:]
+	fileInfo, err := a.store.GetFileInfo(fileInfoID)
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback} from 'react'
 
 import {FileInfo} from '../../../blocks/block'
 import BrokenFile from '../../../widgets/icons/brokenFile'
@@ -13,8 +13,6 @@ type Props = {
 }
 
 const ArchivedFile = (props: Props): JSX.Element => {
-    console.log(props.fileInfo)
-
     const fileName = useCallback(() => props.fileInfo.name || 'untitled file', [props.fileInfo.name])
 
     const fileExtension = useCallback(() => {

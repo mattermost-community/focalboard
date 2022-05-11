@@ -18,7 +18,7 @@ import ImageElement from './imageElement'
 
 jest.mock('../../octoClient')
 const mockedOcto = mocked(octoClient, true)
-mockedOcto.getFileAsDataUrl.mockResolvedValue('test.jpg')
+mockedOcto.getFileAsDataUrl.mockResolvedValue({url: 'test.jpg'})
 
 describe('components/content/ImageElement', () => {
     const defaultBlock: ImageBlock = {

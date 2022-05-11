@@ -1351,10 +1351,10 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 			"extension": fileInfo.Extension,
 		}
 
-		data, err := json.Marshal(fileMetadata)
-		if err != nil {
-			a.logger.Error("failed to marshal archived file metadata", mlog.String("filename", filename), mlog.Err(err))
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		data, jsonErr := json.Marshal(fileMetadata)
+		if jsonErr != nil {
+			a.logger.Error("failed to marshal archived file metadata", mlog.String("filename", filename), mlog.Err(jsonErr))
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", jsonErr)
 			return
 		}
 
@@ -1866,7 +1866,7 @@ func jsonStringResponse(w http.ResponseWriter, code int, message string) { //nol
 	fmt.Fprint(w, message)
 }
 
-func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) { //nolint:unparam
+func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, _ = w.Write(json)
