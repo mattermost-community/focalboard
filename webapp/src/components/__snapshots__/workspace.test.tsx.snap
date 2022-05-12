@@ -56,7 +56,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                         class="version"
                         title="v1.0.0"
                       >
-                        Jun 2022
+                        Aug 2022
                       </div>
                     </div>
                   </div>
@@ -1273,7 +1273,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                         class="version"
                         title="v1.0.0"
                       >
-                        Jun 2022
+                        Aug 2022
                       </div>
                     </div>
                   </div>
