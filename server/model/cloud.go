@@ -18,5 +18,5 @@ type BoardsCloudLimits struct {
 
 	// The maximum number of views for each board
 	// required: true
-    Views int `json:"views"`
+	Views int `json:"views"`
 }

@@ -378,6 +378,9 @@ func (s *SQLStore) SetSystemSetting(key string, value string) error {
 }
 
 func (s *SQLStore) UndeleteBlock(c store.Container, blockID string, modifiedBy string) error {
+	if s.dbType == sqliteDBType {
+		return s.undeleteBlock(s.db, c, blockID, modifiedBy)
+	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
