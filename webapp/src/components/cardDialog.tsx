@@ -41,9 +41,11 @@ type Props = {
     onClose: () => void
     showCard: (cardId?: string) => void
     readonly: boolean
+    // limited: boolean
 }
 
 const CardDialog = (props: Props): JSX.Element => {
+    const limited = true
     const {board, activeView, cards, views} = props
     const card = useAppSelector(getCard(props.cardId))
     const contents = useAppSelector(getCardContents(props.cardId))
@@ -168,8 +170,8 @@ const CardDialog = (props: Props): JSX.Element => {
             <Dialog
                 className='cardDialog'
                 onClose={props.onClose}
-                toolsMenu={!props.readonly && menu}
-                toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar}
+                toolsMenu={!props.readonly && menu && !limited}
+                toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar && !limited}
             >
                 {isTemplate &&
                     <div className='banner'>
@@ -189,6 +191,7 @@ const CardDialog = (props: Props): JSX.Element => {
                         contents={contents}
                         comments={comments}
                         readonly={props.readonly}
+                        limited={true}
                     />}
 
                 {!card &&

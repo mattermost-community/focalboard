@@ -168,4 +168,24 @@
             }
         }
     }
+
+    &.content.is-limited {
+        flex: 1;
+    }
+
+    &__limited-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    &__limited-title {
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 28px;
+    }
 }
