@@ -41,6 +41,7 @@ import ViewHeaderSearch from './viewHeaderSearch'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
+import ViewLimitModal from '../viewLimitDialog/viewLimitDialog'
 
 type Props = {
     board: Board
@@ -108,6 +109,18 @@ const ViewHeader = (props: Props) => {
 
     const showAddViewTourStep = showTourBaseCondition && delayComplete
 
+    const [showViewLimitDialog, setShowViewLimitDialog] = useState<boolean>(false)
+
+    const allowCreateView = (): boolean => {
+        if (views.length < 5) {
+            setShowViewLimitDialog(false)
+            return true
+        }
+
+        setShowViewLimitDialog(true)
+        return false
+    }
+
     return (
         <div className='ViewHeader'>
             <div className='viewSelector'>
@@ -133,6 +146,7 @@ const ViewHeader = (props: Props) => {
                         activeView={activeView}
                         views={views}
                         readonly={props.readonly}
+                        allowCreateView={allowCreateView}
                     />
                 </MenuWrapper>
                 {showAddViewTourStep && <AddViewTourStep/>}
@@ -223,6 +237,8 @@ const ViewHeader = (props: Props) => {
                 />
             </>
             }
+
+            {showViewLimitDialog && <ViewLimitModal onClose={() => setShowViewLimitDialog(false)}/>}
         </div>
     )
 }

@@ -100,7 +100,7 @@ func (s *MattermostAuthLayer) getUserByCondition(condition sq.Eq) (*model.User, 
 func (s *MattermostAuthLayer) getUsersByCondition(condition sq.Eq) (map[string]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data",
-			"props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at").
+			"props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at, Roles").
 		From("Users").
 		Where(sq.Eq{"deleteAt": 0}).
 		Where(condition)
@@ -116,7 +116,7 @@ func (s *MattermostAuthLayer) getUsersByCondition(condition sq.Eq) (map[string]*
 
 		var propsBytes []byte
 		err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.MfaSecret, &user.AuthService,
-			&user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt)
+			&user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt, &user.Roles)
 		if err != nil {
 			return nil, err
 		}

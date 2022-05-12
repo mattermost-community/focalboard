@@ -55,6 +55,8 @@ type User struct {
 	// If the user is a bot or not
 	// required: true
 	IsBot bool `json:"is_bot"`
+
+	Roles string `json:"roles"`
 }
 
 type UserPropPatch struct {
