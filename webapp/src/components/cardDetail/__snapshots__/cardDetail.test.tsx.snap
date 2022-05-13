@@ -1,5 +1,88 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`components/cardDetail/CardDetail should render hidden view if limited 1`] = `
+<div>
+  <div
+    class="CardDetail content is-limited"
+  >
+    <div
+      class="BlockIconSelector"
+    >
+      <div
+        class="octo-icon size-l readonly"
+      >
+        <span>
+          i
+        </span>
+      </div>
+    </div>
+    <div
+      class="EditableAreaWrap"
+    >
+      <textarea
+        class="EditableArea Editable readonly title"
+        height="0"
+        placeholder="Untitled"
+        readonly=""
+        rows="1"
+        spellcheck="true"
+        title="title"
+      >
+        title
+      </textarea>
+      <div
+        class="EditableAreaContainer"
+      >
+        <textarea
+          aria-hidden="true"
+          class="EditableAreaReference Editable readonly title"
+          dir="auto"
+          disabled=""
+          rows="1"
+        >
+          title
+        </textarea>
+      </div>
+    </div>
+    <div
+      class="CardDetail__limited-wrapper"
+    >
+      <img
+        class="CardDetail__limited-bg"
+        src="/static/card-skeleton.svg"
+      />
+      <p
+        class="CardDetail__limited-title"
+      >
+        This card is hidden
+      </p>
+      <p
+        class="CardDetail__limited-body"
+      >
+        Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more.
+        <br />
+        <a
+          class="CardDetail__limited-link"
+          href="https://mattermost.com/pricing/"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Learn more about our plans.
+        </a>
+      </p>
+      <button
+        class="Button emphasis--primary size--medium CardDetail__limited-button"
+        type="button"
+      >
+        <span>
+          Upgrade
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`components/cardDetail/CardDetail should show add comments tour tip 1`] = `
 <div
   class="tippy-box tutorial-tour-tip__box AddCommentTourStep"

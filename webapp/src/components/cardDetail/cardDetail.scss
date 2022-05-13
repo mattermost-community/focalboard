@@ -181,11 +181,33 @@
         justify-content: center;
         text-align: center;
         font-size: 14px;
+        position: relative;
+
+        > :not(.CardDetail__limited-bg) {
+            position: relative;
+        }
+    }
+
+    &__limited-bg {
+        filter: blur(12px);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
     }
 
     &__limited-title {
         font-weight: bold;
         font-size: 22px;
         line-height: 28px;
+    }
+
+    &__limited-link {
+        color: var(--link-color);
+    }
+
+    &__limited-button {
+        margin-top: 24px;
     }
 }

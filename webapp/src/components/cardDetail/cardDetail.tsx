@@ -21,6 +21,8 @@ import BlockIconSelector from '../blockIconSelector'
 import {useAppDispatch} from '../../store/hooks'
 import {setCurrent as setCurrentCard} from '../../store/cards'
 
+import {Utils} from '../../utils'
+
 import CommentsList from './commentsList'
 import {CardDetailProvider} from './cardDetailContext'
 import CardDetailContents from './cardDetailContents'
@@ -43,11 +45,11 @@ type Props = {
     comments: CommentBlock[]
     contents: Array<ContentBlock|ContentBlock[]>
     readonly: boolean
-    limited: boolean
 }
 
 const CardDetail = (props: Props): JSX.Element|null => {
     const {card, comments} = props
+    const {limited} = card
     const [title, setTitle] = useState(card.title)
     const [serverTitle, setServerTitle] = useState(card.title)
     const titleRef = useRef<Focusable>(null)
@@ -60,7 +62,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
     const intl = useIntl()
-    const limited = card.limited
 
     useImagePaste(card.id, card.fields.contentOrder, card.rootId)
 
@@ -100,7 +101,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
     return (
         <>
-            <div className={`CardDetail content ${limited ? 'is-limited' : ''}`}>
+            <div className={`CardDetail content${limited ? ' is-limited' : ''}`}>
                 <BlockIconSelector
                     block={card}
                     size='l'
@@ -135,22 +136,31 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 {/* Hidden (limited) card copy + CTA */}
 
                 {limited && <div className='CardDetail__limited-wrapper'>
+                    <img
+                        className='CardDetail__limited-bg' 
+                        src={`${Utils.buildURL('/static/card-skeleton.svg', true)}`}
+                    />
                     <p className='CardDetail__limited-title'>
                         <FormattedMessage
                             id='CardDetail.limited-title'
-                            defaultMessage="This card is hidden"
+                            defaultMessage='This card is hidden'
                         />
                     </p>
                     <p className='CardDetail__limited-body'>
                         <FormattedMessage
                             id='CardDetail.limited-body'
-                            defaultMessage="Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more."
+                            defaultMessage='Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more.'
                         />
                         <br/>
-                        <a className='CardDetail__limited-link' href={CTA_URL} target='_blank' rel='noreferrer'>
+                        <a
+                            className='CardDetail__limited-link'
+                            href={CTA_URL}
+                            target='_blank'
+                            rel='noreferrer'
+                        >
                             <FormattedMessage
                                 id='CardDetial.limited-link'
-                                defaultMessage="Learn more about our plans."
+                                defaultMessage='Learn more about our plans.'
                             />
                         </a>
                     </p>
@@ -179,13 +189,15 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
                 {/* Comments */}
 
-                {!limited && [<hr/>,
-                <CommentsList
-                    comments={comments}
-                    rootId={card.rootId}
-                    cardId={card.id}
-                    readonly={props.readonly}
-                />]}
+                {!limited && <Fragment>
+                    <hr/>
+                    <CommentsList
+                        comments={comments}
+                        rootId={card.rootId}
+                        cardId={card.id}
+                        readonly={props.readonly}
+                    />
+                </Fragment>}
             </div>
 
             {/* Content blocks */}
