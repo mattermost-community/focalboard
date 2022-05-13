@@ -12,14 +12,18 @@ exports[`components/viewHeader/ViewHeaderSearch return input after click on sear
 
 exports[`components/viewHeader/ViewHeaderSearch return search menu 1`] = `
 <div>
-  <button
-    class="Button"
-    type="button"
+  <div
+    class="board-search-field"
   >
-    <span>
-      Search
-    </span>
-  </button>
+    <i
+      class="CompassIcon icon-magnify board-search-icon"
+    />
+    <input
+      class="Editable "
+      placeholder="Search text"
+      value=""
+    />
+  </div>
 </div>
 `;
 
