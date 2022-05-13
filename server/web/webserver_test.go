@@ -78,7 +78,6 @@ func Test_NewServer(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-
 			ws := NewServer(test.rootPath, test.serverRoot, test.port, test.ssl, test.localOnly, test.logger)
 
 			require.NotNil(t, ws, "The webserver object is nil!")
@@ -94,7 +93,6 @@ func Test_NewServer(t *testing.T) {
 			} else {
 				require.Equal(t, test.expectedServerAddr, ws.Server.Addr, "server address not matching!")
 			}
-
 		})
 	}
 }
