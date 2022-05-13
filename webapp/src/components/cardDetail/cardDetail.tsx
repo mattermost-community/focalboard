@@ -137,7 +137,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
                 {limited && <div className='CardDetail__limited-wrapper'>
                     <img
-                        className='CardDetail__limited-bg' 
+                        className='CardDetail__limited-bg'
                         src={`${Utils.buildURL('/static/card-skeleton.svg', true)}`}
                     />
                     <p className='CardDetail__limited-title'>
@@ -176,7 +176,8 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
                 {/* Property list */}
 
-                {!limited && <CardDetailProperties
+                {!limited &&
+                <CardDetailProperties
                     board={props.board}
                     card={props.card}
                     contents={props.contents}
