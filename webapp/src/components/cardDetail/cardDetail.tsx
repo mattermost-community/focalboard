@@ -168,7 +168,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         className='CardDetail__limited-button'
                         onClick={() => window.open(CTA_URL, '_blank')}
                         emphasis='primary'
-                        size='medium'
+                        size='large'
                     >
                         {intl.formatMessage({id: 'CardDetail.limited-button', defaultMessage: 'Upgrade'})}
                     </Button>
