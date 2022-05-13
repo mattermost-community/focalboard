@@ -41,7 +41,6 @@ type Props = {
     onClose: () => void
     showCard: (cardId?: string) => void
     readonly: boolean
-    // limited: boolean
 }
 
 const CardDialog = (props: Props): JSX.Element => {
@@ -170,8 +169,8 @@ const CardDialog = (props: Props): JSX.Element => {
             <Dialog
                 className='cardDialog'
                 onClose={props.onClose}
-                toolsMenu={!props.readonly && menu && !limited}
-                toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar && !limited}
+                toolsMenu={!props.readonly && menu && !card?.limited}
+                toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar && !card?.limited}
             >
                 {isTemplate &&
                     <div className='banner'>

@@ -47,7 +47,7 @@ type Props = {
 }
 
 const CardDetail = (props: Props): JSX.Element|null => {
-    const {card, comments, limited} = props
+    const {card, comments} = props
     const [title, setTitle] = useState(card.title)
     const [serverTitle, setServerTitle] = useState(card.title)
     const titleRef = useRef<Focusable>(null)
@@ -60,6 +60,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
     const intl = useIntl()
+    const limited = card.limited
 
     useImagePaste(card.id, card.fields.contentOrder, card.rootId)
 
@@ -143,8 +144,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     <p className='CardDetail__limited-body'>
                         <FormattedMessage
                             id='CardDetail.limited-body'
-                            defaultMessage="Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more. 
-                            "
+                            defaultMessage="Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more."
                         />
                         <br/>
                         <a className='CardDetail__limited-link' href={CTA_URL} target='_blank' rel='noreferrer'>
