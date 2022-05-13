@@ -509,6 +509,16 @@ class OctoClient {
 
         return (await this.getJson(response, [])) as PrepareOnboardingResponse
     }
+
+    async notifyAdminUpgrade(): Promise<void> {
+        const path = `/api/v1/workspace/${this.workspaceId}/notifyadminupgrade`
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+        })
+
+        return response.status === 200 ? Promise.resolve() : Promise.reject()
+    }
 }
 
 const octoClient = new OctoClient()

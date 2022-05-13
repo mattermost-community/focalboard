@@ -13,6 +13,7 @@ import {useAppSelector} from '../../store/hooks'
 import {getMe} from '../../store/users'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
+import octoClient from '../../octoClient'
 
 type Props = {
     onClose: () => void
@@ -63,6 +64,15 @@ const ViewLimitModal = (props: Props): JSX.Element => {
     const subtext = isAdmin ? adminSubtext : regularUserSubtext
     const primaryButtonText = isAdmin ? adminPrimaryButtonText : regularUserPrimaryButtonText
 
+    const handlePrimaryButtonAction = async () => {
+        if (isAdmin) {
+            // TODO show a confirmation message to user on successful completion of this task
+            await octoClient.notifyAdminUpgrade()
+        }
+
+        props.onClose()
+    }
+
     return (
         <Dialog
             className='ViewLimitDialog'
@@ -92,6 +102,7 @@ const ViewLimitModal = (props: Props): JSX.Element => {
                     size='medium'
                     className='primaryAction'
                     emphasis='primary'
+                    onClick={handlePrimaryButtonAction}
                 >
                     {primaryButtonText}
                 </Button>

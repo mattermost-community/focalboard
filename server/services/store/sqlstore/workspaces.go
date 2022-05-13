@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
@@ -159,4 +160,8 @@ func (s *SQLStore) createPrivateWorkspace(_ sq.BaseRunner, _ string) (string, er
 	// for personal server we always have only
 	// a single workspace, with id "0".
 	return "0", nil
+}
+
+func (s *SQLStore) getWorkspaceTeam(_ sq.BaseRunner, workspaceID string) (*mmModel.Team, error) {
+	return nil, errUnsupportedOperation
 }

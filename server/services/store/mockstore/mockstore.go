@@ -11,6 +11,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	model "github.com/mattermost/focalboard/server/model"
 	store "github.com/mattermost/focalboard/server/services/store"
+	model0 "github.com/mattermost/mattermost-server/v6/model"
 )
 
 // MockStore is a mock of Store interface.
@@ -405,6 +406,21 @@ func (mr *MockStoreMockRecorder) GetParentID(arg0, arg1 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetParentID", reflect.TypeOf((*MockStore)(nil).GetParentID), arg0, arg1)
 }
 
+// GetPortalAdmin mocks base method.
+func (m *MockStore) GetPortalAdmin() (*model0.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPortalAdmin")
+	ret0, _ := ret[0].(*model0.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPortalAdmin indicates an expected call of GetPortalAdmin.
+func (mr *MockStoreMockRecorder) GetPortalAdmin() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPortalAdmin", reflect.TypeOf((*MockStore)(nil).GetPortalAdmin))
+}
+
 // GetRegisteredUserCount mocks base method.
 func (m *MockStore) GetRegisteredUserCount() (int, error) {
 	m.ctrl.T.Helper()
@@ -690,6 +706,21 @@ func (mr *MockStoreMockRecorder) GetWorkspaceCount() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWorkspaceCount", reflect.TypeOf((*MockStore)(nil).GetWorkspaceCount))
 }
 
+// GetWorkspaceTeam mocks base method.
+func (m *MockStore) GetWorkspaceTeam(arg0 string) (*model0.Team, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetWorkspaceTeam", arg0)
+	ret0, _ := ret[0].(*model0.Team)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetWorkspaceTeam indicates an expected call of GetWorkspaceTeam.
+func (mr *MockStoreMockRecorder) GetWorkspaceTeam(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWorkspaceTeam", reflect.TypeOf((*MockStore)(nil).GetWorkspaceTeam), arg0)
+}
+
 // HasWorkspaceAccess mocks base method.
 func (m *MockStore) HasWorkspaceAccess(arg0, arg1 string) (bool, error) {
 	m.ctrl.T.Helper()
@@ -815,6 +846,20 @@ func (m *MockStore) RemoveDefaultTemplates(arg0 []model.Block) error {
 func (mr *MockStoreMockRecorder) RemoveDefaultTemplates(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveDefaultTemplates", reflect.TypeOf((*MockStore)(nil).RemoveDefaultTemplates), arg0)
+}
+
+// SendMessage mocks base method.
+func (m *MockStore) SendMessage(arg0 string, arg1 []string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendMessage", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendMessage indicates an expected call of SendMessage.
+func (mr *MockStoreMockRecorder) SendMessage(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMessage", reflect.TypeOf((*MockStore)(nil).SendMessage), arg0, arg1)
 }
 
 // SetSystemSetting mocks base method.

@@ -14,6 +14,7 @@ package sqlstore
 
 import (
 	"context"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -161,6 +162,11 @@ func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error
 
 }
 
+func (s *SQLStore) GetPortalAdmin() (*mmModel.User, error) {
+	return s.getPortalAdmin(s.db)
+
+}
+
 func (s *SQLStore) GetRegisteredUserCount() (int, error) {
 	return s.getRegisteredUserCount(s.db)
 
@@ -253,6 +259,11 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 
 func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 	return s.getWorkspaceCount(s.db)
+
+}
+
+func (s *SQLStore) GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error) {
+	return s.getWorkspaceTeam(s.db, workspaceID)
 
 }
 
@@ -372,12 +383,20 @@ func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
 
 }
 
+func (s *SQLStore) SendMessage(message string, receipts []string) error {
+	return s.sendMessage(s.db, message, receipts)
+
+}
+
 func (s *SQLStore) SetSystemSetting(key string, value string) error {
 	return s.setSystemSetting(s.db, key, value)
 
 }
 
 func (s *SQLStore) UndeleteBlock(c store.Container, blockID string, modifiedBy string) error {
+	if s.dbType == sqliteDBType {
+		return s.undeleteBlock(s.db, c, blockID, modifiedBy)
+	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr

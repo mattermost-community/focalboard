@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"strings"
 
 	"github.com/mattermost/mattermost-server/v6/plugin"
@@ -16,7 +17,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 const (
@@ -29,6 +30,7 @@ const (
 
 var (
 	errUnsupportedDatabaseError = errors.New("method is unsupported on current database. Supported databases are - MySQL and PostgreSQL")
+	errNotCloudInstance         = errors.New("not a cloud instance")
 )
 
 type NotSupportedError struct {
@@ -499,4 +501,113 @@ func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, err
 	}
 
 	return channel.Id, nil
+}
+
+func (s *MattermostAuthLayer) getSystemBot() (*mmModel.Bot, error) {
+	bot, err := s.pluginAPI.GetBot(mmModel.BotSystemBotUsername, false)
+	if err != nil {
+		if err.Id == "store.sql_bot.get.missing.app_error" {
+			createdBot, createBotErr := s.pluginAPI.CreateBot(&mmModel.Bot{
+				Username:    mmModel.BotSystemBotUsername,
+				DisplayName: "System",
+			})
+
+			if createBotErr != nil {
+				s.logger.Error("failed to create systems bot", mlog.Err(createBotErr))
+				return nil, createBotErr
+			}
+
+			bot = createdBot
+		} else {
+			s.logger.Error("failed to get bot for sending message from SendMessage", mlog.Err(err))
+			return nil, err
+		}
+	}
+
+	return bot, nil
+}
+
+func (s *MattermostAuthLayer) SendMessage(message string, receipts []string) error {
+	bot, err := s.getSystemBot()
+	if err != nil {
+		return err
+	}
+
+	for _, receipt := range receipts {
+		channel, err := s.pluginAPI.GetDirectChannel(bot.UserId, receipt)
+		if err != nil {
+			s.logger.Error(
+				"failed to get DM channel between system bot and user for receipt",
+				mlog.String("receipt", receipt),
+				mlog.String("user_id", receipt),
+				mlog.Err(err),
+			)
+			continue
+		}
+
+		post := &mmModel.Post{
+			Message:   message,
+			UserId:    bot.UserId,
+			ChannelId: channel.Id,
+		}
+
+		if _, err := s.pluginAPI.CreatePost(post); err != nil {
+			s.logger.Error(
+				"failed to send message to receipt from SendMessage",
+				mlog.String("receipt", receipt),
+				mlog.Err(err),
+			)
+			continue
+		}
+	}
+
+	return nil
+}
+
+func (s *MattermostAuthLayer) GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error) {
+	channel, err := s.pluginAPI.GetChannel(workspaceID)
+	if err != nil {
+		s.logger.Error("failed to fetch channel", mlog.String("workspace_id", workspaceID), mlog.Err(errors.New(err.Error())))
+		return nil, errors.New(err.Error())
+	}
+
+	team, err := s.pluginAPI.GetTeam(channel.TeamId)
+	if err != nil {
+		s.logger.Error("failed to fetch team", mlog.String("team_id", channel.TeamId), mlog.String("channel_id", workspaceID), mlog.Err(errors.New(err.Error())))
+		return nil, errors.New(err.Error())
+	}
+
+	return team, nil
+}
+
+func (s *MattermostAuthLayer) GetPortalAdmin() (*mmModel.User, error) {
+	if !utils.IsCloudLicense(s.pluginAPI.GetLicense()) {
+		return nil, errNotCloudInstance
+	}
+
+	systemAdmins, err := s.pluginAPI.GetUsers(&mmModel.UserGetOptions{
+		Active:  true,
+		Role:    mmModel.SystemAdminRoleId,
+		PerPage: 10,
+		Sort:    "CreateAt",
+	})
+
+	if err != nil {
+		s.logger.Error("failed to fetch all system admins for finding portal admin", mlog.Err(err))
+		return nil, err
+	}
+
+	if len(systemAdmins) == 0 {
+		return nil, errors.New("no portal admin found, no system admin found")
+	}
+
+	portalAdmin := systemAdmins[0]
+
+	for i := 0; i < len(systemAdmins); i++ {
+		if systemAdmins[i].CreateAt < portalAdmin.CreateAt {
+			portalAdmin = systemAdmins[i]
+		}
+	}
+
+	return portalAdmin, nil
 }

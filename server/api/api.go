@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -114,6 +115,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	// archives
 	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/export", a.sessionRequired(a.handleArchiveExport)).Methods("GET")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
+
+	// cloud-specific functions
+	apiv1.HandleFunc("/workspace/{workspaceID}/notifyadminupgrade", a.sessionRequired(a.handleNotifyAdminUpgrade)).Methods(http.MethodPost)
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -1864,4 +1868,21 @@ func (a *API) handleGetUserWorkspaces(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonBytesResponse(w, http.StatusOK, data)
+}
+
+func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", errors.New(""))
+		return
+	}
+
+	vars := mux.Vars(r)
+	workspaceID := vars["workspaceID"]
+
+	if err := a.app.NotifyPortalAdminsUpgradeRequest(workspaceID); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, "{}")
 }

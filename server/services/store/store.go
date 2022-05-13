@@ -5,6 +5,7 @@ package store
 import (
 	"errors"
 	"fmt"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -100,6 +101,10 @@ type Store interface {
 	DBType() string
 
 	IsErrNotFound(err error) bool
+
+	SendMessage(message string, receipts []string) error
+	GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error)
+	GetPortalAdmin() (*mmModel.User, error)
 }
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.
