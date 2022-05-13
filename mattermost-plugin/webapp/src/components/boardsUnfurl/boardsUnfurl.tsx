@@ -162,7 +162,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                     </div>
 
                     {/* Body of the Card*/}
-                    {html !== '' &&
+                    {!card.limited && html !== '' &&
                         <div className='body'>
                             <div
                                 dangerouslySetInnerHTML={{__html: html}}
@@ -170,7 +170,16 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                         </div>
                     }
 
+                    {card.limited &&
+                    <p className='limited'>
+                        <FormattedMessage
+                            id='BoardsUnfurl.Limited'
+                            defaultMessage={'Additional details are hidden due to the card being archived'}
+                        />
+                    </p>}
+
                     {/* Footer of the Card*/}
+                    {!card.limited &&
                     <div className='footer'>
                         <div className='avatar'>
                             <Avatar
@@ -225,7 +234,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                                 />
                             </span>
                         </div>
-                    </div>
+                    </div>}
                 </a>
             }
             {loading &&
