@@ -238,6 +238,7 @@
   "TableHeaderMenu.insert-right": "Sağa ekle",
   "TableHeaderMenu.sort-ascending": "Artan sıralama",
   "TableHeaderMenu.sort-descending": "Azalan sıralama",
+  "TableRow.delete": "Sil",
   "TableRow.open": "Aç",
   "TopBar.give-feedback": "Geri bildirimde bulunun",
   "URLProperty.copiedLink": "Kopyalandı!",
