@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 
@@ -11,6 +12,8 @@ import (
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+var ErrViewsLimitReached = errors.New("views limit reached for board")
 
 func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([]model.Block, error) {
 	if blockType != "" && parentID != "" {
@@ -107,6 +110,20 @@ func (a *App) InsertBlock(c store.Container, block model.Block, modifiedByID str
 func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID string, allowNotifications bool) ([]model.Block, error) {
 	needsNotify := make([]model.Block, 0, len(blocks))
 	for i := range blocks {
+		// check for workspace ID allows creating template boards
+		// with more views that what limit allows.
+		if c.WorkspaceID != "0" && blocks[i].Type == model.TypeView {
+			withinLimit, err := a.isWithinViewsLimit(c, blocks[i])
+			if err != nil {
+				return nil, err
+			}
+
+			if !withinLimit {
+				a.logger.Info("views limit reached on board", mlog.String("board_id", blocks[i].ParentID), mlog.String("workspace_id", c.WorkspaceID))
+				return nil, ErrViewsLimitReached
+			}
+		}
+
 		err := a.store.InsertBlock(c, &blocks[i], modifiedByID)
 		if err != nil {
 			return nil, err
@@ -129,6 +146,15 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID
 	}()
 
 	return blocks, nil
+}
+
+func (a *App) isWithinViewsLimit(c store.Container, block model.Block) (bool, error) {
+	views, err := a.store.GetBlocksWithParentAndType(c, block.ParentID, model.TypeView)
+	if err != nil {
+		return false, err
+	}
+
+	return len(views) < 5, nil
 }
 
 func (a *App) CopyCardFiles(sourceBoardID string, destWorkspaceID string, blocks []model.Block) error {

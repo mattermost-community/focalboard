@@ -442,7 +442,12 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	newBlocks, err := a.app.InsertBlocks(*container, blocks, session.UserID, true)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		if errors.Is(err, app.ErrViewsLimitReached) {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+		} else {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		}
+
 		return
 	}
 
