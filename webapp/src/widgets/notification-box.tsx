@@ -18,7 +18,7 @@ type Props = {
 
 function renderClose(onClose?: () => void, closeTooltip?: string) {
     if (!onClose) {
-        return null;
+        return null
     }
 
     if (closeTooltip) {
@@ -41,9 +41,10 @@ function renderClose(onClose?: () => void, closeTooltip?: string) {
 function NotificationBox(props: Props): JSX.Element {
     return (
         <div className='NotificationBox'>
-            <div className='NotificationBox__icon'>
-                {props.icon && props.icon}
-            </div>
+            {props.icon && 
+                <div className='NotificationBox__icon'>
+                    {props.icon}
+                </div>}
             <div className='content'>
                 <p className='title'>{props.title}</p>
                 {props.children}
