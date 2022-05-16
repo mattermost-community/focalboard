@@ -78,6 +78,17 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 		return false
 	}
 
+	switch member.MinimumRole {
+	case "admin":
+		member.SchemeAdmin = true
+	case "editor":
+		member.SchemeEditor = true
+	case "commenter":
+		member.SchemeCommenter = true
+	case "viewer":
+		member.SchemeViewer = true
+	}
+
 	switch permission {
 	case model.PermissionManageBoardType, model.PermissionDeleteBoard, model.PermissionManageBoardRoles, model.PermissionShareBoard:
 		return member.SchemeAdmin
