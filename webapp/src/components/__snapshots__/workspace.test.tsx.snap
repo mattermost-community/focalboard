@@ -226,6 +226,42 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
         class="BoardComponent"
       >
         <div
+          class="NotificationBox"
+        >
+          <div
+            class="NotificationBox__icon"
+          >
+            <i
+              class="CompassIcon icon-alert-outline AlertIcon"
+            />
+          </div>
+          <div
+            class="content"
+          >
+            <p
+              class="title"
+            >
+              12 cards hidden from board
+            </p>
+            Card limit reached, to view older cards, 
+            <a>
+              upgrade to a paid plan
+            </a>
+          </div>
+          <div
+            class="octo-tooltip tooltip-top"
+            data-tooltip="Snooze for 10 days"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
           class="top-head"
         >
           <div
@@ -803,6 +839,42 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
       <div
         class="BoardComponent"
       >
+        <div
+          class="NotificationBox"
+        >
+          <div
+            class="NotificationBox__icon"
+          >
+            <i
+              class="CompassIcon icon-alert-outline AlertIcon"
+            />
+          </div>
+          <div
+            class="content"
+          >
+            <p
+              class="title"
+            >
+              12 cards hidden from board
+            </p>
+            Card limit reached, to view older cards, 
+            <a>
+              upgrade to a paid plan
+            </a>
+          </div>
+          <div
+            class="octo-tooltip tooltip-top"
+            data-tooltip="Snooze for 10 days"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="top-head"
         >
@@ -1459,6 +1531,42 @@ exports[`src/components/workspace should match snapshot 1`] = `
         class="BoardComponent"
       >
         <div
+          class="NotificationBox"
+        >
+          <div
+            class="NotificationBox__icon"
+          >
+            <i
+              class="CompassIcon icon-alert-outline AlertIcon"
+            />
+          </div>
+          <div
+            class="content"
+          >
+            <p
+              class="title"
+            >
+              12 cards hidden from board
+            </p>
+            Card limit reached, to view older cards, 
+            <a>
+              upgrade to a paid plan
+            </a>
+          </div>
+          <div
+            class="octo-tooltip tooltip-top"
+            data-tooltip="Snooze for 10 days"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
           class="top-head"
         >
           <div
@@ -2036,6 +2144,42 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
       <div
         class="BoardComponent"
       >
+        <div
+          class="NotificationBox"
+        >
+          <div
+            class="NotificationBox__icon"
+          >
+            <i
+              class="CompassIcon icon-alert-outline AlertIcon"
+            />
+          </div>
+          <div
+            class="content"
+          >
+            <p
+              class="title"
+            >
+              12 cards hidden from board
+            </p>
+            Card limit reached, to view older cards, 
+            <a>
+              upgrade to a paid plan
+            </a>
+          </div>
+          <div
+            class="octo-tooltip tooltip-top"
+            data-tooltip="Snooze for 10 days"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="top-head"
         >
