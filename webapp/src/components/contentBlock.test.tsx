@@ -65,6 +65,9 @@ describe('components/contentBlock', () => {
         addBlock: jest.fn(),
     })
 
+    const board1 = TestBlockFactory.createBoard()
+    board1.id = 'board-id-1'
+
     const state = {
         users: {
             boardUsers: {
@@ -75,6 +78,12 @@ describe('components/contentBlock', () => {
                 5: {username: 'g'},
             },
         },
+        boards: {
+            current: 'board-id-1',
+            boards: {
+                [board1.id]: board1,
+            }
+        }
     }
     const store = mockStateStore([], state)
 
