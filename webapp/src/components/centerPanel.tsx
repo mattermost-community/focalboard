@@ -189,7 +189,7 @@ class CenterPanel extends React.Component<Props, State> {
                     this.backgroundClicked(e)
                 }}
             >
-                <CardLimitNotification />
+                <CardLimitNotification/>
                 <Hotkeys
                     keyName='ctrl+d,del,esc,backspace'
                     onKeyDown={this.keydownHandler}

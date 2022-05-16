@@ -41,7 +41,7 @@ function renderClose(onClose?: () => void, closeTooltip?: string) {
 function NotificationBox(props: Props): JSX.Element {
     return (
         <div className='NotificationBox'>
-            {props.icon && 
+            {props.icon &&
                 <div className='NotificationBox__icon'>
                     {props.icon}
                 </div>}

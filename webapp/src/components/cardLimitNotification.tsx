@@ -14,6 +14,9 @@ import octoClient from '../octoClient'
 import NotificationBox from '../widgets/notification-box'
 import './cardLimitNotification.scss'
 
+const snoozeTime = 1000 * 60 * 60 * 24 * 10
+const checkSnoozeInterval = 1000 * 60 * 5
+
 const CardLimitNotification = () => {
     const intl = useIntl()
     const [time, setTime] = useState(Date.now())
@@ -24,7 +27,7 @@ const CardLimitNotification = () => {
             id: 'notification-box-card-limit-reached.title',
             defaultMessage: '{cards} cards hidden from board',
         },
-        {cards: 12}
+        {cards: 12},
     ), [])
     const me = useAppSelector<IUser|null>(getMe)
     const snoozedUntil = useAppSelector<number>(getCardLimitSnoozeUntil)
@@ -34,18 +37,19 @@ const CardLimitNotification = () => {
 
     useEffect(() => {
         if (isSnoozed) {
-            const interval = setInterval(() => setTime(Date.now()), 1000 * 1);
+            const interval = setInterval(() => setTime(Date.now()), checkSnoozeInterval)
             return () => {
-                clearInterval(interval);
-            };
+                clearInterval(interval)
+            }
         }
-    }, [isSnoozed]);
+        return () => null
+    }, [isSnoozed])
 
     useEffect(() => {
         if (!isSnoozed) {
             TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardLimitReached, {})
         }
-    }, [isSnoozed]);
+    }, [isSnoozed])
 
     const onClick = useCallback(() => {
         // TODO: Redirect to the upgrade URL
@@ -56,7 +60,7 @@ const CardLimitNotification = () => {
         if (me) {
             const patch: UserConfigPatch = {
                 updatedFields: {
-                    focalboard_cardLimitSnoozeUntil: `${Date.now() + (1000*30)}`,
+                    focalboard_cardLimitSnoozeUntil: `${Date.now() + snoozeTime}`,
                 },
             }
 
@@ -68,7 +72,7 @@ const CardLimitNotification = () => {
     }, [me])
 
     // TODO: Verify the permission check for the cloud
-    const hasPermissionToUpgrade = me?.roles?.indexOf("system_admin") != -1
+    const hasPermissionToUpgrade = me?.roles?.indexOf('system_admin') !== -1
 
     if (isSnoozed) {
         return null
@@ -81,7 +85,7 @@ const CardLimitNotification = () => {
             onClose={onClose}
             closeTooltip={intl.formatMessage({
                 id: 'notification-box-card-limit-reached.close-tooltip',
-                defaultMessage: 'Snooze for 10 days'
+                defaultMessage: 'Snooze for 10 days',
             })}
         >
             {hasPermissionToUpgrade &&
