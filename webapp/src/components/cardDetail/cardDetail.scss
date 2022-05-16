@@ -195,6 +195,15 @@
         left: 50%;
         transform: translate(-50%, -50%);
         width: 100%;
+
+        > svg {
+            width: 100%;
+            height: auto;
+
+            > rect {
+                fill: rgba(var(--center-channel-color-rgb));
+            }
+        }
     }
 
     &__limited-title {

@@ -21,7 +21,7 @@ import BlockIconSelector from '../blockIconSelector'
 import {useAppDispatch} from '../../store/hooks'
 import {setCurrent as setCurrentCard} from '../../store/cards'
 
-import {Utils} from '../../utils'
+import CardSkeleton from '../../svg/card-skeleton'
 
 import CommentsList from './commentsList'
 import {CardDetailProvider} from './cardDetailContext'
@@ -136,9 +136,8 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 {/* Hidden (limited) card copy + CTA */}
 
                 {limited && <div className='CardDetail__limited-wrapper'>
-                    <img
+                    <CardSkeleton
                         className='CardDetail__limited-bg'
-                        src={`${Utils.buildURL('/static/card-skeleton.svg', true)}`}
                     />
                     <p className='CardDetail__limited-title'>
                         <FormattedMessage
