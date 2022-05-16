@@ -9,9 +9,9 @@ import (
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/ws"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-
+	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type Services struct {
@@ -23,6 +23,7 @@ type Services struct {
 	Notifications    *notify.Service
 	Logger           *mlog.Logger
 	SkipTemplateInit bool
+	PluginAPI        plugin.API
 }
 
 type App struct {
@@ -35,6 +36,7 @@ type App struct {
 	metrics       *metrics.Metrics
 	notifications *notify.Service
 	logger        *mlog.Logger
+	pluginAPI     plugin.API
 }
 
 func (a *App) SetConfig(config *config.Configuration) {
@@ -52,6 +54,7 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 		metrics:       services.Metrics,
 		notifications: services.Notifications,
 		logger:        services.Logger,
+		pluginAPI:     services.PluginAPI,
 	}
 	app.initialize(services.SkipTemplateInit)
 	return app
