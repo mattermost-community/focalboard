@@ -71,7 +71,7 @@ exports[`components/cardDetail/CardDetail should render hidden view if limited 1
         </a>
       </p>
       <button
-        class="Button emphasis--primary size--medium CardDetail__limited-button"
+        class="Button emphasis--primary size--large CardDetail__limited-button"
         type="button"
       >
         <span>
