@@ -1945,7 +1945,83 @@ func TestJoinBoard(t *testing.T) {
 
 		me := th.GetUser1()
 
-		title := "Public board"
+		title := "Test Public board"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:  title,
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypeOpen, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+		require.Equal(t, model.BoardRoleNone, board.MinimumRole)
+
+		member, resp := th.Client2.JoinBoard(board.ID)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, member)
+		require.Equal(t, board.ID, member.BoardID)
+		require.Equal(t, th.GetUser2().ID, member.UserID)
+
+		s, _ := json.MarshalIndent(member, "", "\t")
+		t.Log(string(s))
+	})
+
+	t.Run("create and join public board should match the minimumRole in the membership", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "Public board for commenters"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:       title,
+			Type:        model.BoardTypeOpen,
+			TeamID:      teamID,
+			MinimumRole: model.BoardRoleCommenter,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypeOpen, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+
+		member, resp := th.Client2.JoinBoard(board.ID)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, member)
+		require.Equal(t, board.ID, member.BoardID)
+		require.Equal(t, th.GetUser2().ID, member.UserID)
+		require.False(t, member.SchemeAdmin, "new member should not be admin")
+		require.False(t, member.SchemeEditor, "new member should not be editor")
+		require.True(t, member.SchemeCommenter, "new member should be commenter")
+		require.False(t, member.SchemeViewer, "new member should not be viewer")
+
+		s, _ := json.MarshalIndent(member, "", "\t")
+		t.Log(string(s))
+	})
+
+	t.Run("create and join public board should match editor role in the membership when MinimumRole is empty", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "Public board for editors"
 		teamID := testTeamID
 		newBoard := &model.Board{
 			Title:  title,
@@ -1969,6 +2045,10 @@ func TestJoinBoard(t *testing.T) {
 		require.NotNil(t, member)
 		require.Equal(t, board.ID, member.BoardID)
 		require.Equal(t, th.GetUser2().ID, member.UserID)
+		require.False(t, member.SchemeAdmin, "new member should not be admin")
+		require.True(t, member.SchemeEditor, "new member should be editor")
+		require.False(t, member.SchemeCommenter, "new member should not be commenter")
+		require.False(t, member.SchemeViewer, "new member should not be viewer")
 
 		s, _ := json.MarshalIndent(member, "", "\t")
 		t.Log(string(s))
