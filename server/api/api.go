@@ -117,6 +117,8 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
 
 	apiv1.HandleFunc("/boards/{boardID}/metadata", a.sessionRequired(a.handleGetBoardMetadata)).Methods("GET")
+	// limits
+	apiv1.HandleFunc("/limits", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -611,12 +613,13 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
 	if session.UserID == model.SingleUser {
+		ws, _ := a.app.GetRootWorkspace()
 		now := utils.GetMillis()
 		user = &model.User{
 			ID:       model.SingleUser,
 			Username: model.SingleUser,
 			Email:    model.SingleUser,
-			CreateAt: now,
+			CreateAt: ws.UpdateAt,
 			UpdateAt: now,
 		}
 	} else {
@@ -1928,6 +1931,45 @@ func (a *API) handleGetUserWorkspaces(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data, err := json.Marshal(userWorkspaces)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+}
+
+func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v1/limits cloudLimits
+	//
+	// Fetches the cloud limits of the server.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//         "$ref": "#/definitions/BoardsCloudLimits"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	boardsCloudLimits, err := a.app.GetBoardsCloudLimits()
+	if errors.Is(err, app.ErrNilPluginAPI) {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", err)
+		return
+	}
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(boardsCloudLimits)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

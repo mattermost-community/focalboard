@@ -683,14 +683,15 @@ func testUndeleteBlock(t *testing.T, store store.Store, container store.Containe
 	require.Len(t, blocks, initialCount+3)
 
 	t.Run("exiting id", func(t *testing.T) {
-		// Wait for not colliding the ID+insert_at key
-		time.Sleep(1 * time.Millisecond)
 		err := store.DeleteBlock(container, "block1", userID)
 		require.NoError(t, err)
 
 		block, err := store.GetBlock(container, "block1")
 		require.NoError(t, err)
 		require.Nil(t, block)
+
+		// Wait for not colliding the ID+insert_at key
+		time.Sleep(1 * time.Second)
 
 		err = store.UndeleteBlock(container, "block1", userID)
 		require.NoError(t, err)

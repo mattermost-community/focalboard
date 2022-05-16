@@ -204,9 +204,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const dayCellContent = useCallback((args: DayCellContentArg): JSX.Element|null => {
         return (
-            <div
-                className='dateContainer'
-            >
+            <div className={'dateContainer ' + (readonly ? '' : 'with-plus')}>
                 <div
                     className='addEvent'
                     onClick={() => onNewEvent({start: args.date, end: args.date})}

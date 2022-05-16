@@ -8,6 +8,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/ws"
 
+	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -19,6 +20,7 @@ type Params struct {
 	ServerID        string
 	WSAdapter       ws.Adapter
 	NotifyBackends  []notify.Backend
+	PluginAPI       plugin.API
 }
 
 func (p Params) CheckValid() error {
