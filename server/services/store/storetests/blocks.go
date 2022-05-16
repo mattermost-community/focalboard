@@ -686,7 +686,7 @@ func testUndeleteBlock(t *testing.T, store store.Store, container store.Containe
 
 		// Wait for not colliding the ID+insert_at key
 		time.Sleep(1 * time.Second)
-		
+
 		err = store.UndeleteBlock(container, "block1", userID)
 		require.NoError(t, err)
 
