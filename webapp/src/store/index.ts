@@ -14,6 +14,7 @@ import {reducer as contentsReducer} from './contents'
 import {reducer as commentsReducer} from './comments'
 import {reducer as searchTextReducer} from './searchText'
 import {reducer as globalErrorReducer} from './globalError'
+import {reducer as limitsReducer} from './limits'
 import {reducer as clientConfigReducer} from './clientConfig'
 import {reducer as limitsReducer} from './limits'
 
@@ -30,6 +31,7 @@ const store = configureStore({
         comments: commentsReducer,
         searchText: searchTextReducer,
         globalError: globalErrorReducer,
+        limits: limitsReducer,
         clientConfig: clientConfigReducer,
         limits: limitsReducer,
     },

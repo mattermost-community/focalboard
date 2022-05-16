@@ -8,6 +8,7 @@ import AlertIcon from '../widgets/icons/alert'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {IUser, UserConfigPatch} from '../user'
 import {getMe, patchProps, getCardLimitSnoozeUntil} from '../store/users'
+import {getHiddenByLimitCards} from '../store/cards'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import octoClient from '../octoClient'
 
@@ -21,13 +22,13 @@ const CardLimitNotification = () => {
     const intl = useIntl()
     const [time, setTime] = useState(Date.now())
 
-    // TODO: Set the number of real hidden cards
+    const hiddenCards = useAppSelector<number>(getHiddenByLimitCards)
     const title = useMemo(() => intl.formatMessage(
         {
             id: 'notification-box-card-limit-reached.title',
             defaultMessage: '{cards} cards hidden from board',
         },
-        {cards: 12},
+        {cards: hiddenCards},
     ), [])
     const me = useAppSelector<IUser|null>(getMe)
     const snoozedUntil = useAppSelector<number>(getCardLimitSnoozeUntil)
@@ -52,7 +53,7 @@ const CardLimitNotification = () => {
     }, [isSnoozed])
 
     const onClick = useCallback(() => {
-        // TODO: Redirect to the upgrade URL
+        // TODO: Show the modal to upgrade
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardLimitLinkOpen, {})
     }, [])
 
@@ -71,10 +72,9 @@ const CardLimitNotification = () => {
         }
     }, [me])
 
-    // TODO: Verify the permission check for the cloud
-    const hasPermissionToUpgrade = me?.roles?.indexOf('system_admin') !== -1
+    const hasPermissionToUpgrade = me?.roles?.split(' ').indexOf('system_admin') !== -1
 
-    if (isSnoozed) {
+    if (isSnoozed || hiddenCards === 0) {
         return null
     }
 

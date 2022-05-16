@@ -54,6 +54,21 @@ const cardsSlice = createSlice({
                 }
             }
         },
+        updateLimitedCards: (state, action: PayloadAction<number>) => {
+            for (const card of Object.values(state.cards)) {
+                if (card.updateAt < action.payload) {
+                    state.cards[card.id] = {
+                        ...card,
+                        fields: {
+                            icon: card.fields.icon,
+                            properties: {},
+                            contentOrder: [],
+                        },
+                        isLimited: true,
+                    }
+                }
+            }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
@@ -75,6 +90,19 @@ const cardsSlice = createSlice({
                     state.templates[block.id] = block as Card
                 } else if (block.type === 'card' && !block.fields.isTemplate) {
                     state.cards[block.id] = block as Card
+                }
+            }
+            for (const card of Object.values(state.cards)) {
+                if (card.updateAt < (action.payload.limits?.card_limit_timestamp || 0)) {
+                    state.cards[card.id] = {
+                        ...card,
+                        fields: {
+                            icon: card.fields.icon,
+                            properties: {},
+                            contentOrder: [],
+                        },
+                        isLimited: true,
+                    }
                 }
             }
         })
@@ -321,4 +349,9 @@ export const getCurrentCard = createSelector(
     (state: RootState) => state.cards.current,
     (state: RootState) => state.cards.cards,
     (current, cards) => cards[current],
+)
+
+export const getHiddenByLimitCards = createSelector(
+    getCurrentViewCardsSortedFilteredAndGrouped,
+    (cards) => cards.filter((c: Card) => c.isLimited).length,
 )
