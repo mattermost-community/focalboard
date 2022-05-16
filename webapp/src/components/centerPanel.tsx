@@ -51,6 +51,8 @@ import Table from './table/table'
 
 import CalendarFullView from './calendar/fullCalendar'
 
+import CardLimitNotification from './cardLimitNotification'
+
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
@@ -187,6 +189,7 @@ class CenterPanel extends React.Component<Props, State> {
                     this.backgroundClicked(e)
                 }}
             >
+                <CardLimitNotification />
                 <Hotkeys
                     keyName='ctrl+d,del,esc,backspace'
                     onKeyDown={this.keydownHandler}

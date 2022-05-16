@@ -141,3 +141,17 @@ export const getCloudMessageCanceled = createSelector(
         return Boolean(me.props?.focalboard_cloudMessageCanceled)
     },
 )
+
+export const getCardLimitSnoozeUntil = createSelector(
+    getMe,
+    (me): number => {
+        if (!me) {
+            return 0
+        }
+        try {
+            return parseInt(me.props?.focalboard_cardLimitSnoozeUntil, 10)
+        } catch (_) {
+            return 0
+        }
+    },
+)
