@@ -11,6 +11,8 @@ import {wrapIntl} from '../../testUtils'
 
 import {TableCalculationOptions} from '../table/calculation/tableCalculationOptions'
 
+import {ColumnResizeProvider} from '../table/tableColumnResizeContext'
+
 import Calculation from './calculation'
 
 describe('components/calculations/Calculation', () => {
@@ -26,107 +28,115 @@ describe('components/calculations/Calculation', () => {
     card2.fields.properties.property_3 = ''
     card2.fields.properties.property_4 = 'Baz'
 
+    const Wrapper: React.FC = ({children}) => {
+        return wrapIntl(
+            <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+                {children}
+            </ColumnResizeProvider>
+        )
+    }
+
     test('should match snapshot - none', () => {
-        const component = wrapIntl(
-            <Calculation
-                style={{}}
-                class={'fooClass'}
-                value={'none'}
-                menuOpen={false}
-                onMenuClose={() => {}}
-                onMenuOpen={() => {}}
-                onChange={() => {}}
-                cards={[card, card2]}
-                hovered={true}
-                property={{
-                    id: 'property_2',
-                    name: '',
-                    type: 'text',
-                    options: [],
-                }}
-                optionsComponent={TableCalculationOptions}
-            />,
+        const {container} = render(
+            <Wrapper>
+                <Calculation
+                    class={'fooClass'}
+                    value={'none'}
+                    menuOpen={false}
+                    onMenuClose={() => {}}
+                    onMenuOpen={() => {}}
+                    onChange={() => {}}
+                    cards={[card, card2]}
+                    hovered={true}
+                    property={{
+                        id: 'property_2',
+                        name: '',
+                        type: 'text',
+                        options: [],
+                    }}
+                    optionsComponent={TableCalculationOptions}
+                />
+            </Wrapper>
         )
 
-        const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot - count', () => {
-        const component = wrapIntl(
-            <Calculation
-                style={{}}
-                class={'fooClass'}
-                value={'count'}
-                menuOpen={false}
-                onMenuClose={() => {}}
-                onMenuOpen={() => {}}
-                onChange={() => {}}
-                cards={[card, card2]}
-                hovered={true}
-                property={{
-                    id: 'property_2',
-                    name: '',
-                    type: 'text',
-                    options: [],
-                }}
-                optionsComponent={TableCalculationOptions}
-            />,
+        const {container} = render(
+            <Wrapper>
+                <Calculation
+                    class={'fooClass'}
+                    value={'count'}
+                    menuOpen={false}
+                    onMenuClose={() => {}}
+                    onMenuOpen={() => {}}
+                    onChange={() => {}}
+                    cards={[card, card2]}
+                    hovered={true}
+                    property={{
+                        id: 'property_2',
+                        name: '',
+                        type: 'text',
+                        options: [],
+                    }}
+                    optionsComponent={TableCalculationOptions}
+                />
+            </Wrapper>
         )
 
-        const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot - countValue', () => {
-        const component = wrapIntl(
-            <Calculation
-                style={{}}
-                class={'fooClass'}
-                value={'countValue'}
-                menuOpen={false}
-                onMenuClose={() => {}}
-                onMenuOpen={() => {}}
-                onChange={() => {}}
-                cards={[card, card2]}
-                hovered={true}
-                property={{
-                    id: 'property_3',
-                    name: '',
-                    type: 'text',
-                    options: [],
-                }}
-                optionsComponent={TableCalculationOptions}
-            />,
+        const {container} = render(
+            <Wrapper>
+                <Calculation
+                    class={'fooClass'}
+                    value={'countValue'}
+                    menuOpen={false}
+                    onMenuClose={() => {}}
+                    onMenuOpen={() => {}}
+                    onChange={() => {}}
+                    cards={[card, card2]}
+                    hovered={true}
+                    property={{
+                        id: 'property_3',
+                        name: '',
+                        type: 'text',
+                        options: [],
+                    }}
+                    optionsComponent={TableCalculationOptions}
+                />
+            </Wrapper>
         )
 
-        const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot - countUniqueValue', () => {
-        const component = wrapIntl(
-            <Calculation
-                style={{}}
-                class={'fooClass'}
-                value={'countUniqueValue'}
-                menuOpen={false}
-                onMenuClose={() => {}}
-                onMenuOpen={() => {}}
-                onChange={() => {}}
-                cards={[card, card2]}
-                hovered={true}
-                property={{
-                    id: 'property_4',
-                    name: '',
-                    type: 'text',
-                    options: [],
-                }}
-                optionsComponent={TableCalculationOptions}
-            />,
+        const {container} = render(
+            <Wrapper>
+                <Calculation
+                    class={'fooClass'}
+                    value={'countUniqueValue'}
+                    menuOpen={false}
+                    onMenuClose={() => {}}
+                    onMenuOpen={() => {}}
+                    onChange={() => {}}
+                    cards={[card, card2]}
+                    hovered={true}
+                    property={{
+                        id: 'property_4',
+                        name: '',
+                        type: 'text',
+                        options: [],
+                    }}
+                    optionsComponent={TableCalculationOptions}
+                />
+            </Wrapper>
         )
 
-        const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
@@ -135,28 +145,28 @@ describe('components/calculations/Calculation', () => {
         const onMenuClose = jest.fn()
         const onChange = jest.fn()
 
-        const component = wrapIntl(
-            <Calculation
-                style={{}}
-                class={'fooClass'}
-                value={'none'}
-                menuOpen={true}
-                onMenuClose={onMenuClose}
-                onMenuOpen={onMenuOpen}
-                onChange={onChange}
-                cards={[card, card2]}
-                hovered={true}
-                property={{
-                    id: 'property_2',
-                    name: '',
-                    type: 'text',
-                    options: [],
-                }}
-                optionsComponent={TableCalculationOptions}
-            />,
+        const {container} = render(
+            <Wrapper>
+                <Calculation
+                    class={'fooClass'}
+                    value={'none'}
+                    menuOpen={true}
+                    onMenuClose={onMenuClose}
+                    onMenuOpen={onMenuOpen}
+                    onChange={onChange}
+                    cards={[card, card2]}
+                    hovered={true}
+                    property={{
+                        id: 'property_2',
+                        name: '',
+                        type: 'text',
+                        options: [],
+                    }}
+                    optionsComponent={TableCalculationOptions}
+                />
+            </Wrapper>
         )
 
-        const {container} = render(component)
         const countMenuOption = container.querySelector('#react-select-2-option-1')
         userEvent.click(countMenuOption as Element)
         expect(container).toMatchSnapshot()
