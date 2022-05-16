@@ -10,6 +10,7 @@ import {wrapDNDIntl} from '../../testUtils'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
+import {ColumnResizeProvider} from './tableColumnResizeContext'
 import TableHeader from './tableHeader'
 
 describe('components/table/TableHeaderMenu', () => {
@@ -22,19 +23,20 @@ describe('components/table/TableHeaderMenu', () => {
     test('should match snapshot, title column', async () => {
         const onAutoSizeColumn = jest.fn()
         const component = wrapDNDIntl(
-            <TableHeader
-                readonly={false}
-                sorted={'none'}
-                name={'my Name'}
-                board={board}
-                activeView={view}
-                cards={[]}
-                views={[view, view2]}
-                template={board.cardProperties[0]}
-                offset={0}
-                onDrop={jest.fn()}
-                onAutoSizeColumn={onAutoSizeColumn}
-            />,
+            <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+                <TableHeader
+                    readonly={false}
+                    sorted={'none'}
+                    name={'my Name'}
+                    board={board}
+                    activeView={view}
+                    cards={[]}
+                    views={[view, view2]}
+                    template={board.cardProperties[0]}
+                    onDrop={jest.fn()}
+                    onAutoSizeColumn={onAutoSizeColumn}
+                />
+            </ColumnResizeProvider>
         )
 
         const {container} = render(component)

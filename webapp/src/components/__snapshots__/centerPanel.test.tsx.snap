@@ -764,7 +764,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -1407,7 +1407,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -1425,7 +1425,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -2110,7 +2109,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -2128,7 +2127,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -2813,7 +2811,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -2831,7 +2829,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -3516,7 +3513,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -3534,7 +3531,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -4219,7 +4215,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -4237,7 +4233,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -4922,7 +4917,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -4940,7 +4935,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -5625,7 +5619,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -5643,7 +5637,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -6328,7 +6321,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -6346,7 +6339,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -7031,7 +7023,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -7049,7 +7041,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -9074,7 +9065,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -9092,7 +9083,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>

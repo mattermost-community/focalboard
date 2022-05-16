@@ -23,6 +23,8 @@ import DeleteIcon from '../../widgets/icons/delete'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
+import {useColumnResize} from './tableColumnResizeContext'
+
 import './tableRow.scss'
 
 type Props = {
@@ -38,30 +40,21 @@ type Props = {
     isLastCard: boolean
     showCard: (cardId: string) => void
     readonly: boolean
-    offset: number
-    resizingColumn: string
-    columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     addCard: (groupByOptionId?: string) => Promise<void>
     onClick?: (e: React.MouseEvent<HTMLDivElement>, card: Card) => void
     onDrop: (srcCard: Card, dstCard: Card) => void
 }
 
-export const columnWidth = (resizingColumn: string, columnWidths: Record<string, number>, offset: number, templateId: string): number => {
-    if (resizingColumn === templateId) {
-        return Math.max(Constants.minColumnWidth, (columnWidths[templateId] || 0) + offset)
-    }
-    return Math.max(Constants.minColumnWidth, columnWidths[templateId] || 0)
-}
-
 const TableRow = (props: Props) => {
     const intl = useIntl()
-    const {board, columnRefs, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds, columnWidths} = props
+    const {board, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds} = props
 
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
     const isGrouped = Boolean(groupById)
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly && (isManualSort || isGrouped), props.onDrop)
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
+    const columnResize = useColumnResize()
 
     useEffect(() => {
         if (props.focusOnMount) {
@@ -106,10 +99,6 @@ const TableRow = (props: Props) => {
         if (collapsedOptionIds.indexOf(groupValue) > -1) {
             className += ' hidden'
         }
-    }
-
-    if (!columnRefs.get(Constants.titleColumnId)) {
-        columnRefs.set(Constants.titleColumnId, React.createRef())
     }
 
     const handleDeleteCard = useCallback(async () => {
@@ -176,8 +165,8 @@ const TableRow = (props: Props) => {
             <div
                 className='octo-table-cell title-cell'
                 id='mainBoardHeader'
-                style={{width: columnWidth(props.resizingColumn, columnWidths, props.offset, Constants.titleColumnId)}}
-                ref={columnRefs.get(Constants.titleColumnId)}
+                style={{width: columnResize.width(Constants.titleColumnId)}}
+                ref={(ref) => columnResize.updateRef(card.id, Constants.titleColumnId, ref)}
             >
                 <div className='octo-icontitle'>
                     <div className='octo-icon'>{card.fields.icon}</div>
@@ -205,15 +194,12 @@ const TableRow = (props: Props) => {
 
             {/* Columns, one per property */}
             {visiblePropertyTemplates.map((template) => {
-                if (!columnRefs.get(template.id)) {
-                    columnRefs.set(template.id, React.createRef())
-                }
                 return (
                     <div
                         className='octo-table-cell'
                         key={template.id}
-                        style={{width: columnWidth(props.resizingColumn, columnWidths, props.offset, template.id)}}
-                        ref={columnRefs.get(template.id)}
+                        style={{width: columnResize.width(template.id)}}
+                        ref={(ref) => columnResize.updateRef(card.id, template.id, ref)}
                     >
                         <PropertyValueElement
                             readOnly={props.readonly}
