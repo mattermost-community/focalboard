@@ -513,12 +513,10 @@ class OctoClient {
 
     async notifyAdminUpgrade(): Promise<void> {
         const path = `/api/v1/workspace/${this.workspaceId}/notifyadminupgrade`
-        const response = await fetch(this.getBaseURL() + path, {
+        await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
             method: 'POST',
         })
-
-        return response.status === 200 ? Promise.resolve() : Promise.reject()
     }
 
     // limits.ts

@@ -31,6 +31,10 @@ import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
 import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
 
+import {LimitUnlimited} from '../../boardsCloudLimits'
+import ViewLimitModal from '../viewLimitDialog/viewLimitDialog'
+import {getLimits} from '../../store/limits'
+
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
@@ -41,9 +45,6 @@ import ViewHeaderSearch from './viewHeaderSearch'
 import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
-import ViewLimitModal from '../viewLimitDialog/viewLimitDialog'
-import {getLimits} from '../../store/limits'
-import {LimitUnlimited} from '../../boardsCloudLimits'
 
 type Props = {
     board: Board
