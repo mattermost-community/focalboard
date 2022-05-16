@@ -119,8 +119,8 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	// cloud-specific functions
 	apiv1.HandleFunc("/workspace/{workspaceID}/notifyadminupgrade", a.sessionRequired(a.handleNotifyAdminUpgrade)).Methods(http.MethodPost)
 
-	// limits
-	apiv1.HandleFunc("/limits", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
+	// limits.ts
+	apiv1.HandleFunc("/limits.ts", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -1893,9 +1893,9 @@ func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/limits cloudLimits
+	// swagger:operation GET /api/v1/limits.ts cloudLimits
 	//
-	// Fetches the cloud limits of the server.
+	// Fetches the cloud limits.ts of the server.
 	//
 	// ---
 	// produces:

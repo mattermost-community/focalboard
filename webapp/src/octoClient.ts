@@ -521,9 +521,9 @@ class OctoClient {
         return response.status === 200 ? Promise.resolve() : Promise.reject()
     }
 
-    // limits
+    // limits.ts
     async getBoardsCloudLimits(): Promise<BoardsCloudLimits | undefined> {
-        const path = '/api/v1/limits'
+        const path = '/api/v1/limits.ts'
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return undefined

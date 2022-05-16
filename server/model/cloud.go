@@ -1,6 +1,6 @@
 package model
 
-// BoardsCloudLimits is the representation of the limits for the
+// BoardsCloudLimits is the representation of the limits.ts for the
 // Boards server
 // swagger:model
 type BoardsCloudLimits struct {

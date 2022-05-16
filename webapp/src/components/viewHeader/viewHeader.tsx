@@ -42,6 +42,8 @@ import FilterComponent from './filterComponent'
 
 import './viewHeader.scss'
 import ViewLimitModal from '../viewLimitDialog/viewLimitDialog'
+import {getLimits} from '../../store/limits'
+import {LimitUnlimited} from '../../boardsCloudLimits'
 
 type Props = {
     board: Board
@@ -111,8 +113,10 @@ const ViewHeader = (props: Props) => {
 
     const [showViewLimitDialog, setShowViewLimitDialog] = useState<boolean>(false)
 
+    const limits = useAppSelector(getLimits)
+
     const allowCreateView = (): boolean => {
-        if (views.length < 5) {
+        if (limits && (limits.views === LimitUnlimited || views.length < limits.views)) {
             setShowViewLimitDialog(false)
             return true
         }
