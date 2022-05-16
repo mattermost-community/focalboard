@@ -13,7 +13,8 @@ import (
 )
 
 const (
-	testUserID = "user-id"
+	testUserID  = "user-id"
+	testBoardID = "board-id"
 )
 
 func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
@@ -75,6 +76,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		store, tearDown := setup(t)
 		defer tearDown()
 		testGetBlock(t, store, container)
+	})
+	t.Run("GetBlockMetadata", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBlockMetadata(t, store, container)
 	})
 }
 
@@ -870,5 +876,190 @@ func testGetBlock(t *testing.T, store store.Store, container store.Container) {
 		fetchedBlock, err := store.GetBlock(container, "non-existing-id")
 		require.NoError(t, err)
 		require.Nil(t, fetchedBlock)
+	})
+}
+
+func testGetBlockMetadata(t *testing.T, store store.Store, container store.Container) {
+	boardID := testBoardID
+	blocks, err := store.GetBlocksWithRootID(container, boardID)
+	require.NoError(t, err)
+
+	blocksToInsert := []model.Block{
+		{
+			ID:         "block1",
+			RootID:     boardID,
+			ParentID:   "",
+			ModifiedBy: testUserID,
+			Type:       "test",
+		},
+		{
+			ID:         "block2",
+			RootID:     boardID,
+			ParentID:   "block1",
+			ModifiedBy: testUserID,
+			Type:       "test",
+		},
+		{
+			ID:         "block3",
+			RootID:     boardID,
+			ParentID:   "block1",
+			ModifiedBy: testUserID,
+			Type:       "test",
+		},
+		{
+			ID:         "block4",
+			RootID:     boardID,
+			ParentID:   "block1",
+			ModifiedBy: testUserID,
+			Type:       "test2",
+		},
+		{
+			ID:         "block5",
+			RootID:     boardID,
+			ParentID:   "block2",
+			ModifiedBy: testUserID,
+			Type:       "test",
+		},
+	}
+
+	for _, v := range blocksToInsert {
+		time.Sleep(20 * time.Millisecond)
+		subBlocks := []model.Block{v}
+		InsertBlocks(t, store, container, subBlocks, testUserID)
+	}
+	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+
+	t.Run("get full block history", func(t *testing.T) {
+		opts := model.QueryBlockHistoryOptions{
+			Descending: false,
+		}
+		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
+		require.NoError(t, err)
+		require.Len(t, blocks, 5)
+		expectedBlock := blocksToInsert[0]
+		block := blocks[0]
+
+		require.Equal(t, expectedBlock.ID, block.ID)
+	})
+
+	t.Run("get full block history descending", func(t *testing.T) {
+		opts := model.QueryBlockHistoryOptions{
+			Descending: true,
+		}
+		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
+		require.NoError(t, err)
+		require.Len(t, blocks, 5)
+		expectedBlock := blocksToInsert[len(blocksToInsert)-1]
+		block := blocks[0]
+
+		require.Equal(t, expectedBlock.ID, block.ID)
+	})
+
+	t.Run("get limited block history", func(t *testing.T) {
+		opts := model.QueryBlockHistoryOptions{
+			Limit:      3,
+			Descending: false,
+		}
+		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
+		require.NoError(t, err)
+		require.Len(t, blocks, 3)
+	})
+
+	t.Run("get first block history", func(t *testing.T) {
+		opts := model.QueryBlockHistoryOptions{
+			Limit:      1,
+			Descending: false,
+		}
+		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
+		require.NoError(t, err)
+		require.Len(t, blocks, 1)
+		expectedBlock := blocksToInsert[0]
+		block := blocks[0]
+
+		require.Equal(t, expectedBlock.ID, block.ID)
+	})
+
+	t.Run("get last block history", func(t *testing.T) {
+		opts := model.QueryBlockHistoryOptions{
+			Limit:      1,
+			Descending: true,
+		}
+		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
+		require.NoError(t, err)
+		require.Len(t, blocks, 1)
+		expectedBlock := blocksToInsert[len(blocksToInsert)-1]
+		block := blocks[0]
+
+		require.Equal(t, expectedBlock.ID, block.ID)
+	})
+
+	t.Run("get block history after updateAt", func(t *testing.T) {
+		rBlocks, err2 := store.GetBlocksWithType(container, "test")
+		require.NoError(t, err2)
+		require.NotZero(t, rBlocks[2].UpdateAt)
+
+		opts := model.QueryBlockHistoryOptions{
+			AfterUpdateAt: rBlocks[2].UpdateAt,
+			Descending:    false,
+		}
+		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
+		require.NoError(t, err)
+		require.Len(t, blocks, 2)
+		expectedBlock := blocksToInsert[3]
+		block := blocks[0]
+
+		require.Equal(t, expectedBlock.ID, block.ID)
+	})
+
+	t.Run("get block history before updateAt", func(t *testing.T) {
+		rBlocks, err2 := store.GetBlocksWithType(container, "test")
+		require.NoError(t, err2)
+		require.NotZero(t, rBlocks[2].UpdateAt)
+
+		opts := model.QueryBlockHistoryOptions{
+			BeforeUpdateAt: rBlocks[2].UpdateAt,
+			Descending:     true,
+		}
+		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
+		require.NoError(t, err)
+		require.Len(t, blocks, 2)
+		expectedBlock := blocksToInsert[1]
+		block := blocks[0]
+
+		require.Equal(t, expectedBlock.ID, block.ID)
+	})
+
+	t.Run("get full block history after delete", func(t *testing.T) {
+		time.Sleep(20 * time.Millisecond)
+		err = store.DeleteBlock(container, blocksToInsert[0].ID, testUserID)
+		require.NoError(t, err)
+
+		opts := model.QueryBlockHistoryOptions{
+			Descending: true,
+		}
+		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
+		require.NoError(t, err)
+		require.Len(t, blocks, 6)
+		expectedBlock := blocksToInsert[0]
+		block := blocks[0]
+
+		require.Equal(t, expectedBlock.ID, block.ID)
+	})
+
+	t.Run("get full block history after undelete", func(t *testing.T) {
+		time.Sleep(20 * time.Millisecond)
+		err = store.UndeleteBlock(container, blocksToInsert[0].ID, testUserID)
+		require.NoError(t, err)
+
+		opts := model.QueryBlockHistoryOptions{
+			Descending: true,
+		}
+		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
+		require.NoError(t, err)
+		require.Len(t, blocks, 7)
+		expectedBlock := blocksToInsert[0]
+		block := blocks[0]
+
+		require.Equal(t, expectedBlock.ID, block.ID)
 	})
 }

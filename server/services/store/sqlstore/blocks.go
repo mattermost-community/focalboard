@@ -18,6 +18,7 @@ import (
 
 const (
 	maxSearchDepth = 50
+	descClause     = " DESC "
 )
 
 type RootIDNilError struct{}
@@ -655,7 +656,7 @@ func (s *SQLStore) getBlock(db sq.BaseRunner, c store.Container, blockID string)
 func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
 	var order string
 	if opts.Descending {
-		order = " DESC "
+		order = descClause
 	}
 
 	query := s.getQueryBuilder(db).
@@ -682,6 +683,41 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, c store.Container, blockID 
 		s.logger.Error(`GetBlockHistory ERROR`, mlog.Err(err))
 		return nil, err
 	}
+	defer s.CloseRows(rows)
+
+	return s.blocksFromRows(rows)
+}
+
+func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	var order string
+	if opts.Descending {
+		order = descClause
+	}
+
+	query := s.getQueryBuilder(db).
+		Select(s.blockFields()...).
+		From(s.tablePrefix + "blocks_history").
+		Where(sq.Eq{"root_id": boardID}).
+		OrderBy("insert_at " + order + ", update_at" + order)
+
+	if opts.BeforeUpdateAt != 0 {
+		query = query.Where(sq.Lt{"update_at": opts.BeforeUpdateAt})
+	}
+
+	if opts.AfterUpdateAt != 0 {
+		query = query.Where(sq.Gt{"update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.Limit != 0 {
+		query = query.Limit(opts.Limit)
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`GetBlockHistory ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
 }
