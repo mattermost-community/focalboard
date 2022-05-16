@@ -13,9 +13,9 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-
+	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -34,6 +34,7 @@ type Services struct {
 	Logger           *mlog.Logger
 	Permissions      permissions.PermissionsService
 	SkipTemplateInit bool
+	PluginAPI        plugin.API
 }
 
 type App struct {
@@ -47,6 +48,7 @@ type App struct {
 	notifications       *notify.Service
 	logger              *mlog.Logger
 	blockChangeNotifier *utils.CallbackQueue
+	pluginAPI           plugin.API
 }
 
 func (a *App) SetConfig(config *config.Configuration) {
@@ -69,6 +71,7 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 		notifications:       services.Notifications,
 		logger:              services.Logger,
 		blockChangeNotifier: utils.NewCallbackQueue("blockChangeNotifier", blockChangeNotifierQueueSize, blockChangeNotifierPoolSize, services.Logger),
+		pluginAPI:           services.PluginAPI,
 	}
 	app.initialize(services.SkipTemplateInit)
 	return app

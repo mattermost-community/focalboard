@@ -152,6 +152,7 @@ func (p *Plugin) OnActivate() error {
 		WSAdapter:          p.wsPluginAdapter,
 		NotifyBackends:     notifyBackends,
 		PermissionsService: permissionsService,
+		PluginAPI:          p.API,
 	}
 
 	server, err := server.New(params)

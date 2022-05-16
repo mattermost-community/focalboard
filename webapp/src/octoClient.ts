@@ -13,6 +13,7 @@ import {Team} from './store/teams'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
 import {Constants} from "./constants"
+import {BoardsCloudLimits} from './boardsCloudLimits'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -809,6 +810,17 @@ class OctoClient {
         }
 
         return (await this.getJson(response, {})) as PrepareOnboardingResponse
+    }
+
+    // limits
+    async getBoardsCloudLimits(): Promise<BoardsCloudLimits | undefined> {
+        const path = '/api/v1/limits'
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as BoardsCloudLimits
     }
 }
 
