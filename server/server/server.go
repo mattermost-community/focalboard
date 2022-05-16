@@ -33,9 +33,9 @@ import (
 	"github.com/mattermost/focalboard/server/ws"
 	"github.com/oklog/run"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-
+	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -67,6 +67,7 @@ type Server struct {
 	localModeServer *http.Server
 	api             *api.API
 	app             *app.App
+	pluginAPI       plugin.API
 }
 
 func New(params Params) (*Server, error) {
@@ -137,6 +138,7 @@ func New(params Params) (*Server, error) {
 		Metrics:       metricsService,
 		Notifications: notificationService,
 		Logger:        params.Logger,
+		PluginAPI:     params.PluginAPI,
 	}
 	app := app.New(params.Cfg, wsAdapter, appServices)
 
@@ -198,6 +200,7 @@ func New(params Params) (*Server, error) {
 		localRouter:         localRouter,
 		api:                 focalboardAPI,
 		app:                 app,
+		pluginAPI:           params.PluginAPI,
 	}
 
 	server.initHandlers()

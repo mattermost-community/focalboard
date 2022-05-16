@@ -34,6 +34,7 @@ import CloseIcon from '../widgets/icons/close'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {fetchUserBlockSubscriptions, followBlock, getMe, unfollowBlock} from '../store/users'
 import {IUser} from '../user'
+import CloudMessage from '../components/messages/cloudMessage'
 type Props = {
     readonly?: boolean
 }
@@ -344,7 +345,7 @@ const BoardPage = (props: Props): JSX.Element => {
                         className='margin-right'
                     />
                 </div>}
-
+            <CloudMessage/>
             {props.readonly && board === undefined &&
                 <div className='error'>
                     {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
