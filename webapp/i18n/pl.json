@@ -238,6 +238,7 @@
   "TableHeaderMenu.insert-right": "Wstaw z prawej",
   "TableHeaderMenu.sort-ascending": "Sortuj rosnąco",
   "TableHeaderMenu.sort-descending": "Sortuj malejąco",
+  "TableRow.delete": "Usuń",
   "TableRow.open": "Otwórz",
   "TopBar.give-feedback": "Przekaż informację zwrotną",
   "URLProperty.copiedLink": "Skopiowane!",
