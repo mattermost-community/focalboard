@@ -45,7 +45,7 @@ func (a *App) IsCloud() bool {
 	if license == nil {
 		return false
 	}
-	return *license.Features.Cloud
+	return license.Features.Cloud != nil && *license.Features.Cloud
 }
 
 // IsCloudLimited returns true if the server is running in cloud mode

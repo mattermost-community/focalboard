@@ -15,19 +15,23 @@ import (
 )
 
 func StoreTestCloudStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
+	container := store.Container{
+		WorkspaceID: "0",
+	}
+
 	t.Run("GetUsedCardsCount", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testGetUsedCardsCount(t, store)
+		testGetUsedCardsCount(t, store, container)
 	})
 	t.Run("TestGetCardLimitTimestamp", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testGetCardLimitTimestamp(t, store)
+		testGetCardLimitTimestamp(t, store, container)
 	})
 }
 
-func testGetUsedCardsCount(t *testing.T, store store.Store) {
+func testGetUsedCardsCount(t *testing.T, store store.Store, container store.Container) {
 	userID := "user-id"
 
 	t.Run("should return zero when no cards have been created", func(t *testing.T) {
@@ -44,7 +48,7 @@ func testGetUsedCardsCount(t *testing.T, store store.Store) {
 				RootID: boardID,
 				Type: model.TypeBoard,
 			}
-			require.NoError(t, store.InsertBlock(&board, userID))
+			require.NoError(t, store.InsertBlock(container, &board, userID))
 		}
 
 		// board 1 has three cards
@@ -55,7 +59,7 @@ func testGetUsedCardsCount(t *testing.T, store store.Store) {
 				RootID: "board1",
 				Type: model.TypeCard,
 			}
-			require.NoError(t, store.InsertBlock(&card, userID))
+			require.NoError(t, store.InsertBlock(container, &card, userID))
 		}
 
 		// board 2 has two cards
@@ -66,7 +70,7 @@ func testGetUsedCardsCount(t *testing.T, store store.Store) {
 				RootID: "board2",
 				Type: model.TypeCard,
 			}
-			require.NoError(t, store.InsertBlock(&card, userID))
+			require.NoError(t, store.InsertBlock(container, &card, userID))
 		}
 
 		count, err := store.GetUsedCardsCount()
@@ -82,7 +86,7 @@ func testGetUsedCardsCount(t *testing.T, store store.Store) {
 			RootID: "board1",
 			Type: model.TypeText,
 		}
-		require.NoError(t, store.InsertBlock(&text, userID))
+		require.NoError(t, store.InsertBlock(container, &text, userID))
 
 		view := model.Block{
 			ID: "view-id",
@@ -90,7 +94,7 @@ func testGetUsedCardsCount(t *testing.T, store store.Store) {
 			RootID: "board1",
 			Type: model.TypeView,
 		}
-		require.NoError(t, store.InsertBlock(&view, userID))
+		require.NoError(t, store.InsertBlock(container, &view, userID))
 
 		// and count should not change
 		count, err := store.GetUsedCardsCount()
@@ -109,7 +113,7 @@ func testGetUsedCardsCount(t *testing.T, store store.Store) {
 				"isTemplate": true,
 			},
 		}
-		require.NoError(t, store.InsertBlock(&boardTemplate, userID))
+		require.NoError(t, store.InsertBlock(container, &boardTemplate, userID))
 
 		for _, cardID := range []string{"card6", "card7", "card8"} {
 			card := model.Block{
@@ -118,7 +122,7 @@ func testGetUsedCardsCount(t *testing.T, store store.Store) {
 				RootID: templateID,
 				Type: model.TypeCard,
 			}
-			require.NoError(t, store.InsertBlock(&card, userID))
+			require.NoError(t, store.InsertBlock(container, &card, userID))
 		}
 
 		// and count should still be the same
@@ -136,7 +140,7 @@ func testGetUsedCardsCount(t *testing.T, store store.Store) {
 			Type: model.TypeCard,
 			DeleteAt: utils.GetMillis(),
 		}
-		require.NoError(t, store.InsertBlock(&card9, userID))
+		require.NoError(t, store.InsertBlock(container, &card9, userID))
 
 		// and count should still be the same
 		count, err := store.GetUsedCardsCount()
@@ -145,7 +149,7 @@ func testGetUsedCardsCount(t *testing.T, store store.Store) {
 	})
 }
 
-func testGetCardLimitTimestamp(t *testing.T, store store.Store) {
+func testGetCardLimitTimestamp(t *testing.T, store store.Store, container store.Container) {
 	userID := "user-id"
 
 	// two boards
@@ -155,7 +159,7 @@ func testGetCardLimitTimestamp(t *testing.T, store store.Store) {
 			RootID: boardID,
 			Type: model.TypeBoard,
 		}
-		require.NoError(t, store.InsertBlock(&board, userID))
+		require.NoError(t, store.InsertBlock(container, &board, userID))
 	}
 
 	// board 1 has five cards
@@ -166,7 +170,7 @@ func testGetCardLimitTimestamp(t *testing.T, store store.Store) {
 			RootID: "board1",
 			Type: model.TypeCard,
 		}
-		require.NoError(t, store.InsertBlock(&card, userID))
+		require.NoError(t, store.InsertBlock(container, &card, userID))
 		time.Sleep(10 * time.Millisecond)
 	}
 
@@ -178,48 +182,49 @@ func testGetCardLimitTimestamp(t *testing.T, store store.Store) {
 			RootID: "board2",
 			Type: model.TypeCard,
 		}
-		require.NoError(t, store.InsertBlock(&card, userID))
+		require.NoError(t, store.InsertBlock(container, &card, userID))
 		time.Sleep(10 * time.Millisecond)
 	}
 
 	t.Run("should return the update_at time for the card at the limit", func(t *testing.T) {
 		t.Run("limit 10", func(t *testing.T) {
-			// we fetch the tenth block
-			card10, err := store.GetBlock("card10")
+			// we fetch the first block
+			card1, err := store.GetBlock(container, "card1")
 			require.NoError(t, err)
 
 			// and assert that if the limit is 10, the update_at timestamp
 			// of the last card is retrieved
 			cardLimitTimestamp, err := store.GetCardLimitTimestamp(10)
 			require.NoError(t, err)
-			require.Equal(t, card10.UpdateAt, cardLimitTimestamp)
+			require.Equal(t, card1.UpdateAt, cardLimitTimestamp)
 		})
 
 		t.Run("limit 5", func(t *testing.T) {
-			// if the limit is 5, the timestamp should be the one from the
-			// fifth card
-			card5, err := store.GetBlock("card5")
+			// if the limit is 5, the timestamp should be the one from
+			// the sixth card (the first five are older and out of the
+			// active window)
+			card6, err := store.GetBlock(container, "card6")
 			require.NoError(t, err)
 
 			cardLimitTimestamp, err := store.GetCardLimitTimestamp(5)
 			require.NoError(t, err)
-			require.Equal(t, card5.UpdateAt, cardLimitTimestamp)
+			require.Equal(t, card6.UpdateAt, cardLimitTimestamp)
 		})
 
-		t.Run("we update card1 and assert that with limit 1, it is now the timestamp retrieved", func(t *testing.T) {
+		t.Run("we update card10 and assert that with limit 1, it is now the timestamp retrieved", func(t *testing.T) {
 			time.Sleep(10 * time.Millisecond)
-			card1, err := store.GetBlock("card1")
+			card10, err := store.GetBlock(container, "card10")
 			require.NoError(t, err)
 
-			card1.Title = "New title"
-			require.NoError(t, store.InsertBlock(card1, userID))
+			card10.Title = "New title"
+			require.NoError(t, store.InsertBlock(container, card10, userID))
 
-			newCard1, err := store.GetBlock("card1")
+			newCard10, err := store.GetBlock(container, "card10")
 			require.NoError(t, err)
 
 			cardLimitTimestamp, err := store.GetCardLimitTimestamp(1)
 			require.NoError(t, err)
-			require.Equal(t, newCard1.UpdateAt, cardLimitTimestamp)
+			require.Equal(t, newCard10.UpdateAt, cardLimitTimestamp)
 		})
 
 		t.Run("limit should stop applying if we remove the last card", func(t *testing.T) {
@@ -227,7 +232,7 @@ func testGetCardLimitTimestamp(t *testing.T, store store.Store) {
 			require.NoError(t, err)
 			require.NotZero(t, cardLimitTimestamp)
 
-			require.NoError(t, store.DeleteBlock("card1", userID))
+			require.NoError(t, store.DeleteBlock(container, "card1", userID))
 			cardLimitTimestamp, err = store.GetCardLimitTimestamp(10)
 			require.NoError(t, err)
 			require.Zero(t, cardLimitTimestamp)
