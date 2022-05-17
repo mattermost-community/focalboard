@@ -24,8 +24,8 @@ type UpdateClientConfig struct {
 
 // UpdateClientConfig is sent on block updates.
 type UpdateCardLimitTimestamp struct {
-	Action       string             `json:"action"`
-	Timestamp int64 `json:"timestamp"`
+	Action    string `json:"action"`
+	Timestamp int64  `json:"timestamp"`
 }
 
 // WebsocketCommand is an incoming command from the client.

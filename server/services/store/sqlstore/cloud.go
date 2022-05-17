@@ -12,7 +12,7 @@ import (
 )
 
 func parentIsNotTemplateFilter(dbtype string) string {
-	switch(dbtype) {
+	switch dbtype {
 	case mysqlDBType:
 		return "COALESCE(JSON_EXTRACT(pb.fields, '$.isTemplate'), 'false') = 'false'"
 	case postgresDBType:
@@ -32,15 +32,15 @@ func (s *SQLStore) activeCardsQuery(db sq.BaseRunner, selectStr string, cardLimi
 		Join(s.tablePrefix + "blocks pb on b.parent_id=pb.id").
 		Where(sq.Eq{
 			"b.delete_at": 0,
-			"b.type": model.TypeCard,
-			"pb.type": model.TypeBoard,
+			"b.type":      model.TypeCard,
+			"pb.type":     model.TypeBoard,
 		}).
 		Where(parentIsNotTemplateFilter(s.dbType))
 
 	if cardLimit != 0 {
 		query = query.
 			Limit(1).
-			Offset(uint64(cardLimit-1))
+			Offset(uint64(cardLimit - 1))
 	}
 
 	return query

@@ -211,19 +211,19 @@ func (b Block) GetLimited() Block {
 	}
 
 	return Block{
-		Title: b.Title,
-		ID: b.ID,
+		Title:    b.Title,
+		ID:       b.ID,
 		ParentID: b.ParentID,
-		RootID: b.RootID,
-		Schema: b.Schema,
-		Type: b.Type,
+		RootID:   b.RootID,
+		Schema:   b.Schema,
+		Type:     b.Type,
 		Fields: map[string]interface{}{
 			"icon": iconField,
 		},
-		CreateAt: b.CreateAt,
-		UpdateAt: b.UpdateAt,
-		DeleteAt: b.DeleteAt,
+		CreateAt:    b.CreateAt,
+		UpdateAt:    b.UpdateAt,
+		DeleteAt:    b.DeleteAt,
 		WorkspaceID: b.WorkspaceID,
-		Limited: true,
+		Limited:     true,
 	}
 }

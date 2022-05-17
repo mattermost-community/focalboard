@@ -27,7 +27,7 @@ func (a *App) GetBoardsCloudLimits() (*model.BoardsCloudLimits, error) {
 	}
 
 	boardsCloudLimits := &model.BoardsCloudLimits{
-		UsedCards: usedCards,
+		UsedCards:          usedCards,
 		CardLimitTimestamp: a.CardLimitTimestamp,
 	}
 	if productLimits != nil && productLimits.Boards != nil {

@@ -36,7 +36,7 @@ type App struct {
 	logger        *mlog.Logger
 
 	// ToDo: do we need atomic / mutex?
-	CardLimit       int
+	CardLimit          int
 	CardLimitTimestamp int64
 }
 

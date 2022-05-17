@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 )
 
 func StoreTestCloudStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
@@ -44,9 +44,9 @@ func testGetUsedCardsCount(t *testing.T, store store.Store, container store.Cont
 		// two boards
 		for _, boardID := range []string{"board1", "board2"} {
 			board := model.Block{
-				ID: boardID,
+				ID:     boardID,
 				RootID: boardID,
-				Type: model.TypeBoard,
+				Type:   model.TypeBoard,
 			}
 			require.NoError(t, store.InsertBlock(container, &board, userID))
 		}
@@ -54,10 +54,10 @@ func testGetUsedCardsCount(t *testing.T, store store.Store, container store.Cont
 		// board 1 has three cards
 		for _, cardID := range []string{"card1", "card2", "card3"} {
 			card := model.Block{
-				ID: cardID,
+				ID:       cardID,
 				ParentID: "board1",
-				RootID: "board1",
-				Type: model.TypeCard,
+				RootID:   "board1",
+				Type:     model.TypeCard,
 			}
 			require.NoError(t, store.InsertBlock(container, &card, userID))
 		}
@@ -65,10 +65,10 @@ func testGetUsedCardsCount(t *testing.T, store store.Store, container store.Cont
 		// board 2 has two cards
 		for _, cardID := range []string{"card4", "card5"} {
 			card := model.Block{
-				ID: cardID,
+				ID:       cardID,
 				ParentID: "board2",
-				RootID: "board2",
-				Type: model.TypeCard,
+				RootID:   "board2",
+				Type:     model.TypeCard,
 			}
 			require.NoError(t, store.InsertBlock(container, &card, userID))
 		}
@@ -81,18 +81,18 @@ func testGetUsedCardsCount(t *testing.T, store store.Store, container store.Cont
 	t.Run("should not take into account content blocks", func(t *testing.T) {
 		// we add a couple of content blocks
 		text := model.Block{
-			ID: "text-id",
+			ID:       "text-id",
 			ParentID: "card1",
-			RootID: "board1",
-			Type: model.TypeText,
+			RootID:   "board1",
+			Type:     model.TypeText,
 		}
 		require.NoError(t, store.InsertBlock(container, &text, userID))
 
 		view := model.Block{
-			ID: "view-id",
+			ID:       "view-id",
 			ParentID: "board1",
-			RootID: "board1",
-			Type: model.TypeView,
+			RootID:   "board1",
+			Type:     model.TypeView,
 		}
 		require.NoError(t, store.InsertBlock(container, &view, userID))
 
@@ -106,9 +106,9 @@ func testGetUsedCardsCount(t *testing.T, store store.Store, container store.Cont
 		// we add a template with cards
 		templateID := "template-id"
 		boardTemplate := model.Block{
-			ID: templateID,
+			ID:     templateID,
 			RootID: templateID,
-			Type: model.TypeBoard,
+			Type:   model.TypeBoard,
 			Fields: map[string]interface{}{
 				"isTemplate": true,
 			},
@@ -117,10 +117,10 @@ func testGetUsedCardsCount(t *testing.T, store store.Store, container store.Cont
 
 		for _, cardID := range []string{"card6", "card7", "card8"} {
 			card := model.Block{
-				ID: cardID,
+				ID:       cardID,
 				ParentID: templateID,
-				RootID: templateID,
-				Type: model.TypeCard,
+				RootID:   templateID,
+				Type:     model.TypeCard,
 			}
 			require.NoError(t, store.InsertBlock(container, &card, userID))
 		}
@@ -134,10 +134,10 @@ func testGetUsedCardsCount(t *testing.T, store store.Store, container store.Cont
 	t.Run("should not take into account deleted cards", func(t *testing.T) {
 		// we create a ninth card on the first board
 		card9 := model.Block{
-			ID: "card9",
+			ID:       "card9",
 			ParentID: "board1",
-			RootID: "board1",
-			Type: model.TypeCard,
+			RootID:   "board1",
+			Type:     model.TypeCard,
 			DeleteAt: utils.GetMillis(),
 		}
 		require.NoError(t, store.InsertBlock(container, &card9, userID))
@@ -155,9 +155,9 @@ func testGetCardLimitTimestamp(t *testing.T, store store.Store, container store.
 	// two boards
 	for _, boardID := range []string{"board1", "board2"} {
 		board := model.Block{
-			ID: boardID,
+			ID:     boardID,
 			RootID: boardID,
-			Type: model.TypeBoard,
+			Type:   model.TypeBoard,
 		}
 		require.NoError(t, store.InsertBlock(container, &board, userID))
 	}
@@ -165,10 +165,10 @@ func testGetCardLimitTimestamp(t *testing.T, store store.Store, container store.
 	// board 1 has five cards
 	for _, cardID := range []string{"card1", "card2", "card3", "card4", "card5"} {
 		card := model.Block{
-			ID: cardID,
+			ID:       cardID,
 			ParentID: "board1",
-			RootID: "board1",
-			Type: model.TypeCard,
+			RootID:   "board1",
+			Type:     model.TypeCard,
 		}
 		require.NoError(t, store.InsertBlock(container, &card, userID))
 		time.Sleep(10 * time.Millisecond)
@@ -177,10 +177,10 @@ func testGetCardLimitTimestamp(t *testing.T, store store.Store, container store.
 	// board 2 has five cards
 	for _, cardID := range []string{"card6", "card7", "card8", "card9", "card10"} {
 		card := model.Block{
-			ID: cardID,
+			ID:       cardID,
 			ParentID: "board2",
-			RootID: "board2",
-			Type: model.TypeCard,
+			RootID:   "board2",
+			Type:     model.TypeCard,
 		}
 		require.NoError(t, store.InsertBlock(container, &card, userID))
 		time.Sleep(10 * time.Millisecond)

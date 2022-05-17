@@ -5,14 +5,14 @@ import (
 )
 
 const (
-	websocketActionAuth                 = "AUTH"
-	websocketActionSubscribeWorkspace   = "SUBSCRIBE_WORKSPACE"
-	websocketActionUnsubscribeWorkspace = "UNSUBSCRIBE_WORKSPACE"
-	websocketActionSubscribeBlocks      = "SUBSCRIBE_BLOCKS"
-	websocketActionUnsubscribeBlocks    = "UNSUBSCRIBE_BLOCKS"
-	websocketActionUpdateBlock          = "UPDATE_BLOCK"
-	websocketActionUpdateConfig         = "UPDATE_CLIENT_CONFIG"
-	websocketActionUpdateSubscription   = "UPDATE_SUBSCRIPTION"
+	websocketActionAuth                     = "AUTH"
+	websocketActionSubscribeWorkspace       = "SUBSCRIBE_WORKSPACE"
+	websocketActionUnsubscribeWorkspace     = "UNSUBSCRIBE_WORKSPACE"
+	websocketActionSubscribeBlocks          = "SUBSCRIBE_BLOCKS"
+	websocketActionUnsubscribeBlocks        = "UNSUBSCRIBE_BLOCKS"
+	websocketActionUpdateBlock              = "UPDATE_BLOCK"
+	websocketActionUpdateConfig             = "UPDATE_CLIENT_CONFIG"
+	websocketActionUpdateSubscription       = "UPDATE_SUBSCRIPTION"
 	websocketActionUpdateCardLimitTimestamp = "UPDATE_CARD_LIMIT_TIMESTAMP"
 )
 
