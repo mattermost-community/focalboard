@@ -10,6 +10,7 @@ import (
 )
 
 func TestBlocksStore(t *testing.T) {
+	/*
 	t.Run("BlocksStore", func(t *testing.T) { storetests.StoreTestBlocksStore(t, SetupTests) })
 	t.Run("SharingStore", func(t *testing.T) { storetests.StoreTestSharingStore(t, SetupTests) })
 	t.Run("SystemStore", func(t *testing.T) { storetests.StoreTestSystemStore(t, SetupTests) })
@@ -18,4 +19,7 @@ func TestBlocksStore(t *testing.T) {
 	t.Run("WorkspaceStore", func(t *testing.T) { storetests.StoreTestWorkspaceStore(t, SetupTests) })
 	t.Run("SubscriptionStore", func(t *testing.T) { storetests.StoreTestSubscriptionsStore(t, SetupTests) })
 	t.Run("NotificationHintStore", func(t *testing.T) { storetests.StoreTestNotificationHintsStore(t, SetupTests) })
+	*/
+	t.Run("CloudStore", func(t *testing.T) { storetests.StoreTestCloudStore(t, SetupTests) })
+
 }

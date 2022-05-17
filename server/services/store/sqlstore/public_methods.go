@@ -147,6 +147,16 @@ func (s *SQLStore) GetBoardAndCardByID(c store.Container, blockID string) (*mode
 
 }
 
+func (s *SQLStore) GetCardLimitTimestamp(cardLimit int) (int64, error) {
+	return s.getCardLimitTimestamp(s.db, cardLimit)
+
+}
+
+func (s *SQLStore) GetCloudLimits() (*mmModel.ProductLimits, error) {
+	return s.getCloudLimits(s.db)
+
+}
+
 func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
 	return s.getDefaultTemplateBlocks(s.db)
 
@@ -229,6 +239,11 @@ func (s *SQLStore) GetSystemSetting(key string) (string, error) {
 
 func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 	return s.getSystemSettings(s.db)
+
+}
+
+func (s *SQLStore) GetUsedCardsCount() (int, error) {
+	return s.getUsedCardsCount(s.db)
 
 }
 

@@ -361,6 +361,36 @@ func (mr *MockStoreMockRecorder) GetBoardAndCardByID(arg0, arg1 interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoardAndCardByID", reflect.TypeOf((*MockStore)(nil).GetBoardAndCardByID), arg0, arg1)
 }
 
+// GetCardLimitTimestamp mocks base method.
+func (m *MockStore) GetCardLimitTimestamp(arg0 int) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCardLimitTimestamp", arg0)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCardLimitTimestamp indicates an expected call of GetCardLimitTimestamp.
+func (mr *MockStoreMockRecorder) GetCardLimitTimestamp(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCardLimitTimestamp", reflect.TypeOf((*MockStore)(nil).GetCardLimitTimestamp), arg0)
+}
+
+// GetCloudLimits mocks base method.
+func (m *MockStore) GetCloudLimits() (*model0.ProductLimits, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCloudLimits")
+	ret0, _ := ret[0].(*model0.ProductLimits)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCloudLimits indicates an expected call of GetCloudLimits.
+func (mr *MockStoreMockRecorder) GetCloudLimits() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCloudLimits", reflect.TypeOf((*MockStore)(nil).GetCloudLimits))
+}
+
 // GetDefaultTemplateBlocks mocks base method.
 func (m *MockStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
 	m.ctrl.T.Helper()
@@ -613,6 +643,21 @@ func (m *MockStore) GetSystemSettings() (map[string]string, error) {
 func (mr *MockStoreMockRecorder) GetSystemSettings() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSystemSettings", reflect.TypeOf((*MockStore)(nil).GetSystemSettings))
+}
+
+// GetUsedCardsCount mocks base method.
+func (m *MockStore) GetUsedCardsCount() (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUsedCardsCount")
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUsedCardsCount indicates an expected call of GetUsedCardsCount.
+func (mr *MockStoreMockRecorder) GetUsedCardsCount() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsedCardsCount", reflect.TypeOf((*MockStore)(nil).GetUsedCardsCount))
 }
 
 // GetUserByEmail mocks base method.

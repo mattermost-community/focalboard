@@ -62,6 +62,10 @@ type Block struct {
 	// The workspace id that the block belongs to
 	// required: true
 	WorkspaceID string `json:"workspaceId"`
+
+	// Indicates if the card is limited
+	// required: false
+	Limited bool `json:"limited,omitempty"`
 }
 
 // BlockPatch is a patch for modify blocks
@@ -194,5 +198,32 @@ func StampModificationMetadata(userID string, blocks []Block, auditRec *audit.Re
 		if auditRec != nil {
 			auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), blocks[i])
 		}
+	}
+}
+
+// ToDo: test
+// Returns a limited version of the block that doesn't contain the
+// contents of the block, only its IDs and type
+func (b Block) GetLimited() Block {
+	iconField, ok := b.Fields["icon"]
+	if !ok {
+		iconField = ""
+	}
+
+	return Block{
+		Title: b.Title,
+		ID: b.ID,
+		ParentID: b.ParentID,
+		RootID: b.RootID,
+		Schema: b.Schema,
+		Type: b.Type,
+		Fields: map[string]interface{}{
+			"icon": iconField,
+		},
+		CreateAt: b.CreateAt,
+		UpdateAt: b.UpdateAt,
+		DeleteAt: b.DeleteAt,
+		WorkspaceID: b.WorkspaceID,
+		Limited: true,
 	}
 }

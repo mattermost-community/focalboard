@@ -330,6 +330,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		mlog.Int("block_count", len(blocks)),
 	)
 
+	blocks = a.app.ApplyCloudLimits(blocks)
 	json, err := json.Marshal(blocks)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -865,6 +866,8 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	// ToDo: prevent updates if cloud limited
+
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
@@ -982,6 +985,8 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 		mlog.String("blockID", blockID),
 		mlog.Int("block_count", len(blocks)),
 	)
+
+	blocks = a.app.ApplyCloudLimits(blocks)
 	json, err := json.Marshal(blocks)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -1960,10 +1965,6 @@ func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	boardsCloudLimits, err := a.app.GetBoardsCloudLimits()
-	if errors.Is(err, app.ErrNilPluginAPI) {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", err)
-		return
-	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

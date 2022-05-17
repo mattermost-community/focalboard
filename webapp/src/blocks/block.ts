@@ -40,6 +40,8 @@ interface Block {
     createAt: number
     updateAt: number
     deleteAt: number
+
+    limited?: boolean
 }
 
 function createBlock(block?: Block): Block {
@@ -58,6 +60,7 @@ function createBlock(block?: Block): Block {
         createAt: block?.createAt || now,
         updateAt: block?.updateAt || now,
         deleteAt: block?.deleteAt || 0,
+        limited: Boolean(block?.limited),
     }
 }
 

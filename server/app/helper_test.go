@@ -37,6 +37,8 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	webhook := webhook.NewClient(&cfg, logger)
 	metricsService := metrics.NewMetrics(metrics.InstanceInfo{})
 
+	// ToDo: mock app
+
 	appServices := Services{
 		Auth:             auth,
 		Store:            store,

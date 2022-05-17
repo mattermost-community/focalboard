@@ -99,11 +99,15 @@ type Store interface {
 	RemoveDefaultTemplates(blocks []model.Block) error
 	GetDefaultTemplateBlocks() ([]model.Block, error)
 
+	GetUsedCardsCount() (int, error)
+	GetCardLimitTimestamp(cardLimit int) (int64, error)
+
 	DBType() string
 
 	IsErrNotFound(err error) bool
 
 	GetLicense() *mmModel.License
+	GetCloudLimits() (*mmModel.ProductLimits, error)
 }
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.
