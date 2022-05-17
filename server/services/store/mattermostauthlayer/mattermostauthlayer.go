@@ -18,6 +18,8 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
+
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 )
 
 const (
@@ -41,6 +43,11 @@ func (pe NotSupportedError) Error() string {
 	return pe.msg
 }
 
+var systemsBot = &mmModel.Bot{
+	Username:    mmModel.BotSystemBotUsername,
+	DisplayName: "System",
+}
+
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
@@ -48,16 +55,18 @@ type MattermostAuthLayer struct {
 	mmDB      *sql.DB
 	logger    *mlog.Logger
 	pluginAPI plugin.API
+	client    *pluginapi.Client
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API) (*MattermostAuthLayer, error) {
+func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API, client *pluginapi.Client) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
 		Store:     store,
 		dbType:    dbType,
 		mmDB:      db,
 		logger:    logger,
 		pluginAPI: pluginAPI,
+		client:    client,
 	}
 
 	return layer, nil
@@ -503,38 +512,24 @@ func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, err
 	return channel.Id, nil
 }
 
-func (s *MattermostAuthLayer) getSystemBot() (*mmModel.Bot, error) {
-	bot, err := s.pluginAPI.GetBot(mmModel.BotSystemBotUsername, false)
+func (s *MattermostAuthLayer) getSystemBotID() (string, error) {
+	botID, err := s.client.Bot.EnsureBot(systemsBot)
 	if err != nil {
-		if err.Id == "store.sql_bot.get.missing.app_error" {
-			createdBot, createBotErr := s.pluginAPI.CreateBot(&mmModel.Bot{
-				Username:    mmModel.BotSystemBotUsername,
-				DisplayName: "System",
-			})
-
-			if createBotErr != nil {
-				s.logger.Error("failed to create systems bot", mlog.Err(createBotErr))
-				return nil, createBotErr
-			}
-
-			bot = createdBot
-		} else {
-			s.logger.Error("failed to get bot for sending message from SendMessage", mlog.Err(err))
-			return nil, err
-		}
+		s.logger.Error("failed to ensure system bot", mlog.String("username", systemsBot.Username), mlog.Err(err))
+		return "", err
 	}
 
-	return bot, nil
+	return botID, nil
 }
 
 func (s *MattermostAuthLayer) SendMessage(message string, receipts []string) error {
-	bot, err := s.getSystemBot()
+	botID, err := s.getSystemBotID()
 	if err != nil {
 		return err
 	}
 
 	for _, receipt := range receipts {
-		channel, err := s.pluginAPI.GetDirectChannel(bot.UserId, receipt)
+		channel, err := s.pluginAPI.GetDirectChannel(botID, receipt)
 		if err != nil {
 			s.logger.Error(
 				"failed to get DM channel between system bot and user for receipt",
@@ -547,7 +542,7 @@ func (s *MattermostAuthLayer) SendMessage(message string, receipts []string) err
 
 		post := &mmModel.Post{
 			Message:   message,
-			UserId:    bot.UserId,
+			UserId:    botID,
 			ChannelId: channel.Id,
 		}
 

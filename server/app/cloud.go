@@ -6,8 +6,10 @@ package app
 import (
 	"errors"
 	"fmt"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/focalboard/server/model"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 var ErrNilPluginAPI = errors.New("server not running in plugin mode")
@@ -37,11 +39,38 @@ func (a *App) NotifyPortalAdminsUpgradeRequest(workspaceID string) error {
 		return err
 	}
 
-	message := fmt.Sprintf("A member of %s has notified you to upgrade this workspace before the trial ends.", team.DisplayName)
-	receipt, err := a.store.GetPortalAdmin()
-	if err != nil {
-		return err
+	if a.pluginAPI == nil {
+		return ErrNilPluginAPI
 	}
 
-	return a.store.SendMessage(message, []string{receipt.Id})
+	message := fmt.Sprintf("A member of %s has notified you to upgrade this workspace before the trial ends.", team.DisplayName)
+
+	page := 0
+	getUsersOptions := &mmModel.UserGetOptions{
+		Active:  true,
+		Role:    mmModel.SystemAdminRoleId,
+		PerPage: 50,
+		Page:    page,
+	}
+
+	receiptUserIDs := []string{}
+
+	for ; true; page++ {
+		getUsersOptions.Page = page
+		systemAdmins, appErr := a.pluginAPI.GetUsers(getUsersOptions)
+		if appErr != nil {
+			a.logger.Error("failed to fetch system admins", mlog.Int("page_size", getUsersOptions.PerPage), mlog.Int("page", page), mlog.Err(appErr))
+			return appErr
+		}
+
+		if len(systemAdmins) == 0 {
+			break
+		}
+
+		for _, systemAdmin := range systemAdmins {
+			receiptUserIDs = append(receiptUserIDs, systemAdmin.Id)
+		}
+	}
+
+	return a.store.SendMessage(message, receiptUserIDs)
 }
