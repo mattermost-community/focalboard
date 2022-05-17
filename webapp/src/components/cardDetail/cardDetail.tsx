@@ -34,7 +34,6 @@ import './cardDetail.scss'
 
 export const OnboardingBoardTitle = 'Welcome to Boards!'
 export const OnboardingCardTitle = 'Create a new card'
-const CTA_URL = 'https://mattermost.com/pricing/'
 
 type Props = {
     board: Board
@@ -153,7 +152,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         <br/>
                         <a
                             className='CardDetail__limited-link'
-                            href={CTA_URL}
+                            onClick={() => (window as any).openPricingModal()}
                             target='_blank'
                             rel='noreferrer'
                         >
@@ -165,7 +164,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     </p>
                     <Button
                         className='CardDetail__limited-button'
-                        onClick={() => window.open(CTA_URL, '_blank')}
+                        onClick={() => (window as any).openPricingModal()}
                         emphasis='primary'
                         size='large'
                     >
