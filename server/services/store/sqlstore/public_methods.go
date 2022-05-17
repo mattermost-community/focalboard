@@ -20,6 +20,8 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
+
 )
 
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
