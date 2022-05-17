@@ -104,7 +104,6 @@ type Store interface {
 
 	SendMessage(message string, receipts []string) error
 	GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error)
-	GetPortalAdmin() (*mmModel.User, error)
 }
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.

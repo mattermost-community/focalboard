@@ -406,21 +406,6 @@ func (mr *MockStoreMockRecorder) GetParentID(arg0, arg1 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetParentID", reflect.TypeOf((*MockStore)(nil).GetParentID), arg0, arg1)
 }
 
-// GetPortalAdmin mocks base method.
-func (m *MockStore) GetPortalAdmin() (*model0.User, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPortalAdmin")
-	ret0, _ := ret[0].(*model0.User)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetPortalAdmin indicates an expected call of GetPortalAdmin.
-func (mr *MockStoreMockRecorder) GetPortalAdmin() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPortalAdmin", reflect.TypeOf((*MockStore)(nil).GetPortalAdmin))
-}
-
 // GetRegisteredUserCount mocks base method.
 func (m *MockStore) GetRegisteredUserCount() (int, error) {
 	m.ctrl.T.Helper()

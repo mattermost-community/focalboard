@@ -110,8 +110,8 @@ func (a *App) InsertBlock(c store.Container, block model.Block, modifiedByID str
 func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID string, allowNotifications bool) ([]model.Block, error) {
 	needsNotify := make([]model.Block, 0, len(blocks))
 	for i := range blocks {
-		// check for workspace ID allows creating template boards
-		// with more views that what limit allows.
+		// this check is needed to whitelist inbuilt template
+		// initialization. They do contain more than 5 views per board.
 		if c.WorkspaceID != "0" && blocks[i].Type == model.TypeView {
 			withinLimit, err := a.isWithinViewsLimit(c, blocks[i])
 			if err != nil {

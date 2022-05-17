@@ -34,16 +34,23 @@ func (a *App) GetBoardsCloudLimits() (*model.BoardsCloudLimits, error) {
 }
 
 func (a *App) NotifyPortalAdminsUpgradeRequest(workspaceID string) error {
+	if a.pluginAPI == nil {
+		return ErrNilPluginAPI
+	}
+
 	team, err := a.store.GetWorkspaceTeam(workspaceID)
 	if err != nil {
 		return err
 	}
 
-	if a.pluginAPI == nil {
-		return ErrNilPluginAPI
+	var ofWhat string
+	if team == nil {
+		ofWhat = "your organisation"
+	} else {
+		ofWhat = team.DisplayName
 	}
 
-	message := fmt.Sprintf("A member of %s has notified you to upgrade this workspace before the trial ends.", team.DisplayName)
+	message := fmt.Sprintf("A member of %s has notified you to upgrade this workspace before the trial ends.", ofWhat)
 
 	page := 0
 	getUsersOptions := &mmModel.UserGetOptions{

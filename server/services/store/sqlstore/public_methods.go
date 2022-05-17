@@ -14,7 +14,6 @@ package sqlstore
 
 import (
 	"context"
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -159,11 +158,6 @@ func (s *SQLStore) GetNotificationHint(c store.Container, blockID string) (*mode
 
 func (s *SQLStore) GetParentID(c store.Container, blockID string) (string, error) {
 	return s.getParentID(s.db, c, blockID)
-
-}
-
-func (s *SQLStore) GetPortalAdmin() (*mmModel.User, error) {
-	return s.getPortalAdmin(s.db)
 
 }
 

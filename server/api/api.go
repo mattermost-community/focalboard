@@ -119,8 +119,8 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	// cloud-specific functions
 	apiv1.HandleFunc("/workspace/{workspaceID}/notifyadminupgrade", a.sessionRequired(a.handleNotifyAdminUpgrade)).Methods(http.MethodPost)
 
-	// limits.ts
-	apiv1.HandleFunc("/limits.ts", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
+	// limits
+	apiv1.HandleFunc("/limits", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -1879,6 +1879,23 @@ func (a *API) handleGetUserWorkspaces(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v1/workspace/{workspaceID}/notifyadminupgrade handleNotifyAdminUpgrade
+	//
+	// Notifies admins for upgrade request.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
 	if !a.MattermostAuth {
 		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", errors.New(""))
 		return
@@ -1893,9 +1910,9 @@ func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/limits.ts cloudLimits
+	// swagger:operation GET /api/v1/limits cloudLimits
 	//
-	// Fetches the cloud limits.ts of the server.
+	// Fetches the cloud limits of the server.
 	//
 	// ---
 	// produces:

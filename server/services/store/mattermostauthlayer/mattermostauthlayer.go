@@ -566,6 +566,10 @@ func (s *MattermostAuthLayer) GetWorkspaceTeam(workspaceID string) (*mmModel.Tea
 		return nil, errors.New(err.Error())
 	}
 
+	if channel.Type == mmModel.ChannelTypeDirect || channel.Type == mmModel.ChannelTypeGroup {
+		return nil, nil
+	}
+
 	team, err := s.pluginAPI.GetTeam(channel.TeamId)
 	if err != nil {
 		s.logger.Error("failed to fetch team", mlog.String("team_id", channel.TeamId), mlog.String("channel_id", workspaceID), mlog.Err(errors.New(err.Error())))
@@ -573,36 +577,4 @@ func (s *MattermostAuthLayer) GetWorkspaceTeam(workspaceID string) (*mmModel.Tea
 	}
 
 	return team, nil
-}
-
-func (s *MattermostAuthLayer) GetPortalAdmin() (*mmModel.User, error) {
-	if !utils.IsCloudLicense(s.pluginAPI.GetLicense()) {
-		return nil, errNotCloudInstance
-	}
-
-	systemAdmins, err := s.pluginAPI.GetUsers(&mmModel.UserGetOptions{
-		Active:  true,
-		Role:    mmModel.SystemAdminRoleId,
-		PerPage: 10,
-		Sort:    "CreateAt",
-	})
-
-	if err != nil {
-		s.logger.Error("failed to fetch all system admins for finding portal admin", mlog.Err(err))
-		return nil, err
-	}
-
-	if len(systemAdmins) == 0 {
-		return nil, errors.New("no portal admin found, no system admin found")
-	}
-
-	portalAdmin := systemAdmins[0]
-
-	for i := 0; i < len(systemAdmins); i++ {
-		if systemAdmins[i].CreateAt < portalAdmin.CreateAt {
-			portalAdmin = systemAdmins[i]
-		}
-	}
-
-	return portalAdmin, nil
 }

@@ -15,10 +15,10 @@ type LimitsState = {
 
 const initialState = {
     limits: {
-        cards: -1,
-        used_cards: -1,
-        card_limit_timestamp: -1,
-        views: -1,
+        cards: 0,
+        used_cards: 0,
+        card_limit_timestamp: 0,
+        views: 0,
     },
 } as LimitsState
 
