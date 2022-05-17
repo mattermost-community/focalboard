@@ -20,7 +20,6 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
@@ -229,6 +228,16 @@ func (s *SQLStore) GetSystemSetting(key string) (string, error) {
 
 func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 	return s.getSystemSettings(s.db)
+
+}
+
+func (s *SQLStore) GetTeamBoardsInsights(teamID string, duration string) ([]*model.BoardInsight, error) {
+	return s.getTeamBoardsInsights(s.db, teamID, duration)
+
+}
+
+func (s *SQLStore) GetUserBoardsInsights(userID string, teamID string, duration string) ([]*model.BoardInsight, error) {
+	return s.getUserBoardsInsights(s.db, userID, teamID, duration)
 
 }
 

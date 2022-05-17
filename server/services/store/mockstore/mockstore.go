@@ -615,6 +615,36 @@ func (mr *MockStoreMockRecorder) GetSystemSettings() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSystemSettings", reflect.TypeOf((*MockStore)(nil).GetSystemSettings))
 }
 
+// GetTeamBoardsInsights mocks base method.
+func (m *MockStore) GetTeamBoardsInsights(arg0, arg1 string) ([]*model.BoardInsight, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTeamBoardsInsights", arg0, arg1)
+	ret0, _ := ret[0].([]*model.BoardInsight)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTeamBoardsInsights indicates an expected call of GetTeamBoardsInsights.
+func (mr *MockStoreMockRecorder) GetTeamBoardsInsights(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamBoardsInsights", reflect.TypeOf((*MockStore)(nil).GetTeamBoardsInsights), arg0, arg1)
+}
+
+// GetUserBoardsInsights mocks base method.
+func (m *MockStore) GetUserBoardsInsights(arg0, arg1, arg2 string) ([]*model.BoardInsight, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserBoardsInsights", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]*model.BoardInsight)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserBoardsInsights indicates an expected call of GetUserBoardsInsights.
+func (mr *MockStoreMockRecorder) GetUserBoardsInsights(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserBoardsInsights", reflect.TypeOf((*MockStore)(nil).GetUserBoardsInsights), arg0, arg1, arg2)
+}
+
 // GetUserByEmail mocks base method.
 func (m *MockStore) GetUserByEmail(arg0 string) (*model.User, error) {
 	m.ctrl.T.Helper()

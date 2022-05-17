@@ -442,3 +442,17 @@ func (c *Client) GetSubscriptions(workspaceID string, subscriberID string) ([]*m
 
 	return subs, BuildResponse(r)
 }
+
+func (c *Client) GetTeamRoute(id string) string {
+	return fmt.Sprintf("/teams/%s", id)
+}
+
+func (c *Client) GetTeamBoardsInsights(teamID string, duration string) ([]model.BoardInsight, *Response) {
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/insights?duration="+duration, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardInsightsFromJSON(r.Body), BuildResponse(r)
+}

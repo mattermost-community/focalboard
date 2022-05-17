@@ -104,6 +104,10 @@ type Store interface {
 	IsErrNotFound(err error) bool
 
 	GetLicense() *mmModel.License
+
+	// Insights
+	GetTeamBoardsInsights(teamID string, duration string) ([]*model.BoardInsight, error)
+	GetUserBoardsInsights(userID string, teamID string, duration string) ([]*model.BoardInsight, error)
 }
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.

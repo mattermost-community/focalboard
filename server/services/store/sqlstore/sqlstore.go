@@ -2,6 +2,10 @@ package sqlstore
 
 import (
 	"database/sql"
+	"fmt"
+	"strconv"
+	"strings"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -97,4 +101,56 @@ func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam
 
 func (s *SQLStore) getLicense(db sq.BaseRunner) *mmModel.License {
 	return nil
+}
+
+func (s *SQLStore) durationSelector(interval string) int64 {
+	intervalMagnitudeString := strings.Fields(interval)[0]
+	intervalMagnitude, err := strconv.Atoi(intervalMagnitudeString)
+	if err != nil {
+		// handle error: buggy, change function to introduce err
+		return time.Now().UnixMilli()
+	}
+	if strings.Contains(interval, "day") {
+		return time.Now().AddDate(0, 0, -1*intervalMagnitude).UnixMilli()
+	}
+	if strings.Contains(interval, "month") {
+		return time.Now().AddDate(0, -1*intervalMagnitude, 0).UnixMilli()
+	}
+	if strings.Contains(interval, "year") {
+		return time.Now().AddDate(-1*intervalMagnitude, 0, 0).UnixMilli()
+	}
+	return time.Now().UnixMilli()
+}
+
+func (s *SQLStore) concatenationSelector(field string, delimiter string) string {
+	if s.dbType == sqliteDBType {
+		return fmt.Sprintf("group_concat(%s)", field)
+	}
+	if s.dbType == postgresDBType {
+		return fmt.Sprintf("string_agg(%s, '%s')", field, delimiter)
+	}
+	if s.dbType == mysqlDBType {
+		return fmt.Sprintf("GROUP_CONCAT(%s SEPARATOR '%s')", field, delimiter)
+	}
+	return ""
+}
+
+func (s *SQLStore) elementInColumn(parameterCount int, column string) string {
+	if s.dbType == sqliteDBType || s.dbType == mysqlDBType {
+		return fmt.Sprintf("instr(%s, %s) > 0", column, s.parameterPlaceholder(parameterCount))
+	}
+	if s.dbType == postgresDBType {
+		return fmt.Sprintf("position(%s in %s) > 0", s.parameterPlaceholder(parameterCount), column)
+	}
+	return ""
+}
+
+func (s *SQLStore) parameterPlaceholder(count int) string {
+	if s.dbType == postgresDBType || s.dbType == sqliteDBType {
+		return fmt.Sprintf("$%v", count)
+	}
+	if s.dbType == mysqlDBType {
+		return "?"
+	}
+	return ""
 }
