@@ -138,6 +138,11 @@ describe('src/components/workspace', () => {
         comments: {
             comments: {},
         },
+        limits: {
+            limits: {
+                views: 0,
+            },
+        },
     }
     const store = mockStateStore([], state)
     beforeAll(() => {
@@ -326,6 +331,11 @@ describe('src/components/workspace', () => {
             comments: {
                 comments: {},
             },
+            limits: {
+                limits: {
+                    views: 0,
+                },
+            },
         }
         const localStore = mockStateStore([], localState)
 
@@ -408,6 +418,11 @@ describe('src/components/workspace', () => {
             },
             comments: {
                 comments: {},
+            },
+            limits: {
+                limits: {
+                    views: 0,
+                },
             },
         }
         const localStore = mockStateStore([], localState)
@@ -496,6 +511,11 @@ describe('src/components/workspace', () => {
             },
             comments: {
                 comments: {},
+            },
+            limits: {
+                limits: {
+                    views: 0,
+                },
             },
         }
         const localStore = mockStateStore([], localState)
