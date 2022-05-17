@@ -35,8 +35,7 @@ func (s *SQLStore) activeCardsQuery(db sq.BaseRunner, selectStr string, cardLimi
 			"b.type": model.TypeCard,
 			"pb.type": model.TypeBoard,
 		}).
-		Where(parentIsNotTemplateFilter(s.dbType)).
-		OrderBy("b.update_at DESC")
+		Where(parentIsNotTemplateFilter(s.dbType))
 
 	if cardLimit != 0 {
 		query = query.
@@ -65,6 +64,7 @@ func (s *SQLStore) getUsedCardsCount(db sq.BaseRunner) (int, error) {
 // card, being the limit determined by the cardLimit parameter
 func (s *SQLStore) getCardLimitTimestamp(db sq.BaseRunner, cardLimit int) (int64, error) {
 	row := s.activeCardsQuery(db, "b.update_at", cardLimit).
+		OrderBy("b.update_at DESC").
 		QueryRow()
 
 	var cardLimitTimestamp int64
