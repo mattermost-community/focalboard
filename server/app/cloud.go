@@ -6,6 +6,7 @@ package app
 import (
 	"errors"
 	"fmt"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/focalboard/server/model"

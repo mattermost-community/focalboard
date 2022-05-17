@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"strings"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/mattermost-server/v6/plugin"
 
@@ -32,7 +33,6 @@ const (
 
 var (
 	errUnsupportedDatabaseError = errors.New("method is unsupported on current database. Supported databases are - MySQL and PostgreSQL")
-	errNotCloudInstance         = errors.New("not a cloud instance")
 )
 
 type NotSupportedError struct {
@@ -59,7 +59,14 @@ type MattermostAuthLayer struct {
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API, client *pluginapi.Client) (*MattermostAuthLayer, error) {
+func New(
+	dbType string,
+	db *sql.DB,
+	store store.Store,
+	logger *mlog.Logger,
+	pluginAPI plugin.API,
+	client *pluginapi.Client,
+) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
 		Store:     store,
 		dbType:    dbType,
@@ -572,7 +579,12 @@ func (s *MattermostAuthLayer) GetWorkspaceTeam(workspaceID string) (*mmModel.Tea
 
 	team, err := s.pluginAPI.GetTeam(channel.TeamId)
 	if err != nil {
-		s.logger.Error("failed to fetch team", mlog.String("team_id", channel.TeamId), mlog.String("channel_id", workspaceID), mlog.Err(errors.New(err.Error())))
+		s.logger.Error(
+			"failed to fetch team",
+			mlog.String("team_id", channel.TeamId),
+			mlog.String("channel_id", workspaceID),
+			mlog.Err(errors.New(err.Error())),
+		)
 		return nil, errors.New(err.Error())
 	}
 

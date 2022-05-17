@@ -34,6 +34,8 @@ const (
 	ErrorNoWorkspaceMessage = "No workspace"
 )
 
+var errEmpty = errors.New("")
+
 type PermissionError struct {
 	msg string
 }
@@ -1897,7 +1899,7 @@ func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", errors.New(""))
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", errEmpty)
 		return
 	}
 

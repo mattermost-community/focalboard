@@ -5,8 +5,9 @@ package store
 import (
 	"errors"
 	"fmt"
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"time"
+
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/focalboard/server/model"
 )

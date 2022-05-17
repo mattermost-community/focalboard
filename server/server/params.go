@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/store"
