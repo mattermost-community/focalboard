@@ -12,54 +12,48 @@ import (
 )
 
 func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, duration string) ([]*model.BoardInsight, error) {
-	/**
-	Some squirrel issues to note here are
-	1. https://github.com/Masterminds/squirrel/issues/285 - since we're using 1+ sub queries. When placeholders are counted for second query, the placeholder names are repeated.
-		This is the reason to not use conditional operators in Where clauses which would eventually parametrize the variables.
+	/*
+		Get top private, public boards, combine the list and filter the top 10. Note we can't limit 10 for subqueries.
 	*/
-	insightsQueryStr := fmt.Sprintf(`select
-		id,
-		title,
-		icon,
-		sum(count) as activity_count,
-		%s as active_users,
-		created_by
-	from
-		(
-			select
-				blocks.id,
-				blocks.fields->>'icon' as icon, blocks.title, count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by
-			from
-				%[2]vblocks_history as blocks_history
-				join %[2]vblocks as blocks on blocks_history.root_id = blocks.id
-				join channels as ch on ch.id = blocks_history.workspace_id
-			where
-				blocks_history.update_at > %[3]s
-				and ch.teamid = %[4]s
-				and blocks_history.modified_by != 'system'
-				and blocks.delete_at = 0
-			group by
-				blocks.title,
-				blocks.created_by,
-				blocks.id,
-				blocks_history.modified_by,
-				icon
-		) as boards_and_blocks_history
-	group by
-		id,
-		title,
-		icon,
-		created_by
-	order by
-		activity_count desc
-	limit 10;`,
-		s.concatenationSelector("distinct modified_by", ","),
-		s.tablePrefix,
-		s.parameterPlaceholder(1),
-		s.parameterPlaceholder(2),
-	)
-	args := []interface{}{s.durationSelector(duration), teamID}
-	rows, err := db.Query(insightsQueryStr, args...)
+	qb := s.getQueryBuilder(db)
+	publicBoards := qb.Select(`blocks.id, blocks.fields->>'icon' as icon, blocks.title,
+		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
+		Prefix("(").
+		From(s.tablePrefix + "blocks_history as blocks_history").
+		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
+		Join("PublicChannels as ch on ch.id = blocks_history.workspace_id").
+		Where(sq.Gt{"blocks_history.update_at": s.durationSelector(duration)}).
+		Where(sq.Eq{"ch.teamid": teamID}).
+		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
+		Where(sq.Eq{"blocks.delete_at": 0}).
+		GroupBy("blocks.title, blocks.created_by, blocks.id, blocks_history.modified_by, icon")
+
+	privateBoards := qb.Select(`blocks.id, blocks.fields->>'icon' as icon, blocks.title,
+		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
+		Prefix(") UNION ALL (").
+		From(s.tablePrefix + "blocks_history as blocks_history").
+		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
+		Join("channels as ch on ch.id = blocks_history.workspace_id").
+		Where(sq.Gt{"blocks_history.update_at": s.durationSelector(duration)}).
+		Where(sq.Eq{"ch.teamid": teamID}).
+		Where(sq.Eq{"ch.type": "P"}).
+		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
+		Where(sq.Eq{"blocks.delete_at": 0}).
+		GroupBy("blocks.title, blocks.created_by, blocks.id, blocks_history.modified_by, icon").
+		Suffix(")")
+
+	// sql, args, _ := q2.ToSql()
+	boardsActivity := publicBoards.SuffixExpr(privateBoards)
+
+	insightsQuery := qb.Select(fmt.Sprintf("id, title, icon, sum(count) as activity_count, %s as active_users, created_by",
+		s.concatenationSelector("distinct modified_by", ","))).
+		FromSelect(boardsActivity, "boards_and_blocks_history").
+		GroupBy("id, title, icon, created_by").
+		OrderBy("activity_count desc").
+		Limit(10)
+
+	insightsQuery = insightsQuery.PlaceholderFormat(sq.Dollar)
+	rows, err := insightsQuery.Query()
 
 	if err != nil {
 		s.logger.Debug(`Team insights query ERROR`, mlog.Err(err))
@@ -69,88 +63,82 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, durati
 
 	boardInsights, err := boardsInsightsFromRows(rows)
 	if err != nil {
-		fmt.Println("something line 90")
-		s.logger.Debug(`Rows parsing error`, mlog.Err(err))
-		s.logger.Info(`Rows parsing error`, mlog.Err(err))
+		s.logger.Debug(`Team insights parsing error`, mlog.Err(err))
 		return nil, err
 	}
-	err = rows.Err()
-	if err != nil {
-		fmt.Println(err)
-	}
+
 	return boardInsights, nil
 }
 
 func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, teamID string, duration string) ([]*model.BoardInsight, error) {
 	/**
-	Some squirrel issues to note here are
-	1. https://github.com/Masterminds/squirrel/issues/285 - since we're using 1+ sub queries. When placeholders are counted for second query, the placeholder names are repeated.
-		This is the reason to not use conditional operators in Where clauses which would eventually parametrize the variables.
+	Get top 10 private, public boards, combine the list and filter the top 10
 	*/
-	insightsQueryStr := fmt.Sprintf(`select * from (select
-		id,
-		title,
-		icon,
-		sum(count) as activity_count,
-		%s as active_users,
-		created_by
-	from
-		(
-			select
-				blocks.id,
-				blocks.fields->>'icon' as icon, blocks.title, count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by
-			from
-				%[2]vblocks_history as blocks_history
-				join %[2]vblocks as blocks on blocks_history.root_id = blocks.id
-				join channels as ch on ch.id = blocks_history.workspace_id
-			where
-				blocks_history.update_at > %[3]s
-				and ch.teamid = %[4]s
-				and blocks_history.modified_by != 'system'
-				and blocks.delete_at = 0
-			group by
-				blocks.title,
-				blocks.created_by,
-				blocks.id,
-				blocks_history.modified_by,
-				icon
-		) as boards_and_blocks_history
-	group by
-		id,
-		title,
-		icon,
-		created_by
-	order by
-		activity_count desc) as boards_insights
-	where
-		created_by = %[5]s
-		or %[6]s
-	limit 10;`,
-		s.concatenationSelector("distinct modified_by", ","),
-		s.tablePrefix,
-		s.parameterPlaceholder(1),
-		s.parameterPlaceholder(2),
-		s.parameterPlaceholder(3),
-		s.elementInColumn(4, "active_users"))
-	args := []interface{}{s.durationSelector(duration), teamID, userID, userID}
-	rows, err := db.Query(insightsQueryStr, args...)
+	qb := s.getQueryBuilder(db)
+	publicBoards := qb.Select(`blocks.id, blocks.fields->>'icon' as icon, blocks.title,
+		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
+		Prefix("(").
+		From(s.tablePrefix + "blocks_history as blocks_history").
+		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
+		Join("PublicChannels as ch on ch.id = blocks_history.workspace_id").
+		Where(sq.Gt{"blocks_history.update_at": s.durationSelector(duration)}).
+		Where(sq.Eq{"ch.teamid": teamID}).
+		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
+		Where(sq.Eq{"blocks.delete_at": 0}).
+		GroupBy("blocks.title, blocks.created_by, blocks.id, blocks_history.modified_by, icon").
+		Limit(10)
+
+	privateBoards := qb.Select(`blocks.id, blocks.fields->>'icon' as icon, blocks.title,
+		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
+		Prefix(") UNION ALL (").
+		From(s.tablePrefix + "blocks_history as blocks_history").
+		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
+		Join("channels as ch on ch.id = blocks_history.workspace_id").
+		Where(sq.Gt{"blocks_history.update_at": s.durationSelector(duration)}).
+		Where(sq.Eq{"ch.teamid": teamID}).
+		Where(sq.Eq{"ch.type": "P"}).
+		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
+		Where(sq.Eq{"blocks.delete_at": 0}).
+		GroupBy("blocks.title, blocks.created_by, blocks.id, blocks_history.modified_by, icon").
+		Limit(10).
+		Suffix(")")
+
+	boardsActivity := publicBoards.SuffixExpr(privateBoards)
+
+	userInsightsQuery := qb.Select("*").FromSelect(qb.Select(fmt.Sprintf("id, title, icon, sum(count) as activity_count, %s as active_users, created_by",
+		s.concatenationSelector("distinct modified_by", ","))).
+		FromSelect(boardsActivity, "boards_and_blocks_history").
+		GroupBy("id, title, icon, created_by").
+		OrderBy("activity_count desc"), "team_insights").
+		Where(sq.Eq{
+			"created_by": userID,
+		}).
+		// due to lack of position operator, we have to hardcode arguments, and placeholder here
+		Where(s.elementInColumn(11, "active_users")).
+		Limit(10)
+	userInsightsQueryStr, args, err := userInsightsQuery.ToSql()
+	if err != nil {
+		s.logger.Debug(`User insights query parsing ERROR`, mlog.Err(err))
+		return nil, err
+	}
+
+	// adding the 11th argument
+	args = append(args, userID)
+
+	rows, err := db.Query(userInsightsQueryStr, args...)
 
 	if err != nil {
-		s.logger.Debug(`Team insights query ERROR`, mlog.Err(err))
+		s.logger.Debug(`User insights query ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
 
 	boardInsights, err := boardsInsightsFromRows(rows)
 	if err != nil {
-		fmt.Println("something line 90")
-		s.logger.Debug(`Rows parsing error`, mlog.Err(err))
+		s.logger.Debug(`User insights rows parsing error`, mlog.Err(err))
 		return nil, err
 	}
-	err = rows.Err()
-	if err != nil {
-		fmt.Println(err)
-	}
+
 	return boardInsights, nil
 }
 
