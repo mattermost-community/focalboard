@@ -102,7 +102,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       />
       <input
         class="Editable "
-        placeholder="Search text"
+        placeholder="Search cards"
         value=""
       />
     </div>
@@ -194,7 +194,7 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
       />
       <input
         class="Editable "
-        placeholder="Search text"
+        placeholder="Search cards"
         value=""
       />
     </div>
@@ -246,7 +246,7 @@ exports[`components/viewHeader/viewHeader return viewHeader without permissions 
       />
       <input
         class="Editable "
-        placeholder="Search text"
+        placeholder="Search cards"
         value=""
       />
     </div>

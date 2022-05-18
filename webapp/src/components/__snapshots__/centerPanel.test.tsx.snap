@@ -252,7 +252,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -756,7 +756,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -1365,7 +1365,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -2072,7 +2072,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -2779,7 +2779,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -3486,7 +3486,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -4193,7 +4193,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -4900,7 +4900,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -5607,7 +5607,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -6314,7 +6314,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -7021,7 +7021,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -7710,7 +7710,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -8042,7 +8042,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -8539,7 +8539,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>
@@ -9083,7 +9083,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           />
           <input
             class="Editable "
-            placeholder="Search text"
+            placeholder="Search cards"
             value=""
           />
         </div>

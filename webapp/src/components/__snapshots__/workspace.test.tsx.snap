@@ -519,7 +519,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               />
               <input
                 class="Editable "
-                placeholder="Search text"
+                placeholder="Search cards"
                 value=""
               />
             </div>
@@ -1031,7 +1031,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               />
               <input
                 class="Editable "
-                placeholder="Search text"
+                placeholder="Search cards"
                 value=""
               />
             </div>
@@ -1746,7 +1746,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
               />
               <input
                 class="Editable "
-                placeholder="Search text"
+                placeholder="Search cards"
                 value=""
               />
             </div>
@@ -2258,7 +2258,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               />
               <input
                 class="Editable "
-                placeholder="Search text"
+                placeholder="Search cards"
                 value=""
               />
             </div>

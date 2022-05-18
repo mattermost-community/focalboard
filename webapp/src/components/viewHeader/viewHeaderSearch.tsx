@@ -61,7 +61,7 @@ const ViewHeaderSearch = (): JSX.Element => {
             <Editable
                 ref={searchFieldRef}
                 value={searchValue}
-                placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search'})}
+                placeholderText={intl.formatMessage({id: 'ViewHeader.search-text', defaultMessage: 'Search cards'})}
                 onChange={(value) => {
                     setSearchValue(value)
                     debouncedDispatchSearchText(value)
