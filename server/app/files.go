@@ -7,14 +7,14 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/focalboard/server/utils"
-
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+const emptyString = "empty"
 
 var errEmptyFilename = errors.New("IsFileArchived: empty filename not allowed")
 
@@ -36,21 +36,21 @@ func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (
 
 	now := utils.GetMillis()
 
-	fileInfo := &model.FileInfo{
+	fileInfo := &mmModel.FileInfo{
 		Id:              createdFilename[1:],
 		CreatorId:       "boards",
-		PostId:          " ",
-		ChannelId:       " ",
+		PostId:          emptyString,
+		ChannelId:       emptyString,
 		CreateAt:        now,
 		UpdateAt:        now,
 		DeleteAt:        0,
-		Path:            " ",
-		ThumbnailPath:   " ",
-		PreviewPath:     " ",
+		Path:            emptyString,
+		ThumbnailPath:   emptyString,
+		PreviewPath:     emptyString,
 		Name:            filename,
 		Extension:       fileExtension,
 		Size:            fileSize,
-		MimeType:        " ",
+		MimeType:        emptyString,
 		Width:           0,
 		Height:          0,
 		HasPreviewImage: false,
@@ -66,7 +66,7 @@ func (a *App) SaveFile(reader io.Reader, workspaceID, rootID, filename string) (
 	return fullFilename, nil
 }
 
-func (a *App) GetFileInfo(filename string) (*model.FileInfo, error) {
+func (a *App) GetFileInfo(filename string) (*mmModel.FileInfo, error) {
 	if len(filename) == 0 {
 		return nil, errEmptyFilename
 	}
@@ -79,10 +79,6 @@ func (a *App) GetFileInfo(filename string) (*model.FileInfo, error) {
 	fileInfo, err := a.store.GetFileInfo(fileInfoID)
 	if err != nil {
 		return nil, err
-	}
-
-	if fileInfo == nil {
-		return nil, nil
 	}
 
 	return fileInfo, nil

@@ -52,4 +52,25 @@ describe('components/content/ImageElement', () => {
         })
         expect(imageContainer).toMatchSnapshot()
     })
+
+    test('archived file', async () => {
+        mockedOcto.getFileAsDataUrl.mockResolvedValue({
+            archived: true,
+            name: 'Filename',
+            extension: '.txt',
+            size: 165002,
+        })
+
+        const component = wrapIntl(
+            <ImageElement
+                block={defaultBlock}
+            />,
+        )
+        let imageContainer: Element | undefined
+        await act(async () => {
+            const {container} = render(component)
+            imageContainer = container
+        })
+        expect(imageContainer).toMatchSnapshot()
+    })
 })
