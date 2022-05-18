@@ -16,10 +16,11 @@ import (
 	"context"
 	"time"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -378,8 +379,8 @@ func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
 
 }
 
-func (s *SQLStore) SendMessage(message string, receipts []string) error {
-	return s.sendMessage(s.db, message, receipts)
+func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
+	return s.sendMessage(s.db, message, postType, receipts)
 
 }
 

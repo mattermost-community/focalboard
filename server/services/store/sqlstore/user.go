@@ -256,6 +256,6 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 	return s.updateUser(db, user)
 }
 
-func (s *SQLStore) sendMessage(db sq.BaseRunner, message string, receipts []string) error {
+func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, receipts []string) error {
 	return errUnsupportedOperation
 }

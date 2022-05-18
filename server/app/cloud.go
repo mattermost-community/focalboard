@@ -80,5 +80,5 @@ func (a *App) NotifyPortalAdminsUpgradeRequest(workspaceID string) error {
 		}
 	}
 
-	return a.store.SendMessage(message, receiptUserIDs)
+	return a.store.SendMessage(message, "custom_cloud_upgrade_nudge", receiptUserIDs)
 }

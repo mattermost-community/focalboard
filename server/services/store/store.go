@@ -103,7 +103,7 @@ type Store interface {
 
 	IsErrNotFound(err error) bool
 
-	SendMessage(message string, receipts []string) error
+	SendMessage(message, postType string, receipts []string) error
 	GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error)
 }
 

@@ -529,7 +529,7 @@ func (s *MattermostAuthLayer) getSystemBotID() (string, error) {
 	return botID, nil
 }
 
-func (s *MattermostAuthLayer) SendMessage(message string, receipts []string) error {
+func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []string) error {
 	botID, err := s.getSystemBotID()
 	if err != nil {
 		return err
@@ -551,6 +551,7 @@ func (s *MattermostAuthLayer) SendMessage(message string, receipts []string) err
 			Message:   message,
 			UserId:    botID,
 			ChannelId: channel.Id,
+			Type:      postType,
 		}
 
 		if _, err := s.pluginAPI.CreatePost(post); err != nil {
