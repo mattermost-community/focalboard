@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -114,6 +115,10 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	// archives
 	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/export", a.sessionRequired(a.handleArchiveExport)).Methods("GET")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
+
+	apiv1.HandleFunc("/boards/{boardID}/metadata", a.sessionRequired(a.handleGetBoardMetadata)).Methods("GET")
+	// limits
+	apiv1.HandleFunc("/limits", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -484,7 +489,7 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 	//   default:
 	//     description: internal error
 	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse
+	//       "$ref": "#/definitions/ErrorResponse"
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -608,12 +613,13 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
 	if session.UserID == model.SingleUser {
+		ws, _ := a.app.GetRootWorkspace()
 		now := utils.GetMillis()
 		user = &model.User{
 			ID:       model.SingleUser,
 			Username: model.SingleUser,
 			Email:    model.SingleUser,
-			CreateAt: now,
+			CreateAt: ws.UpdateAt,
 			UpdateAt: now,
 		}
 	} else {
@@ -1530,6 +1536,74 @@ func (a *API) getWorkspaceUsers(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
+func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v1/boards/{boardID}/metadata getBoardMetadata
+	//
+	// Returns a board's metadata
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: boardID
+	//   in: path
+	//   description: Board ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/BoardMetadata"
+	//   '404':
+	//     description: board not found
+	//   '501':
+	//     description: required license not found
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	boardID := mux.Vars(r)["boardID"]
+
+	container, err := a.getContainer(r)
+	if err != nil {
+		a.noContainerErrorResponse(w, r.URL.Path, err)
+		return
+	}
+
+	board, boardMetadata, err := a.app.GetBoardMetadata(*container, boardID)
+	if errors.Is(err, app.ErrInsufficientLicense) {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", err)
+		return
+	}
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if board == nil || boardMetadata == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getBoardMetadata", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+
+	data, err := json.Marshal(boardMetadata)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.Success()
+}
+
 // subscriptions
 
 func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
@@ -1882,6 +1956,45 @@ func (a *API) handleGetUserWorkspaces(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data, err := json.Marshal(userWorkspaces)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+}
+
+func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v1/limits cloudLimits
+	//
+	// Fetches the cloud limits of the server.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//         "$ref": "#/definitions/BoardsCloudLimits"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	boardsCloudLimits, err := a.app.GetBoardsCloudLimits()
+	if errors.Is(err, app.ErrNilPluginAPI) {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", err)
+		return
+	}
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(boardsCloudLimits)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

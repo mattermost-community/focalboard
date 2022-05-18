@@ -174,6 +174,29 @@ func (c *Client) GetBlocks() ([]model.Block, *Response) {
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) GetBoardsRoute() string {
+	return "/boards"
+}
+
+func (c *Client) GetBoardMetadataRoute(boardID string) string {
+	return fmt.Sprintf("%s/%s/metadata", c.GetBoardsRoute(), boardID)
+}
+
+func (c *Client) GetBoardMetadata(boardID, readToken string) (*model.BoardMetadata, *Response) {
+	url := c.GetBoardMetadataRoute(boardID)
+	if readToken != "" {
+		url += fmt.Sprintf("?read_token=%s", readToken)
+	}
+
+	r, err := c.DoAPIGet(url, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardMetadataFromJSON(r.Body), BuildResponse(r)
+}
+
 func (c *Client) PatchBlock(blockID string, blockPatch *model.BlockPatch) (bool, *Response) {
 	r, err := c.DoAPIPatch(c.GetBlockRoute(blockID), toJSON(blockPatch))
 	if err != nil {

@@ -14,12 +14,14 @@ package sqlstore
 
 import (
 	"context"
-	mmmodel "github.com/mattermost/mattermost-server/v6/model"
 	"time"
+
+	mmmodel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -112,6 +114,11 @@ func (s *SQLStore) GetBlockHistory(c store.Container, blockID string, opts model
 
 }
 
+func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	return s.getBlockHistoryDescendants(s.db, boardID, opts)
+
+}
+
 func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]model.Block, error) {
 	return s.getBlocksWithParent(s.db, c, parentID)
 
@@ -150,7 +157,10 @@ func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
 //nolint:typecheck
 func (s *SQLStore) GetFileInfo(id string) (*mmmodel.FileInfo, error) {
 	return s.getFileInfo(s.db, id)
+}
 
+func (s *SQLStore) GetLicense() *mmModel.License {
+	return s.getLicense(s.db)
 }
 
 func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint, error) {
