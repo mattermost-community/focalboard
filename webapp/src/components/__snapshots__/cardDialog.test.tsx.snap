@@ -476,9 +476,7 @@ exports[`components/cardDialog limited card shows hidden view (no toolbar) 1`] =
               <br />
               <a
                 class="CardDetail__limited-link"
-                href="https://mattermost.com/pricing/"
-                rel="noreferrer"
-                target="_blank"
+                role="button"
               >
                 Learn more about our plans.
               </a>

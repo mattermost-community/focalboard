@@ -175,9 +175,7 @@ exports[`components/cardDetail/CardDetail should render hidden view if limited 1
         <br />
         <a
           class="CardDetail__limited-link"
-          href="https://mattermost.com/pricing/"
-          rel="noreferrer"
-          target="_blank"
+          role="button"
         >
           Learn more about our plans.
         </a>
