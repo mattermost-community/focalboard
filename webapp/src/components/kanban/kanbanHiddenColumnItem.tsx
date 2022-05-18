@@ -55,14 +55,14 @@ export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
                 >
                     {group.option.value}
                 </Label>
-                <Menu>
+                {props.group.option.id !== intl.formatMessage({id: 'limitedCard.id'}) && <Menu>
                     <Menu.Text
                         id='show'
                         icon={<ShowIcon/>}
                         name={intl.formatMessage({id: 'BoardComponent.show', defaultMessage: 'Show'})}
                         onClick={() => mutator.unhideViewColumn(activeView, group.option.id)}
                     />
-                </Menu>
+                </Menu>}
             </MenuWrapper>
             <Button>{`${group.cards.length}`}</Button>
         </div>

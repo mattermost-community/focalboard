@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useCallback} from 'react'
 
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 import {useDragLayer, useDrop} from 'react-dnd'
 
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
@@ -11,10 +11,14 @@ import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
-import {useAppDispatch} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {updateView} from '../../store/views'
 
 import './table.scss'
+
+import {getHiddenCard} from '../../store/cards'
+
+import Button from '../../widgets/buttons/button'
 
 import TableHeaders from './tableHeaders'
 import TableRows from './tableRows'
@@ -40,6 +44,8 @@ const Table = (props: Props): JSX.Element => {
     const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
     const dispatch = useAppDispatch()
+    const limited = useAppSelector(getHiddenCard)
+    const intl = useIntl()
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
         if (monitor.getItemType() === 'horizontalGrip') {
@@ -266,6 +272,11 @@ const Table = (props: Props): JSX.Element => {
                     readonly={props.readonly}
                 />
             </div>
+
+            {limited.length > 0 && <div className='limitedCard'>
+                <div className='limitedCard-title'>{intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards Hidden'})}</div>
+                <Button>{limited.length}</Button>
+            </div>}
         </div>
     )
 }

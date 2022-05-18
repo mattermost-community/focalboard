@@ -2,9 +2,13 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React, {useCallback, useState} from 'react'
-import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape, useIntl} from 'react-intl'
 
 import withScrolling, {createHorizontalStrength, createVerticalStrength} from 'react-dnd-scrolling'
+
+import {useAppSelector} from '../../store/hooks'
+
+import {getHiddenCard} from '../../store/cards'
 
 import {Position} from '../cardDetail/cardDetailContents'
 
@@ -42,6 +46,19 @@ type Props = {
 
 const Kanban = (props: Props) => {
     const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups} = props
+    const limitedCard = useAppSelector(getHiddenCard)
+    const intl = useIntl()
+
+    if (limitedCard.length > 0) {
+        props.hiddenGroups.push({
+            option: {
+                color: 'propColorRed',
+                id: intl.formatMessage({id: 'limitedCard.id', defaultMessage: 'zxfsrtfsdfwserfwfdsfwerfsd'}),
+                value: intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards Hidden'}),
+            },
+            cards: limitedCard,
+        })
+    }
 
     if (!groupByProperty) {
         Utils.assertFailure('Board views must have groupByProperty set')

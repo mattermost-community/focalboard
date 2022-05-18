@@ -24,4 +24,23 @@
             background-color: rgba(var(--center-channel-color-rgb), 0.05);
         }
     }
+
+    .limitedCardMain {
+        display: block;
+    }
+
+    .limitedCard {
+        display: flex;
+        height: 30px;
+        margin-left: 10px;
+    }
+
+    .limitedCard-title {
+        background: rgba(243, 192, 199, 0.2);
+        color: #D24B4E;
+        padding: 3px 6px 3px 6px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
 }
