@@ -996,6 +996,41 @@ ul.nav-tabs {
   "description" : "BlockPatchBatch is a batch of IDs and patches for modify blocks",
   "x-go-package" : "github.com/mattermost/focalboard/server/model"
 };
+    defs["BoardMetadata"] = {
+  "required" : [ "boardId", "createdBy", "descendantFirstUpdateAt", "descendantLastUpdateAt", "lastModifiedBy" ],
+  "type" : "object",
+  "properties" : {
+    "boardId" : {
+      "type" : "string",
+      "description" : "The ID for the board",
+      "x-go-name" : "BoardID"
+    },
+    "createdBy" : {
+      "type" : "string",
+      "description" : "The ID of the user that created the board",
+      "x-go-name" : "CreatedBy"
+    },
+    "descendantFirstUpdateAt" : {
+      "type" : "integer",
+      "description" : "The earliest time a descendant of this board was added, modified, or deleted",
+      "format" : "int64",
+      "x-go-name" : "DescendantFirstUpdateAt"
+    },
+    "descendantLastUpdateAt" : {
+      "type" : "integer",
+      "description" : "The most recent time a descendant of this board was added, modified, or deleted",
+      "format" : "int64",
+      "x-go-name" : "DescendantLastUpdateAt"
+    },
+    "lastModifiedBy" : {
+      "type" : "string",
+      "description" : "The ID of the user that last modified the most recently modified descendant",
+      "x-go-name" : "LastModifiedBy"
+    }
+  },
+  "description" : "BoardMetadata contains metadata for a Board",
+  "x-go-package" : "github.com/mattermost/focalboard/server/model"
+};
     defs["ChangePasswordRequest"] = {
   "required" : [ "newPassword", "oldPassword" ],
   "type" : "object",
@@ -1305,6 +1340,29 @@ ul.nav-tabs {
   "description" : "User is a user",
   "x-go-package" : "github.com/mattermost/focalboard/server/model"
 };
+    defs["UserPropPatch"] = {
+  "type" : "object",
+  "properties" : {
+    "deletedFields" : {
+      "type" : "array",
+      "description" : "The user prop removed fields",
+      "items" : {
+        "type" : "string"
+      },
+      "x-go-name" : "DeletedFields"
+    },
+    "updatedFields" : {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      },
+      "description" : "The user prop updated fields",
+      "x-go-name" : "UpdatedFields"
+    }
+  },
+  "description" : "UserPropPatch is a user property patch",
+  "x-go-package" : "github.com/mattermost/focalboard/server/model"
+};
     defs["UserWorkspace"] = {
   "required" : [ "id" ],
   "type" : "object",
@@ -1391,6 +1449,12 @@ ul.nav-tabs {
             <li class="nav-fixed nav-header active" data-group="_"><a href="#api-_">API Summary</a></li>
 
                   <li class="nav-header" data-group="Default"><a href="#api-Default">API Methods - Default</a></li>
+                    <li data-group="Default" data-name="archiveExport" class="">
+                      <a href="#api-Default-archiveExport">archiveExport</a>
+                    </li>
+                    <li data-group="Default" data-name="archiveImport" class="">
+                      <a href="#api-Default-archiveImport">archiveImport</a>
+                    </li>
                     <li data-group="Default" data-name="changePassword" class="">
                       <a href="#api-Default-changePassword">changePassword</a>
                     </li>
@@ -1403,11 +1467,11 @@ ul.nav-tabs {
                     <li data-group="Default" data-name="deleteSubscription" class="">
                       <a href="#api-Default-deleteSubscription">deleteSubscription</a>
                     </li>
-                    <li data-group="Default" data-name="exportBlocks" class="">
-                      <a href="#api-Default-exportBlocks">exportBlocks</a>
-                    </li>
                     <li data-group="Default" data-name="getBlocks" class="">
                       <a href="#api-Default-getBlocks">getBlocks</a>
+                    </li>
+                    <li data-group="Default" data-name="getBoardMetadata" class="">
+                      <a href="#api-Default-getBoardMetadata">getBoardMetadata</a>
                     </li>
                     <li data-group="Default" data-name="getFile" class="">
                       <a href="#api-Default-getFile">getFile</a>
@@ -1433,14 +1497,14 @@ ul.nav-tabs {
                     <li data-group="Default" data-name="getWorkspaceUsers" class="">
                       <a href="#api-Default-getWorkspaceUsers">getWorkspaceUsers</a>
                     </li>
-                    <li data-group="Default" data-name="importBlocks" class="">
-                      <a href="#api-Default-importBlocks">importBlocks</a>
-                    </li>
                     <li data-group="Default" data-name="login" class="">
                       <a href="#api-Default-login">login</a>
                     </li>
                     <li data-group="Default" data-name="logout" class="">
                       <a href="#api-Default-logout">logout</a>
+                    </li>
+                    <li data-group="Default" data-name="onboard" class="">
+                      <a href="#api-Default-onboard">onboard</a>
                     </li>
                     <li data-group="Default" data-name="patchBlock" class="">
                       <a href="#api-Default-patchBlock">patchBlock</a>
@@ -1457,8 +1521,14 @@ ul.nav-tabs {
                     <li data-group="Default" data-name="register" class="">
                       <a href="#api-Default-register">register</a>
                     </li>
+                    <li data-group="Default" data-name="undeleteBlock" class="">
+                      <a href="#api-Default-undeleteBlock">undeleteBlock</a>
+                    </li>
                     <li data-group="Default" data-name="updateBlocks" class="">
                       <a href="#api-Default-updateBlocks">updateBlocks</a>
+                    </li>
+                    <li data-group="Default" data-name="updateUserConfig" class="">
+                      <a href="#api-Default-updateUserConfig">updateUserConfig</a>
                     </li>
                     <li data-group="Default" data-name="uploadFile" class="">
                       <a href="#api-Default-uploadFile">uploadFile</a>
@@ -1486,6 +1556,869 @@ ul.nav-tabs {
         <div id="sections">
                 <section id="api-Default">
                   <h1>Default</h1>
+                    <div id="api-Default-archiveExport">
+                      <article id="api-Default-archiveExport-0" data-group="User" data-name="archiveExport" data-version="0">
+                        <div class="pull-left">
+                          <h1>archiveExport</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Exports an archive of all blocks for one or more boards. If board_id is provided then
+only that board will be exported, otherwise all boards in the workspace are exported.</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}/archive/export</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-archiveExport-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-archiveExport-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-archiveExport-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-archiveExport-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-archiveExport-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-archiveExport-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-archiveExport-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-archiveExport-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-archiveExport-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-archiveExport-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-archiveExport-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-archiveExport-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-archiveExport-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET \
+-H "Authorization: [[apiKey]]" \
+ -H "Accept: application/json" \
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/archive/export"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-archiveExport-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
+        String boardId = boardId_example; // String | Id of board to to export
+
+        try {
+            apiInstance.archiveExport(workspaceID, boardId);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#archiveExport");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-archiveExport-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
+        String boardId = boardId_example; // String | Id of board to to export
+
+        try {
+            apiInstance.archiveExport(workspaceID, boardId);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#archiveExport");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-archiveExport-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-archiveExport-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *boardId = boardId_example; // Id of board to to export (default to null)
+
+[apiInstance archiveExportWith:workspaceID
+    boardId:boardId
+              completionHandler: ^(NSError* error) {
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-archiveExport-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+var defaultClient = FocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
+var boardId = boardId_example; // {String} Id of board to to export
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.archiveExport(workspaceID, boardId, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-archiveExport-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-archiveExport-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class archiveExportExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var boardId = boardId_example;  // String | Id of board to to export (default to null)
+
+            try {
+                apiInstance.archiveExport(workspaceID, boardId);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.archiveExport: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-archiveExport-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
+$boardId = boardId_example; // String | Id of board to to export
+
+try {
+    $api_instance->archiveExport($workspaceID, $boardId);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->archiveExport: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-archiveExport-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
+my $boardId = boardId_example; # String | Id of board to to export
+
+eval {
+    $api_instance->archiveExport(workspaceID => $workspaceID, boardId => $boardId);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->archiveExport: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-archiveExport-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
+boardId = boardId_example # String | Id of board to to export (default to null)
+
+try:
+    api_instance.archive_export(workspaceID, boardId)
+except ApiException as e:
+    print("Exception when calling DefaultApi->archiveExport: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-archiveExport-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let workspaceID = workspaceID_example; // String
+    let boardId = boardId_example; // String
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.archiveExport(workspaceID, boardId, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_archiveExport_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                  <tr><td style="width:150px;">board_id*</td>
+<td>
+
+
+    <div id="d2e199_archiveExport_boardId">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Id of board to to export
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-archiveExport-title-200"></h3>
+                            <p id="examples-Default-archiveExport-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-archiveExport-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-archiveExport-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-archiveExport-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-archiveExport-200" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-archiveExport-200-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-Default-archiveExport-title-default"></h3>
+                            <p id="examples-Default-archiveExport-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-archiveExport-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-archiveExport-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-archiveExport-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-archiveExport-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-archiveExport-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-archiveExport-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-archiveExport-default-schema">
+                                  <div id="responses-Default-archiveExport-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-archiveExport-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-archiveExport-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-archiveExport-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-archiveImport">
+                      <article id="api-Default-archiveImport-0" data-group="User" data-name="archiveImport" data-version="0">
+                        <div class="pull-left">
+                          <h1>archiveImport</h1>
+                          <p>Import an archive of boards.</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/archive/import</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-archiveImport-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-archiveImport-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-archiveImport-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-archiveImport-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-archiveImport-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-archiveImport-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-archiveImport-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-archiveImport-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-archiveImport-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-archiveImport-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-archiveImport-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-archiveImport-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-archiveImport-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+-H "Authorization: [[apiKey]]" \
+ -H "Accept: application/json" \
+ -H "Content-Type: multipart/form-data" \
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/archive/import"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-archiveImport-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
+        File file = BINARY_DATA_HERE; // File | archive file to import
+
+        try {
+            apiInstance.archiveImport(workspaceID, file);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#archiveImport");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-archiveImport-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
+        File file = BINARY_DATA_HERE; // File | archive file to import
+
+        try {
+            apiInstance.archiveImport(workspaceID, file);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#archiveImport");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-archiveImport-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-archiveImport-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+File *file = BINARY_DATA_HERE; // archive file to import (default to null)
+
+// Import an archive of boards.
+[apiInstance archiveImportWith:workspaceID
+    file:file
+              completionHandler: ^(NSError* error) {
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-archiveImport-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+var defaultClient = FocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
+var file = BINARY_DATA_HERE; // {File} archive file to import
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.archiveImport(workspaceID, file, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-archiveImport-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-archiveImport-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class archiveImportExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var file = BINARY_DATA_HERE;  // File | archive file to import (default to null)
+
+            try {
+                // Import an archive of boards.
+                apiInstance.archiveImport(workspaceID, file);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.archiveImport: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-archiveImport-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
+$file = BINARY_DATA_HERE; // File | archive file to import
+
+try {
+    $api_instance->archiveImport($workspaceID, $file);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->archiveImport: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-archiveImport-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
+my $file = BINARY_DATA_HERE; # File | archive file to import
+
+eval {
+    $api_instance->archiveImport(workspaceID => $workspaceID, file => $file);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->archiveImport: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-archiveImport-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
+file = BINARY_DATA_HERE # File | archive file to import (default to null)
+
+try:
+    # Import an archive of boards.
+    api_instance.archive_import(workspaceID, file)
+except ApiException as e:
+    print("Exception when calling DefaultApi->archiveImport: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-archiveImport-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let workspaceID = workspaceID_example; // String
+    let file = BINARY_DATA_HERE; // File
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.archiveImport(workspaceID, file, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_archiveImport_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                            <div class="methodsubtabletitle">Form parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                  <tr><td style="width:150px;">file*</td>
+<td>
+
+
+    <div id="d2e199_archiveImport_file">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    File
+                </span>
+                    <span class="format">
+                        (binary)
+                    </span>
+
+                    <div class="inner description marked">
+archive file to import
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-archiveImport-title-200"></h3>
+                            <p id="examples-Default-archiveImport-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-archiveImport-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-archiveImport-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-archiveImport-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-archiveImport-200" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-archiveImport-200-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-Default-archiveImport-title-default"></h3>
+                            <p id="examples-Default-archiveImport-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-archiveImport-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-archiveImport-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-archiveImport-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-archiveImport-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-archiveImport-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-archiveImport-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-archiveImport-default-schema">
+                                  <div id="responses-Default-archiveImport-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-archiveImport-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-archiveImport-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-archiveImport-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-Default-changePassword">
                       <article id="api-Default-changePassword-0" data-group="User" data-name="changePassword" data-version="0">
                         <div class="pull-left">
@@ -3404,453 +4337,6 @@ Subscriber ID
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Default-exportBlocks">
-                      <article id="api-Default-exportBlocks-0" data-group="User" data-name="exportBlocks" data-version="0">
-                        <div class="pull-left">
-                          <h1>exportBlocks</h1>
-                          <p></p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Returns all blocks</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/export</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Default-exportBlocks-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Default-exportBlocks-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Default-exportBlocks-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Default-exportBlocks-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Default-exportBlocks-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Default-exportBlocks-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Default-exportBlocks-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Default-exportBlocks-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Default-exportBlocks-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Default-exportBlocks-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Default-exportBlocks-0-python">Python</a></li>
-                          <li class=""><a href="#examples-Default-exportBlocks-0-rust">Rust</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Default-exportBlocks-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X GET \
--H "Authorization: [[apiKey]]" \
- -H "Accept: application/json" \
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/export"
-</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Default-exportBlocks-0-java">
-                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
-import org.openapitools.client.auth.*;
-import org.openapitools.client.model.*;
-import org.openapitools.client.api.DefaultApi;
-
-import java.io.File;
-import java.util.*;
-
-public class DefaultApiExample {
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        
-        // Configure API key authorization: BearerAuth
-        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
-        BearerAuth.setApiKey("YOUR API KEY");
-        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-        //BearerAuth.setApiKeyPrefix("Token");
-
-        // Create an instance of the API class
-        DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
-
-        try {
-            array[Block] result = apiInstance.exportBlocks(workspaceID);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#exportBlocks");
-            e.printStackTrace();
-        }
-    }
-}
-</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Default-exportBlocks-0-android">
-                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
-
-public class DefaultApiExample {
-    public static void main(String[] args) {
-        DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
-
-        try {
-            array[Block] result = apiInstance.exportBlocks(workspaceID);
-            System.out.println(result);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#exportBlocks");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Default-exportBlocks-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Default-exportBlocks-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
-
-// Configure API key authorization: (authentication scheme: BearerAuth)
-[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
-
-
-// Create an instance of the API class
-DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
-
-[apiInstance exportBlocksWith:workspaceID
-              completionHandler: ^(array[Block] output, NSError* error) {
-    if (output) {
-        NSLog(@"%@", output);
-    }
-    if (error) {
-        NSLog(@"Error: %@", error);
-    }
-}];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-exportBlocks-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
-
-// Configure API key authorization: BearerAuth
-var BearerAuth = defaultClient.authentications['BearerAuth'];
-BearerAuth.apiKey = "YOUR API KEY";
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
-
-// Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.exportBlocks(workspaceID, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Default-exportBlocks-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Default-exportBlocks-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using Org.OpenAPITools.Api;
-using Org.OpenAPITools.Client;
-using Org.OpenAPITools.Model;
-
-namespace Example
-{
-    public class exportBlocksExample
-    {
-        public void main()
-        {
-            // Configure API key authorization: BearerAuth
-            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
-
-            // Create an instance of the API class
-            var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
-
-            try {
-                array[Block] result = apiInstance.exportBlocks(workspaceID);
-                Debug.WriteLine(result);
-            } catch (Exception e) {
-                Debug.Print("Exception when calling DefaultApi.exportBlocks: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-exportBlocks-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-// Configure API key authorization: BearerAuth
-OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
-
-// Create an instance of the API class
-$api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
-
-try {
-    $result = $api_instance->exportBlocks($workspaceID);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling DefaultApi->exportBlocks: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-exportBlocks-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::OPenAPIClient::Configuration;
-use WWW::OPenAPIClient::DefaultApi;
-
-# Configure API key authorization: BearerAuth
-$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
-# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
-
-# Create an instance of the API class
-my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
-
-eval {
-    my $result = $api_instance->exportBlocks(workspaceID => $workspaceID);
-    print Dumper($result);
-};
-if ($@) {
-    warn "Exception when calling DefaultApi->exportBlocks: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-exportBlocks-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import openapi_client
-from openapi_client.rest import ApiException
-from pprint import pprint
-
-# Configure API key authorization: BearerAuth
-openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
-
-# Create an instance of the API class
-api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
-
-try:
-    api_response = api_instance.export_blocks(workspaceID)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling DefaultApi->exportBlocks: %s\n" % e)</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-exportBlocks-0-rust">
-                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
-
-pub fn main() {
-    let workspaceID = workspaceID_example; // String
-
-    let mut context = DefaultApi::Context::default();
-    let result = client.exportBlocks(workspaceID, &context).wait();
-
-    println!("{:?}", result);
-}
-</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Scopes</h2>
-                          <table>
-                            
-                          </table>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
-<td>
-
-
-    <div id="d2e199_exportBlocks_workspaceID">
-        <div class="json-schema-view">
-            <div class="primitive">
-                <span class="type">
-                    String
-                </span>
-
-                    <div class="inner description marked">
-Workspace ID
-                    </div>
-            </div>
-                <div class="inner required">
-                    Required
-                </div>
-        </div>
-    </div>
-</td>
-</tr>
-
-                            </table>
-
-
-
-
-
-                          <h2>Responses</h2>
-                            <h3 id="examples-Default-exportBlocks-title-200"></h3>
-                            <p id="examples-Default-exportBlocks-description-200" class="marked"></p>
-                            <script>
-                              var responseDefault200_description = `success`;
-                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
-                              if (responseDefault200_description_break == -1) {
-                                $("#examples-Default-exportBlocks-title-200").text("Status: 200 - " + responseDefault200_description);
-                              } else {
-                                $("#examples-Default-exportBlocks-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
-                                $("#examples-Default-exportBlocks-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-Default-exportBlocks-200" class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-Default-exportBlocks-200-schema">Schema</a>
-                                </li>
-
-
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-Default-exportBlocks-200-wrapper" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-Default-exportBlocks-200-schema">
-                                  <div id="responses-Default-exportBlocks-schema-200" class="exampleStyle">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "success",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/Block"
-        }
-      }
-    }
-  }
-};
-                                        var schema = findNode('schema',schemaWrapper).schema;
-                                        if (!schema) {
-                                          schema = schemaWrapper.schema;
-                                        }
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else if (schema.items != null && schema.items.$ref != null) {
-                                            schema.items = defsParser.$refs.get(schema.items.$ref);
-                                        } else {
-                                          schemaWrapper.definitions = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-Default-exportBlocks-200-schema-data').val(JSON.stringify(schema));
-                                        var result = $('#responses-Default-exportBlocks-schema-200');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-Default-exportBlocks-200-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-                            <h3 id="examples-Default-exportBlocks-title-default"></h3>
-                            <p id="examples-Default-exportBlocks-description-default" class="marked"></p>
-                            <script>
-                              var responseDefaultdefault_description = `internal error`;
-                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
-                              if (responseDefaultdefault_description_break == -1) {
-                                $("#examples-Default-exportBlocks-title-default").text("Status: default - " + responseDefaultdefault_description);
-                              } else {
-                                $("#examples-Default-exportBlocks-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
-                                $("#examples-Default-exportBlocks-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-Default-exportBlocks-default" class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-Default-exportBlocks-default-schema">Schema</a>
-                                </li>
-
-
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-Default-exportBlocks-default-wrapper" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-Default-exportBlocks-default-schema">
-                                  <div id="responses-Default-exportBlocks-schema-default" class="exampleStyle">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "internal error",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/ErrorResponse"
-      }
-    }
-  }
-};
-                                        var schema = findNode('schema',schemaWrapper).schema;
-                                        if (!schema) {
-                                          schema = schemaWrapper.schema;
-                                        }
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else if (schema.items != null && schema.items.$ref != null) {
-                                            schema.items = defsParser.$refs.get(schema.items.$ref);
-                                        } else {
-                                          schemaWrapper.definitions = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-Default-exportBlocks-default-schema-data').val(JSON.stringify(schema));
-                                        var result = $('#responses-Default-exportBlocks-schema-default');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-Default-exportBlocks-default-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-                        </article>
-                      </div>
-                      <hr>
                     <div id="api-Default-getBlocks">
                       <article id="api-Default-getBlocks-0" data-group="User" data-name="getBlocks" data-version="0">
                         <div class="pull-left">
@@ -4367,6 +4853,494 @@ Type of blocks to return, omit to specify all types
                         </article>
                       </div>
                       <hr>
+                    <div id="api-Default-getBoardMetadata">
+                      <article id="api-Default-getBoardMetadata-0" data-group="User" data-name="getBoardMetadata" data-version="0">
+                        <div class="pull-left">
+                          <h1>getBoardMetadata</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Returns a board&#39;s metadata</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="get"><code><span class="pln">/api/v1/boards/{boardID}/metadata</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-getBoardMetadata-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-getBoardMetadata-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-getBoardMetadata-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-getBoardMetadata-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-getBoardMetadata-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-getBoardMetadata-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-getBoardMetadata-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-getBoardMetadata-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-getBoardMetadata-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-getBoardMetadata-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-getBoardMetadata-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-getBoardMetadata-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-getBoardMetadata-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X GET \
+-H "Authorization: [[apiKey]]" \
+ -H "Accept: application/json" \
+ "http://localhost/api/v1/api/v1/boards/{boardID}/metadata"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-getBoardMetadata-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String boardID = boardID_example; // String | Board ID
+
+        try {
+            BoardMetadata result = apiInstance.getBoardMetadata(boardID);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#getBoardMetadata");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-getBoardMetadata-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String boardID = boardID_example; // String | Board ID
+
+        try {
+            BoardMetadata result = apiInstance.getBoardMetadata(boardID);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#getBoardMetadata");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-getBoardMetadata-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-getBoardMetadata-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *boardID = boardID_example; // Board ID (default to null)
+
+[apiInstance getBoardMetadataWith:boardID
+              completionHandler: ^(BoardMetadata output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getBoardMetadata-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+var defaultClient = FocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var boardID = boardID_example; // {String} Board ID
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.getBoardMetadata(boardID, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-getBoardMetadata-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-getBoardMetadata-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class getBoardMetadataExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var boardID = boardID_example;  // String | Board ID (default to null)
+
+            try {
+                BoardMetadata result = apiInstance.getBoardMetadata(boardID);
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.getBoardMetadata: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getBoardMetadata-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$boardID = boardID_example; // String | Board ID
+
+try {
+    $result = $api_instance->getBoardMetadata($boardID);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->getBoardMetadata: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getBoardMetadata-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $boardID = boardID_example; # String | Board ID
+
+eval {
+    my $result = $api_instance->getBoardMetadata(boardID => $boardID);
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->getBoardMetadata: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getBoardMetadata-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+boardID = boardID_example # String | Board ID (default to null)
+
+try:
+    api_response = api_instance.get_board_metadata(boardID)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->getBoardMetadata: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-getBoardMetadata-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let boardID = boardID_example; // String
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.getBoardMetadata(boardID, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">boardID*</td>
+<td>
+
+
+    <div id="d2e199_getBoardMetadata_boardID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Board ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-getBoardMetadata-title-200"></h3>
+                            <p id="examples-Default-getBoardMetadata-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-getBoardMetadata-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-getBoardMetadata-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-getBoardMetadata-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getBoardMetadata-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-getBoardMetadata-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getBoardMetadata-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-getBoardMetadata-200-schema">
+                                  <div id="responses-Default-getBoardMetadata-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "success",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/BoardMetadata"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-getBoardMetadata-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-getBoardMetadata-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-getBoardMetadata-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-Default-getBoardMetadata-title-404"></h3>
+                            <p id="examples-Default-getBoardMetadata-description-404" class="marked"></p>
+                            <script>
+                              var responseDefault404_description = `board not found`;
+                              var responseDefault404_description_break = responseDefault404_description.indexOf('\n');
+                              if (responseDefault404_description_break == -1) {
+                                $("#examples-Default-getBoardMetadata-title-404").text("Status: 404 - " + responseDefault404_description);
+                              } else {
+                                $("#examples-Default-getBoardMetadata-title-404").text("Status: 404 - " + responseDefault404_description.substring(0, responseDefault404_description_break));
+                                $("#examples-Default-getBoardMetadata-description-404").html(responseDefault404_description.substring(responseDefault404_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getBoardMetadata-404" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getBoardMetadata-404-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-Default-getBoardMetadata-title-501"></h3>
+                            <p id="examples-Default-getBoardMetadata-description-501" class="marked"></p>
+                            <script>
+                              var responseDefault501_description = `required license not found`;
+                              var responseDefault501_description_break = responseDefault501_description.indexOf('\n');
+                              if (responseDefault501_description_break == -1) {
+                                $("#examples-Default-getBoardMetadata-title-501").text("Status: 501 - " + responseDefault501_description);
+                              } else {
+                                $("#examples-Default-getBoardMetadata-title-501").text("Status: 501 - " + responseDefault501_description.substring(0, responseDefault501_description_break));
+                                $("#examples-Default-getBoardMetadata-description-501").html(responseDefault501_description.substring(responseDefault501_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getBoardMetadata-501" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getBoardMetadata-501-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-Default-getBoardMetadata-title-default"></h3>
+                            <p id="examples-Default-getBoardMetadata-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-getBoardMetadata-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-getBoardMetadata-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-getBoardMetadata-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-getBoardMetadata-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-getBoardMetadata-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-getBoardMetadata-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-getBoardMetadata-default-schema">
+                                  <div id="responses-Default-getBoardMetadata-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-getBoardMetadata-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-getBoardMetadata-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-getBoardMetadata-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-Default-getFile">
                       <article id="api-Default-getFile-0" data-group="User" data-name="getFile" data-version="0">
                         <div class="pull-left">
@@ -4402,7 +5376,7 @@ Type of blocks to return, omit to specify all types
                           <div class="tab-pane active" id="examples-Default-getFile-0-curl">
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET \
 -H "Authorization: [[apiKey]]" \
- -H "Accept: application/json,image/jpg,image/png" \
+ -H "Accept: application/json,image/jpg,image/png,image/gif" \
  "http://localhost/api/v1/workspaces/{workspaceID}/{rootID}/{fileID}"
 </code></pre>
                           </div>
@@ -4799,6 +5773,11 @@ ID of the file
       }
     },
     "image/png" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    },
+    "image/gif" : {
       "schema" : {
         "$ref" : "#/components/schemas/ErrorResponse"
       }
@@ -8052,475 +9031,6 @@ Workspace ID
                         </article>
                       </div>
                       <hr>
-                    <div id="api-Default-importBlocks">
-                      <article id="api-Default-importBlocks-0" data-group="User" data-name="importBlocks" data-version="0">
-                        <div class="pull-left">
-                          <h1>importBlocks</h1>
-                          <p></p>
-                        </div>
-                        <div class="pull-right"></div>
-                        <div class="clearfix"></div>
-                        <p></p>
-                        <p class="marked">Import blocks</p>
-                        <p></p>
-                        <br />
-                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/import</span></code></pre>
-                        <p>
-                          <h3>Usage and SDK Samples</h3>
-                        </p>
-                        <ul class="nav nav-tabs nav-tabs-examples">
-                          <li class="active"><a href="#examples-Default-importBlocks-0-curl">Curl</a></li>
-                          <li class=""><a href="#examples-Default-importBlocks-0-java">Java</a></li>
-                          <li class=""><a href="#examples-Default-importBlocks-0-android">Android</a></li>
-                          <!--<li class=""><a href="#examples-Default-importBlocks-0-groovy">Groovy</a></li>-->
-                          <li class=""><a href="#examples-Default-importBlocks-0-objc">Obj-C</a></li>
-                          <li class=""><a href="#examples-Default-importBlocks-0-javascript">JavaScript</a></li>
-                          <!--<li class=""><a href="#examples-Default-importBlocks-0-angular">Angular</a></li>-->
-                          <li class=""><a href="#examples-Default-importBlocks-0-csharp">C#</a></li>
-                          <li class=""><a href="#examples-Default-importBlocks-0-php">PHP</a></li>
-                          <li class=""><a href="#examples-Default-importBlocks-0-perl">Perl</a></li>
-                          <li class=""><a href="#examples-Default-importBlocks-0-python">Python</a></li>
-                          <li class=""><a href="#examples-Default-importBlocks-0-rust">Rust</a></li>
-                        </ul>
-
-                        <div class="tab-content">
-                          <div class="tab-pane active" id="examples-Default-importBlocks-0-curl">
-                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
--H "Authorization: [[apiKey]]" \
- -H "Accept: application/json" \
- -H "Content-Type: application/json" \
- "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/import" \
- -d '{
-  &quot;schema&quot; : 1,
-  &quot;deleteAt&quot; : 6,
-  &quot;rootId&quot; : &quot;rootId&quot;,
-  &quot;updateAt&quot; : 5,
-  &quot;title&quot; : &quot;title&quot;,
-  &quot;type&quot; : &quot;type&quot;,
-  &quot;createAt&quot; : 0,
-  &quot;parentId&quot; : &quot;parentId&quot;,
-  &quot;createdBy&quot; : &quot;createdBy&quot;,
-  &quot;modifiedBy&quot; : &quot;modifiedBy&quot;,
-  &quot;id&quot; : &quot;id&quot;,
-  &quot;fields&quot; : {
-    &quot;key&quot; : &quot;{}&quot;
-  },
-  &quot;workspaceId&quot; : &quot;workspaceId&quot;
-}'
-</code></pre>
-                          </div>
-                          <div class="tab-pane" id="examples-Default-importBlocks-0-java">
-                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
-import org.openapitools.client.auth.*;
-import org.openapitools.client.model.*;
-import org.openapitools.client.api.DefaultApi;
-
-import java.io.File;
-import java.util.*;
-
-public class DefaultApiExample {
-    public static void main(String[] args) {
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        
-        // Configure API key authorization: BearerAuth
-        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
-        BearerAuth.setApiKey("YOUR API KEY");
-        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-        //BearerAuth.setApiKeyPrefix("Token");
-
-        // Create an instance of the API class
-        DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
-        array[Block] body = ; // array[Block] | 
-
-        try {
-            apiInstance.importBlocks(workspaceID, body);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#importBlocks");
-            e.printStackTrace();
-        }
-    }
-}
-</code></pre>
-                          </div>
-
-                          <div class="tab-pane" id="examples-Default-importBlocks-0-android">
-                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
-
-public class DefaultApiExample {
-    public static void main(String[] args) {
-        DefaultApi apiInstance = new DefaultApi();
-        String workspaceID = workspaceID_example; // String | Workspace ID
-        array[Block] body = ; // array[Block] | 
-
-        try {
-            apiInstance.importBlocks(workspaceID, body);
-        } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#importBlocks");
-            e.printStackTrace();
-        }
-    }
-}</code></pre>
-                          </div>
-  <!--
-  <div class="tab-pane" id="examples-Default-importBlocks-0-groovy">
-  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-  </div> -->
-                            <div class="tab-pane" id="examples-Default-importBlocks-0-objc">
-                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
-
-// Configure API key authorization: (authentication scheme: BearerAuth)
-[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
-
-
-// Create an instance of the API class
-DefaultApi *apiInstance = [[DefaultApi alloc] init];
-String *workspaceID = workspaceID_example; // Workspace ID (default to null)
-array[Block] *body = ; // 
-
-[apiInstance importBlocksWith:workspaceID
-    body:body
-              completionHandler: ^(NSError* error) {
-    if (error) {
-        NSLog(@"Error: %@", error);
-    }
-}];
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-importBlocks-0-javascript">
-                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
-var defaultClient = FocalboardServer.ApiClient.instance;
-
-// Configure API key authorization: BearerAuth
-var BearerAuth = defaultClient.authentications['BearerAuth'];
-BearerAuth.apiKey = "YOUR API KEY";
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
-
-// Create an instance of the API class
-var api = new FocalboardServer.DefaultApi()
-var workspaceID = workspaceID_example; // {String} Workspace ID
-var body = ; // {array[Block]} 
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully.');
-  }
-};
-api.importBlocks(workspaceID, body, callback);
-</code></pre>
-                            </div>
-
-                            <!--<div class="tab-pane" id="examples-Default-importBlocks-0-angular">
-              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
-            </div>-->
-                            <div class="tab-pane" id="examples-Default-importBlocks-0-csharp">
-                              <pre class="prettyprint"><code class="language-cs">using System;
-using System.Diagnostics;
-using Org.OpenAPITools.Api;
-using Org.OpenAPITools.Client;
-using Org.OpenAPITools.Model;
-
-namespace Example
-{
-    public class importBlocksExample
-    {
-        public void main()
-        {
-            // Configure API key authorization: BearerAuth
-            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
-
-            // Create an instance of the API class
-            var apiInstance = new DefaultApi();
-            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
-            var body = new array[Block](); // array[Block] | 
-
-            try {
-                apiInstance.importBlocks(workspaceID, body);
-            } catch (Exception e) {
-                Debug.Print("Exception when calling DefaultApi.importBlocks: " + e.Message );
-            }
-        }
-    }
-}
-</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-importBlocks-0-php">
-                              <pre class="prettyprint"><code class="language-php"><&#63;php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-// Configure API key authorization: BearerAuth
-OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
-// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
-
-// Create an instance of the API class
-$api_instance = new OpenAPITools\Client\Api\DefaultApi();
-$workspaceID = workspaceID_example; // String | Workspace ID
-$body = ; // array[Block] | 
-
-try {
-    $api_instance->importBlocks($workspaceID, $body);
-} catch (Exception $e) {
-    echo 'Exception when calling DefaultApi->importBlocks: ', $e->getMessage(), PHP_EOL;
-}
-?></code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-importBlocks-0-perl">
-                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
-use WWW::OPenAPIClient::Configuration;
-use WWW::OPenAPIClient::DefaultApi;
-
-# Configure API key authorization: BearerAuth
-$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
-# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
-
-# Create an instance of the API class
-my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
-my $workspaceID = workspaceID_example; # String | Workspace ID
-my $body = [WWW::OPenAPIClient::Object::array[Block]->new()]; # array[Block] | 
-
-eval {
-    $api_instance->importBlocks(workspaceID => $workspaceID, body => $body);
-};
-if ($@) {
-    warn "Exception when calling DefaultApi->importBlocks: $@\n";
-}</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-importBlocks-0-python">
-                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
-import time
-import openapi_client
-from openapi_client.rest import ApiException
-from pprint import pprint
-
-# Configure API key authorization: BearerAuth
-openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
-
-# Create an instance of the API class
-api_instance = openapi_client.DefaultApi()
-workspaceID = workspaceID_example # String | Workspace ID (default to null)
-body =  # array[Block] | 
-
-try:
-    api_instance.import_blocks(workspaceID, body)
-except ApiException as e:
-    print("Exception when calling DefaultApi->importBlocks: %s\n" % e)</code></pre>
-                            </div>
-
-                            <div class="tab-pane" id="examples-Default-importBlocks-0-rust">
-                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
-
-pub fn main() {
-    let workspaceID = workspaceID_example; // String
-    let body = ; // array[Block]
-
-    let mut context = DefaultApi::Context::default();
-    let result = client.importBlocks(workspaceID, body, &context).wait();
-
-    println!("{:?}", result);
-}
-</code></pre>
-                            </div>
-                          </div>
-
-                          <h2>Scopes</h2>
-                          <table>
-                            
-                          </table>
-
-                          <h2>Parameters</h2>
-
-                            <div class="methodsubtabletitle">Path parameters</div>
-                            <table id="methodsubtable">
-                                <tr>
-                                  <th width="150px">Name</th>
-                                  <th>Description</th>
-                                </tr>
-                                  <tr><td style="width:150px;">workspaceID*</td>
-<td>
-
-
-    <div id="d2e199_importBlocks_workspaceID">
-        <div class="json-schema-view">
-            <div class="primitive">
-                <span class="type">
-                    String
-                </span>
-
-                    <div class="inner description marked">
-Workspace ID
-                    </div>
-            </div>
-                <div class="inner required">
-                    Required
-                </div>
-        </div>
-    </div>
-</td>
-</tr>
-
-                            </table>
-
-
-                            <div class="methodsubtabletitle">Body parameters</div>
-                            <table id="methodsubtable">
-                              <tr>
-                                <th width="150px">Name</th>
-                                <th>Description</th>
-                              </tr>
-                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
-<td>
-<p class="marked">array of blocks to import</p>
-<script>
-$(document).ready(function() {
-  var schemaWrapper = {
-  "description" : "array of blocks to import",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "type" : "array",
-        "items" : {
-          "$ref" : "#/components/schemas/Block"
-        }
-      }
-    }
-  },
-  "required" : true
-};
-
-  var schema = findNode('schema',schemaWrapper).schema;
-  if (!schema) {
-    schema = schemaWrapper.schema;
-  }
-  if (schema.$ref != null) {
-    schema = defsParser.$refs.get(schema.$ref);
-  } else {
-    schemaWrapper.definitions = Object.assign({}, defs);
-    $RefParser.dereference(schemaWrapper).catch(function(err) {
-      console.log(err);
-    });
-  }
-
-  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
-  var result = $('#d2e199_importBlocks_body');
-  result.empty();
-  result.append(view.render());
-});
-</script>
-<div id="d2e199_importBlocks_body"></div>
-</td>
-</tr>
-
-                            </table>
-
-
-
-                          <h2>Responses</h2>
-                            <h3 id="examples-Default-importBlocks-title-200"></h3>
-                            <p id="examples-Default-importBlocks-description-200" class="marked"></p>
-                            <script>
-                              var responseDefault200_description = `success`;
-                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
-                              if (responseDefault200_description_break == -1) {
-                                $("#examples-Default-importBlocks-title-200").text("Status: 200 - " + responseDefault200_description);
-                              } else {
-                                $("#examples-Default-importBlocks-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
-                                $("#examples-Default-importBlocks-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-Default-importBlocks-200" class="nav nav-tabs nav-tabs-examples" >
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-Default-importBlocks-200-wrapper" style='margin-bottom: 10px;'>
-                            </div>
-                            <h3 id="examples-Default-importBlocks-title-default"></h3>
-                            <p id="examples-Default-importBlocks-description-default" class="marked"></p>
-                            <script>
-                              var responseDefaultdefault_description = `internal error`;
-                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
-                              if (responseDefaultdefault_description_break == -1) {
-                                $("#examples-Default-importBlocks-title-default").text("Status: default - " + responseDefaultdefault_description);
-                              } else {
-                                $("#examples-Default-importBlocks-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
-                                $("#examples-Default-importBlocks-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
-                              }
-                            </script>
-
-
-                            <ul id="responses-detail-Default-importBlocks-default" class="nav nav-tabs nav-tabs-examples" >
-                                <li class="active">
-                                  <a data-toggle="tab" href="#responses-Default-importBlocks-default-schema">Schema</a>
-                                </li>
-
-
-
-
-                            </ul>
-
-
-                            <div class="tab-content" id="responses-Default-importBlocks-default-wrapper" style='margin-bottom: 10px;'>
-                                <div class="tab-pane active" id="responses-Default-importBlocks-default-schema">
-                                  <div id="responses-Default-importBlocks-schema-default" class="exampleStyle">
-                                    <script>
-                                      $(document).ready(function() {
-                                        var schemaWrapper = {
-  "description" : "internal error",
-  "content" : {
-    "application/json" : {
-      "schema" : {
-        "$ref" : "#/components/schemas/ErrorResponse"
-      }
-    }
-  }
-};
-                                        var schema = findNode('schema',schemaWrapper).schema;
-                                        if (!schema) {
-                                          schema = schemaWrapper.schema;
-                                        }
-                                        if (schema.$ref != null) {
-                                          schema = defsParser.$refs.get(schema.$ref);
-                                        } else if (schema.items != null && schema.items.$ref != null) {
-                                            schema.items = defsParser.$refs.get(schema.items.$ref);
-                                        } else {
-                                          schemaWrapper.definitions = Object.assign({}, defs);
-                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
-                                            console.log(err);
-                                          });
-                                        }
-
-                                        var view = new JSONSchemaView(schema, 3);
-                                        $('#responses-Default-importBlocks-default-schema-data').val(JSON.stringify(schema));
-                                        var result = $('#responses-Default-importBlocks-schema-default');
-                                        result.empty();
-                                        result.append(view.render());
-                                      });
-                                    </script>
-                                  </div>
-                                  <input id='responses-Default-importBlocks-default-schema-data' type='hidden' value=''></input>
-                                </div>
-                            </div>
-                        </article>
-                      </div>
-                      <hr>
                     <div id="api-Default-login">
                       <article id="api-Default-login-0" data-group="User" data-name="login" data-version="0">
                         <div class="pull-left">
@@ -9361,6 +9871,413 @@ pub fn main() {
                                     </script>
                                   </div>
                                   <input id='responses-Default-logout-500-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-onboard">
+                      <article id="api-Default-onboard-0" data-group="User" data-name="onboard" data-version="0">
+                        <div class="pull-left">
+                          <h1>onboard</h1>
+                          <p>Onboards a user on Boards.</p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked"></p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/onboard</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-onboard-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-onboard-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-onboard-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-onboard-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-onboard-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-onboard-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-onboard-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-onboard-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-onboard-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-onboard-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-onboard-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-onboard-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-onboard-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+-H "Authorization: [[apiKey]]" \
+ -H "Accept: application/json" \
+ "http://localhost/api/v1/api/v1/onboard"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-onboard-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+
+        try {
+            OnboardingResponse result = apiInstance.onboard();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#onboard");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-onboard-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+
+        try {
+            OnboardingResponse result = apiInstance.onboard();
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#onboard");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-onboard-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-onboard-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+
+// Onboards a user on Boards.
+[apiInstance onboardWithCompletionHandler: 
+              ^(OnboardingResponse output, NSError* error) {
+    if (output) {
+        NSLog(@"%@", output);
+    }
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-onboard-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+var defaultClient = FocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+api.onboard(callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-onboard-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-onboard-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class onboardExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+
+            try {
+                // Onboards a user on Boards.
+                OnboardingResponse result = apiInstance.onboard();
+                Debug.WriteLine(result);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.onboard: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-onboard-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+
+try {
+    $result = $api_instance->onboard();
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->onboard: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-onboard-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+
+eval {
+    my $result = $api_instance->onboard();
+    print Dumper($result);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->onboard: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-onboard-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+
+try:
+    # Onboards a user on Boards.
+    api_response = api_instance.onboard()
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DefaultApi->onboard: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-onboard-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.onboard(&context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-onboard-title-200"></h3>
+                            <p id="examples-Default-onboard-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-onboard-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-onboard-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-onboard-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-onboard-200" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-onboard-200-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-onboard-200-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-onboard-200-schema">
+                                  <div id="responses-Default-onboard-schema-200" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "success",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/OnboardingResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-onboard-200-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-onboard-schema-200');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-onboard-200-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                            <h3 id="examples-Default-onboard-title-default"></h3>
+                            <p id="examples-Default-onboard-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-onboard-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-onboard-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-onboard-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-onboard-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-onboard-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-onboard-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-onboard-default-schema">
+                                  <div id="responses-Default-onboard-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-onboard-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-onboard-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-onboard-default-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
                         </article>
@@ -11609,6 +12526,430 @@ $(document).ready(function() {
                         </article>
                       </div>
                       <hr>
+                    <div id="api-Default-undeleteBlock">
+                      <article id="api-Default-undeleteBlock-0" data-group="User" data-name="undeleteBlock" data-version="0">
+                        <div class="pull-left">
+                          <h1>undeleteBlock</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Undeletes a block</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="post"><code><span class="pln">/api/v1/workspaces/{workspaceID}/blocks/{blockID}/undelete</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-undeleteBlock-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-undeleteBlock-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-undeleteBlock-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-undeleteBlock-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-undeleteBlock-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-undeleteBlock-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-undeleteBlock-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-undeleteBlock-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-undeleteBlock-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-undeleteBlock-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-undeleteBlock-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-undeleteBlock-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-undeleteBlock-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X POST \
+-H "Authorization: [[apiKey]]" \
+ -H "Accept: application/json" \
+ "http://localhost/api/v1/api/v1/workspaces/{workspaceID}/blocks/{blockID}/undelete"
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-undeleteBlock-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
+        String blockID = blockID_example; // String | ID of block to undelete
+
+        try {
+            apiInstance.undeleteBlock(workspaceID, blockID);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#undeleteBlock");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-undeleteBlock-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String workspaceID = workspaceID_example; // String | Workspace ID
+        String blockID = blockID_example; // String | ID of block to undelete
+
+        try {
+            apiInstance.undeleteBlock(workspaceID, blockID);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#undeleteBlock");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-undeleteBlock-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-undeleteBlock-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *workspaceID = workspaceID_example; // Workspace ID (default to null)
+String *blockID = blockID_example; // ID of block to undelete (default to null)
+
+[apiInstance undeleteBlockWith:workspaceID
+    blockID:blockID
+              completionHandler: ^(NSError* error) {
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-undeleteBlock-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+var defaultClient = FocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var workspaceID = workspaceID_example; // {String} Workspace ID
+var blockID = blockID_example; // {String} ID of block to undelete
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.undeleteBlock(workspaceID, blockID, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-undeleteBlock-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-undeleteBlock-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class undeleteBlockExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var workspaceID = workspaceID_example;  // String | Workspace ID (default to null)
+            var blockID = blockID_example;  // String | ID of block to undelete (default to null)
+
+            try {
+                apiInstance.undeleteBlock(workspaceID, blockID);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.undeleteBlock: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-undeleteBlock-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$workspaceID = workspaceID_example; // String | Workspace ID
+$blockID = blockID_example; // String | ID of block to undelete
+
+try {
+    $api_instance->undeleteBlock($workspaceID, $blockID);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->undeleteBlock: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-undeleteBlock-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $workspaceID = workspaceID_example; # String | Workspace ID
+my $blockID = blockID_example; # String | ID of block to undelete
+
+eval {
+    $api_instance->undeleteBlock(workspaceID => $workspaceID, blockID => $blockID);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->undeleteBlock: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-undeleteBlock-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+workspaceID = workspaceID_example # String | Workspace ID (default to null)
+blockID = blockID_example # String | ID of block to undelete (default to null)
+
+try:
+    api_instance.undelete_block(workspaceID, blockID)
+except ApiException as e:
+    print("Exception when calling DefaultApi->undeleteBlock: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-undeleteBlock-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let workspaceID = workspaceID_example; // String
+    let blockID = blockID_example; // String
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.undeleteBlock(workspaceID, blockID, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">workspaceID*</td>
+<td>
+
+
+    <div id="d2e199_undeleteBlock_workspaceID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+Workspace ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                  <tr><td style="width:150px;">blockID*</td>
+<td>
+
+
+    <div id="d2e199_undeleteBlock_blockID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+ID of block to undelete
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-undeleteBlock-title-200"></h3>
+                            <p id="examples-Default-undeleteBlock-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-undeleteBlock-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-undeleteBlock-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-undeleteBlock-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-undeleteBlock-200" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-undeleteBlock-200-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-Default-undeleteBlock-title-default"></h3>
+                            <p id="examples-Default-undeleteBlock-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-undeleteBlock-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-undeleteBlock-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-undeleteBlock-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-undeleteBlock-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-undeleteBlock-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-undeleteBlock-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-undeleteBlock-default-schema">
+                                  <div id="responses-Default-undeleteBlock-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-undeleteBlock-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-undeleteBlock-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-undeleteBlock-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
                     <div id="api-Default-updateBlocks">
                       <article id="api-Default-updateBlocks-0" data-group="User" data-name="updateBlocks" data-version="0">
                         <div class="pull-left">
@@ -12131,6 +13472,461 @@ $(document).ready(function() {
                                     </script>
                                   </div>
                                   <input id='responses-Default-updateBlocks-default-schema-data' type='hidden' value=''></input>
+                                </div>
+                            </div>
+                        </article>
+                      </div>
+                      <hr>
+                    <div id="api-Default-updateUserConfig">
+                      <article id="api-Default-updateUserConfig-0" data-group="User" data-name="updateUserConfig" data-version="0">
+                        <div class="pull-left">
+                          <h1>updateUserConfig</h1>
+                          <p></p>
+                        </div>
+                        <div class="pull-right"></div>
+                        <div class="clearfix"></div>
+                        <p></p>
+                        <p class="marked">Updates user config</p>
+                        <p></p>
+                        <br />
+                        <pre class="prettyprint language-html prettyprinted" data-type="patch"><code><span class="pln">/api/v1/users/{userID}/config</span></code></pre>
+                        <p>
+                          <h3>Usage and SDK Samples</h3>
+                        </p>
+                        <ul class="nav nav-tabs nav-tabs-examples">
+                          <li class="active"><a href="#examples-Default-updateUserConfig-0-curl">Curl</a></li>
+                          <li class=""><a href="#examples-Default-updateUserConfig-0-java">Java</a></li>
+                          <li class=""><a href="#examples-Default-updateUserConfig-0-android">Android</a></li>
+                          <!--<li class=""><a href="#examples-Default-updateUserConfig-0-groovy">Groovy</a></li>-->
+                          <li class=""><a href="#examples-Default-updateUserConfig-0-objc">Obj-C</a></li>
+                          <li class=""><a href="#examples-Default-updateUserConfig-0-javascript">JavaScript</a></li>
+                          <!--<li class=""><a href="#examples-Default-updateUserConfig-0-angular">Angular</a></li>-->
+                          <li class=""><a href="#examples-Default-updateUserConfig-0-csharp">C#</a></li>
+                          <li class=""><a href="#examples-Default-updateUserConfig-0-php">PHP</a></li>
+                          <li class=""><a href="#examples-Default-updateUserConfig-0-perl">Perl</a></li>
+                          <li class=""><a href="#examples-Default-updateUserConfig-0-python">Python</a></li>
+                          <li class=""><a href="#examples-Default-updateUserConfig-0-rust">Rust</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div class="tab-pane active" id="examples-Default-updateUserConfig-0-curl">
+                            <pre class="prettyprint"><code class="language-bsh">curl -X PATCH \
+-H "Authorization: [[apiKey]]" \
+ -H "Accept: application/json" \
+ -H "Content-Type: application/json" \
+ "http://localhost/api/v1/api/v1/users/{userID}/config" \
+ -d '{
+  &quot;updatedFields&quot; : {
+    &quot;key&quot; : &quot;updatedFields&quot;
+  },
+  &quot;deletedFields&quot; : [ &quot;deletedFields&quot;, &quot;deletedFields&quot; ]
+}'
+</code></pre>
+                          </div>
+                          <div class="tab-pane" id="examples-Default-updateUserConfig-0-java">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.*;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.model.*;
+import org.openapitools.client.api.DefaultApi;
+
+import java.io.File;
+import java.util.*;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        
+        // Configure API key authorization: BearerAuth
+        ApiKeyAuth BearerAuth = (ApiKeyAuth) defaultClient.getAuthentication("BearerAuth");
+        BearerAuth.setApiKey("YOUR API KEY");
+        // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+        //BearerAuth.setApiKeyPrefix("Token");
+
+        // Create an instance of the API class
+        DefaultApi apiInstance = new DefaultApi();
+        String userID = userID_example; // String | User ID
+        UserPropPatch body = ; // UserPropPatch | 
+
+        try {
+            apiInstance.updateUserConfig(userID, body);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#updateUserConfig");
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+                          </div>
+
+                          <div class="tab-pane" id="examples-Default-updateUserConfig-0-android">
+                            <pre class="prettyprint"><code class="language-java">import org.openapitools.client.api.DefaultApi;
+
+public class DefaultApiExample {
+    public static void main(String[] args) {
+        DefaultApi apiInstance = new DefaultApi();
+        String userID = userID_example; // String | User ID
+        UserPropPatch body = ; // UserPropPatch | 
+
+        try {
+            apiInstance.updateUserConfig(userID, body);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling DefaultApi#updateUserConfig");
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+                          </div>
+  <!--
+  <div class="tab-pane" id="examples-Default-updateUserConfig-0-groovy">
+  <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+  </div> -->
+                            <div class="tab-pane" id="examples-Default-updateUserConfig-0-objc">
+                              <pre class="prettyprint"><code class="language-cpp">Configuration *apiConfig = [Configuration sharedConfig];
+
+// Configure API key authorization: (authentication scheme: BearerAuth)
+[apiConfig setApiKey:@"YOUR_API_KEY" forApiKeyIdentifier:@"Authorization"];
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+//[apiConfig setApiKeyPrefix:@"Bearer" forApiKeyIdentifier:@"Authorization"];
+
+
+// Create an instance of the API class
+DefaultApi *apiInstance = [[DefaultApi alloc] init];
+String *userID = userID_example; // User ID (default to null)
+UserPropPatch *body = ; // 
+
+[apiInstance updateUserConfigWith:userID
+    body:body
+              completionHandler: ^(NSError* error) {
+    if (error) {
+        NSLog(@"Error: %@", error);
+    }
+}];
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateUserConfig-0-javascript">
+                              <pre class="prettyprint"><code class="language-js">var FocalboardServer = require('focalboard_server');
+var defaultClient = FocalboardServer.ApiClient.instance;
+
+// Configure API key authorization: BearerAuth
+var BearerAuth = defaultClient.authentications['BearerAuth'];
+BearerAuth.apiKey = "YOUR API KEY";
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//BearerAuth.apiKeyPrefix['Authorization'] = "Token";
+
+// Create an instance of the API class
+var api = new FocalboardServer.DefaultApi()
+var userID = userID_example; // {String} User ID
+var body = ; // {UserPropPatch} 
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully.');
+  }
+};
+api.updateUserConfig(userID, body, callback);
+</code></pre>
+                            </div>
+
+                            <!--<div class="tab-pane" id="examples-Default-updateUserConfig-0-angular">
+              <pre class="prettyprint language-json prettyprinted" data-type="json"><code>Coming Soon!</code></pre>
+            </div>-->
+                            <div class="tab-pane" id="examples-Default-updateUserConfig-0-csharp">
+                              <pre class="prettyprint"><code class="language-cs">using System;
+using System.Diagnostics;
+using Org.OpenAPITools.Api;
+using Org.OpenAPITools.Client;
+using Org.OpenAPITools.Model;
+
+namespace Example
+{
+    public class updateUserConfigExample
+    {
+        public void main()
+        {
+            // Configure API key authorization: BearerAuth
+            Configuration.Default.ApiKey.Add("Authorization", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.ApiKeyPrefix.Add("Authorization", "Bearer");
+
+            // Create an instance of the API class
+            var apiInstance = new DefaultApi();
+            var userID = userID_example;  // String | User ID (default to null)
+            var body = new UserPropPatch(); // UserPropPatch | 
+
+            try {
+                apiInstance.updateUserConfig(userID, body);
+            } catch (Exception e) {
+                Debug.Print("Exception when calling DefaultApi.updateUserConfig: " + e.Message );
+            }
+        }
+    }
+}
+</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateUserConfig-0-php">
+                              <pre class="prettyprint"><code class="language-php"><&#63;php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+// Configure API key authorization: BearerAuth
+OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+// Create an instance of the API class
+$api_instance = new OpenAPITools\Client\Api\DefaultApi();
+$userID = userID_example; // String | User ID
+$body = ; // UserPropPatch | 
+
+try {
+    $api_instance->updateUserConfig($userID, $body);
+} catch (Exception $e) {
+    echo 'Exception when calling DefaultApi->updateUserConfig: ', $e->getMessage(), PHP_EOL;
+}
+?></code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateUserConfig-0-perl">
+                              <pre class="prettyprint"><code class="language-perl">use Data::Dumper;
+use WWW::OPenAPIClient::Configuration;
+use WWW::OPenAPIClient::DefaultApi;
+
+# Configure API key authorization: BearerAuth
+$WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
+# uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+#$WWW::OPenAPIClient::Configuration::api_key_prefix->{'Authorization'} = "Bearer";
+
+# Create an instance of the API class
+my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
+my $userID = userID_example; # String | User ID
+my $body = WWW::OPenAPIClient::Object::UserPropPatch->new(); # UserPropPatch | 
+
+eval {
+    $api_instance->updateUserConfig(userID => $userID, body => $body);
+};
+if ($@) {
+    warn "Exception when calling DefaultApi->updateUserConfig: $@\n";
+}</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateUserConfig-0-python">
+                              <pre class="prettyprint"><code class="language-python">from __future__ import print_statement
+import time
+import openapi_client
+from openapi_client.rest import ApiException
+from pprint import pprint
+
+# Configure API key authorization: BearerAuth
+openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# openapi_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+
+# Create an instance of the API class
+api_instance = openapi_client.DefaultApi()
+userID = userID_example # String | User ID (default to null)
+body =  # UserPropPatch | 
+
+try:
+    api_instance.update_user_config(userID, body)
+except ApiException as e:
+    print("Exception when calling DefaultApi->updateUserConfig: %s\n" % e)</code></pre>
+                            </div>
+
+                            <div class="tab-pane" id="examples-Default-updateUserConfig-0-rust">
+                              <pre class="prettyprint"><code class="language-rust">extern crate DefaultApi;
+
+pub fn main() {
+    let userID = userID_example; // String
+    let body = ; // UserPropPatch
+
+    let mut context = DefaultApi::Context::default();
+    let result = client.updateUserConfig(userID, body, &context).wait();
+
+    println!("{:?}", result);
+}
+</code></pre>
+                            </div>
+                          </div>
+
+                          <h2>Scopes</h2>
+                          <table>
+                            
+                          </table>
+
+                          <h2>Parameters</h2>
+
+                            <div class="methodsubtabletitle">Path parameters</div>
+                            <table id="methodsubtable">
+                                <tr>
+                                  <th width="150px">Name</th>
+                                  <th>Description</th>
+                                </tr>
+                                  <tr><td style="width:150px;">userID*</td>
+<td>
+
+
+    <div id="d2e199_updateUserConfig_userID">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    String
+                </span>
+
+                    <div class="inner description marked">
+User ID
+                    </div>
+            </div>
+                <div class="inner required">
+                    Required
+                </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                            </table>
+
+
+                            <div class="methodsubtabletitle">Body parameters</div>
+                            <table id="methodsubtable">
+                              <tr>
+                                <th width="150px">Name</th>
+                                <th>Description</th>
+                              </tr>
+                                <tr><td style="width:150px;">body <span style="color:red;">*</span></td>
+<td>
+<p class="marked">User config patch to apply</p>
+<script>
+$(document).ready(function() {
+  var schemaWrapper = {
+  "description" : "User config patch to apply",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/UserPropPatch"
+      }
+    }
+  },
+  "required" : true
+};
+
+  var schema = findNode('schema',schemaWrapper).schema;
+  if (!schema) {
+    schema = schemaWrapper.schema;
+  }
+  if (schema.$ref != null) {
+    schema = defsParser.$refs.get(schema.$ref);
+  } else {
+    schemaWrapper.definitions = Object.assign({}, defs);
+    $RefParser.dereference(schemaWrapper).catch(function(err) {
+      console.log(err);
+    });
+  }
+
+  var view = new JSONSchemaView(schema,2,{isBodyParam: true});
+  var result = $('#d2e199_updateUserConfig_body');
+  result.empty();
+  result.append(view.render());
+});
+</script>
+<div id="d2e199_updateUserConfig_body"></div>
+</td>
+</tr>
+
+                            </table>
+
+
+
+                          <h2>Responses</h2>
+                            <h3 id="examples-Default-updateUserConfig-title-200"></h3>
+                            <p id="examples-Default-updateUserConfig-description-200" class="marked"></p>
+                            <script>
+                              var responseDefault200_description = `success`;
+                              var responseDefault200_description_break = responseDefault200_description.indexOf('\n');
+                              if (responseDefault200_description_break == -1) {
+                                $("#examples-Default-updateUserConfig-title-200").text("Status: 200 - " + responseDefault200_description);
+                              } else {
+                                $("#examples-Default-updateUserConfig-title-200").text("Status: 200 - " + responseDefault200_description.substring(0, responseDefault200_description_break));
+                                $("#examples-Default-updateUserConfig-description-200").html(responseDefault200_description.substring(responseDefault200_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-updateUserConfig-200" class="nav nav-tabs nav-tabs-examples" >
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-updateUserConfig-200-wrapper" style='margin-bottom: 10px;'>
+                            </div>
+                            <h3 id="examples-Default-updateUserConfig-title-default"></h3>
+                            <p id="examples-Default-updateUserConfig-description-default" class="marked"></p>
+                            <script>
+                              var responseDefaultdefault_description = `internal error`;
+                              var responseDefaultdefault_description_break = responseDefaultdefault_description.indexOf('\n');
+                              if (responseDefaultdefault_description_break == -1) {
+                                $("#examples-Default-updateUserConfig-title-default").text("Status: default - " + responseDefaultdefault_description);
+                              } else {
+                                $("#examples-Default-updateUserConfig-title-default").text("Status: default - " + responseDefaultdefault_description.substring(0, responseDefaultdefault_description_break));
+                                $("#examples-Default-updateUserConfig-description-default").html(responseDefaultdefault_description.substring(responseDefaultdefault_description_break));
+                              }
+                            </script>
+
+
+                            <ul id="responses-detail-Default-updateUserConfig-default" class="nav nav-tabs nav-tabs-examples" >
+                                <li class="active">
+                                  <a data-toggle="tab" href="#responses-Default-updateUserConfig-default-schema">Schema</a>
+                                </li>
+
+
+
+
+                            </ul>
+
+
+                            <div class="tab-content" id="responses-Default-updateUserConfig-default-wrapper" style='margin-bottom: 10px;'>
+                                <div class="tab-pane active" id="responses-Default-updateUserConfig-default-schema">
+                                  <div id="responses-Default-updateUserConfig-schema-default" class="exampleStyle">
+                                    <script>
+                                      $(document).ready(function() {
+                                        var schemaWrapper = {
+  "description" : "internal error",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ErrorResponse"
+      }
+    }
+  }
+};
+                                        var schema = findNode('schema',schemaWrapper).schema;
+                                        if (!schema) {
+                                          schema = schemaWrapper.schema;
+                                        }
+                                        if (schema.$ref != null) {
+                                          schema = defsParser.$refs.get(schema.$ref);
+                                        } else if (schema.items != null && schema.items.$ref != null) {
+                                            schema.items = defsParser.$refs.get(schema.items.$ref);
+                                        } else {
+                                          schemaWrapper.definitions = Object.assign({}, defs);
+                                          $RefParser.dereference(schemaWrapper).catch(function(err) {
+                                            console.log(err);
+                                          });
+                                        }
+
+                                        var view = new JSONSchemaView(schema, 3);
+                                        $('#responses-Default-updateUserConfig-default-schema-data').val(JSON.stringify(schema));
+                                        var result = $('#responses-Default-updateUserConfig-schema-default');
+                                        result.empty();
+                                        result.append(view.render());
+                                      });
+                                    </script>
+                                  </div>
+                                  <input id='responses-Default-updateUserConfig-default-schema-data' type='hidden' value=''></input>
                                 </div>
                             </div>
                         </article>

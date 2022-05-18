@@ -144,6 +144,7 @@ func (p *Plugin) OnActivate() error {
 		ServerID:        serverID,
 		WSAdapter:       p.wsPluginAdapter,
 		NotifyBackends:  notifyBackends,
+		PluginAPI:       p.API,
 	}
 
 	server, err := server.New(params)
