@@ -152,6 +152,17 @@ const MainApp = (props: Props) => {
     )
 }
 
+const RHSCard = (props: Props) => {
+    useEffect(() => {
+    }, [])
+
+    return (
+        <div>
+            Card {windowAny.cardID}
+        </div>
+    )
+}
+
 const HeaderComponent = () => {
     return (
         <ErrorBoundary>
@@ -162,7 +173,10 @@ const HeaderComponent = () => {
 
 export default class Plugin {
     channelHeaderButtonId?: string
+    rhsCardID?: string
     registry?: PluginRegistry
+    showRHSCard?: (cardID: string) => void
+    hideRHSCard?: () => void
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
     async initialize(registry: PluginRegistry, mmStore: Store<GlobalState, Action<Record<string, unknown>>>): Promise<void> {
@@ -171,6 +185,15 @@ export default class Plugin {
         windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
         windowAny.baseURL = subpath + windowAny.baseURL
         browserHistory = customHistory()
+
+        const registerResult = registry.registerRightHandSidebarComponent(RHSCard, 'Card')
+        console.log(registerResult)
+        this.rhsCardID = registerResult.id
+        windowAny.showRHSCard = (cardID: string) => {
+            windowAny.showRHSCardID = cardID
+            mmStore.dispatch(registerResult.showRHSPlugin)
+        }
+        windowAny.hideRHSCard = () => mmStore.dispatch(registerResult.hideRHSPlugin)
 
         this.registry = registry
 
@@ -312,6 +335,7 @@ export default class Plugin {
     uninitialize(): void {
         if (this.channelHeaderButtonId) {
             this.registry?.unregisterComponent(this.channelHeaderButtonId)
+            this.registry?.unregisterComponent(this.rhsCardID!)
         }
 
         // unregister websocket handlers
