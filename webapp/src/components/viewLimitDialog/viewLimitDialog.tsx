@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useEffect} from 'react'
 
 import './viewLimitDialog.scss'
 import {FormattedMessage, useIntl} from 'react-intl'
@@ -14,6 +14,8 @@ import {getMe} from '../../store/users'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
 import octoClient from '../../octoClient'
+import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import {getCurrentBoard} from '../../store/boards'
 
 type Props = {
     onClose: () => void
@@ -23,6 +25,12 @@ const ViewLimitModal = (props: Props): JSX.Element => {
     const me = useAppSelector(getMe)
     const isAdmin = me ? Utils.isAdmin(me.roles) : false
     const intl = useIntl()
+
+    const board = useAppSelector(getCurrentBoard)
+
+    useEffect(() => {
+        telemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewLimitReached, {board: board.id})
+    }, [])
 
     const heading = (
         <FormattedMessage
@@ -65,6 +73,8 @@ const ViewLimitModal = (props: Props): JSX.Element => {
     const primaryButtonText = isAdmin ? adminPrimaryButtonText : regularUserPrimaryButtonText
 
     const handlePrimaryButtonAction = async () => {
+        telemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewLimitCTAPerformed, {board: board.id})
+
         if (isAdmin) {
             (window as any)?.openPricingModal()()
         } else {
