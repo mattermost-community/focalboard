@@ -11,6 +11,7 @@ import (
 
 	"github.com/mattermost/mattermost-plugin-api/cluster"
 
+	utils "github.com/mattermost/focalboard/server/utils"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -108,18 +109,18 @@ func (s *SQLStore) durationSelector(interval string) int64 {
 	intervalMagnitude, err := strconv.Atoi(intervalMagnitudeString)
 	if err != nil {
 		// handle error: buggy, change function to introduce err
-		return time.Now().UnixMilli()
+		return utils.GetMillisForTime(time.Now())
 	}
 	if strings.Contains(interval, "day") {
-		return time.Now().AddDate(0, 0, -1*intervalMagnitude).UnixMilli()
+		return utils.GetMillisForTime(time.Now().AddDate(0, 0, -1*intervalMagnitude))
 	}
 	if strings.Contains(interval, "month") {
-		return time.Now().AddDate(0, -1*intervalMagnitude, 0).UnixMilli()
+		return utils.GetMillisForTime(time.Now().AddDate(0, -1*intervalMagnitude, 0))
 	}
 	if strings.Contains(interval, "year") {
-		return time.Now().AddDate(-1*intervalMagnitude, 0, 0).UnixMilli()
+		return utils.GetMillisForTime(time.Now().AddDate(-1*intervalMagnitude, 0, 0))
 	}
-	return time.Now().UnixMilli()
+	return utils.GetMillisForTime(time.Now())
 }
 
 func (s *SQLStore) concatenationSelector(field string, delimiter string) string {
