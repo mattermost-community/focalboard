@@ -65,7 +65,9 @@ const ViewLimitModal = (props: Props): JSX.Element => {
     const primaryButtonText = isAdmin ? adminPrimaryButtonText : regularUserPrimaryButtonText
 
     const handlePrimaryButtonAction = async () => {
-        if (!isAdmin) {
+        if (isAdmin) {
+            (window as any)?.openPricingModal()()
+        } else {
             // TODO show a confirmation message to user on successful completion of this task
             await octoClient.notifyAdminUpgrade()
         }
