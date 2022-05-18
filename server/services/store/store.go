@@ -42,6 +42,7 @@ type Store interface {
 	// @withTransaction
 	PatchBlock(c Container, blockID string, blockPatch *model.BlockPatch, userID string) error
 	GetBlockHistory(c Container, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
+	GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
 	GetBoardAndCardByID(c Container, blockID string) (board *model.Block, card *model.Block, err error)
 	GetBoardAndCard(c Container, block *model.Block) (board *model.Block, card *model.Block, err error)
 	// @withTransaction
@@ -105,6 +106,7 @@ type Store interface {
 
 	SendMessage(message, postType string, receipts []string) error
 	GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error)
+	GetLicense() *mmModel.License
 }
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.

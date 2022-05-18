@@ -17,7 +17,6 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
-
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
@@ -590,4 +589,8 @@ func (s *MattermostAuthLayer) GetWorkspaceTeam(workspaceID string) (*mmModel.Tea
 	}
 
 	return team, nil
+}
+
+func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
+	return s.pluginAPI.GetLicense()
 }

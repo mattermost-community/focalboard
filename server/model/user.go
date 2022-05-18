@@ -59,6 +59,8 @@ type User struct {
 	Roles string `json:"roles"`
 }
 
+// UserPropPatch is a user property patch
+// swagger:model
 type UserPropPatch struct {
 	// The user prop updated fields
 	// required: false

@@ -254,6 +254,21 @@ func (mr *MockStoreMockRecorder) GetBlockHistory(arg0, arg1, arg2 interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlockHistory", reflect.TypeOf((*MockStore)(nil).GetBlockHistory), arg0, arg1, arg2)
 }
 
+// GetBlockHistoryDescendants mocks base method.
+func (m *MockStore) GetBlockHistoryDescendants(arg0 string, arg1 model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBlockHistoryDescendants", arg0, arg1)
+	ret0, _ := ret[0].([]model.Block)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBlockHistoryDescendants indicates an expected call of GetBlockHistoryDescendants.
+func (mr *MockStoreMockRecorder) GetBlockHistoryDescendants(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlockHistoryDescendants", reflect.TypeOf((*MockStore)(nil).GetBlockHistoryDescendants), arg0, arg1)
+}
+
 // GetBlocksWithParent mocks base method.
 func (m *MockStore) GetBlocksWithParent(arg0 store.Container, arg1 string) ([]model.Block, error) {
 	m.ctrl.T.Helper()
@@ -359,6 +374,20 @@ func (m *MockStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
 func (mr *MockStoreMockRecorder) GetDefaultTemplateBlocks() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultTemplateBlocks", reflect.TypeOf((*MockStore)(nil).GetDefaultTemplateBlocks))
+}
+
+// GetLicense mocks base method.
+func (m *MockStore) GetLicense() *model0.License {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetLicense")
+	ret0, _ := ret[0].(*model0.License)
+	return ret0
+}
+
+// GetLicense indicates an expected call of GetLicense.
+func (mr *MockStoreMockRecorder) GetLicense() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLicense", reflect.TypeOf((*MockStore)(nil).GetLicense))
 }
 
 // GetNextNotificationHint mocks base method.

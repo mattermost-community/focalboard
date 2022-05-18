@@ -22,6 +22,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
@@ -113,6 +114,11 @@ func (s *SQLStore) GetBlockHistory(c store.Container, blockID string, opts model
 
 }
 
+func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+	return s.getBlockHistoryDescendants(s.db, boardID, opts)
+
+}
+
 func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]model.Block, error) {
 	return s.getBlocksWithParent(s.db, c, parentID)
 
@@ -145,6 +151,11 @@ func (s *SQLStore) GetBoardAndCardByID(c store.Container, blockID string) (*mode
 
 func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
 	return s.getDefaultTemplateBlocks(s.db)
+
+}
+
+func (s *SQLStore) GetLicense() *mmModel.License {
+	return s.getLicense(s.db)
 
 }
 
