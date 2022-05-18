@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 
 import {getCurrentWorkspace} from '../store/workspace'
 import {getCurrentBoard} from '../store/boards'
-import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
+import {refreshCards, getCardLimitTimestamp, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
@@ -36,6 +36,7 @@ function CenterContent(props: Props) {
     const groupByProperty = useAppSelector(getCurrentViewGroupBy)
     const dateDisplayProperty = useAppSelector(getCurrentViewDisplayBy)
     const clientConfig = useAppSelector(getClientConfig)
+    const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
 
@@ -56,7 +57,10 @@ function CenterContent(props: Props) {
         wsClient.addOnConfigChange(onConfigChangeHandler)
 
         const onCardLimitTimestampChangeHandler = (_: WSClient, timestamp: number) => {
-            console.log(`HANDLING TIMESTAMP: ${timestamp}`)
+            dispatch(setLimitTimestamp(timestamp))
+            if (cardLimitTimestamp > timestamp) {
+                dispatch(refreshCards(match.params.boardId))
+            }
         }
         wsClient.addOnCardLimitTimestampChange(onCardLimitTimestampChangeHandler)
 
@@ -64,7 +68,7 @@ function CenterContent(props: Props) {
             wsClient.removeOnConfigChange(onConfigChangeHandler)
             wsClient.removeOnCardLimitTimestampChange(onCardLimitTimestampChangeHandler)
         }
-    }, [])
+    }, [cardLimitTimestamp, match.params.boardId])
 
     if (board && activeView) {
         let property = groupByProperty

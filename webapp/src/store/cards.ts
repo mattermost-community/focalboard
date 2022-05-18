@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction, createSelector, createAsyncThunk} from '@reduxjs/toolkit'
 
 import {Card} from '../blocks/card'
 import {IUser} from '../user'
@@ -10,6 +10,7 @@ import {BoardView} from '../blocks/boardView'
 import {Utils} from '../utils'
 import {Constants} from '../constants'
 import {CardFilter} from '../cardFilter'
+import {default as client} from '../octoClient'
 
 import {initialLoad, initialReadOnlyLoad} from './initialLoad'
 import {getCurrentBoard} from './boards'
@@ -21,14 +22,31 @@ import {RootState} from './index'
 
 type CardsState = {
     current: string
+    limitTimestamp: number
     cards: {[key: string]: Card}
     templates: {[key: string]: Card}
 }
+
+export const refreshCards = createAsyncThunk(
+    'refreshCards',
+    async (boardId: string) => {
+        const [blocks, limits] = await Promise.all([
+            client.getSubtree(boardId, 2),
+            client.getBoardsCloudLimits(),
+        ])
+
+        return {
+            blocks,
+            limits,
+        }
+    },
+)
 
 const cardsSlice = createSlice({
     name: 'cards',
     initialState: {
         current: '',
+        limitTimestamp: 0,
         cards: {},
         templates: {},
     } as CardsState,
@@ -36,8 +54,23 @@ const cardsSlice = createSlice({
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
         },
+        setLimitTimestamp: (state, action: PayloadAction<number>) => {
+            state.limitTimestamp = action.payload
+        },
         addCard: (state, action: PayloadAction<Card>) => {
-            state.cards[action.payload.id] = action.payload
+            if (action.payload.updateAt < state.limitTimestamp) {
+                state.cards[action.payload.id] = {
+                    ...action.payload,
+                    fields: {
+                        icon: action.payload.fields.icon,
+                        properties: {},
+                        contentOrder: [],
+                    },
+                    isLimited: true,
+                }
+            } else {
+                state.cards[action.payload.id] = action.payload
+            }
         },
         addTemplate: (state, action: PayloadAction<Card>) => {
             state.templates[action.payload.id] = action.payload
@@ -49,14 +82,7 @@ const cardsSlice = createSlice({
                     delete state.templates[card.id]
                 } else if (card.fields.isTemplate) {
                     state.templates[card.id] = card
-                } else {
-                    state.cards[card.id] = card
-                }
-            }
-        },
-        updateLimitedCards: (state, action: PayloadAction<number>) => {
-            for (const card of Object.values(state.cards)) {
-                if (card.updateAt < action.payload) {
+                } else if (card.updateAt < state.limitTimestamp) {
                     state.cards[card.id] = {
                         ...card,
                         fields: {
@@ -66,11 +92,37 @@ const cardsSlice = createSlice({
                         },
                         isLimited: true,
                     }
+                } else {
+                    state.cards[card.id] = card
                 }
             }
         },
     },
     extraReducers: (builder) => {
+        builder.addCase(refreshCards.fulfilled, (state, action) => {
+            state.cards = {}
+            state.templates = {}
+            state.limitTimestamp = action.payload.limits?.card_limit_timestamp || 0
+            for (const block of action.payload.blocks) {
+                if (block.type === 'card' && block.fields.isTemplate) {
+                    state.templates[block.id] = block as Card
+                } else if (block.type === 'card' && !block.fields.isTemplate) {
+                    if (block.updateAt < state.limitTimestamp) {
+                        state.cards[block.id] = {
+                            ...block,
+                            fields: {
+                                icon: block.fields.icon,
+                                properties: {},
+                                contentOrder: [],
+                            },
+                            isLimited: true,
+                        }
+                    } else {
+                        state.cards[block.id] = block as Card
+                    }
+                }
+            }
+        })
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
             state.cards = {}
             state.templates = {}
@@ -78,30 +130,42 @@ const cardsSlice = createSlice({
                 if (block.type === 'card' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Card
                 } else if (block.type === 'card' && !block.fields.isTemplate) {
-                    state.cards[block.id] = block as Card
+                    if (block.updateAt < state.limitTimestamp) {
+                        state.cards[block.id] = {
+                            ...block,
+                            fields: {
+                                icon: block.fields.icon,
+                                properties: {},
+                                contentOrder: [],
+                            },
+                            isLimited: true,
+                        }
+                    } else {
+                        state.cards[block.id] = block as Card
+                    }
                 }
             }
         })
         builder.addCase(initialLoad.fulfilled, (state, action) => {
             state.cards = {}
             state.templates = {}
+            state.limitTimestamp = action.payload.limits?.card_limit_timestamp || 0
             for (const block of action.payload.blocks) {
                 if (block.type === 'card' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Card
                 } else if (block.type === 'card' && !block.fields.isTemplate) {
-                    state.cards[block.id] = block as Card
-                }
-            }
-            for (const card of Object.values(state.cards)) {
-                if (card.updateAt < (action.payload.limits?.card_limit_timestamp || 0)) {
-                    state.cards[card.id] = {
-                        ...card,
-                        fields: {
-                            icon: card.fields.icon,
-                            properties: {},
-                            contentOrder: [],
-                        },
-                        isLimited: true,
+                    if (block.updateAt < state.limitTimestamp) {
+                        state.cards[block.id] = {
+                            ...block,
+                            fields: {
+                                icon: block.fields.icon,
+                                properties: {},
+                                contentOrder: [],
+                            },
+                            isLimited: true,
+                        }
+                    } else {
+                        state.cards[block.id] = block as Card
                     }
                 }
             }
@@ -109,7 +173,7 @@ const cardsSlice = createSlice({
     },
 })
 
-export const {updateCards, addCard, addTemplate, setCurrent} = cardsSlice.actions
+export const {updateCards, addCard, addTemplate, setCurrent, setLimitTimestamp} = cardsSlice.actions
 export const {reducer} = cardsSlice
 
 export const getCards = (state: RootState): {[key: string]: Card} => state.cards.cards
@@ -322,7 +386,7 @@ function searchFilterCards(cards: Card[], board: Board, searchTextRaw: string): 
     })
 }
 
-export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
+export const getCurrentViewCardsSortedFilteredAndGroupedWithoutLimit = createSelector(
     getCurrentBoardCards,
     getCurrentBoard,
     getCurrentView,
@@ -345,6 +409,11 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
     },
 )
 
+export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
+    getCurrentViewCardsSortedFilteredAndGroupedWithoutLimit,
+    (cards) => cards.filter((c) => !c.isLimited),
+)
+
 export const getCurrentCard = createSelector(
     (state: RootState) => state.cards.current,
     (state: RootState) => state.cards.cards,
@@ -352,6 +421,9 @@ export const getCurrentCard = createSelector(
 )
 
 export const getHiddenByLimitCards = createSelector(
+    getCurrentViewCardsSortedFilteredAndGroupedWithoutLimit,
     getCurrentViewCardsSortedFilteredAndGrouped,
-    (cards) => cards.filter((c: Card) => c.isLimited).length,
+    (allCards, shownCards) => allCards.length - shownCards.length,
 )
+
+export const getCardLimitTimestamp = (state: RootState): number => state.cards.limitTimestamp

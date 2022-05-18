@@ -29,7 +29,7 @@ const CardLimitNotification = () => {
             defaultMessage: '{cards} cards hidden from board',
         },
         {cards: hiddenCards},
-    ), [])
+    ), [hiddenCards])
     const me = useAppSelector<IUser|null>(getMe)
     const snoozedUntil = useAppSelector<number>(getCardLimitSnoozeUntil)
     const dispatch = useAppDispatch()
