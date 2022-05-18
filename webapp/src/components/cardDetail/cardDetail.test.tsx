@@ -98,6 +98,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -143,6 +144,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={true}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -222,6 +224,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -316,6 +319,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -414,6 +418,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[text]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -487,6 +492,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>

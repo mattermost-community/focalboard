@@ -44,6 +44,7 @@ type Props = {
     comments: CommentBlock[]
     contents: Array<ContentBlock|ContentBlock[]>
     readonly: boolean
+    onClose: () => void
 }
 
 const CardDetail = (props: Props): JSX.Element|null => {
@@ -152,9 +153,11 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         <br/>
                         <a
                             className='CardDetail__limited-link'
-                            onClick={() => (window as any).openPricingModal()}
-                            target='_blank'
-                            rel='noreferrer'
+                            role='button'
+                            onClick={() => {
+                                props.onClose();
+                                (window as any).openPricingModal()()
+                            }}
                         >
                             <FormattedMessage
                                 id='CardDetial.limited-link'
@@ -164,7 +167,10 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     </p>
                     <Button
                         className='CardDetail__limited-button'
-                        onClick={() => (window as any).openPricingModal()}
+                        onClick={() => {
+                            props.onClose();
+                            (window as any).openPricingModal()()
+                        }}
                         emphasis='primary'
                         size='large'
                     >

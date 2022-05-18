@@ -189,6 +189,7 @@ const CardDialog = (props: Props): JSX.Element => {
                         contents={contents}
                         comments={comments}
                         readonly={props.readonly}
+                        onClose={props.onClose}
                     />}
 
                 {!card &&
