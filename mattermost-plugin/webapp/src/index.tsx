@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
 import {createBrowserHistory, History} from 'history'
@@ -21,6 +21,7 @@ windowAny.isFocalboardPlugin = true
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import {setTeam} from '../../../webapp/src/store/teams'
+import {setRHSCard} from '../../../webapp/src/store/cards'
 import {Utils} from '../../../webapp/src/utils'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
@@ -34,6 +35,7 @@ import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
+import RHSCard from './rhsCard'
 import wsClient, {
     MMWebSocketClient,
     ACTION_UPDATE_BLOCK,
@@ -151,18 +153,6 @@ const MainApp = (props: Props) => {
         </ErrorBoundary>
     )
 }
-
-const RHSCard = (props: Props) => {
-    useEffect(() => {
-    }, [])
-
-    return (
-        <div>
-            Card {windowAny.cardID}
-        </div>
-    )
-}
-
 const HeaderComponent = () => {
     return (
         <ErrorBoundary>
@@ -190,6 +180,7 @@ export default class Plugin {
         console.log(registerResult)
         this.rhsCardID = registerResult.id
         windowAny.showRHSCard = (cardID: string) => {
+            store.dispatch(setRHSCard(cardID))
             windowAny.showRHSCardID = cardID
             mmStore.dispatch(registerResult.showRHSPlugin)
         }

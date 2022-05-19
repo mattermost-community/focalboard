@@ -26,6 +26,7 @@ import {RootState} from './index'
 type CardsState = {
     current: string
     limitTimestamp: number
+    rhsCard: string
     cards: {[key: string]: Card}
     templates: {[key: string]: Card}
     cardHiddenWarning: boolean
@@ -76,6 +77,9 @@ const cardsSlice = createSlice({
         cardHiddenWarning: false,
     } as CardsState,
     reducers: {
+        setRHSCard: (state, action: PayloadAction<string>) => {
+            state.rhsCard = action.payload
+        },
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
         },
@@ -141,7 +145,7 @@ const cardsSlice = createSlice({
     },
 })
 
-export const {updateCards, addCard, addTemplate, setCurrent, setLimitTimestamp, showCardHiddenWarning} = cardsSlice.actions
+export const {setRHSCard, updateCards, addCard, addTemplate, setCurrent, setLimitTimestamp, showCardHiddenWarning} = cardsSlice.actions
 export const {reducer} = cardsSlice
 
 export const getCards = (state: RootState): {[key: string]: Card} => state.cards.cards
@@ -394,3 +398,10 @@ export const getCurrentCard = createSelector(
 
 export const getCardLimitTimestamp = (state: RootState): number => state.cards.limitTimestamp
 export const getCardHiddenWarning = (state: RootState): boolean => state.cards.cardHiddenWarning
+
+export const getRHSCardID = (state: RootState): string => state.cards.rhsCard
+export const getRHSCard = createSelector(
+    getCards,
+    getRHSCardID,
+    (cards, cardID) => cards[cardID],
+)
