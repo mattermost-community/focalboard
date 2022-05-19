@@ -159,6 +159,10 @@ func (a *App) isWithinViewsLimit(c store.Container, block model.Block) (bool, er
 		return false, err
 	}
 
+	if limits.Views == model.LimitUnlimited {
+		return true, nil
+	}
+
 	// < rather than <= because we'll be creating new view if this
 	// check passes. When that view is created, the limit will be reached.
 	// That's why we need to check for if existing + the being-created

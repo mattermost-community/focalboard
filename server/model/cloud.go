@@ -1,5 +1,7 @@
 package model
 
+const LimitUnlimited = 0
+
 // BoardsCloudLimits is the representation of the limits for the
 // Boards server
 // swagger:model

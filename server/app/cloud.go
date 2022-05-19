@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/mattermost/focalboard/server/utils"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -18,6 +20,10 @@ var ErrNilPluginAPI = errors.New("server not running in plugin mode")
 func (a *App) GetBoardsCloudLimits() (*model.BoardsCloudLimits, error) {
 	if a.pluginAPI == nil {
 		return nil, ErrNilPluginAPI
+	}
+
+	if !utils.IsCloudLicense(a.store.GetLicense()) {
+		return &model.BoardsCloudLimits{}, nil
 	}
 
 	productLimits, err := a.pluginAPI.GetCloudLimits()
@@ -46,7 +52,7 @@ func (a *App) NotifyPortalAdminsUpgradeRequest(workspaceID string) error {
 
 	var ofWhat string
 	if team == nil {
-		ofWhat = "your organisation"
+		ofWhat = "your organization"
 	} else {
 		ofWhat = team.DisplayName
 	}
@@ -61,8 +67,6 @@ func (a *App) NotifyPortalAdminsUpgradeRequest(workspaceID string) error {
 		Page:    page,
 	}
 
-	receiptUserIDs := []string{}
-
 	for ; true; page++ {
 		getUsersOptions.Page = page
 		systemAdmins, appErr := a.pluginAPI.GetUsers(getUsersOptions)
@@ -75,10 +79,15 @@ func (a *App) NotifyPortalAdminsUpgradeRequest(workspaceID string) error {
 			break
 		}
 
+		receiptUserIDs := []string{}
 		for _, systemAdmin := range systemAdmins {
 			receiptUserIDs = append(receiptUserIDs, systemAdmin.Id)
 		}
+
+		if err := a.store.SendMessage(message, "custom_cloud_upgrade_nudge", receiptUserIDs); err != nil {
+			return err
+		}
 	}
 
-	return a.store.SendMessage(message, "custom_cloud_upgrade_nudge", receiptUserIDs)
+	return nil
 }
