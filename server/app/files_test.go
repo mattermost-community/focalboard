@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/golang/mock/gomock"
+
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore/mocks"
@@ -182,6 +184,7 @@ func TestSaveFile(t *testing.T) {
 		fileName := "temp-file-name.txt"
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
+		th.Store.EXPECT().SaveFileInfo(gomock.Any()).Return(nil)
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, "/")
@@ -205,6 +208,7 @@ func TestSaveFile(t *testing.T) {
 		fileName := "temp-file-name.jpeg"
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
+		th.Store.EXPECT().SaveFileInfo(gomock.Any()).Return(nil)
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, "/")
@@ -229,6 +233,7 @@ func TestSaveFile(t *testing.T) {
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
 		mockedError := &TestError{}
+		th.Store.EXPECT().SaveFileInfo(gomock.Any()).Return(nil)
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, "/")
