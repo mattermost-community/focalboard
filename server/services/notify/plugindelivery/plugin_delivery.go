@@ -4,8 +4,6 @@
 package plugindelivery
 
 import (
-	"github.com/mattermost/focalboard/server/services/notify"
-
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -35,6 +33,9 @@ type PluginAPI interface {
 	// IsErrNotFound returns true if `err` or one of its wrapped children are the `ErrNotFound`
 	// as defined in the plugin API.
 	IsErrNotFound(err error) bool
+	// CreateMember adds a user to the specified team. Safe to call if the user is
+	// already a member of the team.
+	CreateMember(teamID string, userID string) (*mm_model.TeamMember, error)
 }
 
 // PluginDelivery provides ability to send notifications to direct message channels via Mattermost plugin API.
@@ -44,6 +45,7 @@ type PluginDelivery struct {
 	api        PluginAPI
 }
 
+// New creates a PluginDelivery instance.
 func New(botID string, serverRoot string, api PluginAPI) *PluginDelivery {
 	return &PluginDelivery{
 		botID:      botID,
@@ -52,9 +54,9 @@ func New(botID string, serverRoot string, api PluginAPI) *PluginDelivery {
 	}
 }
 
-func (pd *PluginDelivery) getTeamID(evt notify.BlockChangeEvent) (string, error) {
+func (pd *PluginDelivery) GetTeamIDForWorkspace(workspaceID string) (string, error) {
 	// for now, the workspace ID is also the channel ID
-	channel, err := pd.api.GetChannelByID(evt.Workspace)
+	channel, err := pd.api.GetChannelByID(workspaceID)
 	if err != nil {
 		return "", err
 	}

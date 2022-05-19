@@ -44,6 +44,10 @@ type Props = {
     showCard: (cardId?: string) => void
 }
 
+const ScrollingComponent = withScrolling('div')
+const hStrength = createHorizontalStrength(Utils.isMobile() ? 60 : 250)
+const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
+
 const Kanban = (props: Props) => {
     const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups} = props
     const limitedCard = useAppSelector(getHiddenCard)
@@ -208,10 +212,6 @@ const Kanban = (props: Props) => {
         newShowOptions.set(templateId, show)
         setShowCalculationsMenu(newShowOptions)
     }
-
-    const ScrollingComponent = withScrolling('div')
-    const hStrength = createHorizontalStrength(Utils.isMobile() ? 60 : 250)
-    const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
 
     return (
         <ScrollingComponent

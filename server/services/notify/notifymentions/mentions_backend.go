@@ -110,6 +110,14 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 			merr.Append(fmt.Errorf("cannot deliver notification for @%s: %w", username, err))
 		}
 
+		if userID == "" {
+			// was a `@` followed by something other than a username.
+			b.logger.Debug("Mention notification skipped; not a known username",
+				mlog.String("username", username),
+			)
+			continue
+		}
+
 		b.logger.Debug("Mention notification delivered",
 			mlog.String("user", username),
 			mlog.Int("listener_count", len(listeners)),

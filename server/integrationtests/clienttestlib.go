@@ -4,19 +4,32 @@ import (
 	"errors"
 	"net/http"
 	"os"
+	"testing"
 	"time"
 
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/client"
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/utils"
+	"github.com/stretchr/testify/require"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+type LicenseType int
+
+const (
+	LicenseNone         LicenseType = iota // 0
+	LicenseProfessional                    // 1
+	LicenseEnterprise                      // 2
+)
+
 type TestHelper struct {
+	T       *testing.T
 	Server  *server.Server
 	Client  *client.Client
 	Client2 *client.Client
@@ -66,6 +79,10 @@ func getTestConfig() (*config.Configuration, error) {
 }
 
 func newTestServer(singleUserToken string) *server.Server {
+	return newTestServerWithLicense(singleUserToken, LicenseNone)
+}
+
+func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *server.Server {
 	cfg, err := getTestConfig()
 	if err != nil {
 		panic(err)
@@ -75,9 +92,22 @@ func newTestServer(singleUserToken string) *server.Server {
 	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
 		panic(err)
 	}
-	db, err := server.NewStore(cfg, logger)
+	innerStore, err := server.NewStore(cfg, logger)
 	if err != nil {
 		panic(err)
+	}
+
+	var db store.Store
+
+	switch licenseType {
+	case LicenseProfessional:
+		db = NewTestProfessionalStore(innerStore)
+	case LicenseEnterprise:
+		db = NewTestEnterpriseStore(innerStore)
+	case LicenseNone:
+		fallthrough
+	default:
+		db = innerStore
 	}
 
 	params := server.Params{
@@ -100,6 +130,14 @@ func SetupTestHelper() *TestHelper {
 	th := &TestHelper{}
 	th.Server = newTestServer(sessionToken)
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
+	return th
+}
+
+func SetupTestHelperWithLicense(t *testing.T, licenseType LicenseType) *TestHelper {
+	th := &TestHelper{T: t}
+	th.Server = newTestServerWithLicense("", licenseType)
+	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
+	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, "")
 	return th
 }
 
@@ -189,6 +227,21 @@ func (th *TestHelper) InitUsers(username1 string, username2 string) error {
 	return nil
 }
 
+func (th *TestHelper) Me(client *client.Client) *model.User {
+	user, resp := client.GetMe()
+	th.CheckOK(resp)
+	require.NotNil(th.T, user)
+	return user
+}
+
+func (th *TestHelper) GetUser1() *model.User {
+	return th.Me(th.Client)
+}
+
+func (th *TestHelper) GetUser2() *model.User {
+	return th.Me(th.Client2)
+}
+
 func (th *TestHelper) TearDown() {
 	defer func() { _ = th.Server.Logger().Shutdown() }()
 
@@ -198,4 +251,23 @@ func (th *TestHelper) TearDown() {
 	}
 
 	os.RemoveAll(th.Server.Config().FilesPath)
+}
+
+func (th *TestHelper) Logout(client *client.Client) {
+	client.Token = ""
+}
+
+func (th *TestHelper) CheckOK(r *client.Response) {
+	require.Equal(th.T, http.StatusOK, r.StatusCode)
+	require.NoError(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckUnauthorized(r *client.Response) {
+	require.Equal(th.T, http.StatusUnauthorized, r.StatusCode)
+	require.Error(th.T, r.Error)
+}
+
+func (th *TestHelper) CheckNotImplemented(r *client.Response) {
+	require.Equal(th.T, http.StatusNotImplemented, r.StatusCode)
+	require.Error(th.T, r.Error)
 }

@@ -278,7 +278,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-2"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -324,7 +324,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-4"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -370,7 +370,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-6"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -416,7 +416,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-8"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -462,7 +462,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-10"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -508,7 +508,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-12"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -554,7 +554,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-14"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -604,7 +604,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-16"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -650,7 +650,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-18"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -696,7 +696,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-20"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -773,7 +773,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-22"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -819,7 +819,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-24"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -865,7 +865,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-26"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -911,7 +911,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-28"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -961,7 +961,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-30"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1007,7 +1007,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-32"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1053,7 +1053,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-34"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1099,7 +1099,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-36"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1145,7 +1145,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-38"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1191,7 +1191,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-40"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1237,7 +1237,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-42"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1287,7 +1287,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-44"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1333,7 +1333,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-46"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1379,7 +1379,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-48"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1425,7 +1425,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-50"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1471,7 +1471,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-52"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1517,7 +1517,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-54"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1563,7 +1563,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-56"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1613,7 +1613,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-58"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1659,7 +1659,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-60"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1705,7 +1705,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-62"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1751,7 +1751,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-64"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1797,7 +1797,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-66"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1843,7 +1843,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-68"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1889,7 +1889,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-70"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1939,7 +1939,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-72"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -1985,7 +1985,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-74"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2031,7 +2031,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-76"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2077,7 +2077,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-78"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2123,7 +2123,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-80"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2169,7 +2169,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-82"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2215,7 +2215,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                       id="fc-dom-84"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2538,7 +2538,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-87"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2584,7 +2584,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-89"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2630,7 +2630,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-91"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2676,7 +2676,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-93"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2722,7 +2722,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-95"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2768,7 +2768,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-97"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2814,7 +2814,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-99"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2864,7 +2864,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-101"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2910,7 +2910,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-103"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -2956,7 +2956,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-105"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3033,7 +3033,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-107"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3079,7 +3079,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-109"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3125,7 +3125,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-111"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3171,7 +3171,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-113"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3221,7 +3221,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-115"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3267,7 +3267,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-117"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3313,7 +3313,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-119"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3359,7 +3359,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-121"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3405,7 +3405,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-123"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3451,7 +3451,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-125"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3497,7 +3497,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-127"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3547,7 +3547,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-129"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3593,7 +3593,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-131"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3639,7 +3639,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-133"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3685,7 +3685,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-135"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3731,7 +3731,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-137"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3777,7 +3777,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-139"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3823,7 +3823,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-141"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3873,7 +3873,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-143"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3919,7 +3919,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-145"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -3965,7 +3965,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-147"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4011,7 +4011,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-149"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4057,7 +4057,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-151"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4103,7 +4103,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-153"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4149,7 +4149,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-155"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4199,7 +4199,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-157"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4245,7 +4245,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-159"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4291,7 +4291,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-161"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4337,7 +4337,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-163"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4383,7 +4383,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-165"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4429,7 +4429,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-167"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4475,7 +4475,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                       id="fc-dom-169"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4798,7 +4798,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-172"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4844,7 +4844,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-174"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4890,7 +4890,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-176"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4936,7 +4936,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-178"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -4982,7 +4982,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-180"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5028,7 +5028,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-182"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5074,7 +5074,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-184"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5124,7 +5124,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-186"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5170,7 +5170,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-188"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5216,7 +5216,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-190"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5262,7 +5262,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-192"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5308,7 +5308,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-194"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5354,7 +5354,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-196"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5400,7 +5400,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-198"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5450,7 +5450,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-200"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5496,7 +5496,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-202"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5542,7 +5542,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-204"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5588,7 +5588,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-206"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5634,7 +5634,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-208"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5680,7 +5680,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-210"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5726,7 +5726,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-212"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5776,7 +5776,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-214"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5822,7 +5822,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-216"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5868,7 +5868,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-218"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5914,7 +5914,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-220"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -5997,7 +5997,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-222"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6043,7 +6043,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-224"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6089,7 +6089,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-226"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6139,7 +6139,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-228"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6185,7 +6185,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-230"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6231,7 +6231,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-232"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6277,7 +6277,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-234"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6323,7 +6323,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-236"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6369,7 +6369,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-238"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6415,7 +6415,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-240"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6465,7 +6465,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-242"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6511,7 +6511,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-244"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6557,7 +6557,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-246"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6603,7 +6603,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-248"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6649,7 +6649,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-250"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6695,7 +6695,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-252"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"
@@ -6741,7 +6741,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                       id="fc-dom-254"
                                     >
                                       <div
-                                        class="dateContainer"
+                                        class="dateContainer with-plus"
                                       >
                                         <div
                                           class="addEvent"

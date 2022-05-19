@@ -77,12 +77,12 @@ function customHistory() {
             }
 
             const pathName = event.data.message?.pathName
-            if (!pathName || !pathName.startsWith(windowAny.frontendBaseURL)) {
+            if (!pathName || !pathName.startsWith('/boards')) {
                 return
             }
 
             Utils.log(`Navigating Boards to ${pathName}`)
-            history.replace(pathName.replace(windowAny.frontendBaseURL, ''))
+            history.replace(pathName.replace('/boards', ''))
         })
     }
     return {
@@ -195,6 +195,12 @@ export default class Plugin {
             }
 
             this.registry.registerProduct('/boards', 'product-boards', 'Boards', '/boards/welcome', MainApp, HeaderComponent)
+
+            if (this.registry.registerAppBarComponent) {
+                const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
+                this.registry.registerAppBarComponent(appBarIconURL, goToFocalboardWorkspace, 'Open Boards Workspace')
+            }
+
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         } else {
             windowAny.frontendBaseURL = subpath + '/plug/focalboard'

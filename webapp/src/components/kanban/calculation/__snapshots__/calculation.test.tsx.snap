@@ -40,18 +40,9 @@ exports[`components/kanban/calculation/KanbanCalculation calculations menu open 
         aria-live="polite"
         aria-relevant="additions text"
         class="css-1f43avz-a11yText-A11yText"
-      >
-        <span
-          id="aria-selection"
-        />
-        <span
-          id="aria-context"
-        >
-           7 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
-        </span>
-      </span>
+      />
       <div
-        class="CalculationOptions__control CalculationOptions__control--is-focused CalculationOptions__control--menu-is-open css-1s59geg-Control"
+        class="CalculationOptions__control CalculationOptions__control--menu-is-open css-1s59geg-Control"
       >
         <div
           class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1mxrbau-ValueContainer"
@@ -75,7 +66,7 @@ exports[`components/kanban/calculation/KanbanCalculation calculations menu open 
         >
           <div
             aria-hidden="true"
-            class="CalculationOptions__indicator CalculationOptions__clear-indicator css-13eygzs-indicatorContainer"
+            class="CalculationOptions__indicator CalculationOptions__clear-indicator css-tpaeio-indicatorContainer"
           >
             <svg
               aria-hidden="true"
@@ -95,7 +86,7 @@ exports[`components/kanban/calculation/KanbanCalculation calculations menu open 
           />
           <div
             aria-hidden="true"
-            class="CalculationOptions__indicator CalculationOptions__dropdown-indicator css-1f9iddu-indicatorContainer"
+            class="CalculationOptions__indicator CalculationOptions__dropdown-indicator css-wpsttr-indicatorContainer"
           >
             <i
               class="CompassIcon icon-chevron-up ChevronUpIcon"

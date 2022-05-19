@@ -15,7 +15,7 @@ import (
 // MentionDeliver notifies a user they have been mentioned in a block.
 func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string, evt notify.BlockChangeEvent) (string, error) {
 	// determine which team the workspace is associated with
-	teamID, err := pd.getTeamID(evt)
+	teamID, err := pd.GetTeamIDForWorkspace(evt.Workspace)
 	if err != nil {
 		return "", fmt.Errorf("cannot determine teamID for block change notification: %w", err)
 	}
@@ -45,7 +45,7 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 		return "", fmt.Errorf("cannot find user: %w", err)
 	}
 
-	channel, err := pd.api.GetDirectChannel(member.UserId, pd.botID)
+	channel, err := pd.getDirectChannel(teamID, member.UserId, pd.botID)
 	if err != nil {
 		return "", fmt.Errorf("cannot get direct channel: %w", err)
 	}
