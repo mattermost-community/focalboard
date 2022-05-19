@@ -19,8 +19,6 @@ import (
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-
-	mmmodel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 const (
@@ -505,7 +503,7 @@ func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, err
 	return channel.Id, nil
 }
 
-func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmmodel.FileInfo, error) {
+func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmModel.FileInfo, error) {
 	fileInfo, appErr := s.pluginAPI.GetFileInfo(id)
 	if appErr != nil {
 		// Not finding fileinfo is fine because we don't have data for
@@ -522,7 +520,7 @@ func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmmodel.FileInfo, error) 
 	return fileInfo, nil
 }
 
-func (s *MattermostAuthLayer) SaveFileInfo(fileInfo *mmmodel.FileInfo) error {
+func (s *MattermostAuthLayer) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
 	query := s.getQueryBuilder().
 		Insert("FileInfo").
 		Columns(
