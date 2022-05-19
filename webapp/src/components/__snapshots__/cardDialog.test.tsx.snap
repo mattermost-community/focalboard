@@ -6,6 +6,9 @@ exports[`components/cardDialog already following card 1`] = `
     class="Dialog dialog-back cardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -286,6 +289,9 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
     class="Dialog dialog-back cardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -394,6 +400,9 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
   <div
     class="Dialog dialog-back cardDialog"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >
@@ -784,6 +793,9 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
     class="Dialog dialog-back cardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -1064,6 +1076,9 @@ exports[`components/cardDialog should match snapshot 1`] = `
     class="Dialog dialog-back cardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -1343,6 +1358,9 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
   <div
     class="Dialog dialog-back cardDialog"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >
