@@ -244,13 +244,18 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -743,13 +748,18 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
         <div
           class="octo-spacer"
         />
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
       </div>
     </div>
     <div
@@ -1347,13 +1357,18 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -2049,13 +2064,18 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -2751,13 +2771,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -3453,13 +3478,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -4155,13 +4185,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -4857,13 +4892,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -5559,13 +5599,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -6261,13 +6306,18 @@ exports[`components/centerPanel return centerPanel and select one card and click
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -6963,13 +7013,18 @@ exports[`components/centerPanel return centerPanel and select one card and click
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -7647,13 +7702,18 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -7974,13 +8034,18 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -8466,13 +8531,18 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -9005,13 +9075,18 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >

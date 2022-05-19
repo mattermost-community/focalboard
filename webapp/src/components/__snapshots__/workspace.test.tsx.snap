@@ -511,13 +511,18 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </span>
               </button>
             </div>
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
             <div
               class="ModalWrapper"
             >
@@ -1018,13 +1023,18 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
             <div
               class="octo-spacer"
             />
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div
@@ -1728,13 +1738,18 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </span>
               </button>
             </div>
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
             <div
               class="ModalWrapper"
             >
@@ -2235,13 +2250,18 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
             <div
               class="octo-spacer"
             />
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div
