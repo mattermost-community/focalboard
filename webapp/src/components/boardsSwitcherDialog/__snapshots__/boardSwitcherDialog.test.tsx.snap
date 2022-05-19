@@ -6,6 +6,9 @@ exports[`component/BoardSwitcherDialog base case 1`] = `
     class="Dialog dialog-back BoardSwitcherDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div

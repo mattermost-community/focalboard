@@ -232,6 +232,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
     class="Dialog dialog-back ShareBoardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -454,6 +457,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
   <div
     class="Dialog dialog-back ShareBoardDialog"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >
@@ -701,6 +707,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
     class="Dialog dialog-back ShareBoardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -897,6 +906,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
   <div
     class="Dialog dialog-back ShareBoardDialog"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >
