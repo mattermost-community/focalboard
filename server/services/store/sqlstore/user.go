@@ -255,3 +255,7 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 
 	return s.updateUser(db, user)
 }
+
+func (s *SQLStore) checkUserIDInTeam(db sq.BaseRunner, userID string, teamID string) bool {
+	return false
+}

@@ -15,6 +15,9 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, durati
 	/*
 		Get top private, public boards, combine the list and filter the top 10. Note we can't limit 10 for subqueries.
 	*/
+
+	// safe to use channels, channelmembers here since we're checking that user belongs to team, and without mm-auth, the auth-check returns false and
+	// store function won't be called.
 	qb := s.getQueryBuilder(db)
 	publicBoards := qb.Select(`blocks.id, blocks.fields->>'icon' as icon, blocks.title,
 		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
@@ -42,7 +45,6 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, durati
 		GroupBy("blocks.title, blocks.created_by, blocks.id, blocks_history.modified_by, icon").
 		Suffix(")")
 
-	// sql, args, _ := q2.ToSql()
 	boardsActivity := publicBoards.SuffixExpr(privateBoards)
 
 	insightsQuery := qb.Select(fmt.Sprintf("id, title, icon, sum(count) as activity_count, %s as active_users, created_by",

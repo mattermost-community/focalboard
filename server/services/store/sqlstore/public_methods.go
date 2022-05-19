@@ -24,6 +24,11 @@ import (
 
 )
 
+func (s *SQLStore) CheckUserIDInTeam(userID string, teamID string) bool {
+	return s.checkUserIDInTeam(s.db, userID, teamID)
+
+}
+
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
 	return s.cleanUpSessions(s.db, expireTime)
 

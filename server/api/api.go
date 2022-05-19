@@ -156,16 +156,18 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 	query := r.URL.Query()
 	duration := query.Get("duration")
 
-	// TODO: figure authorization
-	// if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-	// 	a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
-	// 	return
-	// }
+	if !a.app.CheckUserIDInTeam(userID, teamID) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
+		return
+	}
 
 	auditRec := a.makeAuditRecord(r, "getTeamBoardsInsights", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
@@ -219,12 +221,6 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	duration := query.Get("duration")
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
-
-	// TODO: figure authorization
-	// if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-	// 	a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
-	// 	return
-	// }
 
 	auditRec := a.makeAuditRecord(r, "getUserBoardsInsights", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)

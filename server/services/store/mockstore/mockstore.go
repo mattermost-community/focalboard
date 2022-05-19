@@ -37,6 +37,20 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
+// CheckUserIDInTeam mocks base method.
+func (m *MockStore) CheckUserIDInTeam(arg0, arg1 string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckUserIDInTeam", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// CheckUserIDInTeam indicates an expected call of CheckUserIDInTeam.
+func (mr *MockStoreMockRecorder) CheckUserIDInTeam(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckUserIDInTeam", reflect.TypeOf((*MockStore)(nil).CheckUserIDInTeam), arg0, arg1)
+}
+
 // CleanUpSessions mocks base method.
 func (m *MockStore) CleanUpSessions(arg0 int64) error {
 	m.ctrl.T.Helper()

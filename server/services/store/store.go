@@ -63,6 +63,7 @@ type Store interface {
 	UpdateUserPasswordByID(userID, password string) error
 	GetUsersByWorkspace(workspaceID string) ([]*model.User, error)
 	PatchUserProps(userID string, patch model.UserPropPatch) error
+	CheckUserIDInTeam(userID string, teamID string) bool
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)

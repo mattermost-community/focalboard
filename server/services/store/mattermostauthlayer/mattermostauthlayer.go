@@ -505,3 +505,7 @@ func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, err
 func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 	return s.pluginAPI.GetLicense()
 }
+
+func (s *MattermostAuthLayer) CheckUserIDInTeam(userID string, teamID string) bool {
+	return s.pluginAPI.HasPermissionToTeam(userID, teamID, mmModel.PermissionViewTeam)
+}
