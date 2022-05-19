@@ -80,6 +80,7 @@ describe('src/component/kanban/kanban', () => {
         comments: {
             comments: {},
         },
+        boards: {},
     }
     const store = mockStateStore([], state)
     beforeAll(() => {

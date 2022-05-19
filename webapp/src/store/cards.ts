@@ -304,7 +304,7 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
         if (!view || !board || !users || !cards) {
             return []
         }
-        let result = cards
+        let result = cards.filter((c) => !c.limited)
         if (view.fields.filter) {
             result = CardFilter.applyFilterGroup(view.fields.filter, board.fields.cardProperties, result)
         }
@@ -321,4 +321,9 @@ export const getCurrentCard = createSelector(
     (state: RootState) => state.cards.current,
     (state: RootState) => state.cards.cards,
     (current, cards) => cards[current],
+)
+
+export const getHiddenCard = createSelector(
+    getCurrentBoardCards,
+    (cards) => Object.values(cards).filter((c) => c.limited),
 )

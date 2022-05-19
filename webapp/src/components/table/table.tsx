@@ -275,7 +275,7 @@ const Table = (props: Props): JSX.Element => {
 
             {limited.length > 0 && <div className='limitedCard'>
                 <div className='limitedCard-title'>{intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards Hidden'})}</div>
-                <Button>{limited.length}</Button>
+                <Button title='limited-card-count'>{limited.length}</Button>
             </div>}
         </div>
     )

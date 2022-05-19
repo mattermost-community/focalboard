@@ -279,6 +279,7 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
             </span>
           </div>
           <button
+            title="limited-card-count"
             type="button"
           >
             <span>
@@ -724,6 +725,7 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
             </span>
           </div>
           <button
+            title="limited-card-count"
             type="button"
           >
             <span>
@@ -1010,6 +1012,7 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
             </span>
           </div>
           <button
+            title="limited-card-count"
             type="button"
           >
             <span>

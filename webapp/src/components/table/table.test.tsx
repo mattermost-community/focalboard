@@ -61,6 +61,7 @@ describe('components/table/Table', () => {
                 [card.id]: card,
             },
         },
+        boards: {},
     }
 
     test('should match snapshot', async () => {
@@ -153,6 +154,56 @@ describe('components/table/Table', () => {
         const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
+
+    test('limited card in table view', () => {
+        const callback = jest.fn()
+        const addCard = jest.fn()
+        const boardTest = TestBlockFactory.createBoard()
+        const card1 = TestBlockFactory.createCard(boardTest, true)
+        const card2 = TestBlockFactory.createCard(boardTest, true)
+        const mockStore = configureStore([])
+
+        const stateTest = {
+            comments: {
+                comments: {},
+            },
+            contents: {
+                contents: {},
+            },
+            cards: {
+                cards: {
+                    [card1.id]: card1,
+                    [card2.id]: card2,
+                },
+            },
+            boards: {
+                current: boardTest.id,
+            },
+        }
+
+        const storeTest = mockStore(stateTest)
+        card.limited = true
+
+        const component = wrapDNDIntl(
+            <ReduxProvider store={storeTest}>
+                <Table
+                    board={boardTest}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card1, card2]}
+                    views={[view, view2]}
+                    selectedCardIds={[]}
+                    readonly={true}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
+        )
+        const {getByTitle} = render(component)
+        expect(getByTitle('limited-card-count')).toHaveTextContent('2')
+    })
 })
 
 describe('components/table/Table extended', () => {
@@ -174,6 +225,7 @@ describe('components/table/Table extended', () => {
         cards: {
             cards: {},
         },
+        boards: {},
     }
 
     test('should match snapshot with CreatedBy', async () => {

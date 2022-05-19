@@ -64,7 +64,7 @@ export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
                     />
                 </Menu>}
             </MenuWrapper>
-            <Button>{`${group.cards.length}`}</Button>
+            <Button title='limited-card-count'>{`${group.cards.length}`}</Button>
         </div>
     )
 }

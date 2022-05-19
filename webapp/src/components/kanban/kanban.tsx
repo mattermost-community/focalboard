@@ -48,12 +48,13 @@ const Kanban = (props: Props) => {
     const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups} = props
     const limitedCard = useAppSelector(getHiddenCard)
     const intl = useIntl()
+    const hiddenCardGroupId = 'hidden-card-group-id'
 
     if (limitedCard.length > 0) {
         props.hiddenGroups.push({
             option: {
                 color: 'propColorRed',
-                id: intl.formatMessage({id: 'limitedCard.id', defaultMessage: 'zxfsrtfsdfwserfwfdsfwerfsd'}),
+                id: hiddenCardGroupId,
                 value: intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards Hidden'}),
             },
             cards: limitedCard,

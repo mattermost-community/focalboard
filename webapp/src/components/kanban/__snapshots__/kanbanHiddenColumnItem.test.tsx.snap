@@ -79,6 +79,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
     </div>
     <button
       class="Button"
+      title="limited-card-count"
       type="button"
     >
       <span>
@@ -168,6 +169,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
     </div>
     <button
       class="Button"
+      title="limited-card-count"
       type="button"
     >
       <span>
@@ -196,6 +198,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem should match snapshot 1`] 
     </div>
     <button
       class="Button"
+      title="limited-card-count"
       type="button"
     >
       <span>
@@ -224,6 +227,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem should match snapshot read
     </div>
     <button
       class="Button"
+      title="limited-card-count"
       type="button"
     >
       <span>

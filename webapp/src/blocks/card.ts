@@ -12,6 +12,7 @@ type CardFields = {
 
 type Card = Block & {
     fields: CardFields
+    limited: boolean
 }
 
 function createCard(block?: Block): Card {
@@ -36,6 +37,7 @@ function createCard(block?: Block): Card {
             contentOrder,
             isTemplate: block?.fields.isTemplate || false,
         },
+        limited: false,
     }
 }
 

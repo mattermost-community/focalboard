@@ -22,6 +22,7 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
     const board = TestBlockFactory.createBoard()
     const activeView = TestBlockFactory.createBoardView(board)
     const card = TestBlockFactory.createCard(board)
+    const card2 = TestBlockFactory.createCard(board)
     const option:IPropertyOption = {
         id: 'id1',
         value: 'propOption',
@@ -98,5 +99,23 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
         const buttonShow = within(buttonMenuWrapper).getByRole('button', {name: 'Show'})
         userEvent.click(buttonShow)
         expect(mockedMutator.unhideViewColumn).toBeCalledWith(activeView, option.id)
+    })
+
+    test('limited card check', () => {
+        card.limited = true
+        card2.limited = true
+        const {getByTitle} = render(wrapDNDIntl(
+            <KanbanHiddenColumnItem
+                activeView={activeView}
+                group={{
+                    option,
+                    cards: [card, card2],
+                }}
+                readonly={false}
+                onDrop={jest.fn()}
+                intl={intl}
+            />,
+        ))
+        expect(getByTitle('limited-card-count')).toHaveTextContent('2')
     })
 })

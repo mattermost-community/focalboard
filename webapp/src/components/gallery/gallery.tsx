@@ -64,6 +64,7 @@ const Gallery = (props: Props): JSX.Element => {
     const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
 
     return (
+
         <div className='Gallery'>
             {cards.filter((c) => c.parentId === board.id).map((card) => {
                 return (
@@ -98,12 +99,10 @@ const Gallery = (props: Props): JSX.Element => {
                     />
                 </div>
             }
-            <div className='limitedCardMain'>
-                {limited.length > 0 && <div className='limitedCard'>
-                    <div className='limitedCard-title'>{intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards Hidden'})}</div>
-                    <Button>{limited.length}</Button>
-                </div>}
-            </div>
+            {limited.length > 0 && <div className='limitedCard'>
+                <div className='limitedCard-title'>{intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards Hidden'})}</div>
+                <Button title='limited-card-count'>{limited.length}</Button>
+            </div>}
         </div>
     )
 }

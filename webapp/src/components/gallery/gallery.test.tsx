@@ -44,6 +44,11 @@ describe('src/components/gallery/Gallery', () => {
         comments: {
             comments: {},
         },
+        boards: {
+            current: '',
+            boards: {},
+            templates: {},
+        },
     }
     const store = mockStateStore([], state)
     beforeEach(() => {
@@ -128,5 +133,50 @@ describe('src/components/gallery/Gallery', () => {
         fireEvent.dragOver(drop)
         fireEvent.drop(drop)
         expect(mockedMutator.performAsUndoGroup).toBeCalledTimes(1)
+    })
+
+    test('limited card count check', () => {
+        const boardTest = TestBlockFactory.createBoard()
+        const card1 = TestBlockFactory.createCard(boardTest, true)
+        const card3 = TestBlockFactory.createCard(boardTest, true)
+        const stateTest: Partial<RootState> = {
+            contents: {
+                contents: blocksById(contents),
+            },
+            cards: {
+                current: '',
+                cards: {
+                    [card1.id]: card1,
+                    [card3.id]: card3,
+                },
+                templates: {},
+            },
+            comments: {
+                comments: {},
+            },
+            boards: {
+                current: boardTest.id,
+                boards: {},
+                templates: {},
+            },
+        }
+        const storeTest = mockStateStore([], stateTest)
+        beforeEach(() => {
+            jest.clearAllMocks()
+        })
+        const {getByTitle} = render(wrapDNDIntl(
+            <ReduxProvider store={storeTest}>
+                <Gallery
+                    board={boardTest}
+                    cards={[card1, card3]}
+                    activeView={activeView}
+                    readonly={false}
+                    addCard={jest.fn()}
+                    selectedCardIds={[card1.id]}
+                    onCardClicked={jest.fn()}
+                />
+            </ReduxProvider>,
+        ))
+        expect(getByTitle('limited-card-count').innerHTML).toBe('<span>2</span>')
     })
 })
