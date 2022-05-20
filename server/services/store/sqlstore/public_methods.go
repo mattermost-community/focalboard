@@ -20,7 +20,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
-
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -153,9 +152,13 @@ func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
 
 }
 
+//nolint:typecheck
+func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
+	return s.getFileInfo(s.db, id)
+}
+
 func (s *SQLStore) GetLicense() *mmModel.License {
 	return s.getLicense(s.db)
-
 }
 
 func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint, error) {
@@ -391,7 +394,11 @@ func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
 
 func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
 	return s.sendMessage(s.db, message, postType, receipts)
+}
 
+//nolint:typecheck
+func (s *SQLStore) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
+	return s.saveFileInfo(s.db, fileInfo)
 }
 
 func (s *SQLStore) SetSystemSetting(key string, value string) error {

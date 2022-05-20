@@ -106,6 +106,8 @@ type Store interface {
 
 	SendMessage(message, postType string, receipts []string) error
 	GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error)
+	GetFileInfo(id string) (*mmModel.FileInfo, error)
+	SaveFileInfo(fileInfo *mmModel.FileInfo) error
 	GetLicense() *mmModel.License
 }
 

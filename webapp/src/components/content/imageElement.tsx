@@ -8,7 +8,10 @@ import octoClient from '../../octoClient'
 import {Utils} from '../../utils'
 import ImageIcon from '../../widgets/icons/image'
 
+import {FileInfo} from '../../blocks/block'
+
 import {contentRegistry} from './contentRegistry'
+import ArchivedFile from './archivedFile/archivedFile'
 
 type Props = {
     block: ContentBlock
@@ -16,18 +19,27 @@ type Props = {
 
 const ImageElement = (props: Props): JSX.Element|null => {
     const [imageDataUrl, setImageDataUrl] = useState<string|null>(null)
+    const [fileInfo, setFileInfo] = useState<FileInfo>({})
 
     const {block} = props
 
     useEffect(() => {
         if (!imageDataUrl) {
             const loadImage = async () => {
-                const url = await octoClient.getFileAsDataUrl(block.rootId, props.block.fields.fileId)
-                setImageDataUrl(url)
+                const fileURL = await octoClient.getFileAsDataUrl(block.rootId, props.block.fields.fileId)
+
+                setImageDataUrl(fileURL.url || '')
+                setFileInfo(fileURL)
             }
             loadImage()
         }
-    })
+    }, [])
+
+    if (fileInfo.archived) {
+        return (
+            <ArchivedFile fileInfo={fileInfo}/>
+        )
+    }
 
     if (!imageDataUrl) {
         return null
