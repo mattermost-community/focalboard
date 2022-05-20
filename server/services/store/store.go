@@ -103,6 +103,8 @@ type Store interface {
 
 	IsErrNotFound(err error) bool
 
+	GetFileInfo(id string) (*mmModel.FileInfo, error)
+	SaveFileInfo(fileInfo *mmModel.FileInfo) error
 	GetLicense() *mmModel.License
 }
 
