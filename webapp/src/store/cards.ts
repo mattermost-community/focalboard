@@ -35,20 +35,20 @@ export const refreshCards = createAsyncThunk<Block[], number, {state: RootState}
         const blocksPromises = []
 
         for (const card of Object.values(cards)) {
-            console.log("CHECKING CARD", card)
             if (card.isLimited && card.updateAt >= cardLimitTimestamp) {
-                console.log("LOADING CARD", card)
                 blocksPromises.push(client.getSubtree(card.id).then((blocks) => blocks.find((b) => b?.type === 'card')))
             }
         }
         const blocks = await Promise.all(blocksPromises)
-        console.log(blocks)
 
         return blocks.filter((b: Block|undefined): boolean => Boolean(b)) as Block[]
     },
 )
 
-const limitCard = (card: Card): Card => {
+const limitCard = (limitTimestamp:number, card: Card): Card => {
+    if (card.updateAt >= limitTimestamp) {
+        return card
+    }
     return {
         ...card,
         fields: {
@@ -74,29 +74,28 @@ const cardsSlice = createSlice({
         },
         setLimitTimestamp: (state, action: PayloadAction<number>) => {
             state.limitTimestamp = action.payload
-        },
-        addCard: (state, action: PayloadAction<Card>) => {
-            state.cards[action.payload.id] = action.payload
             for (const card of Object.values(state.cards)) {
-                if (card.updateAt < state.limitTimestamp) {
-                    state.cards[card.id] = limitCard(card)
-                }
+                state.cards[card.id] = limitCard(state.limitTimestamp, card)
             }
         },
-        addTemplate: (state, action: PayloadAction<Card>) => {
+        addCard: (state, action: PayloadAction<Card>) => {
+            state.cards[action.payload.id] = limitCard(state.limitTimestamp, action.payload)
+            for (const card of Object.values(state.cards)) {
+                state.cards[card.id] = limitCard(state.limitTimestamp, card)
+            }
+        },
+        addTemplate: (state: CardsState, action: PayloadAction<Card>) => {
             state.templates[action.payload.id] = action.payload
         },
-        updateCards: (state, action: PayloadAction<Card[]>) => {
+        updateCards: (state: CardsState, action: PayloadAction<Card[]>) => {
             for (const card of action.payload) {
                 if (card.deleteAt !== 0) {
                     delete state.cards[card.id]
                     delete state.templates[card.id]
                 } else if (card.fields.isTemplate) {
                     state.templates[card.id] = card
-                } else if (card.updateAt < state.limitTimestamp) {
-                    state.cards[card.id] = limitCard(card)
                 } else {
-                    state.cards[card.id] = card
+                    state.cards[card.id] = limitCard(state.limitTimestamp, card)
                 }
             }
         },
@@ -114,20 +113,7 @@ const cardsSlice = createSlice({
                 if (block.type === 'card' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Card
                 } else if (block.type === 'card' && !block.fields.isTemplate) {
-                //     if (block.updateAt < state.limitTimestamp) {
-                //         state.cards[block.id] = {
-                //             ...block,
-                //             fields: {
-                //                 icon: block.fields.icon,
-                //                 properties: {},
-                //                 contentOrder: [],
-                //             },
-                //             isLimited: true,
-                //         }
-                //     } else {
-                //         state.cards[block.id] = block as Card
-                //     }
-                    state.cards[block.id] = block as Card
+                    state.cards[block.id] = limitCard(state.limitTimestamp, block as Card)
                 }
             }
         })
@@ -139,20 +125,7 @@ const cardsSlice = createSlice({
                 if (block.type === 'card' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Card
                 } else if (block.type === 'card' && !block.fields.isTemplate) {
-                //     if (block.updateAt < state.limitTimestamp) {
-                //         state.cards[block.id] = {
-                //             ...block,
-                //             fields: {
-                //                 icon: block.fields.icon,
-                //                 properties: {},
-                //                 contentOrder: [],
-                //             },
-                //             isLimited: true,
-                //         }
-                //     } else {
-                //         state.cards[block.id] = block as Card
-                //     }
-                    state.cards[block.id] = block as Card
+                    state.cards[block.id] = limitCard(state.limitTimestamp, block as Card)
                 }
             }
         })
