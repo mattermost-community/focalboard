@@ -1,11 +1,12 @@
 package app
 
 import (
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestCloud(t *testing.T) {
