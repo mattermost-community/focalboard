@@ -149,11 +149,6 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID
 }
 
 func (a *App) isWithinViewsLimit(c store.Container, block model.Block) (bool, error) {
-	views, err := a.store.GetBlocksWithParentAndType(c, block.ParentID, model.TypeView)
-	if err != nil {
-		return false, err
-	}
-
 	limits, err := a.GetBoardsCloudLimits()
 	if err != nil {
 		return false, err
@@ -161,6 +156,11 @@ func (a *App) isWithinViewsLimit(c store.Container, block model.Block) (bool, er
 
 	if limits.Views == model.LimitUnlimited {
 		return true, nil
+	}
+
+	views, err := a.store.GetBlocksWithParentAndType(c, block.ParentID, model.TypeView)
+	if err != nil {
+		return false, err
 	}
 
 	// < rather than <= because we'll be creating new view if this
