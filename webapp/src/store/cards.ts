@@ -26,6 +26,7 @@ type CardsState = {
     limitTimestamp: number
     cards: {[key: string]: Card}
     templates: {[key: string]: Card}
+    cardHiddenWarning: boolean
 }
 
 export const refreshCards = createAsyncThunk<Block[], number, {state: RootState}>(
@@ -67,6 +68,7 @@ const cardsSlice = createSlice({
         limitTimestamp: 0,
         cards: {},
         templates: {},
+        cardHiddenWarning: false,
     } as CardsState,
     reducers: {
         setCurrent: (state, action: PayloadAction<string>) => {
@@ -83,6 +85,9 @@ const cardsSlice = createSlice({
             for (const card of Object.values(state.cards)) {
                 state.cards[card.id] = limitCard(state.limitTimestamp, card)
             }
+        },
+        showCardHiddenWarning: (state, action: PayloadAction<boolean>) => {
+            state.cardHiddenWarning = action.payload
         },
         addTemplate: (state: CardsState, action: PayloadAction<Card>) => {
             state.templates[action.payload.id] = action.payload
@@ -132,7 +137,7 @@ const cardsSlice = createSlice({
     },
 })
 
-export const {updateCards, addCard, addTemplate, setCurrent, setLimitTimestamp} = cardsSlice.actions
+export const {updateCards, addCard, addTemplate, setCurrent, setLimitTimestamp, showCardHiddenWarning} = cardsSlice.actions
 export const {reducer} = cardsSlice
 
 export const getCards = (state: RootState): {[key: string]: Card} => state.cards.cards
@@ -386,3 +391,4 @@ export const getHiddenByLimitCards = createSelector(
 )
 
 export const getCardLimitTimestamp = (state: RootState): number => state.cards.limitTimestamp
+export const getCardHiddenWarning = (state: RootState): boolean => state.cards.cardHiddenWarning

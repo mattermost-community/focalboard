@@ -17,7 +17,7 @@ import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
-import {addCard, addTemplate} from '../store/cards'
+import {addCard, addTemplate, showCardHiddenWarning} from '../store/cards'
 import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
@@ -68,6 +68,7 @@ type Props = {
     intl: IntlShape
     readonly: boolean
     addCard: (card: Card) => void
+    showCardHiddenWarning: (hidden: boolean) => void
     updateView: (view: BoardView) => void
     addTemplate: (template: Card) => void
     shownCardId?: string
@@ -369,6 +370,7 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
+            this.props.showCardHiddenWarning(true)
             await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }
@@ -497,6 +499,7 @@ function mapStateToProps(state: RootState) {
 }
 
 export default connect(mapStateToProps, {
+    showCardHiddenWarning,
     addCard,
     addTemplate,
     updateView,

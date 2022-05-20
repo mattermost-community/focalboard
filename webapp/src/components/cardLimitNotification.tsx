@@ -1,14 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useMemo, useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {useIntl, FormattedMessage} from 'react-intl'
 
 import AlertIcon from '../widgets/icons/alert'
 
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {IUser, UserConfigPatch} from '../user'
-import {getMe, patchProps, getCardLimitSnoozeUntil} from '../store/users'
-import {getHiddenByLimitCards} from '../store/cards'
+import {getMe, patchProps, getCardLimitSnoozeUntil, getCardHiddenWarningSnoozeUntil} from '../store/users'
+import {getHiddenByLimitCards, getCardHiddenWarning} from '../store/cards'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import octoClient from '../octoClient'
 
@@ -23,41 +23,13 @@ const CardLimitNotification = () => {
     const [time, setTime] = useState(Date.now())
 
     const hiddenCards = useAppSelector<number>(getHiddenByLimitCards)
-    const title = useMemo(() => intl.formatMessage(
-        {
-            id: 'notification-box-card-limit-reached.title',
-            defaultMessage: '{cards} cards hidden from board',
-        },
-        {cards: hiddenCards},
-    ), [hiddenCards])
+    const cardHiddenWarning = useAppSelector<boolean>(getCardHiddenWarning)
     const me = useAppSelector<IUser|null>(getMe)
     const snoozedUntil = useAppSelector<number>(getCardLimitSnoozeUntil)
+    const snoozedCardHiddenWarningUntil = useAppSelector<number>(getCardHiddenWarningSnoozeUntil)
     const dispatch = useAppDispatch()
 
-    const isSnoozed = time < snoozedUntil
-
-    useEffect(() => {
-        if (isSnoozed) {
-            const interval = setInterval(() => setTime(Date.now()), checkSnoozeInterval)
-            return () => {
-                clearInterval(interval)
-            }
-        }
-        return () => null
-    }, [isSnoozed])
-
-    useEffect(() => {
-        if (!isSnoozed) {
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardLimitReached, {})
-        }
-    }, [isSnoozed])
-
-    const onClick = useCallback(() => {
-        // TODO: Show the modal to upgrade
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardLimitLinkOpen, {})
-    }, [])
-
-    const onClose = useCallback(async () => {
+    const onCloseHidden = useCallback(async () => {
         if (me) {
             const patch: UserConfigPatch = {
                 updatedFields: {
@@ -72,9 +44,72 @@ const CardLimitNotification = () => {
         }
     }, [me])
 
+    const onCloseWarning = useCallback(async () => {
+        if (me) {
+            const patch: UserConfigPatch = {
+                updatedFields: {
+                    focalboard_cardLimitSnoozeUntil: `${Date.now() + snoozeTime}`,
+                },
+            }
+
+            const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+            if (patchedProps) {
+                dispatch(patchProps(patchedProps))
+            }
+        }
+    }, [me])
+
+    let show = false
+    let onClose = onCloseHidden
+    let title = intl.formatMessage(
+        {
+            id: 'notification-box-card-limit-reached.title',
+            defaultMessage: '{cards} cards hidden from board',
+        },
+        {cards: hiddenCards},
+    )
+
+    if (hiddenCards > 0 && time > snoozedUntil) {
+        show = true
+    }
+
+    if (!show && cardHiddenWarning) {
+        show = time > snoozedCardHiddenWarningUntil
+        onClose = onCloseWarning
+        title = intl.formatMessage(
+            {
+                id: 'notification-box-cards-hidden.title',
+                defaultMessage: 'Your action hidden another card',
+            },
+        )
+    }
+
+    console.log("SHOW HIDDEN WARNING ", show)
+
+    useEffect(() => {
+        if (!show) {
+            const interval = setInterval(() => setTime(Date.now()), checkSnoozeInterval)
+            return () => {
+                clearInterval(interval)
+            }
+        }
+        return () => null
+    }, [show])
+
+    useEffect(() => {
+        if (show) {
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardLimitReached, {})
+        }
+    }, [show])
+
+    const onClick = useCallback(() => {
+        // TODO: Show the modal to upgrade
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardLimitLinkOpen, {})
+    }, [])
+
     const hasPermissionToUpgrade = me?.roles?.split(' ').indexOf('system_admin') !== -1
 
-    if (isSnoozed || hiddenCards === 0) {
+    if (!show) {
         return null
     }
 

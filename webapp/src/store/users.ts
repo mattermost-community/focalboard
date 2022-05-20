@@ -149,7 +149,21 @@ export const getCardLimitSnoozeUntil = createSelector(
             return 0
         }
         try {
-            return parseInt(me.props?.focalboard_cardLimitSnoozeUntil, 10)
+            return parseInt(me.props?.focalboard_cardLimitSnoozeUntil, 10) || 0
+        } catch (_) {
+            return 0
+        }
+    },
+)
+
+export const getCardHiddenWarningSnoozeUntil = createSelector(
+    getMe,
+    (me): number => {
+        if (!me) {
+            return 0
+        }
+        try {
+            return parseInt(me.props?.focalboard_cardHiddenWarningSnoozeUntil, 10) || 0
         } catch (_) {
             return 0
         }
