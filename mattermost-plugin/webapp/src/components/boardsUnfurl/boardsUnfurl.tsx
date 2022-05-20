@@ -14,9 +14,10 @@ import {Board} from './../../../../../webapp/src/blocks/board'
 import {ContentBlock} from './../../../../../webapp/src/blocks/contentBlock'
 import octoClient from './../../../../../webapp/src/octoClient'
 
-const Avatar = (window as any).Components.Avatar
-const Timestamp = (window as any).Components.Timestamp
-const imageURLForUser = (window as any).Components.imageURLForUser
+const noop = () => ''
+const Avatar = (window as any).Components?.Avatar || noop
+const Timestamp = (window as any).Components?.Timestamp || noop
+const imageURLForUser = (window as any).Components?.imageURLForUser || noop
 
 import './boardsUnfurl.scss'
 import '../../../../../webapp/src/styles/labels.scss'
@@ -36,7 +37,7 @@ function mapStateToProps(state: GlobalState) {
     }
 }
 
-const BoardsUnfurl = (props: Props): JSX.Element => {
+export const BoardsUnfurl = (props: Props): JSX.Element => {
     if (!props.embed || !props.embed.data) {
         return <></>
     }
