@@ -6,6 +6,7 @@ import {createSlice, PayloadAction, createSelector, createAsyncThunk} from '@red
 import {Card} from '../blocks/card'
 import {IUser} from '../user'
 import {Board} from '../blocks/board'
+import {Block} from '../blocks/block'
 import {BoardView} from '../blocks/boardView'
 import {Utils} from '../utils'
 import {Constants} from '../constants'
@@ -27,20 +28,37 @@ type CardsState = {
     templates: {[key: string]: Card}
 }
 
-export const refreshCards = createAsyncThunk(
+export const refreshCards = createAsyncThunk<Block[], number, {state: RootState}>(
     'refreshCards',
-    async (boardId: string) => {
-        const [blocks, limits] = await Promise.all([
-            client.getSubtree(boardId, 2),
-            client.getBoardsCloudLimits(),
-        ])
+    async (cardLimitTimestamp: number, thunkAPI) => {
+        const {cards} = thunkAPI.getState().cards
+        const blocksPromises = []
 
-        return {
-            blocks,
-            limits,
+        for (const card of Object.values(cards)) {
+            console.log("CHECKING CARD", card)
+            if (card.isLimited && card.updateAt >= cardLimitTimestamp) {
+                console.log("LOADING CARD", card)
+                blocksPromises.push(client.getSubtree(card.id).then((blocks) => blocks.find((b) => b?.type === 'card')))
+            }
         }
+        const blocks = await Promise.all(blocksPromises)
+        console.log(blocks)
+
+        return blocks.filter((b: Block|undefined): boolean => Boolean(b)) as Block[]
     },
 )
+
+const limitCard = (card: Card): Card => {
+    return {
+        ...card,
+        fields: {
+            icon: card.fields.icon,
+            properties: {},
+            contentOrder: [],
+        },
+        isLimited: true,
+    }
+}
 
 const cardsSlice = createSlice({
     name: 'cards',
@@ -58,18 +76,11 @@ const cardsSlice = createSlice({
             state.limitTimestamp = action.payload
         },
         addCard: (state, action: PayloadAction<Card>) => {
-            if (action.payload.updateAt < state.limitTimestamp) {
-                state.cards[action.payload.id] = {
-                    ...action.payload,
-                    fields: {
-                        icon: action.payload.fields.icon,
-                        properties: {},
-                        contentOrder: [],
-                    },
-                    isLimited: true,
+            state.cards[action.payload.id] = action.payload
+            for (const card of Object.values(state.cards)) {
+                if (card.updateAt < state.limitTimestamp) {
+                    state.cards[card.id] = limitCard(card)
                 }
-            } else {
-                state.cards[action.payload.id] = action.payload
             }
         },
         addTemplate: (state, action: PayloadAction<Card>) => {
@@ -83,15 +94,7 @@ const cardsSlice = createSlice({
                 } else if (card.fields.isTemplate) {
                     state.templates[card.id] = card
                 } else if (card.updateAt < state.limitTimestamp) {
-                    state.cards[card.id] = {
-                        ...card,
-                        fields: {
-                            icon: card.fields.icon,
-                            properties: {},
-                            contentOrder: [],
-                        },
-                        isLimited: true,
-                    }
+                    state.cards[card.id] = limitCard(card)
                 } else {
                     state.cards[card.id] = card
                 }
@@ -100,27 +103,8 @@ const cardsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(refreshCards.fulfilled, (state, action) => {
-            state.cards = {}
-            state.templates = {}
-            state.limitTimestamp = action.payload.limits?.card_limit_timestamp || 0
-            for (const block of action.payload.blocks) {
-                if (block.type === 'card' && block.fields.isTemplate) {
-                    state.templates[block.id] = block as Card
-                } else if (block.type === 'card' && !block.fields.isTemplate) {
-                    if (block.updateAt < state.limitTimestamp) {
-                        state.cards[block.id] = {
-                            ...block,
-                            fields: {
-                                icon: block.fields.icon,
-                                properties: {},
-                                contentOrder: [],
-                            },
-                            isLimited: true,
-                        }
-                    } else {
-                        state.cards[block.id] = block as Card
-                    }
-                }
+            for (const block of action.payload) {
+                state.cards[block.id] = block as Card
             }
         })
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
@@ -130,19 +114,20 @@ const cardsSlice = createSlice({
                 if (block.type === 'card' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Card
                 } else if (block.type === 'card' && !block.fields.isTemplate) {
-                    if (block.updateAt < state.limitTimestamp) {
-                        state.cards[block.id] = {
-                            ...block,
-                            fields: {
-                                icon: block.fields.icon,
-                                properties: {},
-                                contentOrder: [],
-                            },
-                            isLimited: true,
-                        }
-                    } else {
-                        state.cards[block.id] = block as Card
-                    }
+                //     if (block.updateAt < state.limitTimestamp) {
+                //         state.cards[block.id] = {
+                //             ...block,
+                //             fields: {
+                //                 icon: block.fields.icon,
+                //                 properties: {},
+                //                 contentOrder: [],
+                //             },
+                //             isLimited: true,
+                //         }
+                //     } else {
+                //         state.cards[block.id] = block as Card
+                //     }
+                    state.cards[block.id] = block as Card
                 }
             }
         })
@@ -154,19 +139,20 @@ const cardsSlice = createSlice({
                 if (block.type === 'card' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Card
                 } else if (block.type === 'card' && !block.fields.isTemplate) {
-                    if (block.updateAt < state.limitTimestamp) {
-                        state.cards[block.id] = {
-                            ...block,
-                            fields: {
-                                icon: block.fields.icon,
-                                properties: {},
-                                contentOrder: [],
-                            },
-                            isLimited: true,
-                        }
-                    } else {
-                        state.cards[block.id] = block as Card
-                    }
+                //     if (block.updateAt < state.limitTimestamp) {
+                //         state.cards[block.id] = {
+                //             ...block,
+                //             fields: {
+                //                 icon: block.fields.icon,
+                //                 properties: {},
+                //                 contentOrder: [],
+                //             },
+                //             isLimited: true,
+                //         }
+                //     } else {
+                //         state.cards[block.id] = block as Card
+                //     }
+                    state.cards[block.id] = block as Card
                 }
             }
         })

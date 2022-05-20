@@ -59,7 +59,7 @@ function CenterContent(props: Props) {
         const onCardLimitTimestampChangeHandler = (_: WSClient, timestamp: number) => {
             dispatch(setLimitTimestamp(timestamp))
             if (cardLimitTimestamp > timestamp) {
-                dispatch(refreshCards(match.params.boardId))
+                dispatch(refreshCards(timestamp))
             }
         }
         wsClient.addOnCardLimitTimestampChange(onCardLimitTimestampChangeHandler)
