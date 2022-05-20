@@ -21,6 +21,9 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 	err = sqlDB.Ping()
 	require.NoError(t, err)
 
+	// create channels, publicchannels test tables to be used by insights store
+	err = createTestChannelsTable(sqlDB)
+
 	storeParams := Params{
 		DBType:           dbType,
 		ConnectionString: connectionString,
@@ -39,4 +42,31 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 	}
 
 	return store, tearDown
+}
+
+func createTestChannelsTable(db *sql.DB) error {
+	/*
+		create channels, publicchannels table, and seed data
+		channels: id, teamid
+	*/
+
+	query := `
+		create table Channels(
+			id varchar(26) primary key,
+			teamid varchar(26),
+			type varchar(1)
+		);
+		create table PublicChannels(
+			id varchar(26) primary key,
+			teamid varchar(26)
+		);
+
+		insert into channels(id, teamid, type) values ('channel-id-1','team-id-1', 'P'), ('channel-id-2','team-id-1', 'P');
+	`
+
+	_, err := db.Query(query)
+	if err != nil {
+		return err
+	}
+	return nil
 }
