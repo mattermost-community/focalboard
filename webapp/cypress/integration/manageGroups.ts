@@ -86,10 +86,12 @@ describe('Manage groups', () => {
         // Step 3: Click on "Hide"
         cy.contains('Hide').click({force: true})
         cy.get('.octo-board-hidden-item').contains('Group 1').should('exist')
+        cy.get('.KanbanColumnHeader .Editable[value=\'Group 1\']').should('not.exist')
 
         // Step 4: Click "Group 1", then click "Show" in the dropdown
         cy.contains('Group 1').click({force: true})
         cy.contains('Show').click({force: true})
-        cy.contains('.octo-board-hidden-item').should('not.exist')
+        cy.get('.octo-board-hidden-item').contains('Group 1').should('not.exist')
+        cy.get('.KanbanColumnHeader .Editable[value=\'Group 1\']').should('exist')
     })
 })
