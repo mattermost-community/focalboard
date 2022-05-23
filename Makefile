@@ -29,11 +29,13 @@ all: webapp server ## Build server and webapp.
 
 prebuild: ## Run prebuild actions (install dependencies etc.).
 	cd webapp; npm install
+	cd mattermost-plugin/webapp; npm install
 
 ci: server-test
 	cd webapp; npm run check
 	cd webapp; npm run test
 	cd webapp; npm run cypress:ci
+	cd mattermost-plugin/webapp; npm run test
 
 server: ## Build server for local environment.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=dev")
