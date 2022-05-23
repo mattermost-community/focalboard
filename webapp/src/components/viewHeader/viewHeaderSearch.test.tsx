@@ -47,7 +47,7 @@ describe('components/viewHeader/ViewHeaderSearch', () => {
         )
         expect(container).toMatchSnapshot()
     })
-    test('return input after click on search button', () => {
+    test('search text after input', () => {
         const {container} = render(
             wrapIntl(
                 <ReduxProvider store={store}>
@@ -55,20 +55,7 @@ describe('components/viewHeader/ViewHeaderSearch', () => {
                 </ReduxProvider>,
             ),
         )
-        const buttonElement = screen.getByRole('button')
-        userEvent.click(buttonElement)
-        expect(container).toMatchSnapshot()
-    })
-    test('search text after input after click on search button and search text', () => {
-        const {container} = render(
-            wrapIntl(
-                <ReduxProvider store={store}>
-                    <ViewHeaderSearch/>
-                </ReduxProvider>,
-            ),
-        )
-        userEvent.click(screen.getByRole('button'))
-        const elementSearchText = screen.getByPlaceholderText('Search text')
+        const elementSearchText = screen.getByPlaceholderText('Search cards')
         userEvent.type(elementSearchText, 'Hello')
         expect(container).toMatchSnapshot()
     })

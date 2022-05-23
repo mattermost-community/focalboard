@@ -6,6 +6,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
     class="Dialog dialog-back ShareBoardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -229,6 +232,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
     class="Dialog dialog-back ShareBoardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -451,6 +457,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
   <div
     class="Dialog dialog-back ShareBoardDialog"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >
@@ -698,6 +707,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
     class="Dialog dialog-back ShareBoardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -894,6 +906,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
   <div
     class="Dialog dialog-back ShareBoardDialog"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >
@@ -1214,6 +1229,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
     class="Dialog dialog-back ShareBoardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -1410,6 +1428,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
   <div
     class="Dialog dialog-back ShareBoardDialog"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >
@@ -1730,6 +1751,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
     class="Dialog dialog-back ShareBoardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -1975,6 +1999,9 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
   <div
     class="Dialog dialog-back ShareBoardDialog"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >
@@ -2222,6 +2249,9 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
     class="Dialog dialog-back ShareBoardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -2444,6 +2474,9 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
   <div
     class="Dialog dialog-back ShareBoardDialog"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >
@@ -2668,6 +2701,9 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
     class="Dialog dialog-back ShareBoardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -2890,6 +2926,9 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
   <div
     class="Dialog dialog-back ShareBoardDialog"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >

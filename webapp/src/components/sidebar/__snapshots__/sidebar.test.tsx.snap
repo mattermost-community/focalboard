@@ -109,9 +109,9 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
                   >
                     <div
                       class="version"
-                      title="v0.17.0"
+                      title="v7.2.0"
                     >
-                      Jun 2022
+                      Aug 2022
                     </div>
                   </div>
                 </div>

@@ -32,7 +32,7 @@ var (
 // blocks.
 type notifier struct {
 	serverRoot  string
-	store       Store
+	store       AppAPI
 	permissions permissions.PermissionsService
 	delivery    SubscriptionDelivery
 	logger      *mlog.Logger
@@ -46,7 +46,7 @@ type notifier struct {
 func newNotifier(params BackendParams) *notifier {
 	return &notifier{
 		serverRoot:  params.ServerRoot,
-		store:       params.Store,
+		store:       params.AppAPI,
 		permissions: params.Permissions,
 		delivery:    params.Delivery,
 		logger:      params.Logger,
