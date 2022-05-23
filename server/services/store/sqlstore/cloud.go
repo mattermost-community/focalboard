@@ -28,7 +28,7 @@ func parentIsNotTemplateFilter(dbtype string) string {
 
 // activeCardsQuery applies the necessary filters to the query for it
 // to fetch an active cards window if the cardLimit is set, or all the
-// active cards if it's 0
+// active cards if it's 0.
 func (s *SQLStore) activeCardsQuery(builder sq.StatementBuilderType, selectStr string, cardLimit int) sq.SelectBuilder {
 	query := builder.
 		Select(selectStr).
@@ -50,7 +50,7 @@ func (s *SQLStore) activeCardsQuery(builder sq.StatementBuilderType, selectStr s
 	return query
 }
 
-// getUsedCardsCount returns the amount of active cards in the server
+// getUsedCardsCount returns the amount of active cards in the server.
 func (s *SQLStore) getUsedCardsCount(db sq.BaseRunner) (int, error) {
 	row := s.activeCardsQuery(s.getQueryBuilder(db), "count(b.id)", 0).
 		QueryRow()
@@ -65,7 +65,7 @@ func (s *SQLStore) getUsedCardsCount(db sq.BaseRunner) (int, error) {
 }
 
 // getCardLimitTimestamp returns the timestamp value from the
-// system_settings table or zero if it doesn't exist
+// system_settings table or zero if it doesn't exist.
 func (s *SQLStore) getCardLimitTimestamp(db sq.BaseRunner) (int64, error) {
 	scanner := s.getQueryBuilder(db).
 		Select("value").
@@ -93,7 +93,7 @@ func (s *SQLStore) getCardLimitTimestamp(db sq.BaseRunner) (int64, error) {
 // updateCardLimitTimestamp updates the card limit value in the
 // system_settings table with the timestamp of the nth last updated
 // card, being nth the value of the cardLimit parameter. If cardLimit
-// is zero, the timestamp will be set to zero
+// is zero, the timestamp will be set to zero.
 func (s *SQLStore) updateCardLimitTimestamp(db sq.BaseRunner, cardLimit int) (int64, error) {
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"system_settings").

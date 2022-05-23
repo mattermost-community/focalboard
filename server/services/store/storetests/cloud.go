@@ -154,7 +154,7 @@ func testGetUsedCardsCount(t *testing.T, store storeservice.Store, container sto
 	})
 }
 
-func testGetCardLimitTimestamp(t *testing.T, store storeservice.Store, container storeservice.Container) {
+func testGetCardLimitTimestamp(t *testing.T, store storeservice.Store, _ storeservice.Container) {
 	t.Run("should return 0 if there is no entry in the database", func(t *testing.T) {
 		rawValue, err := store.GetSystemSetting(storeservice.CardLimitTimestampSystemKey)
 		require.NoError(t, err)
