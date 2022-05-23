@@ -16,7 +16,6 @@ import {reducer as searchTextReducer} from './searchText'
 import {reducer as globalErrorReducer} from './globalError'
 import {reducer as limitsReducer} from './limits'
 import {reducer as clientConfigReducer} from './clientConfig'
-import {reducer as limitsReducer} from './limits'
 
 const store = configureStore({
     reducer: {
@@ -33,7 +32,6 @@ const store = configureStore({
         globalError: globalErrorReducer,
         limits: limitsReducer,
         clientConfig: clientConfigReducer,
-        limits: limitsReducer,
     },
 })
 
