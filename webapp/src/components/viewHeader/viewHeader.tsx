@@ -31,6 +31,10 @@ import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
 import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
 
+import {LimitUnlimited} from '../../boardsCloudLimits'
+import ViewLimitModal from '../viewLimitDialog/viewLimitDialog'
+import {getLimits} from '../../store/limits'
+
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
 import ViewHeaderGroupByMenu from './viewHeaderGroupByMenu'
@@ -108,6 +112,20 @@ const ViewHeader = (props: Props) => {
 
     const showAddViewTourStep = showTourBaseCondition && delayComplete
 
+    const [showViewLimitDialog, setShowViewLimitDialog] = useState<boolean>(false)
+
+    const limits = useAppSelector(getLimits)
+
+    const allowCreateView = (): boolean => {
+        if (limits && (limits.views === LimitUnlimited || views.length < limits.views)) {
+            setShowViewLimitDialog(false)
+            return true
+        }
+
+        setShowViewLimitDialog(true)
+        return false
+    }
+
     return (
         <div className='ViewHeader'>
             <div className='viewSelector'>
@@ -133,6 +151,7 @@ const ViewHeader = (props: Props) => {
                         activeView={activeView}
                         views={views}
                         readonly={props.readonly}
+                        allowCreateView={allowCreateView}
                     />
                 </MenuWrapper>
                 {showAddViewTourStep && <AddViewTourStep/>}
@@ -223,6 +242,8 @@ const ViewHeader = (props: Props) => {
                 />
             </>
             }
+
+            {showViewLimitDialog && <ViewLimitModal onClose={() => setShowViewLimitDialog(false)}/>}
         </div>
     )
 }

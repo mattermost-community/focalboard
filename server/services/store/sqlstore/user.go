@@ -259,3 +259,7 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 func (s *SQLStore) checkUserIDInTeam(db sq.BaseRunner, userID string, teamID string) bool {
 	return false
 }
+
+func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, receipts []string) error {
+	return errUnsupportedOperation
+}

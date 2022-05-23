@@ -10,6 +10,8 @@ import (
 
 	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 )
 
 type Params struct {
@@ -21,6 +23,7 @@ type Params struct {
 	WSAdapter       ws.Adapter
 	NotifyBackends  []notify.Backend
 	PluginAPI       plugin.API
+	Client          *pluginapi.Client
 }
 
 func (p Params) CheckValid() error {

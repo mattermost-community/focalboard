@@ -516,6 +516,14 @@ class OctoClient {
         return (await this.getJson(response, [])) as PrepareOnboardingResponse
     }
 
+    async notifyAdminUpgrade(): Promise<void> {
+        const path = `/api/v1/workspace/${this.workspaceId}/notifyadminupgrade`
+        await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+        })
+    }
+
     // limits
     async getBoardsCloudLimits(): Promise<BoardsCloudLimits | undefined> {
         const path = '/api/v1/limits'

@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+
 	"github.com/mattermost/mattermost-server/v6/plugin"
 
 	"github.com/pkg/errors"
@@ -18,7 +20,7 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 )
 
 const (
@@ -41,6 +43,11 @@ func (pe NotSupportedError) Error() string {
 	return pe.msg
 }
 
+var systemsBot = &mmModel.Bot{
+	Username:    mmModel.BotSystemBotUsername,
+	DisplayName: "System",
+}
+
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
@@ -48,16 +55,25 @@ type MattermostAuthLayer struct {
 	mmDB      *sql.DB
 	logger    *mlog.Logger
 	pluginAPI plugin.API
+	client    *pluginapi.Client
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API) (*MattermostAuthLayer, error) {
+func New(
+	dbType string,
+	db *sql.DB,
+	store store.Store,
+	logger *mlog.Logger,
+	pluginAPI plugin.API,
+	client *pluginapi.Client,
+) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
 		Store:     store,
 		dbType:    dbType,
 		mmDB:      db,
 		logger:    logger,
 		pluginAPI: pluginAPI,
+		client:    client,
 	}
 
 	return layer, nil
@@ -102,7 +118,7 @@ func (s *MattermostAuthLayer) getUserByCondition(condition sq.Eq) (*model.User, 
 func (s *MattermostAuthLayer) getUsersByCondition(condition sq.Eq) (map[string]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("id", "username", "email", "password", "MFASecret as mfa_secret", "AuthService as auth_service", "COALESCE(AuthData, '') as auth_data",
-			"props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at").
+			"props", "CreateAt as create_at", "UpdateAt as update_at", "DeleteAt as delete_at, Roles").
 		From("Users").
 		Where(sq.Eq{"deleteAt": 0}).
 		Where(condition)
@@ -118,7 +134,7 @@ func (s *MattermostAuthLayer) getUsersByCondition(condition sq.Eq) (map[string]*
 
 		var propsBytes []byte
 		err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.MfaSecret, &user.AuthService,
-			&user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt)
+			&user.AuthData, &propsBytes, &user.CreateAt, &user.UpdateAt, &user.DeleteAt, &user.Roles)
 		if err != nil {
 			return nil, err
 		}
@@ -539,6 +555,79 @@ func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, err
 	}
 
 	return channel.Id, nil
+}
+
+func (s *MattermostAuthLayer) getSystemBotID() (string, error) {
+	botID, err := s.client.Bot.EnsureBot(systemsBot)
+	if err != nil {
+		s.logger.Error("failed to ensure system bot", mlog.String("username", systemsBot.Username), mlog.Err(err))
+		return "", err
+	}
+
+	return botID, nil
+}
+
+func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []string) error {
+	botID, err := s.getSystemBotID()
+	if err != nil {
+		return err
+	}
+
+	for _, receipt := range receipts {
+		channel, err := s.pluginAPI.GetDirectChannel(botID, receipt)
+		if err != nil {
+			s.logger.Error(
+				"failed to get DM channel between system bot and user for receipt",
+				mlog.String("receipt", receipt),
+				mlog.String("user_id", receipt),
+				mlog.Err(err),
+			)
+			continue
+		}
+
+		post := &mmModel.Post{
+			Message:   message,
+			UserId:    botID,
+			ChannelId: channel.Id,
+			Type:      postType,
+		}
+
+		if _, err := s.pluginAPI.CreatePost(post); err != nil {
+			s.logger.Error(
+				"failed to send message to receipt from SendMessage",
+				mlog.String("receipt", receipt),
+				mlog.Err(err),
+			)
+			continue
+		}
+	}
+
+	return nil
+}
+
+func (s *MattermostAuthLayer) GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error) {
+	channel, err := s.pluginAPI.GetChannel(workspaceID)
+	if err != nil {
+		s.logger.Error("failed to fetch channel", mlog.String("workspace_id", workspaceID), mlog.Err(errors.New(err.Error())))
+		return nil, errors.New(err.Error())
+	}
+
+	if channel.Type == mmModel.ChannelTypeDirect || channel.Type == mmModel.ChannelTypeGroup {
+		return nil, nil
+	}
+
+	team, err := s.pluginAPI.GetTeam(channel.TeamId)
+	if err != nil {
+		s.logger.Error(
+			"failed to fetch team",
+			mlog.String("team_id", channel.TeamId),
+			mlog.String("channel_id", workspaceID),
+			mlog.Err(errors.New(err.Error())),
+		)
+		return nil, errors.New(err.Error())
+	}
+
+	return team, nil
 }
 
 func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmModel.FileInfo, error) {
