@@ -16,12 +16,10 @@ import (
 	"context"
 	"time"
 
-	mmmodel "github.com/mattermost/mattermost-server/v6/model"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
-
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -155,7 +153,7 @@ func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
 }
 
 //nolint:typecheck
-func (s *SQLStore) GetFileInfo(id string) (*mmmodel.FileInfo, error) {
+func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
 	return s.getFileInfo(s.db, id)
 }
 
@@ -270,6 +268,11 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 
 func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 	return s.getWorkspaceCount(s.db)
+
+}
+
+func (s *SQLStore) GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error) {
+	return s.getWorkspaceTeam(s.db, workspaceID)
 
 }
 
@@ -389,10 +392,13 @@ func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
 
 }
 
-//nolint:typecheck
-func (s *SQLStore) SaveFileInfo(fileInfo *mmmodel.FileInfo) error {
-	return s.saveFileInfo(s.db, fileInfo)
+func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
+	return s.sendMessage(s.db, message, postType, receipts)
+}
 
+//nolint:typecheck
+func (s *SQLStore) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
+	return s.saveFileInfo(s.db, fileInfo)
 }
 
 func (s *SQLStore) SetSystemSetting(key string, value string) error {

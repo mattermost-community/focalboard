@@ -7,8 +7,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mattermost/focalboard/server/model"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
+
+	"github.com/mattermost/focalboard/server/model"
 )
 
 // Conainer represents a container in a store
@@ -103,6 +104,8 @@ type Store interface {
 
 	IsErrNotFound(err error) bool
 
+	SendMessage(message, postType string, receipts []string) error
+	GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error)
 	GetFileInfo(id string) (*mmModel.FileInfo, error)
 	SaveFileInfo(fileInfo *mmModel.FileInfo) error
 	GetLicense() *mmModel.License

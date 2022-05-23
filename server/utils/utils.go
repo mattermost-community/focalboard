@@ -54,3 +54,7 @@ func StructToMap(v interface{}) (m map[string]interface{}) {
 	_ = json.Unmarshal(b, &m)
 	return
 }
+
+func IsCloudLicense(license *mm_model.License) bool {
+	return license != nil && *license.Features.Cloud
+}

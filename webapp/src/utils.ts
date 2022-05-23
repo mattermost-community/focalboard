@@ -38,6 +38,9 @@ export const KeyCodes: Record<string, [string, number]> = {
     COMPOSING: ['Composing', 229],
 }
 
+export const SYSTEM_ADMIN_ROLE = 'system_admin'
+export const TEAM_ADMIN_ROLE = 'team_admin'
+
 class Utils {
     static createGuid(idType: IDType): string {
         const data = Utils.randomArray(16)
@@ -667,6 +670,26 @@ class Utils {
 
         // used for different language keyboards to detect the position of keys
         return event.keyCode === key[1]
+    }
+
+    static spaceSeparatedStringIncludes(item: string, spaceSeparated?: string): boolean {
+        if (spaceSeparated) {
+            const items = spaceSeparated?.split(' ')
+            return items.includes(item)
+        }
+        return false
+    }
+
+    static isSystemAdmin(roles: string): boolean {
+        return Utils.spaceSeparatedStringIncludes(SYSTEM_ADMIN_ROLE, roles)
+    }
+
+    static isTeamAdmin(roles: string): boolean {
+        return Utils.spaceSeparatedStringIncludes(TEAM_ADMIN_ROLE, roles)
+    }
+
+    static isAdmin(roles: string): boolean {
+        return Utils.isSystemAdmin(roles) || Utils.isTeamAdmin(roles)
     }
 
     static humanFileSize(bytesParam: number, si = false, dp = 1): string {
