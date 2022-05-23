@@ -735,6 +735,21 @@ func (mr *MockStoreMockRecorder) GetWorkspaceCount() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWorkspaceCount", reflect.TypeOf((*MockStore)(nil).GetWorkspaceCount))
 }
 
+// GetWorkspaceTeam mocks base method.
+func (m *MockStore) GetWorkspaceTeam(arg0 string) (*model0.Team, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetWorkspaceTeam", arg0)
+	ret0, _ := ret[0].(*model0.Team)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetWorkspaceTeam indicates an expected call of GetWorkspaceTeam.
+func (mr *MockStoreMockRecorder) GetWorkspaceTeam(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWorkspaceTeam", reflect.TypeOf((*MockStore)(nil).GetWorkspaceTeam), arg0)
+}
+
 // HasWorkspaceAccess mocks base method.
 func (m *MockStore) HasWorkspaceAccess(arg0, arg1 string) (bool, error) {
 	m.ctrl.T.Helper()
@@ -862,12 +877,28 @@ func (mr *MockStoreMockRecorder) RemoveDefaultTemplates(arg0 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveDefaultTemplates", reflect.TypeOf((*MockStore)(nil).RemoveDefaultTemplates), arg0)
 }
 
+
+// SendMessage mocks base method.
+func (m *MockStore) SendMessage(arg0, arg1 string, arg2 []string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendMessage", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
 // SaveFileInfo mocks base method.
 func (m *MockStore) SaveFileInfo(arg0 *model0.FileInfo) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SaveFileInfo", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
+}
+
+
+// SendMessage indicates an expected call of SendMessage.
+func (mr *MockStoreMockRecorder) SendMessage(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMessage", reflect.TypeOf((*MockStore)(nil).SendMessage), arg0, arg1, arg2)
 }
 
 // SaveFileInfo indicates an expected call of SaveFileInfo.

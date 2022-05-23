@@ -110,6 +110,11 @@ describe('components/centerPanel', () => {
         comments: {
             comments: [comment1, comment2],
         },
+        limits: {
+            limits: {
+                views: 0,
+            },
+        },
     }
     const store = mockStateStore([], state)
     beforeAll(() => {

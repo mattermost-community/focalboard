@@ -75,7 +75,7 @@ card3.id = 'card3'
 card3.title = 'card-3'
 card3.workspaceId = workspace1.id
 
-const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, create_at: 0, update_at: 0, is_bot: false}
+const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, create_at: 0, update_at: 0, is_bot: false, roles: ''}
 
 jest.mock('react-router-dom', () => {
     const originalModule = jest.requireActual('react-router-dom')
@@ -137,6 +137,11 @@ describe('src/components/workspace', () => {
         },
         comments: {
             comments: {},
+        },
+        limits: {
+            limits: {
+                views: 0,
+            },
         },
     }
     const store = mockStateStore([], state)
@@ -326,6 +331,11 @@ describe('src/components/workspace', () => {
             comments: {
                 comments: {},
             },
+            limits: {
+                limits: {
+                    views: 0,
+                },
+            },
         }
         const localStore = mockStateStore([], localState)
 
@@ -408,6 +418,11 @@ describe('src/components/workspace', () => {
             },
             comments: {
                 comments: {},
+            },
+            limits: {
+                limits: {
+                    views: 0,
+                },
             },
         }
         const localStore = mockStateStore([], localState)
@@ -496,6 +511,11 @@ describe('src/components/workspace', () => {
             },
             comments: {
                 comments: {},
+            },
+            limits: {
+                limits: {
+                    views: 0,
+                },
             },
         }
         const localStore = mockStateStore([], localState)
