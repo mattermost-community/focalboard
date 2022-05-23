@@ -147,8 +147,8 @@ func (s *SQLStore) GetBoardAndCardByID(c store.Container, blockID string) (*mode
 
 }
 
-func (s *SQLStore) GetCardLimitTimestamp(cardLimit int) (int64, error) {
-	return s.getCardLimitTimestamp(s.db, cardLimit)
+func (s *SQLStore) GetCardLimitTimestamp() (int64, error) {
+	return s.getCardLimitTimestamp(s.db)
 
 }
 
@@ -424,6 +424,11 @@ func (s *SQLStore) UndeleteBlock(c store.Container, blockID string, modifiedBy s
 	}
 
 	return nil
+
+}
+
+func (s *SQLStore) UpdateCardLimitTimestamp(cardLimit int) (int64, error) {
+	return s.updateCardLimitTimestamp(s.db, cardLimit)
 
 }
 

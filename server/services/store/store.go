@@ -11,6 +11,8 @@ import (
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
+const CardLimitTimestampSystemKey = "card_limit_timestamp"
+
 // Conainer represents a container in a store
 // Using a struct to make extending this easier in the future.
 type Container struct {
@@ -100,7 +102,8 @@ type Store interface {
 	GetDefaultTemplateBlocks() ([]model.Block, error)
 
 	GetUsedCardsCount() (int, error)
-	GetCardLimitTimestamp(cardLimit int) (int64, error)
+	GetCardLimitTimestamp() (int64, error)
+	UpdateCardLimitTimestamp(cardLimit int) (int64, error)
 
 	DBType() string
 

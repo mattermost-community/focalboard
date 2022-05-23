@@ -10,7 +10,7 @@ import (
 )
 
 // GetBoardsCloudLimits returns the limits of the server, and an empty
-// limits struct if there are no limits set
+// limits struct if there are no limits set.
 func (a *App) GetBoardsCloudLimits() (*model.BoardsCloudLimits, error) {
 	if !a.IsCloud() {
 		return &model.BoardsCloudLimits{}, nil
@@ -26,9 +26,14 @@ func (a *App) GetBoardsCloudLimits() (*model.BoardsCloudLimits, error) {
 		return nil, err
 	}
 
+	cardLimitTimestamp, err := a.store.GetCardLimitTimestamp()
+	if err != nil {
+		return nil, err
+	}
+
 	boardsCloudLimits := &model.BoardsCloudLimits{
 		UsedCards:          usedCards,
-		CardLimitTimestamp: a.CardLimitTimestamp,
+		CardLimitTimestamp: cardLimitTimestamp,
 	}
 	if productLimits != nil && productLimits.Boards != nil {
 		boardsCloudLimits.Cards = *productLimits.Boards.Cards
@@ -39,56 +44,76 @@ func (a *App) GetBoardsCloudLimits() (*model.BoardsCloudLimits, error) {
 }
 
 // IsCloud returns true if the server is running as a plugin in a
-// cloud licensed server
+// cloud licensed server.
 func (a *App) IsCloud() bool {
 	license := a.store.GetLicense()
 	if license == nil {
 		return false
 	}
-	return license.Features.Cloud != nil && *license.Features.Cloud
+	return license.Features != nil &&
+		license.Features.Cloud != nil &&
+		*license.Features.Cloud
 }
 
 // IsCloudLimited returns true if the server is running in cloud mode
-// and the card limit has been set
+// and the card limit has been set.
 func (a *App) IsCloudLimited() bool {
-	return a.IsCloud() && a.CardLimit != 0
+	return a.CardLimit != 0 && a.IsCloud()
 }
 
-// SetCloudLimits sets the limits of the server
+// SetCloudLimits sets the limits of the server.
 func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
+	oldCardLimit := a.CardLimit
+
 	// if the limit object doesn't come complete, we assume limits are
 	// being disabled
 	cardLimit := 0
 	if limits != nil && limits.Boards != nil {
 		cardLimit = *limits.Boards.Cards
 	}
-
 	a.CardLimit = cardLimit
-	return a.UpdateCardLimitTimestamp()
+
+	if oldCardLimit != cardLimit {
+		return a.doUpdateCardLimitTimestamp()
+	}
+
+	return nil
 }
 
-// ToDo: test
+// doUpdateCardLimitTimestamp performs the update without running any
+// checks.
+func (a *App) doUpdateCardLimitTimestamp() error {
+	cardLimitTimestamp, err := a.store.UpdateCardLimitTimestamp(a.CardLimit)
+	if err != nil {
+		return err
+	}
+
+	a.wsAdapter.BroadcastCardLimitTimestampChange(cardLimitTimestamp)
+
+	return nil
+}
+
+// UpdateCardLimitTimestamp checks if the server is a cloud instance
+// with limits applied, and if that's true, recalculates the card
+// limit timestamp and propagates the new one to the connected
+// clients.
 func (a *App) UpdateCardLimitTimestamp() error {
 	if !a.IsCloudLimited() {
 		return nil
 	}
 
-	cardLimitTimestamp, err := a.store.GetCardLimitTimestamp(a.CardLimit)
-	if err != nil {
-		return err
-	}
-	a.CardLimitTimestamp = cardLimitTimestamp
-
-	a.wsAdapter.BroadcastCardLimitTimestampChange(a.CardLimitTimestamp)
-
-	return nil
+	return a.doUpdateCardLimitTimestamp()
 }
 
-// ToDo: test
-func (a *App) ApplyCloudLimits(blocks []model.Block) []model.Block {
+func (a *App) ApplyCloudLimits(blocks []model.Block) ([]model.Block, error) {
 	// if there is no limit currently being applied, return
 	if !a.IsCloudLimited() {
-		return blocks
+		return blocks, nil
+	}
+
+	cardLimitTimestamp, err := a.store.GetCardLimitTimestamp()
+	if err != nil {
+		return nil, err
 	}
 
 	// ToDo:
@@ -100,12 +125,12 @@ func (a *App) ApplyCloudLimits(blocks []model.Block) []model.Block {
 	for i, block := range blocks {
 		if block.Type != model.TypeBoard &&
 			block.Type != model.TypeView &&
-			block.UpdateAt < a.CardLimitTimestamp {
+			block.UpdateAt < cardLimitTimestamp {
 			limitedBlocks[i] = block.GetLimited()
 		} else {
 			limitedBlocks[i] = block
 		}
 	}
 
-	return limitedBlocks
+	return limitedBlocks, nil
 }

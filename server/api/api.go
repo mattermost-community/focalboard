@@ -330,7 +330,13 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		mlog.Int("block_count", len(blocks)),
 	)
 
-	blocks = a.app.ApplyCloudLimits(blocks)
+	var bErr error
+	blocks, bErr = a.app.ApplyCloudLimits(blocks)
+	if bErr != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", bErr)
+		return
+	}
+
 	json, err := json.Marshal(blocks)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -986,7 +992,13 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 		mlog.Int("block_count", len(blocks)),
 	)
 
-	blocks = a.app.ApplyCloudLimits(blocks)
+	var bErr error
+	blocks, bErr = a.app.ApplyCloudLimits(blocks)
+	if bErr != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", bErr)
+		return
+	}
+
 	json, err := json.Marshal(blocks)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)

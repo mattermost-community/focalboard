@@ -10,12 +10,12 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
+	storeservice "github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 )
 
-func StoreTestCloudStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
-	container := store.Container{
+func StoreTestCloudStore(t *testing.T, setup func(t *testing.T) (storeservice.Store, func())) {
+	container := storeservice.Container{
 		WorkspaceID: "0",
 	}
 
@@ -29,9 +29,14 @@ func StoreTestCloudStore(t *testing.T, setup func(t *testing.T) (store.Store, fu
 		defer tearDown()
 		testGetCardLimitTimestamp(t, store, container)
 	})
+	t.Run("TestUpdateCardLimitTimestamp", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testUpdateCardLimitTimestamp(t, store, container)
+	})
 }
 
-func testGetUsedCardsCount(t *testing.T, store store.Store, container store.Container) {
+func testGetUsedCardsCount(t *testing.T, store storeservice.Store, container storeservice.Container) {
 	userID := "user-id"
 
 	t.Run("should return zero when no cards have been created", func(t *testing.T) {
@@ -149,7 +154,35 @@ func testGetUsedCardsCount(t *testing.T, store store.Store, container store.Cont
 	})
 }
 
-func testGetCardLimitTimestamp(t *testing.T, store store.Store, container store.Container) {
+func testGetCardLimitTimestamp(t *testing.T, store storeservice.Store, container storeservice.Container) {
+	t.Run("should return 0 if there is no entry in the database", func(t *testing.T) {
+		rawValue, err := store.GetSystemSetting(storeservice.CardLimitTimestampSystemKey)
+		require.NoError(t, err)
+		require.Equal(t, "", rawValue)
+
+		cardLimitTimestamp, err := store.GetCardLimitTimestamp()
+		require.NoError(t, err)
+		require.Zero(t, cardLimitTimestamp)
+	})
+
+	t.Run("should return an int64 representation of the value", func(t *testing.T) {
+		require.NoError(t, store.SetSystemSetting(storeservice.CardLimitTimestampSystemKey, "1234"))
+
+		cardLimitTimestamp, err := store.GetCardLimitTimestamp()
+		require.NoError(t, err)
+		require.Equal(t, int64(1234), cardLimitTimestamp)
+	})
+
+	t.Run("should return an invalid value error if the value is not a number", func(t *testing.T) {
+		require.NoError(t, store.SetSystemSetting(storeservice.CardLimitTimestampSystemKey, "abc"))
+
+		cardLimitTimestamp, err := store.GetCardLimitTimestamp()
+		require.ErrorContains(t, err, "card limit value is invalid")
+		require.Zero(t, cardLimitTimestamp)
+	})
+}
+
+func testUpdateCardLimitTimestamp(t *testing.T, store storeservice.Store, container storeservice.Container) {
 	userID := "user-id"
 
 	// two boards
@@ -186,15 +219,25 @@ func testGetCardLimitTimestamp(t *testing.T, store store.Store, container store.
 		time.Sleep(10 * time.Millisecond)
 	}
 
-	t.Run("should return the update_at time for the card at the limit", func(t *testing.T) {
+	t.Run("should set the timestamp to zero if the card limit is zero", func(t *testing.T) {
+		cardLimitTimestamp, err := store.UpdateCardLimitTimestamp(0)
+		require.NoError(t, err)
+		require.Zero(t, cardLimitTimestamp)
+
+		cardLimitTimestampStr, err := store.GetSystemSetting(storeservice.CardLimitTimestampSystemKey)
+		require.NoError(t, err)
+		require.Equal(t, "0", cardLimitTimestampStr)
+	})
+
+	t.Run("should set the correct timestamp", func(t *testing.T) {
 		t.Run("limit 10", func(t *testing.T) {
 			// we fetch the first block
 			card1, err := store.GetBlock(container, "card1")
 			require.NoError(t, err)
 
-			// and assert that if the limit is 10, the update_at timestamp
-			// of the last card is retrieved
-			cardLimitTimestamp, err := store.GetCardLimitTimestamp(10)
+			// and assert that if the limit is 10, the stored
+			// timestamp corresponds to the card's update_at
+			cardLimitTimestamp, err := store.UpdateCardLimitTimestamp(10)
 			require.NoError(t, err)
 			require.Equal(t, card1.UpdateAt, cardLimitTimestamp)
 		})
@@ -202,46 +245,47 @@ func testGetCardLimitTimestamp(t *testing.T, store store.Store, container store.
 		t.Run("limit 5", func(t *testing.T) {
 			// if the limit is 5, the timestamp should be the one from
 			// the sixth card (the first five are older and out of the
-			// active window)
 			card6, err := store.GetBlock(container, "card6")
 			require.NoError(t, err)
 
-			cardLimitTimestamp, err := store.GetCardLimitTimestamp(5)
+			cardLimitTimestamp, err := store.UpdateCardLimitTimestamp(5)
 			require.NoError(t, err)
 			require.Equal(t, card6.UpdateAt, cardLimitTimestamp)
 		})
 
-		t.Run("we update card10 and assert that with limit 1, it is now the timestamp retrieved", func(t *testing.T) {
-			time.Sleep(10 * time.Millisecond)
-			card10, err := store.GetBlock(container, "card10")
-			require.NoError(t, err)
-
-			card10.Title = "New title"
-			require.NoError(t, store.InsertBlock(container, card10, userID))
-
-			newCard10, err := store.GetBlock(container, "card10")
-			require.NoError(t, err)
-
-			cardLimitTimestamp, err := store.GetCardLimitTimestamp(1)
-			require.NoError(t, err)
-			require.Equal(t, newCard10.UpdateAt, cardLimitTimestamp)
-		})
-
-		t.Run("limit should stop applying if we remove the last card", func(t *testing.T) {
-			cardLimitTimestamp, err := store.GetCardLimitTimestamp(10)
-			require.NoError(t, err)
-			require.NotZero(t, cardLimitTimestamp)
-
-			require.NoError(t, store.DeleteBlock(container, "card1", userID))
-			cardLimitTimestamp, err = store.GetCardLimitTimestamp(10)
+		t.Run("limit should be zero if we have less cards than the limit", func(t *testing.T) {
+			cardLimitTimestamp, err := store.UpdateCardLimitTimestamp(100)
 			require.NoError(t, err)
 			require.Zero(t, cardLimitTimestamp)
 		})
-	})
 
-	t.Run("should return zero if there are less cards than the limit", func(t *testing.T) {
-		cardLimitTimestamp, err := store.GetCardLimitTimestamp(15)
-		require.NoError(t, err)
-		require.Zero(t, cardLimitTimestamp)
+		t.Run("we update the first inserted card and assert that with limit 1 that's the limit that is set", func(t *testing.T) {
+			time.Sleep(10 * time.Millisecond)
+			card1, err := store.GetBlock(container, "card1")
+			require.NoError(t, err)
+
+			card1.Title = "New title"
+			require.NoError(t, store.InsertBlock(container, card1, userID))
+
+			newCard1, err := store.GetBlock(container, "card1")
+			require.NoError(t, err)
+
+			cardLimitTimestamp, err := store.UpdateCardLimitTimestamp(1)
+			require.NoError(t, err)
+			require.Equal(t, newCard1.UpdateAt, cardLimitTimestamp)
+		})
+
+		t.Run("limit should stop applying if we remove the last card", func(t *testing.T) {
+			initialCardLimitTimestamp, err := store.GetCardLimitTimestamp()
+			require.NoError(t, err)
+			require.NotZero(t, initialCardLimitTimestamp)
+
+			time.Sleep(10 * time.Millisecond)
+			require.NoError(t, store.DeleteBlock(container, "card1", userID))
+
+			cardLimitTimestamp, err := store.UpdateCardLimitTimestamp(10)
+			require.NoError(t, err)
+			require.Zero(t, cardLimitTimestamp)
+		})
 	})
 }

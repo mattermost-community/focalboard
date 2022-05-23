@@ -201,29 +201,28 @@ func StampModificationMetadata(userID string, blocks []Block, auditRec *audit.Re
 	}
 }
 
-// ToDo: test
 // Returns a limited version of the block that doesn't contain the
-// contents of the block, only its IDs and type
+// contents of the block, only its IDs and type.
 func (b Block) GetLimited() Block {
-	iconField, ok := b.Fields["icon"]
-	if !ok {
-		iconField = ""
-	}
-
-	return Block{
-		Title:    b.Title,
-		ID:       b.ID,
-		ParentID: b.ParentID,
-		RootID:   b.RootID,
-		Schema:   b.Schema,
-		Type:     b.Type,
-		Fields: map[string]interface{}{
-			"icon": iconField,
-		},
+	newBlock := Block{
+		Title:       b.Title,
+		ID:          b.ID,
+		ParentID:    b.ParentID,
+		RootID:      b.RootID,
+		Schema:      b.Schema,
+		Type:        b.Type,
 		CreateAt:    b.CreateAt,
 		UpdateAt:    b.UpdateAt,
 		DeleteAt:    b.DeleteAt,
 		WorkspaceID: b.WorkspaceID,
 		Limited:     true,
 	}
+
+	if iconField, ok := b.Fields["icon"]; ok {
+		newBlock.Fields = map[string]interface{}{
+			"icon": iconField,
+		}
+	}
+
+	return newBlock
 }

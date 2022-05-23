@@ -100,10 +100,10 @@ func (a *App) InsertBlock(c store.Container, block model.Block, modifiedByID str
 			a.webhook.NotifyUpdate(block)
 			a.notifyBlockChanged(notify.Add, c, &block, nil, modifiedByID)
 
-			if err := a.UpdateCardLimitTimestamp(); err != nil {
+			if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
 				a.logger.Error(
 					"UpdateCardLimitTimestamp failed after inserting a block",
-					mlog.Err(err),
+					mlog.Err(uErr),
 				)
 			}
 		}()

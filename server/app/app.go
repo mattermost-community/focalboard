@@ -35,9 +35,8 @@ type App struct {
 	notifications *notify.Service
 	logger        *mlog.Logger
 
-	// ToDo: do we need atomic / mutex?
-	CardLimit          int
-	CardLimitTimestamp int64
+	// ToDo: do we require a mutex?
+	CardLimit int
 }
 
 func (a *App) SetConfig(config *config.Configuration) {

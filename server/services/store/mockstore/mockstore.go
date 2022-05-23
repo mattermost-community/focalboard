@@ -362,18 +362,18 @@ func (mr *MockStoreMockRecorder) GetBoardAndCardByID(arg0, arg1 interface{}) *go
 }
 
 // GetCardLimitTimestamp mocks base method.
-func (m *MockStore) GetCardLimitTimestamp(arg0 int) (int64, error) {
+func (m *MockStore) GetCardLimitTimestamp() (int64, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCardLimitTimestamp", arg0)
+	ret := m.ctrl.Call(m, "GetCardLimitTimestamp")
 	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetCardLimitTimestamp indicates an expected call of GetCardLimitTimestamp.
-func (mr *MockStoreMockRecorder) GetCardLimitTimestamp(arg0 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetCardLimitTimestamp() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCardLimitTimestamp", reflect.TypeOf((*MockStore)(nil).GetCardLimitTimestamp), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCardLimitTimestamp", reflect.TypeOf((*MockStore)(nil).GetCardLimitTimestamp))
 }
 
 // GetCloudLimits mocks base method.
@@ -932,6 +932,21 @@ func (m *MockStore) UndeleteBlock(arg0 store.Container, arg1, arg2 string) error
 func (mr *MockStoreMockRecorder) UndeleteBlock(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UndeleteBlock", reflect.TypeOf((*MockStore)(nil).UndeleteBlock), arg0, arg1, arg2)
+}
+
+// UpdateCardLimitTimestamp mocks base method.
+func (m *MockStore) UpdateCardLimitTimestamp(arg0 int) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateCardLimitTimestamp", arg0)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateCardLimitTimestamp indicates an expected call of UpdateCardLimitTimestamp.
+func (mr *MockStoreMockRecorder) UpdateCardLimitTimestamp(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCardLimitTimestamp", reflect.TypeOf((*MockStore)(nil).UpdateCardLimitTimestamp), arg0)
 }
 
 // UpdateSession mocks base method.

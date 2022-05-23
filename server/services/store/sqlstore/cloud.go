@@ -6,10 +6,14 @@ package sqlstore
 import (
 	"database/sql"
 	"errors"
+	"strconv"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
 )
+
+var ErrInvalidCardLimitValue = errors.New("card limit value is invalid")
 
 func parentIsNotTemplateFilter(dbtype string) string {
 	switch dbtype {
@@ -25,8 +29,8 @@ func parentIsNotTemplateFilter(dbtype string) string {
 // activeCardsQuery applies the necessary filters to the query for it
 // to fetch an active cards window if the cardLimit is set, or all the
 // active cards if it's 0
-func (s *SQLStore) activeCardsQuery(db sq.BaseRunner, selectStr string, cardLimit int) sq.SelectBuilder {
-	query := s.getQueryBuilder(db).
+func (s *SQLStore) activeCardsQuery(builder sq.StatementBuilderType, selectStr string, cardLimit int) sq.SelectBuilder {
+	query := builder.
 		Select(selectStr).
 		From(s.tablePrefix + "blocks b").
 		Join(s.tablePrefix + "blocks pb on b.parent_id=pb.id").
@@ -48,7 +52,7 @@ func (s *SQLStore) activeCardsQuery(db sq.BaseRunner, selectStr string, cardLimi
 
 // getUsedCardsCount returns the amount of active cards in the server
 func (s *SQLStore) getUsedCardsCount(db sq.BaseRunner) (int, error) {
-	row := s.activeCardsQuery(db, "count(b.id)", 0).
+	row := s.activeCardsQuery(s.getQueryBuilder(db), "count(b.id)", 0).
 		QueryRow()
 
 	var usedCards int
@@ -60,21 +64,71 @@ func (s *SQLStore) getUsedCardsCount(db sq.BaseRunner) (int, error) {
 	return usedCards, nil
 }
 
-// getCardLimitTimestamp returns the timestamp of the last active
-// card, being the limit determined by the cardLimit parameter
-func (s *SQLStore) getCardLimitTimestamp(db sq.BaseRunner, cardLimit int) (int64, error) {
-	row := s.activeCardsQuery(db, "b.update_at", cardLimit).
-		OrderBy("b.update_at DESC").
+// getCardLimitTimestamp returns the timestamp value from the
+// system_settings table or zero if it doesn't exist
+func (s *SQLStore) getCardLimitTimestamp(db sq.BaseRunner) (int64, error) {
+	scanner := s.getQueryBuilder(db).
+		Select("value").
+		From(s.tablePrefix + "system_settings").
+		Where(sq.Eq{"id": store.CardLimitTimestampSystemKey}).
 		QueryRow()
 
-	var cardLimitTimestamp int64
-	scanErr := row.Scan(&cardLimitTimestamp)
-	if errors.Is(scanErr, sql.ErrNoRows) {
+	var result string
+	err := scanner.Scan(&result)
+	if errors.Is(sql.ErrNoRows, err) {
 		return 0, nil
 	}
-	if scanErr != nil {
-		return 0, scanErr
+	if err != nil {
+		return 0, err
 	}
 
-	return cardLimitTimestamp, nil
+	cardLimitTimestamp, err := strconv.Atoi(result)
+	if err != nil {
+		return 0, ErrInvalidCardLimitValue
+	}
+
+	return int64(cardLimitTimestamp), nil
+}
+
+// updateCardLimitTimestamp updates the card limit value in the
+// system_settings table with the timestamp of the nth last updated
+// card, being nth the value of the cardLimit parameter. If cardLimit
+// is zero, the timestamp will be set to zero
+func (s *SQLStore) updateCardLimitTimestamp(db sq.BaseRunner, cardLimit int) (int64, error) {
+	query := s.getQueryBuilder(db).
+		Insert(s.tablePrefix+"system_settings").
+		Columns("id", "value")
+
+	var value interface{} = 0
+	if cardLimit != 0 {
+		value = s.activeCardsQuery(sq.StatementBuilder, "b.update_at", cardLimit).
+			OrderBy("b.update_at DESC").
+			Prefix("COALESCE((").Suffix("), 0)")
+	}
+	query = query.Values(store.CardLimitTimestampSystemKey, value)
+
+	if s.dbType == mysqlDBType {
+		query = query.Suffix("ON DUPLICATE KEY UPDATE value = ?", value)
+	} else {
+		query = query.Suffix(
+			`ON CONFLICT (id)
+			 DO UPDATE SET value = EXCLUDED.value`,
+		)
+	}
+
+	result, err := query.Exec()
+	if err != nil {
+		return 0, err
+	}
+
+	rowCount, err := result.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	if rowCount < 1 {
+		return 0, store.NewErrNotFound(store.CardLimitTimestampSystemKey)
+	}
+
+	return s.getCardLimitTimestamp(db)
 }
