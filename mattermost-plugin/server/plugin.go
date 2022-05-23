@@ -505,5 +505,7 @@ func isBoardsLink(link string) bool {
 }
 
 func (p *Plugin) OnCloudLimitsUpdated(limits *mmModel.ProductLimits) {
-	p.server.App().SetCloudLimits(limits)
+	if err := p.server.App().SetCloudLimits(limits); err != nil {
+		fmt.Println("Error setting the cloud limits for Boards", err)
+	}
 }
