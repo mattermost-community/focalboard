@@ -197,6 +197,11 @@ func (s *SQLStore) Migrate() error {
 	}
 	defer engine.Close()
 
+	if err := engine.ApplyAll(); err != nil {
+		s.logger.Error("failed to apply migrations", mlog.Err(err))
+		return err
+	}
+
 	var mutex *cluster.Mutex
 	if s.isPlugin {
 		var mutexErr error
@@ -265,7 +270,7 @@ func (s *SQLStore) Migrate() error {
 		mutex.Unlock()
 	}
 
-	return engine.ApplyAll()
+	return nil
 }
 
 // migrateSchemaVersionTable converts the schema version table from
