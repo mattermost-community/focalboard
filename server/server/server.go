@@ -201,8 +201,6 @@ func New(params Params) (*Server, error) {
 
 	server.initHandlers()
 
-	// ToDo: port json1 flag mechanism to 0.15
-
 	return &server, nil
 }
 
