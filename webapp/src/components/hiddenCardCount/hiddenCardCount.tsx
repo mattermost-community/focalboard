@@ -7,7 +7,7 @@ import {useIntl} from 'react-intl'
 import Button from '../../widgets/buttons/button'
 
 import {Card} from '../../blocks/card'
-import './HiddenCardCount.scss'
+import './hiddenCardCount.scss'
 
 type Props = {
     hiddenCards: Card[]
