@@ -37,6 +37,9 @@ type App struct {
 	notifications *notify.Service
 	logger        *mlog.Logger
 	pluginAPI     plugin.API
+
+	// ToDo: do we require a mutex?
+	CardLimit int
 }
 
 func (a *App) SetConfig(config *config.Configuration) {
@@ -54,7 +57,6 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 		metrics:       services.Metrics,
 		notifications: services.Notifications,
 		logger:        services.Logger,
-		pluginAPI:     services.PluginAPI,
 	}
 	app.initialize(services.SkipTemplateInit)
 	return app

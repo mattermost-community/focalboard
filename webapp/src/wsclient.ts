@@ -20,6 +20,7 @@ type WSMessage = {
     action?: string
     block?: Block
     error?: string
+    timestamp?: number
 }
 
 type WSSubscriptionMsg = {
@@ -47,6 +48,7 @@ export const ACTION_UNSUBSCRIBE_WORKSPACE = 'UNSUBSCRIBE_WORKSPACE'
 export const ACTION_UNSUBSCRIBE_BLOCKS = 'UNSUBSCRIBE_BLOCKS'
 export const ACTION_UPDATE_CLIENT_CONFIG = 'UPDATE_CLIENT_CONFIG'
 export const ACTION_UPDATE_SUBSCRIPTION = 'UPDATE_SUBSCRIPTION'
+export const ACTION_UPDATE_CARD_LIMIT_TIMESTAMP = 'UPDATE_CARD_LIMIT_TIMESTAMP'
 
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
@@ -63,6 +65,7 @@ type OnReconnectHandler = (client: WSClient) => void
 type OnStateChangeHandler = (client: WSClient, state: 'init' | 'open' | 'close') => void
 type OnErrorHandler = (client: WSClient, e: Event) => void
 type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => void
+type OnCardLimitTimestampChangeHandler = (client: WSClient, timestamp: number) => void
 type FollowChangeHandler = (client: WSClient, subscription: Subscription) => void
 
 class WSClient {
@@ -80,6 +83,7 @@ class WSClient {
     onChange: OnChangeHandler[] = []
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
+    onCardLimitTimestampChange: OnCardLimitTimestampChangeHandler[] = []
     onFollowBlock: FollowChangeHandler = () => {}
     onUnfollowBlock: FollowChangeHandler = () => {}
     private notificationDelay = 100
@@ -182,6 +186,17 @@ class WSClient {
         const index = this.onConfigChange.indexOf(handler)
         if (index !== -1) {
             this.onConfigChange.splice(index, 1)
+        }
+    }
+
+    addOnCardLimitTimestampChange(handler: OnCardLimitTimestampChangeHandler): void {
+        this.onCardLimitTimestampChange.push(handler)
+    }
+
+    removeOnCardLimitTimestampChange(handler: OnCardLimitTimestampChangeHandler): void {
+        const index = this.onCardLimitTimestampChange.indexOf(handler)
+        if (index !== -1) {
+            this.onCardLimitTimestampChange.splice(index, 1)
         }
     }
 
@@ -332,6 +347,12 @@ class WSClient {
     updateClientConfigHandler(config: ClientConfig): void {
         for (const handler of this.onConfigChange) {
             handler(this, config)
+        }
+    }
+
+    updateCardLimitTimestampHandler(timestamp: number): void {
+        for (const handler of this.onCardLimitTimestampChange) {
+            handler(this, timestamp)
         }
     }
 

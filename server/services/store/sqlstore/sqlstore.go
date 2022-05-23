@@ -98,3 +98,7 @@ func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam
 func (s *SQLStore) getLicense(db sq.BaseRunner) *mmModel.License {
 	return nil
 }
+
+func (s *SQLStore) getCloudLimits(db sq.BaseRunner) (*mmModel.ProductLimits, error) {
+	return nil, nil
+}
