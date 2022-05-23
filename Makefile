@@ -29,11 +29,13 @@ all: webapp server ## Build server and webapp.
 
 prebuild: ## Run prebuild actions (install dependencies etc.).
 	cd webapp; npm install
+	cd mattermost-plugin/webapp; npm install
 
 ci: server-test
 	cd webapp; npm run check
 	cd webapp; npm run test
 	cd webapp; npm run cypress:ci
+	cd mattermost-plugin/webapp; npm run test
 
 templates-archive: ## Build templates archive file
 	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
