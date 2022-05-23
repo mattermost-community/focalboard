@@ -36,7 +36,7 @@ export const refreshCards = createAsyncThunk<Block[], number, {state: RootState}
         const blocksPromises = []
 
         for (const card of Object.values(cards)) {
-            if (card.isLimited && card.updateAt >= cardLimitTimestamp) {
+            if (card.limited && card.updateAt >= cardLimitTimestamp) {
                 blocksPromises.push(client.getSubtree(card.id).then((blocks) => blocks.find((b) => b?.type === 'card')))
             }
         }
@@ -57,7 +57,7 @@ const limitCard = (limitTimestamp:number, card: Card): Card => {
             properties: {},
             contentOrder: [],
         },
-        isLimited: true,
+        limited: true,
     }
 }
 
@@ -375,7 +375,7 @@ export const getCurrentViewCardsSortedFilteredAndGroupedWithoutLimit = createSel
 
 export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
     getCurrentViewCardsSortedFilteredAndGroupedWithoutLimit,
-    (cards) => cards.filter((c) => !c.isLimited),
+    (cards) => cards.filter((c) => !c.limited),
 )
 
 export const getCurrentCard = createSelector(
