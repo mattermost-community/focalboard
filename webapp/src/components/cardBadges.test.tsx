@@ -39,6 +39,7 @@ describe('components/cardBadges', () => {
             limitTimestamp: 0,
             cards: blocksById([card, emptyCard]),
             templates: {},
+            cardHiddenWarning: true,
         },
         comments: {
             comments: blocksById(comments),

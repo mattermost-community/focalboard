@@ -84,8 +84,6 @@ const CardLimitNotification = () => {
         )
     }
 
-    console.log("SHOW HIDDEN WARNING ", show)
-
     useEffect(() => {
         if (!show) {
             const interval = setInterval(() => setTime(Date.now()), checkSnoozeInterval)

@@ -41,6 +41,7 @@ describe('src/components/gallery/Gallery', () => {
                 [card.id]: card,
             },
             templates: {},
+            cardHiddenWarning: true,
         },
         comments: {
             comments: {},
