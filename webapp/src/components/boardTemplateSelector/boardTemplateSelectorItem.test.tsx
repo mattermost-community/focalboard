@@ -106,6 +106,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
             dateDisplayPropertyId: 'id-5',
             columnCalculations: {},
         },
+        limited: false,
     }
 
     const globalTemplate: Board = {
@@ -130,6 +131,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
             isTemplate: true,
             templateVer: 2,
         },
+        limited: false,
     }
 
     beforeEach(() => {

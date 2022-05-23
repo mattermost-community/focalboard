@@ -104,7 +104,8 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
     test('limited card check', () => {
         card.limited = true
         card2.limited = true
-        const {getByTitle} = render(wrapDNDIntl(
+        option.id = 'hidden-card-group-id'
+        const {container, getByTitle} = render(wrapDNDIntl(
             <KanbanHiddenColumnItem
                 activeView={activeView}
                 group={{
@@ -116,6 +117,7 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
                 intl={intl}
             />,
         ))
-        expect(getByTitle('limited-card-count')).toHaveTextContent('2')
+        expect(getByTitle('hidden-card-count')).toHaveTextContent('2')
+        expect(container).toMatchSnapshot()
     })
 })

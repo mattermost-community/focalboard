@@ -2,13 +2,12 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React, {useCallback, useState} from 'react'
-import {FormattedMessage, injectIntl, IntlShape, useIntl} from 'react-intl'
+import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import withScrolling, {createHorizontalStrength, createVerticalStrength} from 'react-dnd-scrolling'
 
+import {GetHiddenCard} from '../../store/cards'
 import {useAppSelector} from '../../store/hooks'
-
-import {getHiddenCard} from '../../store/cards'
 
 import {Position} from '../cardDetail/cardDetailContents'
 
@@ -21,6 +20,8 @@ import Button from '../../widgets/buttons/button'
 import {Constants} from '../../constants'
 
 import {dragAndDropRearrange} from '../cardDetail/cardDetailContentsUtility'
+
+import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
 
 import KanbanCard from './kanbanCard'
 import KanbanColumn from './kanbanColumn'
@@ -50,20 +51,7 @@ const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
 
 const Kanban = (props: Props) => {
     const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups} = props
-    const limitedCard = useAppSelector(getHiddenCard)
-    const intl = useIntl()
-    const hiddenCardGroupId = 'hidden-card-group-id'
-
-    if (limitedCard.length > 0) {
-        props.hiddenGroups.push({
-            option: {
-                color: 'propColorRed',
-                id: hiddenCardGroupId,
-                value: intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards Hidden'}),
-            },
-            cards: limitedCard,
-        })
-    }
+    const limitedCard = useAppSelector(GetHiddenCard)
 
     if (!groupByProperty) {
         Utils.assertFailure('Board views must have groupByProperty set')
@@ -245,7 +233,7 @@ const Kanban = (props: Props) => {
 
                 {/* Hidden column header */}
 
-                {hiddenGroups.length > 0 &&
+                {(hiddenGroups.length > 0 || limitedCard.length > 0) &&
                     <div className='octo-board-header-cell narrow'>
                         <FormattedMessage
                             id='BoardComponent.hidden-columns'
@@ -327,6 +315,10 @@ const Kanban = (props: Props) => {
                             onDrop={(card: Card) => onDropToColumn(group.option, card)}
                         />
                     ))}
+                    {limitedCard.length > 0 &&
+                    <div className='kanban-hidden-cards'>
+                        <HiddenCardCount hiddenCards={limitedCard}/>
+                    </div>}
                 </div>}
             </div>
         </ScrollingComponent>

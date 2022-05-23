@@ -201,8 +201,9 @@ describe('components/table/Table', () => {
                 />
             </ReduxProvider>,
         )
-        const {getByTitle} = render(component)
-        expect(getByTitle('limited-card-count')).toHaveTextContent('2')
+        const {container, getByTitle} = render(component)
+        expect(getByTitle('hidden-card-count')).toHaveTextContent('2')
+        expect(container).toMatchSnapshot()
     })
 })
 

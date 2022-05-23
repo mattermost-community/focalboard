@@ -164,7 +164,7 @@ describe('src/components/gallery/Gallery', () => {
         beforeEach(() => {
             jest.clearAllMocks()
         })
-        const {getByTitle} = render(wrapDNDIntl(
+        const {container, getByTitle} = render(wrapDNDIntl(
             <ReduxProvider store={storeTest}>
                 <Gallery
                     board={boardTest}
@@ -177,6 +177,7 @@ describe('src/components/gallery/Gallery', () => {
                 />
             </ReduxProvider>,
         ))
-        expect(getByTitle('limited-card-count').innerHTML).toBe('<span>2</span>')
+        expect(getByTitle('hidden-card-count').innerHTML).toBe('<span>2</span>')
+        expect(container).toMatchSnapshot()
     })
 })

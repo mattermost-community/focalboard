@@ -1,11 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {FormattedMessage, useIntl} from 'react-intl'
+import {FormattedMessage} from 'react-intl'
 
-import Button from '../../widgets/buttons/button'
-
-import {getHiddenCard} from '../../store/cards'
+import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
+import {GetHiddenCard} from '../../store/cards'
 
 import {useAppSelector} from '../../store/hooks'
 
@@ -31,8 +30,7 @@ type Props = {
 
 const Gallery = (props: Props): JSX.Element => {
     const {activeView, board, cards} = props
-    const limited = useAppSelector(getHiddenCard)
-    const intl = useIntl()
+    const hiddenCards = useAppSelector(GetHiddenCard)
 
     const visiblePropertyTemplates =
         activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
@@ -99,9 +97,11 @@ const Gallery = (props: Props): JSX.Element => {
                     />
                 </div>
             }
-            {limited.length > 0 && <div className='limitedCard'>
-                <div className='limitedCard-title'>{intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards Hidden'})}</div>
-                <Button title='limited-card-count'>{limited.length}</Button>
+            {hiddenCards.length > 0 &&
+            <div className='gallery-hidden-cards'>
+                <HiddenCardCount
+                    hiddenCards={hiddenCards}
+                />
             </div>}
         </div>
     )
