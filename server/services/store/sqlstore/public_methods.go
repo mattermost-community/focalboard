@@ -354,6 +354,11 @@ func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
 
 }
 
+func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
+	return s.getFileInfo(s.db, id)
+
+}
+
 func (s *SQLStore) GetLicense() *mmModel.License {
 	return s.getLicense(s.db)
 
@@ -691,6 +696,11 @@ func (s *SQLStore) RunDataRetention(globalRetentionDate int64, batchSize int64) 
 
 }
 
+func (s *SQLStore) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
+	return s.saveFileInfo(s.db, fileInfo)
+
+}
+
 func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error) {
 	return s.saveMember(s.db, bm)
 
@@ -703,6 +713,11 @@ func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Boa
 
 func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
 	return s.searchUsersByTeam(s.db, teamID, searchQuery)
+
+}
+
+func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
+	return s.sendMessage(s.db, message, postType, receipts)
 
 }
 

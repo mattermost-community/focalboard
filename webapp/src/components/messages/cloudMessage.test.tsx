@@ -43,6 +43,7 @@ describe('components/messages/CloudMessage', () => {
             create_at: 0,
             update_at: 0,
             is_bot: false,
+            roles: '',
         }
         const state = {
             users: {
@@ -73,6 +74,7 @@ describe('components/messages/CloudMessage', () => {
             create_at: 0,
             update_at: 0,
             is_bot: false,
+            roles: '',
         }
         const state = {
             users: {
@@ -101,6 +103,7 @@ describe('components/messages/CloudMessage', () => {
             create_at: 0,
             update_at: 0,
             is_bot: false,
+            roles: '',
         }
         const state = {
             users: {

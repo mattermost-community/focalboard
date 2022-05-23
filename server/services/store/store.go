@@ -3,11 +3,10 @@
 package store
 
 import (
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
-
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 // Store represents the abstraction of the data storage.
@@ -113,6 +112,10 @@ type Store interface {
 	DeleteCategory(categoryID, userID, teamID string) error
 
 	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error)
+
+	SendMessage(message, postType string, receipts []string) error
+	GetFileInfo(id string) (*mmModel.FileInfo, error)
+	SaveFileInfo(fileInfo *mmModel.FileInfo) error
 
 	// @withTransaction
 	AddUpdateCategoryBoard(userID, categoryID, blockID string) error

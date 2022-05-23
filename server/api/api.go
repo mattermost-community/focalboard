@@ -34,6 +34,8 @@ const (
 	ErrorNoTeamMessage = "No team"
 )
 
+var errEmpty = errors.New("")
+
 type PermissionError struct {
 	msg string
 }
@@ -155,6 +157,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	// System APIs
 	r.HandleFunc("/hello", a.handleHello).Methods("GET")
+
+	// cloud-specific functions
+	apiv2.HandleFunc("/teams/{teamID}/notifyadminupgrade", a.sessionRequired(a.handleNotifyAdminUpgrade)).Methods(http.MethodPost)
 
 	// limits
 	apiv2.HandleFunc("/limits", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
@@ -470,7 +475,12 @@ func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
 
 	createdCategory, err := a.app.CreateCategory(&category)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		if errors.Is(err, app.ErrViewsLimitReached) {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+		} else {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		}
+
 		return
 	}
 
@@ -4176,6 +4186,37 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, _ = w.Write(json)
+}
+
+func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v1/workspace/{workspaceID}/notifyadminupgrade handleNotifyAdminUpgrade
+	//
+	// Notifies admins for upgrade request.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", errEmpty)
+		return
+	}
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+
+	if err := a.app.NotifyPortalAdminsUpgradeRequest(teamID); err != nil {
+		jsonStringResponse(w, http.StatusOK, "{}")
+	}
 }
 
 func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {

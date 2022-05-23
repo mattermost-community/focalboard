@@ -95,3 +95,7 @@ func Intersection(x ...[]interface{}) []interface{} {
 
 	return result
 }
+
+func IsCloudLicense(license *mm_model.License) bool {
+	return license != nil && *license.Features.Cloud
+}

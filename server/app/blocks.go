@@ -13,6 +13,7 @@ import (
 )
 
 var ErrBlocksFromMultipleBoards = errors.New("the block set contain blocks from multiple boards")
+var ErrViewsLimitReached = errors.New("views limit reached for board")
 
 func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Block, error) {
 	if boardID == "" {
@@ -162,7 +163,21 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 
 	needsNotify := make([]model.Block, 0, len(blocks))
 	for i := range blocks {
-		err := a.store.InsertBlock(&blocks[i], modifiedByID)
+		// this check is needed to whitelist inbuilt template
+		// initialization. They do contain more than 5 views per board.
+		//if c.WorkspaceID != "0" && blocks[i].Type == model.TypeView {
+		withinLimit, err := a.isWithinViewsLimit(blocks[i])
+		if err != nil {
+			return nil, err
+		}
+
+		if !withinLimit {
+			a.logger.Info("views limit reached on board", mlog.String("board_id", blocks[i].ParentID))
+			return nil, ErrViewsLimitReached
+		}
+		//}
+
+		err = a.store.InsertBlock(&blocks[i], modifiedByID)
 		if err != nil {
 			return nil, err
 		}
@@ -184,6 +199,28 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 	})
 
 	return blocks, nil
+}
+
+func (a *App) isWithinViewsLimit(block model.Block) (bool, error) {
+	limits, err := a.GetBoardsCloudLimits()
+	if err != nil {
+		return false, err
+	}
+
+	if limits.Views == model.LimitUnlimited {
+		return true, nil
+	}
+
+	views, err := a.store.GetBlocksWithParentAndType(block.ParentID, block.ParentID, model.TypeView)
+	if err != nil {
+		return false, err
+	}
+
+	// < rather than <= because we'll be creating new view if this
+	// check passes. When that view is created, the limit will be reached.
+	// That's why we need to check for if existing + the being-created
+	// view doesn't exceed the limit.
+	return len(views) < limits.Views, nil
 }
 
 func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []model.Block) error {

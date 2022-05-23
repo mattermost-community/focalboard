@@ -81,6 +81,7 @@ describe('/components/viewMenu', () => {
                         activeView={activeView}
                         views={views}
                         readonly={false}
+                        allowCreateView={() => false}
                     />
                 </Router>
             </ReduxProvider>,
@@ -102,6 +103,7 @@ describe('/components/viewMenu', () => {
                         activeView={activeView}
                         views={views}
                         readonly={true}
+                        allowCreateView={() => false}
                     />
                 </Router>
             </ReduxProvider>,
