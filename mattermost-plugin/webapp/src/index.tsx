@@ -45,6 +45,7 @@ import ErrorBoundary from './error_boundary'
 import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
+import CloudUpgradeNudge from './components/cloudUpgradeNudge/cloudUpgradeNudge'
 
 function getSubpath(siteURL: string): string {
     const url = new URL(siteURL)
@@ -274,6 +275,7 @@ export default class Plugin {
                 }
             }
         })
+        this.registry?.registerPostTypeComponent('custom_cloud_upgrade_nudge', CloudUpgradeNudge)
     }
 
     uninitialize(): void {

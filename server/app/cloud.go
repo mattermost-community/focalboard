@@ -4,10 +4,18 @@
 package app
 
 import (
-	"github.com/mattermost/focalboard/server/model"
+	"errors"
+	"fmt"
 
+	"github.com/mattermost/focalboard/server/utils"
+
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+
+	"github.com/mattermost/focalboard/server/model"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
+
+var ErrNilPluginAPI = errors.New("server not running in plugin mode")
 
 // GetBoardsCloudLimits returns the limits of the server, and an empty
 // limits struct if there are no limits set.
@@ -46,13 +54,7 @@ func (a *App) GetBoardsCloudLimits() (*model.BoardsCloudLimits, error) {
 // IsCloud returns true if the server is running as a plugin in a
 // cloud licensed server.
 func (a *App) IsCloud() bool {
-	license := a.store.GetLicense()
-	if license == nil {
-		return false
-	}
-	return license.Features != nil &&
-		license.Features.Cloud != nil &&
-		*license.Features.Cloud
+	return utils.IsCloudLicense(a.store.GetLicense())
 }
 
 // IsCloudLimited returns true if the server is running in cloud mode
@@ -133,4 +135,56 @@ func (a *App) ApplyCloudLimits(blocks []model.Block) ([]model.Block, error) {
 	}
 
 	return limitedBlocks, nil
+}
+
+func (a *App) NotifyPortalAdminsUpgradeRequest(workspaceID string) error {
+	if a.pluginAPI == nil {
+		return ErrNilPluginAPI
+	}
+
+	team, err := a.store.GetWorkspaceTeam(workspaceID)
+	if err != nil {
+		return err
+	}
+
+	var ofWhat string
+	if team == nil {
+		ofWhat = "your organization"
+	} else {
+		ofWhat = team.DisplayName
+	}
+
+	message := fmt.Sprintf("A member of %s has notified you to upgrade this workspace before the trial ends.", ofWhat)
+
+	page := 0
+	getUsersOptions := &mmModel.UserGetOptions{
+		Active:  true,
+		Role:    mmModel.SystemAdminRoleId,
+		PerPage: 50,
+		Page:    page,
+	}
+
+	for ; true; page++ {
+		getUsersOptions.Page = page
+		systemAdmins, appErr := a.pluginAPI.GetUsers(getUsersOptions)
+		if appErr != nil {
+			a.logger.Error("failed to fetch system admins", mlog.Int("page_size", getUsersOptions.PerPage), mlog.Int("page", page), mlog.Err(appErr))
+			return appErr
+		}
+
+		if len(systemAdmins) == 0 {
+			break
+		}
+
+		receiptUserIDs := []string{}
+		for _, systemAdmin := range systemAdmins {
+			receiptUserIDs = append(receiptUserIDs, systemAdmin.Id)
+		}
+
+		if err := a.store.SendMessage(message, "custom_cloud_upgrade_nudge", receiptUserIDs); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

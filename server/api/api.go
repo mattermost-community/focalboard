@@ -34,6 +34,8 @@ const (
 	ErrorNoWorkspaceMessage = "No workspace"
 )
 
+var errEmpty = errors.New("")
+
 type PermissionError struct {
 	msg string
 }
@@ -115,6 +117,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	// archives
 	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/export", a.sessionRequired(a.handleArchiveExport)).Methods("GET")
 	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
+
+	// cloud-specific functions
+	apiv1.HandleFunc("/workspace/{workspaceID}/notifyadminupgrade", a.sessionRequired(a.handleNotifyAdminUpgrade)).Methods(http.MethodPost)
 
 	apiv1.HandleFunc("/boards/{boardID}/metadata", a.sessionRequired(a.handleGetBoardMetadata)).Methods("GET")
 	// limits
@@ -450,7 +455,12 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	newBlocks, err := a.app.InsertBlocks(*container, blocks, session.UserID, true)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		if errors.Is(err, app.ErrViewsLimitReached) {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+		} else {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		}
+
 		return
 	}
 
@@ -1360,6 +1370,31 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", contentType)
 
+	fileInfo, err := a.app.GetFileInfo(filename)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	if fileInfo != nil && fileInfo.Archived {
+		fileMetadata := map[string]interface{}{
+			"archived":  true,
+			"name":      fileInfo.Name,
+			"size":      fileInfo.Size,
+			"extension": fileInfo.Extension,
+		}
+
+		data, jsonErr := json.Marshal(fileMetadata)
+		if jsonErr != nil {
+			a.logger.Error("failed to marshal archived file metadata", mlog.String("filename", filename), mlog.Err(jsonErr))
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", jsonErr)
+			return
+		}
+
+		jsonBytesResponse(w, http.StatusBadRequest, data)
+		return
+	}
+
 	fileReader, err := a.app.GetFileReader(workspaceID, rootID, filename)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -1932,7 +1967,7 @@ func jsonStringResponse(w http.ResponseWriter, code int, message string) { //nol
 	fmt.Fprint(w, message)
 }
 
-func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) { //nolint:unparam
+func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, _ = w.Write(json)
@@ -1954,6 +1989,37 @@ func (a *API) handleGetUserWorkspaces(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonBytesResponse(w, http.StatusOK, data)
+}
+
+func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v1/workspace/{workspaceID}/notifyadminupgrade handleNotifyAdminUpgrade
+	//
+	// Notifies admins for upgrade request.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", errEmpty)
+		return
+	}
+
+	vars := mux.Vars(r)
+	workspaceID := vars["workspaceID"]
+
+	if err := a.app.NotifyPortalAdminsUpgradeRequest(workspaceID); err != nil {
+		jsonStringResponse(w, http.StatusOK, "{}")
+	}
 }
 
 func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
