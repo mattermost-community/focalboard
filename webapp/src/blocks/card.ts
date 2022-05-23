@@ -31,10 +31,10 @@ function createCard(block?: Block): Card {
         ...createBlock(block),
         type: 'card',
         fields: {
-            icon: block?.fields.icon || '',
-            properties: {...(block?.fields.properties || {})},
+            icon: block?.fields?.icon || '',
+            properties: {...(block?.fields?.properties || {})},
             contentOrder,
-            isTemplate: block?.fields.isTemplate || false,
+            isTemplate: block?.fields?.isTemplate || false,
         },
     }
 }

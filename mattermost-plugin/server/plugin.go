@@ -154,6 +154,17 @@ func (p *Plugin) OnActivate() error {
 		return err
 	}
 
+	limits, err := p.API.GetCloudLimits()
+	if err != nil {
+		fmt.Println("ERROR FETCHING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
+		return err
+	}
+
+	if err := server.App().SetCloudLimits(limits); err != nil {
+		fmt.Println("ERROR SETTING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
+		return err
+	}
+
 	p.server = server
 	return server.Start()
 }
@@ -493,4 +504,10 @@ func isBoardsLink(link string) bool {
 
 	workspaceID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
 	return workspaceID != "" && boardID != "" && viewID != "" && cardID != ""
+}
+
+func (p *Plugin) OnCloudLimitsUpdated(limits *mmModel.ProductLimits) {
+	if err := p.server.App().SetCloudLimits(limits); err != nil {
+		fmt.Println("Error setting the cloud limits for Boards", err)
+	}
 }

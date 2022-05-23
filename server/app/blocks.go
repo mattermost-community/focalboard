@@ -102,6 +102,13 @@ func (a *App) InsertBlock(c store.Container, block model.Block, modifiedByID str
 		go func() {
 			a.webhook.NotifyUpdate(block)
 			a.notifyBlockChanged(notify.Add, c, &block, nil, modifiedByID)
+
+			if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
+				a.logger.Error(
+					"UpdateCardLimitTimestamp failed after inserting a block",
+					mlog.Err(uErr),
+				)
+			}
 		}()
 	}
 	return err
@@ -142,6 +149,15 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID
 			if allowNotifications {
 				a.notifyBlockChanged(notify.Add, c, &block, nil, modifiedByID)
 			}
+		}
+	}()
+
+	go func() {
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after inserting a block",
+				mlog.Err(err),
+			)
 		}
 	}()
 
@@ -268,7 +284,15 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 	a.metrics.IncrementBlocksDeleted(1)
 	go func() {
 		a.notifyBlockChanged(notify.Delete, c, block, block, modifiedBy)
+
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after deleting a block",
+				mlog.Err(err),
+			)
+		}
 	}()
+
 	return nil
 }
 
@@ -303,7 +327,15 @@ func (a *App) UndeleteBlock(c store.Container, blockID string, modifiedBy string
 	go func() {
 		a.webhook.NotifyUpdate(*block)
 		a.notifyBlockChanged(notify.Add, c, block, nil, modifiedBy)
+
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after deleting a block",
+				mlog.Err(err),
+			)
+		}
 	}()
+
 	return nil
 }
 

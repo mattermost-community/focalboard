@@ -56,5 +56,8 @@ func StructToMap(v interface{}) (m map[string]interface{}) {
 }
 
 func IsCloudLicense(license *mm_model.License) bool {
-	return license != nil && *license.Features.Cloud
+	return license != nil &&
+		license.Features != nil &&
+		license.Features.Cloud != nil &&
+		*license.Features.Cloud
 }
