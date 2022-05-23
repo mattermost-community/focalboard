@@ -39,7 +39,7 @@ func TestDurationSelector(t *testing.T) {
 	})
 
 	t.Run("Test month", func(t *testing.T) {
-		timeResult := utils.GetTimeForMillis(sqlStore.durationSelector("2 days"))
+		timeResult := utils.GetTimeForMillis(sqlStore.durationSelector("2 months"))
 		timeAfter := time.Now().AddDate(0, -2, 1)
 		timeBefore := time.Now().AddDate(0, -2, -1)
 		require.Equal(t, timeResult.Before(timeAfter), true)
@@ -47,7 +47,7 @@ func TestDurationSelector(t *testing.T) {
 	})
 
 	t.Run("Test year", func(t *testing.T) {
-		timeResult := utils.GetTimeForMillis(sqlStore.durationSelector("2 days"))
+		timeResult := utils.GetTimeForMillis(sqlStore.durationSelector("2 years"))
 		timeAfter := time.Now().AddDate(-2, 0, 1)
 		timeBefore := time.Now().AddDate(-2, 0, -1)
 		require.Equal(t, timeResult.Before(timeAfter), true)
