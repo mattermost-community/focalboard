@@ -294,7 +294,7 @@
   "default-properties.title": "Title",
   "error.back-to-boards": "Go to the Dashboard",
   "error.back-to-home": "Back to Home",
-  "error.go-login": "Login",
+  "error.go-login": "Log in",
   "error.not-logged-in": "Your session may have expired or you're not logged in. Log in again to access Boards.",
   "error.page.title": "Sorry, something went wrong",
   "error.unknown": "An error occurred.",
