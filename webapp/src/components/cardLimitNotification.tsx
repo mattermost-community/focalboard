@@ -48,7 +48,7 @@ const CardLimitNotification = () => {
         if (me) {
             const patch: UserConfigPatch = {
                 updatedFields: {
-                    focalboard_cardLimitSnoozeUntil: `${Date.now() + snoozeTime}`,
+                    focalboard_cardHiddenWarningSnoozeUntil: `${Date.now() + snoozeTime}`,
                 },
             }
 
