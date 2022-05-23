@@ -82,6 +82,7 @@ type Store interface {
 	HasWorkspaceAccess(userID string, workspaceID string) (bool, error)
 	GetWorkspaceCount() (int64, error)
 	GetUserWorkspaces(userID string) ([]model.UserWorkspace, error)
+	GetUserWorkspacesInTeam(userID string, teamID string) ([]model.UserWorkspace, error)
 	CreatePrivateWorkspace(userID string) (string, error)
 
 	CreateSubscription(c Container, sub *model.Subscription) (*model.Subscription, error)
@@ -109,8 +110,8 @@ type Store interface {
 	GetLicense() *mmModel.License
 
 	// Insights
-	GetTeamBoardsInsights(teamID string, duration string) ([]*model.BoardInsight, error)
-	GetUserBoardsInsights(userID string, teamID string, duration string) ([]*model.BoardInsight, error)
+	GetTeamBoardsInsights(duration string, channelIDs []string) ([]*model.BoardInsight, error)
+	GetUserBoardsInsights(userID string, duration string, channelIDs []string) ([]*model.BoardInsight, error)
 }
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.

@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -11,50 +12,29 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, duration string) ([]*model.BoardInsight, error) {
+func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, duration string, channelIDs []string) ([]*model.BoardInsight, error) {
 	/*
 		Get top private, public boards, combine the list and filter the top 10. Note we can't limit 10 for subqueries.
 	*/
 
-	// safe to use channels, channelmembers here since we're checking that user belongs to team, and without mm-auth, the auth-check returns false and
-	// store function won't be called.
 	qb := s.getQueryBuilder(db)
-	publicBoards := qb.Select(`blocks.id, blocks.fields->>'icon' as icon, blocks.title,
+	publicBoards := qb.Select(`blocks.id, blocks.title,
 		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
-		Prefix("(").
 		From(s.tablePrefix + "blocks_history as blocks_history").
 		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
-		Join("PublicChannels as ch on ch.id = blocks_history.workspace_id").
 		Where(sq.Gt{"blocks_history.update_at": s.durationSelector(duration)}).
-		Where(sq.Eq{"ch.teamid": teamID}).
+		Where(sq.Eq{"blocks_history.workspace_id": channelIDs}).
 		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
 		Where(sq.Eq{"blocks.delete_at": 0}).
-		GroupBy("blocks.title, blocks.created_by, blocks.id, blocks_history.modified_by, icon")
+		GroupBy("blocks.title, blocks.created_by, blocks.id, blocks_history.modified_by")
 
-	privateBoards := qb.Select(`blocks.id, blocks.fields->>'icon' as icon, blocks.title,
-		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
-		Prefix(") UNION ALL (").
-		From(s.tablePrefix + "blocks_history as blocks_history").
-		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
-		Join("channels as ch on ch.id = blocks_history.workspace_id").
-		Where(sq.Gt{"blocks_history.update_at": s.durationSelector(duration)}).
-		Where(sq.Eq{"ch.teamid": teamID}).
-		Where(sq.Eq{"ch.type": "P"}).
-		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
-		Where(sq.Eq{"blocks.delete_at": 0}).
-		GroupBy("blocks.title, blocks.created_by, blocks.id, blocks_history.modified_by, icon").
-		Suffix(")")
-
-	boardsActivity := publicBoards.SuffixExpr(privateBoards)
-
-	insightsQuery := qb.Select(fmt.Sprintf("id, title, icon, sum(count) as activity_count, %s as active_users, created_by",
+	insightsQuery := qb.Select(fmt.Sprintf("id, title, sum(count) as activity_count, %s as active_users, created_by",
 		s.concatenationSelector("distinct modified_by", ","))).
-		FromSelect(boardsActivity, "boards_and_blocks_history").
-		GroupBy("id, title, icon, created_by").
+		FromSelect(publicBoards, "boards_and_blocks_history").
+		GroupBy("id, title, created_by").
 		OrderBy("activity_count desc").
 		Limit(10)
 
-	insightsQuery = insightsQuery.PlaceholderFormat(sq.Dollar)
 	rows, err := insightsQuery.Query()
 
 	if err != nil {
@@ -68,55 +48,41 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, durati
 		s.logger.Debug(`Team insights parsing error`, mlog.Err(err))
 		return nil, err
 	}
+	boardInsights, err = populateIcons(s, db, boardInsights)
+	if err != nil {
+		s.logger.Debug(`Team insights icon populate error`, mlog.Err(err))
+		return nil, err
+	}
 
 	return boardInsights, nil
 }
 
-func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, teamID string, duration string) ([]*model.BoardInsight, error) {
+func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string,
+	duration string, channelIDs []string) ([]*model.BoardInsight, error) {
 	/**
 	Get top 10 private, public boards, combine the list and filter the top 10
 	*/
 	qb := s.getQueryBuilder(db)
-	publicBoards := qb.Select(`blocks.id, blocks.fields->>'icon' as icon, blocks.title,
+	publicBoards := qb.Select(`blocks.id, blocks.title,
 		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
-		Prefix("(").
 		From(s.tablePrefix + "blocks_history as blocks_history").
 		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
-		Join("PublicChannels as ch on ch.id = blocks_history.workspace_id").
 		Where(sq.Gt{"blocks_history.update_at": s.durationSelector(duration)}).
-		Where(sq.Eq{"ch.teamid": teamID}).
+		Where(sq.Eq{"blocks_history.workspace_id": channelIDs}).
 		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
 		Where(sq.Eq{"blocks.delete_at": 0}).
-		GroupBy("blocks.title, blocks.created_by, blocks.id, blocks_history.modified_by, icon").
-		Limit(10)
+		GroupBy("blocks.title, blocks.created_by, blocks.id, blocks_history.modified_by")
 
-	privateBoards := qb.Select(`blocks.id, blocks.fields->>'icon' as icon, blocks.title,
-		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
-		Prefix(") UNION ALL (").
-		From(s.tablePrefix + "blocks_history as blocks_history").
-		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
-		Join("channels as ch on ch.id = blocks_history.workspace_id").
-		Where(sq.Gt{"blocks_history.update_at": s.durationSelector(duration)}).
-		Where(sq.Eq{"ch.teamid": teamID}).
-		Where(sq.Eq{"ch.type": "P"}).
-		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
-		Where(sq.Eq{"blocks.delete_at": 0}).
-		GroupBy("blocks.title, blocks.created_by, blocks.id, blocks_history.modified_by, icon").
-		Limit(10).
-		Suffix(")")
-
-	boardsActivity := publicBoards.SuffixExpr(privateBoards)
-
-	userInsightsQuery := qb.Select("*").FromSelect(qb.Select(fmt.Sprintf("id, title, icon, sum(count) as activity_count, %s as active_users, created_by",
+	userInsightsQuery := qb.Select("*").FromSelect(qb.Select(fmt.Sprintf("id, title, sum(count) as activity_count, %s as active_users, created_by",
 		s.concatenationSelector("distinct modified_by", ","))).
-		FromSelect(boardsActivity, "boards_and_blocks_history").
-		GroupBy("id, title, icon, created_by").
+		FromSelect(publicBoards, "boards_and_blocks_history").
+		GroupBy("id, title, created_by").
 		OrderBy("activity_count desc"), "team_insights").
 		Where(sq.Eq{
 			"created_by": userID,
 		}).
 		// due to lack of position operator, we have to hardcode arguments, and placeholder here
-		Where(s.elementInColumn(11, "active_users")).
+		Where(s.elementInColumn(5+len(channelIDs), "active_users")).
 		Limit(10)
 	userInsightsQueryStr, args, err := userInsightsQuery.ToSql()
 	if err != nil {
@@ -140,6 +106,11 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, teamID
 		s.logger.Debug(`User insights rows parsing error`, mlog.Err(err))
 		return nil, err
 	}
+	boardInsights, err = populateIcons(s, db, boardInsights)
+	if err != nil {
+		s.logger.Debug(`User insights icon populate error`, mlog.Err(err))
+		return nil, err
+	}
 
 	return boardInsights, nil
 }
@@ -152,7 +123,6 @@ func boardsInsightsFromRows(rows *sql.Rows) ([]*model.BoardInsight, error) {
 		err := rows.Scan(
 			&boardInsight.BoardID,
 			&boardInsight.Title,
-			&boardInsight.Icon,
 			&boardInsight.ActivityCount,
 			&boardInsight.ActiveUsers,
 			&boardInsight.CreatedBy,
@@ -161,6 +131,36 @@ func boardsInsightsFromRows(rows *sql.Rows) ([]*model.BoardInsight, error) {
 			return nil, err
 		}
 		boardsInsights = append(boardsInsights, &boardInsight)
+	}
+	return boardsInsights, nil
+}
+
+func populateIcons(s *SQLStore, db sq.BaseRunner, boardsInsights []*model.BoardInsight) ([]*model.BoardInsight, error) {
+	qb := s.getQueryBuilder(db)
+	for _, boardInsight := range boardsInsights {
+		boardID := boardInsight.BoardID
+		iconQuery := qb.Select("COALESCE(fields, '{}')").From(s.tablePrefix + "blocks").Where(sq.Eq{"id": boardID})
+		rows, err := iconQuery.Query()
+		if err != nil {
+			return nil, err
+		}
+		for rows.Next() {
+			var fieldsJSON string
+			var fields map[string]interface{}
+			err := rows.Scan(
+				&fieldsJSON,
+			)
+			if err != nil {
+				return nil, err
+			}
+			err = json.Unmarshal([]byte(fieldsJSON), &fields)
+			if err != nil {
+				// handle this error
+				s.logger.Error(`ERROR populateIcons fields`, mlog.Err(err))
+				return nil, err
+			}
+			boardInsight.Icon = fields["icon"].(string)
+		}
 	}
 	return boardsInsights, nil
 }

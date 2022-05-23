@@ -412,6 +412,44 @@ func (s *MattermostAuthLayer) GetUserWorkspaces(userID string) ([]model.UserWork
 	return s.userWorkspacesFromRows(rows)
 }
 
+func (s *MattermostAuthLayer) GetUserWorkspacesInTeam(userID string, teamID string) ([]model.UserWorkspace, error) {
+	var query sq.SelectBuilder
+
+	var nonTemplateFilter string
+
+	switch s.dbType {
+	case mysqlDBType:
+		nonTemplateFilter = "focalboard_blocks.fields LIKE '%\"isTemplate\":false%'"
+	case postgresDBType:
+		nonTemplateFilter = "focalboard_blocks.fields ->> 'isTemplate' = 'false'"
+	default:
+		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
+	}
+
+	query = s.getQueryBuilder().
+		Select("Channels.ID", "Channels.DisplayName", "COUNT(focalboard_blocks.id), Channels.Type, Channels.Name").
+		From("ChannelMembers").
+		// select channels without a corresponding workspace
+		LeftJoin(
+			"focalboard_blocks ON focalboard_blocks.workspace_id = ChannelMembers.ChannelId AND "+
+				"focalboard_blocks.type = 'board' AND "+
+				nonTemplateFilter,
+		).
+		Join("Channels ON ChannelMembers.ChannelId = Channels.Id").
+		Where(sq.Eq{"ChannelMembers.UserId": userID}).
+		Where(sq.Eq{"Channels.TeamID": teamID}).
+		GroupBy("Channels.Id", "Channels.DisplayName")
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("ERROR GetUserWorkspaces", mlog.Err(err))
+		return nil, err
+	}
+
+	defer s.CloseRows(rows)
+	return s.userWorkspacesFromRows(rows)
+}
+
 type UserWorkspaceRawModel struct {
 	ID         string `json:"id"`
 	Title      string `json:"title"`

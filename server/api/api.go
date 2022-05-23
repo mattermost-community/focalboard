@@ -171,7 +171,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 
 	auditRec := a.makeAuditRecord(r, "getTeamBoardsInsights", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	boardsInsights, err := a.app.GetTeamBoardsInsights(teamID, duration)
+	boardsInsights, err := a.app.GetTeamBoardsInsights(userID, teamID, duration)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "duration="+duration, err)
 		return

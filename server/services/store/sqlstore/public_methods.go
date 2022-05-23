@@ -16,8 +16,6 @@ import (
 	"context"
 	"time"
 
-	mmmodel "github.com/mattermost/mattermost-server/v6/model"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 
@@ -159,13 +157,14 @@ func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
 
 }
 
-//nolint:typecheck
-func (s *SQLStore) GetFileInfo(id string) (*mmmodel.FileInfo, error) {
+func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
 	return s.getFileInfo(s.db, id)
+
 }
 
 func (s *SQLStore) GetLicense() *mmModel.License {
 	return s.getLicense(s.db)
+
 }
 
 func (s *SQLStore) GetNextNotificationHint(remove bool) (*model.NotificationHint, error) {
@@ -243,13 +242,13 @@ func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 
 }
 
-func (s *SQLStore) GetTeamBoardsInsights(teamID string, duration string) ([]*model.BoardInsight, error) {
-	return s.getTeamBoardsInsights(s.db, teamID, duration)
+func (s *SQLStore) GetTeamBoardsInsights(duration string, channelIDs []string) ([]*model.BoardInsight, error) {
+	return s.getTeamBoardsInsights(s.db, duration, channelIDs)
 
 }
 
-func (s *SQLStore) GetUserBoardsInsights(userID string, teamID string, duration string) ([]*model.BoardInsight, error) {
-	return s.getUserBoardsInsights(s.db, userID, teamID, duration)
+func (s *SQLStore) GetUserBoardsInsights(userID string, duration string, channelIDs []string) ([]*model.BoardInsight, error) {
+	return s.getUserBoardsInsights(s.db, userID, duration, channelIDs)
 
 }
 
@@ -270,6 +269,11 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 
 func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
 	return s.getUserWorkspaces(s.db, userID)
+
+}
+
+func (s *SQLStore) GetUserWorkspacesInTeam(userID string, teamID string) ([]model.UserWorkspace, error) {
+	return s.getUserWorkspacesInTeam(s.db, userID, teamID)
 
 }
 
@@ -404,8 +408,7 @@ func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
 
 }
 
-//nolint:typecheck
-func (s *SQLStore) SaveFileInfo(fileInfo *mmmodel.FileInfo) error {
+func (s *SQLStore) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
 	return s.saveFileInfo(s.db, fileInfo)
 
 }

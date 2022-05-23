@@ -645,7 +645,7 @@ func (mr *MockStoreMockRecorder) GetSystemSettings() *gomock.Call {
 }
 
 // GetTeamBoardsInsights mocks base method.
-func (m *MockStore) GetTeamBoardsInsights(arg0, arg1 string) ([]*model.BoardInsight, error) {
+func (m *MockStore) GetTeamBoardsInsights(arg0 string, arg1 []string) ([]*model.BoardInsight, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTeamBoardsInsights", arg0, arg1)
 	ret0, _ := ret[0].([]*model.BoardInsight)
@@ -660,7 +660,7 @@ func (mr *MockStoreMockRecorder) GetTeamBoardsInsights(arg0, arg1 interface{}) *
 }
 
 // GetUserBoardsInsights mocks base method.
-func (m *MockStore) GetUserBoardsInsights(arg0, arg1, arg2 string) ([]*model.BoardInsight, error) {
+func (m *MockStore) GetUserBoardsInsights(arg0, arg1 string, arg2 []string) ([]*model.BoardInsight, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserBoardsInsights", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]*model.BoardInsight)
@@ -732,6 +732,21 @@ func (m *MockStore) GetUserWorkspaces(arg0 string) ([]model.UserWorkspace, error
 func (mr *MockStoreMockRecorder) GetUserWorkspaces(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserWorkspaces", reflect.TypeOf((*MockStore)(nil).GetUserWorkspaces), arg0)
+}
+
+// GetUserWorkspacesInTeam mocks base method.
+func (m *MockStore) GetUserWorkspacesInTeam(arg0, arg1 string) ([]model.UserWorkspace, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserWorkspacesInTeam", arg0, arg1)
+	ret0, _ := ret[0].([]model.UserWorkspace)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserWorkspacesInTeam indicates an expected call of GetUserWorkspacesInTeam.
+func (mr *MockStoreMockRecorder) GetUserWorkspacesInTeam(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserWorkspacesInTeam", reflect.TypeOf((*MockStore)(nil).GetUserWorkspacesInTeam), arg0, arg1)
 }
 
 // GetUsersByWorkspace mocks base method.
