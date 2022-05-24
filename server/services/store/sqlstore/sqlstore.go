@@ -155,3 +155,7 @@ func (s *SQLStore) parameterPlaceholder(count int) string {
 	}
 	return ""
 }
+
+func (s *SQLStore) getCloudLimits(db sq.BaseRunner) (*mmModel.ProductLimits, error) {
+	return nil, nil
+}

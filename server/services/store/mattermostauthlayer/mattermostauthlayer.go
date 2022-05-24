@@ -715,3 +715,7 @@ func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 func (s *MattermostAuthLayer) CheckUserIDInTeam(userID string, teamID string) bool {
 	return s.pluginAPI.HasPermissionToTeam(userID, teamID, mmModel.PermissionViewTeam)
 }
+
+func (s *MattermostAuthLayer) GetCloudLimits() (*mmModel.ProductLimits, error) {
+	return s.pluginAPI.GetCloudLimits()
+}

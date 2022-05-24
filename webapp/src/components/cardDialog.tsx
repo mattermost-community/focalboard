@@ -168,8 +168,8 @@ const CardDialog = (props: Props): JSX.Element => {
             <Dialog
                 className='cardDialog'
                 onClose={props.onClose}
-                toolsMenu={!props.readonly && menu}
-                toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar}
+                toolsMenu={!props.readonly && !card?.limited && menu}
+                toolbar={!isTemplate && Utils.isFocalboardPlugin() && !card?.limited && toolbar}
             >
                 {isTemplate &&
                     <div className='banner'>
@@ -189,6 +189,7 @@ const CardDialog = (props: Props): JSX.Element => {
                         contents={contents}
                         comments={comments}
                         readonly={props.readonly}
+                        onClose={props.onClose}
                     />}
 
                 {!card &&

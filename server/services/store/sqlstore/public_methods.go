@@ -152,12 +152,21 @@ func (s *SQLStore) GetBoardAndCardByID(c store.Container, blockID string) (*mode
 
 }
 
+func (s *SQLStore) GetCardLimitTimestamp() (int64, error) {
+	return s.getCardLimitTimestamp(s.db)
+
+}
+
+func (s *SQLStore) GetCloudLimits() (*mmModel.ProductLimits, error) {
+	return s.getCloudLimits(s.db)
+
+}
+
 func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
 	return s.getDefaultTemplateBlocks(s.db)
 
 }
 
-//nolint:typecheck
 func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
 	return s.getFileInfo(s.db, id)
 
@@ -250,6 +259,10 @@ func (s *SQLStore) GetTeamBoardsInsights(duration string, channelIDs []string) (
 
 func (s *SQLStore) GetUserBoardsInsights(userID string, duration string, channelIDs []string) ([]*model.BoardInsight, error) {
 	return s.getUserBoardsInsights(s.db, userID, duration, channelIDs)
+}
+
+func (s *SQLStore) GetUsedCardsCount() (int, error) {
+	return s.getUsedCardsCount(s.db)
 
 }
 
@@ -449,6 +462,11 @@ func (s *SQLStore) UndeleteBlock(c store.Container, blockID string, modifiedBy s
 	}
 
 	return nil
+
+}
+
+func (s *SQLStore) UpdateCardLimitTimestamp(cardLimit int) (int64, error) {
+	return s.updateCardLimitTimestamp(s.db, cardLimit)
 
 }
 

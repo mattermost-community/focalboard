@@ -12,6 +12,8 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 )
 
+const CardLimitTimestampSystemKey = "card_limit_timestamp"
+
 // Conainer represents a container in a store
 // Using a struct to make extending this easier in the future.
 type Container struct {
@@ -102,6 +104,10 @@ type Store interface {
 	RemoveDefaultTemplates(blocks []model.Block) error
 	GetDefaultTemplateBlocks() ([]model.Block, error)
 
+	GetUsedCardsCount() (int, error)
+	GetCardLimitTimestamp() (int64, error)
+	UpdateCardLimitTimestamp(cardLimit int) (int64, error)
+
 	DBType() string
 
 	IsErrNotFound(err error) bool
@@ -115,6 +121,7 @@ type Store interface {
 	// Insights
 	GetTeamBoardsInsights(duration string, channelIDs []string) ([]*model.BoardInsight, error)
 	GetUserBoardsInsights(userID string, duration string, channelIDs []string) ([]*model.BoardInsight, error)
+	GetCloudLimits() (*mmModel.ProductLimits, error)
 }
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.
