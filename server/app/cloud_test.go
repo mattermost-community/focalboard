@@ -9,6 +9,9 @@ import (
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
+
+	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
 )
 
 func TestIsCloud(t *testing.T) {
@@ -310,5 +313,225 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 
 		err := th.App.NotifyPortalAdminsUpgradeRequest("team-id-1")
 		assert.NoError(t, err)
+	})
+}
+
+func TestGetTemplateMapForBlocks(t *testing.T) {
+	container := store.Container{
+		WorkspaceID: "0",
+	}
+
+	t.Run("should not access the database if all boards are present already in the blocks", func(t *testing.T) {
+		th, tearDown := SetupTestHelper(t)
+		defer tearDown()
+
+		blocks := []model.Block{
+			{
+				ID:       "board1",
+				Type:     model.TypeBoard,
+				ParentID: "board1",
+				RootID:   "board1",
+				Fields:   map[string]interface{}{"isTemplate": true},
+			},
+			{
+				ID:       "card1",
+				Type:     model.TypeCard,
+				ParentID: "board1",
+				RootID:   "board1",
+			},
+			{
+				ID:       "board2",
+				Type:     model.TypeBoard,
+				ParentID: "board2",
+				RootID:   "board2",
+				Fields:   map[string]interface{}{"isTemplate": false},
+			},
+			{
+				ID:       "card2",
+				Type:     model.TypeCard,
+				ParentID: "board2",
+				RootID:   "board2",
+			},
+			{
+				ID:       "text2",
+				Type:     model.TypeText,
+				ParentID: "card2",
+				RootID:   "board2",
+			},
+		}
+
+		templateMap, err := th.App.getTemplateMapForBlocks(container, blocks)
+		require.NoError(t, err)
+		require.Len(t, templateMap, 2)
+		require.Contains(t, templateMap, "board1")
+		require.True(t, templateMap["board1"])
+		require.Contains(t, templateMap, "board2")
+		require.False(t, templateMap["board2"])
+	})
+
+	t.Run("should fetch boards from the database if not present", func(t *testing.T) {
+		th, tearDown := SetupTestHelper(t)
+		defer tearDown()
+
+		blocks := []model.Block{
+			{
+				ID:       "board1",
+				Type:     model.TypeBoard,
+				ParentID: "board1",
+				RootID:   "board1",
+				Fields:   map[string]interface{}{"isTemplate": true},
+			},
+			{
+				ID:       "card1",
+				Type:     model.TypeCard,
+				ParentID: "board1",
+				RootID:   "board1",
+			},
+			{
+				ID:       "card2",
+				Type:     model.TypeCard,
+				ParentID: "board2",
+				RootID:   "board2",
+			},
+			{
+				ID:       "text3",
+				Type:     model.TypeText,
+				ParentID: "card3",
+				RootID:   "board3",
+			},
+		}
+
+		// doesn't have Fields, so it should be treated as not
+		// template
+		board2 := model.Block{
+			ID:       "board2",
+			Type:     model.TypeBoard,
+			ParentID: "board2",
+			RootID:   "board2",
+		}
+
+		board3 := model.Block{
+			ID:       "board3",
+			Type:     model.TypeBoard,
+			ParentID: "board3",
+			RootID:   "board3",
+			Fields:   map[string]interface{}{"isTemplate": true},
+		}
+
+		th.Store.EXPECT().
+			GetBlocksByIDs(container, gomock.InAnyOrder([]string{"board2", "board3"})).
+			Return([]model.Block{board2, board3}, nil)
+
+		templateMap, err := th.App.getTemplateMapForBlocks(container, blocks)
+		require.NoError(t, err)
+		require.Len(t, templateMap, 3)
+		require.Contains(t, templateMap, "board1")
+		require.True(t, templateMap["board1"])
+		require.Contains(t, templateMap, "board2")
+		require.False(t, templateMap["board2"])
+		require.Contains(t, templateMap, "board3")
+		require.True(t, templateMap["board3"])
+	})
+}
+
+func TestApplyCloudLimits(t *testing.T) {
+	container := store.Container{
+		WorkspaceID: "0",
+	}
+
+	fakeLicense := &mmModel.License{
+		Features: &mmModel.Features{Cloud: mmModel.NewBool(true)},
+	}
+
+	blocks := []model.Block{
+		{
+			ID:       "board1",
+			Type:     model.TypeBoard,
+			ParentID: "board1",
+			RootID:   "board1",
+			UpdateAt: 100,
+		},
+		{
+			ID:       "card1",
+			Type:     model.TypeCard,
+			ParentID: "board1",
+			RootID:   "board1",
+			UpdateAt: 100,
+		},
+		{
+			ID:       "text1",
+			Type:     model.TypeText,
+			ParentID: "card1",
+			RootID:   "board1",
+			UpdateAt: 100,
+		},
+		{
+			ID:       "card2",
+			Type:     model.TypeCard,
+			ParentID: "board1",
+			RootID:   "board1",
+			UpdateAt: 200,
+		},
+		{
+			ID:       "template",
+			Type:     model.TypeBoard,
+			ParentID: "template",
+			RootID:   "template",
+			UpdateAt: 1,
+			Fields:   map[string]interface{}{"isTemplate": true},
+		},
+		{
+			ID:       "card-from-template",
+			Type:     model.TypeCard,
+			ParentID: "template",
+			RootID:   "template",
+			UpdateAt: 1,
+		},
+	}
+
+	t.Run("if the server is not limited, it should return the blocks untouched", func(t *testing.T) {
+		th, tearDown := SetupTestHelper(t)
+		defer tearDown()
+
+		require.Zero(t, th.App.CardLimit)
+
+		newBlocks, err := th.App.ApplyCloudLimits(container, blocks)
+		require.NoError(t, err)
+		require.ElementsMatch(t, blocks, newBlocks)
+	})
+
+	t.Run("if the server is limited, it should limit the blocks that are beyond the card limit timestamp", func(t *testing.T) {
+		findBlock := func(blocks []model.Block, id string) model.Block {
+			for _, block := range blocks {
+				if block.ID == id {
+					return block
+				}
+			}
+			require.FailNow(t, "block %s not found", id)
+			return model.Block{} // this should never be reached
+		}
+
+		th, tearDown := SetupTestHelper(t)
+		defer tearDown()
+
+		th.App.CardLimit = 5
+
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
+		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(150), nil)
+
+		newBlocks, err := th.App.ApplyCloudLimits(container, blocks)
+		require.NoError(t, err)
+
+		// boards are never limited
+		require.False(t, findBlock(newBlocks, "board1").Limited)
+		// should be limited as it's beyond the threshold
+		require.True(t, findBlock(newBlocks, "card1").Limited)
+		// only cards are limited
+		require.False(t, findBlock(newBlocks, "text1").Limited)
+		// should not be limited as it's not beyond the threshold
+		require.False(t, findBlock(newBlocks, "card2").Limited)
+		// cards belonging to templates are never limited
+		require.False(t, findBlock(newBlocks, "template").Limited)
+		require.False(t, findBlock(newBlocks, "card-from-template").Limited)
 	})
 }
