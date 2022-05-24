@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 
@@ -11,6 +12,8 @@ import (
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+var ErrViewsLimitReached = errors.New("views limit reached for board")
 
 func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([]model.Block, error) {
 	if blockType != "" && parentID != "" {
@@ -99,6 +102,13 @@ func (a *App) InsertBlock(c store.Container, block model.Block, modifiedByID str
 		go func() {
 			a.webhook.NotifyUpdate(block)
 			a.notifyBlockChanged(notify.Add, c, &block, nil, modifiedByID)
+
+			if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
+				a.logger.Error(
+					"UpdateCardLimitTimestamp failed after inserting a block",
+					mlog.Err(uErr),
+				)
+			}
 		}()
 	}
 	return err
@@ -107,6 +117,20 @@ func (a *App) InsertBlock(c store.Container, block model.Block, modifiedByID str
 func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID string, allowNotifications bool) ([]model.Block, error) {
 	needsNotify := make([]model.Block, 0, len(blocks))
 	for i := range blocks {
+		// this check is needed to whitelist inbuilt template
+		// initialization. They do contain more than 5 views per board.
+		if c.WorkspaceID != "0" && blocks[i].Type == model.TypeView {
+			withinLimit, err := a.isWithinViewsLimit(c, blocks[i])
+			if err != nil {
+				return nil, err
+			}
+
+			if !withinLimit {
+				a.logger.Info("views limit reached on board", mlog.String("board_id", blocks[i].ParentID), mlog.String("workspace_id", c.WorkspaceID))
+				return nil, ErrViewsLimitReached
+			}
+		}
+
 		err := a.store.InsertBlock(c, &blocks[i], modifiedByID)
 		if err != nil {
 			return nil, err
@@ -128,7 +152,38 @@ func (a *App) InsertBlocks(c store.Container, blocks []model.Block, modifiedByID
 		}
 	}()
 
+	go func() {
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after inserting a block",
+				mlog.Err(err),
+			)
+		}
+	}()
+
 	return blocks, nil
+}
+
+func (a *App) isWithinViewsLimit(c store.Container, block model.Block) (bool, error) {
+	limits, err := a.GetBoardsCloudLimits()
+	if err != nil {
+		return false, err
+	}
+
+	if limits.Views == model.LimitUnlimited {
+		return true, nil
+	}
+
+	views, err := a.store.GetBlocksWithParentAndType(c, block.ParentID, model.TypeView)
+	if err != nil {
+		return false, err
+	}
+
+	// < rather than <= because we'll be creating new view if this
+	// check passes. When that view is created, the limit will be reached.
+	// That's why we need to check for if existing + the being-created
+	// view doesn't exceed the limit.
+	return len(views) < limits.Views, nil
 }
 
 func (a *App) CopyCardFiles(sourceBoardID string, destWorkspaceID string, blocks []model.Block) error {
@@ -229,7 +284,15 @@ func (a *App) DeleteBlock(c store.Container, blockID string, modifiedBy string) 
 	a.metrics.IncrementBlocksDeleted(1)
 	go func() {
 		a.notifyBlockChanged(notify.Delete, c, block, block, modifiedBy)
+
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after deleting a block",
+				mlog.Err(err),
+			)
+		}
 	}()
+
 	return nil
 }
 
@@ -264,7 +327,15 @@ func (a *App) UndeleteBlock(c store.Container, blockID string, modifiedBy string
 	go func() {
 		a.webhook.NotifyUpdate(*block)
 		a.notifyBlockChanged(notify.Add, c, block, nil, modifiedBy)
+
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after deleting a block",
+				mlog.Err(err),
+			)
+		}
 	}()
+
 	return nil
 }
 

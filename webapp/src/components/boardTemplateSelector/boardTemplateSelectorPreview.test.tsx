@@ -168,6 +168,11 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                     },
                 }],
             },
+            limits: {
+                limits: {
+                    views: 0,
+                },
+            },
         }
         store = mockStateStore([], state)
     })

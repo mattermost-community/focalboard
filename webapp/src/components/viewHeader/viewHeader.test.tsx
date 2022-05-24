@@ -60,6 +60,11 @@ describe('components/viewHeader/viewHeader', () => {
             },
             current: 'boardView',
         },
+        limits: {
+            limits: {
+                views: 0,
+            },
+        },
     }
     const store = mockStateStore([], state)
     test('return viewHeader', () => {

@@ -105,7 +105,7 @@ func (p *Plugin) OnActivate() error {
 		return fmt.Errorf("error initializing the DB: %w", err)
 	}
 	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API)
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API, client)
 		if err2 != nil {
 			return fmt.Errorf("error initializing the DB: %w", err2)
 		}
@@ -145,11 +145,23 @@ func (p *Plugin) OnActivate() error {
 		WSAdapter:       p.wsPluginAdapter,
 		NotifyBackends:  notifyBackends,
 		PluginAPI:       p.API,
+		Client:          client,
 	}
 
 	server, err := server.New(params)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
+		return err
+	}
+
+	limits, err := p.API.GetCloudLimits()
+	if err != nil {
+		fmt.Println("ERROR FETCHING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
+		return err
+	}
+
+	if err := server.App().SetCloudLimits(limits); err != nil {
+		fmt.Println("ERROR SETTING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
 		return err
 	}
 
@@ -492,4 +504,10 @@ func isBoardsLink(link string) bool {
 
 	workspaceID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
 	return workspaceID != "" && boardID != "" && viewID != "" && cardID != ""
+}
+
+func (p *Plugin) OnCloudLimitsUpdated(limits *mmModel.ProductLimits) {
+	if err := p.server.App().SetCloudLimits(limits); err != nil {
+		fmt.Println("Error setting the cloud limits for Boards", err)
+	}
 }

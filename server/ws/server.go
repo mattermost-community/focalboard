@@ -64,12 +64,6 @@ type Server struct {
 	logger               *mlog.Logger
 }
 
-// UpdateClientConfig is sent on block updates.
-type UpdateClientConfig struct {
-	Action       string             `json:"action"`
-	ClientConfig model.ClientConfig `json:"clientconfig"`
-}
-
 type websocketSession struct {
 	client *wsClient
 	userID string
@@ -538,5 +532,9 @@ func (ws *Server) BroadcastConfigChange(clientConfig model.ClientConfig) {
 }
 
 func (ws *Server) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
+	// not implemented for standalone server.
+}
+
+func (ws *Server) BroadcastCardLimitTimestampChange(cardLimitTimestamp int64) {
 	// not implemented for standalone server.
 }

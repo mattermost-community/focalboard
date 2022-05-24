@@ -40,7 +40,16 @@ interface Block {
     createAt: number
     updateAt: number
     deleteAt: number
-    limited: boolean
+
+    limited?: boolean
+}
+
+interface FileInfo {
+    url?: string
+    archived?: boolean
+    extension?: string
+    name?: string
+    size?: number
 }
 
 function createBlock(block?: Block): Block {
@@ -109,5 +118,5 @@ function createPatchesFromBlocks(newBlock: Block, oldBlock: Block): BlockPatch[]
     ]
 }
 
-export type {ContentBlockTypes, BlockTypes}
+export type {ContentBlockTypes, BlockTypes, FileInfo}
 export {blockTypes, contentBlockTypes, Block, BlockPatch, createBlock, createPatchesFromBlocks}

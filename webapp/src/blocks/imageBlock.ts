@@ -17,7 +17,7 @@ function createImageBlock(block?: Block): ImageBlock {
         ...createBlock(block),
         type: 'image',
         fields: {
-            fileId: block?.fields.fileId || '',
+            fileId: block?.fields?.fileId || '',
         },
     }
 }

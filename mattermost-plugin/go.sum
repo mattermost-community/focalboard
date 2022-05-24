@@ -106,8 +106,9 @@ github.com/Julusian/godocdown v0.0.0-20170816220326-6d19f8ff2df8/go.mod h1:INZr5
 github.com/Masterminds/glide v0.13.2/go.mod h1:STyF5vcenH/rUqTEv+/hBXlSTo7KYwg2oc2f4tzPWic=
 github.com/Masterminds/semver v1.4.2/go.mod h1:MB6lktGJrhw8PrUyiEoblNEGEQ+RzHPF078ddwwvV3Y=
 github.com/Masterminds/semver/v3 v3.1.1/go.mod h1:VPu/7SZ7ePZ3QOrcuXROw5FAcLl4a0cBrbBpGY/8hQs=
-github.com/Masterminds/squirrel v1.5.0 h1:JukIZisrUXadA9pl3rMkjhiamxiB0cXiu+HGp/Y8cY8=
 github.com/Masterminds/squirrel v1.5.0/go.mod h1:NNaOrjSoIDfDA40n7sr2tPNZRfjzjA400rg+riTZj10=
+github.com/Masterminds/squirrel v1.5.2 h1:UiOEi2ZX4RCSkpiNDQN5kro/XIBpSRk9iTqdIRPzUXE=
+github.com/Masterminds/squirrel v1.5.2/go.mod h1:NNaOrjSoIDfDA40n7sr2tPNZRfjzjA400rg+riTZj10=
 github.com/Masterminds/vcs v1.13.0/go.mod h1:N09YCmOQr6RLxC6UNHzuVwAdodYbbnycGHSmwVJjcKA=
 github.com/Microsoft/go-winio v0.4.11/go.mod h1:VhR8bwka0BXejwEJY73c50VrPtXAaKcyvVC4A4RozmA=
 github.com/Microsoft/go-winio v0.4.14/go.mod h1:qXqCSQ3Xa7+6tgxaGTIe4Kpcdsi+P8jBhyzoq1bpyYA=
@@ -1127,8 +1128,8 @@ github.com/mattermost/logr/v2 v2.0.15/go.mod h1:mpPp935r5dIkFDo2y9Q87cQWhFR/4xXp
 github.com/mattermost/mattermost-plugin-api v0.0.21 h1:0uQ9kQwFFEvb+qxwXqwbaDGmxwwv3wv6iHdhMWG3KiA=
 github.com/mattermost/mattermost-plugin-api v0.0.21/go.mod h1:qz19Y+5HLbjtzY2RZ6B8ZZx90XUrmoRsHkSAfvfKU1M=
 github.com/mattermost/mattermost-server/v6 v6.0.0-20210901153517-42e75fad4dae/go.mod h1:kmxJuVgpX13Th+e5L1ZsBs4aq+ETmmDg9joo5r4cIw8=
-github.com/mattermost/mattermost-server/v6 v6.0.0-20220512083839-2c155cdc9510 h1:jpvCXx2m3KYUTniRFrjCaKC6Q5agGYIaax+tTp4mrBw=
-github.com/mattermost/mattermost-server/v6 v6.0.0-20220512083839-2c155cdc9510/go.mod h1:HBSu5YC0k8TLb+7DFFB9/63/+oBZj7pgx8K07lHmzyI=
+github.com/mattermost/mattermost-server/v6 v6.0.0-20220518113816-388842803cee h1:4zobTblf+33T9Y6SVXy0zX1YJ999Tyxff7unycul82s=
+github.com/mattermost/mattermost-server/v6 v6.0.0-20220518113816-388842803cee/go.mod h1:HBSu5YC0k8TLb+7DFFB9/63/+oBZj7pgx8K07lHmzyI=
 github.com/mattermost/morph v0.0.0-20220401091636-39f834798da8/go.mod h1:jxM3g1bx+k2Thz7jofcHguBS8TZn5Pc+o5MGmORObhw=
 github.com/mattermost/rsc v0.0.0-20160330161541-bbaefb05eaa0/go.mod h1:nV5bfVpT//+B1RPD2JvRnxbkLmJEYXmRaaVl15fsXjs=
 github.com/mattermost/squirrel v0.2.0/go.mod h1:NPPtk+CdpWre4GxMGoOpzEVFVc0ZoEFyJBZGCtn9nSU=

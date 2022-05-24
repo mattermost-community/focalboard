@@ -20,11 +20,12 @@ const fetchUserWorkspaces = async ():Promise<UserWorkspace[]> => {
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
-        const [workspace, workspaceUsers, blocks, userWorkspaces] = await Promise.all([
+        const [workspace, workspaceUsers, blocks, userWorkspaces, limits] = await Promise.all([
             client.getWorkspace(),
             client.getWorkspaceUsers(),
             client.getAllBlocks(),
             fetchUserWorkspaces(),
+            client.getBoardsCloudLimits(),
         ])
 
         // if no workspace, either bad id, or user doesn't have access
@@ -36,6 +37,7 @@ export const initialLoad = createAsyncThunk(
             workspaceUsers,
             blocks,
             userWorkspaces,
+            limits,
         }
     },
 )

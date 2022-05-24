@@ -55,8 +55,15 @@ function CenterContent(props: Props) {
             dispatch(setClientConfig(config))
         }
         wsClient.addOnConfigChange(onConfigChangeHandler)
+
+        const onCardLimitTimestampChangeHandler = (_: WSClient, timestamp: number) => {
+            Utils.log(`HANDLING TIMESTAMP: ${timestamp}`)
+        }
+        wsClient.addOnCardLimitTimestampChange(onCardLimitTimestampChangeHandler)
+
         return () => {
             wsClient.removeOnConfigChange(onConfigChangeHandler)
+            wsClient.removeOnCardLimitTimestampChange(onCardLimitTimestampChangeHandler)
         }
     }, [])
 

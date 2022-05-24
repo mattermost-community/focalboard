@@ -16,11 +16,11 @@ import (
 	"context"
 	"time"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
-
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
@@ -147,8 +147,23 @@ func (s *SQLStore) GetBoardAndCardByID(c store.Container, blockID string) (*mode
 
 }
 
+func (s *SQLStore) GetCardLimitTimestamp() (int64, error) {
+	return s.getCardLimitTimestamp(s.db)
+
+}
+
+func (s *SQLStore) GetCloudLimits() (*mmModel.ProductLimits, error) {
+	return s.getCloudLimits(s.db)
+
+}
+
 func (s *SQLStore) GetDefaultTemplateBlocks() ([]model.Block, error) {
 	return s.getDefaultTemplateBlocks(s.db)
+
+}
+
+func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
+	return s.getFileInfo(s.db, id)
 
 }
 
@@ -232,6 +247,11 @@ func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 
 }
 
+func (s *SQLStore) GetUsedCardsCount() (int, error) {
+	return s.getUsedCardsCount(s.db)
+
+}
+
 func (s *SQLStore) GetUserByEmail(email string) (*model.User, error) {
 	return s.getUserByEmail(s.db, email)
 
@@ -264,6 +284,11 @@ func (s *SQLStore) GetWorkspace(ID string) (*model.Workspace, error) {
 
 func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 	return s.getWorkspaceCount(s.db)
+
+}
+
+func (s *SQLStore) GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error) {
+	return s.getWorkspaceTeam(s.db, workspaceID)
 
 }
 
@@ -383,6 +408,15 @@ func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
 
 }
 
+func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
+	return s.sendMessage(s.db, message, postType, receipts)
+}
+
+//nolint:typecheck
+func (s *SQLStore) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
+	return s.saveFileInfo(s.db, fileInfo)
+}
+
 func (s *SQLStore) SetSystemSetting(key string, value string) error {
 	return s.setSystemSetting(s.db, key, value)
 
@@ -409,6 +443,11 @@ func (s *SQLStore) UndeleteBlock(c store.Container, blockID string, modifiedBy s
 	}
 
 	return nil
+
+}
+
+func (s *SQLStore) UpdateCardLimitTimestamp(cardLimit int) (int64, error) {
+	return s.updateCardLimitTimestamp(s.db, cardLimit)
 
 }
 
