@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -11,6 +12,46 @@ import (
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+func legacyBoardFields(prefix string) []string {
+	// substitute new columns with `"\"\""` (empty string) so as to allow
+	// row scan to continue to work with new models.
+
+	fields := []string{
+		"id",
+		"team_id",
+		"COALESCE(channel_id, '')",
+		"COALESCE(created_by, '')",
+		"modified_by",
+		"type",
+		"\"\"", // substitute for minimum_role column.
+		"title",
+		"description",
+		"icon",
+		"show_description",
+		"is_template",
+		"template_version",
+		"COALESCE(properties, '{}')",
+		"COALESCE(card_properties, '[]')",
+		"create_at",
+		"update_at",
+		"delete_at",
+	}
+
+	if prefix == "" {
+		return fields
+	}
+
+	prefixedFields := make([]string, len(fields))
+	for i, field := range fields {
+		if strings.HasPrefix(field, "COALESCE(") {
+			prefixedFields[i] = strings.Replace(field, "COALESCE(", "COALESCE("+prefix, 1)
+		} else {
+			prefixedFields[i] = prefix + field
+		}
+	}
+	return prefixedFields
+}
 
 // legacyBlocksFromRows is the old getBlock version that still uses
 // the old block model. This method is kept to enable the unique IDs
@@ -205,4 +246,8 @@ func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block
 	}
 
 	return nil
+}
+
+func (s *SQLStore) getLegacyBoardsByCondition(db sq.BaseRunner, conditions ...interface{}) ([]*model.Board, error) {
+	return s.getBoardsFieldsByCondition(db, legacyBoardFields(""), conditions...)
 }
