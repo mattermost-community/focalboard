@@ -7,12 +7,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mattermost/focalboard/server/utils"
-
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/mattermost/focalboard/server/model"
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/focalboard/server/services/store"
+	"github.com/mattermost/focalboard/server/utils"
 )
 
 var ErrNilPluginAPI = errors.New("server not running in plugin mode")
@@ -107,7 +107,66 @@ func (a *App) UpdateCardLimitTimestamp() error {
 	return a.doUpdateCardLimitTimestamp()
 }
 
-func (a *App) ApplyCloudLimits(blocks []model.Block) ([]model.Block, error) {
+// getTemplateMapForBlocks gets all board ids for the blocks, directly
+// from the list if the boards are present or fetching them if
+// necessary, and builds a map with the board IDs as the key and their
+// isTemplate field as the value.
+func (a *App) getTemplateMapForBlocks(c store.Container, blocks []model.Block) (map[string]bool, error) {
+	boards := []model.Block{}
+	boardIDMap := map[string]bool{}
+	for _, block := range blocks {
+		if block.Type == model.TypeBoard {
+			boards = append(boards, block)
+		} else {
+			boardIDMap[block.RootID] = true
+		}
+	}
+
+	boardIDs := []string{}
+	// if the board is already part of the block set, we don't need to
+	// fetch it from the database
+	for boardID := range boardIDMap {
+		alreadyPresent := false
+		for _, board := range boards {
+			if board.ID == boardID {
+				alreadyPresent = true
+				break
+			}
+		}
+
+		if !alreadyPresent {
+			boardIDs = append(boardIDs, boardID)
+		}
+	}
+
+	if len(boardIDs) != 0 {
+		fetchedBoards, err := a.store.GetBlocksByIDs(c, boardIDs)
+		if err != nil {
+			return nil, err
+		}
+		boards = append(boards, fetchedBoards...)
+	}
+
+	templateMap := map[string]bool{}
+	for _, board := range boards {
+		if isTemplateStr, ok := board.Fields["isTemplate"]; ok {
+			isTemplate, ok := isTemplateStr.(bool)
+			if !ok {
+				return nil, newErrInvalidIsTemplate(board.ID)
+			}
+			templateMap[board.ID] = isTemplate
+		} else {
+			templateMap[board.ID] = false
+		}
+	}
+
+	return templateMap, nil
+}
+
+// ApplyCloudLimits takes a set of blocks and, if the server is cloud
+// limited, limits those that are outside of the card limit and don't
+// belong to a template.
+func (a *App) ApplyCloudLimits(c store.Container, blocks []model.Block) ([]model.Block, error) {
 	// if there is no limit currently being applied, return
 	if !a.IsCloudLimited() {
 		return blocks, nil
@@ -118,15 +177,32 @@ func (a *App) ApplyCloudLimits(blocks []model.Block) ([]model.Block, error) {
 		return nil, err
 	}
 
-	// ToDo:
-	// 1-get limited cards only on a map
-	// 2-iterate through all the blocks, limiting those that either
-	// are limited cards or are linked to them
+	templateMap, err := a.getTemplateMapForBlocks(c, blocks)
+	if err != nil {
+		return nil, err
+	}
 
 	limitedBlocks := make([]model.Block, len(blocks))
 	for i, block := range blocks {
-		if block.Type != model.TypeBoard &&
-			block.Type != model.TypeView &&
+		// boards are never limited
+		if block.Type == model.TypeBoard {
+			limitedBlocks[i] = block
+			continue
+		}
+
+		isTemplate, ok := templateMap[block.RootID]
+		if !ok {
+			return nil, newErrBoardNotFoundInTemplateMap(block.RootID)
+		}
+
+		// if the block belongs to a template, it will never be
+		// limited
+		if isTemplate {
+			limitedBlocks[i] = block
+			continue
+		}
+
+		if block.Type == model.TypeCard &&
 			block.UpdateAt < cardLimitTimestamp {
 			limitedBlocks[i] = block.GetLimited()
 		} else {
@@ -187,4 +263,28 @@ func (a *App) NotifyPortalAdminsUpgradeRequest(workspaceID string) error {
 	}
 
 	return nil
+}
+
+type errInvalidIsTemplate struct {
+	id string
+}
+
+func newErrInvalidIsTemplate(id string) *errInvalidIsTemplate {
+	return &errInvalidIsTemplate{id}
+}
+
+func (ei *errInvalidIsTemplate) Error() string {
+	return fmt.Sprintf("invalid isTemplate field value for board %q", ei.id)
+}
+
+type errBoardNotFoundInTemplateMap struct {
+	id string
+}
+
+func newErrBoardNotFoundInTemplateMap(id string) *errBoardNotFoundInTemplateMap {
+	return &errBoardNotFoundInTemplateMap{id}
+}
+
+func (eb *errBoardNotFoundInTemplateMap) Error() string {
+	return fmt.Sprintf("board %q not found in template map", eb.id)
 }

@@ -336,7 +336,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	)
 
 	var bErr error
-	blocks, bErr = a.app.ApplyCloudLimits(blocks)
+	blocks, bErr = a.app.ApplyCloudLimits(*container, blocks)
 	if bErr != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", bErr)
 		return
@@ -1003,7 +1003,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	)
 
 	var bErr error
-	blocks, bErr = a.app.ApplyCloudLimits(blocks)
+	blocks, bErr = a.app.ApplyCloudLimits(*container, blocks)
 	if bErr != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", bErr)
 		return
