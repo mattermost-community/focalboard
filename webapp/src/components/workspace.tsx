@@ -4,10 +4,9 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import {Card} from '../blocks/card'
 import {getCurrentWorkspace} from '../store/workspace'
 import {getCurrentBoard, getTemplates} from '../store/boards'
-import {refreshCards, getCards, updateCards, getCardLimitTimestamp, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
+import {refreshCards, getCardLimitTimestamp, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
