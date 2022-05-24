@@ -152,7 +152,7 @@ func (a *App) getTemplateMapForBlocks(c store.Container, blocks []model.Block) (
 		if isTemplateStr, ok := board.Fields["isTemplate"]; ok {
 			isTemplate, ok := isTemplateStr.(bool)
 			if !ok {
-				return nil, fmt.Errorf("invalid isTemplate value for board %q", board.ID)
+				return nil, newErrInvalidIsTemplate(board.ID)
 			}
 			templateMap[board.ID] = isTemplate
 		} else {
@@ -165,7 +165,7 @@ func (a *App) getTemplateMapForBlocks(c store.Container, blocks []model.Block) (
 
 // ApplyCloudLimits takes a set of blocks and, if the server is cloud
 // limited, limits those that are outside of the card limit and don't
-// belong to a template
+// belong to a template.
 func (a *App) ApplyCloudLimits(c store.Container, blocks []model.Block) ([]model.Block, error) {
 	// if there is no limit currently being applied, return
 	if !a.IsCloudLimited() {
@@ -192,7 +192,7 @@ func (a *App) ApplyCloudLimits(c store.Container, blocks []model.Block) ([]model
 
 		isTemplate, ok := templateMap[block.RootID]
 		if !ok {
-			return nil, fmt.Errorf("board %q is not part of the template map", block.RootID)
+			return nil, newErrBoardNotFoundInTemplateMap(block.RootID)
 		}
 
 		// if the block belongs to a template, it will never be
@@ -263,4 +263,28 @@ func (a *App) NotifyPortalAdminsUpgradeRequest(workspaceID string) error {
 	}
 
 	return nil
+}
+
+type errInvalidIsTemplate struct {
+	id string
+}
+
+func newErrInvalidIsTemplate(id string) *errInvalidIsTemplate {
+	return &errInvalidIsTemplate{id}
+}
+
+func (ei *errInvalidIsTemplate) Error() string {
+	return fmt.Sprintf("invalid isTemplate field value for board %q", ei.id)
+}
+
+type errBoardNotFoundInTemplateMap struct {
+	id string
+}
+
+func newErrBoardNotFoundInTemplateMap(id string) *errBoardNotFoundInTemplateMap {
+	return &errBoardNotFoundInTemplateMap{id}
+}
+
+func (eb *errBoardNotFoundInTemplateMap) Error() string {
+	return fmt.Sprintf("board %q not found in template map", eb.id)
 }
