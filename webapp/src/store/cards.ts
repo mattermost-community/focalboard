@@ -77,8 +77,11 @@ const cardsSlice = createSlice({
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
         },
-        setLimitTimestamp: (state, action: PayloadAction<number>) => {
-            state.limitTimestamp = action.payload
+        setLimitTimestamp: (state, action: PayloadAction<{timestamp: number, templates: {[key: string]: Board}}>) => {
+            state.limitTimestamp = action.payload.timestamp
+            for (const card of Object.values(state.cards)) {
+                state.cards[card.id] = limitCard(Boolean(action.payload.templates[card.id]), state.limitTimestamp, card)
+            }
         },
         addCard: (state, action: PayloadAction<Card>) => {
             state.cards[action.payload.id] = action.payload
@@ -137,20 +140,7 @@ const cardsSlice = createSlice({
 export const {updateCards, addCard, addTemplate, setCurrent, setLimitTimestamp, showCardHiddenWarning} = cardsSlice.actions
 export const {reducer} = cardsSlice
 
-export const getCardLimitTimestamp = (state: RootState): number => state.cards.limitTimestamp
-
-export const getCards = createSelector(
-    (state: RootState): {[key: string]: Card} => state.cards.cards,
-    (state: RootState): {[key: string]: Board} => state.boards.templates,
-    getCardLimitTimestamp,
-    (cards, templates, timestamp) => {
-        return Object.fromEntries(
-            Object.values(cards).map(
-                (card: Card): [string, Card] => [card.id, limitCard(Boolean(templates[card.parentId]), timestamp, card)],
-            ),
-        )
-    },
-)
+export const getCards = (state: RootState): {[key: string]: Card} => state.cards.cards
 
 export const getSortedCards = createSelector(
     getCards,
@@ -394,6 +384,7 @@ export const getCurrentCard = createSelector(
     (current, cards) => cards[current],
 )
 
+export const getCardLimitTimestamp = (state: RootState): number => state.cards.limitTimestamp
 export const getHiddenByLimitCards = createSelector(
     getCurrentViewCardsSortedFilteredAndGroupedWithoutLimit,
     getCurrentViewCardsSortedFilteredAndGrouped,

@@ -4,9 +4,10 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
+import {Card} from '../blocks/card'
 import {getCurrentWorkspace} from '../store/workspace'
-import {getCurrentBoard} from '../store/boards'
-import {refreshCards, getCardLimitTimestamp, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
+import {getCurrentBoard, getTemplates} from '../store/boards'
+import {refreshCards, getCards, updateCards, getCardLimitTimestamp, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
@@ -30,6 +31,7 @@ function CenterContent(props: Props) {
     const workspace = useAppSelector(getCurrentWorkspace)
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const board = useAppSelector(getCurrentBoard)
+    const templates = useAppSelector(getTemplates)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
     const activeView = useAppSelector(getView(match.params.viewId))
     const views = useAppSelector(getCurrentBoardViews)
@@ -57,7 +59,7 @@ function CenterContent(props: Props) {
         wsClient.addOnConfigChange(onConfigChangeHandler)
 
         const onCardLimitTimestampChangeHandler = (_: WSClient, timestamp: number) => {
-            dispatch(setLimitTimestamp(timestamp))
+            dispatch(setLimitTimestamp({timestamp, templates}))
             if (cardLimitTimestamp > timestamp) {
                 dispatch(refreshCards(timestamp))
             }
@@ -68,7 +70,7 @@ function CenterContent(props: Props) {
             wsClient.removeOnConfigChange(onConfigChangeHandler)
             wsClient.removeOnCardLimitTimestampChange(onCardLimitTimestampChangeHandler)
         }
-    }, [cardLimitTimestamp, match.params.boardId])
+    }, [cardLimitTimestamp, match.params.boardId, templates])
 
     if (board && activeView) {
         let property = groupByProperty
