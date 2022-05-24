@@ -323,7 +323,7 @@ export const getCurrentCard = createSelector(
     (current, cards) => cards[current],
 )
 
-export const GetHiddenCard = createSelector(
+export const GetCurrentBoardHiddenCards = createSelector(
     getCurrentBoardCards,
     (cards) => Object.values(cards).filter((c) => c.limited),
 )

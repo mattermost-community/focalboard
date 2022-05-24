@@ -118,6 +118,7 @@ describe('src/component/kanban/kanban', () => {
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
                     showCard={jest.fn()}
+                    hiddenCards={[]}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -151,6 +152,7 @@ describe('src/component/kanban/kanban', () => {
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
                     showCard={jest.fn()}
+                    hiddenCards={[]}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -186,6 +188,7 @@ describe('src/component/kanban/kanban', () => {
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
                     showCard={jest.fn()}
+                    hiddenCards={[]}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -231,6 +234,7 @@ describe('src/component/kanban/kanban', () => {
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
                     showCard={jest.fn()}
+                    hiddenCards={[]}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -276,6 +280,7 @@ describe('src/component/kanban/kanban', () => {
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
                     showCard={jest.fn()}
+                    hiddenCards={[]}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -322,6 +327,7 @@ describe('src/component/kanban/kanban', () => {
                     onCardClicked={jest.fn()}
                     addCard={mockedAddCard}
                     showCard={jest.fn()}
+                    hiddenCards={[]}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -359,6 +365,7 @@ describe('src/component/kanban/kanban', () => {
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
                     showCard={jest.fn()}
+                    hiddenCards={[]}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -396,6 +403,7 @@ describe('src/component/kanban/kanban', () => {
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
                     showCard={jest.fn()}
+                    hiddenCards={[]}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})
@@ -440,6 +448,7 @@ describe('src/component/kanban/kanban', () => {
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
                     showCard={jest.fn()}
+                    hiddenCards={[]}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})

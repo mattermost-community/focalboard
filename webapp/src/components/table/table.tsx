@@ -11,12 +11,10 @@ import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
-import {useAppDispatch, useAppSelector} from '../../store/hooks'
+import {useAppDispatch} from '../../store/hooks'
 import {updateView} from '../../store/views'
 
 import './table.scss'
-
-import {GetHiddenCard} from '../../store/cards'
 
 import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
 
@@ -38,13 +36,13 @@ type Props = {
     showCard: (cardId?: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
+    hiddenCards: Card[]
 }
 
 const Table = (props: Props): JSX.Element => {
-    const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
+    const {board, cards, activeView, visibleGroups, groupByProperty, views, hiddenCards} = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
     const dispatch = useAppDispatch()
-    const hiddenCards = useAppSelector(GetHiddenCard)
 
     const {offset, resizingColumn} = useDragLayer((monitor) => {
         if (monitor.getItemType() === 'horizontalGrip') {

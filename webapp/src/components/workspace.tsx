@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 
 import {getCurrentWorkspace} from '../store/workspace'
 import {getCurrentBoard} from '../store/boards'
-import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
+import {GetCurrentBoardHiddenCards, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
@@ -36,6 +36,7 @@ function CenterContent(props: Props) {
     const groupByProperty = useAppSelector(getCurrentViewGroupBy)
     const dateDisplayProperty = useAppSelector(getCurrentViewDisplayBy)
     const clientConfig = useAppSelector(getClientConfig)
+    const hiddenCards = useAppSelector(GetCurrentBoardHiddenCards)
     const history = useHistory()
     const dispatch = useAppDispatch()
 
@@ -82,6 +83,7 @@ function CenterContent(props: Props) {
                 groupByProperty={property}
                 dateDisplayProperty={displayProperty}
                 views={views}
+                hiddenCards={hiddenCards}
                 showShared={clientConfig?.enablePublicSharedBoards || false}
             />
         )
