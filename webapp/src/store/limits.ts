@@ -11,7 +11,6 @@ import {RootState} from './index'
 
 type LimitsState = {
     limits: BoardsCloudLimits,
-    hasLimits: boolean
 }
 
 const defaultLimits = {
@@ -23,7 +22,6 @@ const defaultLimits = {
 
 const initialState = {
     limits: defaultLimits,
-    hasLimits: false,
 } as LimitsState
 
 const limitsSlice = createSlice({
@@ -39,7 +37,6 @@ const limitsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.hasLimits = Boolean(action.payload.limits)
             state.limits = action.payload.limits || defaultLimits
         })
     },

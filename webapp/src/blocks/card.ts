@@ -12,7 +12,6 @@ type CardFields = {
 
 type Card = Block & {
     fields: CardFields
-    limited?: boolean
 }
 
 function createCard(block?: Block): Card {
