@@ -16,7 +16,7 @@ import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
-import {getCurrentCard, addCard as addCardAction, addTemplate as addTemplateAction} from '../store/cards'
+import {getCurrentCard, addCard as addCardAction, addTemplate as addTemplateAction, showCardHiddenWarning} from '../store/cards'
 import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
@@ -50,6 +50,8 @@ import Kanban from './kanban/kanban'
 import Table from './table/table'
 
 import CalendarFullView from './calendar/fullCalendar'
+
+import CardLimitNotification from './cardLimitNotification'
 
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
@@ -198,6 +200,7 @@ const CenterPanel = (props: Props) => {
                     showCard(undefined)
                 },
             )
+            dispatch(showCardHiddenWarning(true))
             await mutator.changeViewCardOrder(board.id, activeView.id, activeView.fields.cardOrder, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }, [props.activeView, props.board.id, props.board.cardProperties, props.groupByProperty, showCard])
@@ -349,6 +352,7 @@ const CenterPanel = (props: Props) => {
             className='BoardComponent'
             onClick={backgroundClicked}
         >
+            <CardLimitNotification/>
             {props.shownCardId &&
                 <RootPortal>
                     <CardDialog

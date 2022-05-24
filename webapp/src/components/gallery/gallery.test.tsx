@@ -38,10 +38,12 @@ describe('src/components/gallery/Gallery', () => {
         },
         cards: {
             current: '',
+            limitTimestamp: 0,
             cards: {
                 [card.id]: card,
             },
             templates: {},
+            cardHiddenWarning: true,
         },
         teams: {
             current: {id: 'team-id'},
