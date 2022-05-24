@@ -22,7 +22,7 @@ type BoardInsight struct {
 
 	// Metric of how active the board is
 	// required: true
-	ActivityCount string `json:"activityCount"`
+	ActivityCount int `json:"activityCount"`
 
 	// IDs of users active on the board
 	// required: true

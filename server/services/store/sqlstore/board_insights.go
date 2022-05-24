@@ -138,29 +138,32 @@ func boardsInsightsFromRows(rows *sql.Rows) ([]*model.BoardInsight, error) {
 func populateIcons(s *SQLStore, db sq.BaseRunner, boardsInsights []*model.BoardInsight) ([]*model.BoardInsight, error) {
 	qb := s.getQueryBuilder(db)
 	for _, boardInsight := range boardsInsights {
+		// querying raw instead of calling store.GetBoardsFromSameID needs container, and this function has no context on channel ID
+		// performance wise, this is better since 1) it's querying for only fields 2) it's querying for only one row.
 		boardID := boardInsight.BoardID
 		iconQuery := qb.Select("COALESCE(fields, '{}')").From(s.tablePrefix + "blocks").Where(sq.Eq{"id": boardID})
-		rows, err := iconQuery.Query()
+		iconQueryString, args, err := iconQuery.ToSql()
+		if err != nil {
+			s.logger.Error(`Query parsing error while getting icons`, mlog.Err(err))
+		}
+		row := s.db.QueryRow(iconQueryString, args...)
 		if err != nil {
 			return nil, err
 		}
-		for rows.Next() {
-			var fieldsJSON string
-			var fields map[string]interface{}
-			err := rows.Scan(
-				&fieldsJSON,
-			)
-			if err != nil {
-				return nil, err
-			}
-			err = json.Unmarshal([]byte(fieldsJSON), &fields)
-			if err != nil {
-				// handle this error
-				s.logger.Error(`ERROR populateIcons fields`, mlog.Err(err))
-				return nil, err
-			}
-			boardInsight.Icon = fields["icon"].(string)
+		var fieldsJSON string
+		var fields map[string]interface{}
+		err = row.Scan(
+			&fieldsJSON,
+		)
+		if err != nil {
+			return nil, err
 		}
+		err = json.Unmarshal([]byte(fieldsJSON), &fields)
+		if err != nil {
+			s.logger.Error(`ERROR unmarshalling populateIcons fields`, mlog.Err(err))
+			return nil, err
+		}
+		boardInsight.Icon = fields["icon"].(string)
 	}
 	return boardsInsights, nil
 }
