@@ -3,7 +3,10 @@ package mattermostauthlayer
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
@@ -28,20 +31,22 @@ func (pe NotSupportedError) Error() string {
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
-	dbType    string
-	mmDB      *sql.DB
-	logger    *mlog.Logger
-	pluginAPI plugin.API
+	dbType      string
+	mmDB        *sql.DB
+	logger      *mlog.Logger
+	pluginAPI   plugin.API
+	tablePrefix string
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API) (*MattermostAuthLayer, error) {
+func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API, tablePrefix string) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
-		Store:     store,
-		dbType:    dbType,
-		mmDB:      db,
-		logger:    logger,
-		pluginAPI: pluginAPI,
+		Store:       store,
+		dbType:      dbType,
+		mmDB:        db,
+		logger:      logger,
+		pluginAPI:   pluginAPI,
+		tablePrefix: tablePrefix,
 	}
 
 	return layer, nil
@@ -468,4 +473,264 @@ func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 
 func (s *MattermostAuthLayer) GetCloudLimits() (*mmModel.ProductLimits, error) {
 	return s.pluginAPI.GetCloudLimits()
+}
+
+func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) ([]*model.BoardMember, error) {
+	boardMembers := []*model.BoardMember{}
+
+	for rows.Next() {
+		var boardMember model.BoardMember
+
+		err := rows.Scan(
+			&boardMember.UserID,
+			&boardMember.BoardID,
+		)
+		if err != nil {
+			return nil, err
+		}
+		boardMember.Roles = "editor"
+		boardMember.SchemeEditor = true
+
+		boardMembers = append(boardMembers, &boardMember)
+	}
+
+	return boardMembers, nil
+}
+func (s *MattermostAuthLayer) boardMembersFromRows(rows *sql.Rows) ([]*model.BoardMember, error) {
+	boardMembers := []*model.BoardMember{}
+
+	for rows.Next() {
+		var boardMember model.BoardMember
+
+		err := rows.Scan(
+			&boardMember.MinimumRole,
+			&boardMember.BoardID,
+			&boardMember.UserID,
+			&boardMember.Roles,
+			&boardMember.SchemeAdmin,
+			&boardMember.SchemeEditor,
+			&boardMember.SchemeCommenter,
+			&boardMember.SchemeViewer,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		boardMembers = append(boardMembers, &boardMember)
+	}
+
+	return boardMembers, nil
+}
+
+func (s *MattermostAuthLayer) boardMemberHistoryEntriesFromRows(rows *sql.Rows) ([]*model.BoardMemberHistoryEntry, error) {
+	boardMemberHistoryEntries := []*model.BoardMemberHistoryEntry{}
+
+	for rows.Next() {
+		var boardMemberHistoryEntry model.BoardMemberHistoryEntry
+		var insertAt sql.NullString
+
+		err := rows.Scan(
+			&boardMemberHistoryEntry.BoardID,
+			&boardMemberHistoryEntry.UserID,
+			&boardMemberHistoryEntry.Action,
+			&insertAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		// parse the insert_at timestamp which is different based on database type.
+		dateTemplate := "2006-01-02T15:04:05Z0700"
+		if s.dbType == model.MysqlDBType {
+			dateTemplate = "2006-01-02 15:04:05.000000"
+		}
+		ts, err := time.Parse(dateTemplate, insertAt.String)
+		if err != nil {
+			return nil, fmt.Errorf("cannot parse datetime '%s' for board_members_history scan: %w", insertAt.String, err)
+		}
+		boardMemberHistoryEntry.InsertAt = ts
+
+		boardMemberHistoryEntries = append(boardMemberHistoryEntries, &boardMemberHistoryEntry)
+	}
+
+	return boardMemberHistoryEntries, nil
+}
+
+func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
+	bm, err := s.Store.GetMemberForBoard(boardID, userID)
+	if model.IsErrNotFound(err) {
+		b, err := s.Store.GetBoard(boardID)
+		if err != nil {
+			return nil, err
+		}
+		if b.ChannelID != "" {
+			_, err := s.pluginAPI.GetChannelMember(b.ChannelID, userID)
+			if err != nil {
+				return nil, err
+			}
+			return &model.BoardMember{
+				BoardID:         boardID,
+				UserID:          userID,
+				Roles:           "editor",
+				SchemeAdmin:     false,
+				SchemeEditor:    true,
+				SchemeCommenter: false,
+				SchemeViewer:    false,
+			}, nil
+		}
+	}
+	return bm, nil
+}
+
+func (s *MattermostAuthLayer) GetMembersForUser(userID string) ([]*model.BoardMember, error) {
+	explicitMembers, err := s.Store.GetMembersForUser(userID)
+
+	query := s.getQueryBuilder().
+		Select("Cm.userID, B.Id").
+		From(s.tablePrefix + "boards AS B").
+		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
+		Where(sq.Eq{"CM.userID": userID})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+	members := []*model.BoardMember{}
+	existingMembers := map[string]bool{}
+	for _, m := range explicitMembers {
+		members = append(members, m)
+		existingMembers[m.BoardID] = true
+	}
+	for _, m := range implicitMembers {
+		if !existingMembers[m.BoardID] {
+			members = append(members, m)
+		}
+	}
+
+	return members, nil
+}
+
+func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
+	explicitMembers, err := s.Store.GetMembersForBoard(boardID)
+
+	query := s.getQueryBuilder().
+		Select("Cm.userID, B.Id").
+		From(s.tablePrefix + "boards AS B").
+		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
+		Where(sq.Eq{"B.id": boardID}).
+		Where(sq.NotEq{"B.channel_id": ""})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+	members := []*model.BoardMember{}
+	existingMembers := map[string]bool{}
+	for _, m := range explicitMembers {
+		members = append(members, m)
+		existingMembers[m.UserID] = true
+	}
+	for _, m := range implicitMembers {
+		if !existingMembers[m.UserID] {
+			members = append(members, m)
+		}
+	}
+
+	return members, nil
+}
+
+// searchBoardsForUser returns all boards that match with the
+// term that are either private and which the user is a member of, or
+// they're open, regardless of the user membership.
+// Search is case-insensitive.
+func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model.Board, error) {
+	// TODO: Make this efficient
+	members, err := s.GetMembersForUser(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	explicitBoards, err := s.Store.SearchBoardsForUser(term, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	explicitBoardsExists := map[string]bool{}
+	for _, b := range explicitBoards {
+		explicitBoardsExists[b.ID] = true
+	}
+
+	boards := explicitBoards
+	for _, m := range members {
+		if explicitBoardsExists[m.BoardID] {
+			continue
+		}
+
+		board, err := s.GetBoard(m.BoardID)
+		if err != nil {
+			return nil, err
+		}
+		for _, q := range strings.Fields(term) {
+			if !strings.Contains(board.Title, q) {
+				continue
+			}
+		}
+		if board.IsTemplate {
+			continue
+		}
+		boards = append(boards, board)
+	}
+	return boards, nil
+}
+
+func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error) {
+	// TODO: Make this efficient
+	members, err := s.GetMembersForUser(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	explicitBoards, err := s.Store.GetBoardsForUserAndTeam(userID, teamID)
+	if err != nil {
+		return nil, err
+	}
+
+	explicitBoardsExists := map[string]bool{}
+	for _, b := range explicitBoards {
+		explicitBoardsExists[b.ID] = true
+	}
+
+	boards := explicitBoards
+	for _, m := range members {
+		if explicitBoardsExists[m.BoardID] {
+			continue
+		}
+
+		board, err := s.GetBoard(m.BoardID)
+		if err != nil {
+			return nil, err
+		}
+		if board.TeamID != teamID {
+			continue
+		}
+		if board.IsTemplate {
+			continue
+		}
+		boards = append(boards, board)
+	}
+	return boards, nil
 }
