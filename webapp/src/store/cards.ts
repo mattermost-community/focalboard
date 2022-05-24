@@ -46,7 +46,10 @@ export const refreshCards = createAsyncThunk<Block[], number, {state: RootState}
     },
 )
 
-const limitCard = (limitTimestamp:number, card: Card): Card => {
+const limitCard = (isBoardTemplate: boolean, limitTimestamp:number, card: Card): Card => {
+    if (isBoardTemplate) {
+        return card
+    }
     if (card.updateAt >= limitTimestamp) {
         return card
     }
@@ -76,15 +79,9 @@ const cardsSlice = createSlice({
         },
         setLimitTimestamp: (state, action: PayloadAction<number>) => {
             state.limitTimestamp = action.payload
-            for (const card of Object.values(state.cards)) {
-                state.cards[card.id] = limitCard(state.limitTimestamp, card)
-            }
         },
         addCard: (state, action: PayloadAction<Card>) => {
-            state.cards[action.payload.id] = limitCard(state.limitTimestamp, action.payload)
-            for (const card of Object.values(state.cards)) {
-                state.cards[card.id] = limitCard(state.limitTimestamp, card)
-            }
+            state.cards[action.payload.id] = action.payload
         },
         showCardHiddenWarning: (state, action: PayloadAction<boolean>) => {
             state.cardHiddenWarning = action.payload
@@ -100,7 +97,7 @@ const cardsSlice = createSlice({
                 } else if (card.fields.isTemplate) {
                     state.templates[card.id] = card
                 } else {
-                    state.cards[card.id] = limitCard(state.limitTimestamp, card)
+                    state.cards[card.id] = card
                 }
             }
         },
@@ -118,7 +115,7 @@ const cardsSlice = createSlice({
                 if (block.type === 'card' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Card
                 } else if (block.type === 'card' && !block.fields.isTemplate) {
-                    state.cards[block.id] = limitCard(state.limitTimestamp, block as Card)
+                    state.cards[block.id] = block as Card
                 }
             }
         })
@@ -130,7 +127,7 @@ const cardsSlice = createSlice({
                 if (block.type === 'card' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Card
                 } else if (block.type === 'card' && !block.fields.isTemplate) {
-                    state.cards[block.id] = limitCard(state.limitTimestamp, block as Card)
+                    state.cards[block.id] = block as Card
                 }
             }
         })
@@ -140,7 +137,20 @@ const cardsSlice = createSlice({
 export const {updateCards, addCard, addTemplate, setCurrent, setLimitTimestamp, showCardHiddenWarning} = cardsSlice.actions
 export const {reducer} = cardsSlice
 
-export const getCards = (state: RootState): {[key: string]: Card} => state.cards.cards
+export const getCardLimitTimestamp = (state: RootState): number => state.cards.limitTimestamp
+
+export const getCards = createSelector(
+    (state: RootState): {[key: string]: Card} => state.cards.cards,
+    (state: RootState): {[key: string]: Board} => state.boards.templates,
+    getCardLimitTimestamp,
+    (cards, templates, timestamp) => {
+        return Object.fromEntries(
+            Object.values(cards).map(
+                (card: Card): [string, Card] => [card.id, limitCard(Boolean(templates[card.parentId]), timestamp, card)],
+            ),
+        )
+    },
+)
 
 export const getSortedCards = createSelector(
     getCards,
@@ -160,7 +170,7 @@ export const getSortedTemplates = createSelector(
 
 export function getCard(cardId: string): (state: RootState) => Card|undefined {
     return (state: RootState): Card|undefined => {
-        return state.cards.cards[cardId] || state.cards.templates[cardId]
+        return getCards(state)[cardId] || getTemplates(state)[cardId]
     }
 }
 
@@ -380,7 +390,7 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
 
 export const getCurrentCard = createSelector(
     (state: RootState) => state.cards.current,
-    (state: RootState) => state.cards.cards,
+    getCards,
     (current, cards) => cards[current],
 )
 
@@ -390,5 +400,4 @@ export const getHiddenByLimitCards = createSelector(
     (allCards, shownCards) => allCards.length - shownCards.length,
 )
 
-export const getCardLimitTimestamp = (state: RootState): number => state.cards.limitTimestamp
 export const getCardHiddenWarning = (state: RootState): boolean => state.cards.cardHiddenWarning
