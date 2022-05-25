@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards (
 ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
 CREATE INDEX idx_board_team_id ON {{.prefix}}boards(team_id, is_template);
+CREATE INDEX idx_board_channel_id ON {{.prefix}}boards(channel_id);
 
 CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
     id VARCHAR(36) NOT NULL,
@@ -298,9 +299,10 @@ CREATE INDEX idx_boardmembers_user_id ON {{.prefix}}board_members(user_id);
 {{- /* if we're in plugin, migrate channel memberships to the board */ -}}
 {{if .plugin}}
 INSERT INTO {{.prefix}}board_members (
-    SELECT B.Id, CM.UserId, CM.Roles, (CM.UserId=B.created_by) OR CM.SchemeAdmin, CM.SchemeUser, FALSE, CM.SchemeGuest
+    SELECT B.Id, CM.UserId, CM.Roles, TRUE, TRUE, FALSE, FALSE
     FROM {{.prefix}}boards AS B
     INNER JOIN ChannelMembers as CM ON CM.ChannelId=B.channel_id
+    WHERE CM.SchemeAdmin=True
 );
 {{end}}
 
