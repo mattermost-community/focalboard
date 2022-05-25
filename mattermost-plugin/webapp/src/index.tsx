@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
 import {createBrowserHistory, History} from 'history'
@@ -45,6 +45,7 @@ import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
+import RHSChannelBoards from './components/rhsChannelBoards'
 import wsClient, {
     MMWebSocketClient,
     ACTION_UPDATE_BLOCK,
@@ -295,9 +296,7 @@ export default class Plugin {
             /* TODO: translate Channel Boards string down there*/
             const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
                 () => (
-                    <ReduxProvider store={store}>
-                        <BoardsMenu getCurrentChannel={() => lastViewedChannel}/>
-                    </ReduxProvider>
+                    <RHSChannelBoards getCurrentChannel={() => lastViewedChannel}/>
                 ),
                 <div><FocalboardIcon/>{'Channel Boards'}</div>,
             )
