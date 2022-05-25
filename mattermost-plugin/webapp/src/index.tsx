@@ -27,6 +27,14 @@ import {Utils} from '../../../webapp/src/utils'
 import {useAppSelector} from '../../../webapp/src/store/hooks'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
+import AddIcon from '../../../webapp/src/widgets/icons/add'
+import Button from '../../../webapp/src/widgets/buttons/button'
+import IconButton from '../../../webapp/src/widgets/buttons/iconButton'
+import OptionsIcon from '../../../webapp/src/widgets/icons/options'
+import DeleteIcon from '../../../webapp/src/widgets/icons/delete'
+import Menu from '../../../webapp/src/widgets/menu'
+import MenuWrapper from '../../../webapp/src/widgets/menuWrapper'
+import SearchDialog from '../../../webapp/src/components/searchDialog/searchDialog'
 import {setMattermostTheme} from '../../../webapp/src/theme'
 
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
@@ -164,7 +172,6 @@ const HeaderComponent = () => {
 }
 
 const BoardsMenu = (props: {getCurrentChannel: () => string}) => {
-    const [showMenu, setShowMenu] = useState(false)
     const boards = useAppSelector(getMySortedBoards)
     if (!boards) {
         return null
@@ -180,28 +187,65 @@ const BoardsMenu = (props: {getCurrentChannel: () => string}) => {
     }
 
     return (
-        <>
-            <div onClick={() => setShowMenu(!showMenu)}>
-                <FocalboardIcon/>
+        <div
+            style={{padding: 20}}
+            className='focalboard-body'
+        >
+            <div style={{display: 'flex'}}>
+                {/* TODO: translate this */}
+                <span style={{flexGrow: 1, fontSize: 16, fontWeight: 600}}>{'Linked Channels'}</span>
+                <Button
+                    onClick={() => console.log("TODO")}
+                    icon={<AddIcon/>}
+                    emphasis='primary'
+                >
+                    {/* TODO: translate this */}
+                    {'Add'}
+                </Button>
+                <SearchDialog
+                    onClose={() => console.log('close')}
+                    title='whatever'
+                    searchHandler={async (query) => query.split(' ')}
+                />
             </div>
-            {showMenu &&
-                <div style={{background: 'white', position: 'absolute', top: 40, right: 0, border: '1px solid #cccccc', borderRadius: 5, width: 200, padding: 5}}>
-                    {channelBoards.map((b) => (
-                        <div
-                            key={b.id}
-                            onClick={() => handleBoardClicked(b.id)}
-                            style={{padding: 10, width: 200, textAlign: 'left'}}
-                        >
-                            {b.icon && <span style={{marginRight: 5}}>{b.icon}</span>}
-                            <span>{b.title}</span>
-                        </div>))}
-                </div>}
-        </>
+            {channelBoards.map((b) => (
+                <div
+                    key={b.id}
+                    onClick={() => handleBoardClicked(b.id)}
+                    style={{padding: 15, textAlign: 'left', border: '1px solid #cccccc', borderRadius: 5, marginTop: 10, cursor: 'pointer'}}
+                >
+                    <div style={{fontSize: 16, display: 'flex'}}>
+                        {b.icon && <span style={{marginRight: 10}}>{b.icon}</span>}
+                        <span style={{fontWeight: 600, flexGrow: 1}}>{b.title}</span>
+                        <MenuWrapper stopPropagationOnToggle={true}>
+                            <IconButton icon={<OptionsIcon/>}/>
+                            <Menu
+                                fixed={true}
+                                position='left'
+                            >
+                                <Menu.Text
+                                    key={`unlinkBoard-${b.id}`}
+                                    id='unlinkBoard'
+                                    name={'Unlink Board'}
+                                    icon={<DeleteIcon/>}
+                                    onClick={() => {
+                                        console.log("TODO: DELETE")
+                                    }}
+                                />
+                            </Menu>
+                        </MenuWrapper>
+                    </div>
+                    <div>{b.description}</div>
+                    {/* TODO: Translate this later */}
+                    <div style={{color: '#cccccc'}}>{'Last Update at: '}{b.updateAt}</div>
+                </div>))}
+        </div>
     )
 }
 
 export default class Plugin {
     channelHeaderButtonId?: string
+    rhsId?: string
     registry?: PluginRegistry
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
@@ -248,10 +292,19 @@ export default class Plugin {
                 window.open(`${windowAny.frontendBaseURL}/team/${currentTeam}`, '_blank', 'noopener')
             }
 
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(
-                <ReduxProvider store={store}>
-                    <BoardsMenu getCurrentChannel={() => lastViewedChannel} />
-                </ReduxProvider>, () => null, 'Boards', 'Boards')
+            /* TODO: translate Channel Boards string down there*/
+            const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
+                () => (
+                    <ReduxProvider store={store}>
+                        <BoardsMenu getCurrentChannel={() => lastViewedChannel}/>
+                    </ReduxProvider>
+                ),
+                <div><FocalboardIcon/>{'Channel Boards'}</div>,
+            )
+            this.rhsId = rhsId
+
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => mmStore.dispatch(toggleRHSPlugin), 'Boards', 'Boards')
+
             this.registry.registerProduct(
                 '/boards',
                 'product-boards',
@@ -356,6 +409,9 @@ export default class Plugin {
     uninitialize(): void {
         if (this.channelHeaderButtonId) {
             this.registry?.unregisterComponent(this.channelHeaderButtonId)
+        }
+        if (this.rhsId) {
+            this.registry?.unregisterComponent(this.rhsId)
         }
 
         // unregister websocket handlers
