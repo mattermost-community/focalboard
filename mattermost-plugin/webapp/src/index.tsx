@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
 import {createBrowserHistory, History} from 'history'
@@ -20,8 +20,11 @@ windowAny.isFocalboardPlugin = true
 
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
-import {setTeam} from '../../../webapp/src/store/teams'
+import {setTeam, getCurrentTeam} from '../../../webapp/src/store/teams'
+import {initialLoad} from '../../../webapp/src/store/initialLoad'
+import {getMySortedBoards} from '../../../webapp/src/store/boards'
 import {Utils} from '../../../webapp/src/utils'
+import {useAppSelector} from '../../../webapp/src/store/hooks'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
@@ -160,6 +163,43 @@ const HeaderComponent = () => {
     )
 }
 
+const BoardsMenu = (props: {getCurrentChannel: () => string}) => {
+    const [showMenu, setShowMenu] = useState(false)
+    const boards = useAppSelector(getMySortedBoards)
+    if (!boards) {
+        return null
+    }
+    const team = useAppSelector(getCurrentTeam)
+    if (!team) {
+        return null
+    }
+    const currentChannel = props.getCurrentChannel()
+    const channelBoards = boards.filter((b) => b.channelId === currentChannel)
+    const handleBoardClicked = (boardID: string) => {
+        window.open(`${windowAny.frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
+    }
+
+    return (
+        <>
+            <div onClick={() => setShowMenu(!showMenu)}>
+                <FocalboardIcon/>
+            </div>
+            {showMenu &&
+                <div style={{background: 'white', position: 'absolute', top: 40, right: 0, border: '1px solid #cccccc', borderRadius: 5, width: 200, padding: 5}}>
+                    {channelBoards.map((b) => (
+                        <div
+                            key={b.id}
+                            onClick={() => handleBoardClicked(b.id)}
+                            style={{padding: 10, width: 200, textAlign: 'left'}}
+                        >
+                            {b.icon && <span style={{marginRight: 5}}>{b.icon}</span>}
+                            <span>{b.title}</span>
+                        </div>))}
+                </div>}
+        </>
+    )
+}
+
 export default class Plugin {
     channelHeaderButtonId?: string
     registry?: PluginRegistry
@@ -208,7 +248,10 @@ export default class Plugin {
                 window.open(`${windowAny.frontendBaseURL}/team/${currentTeam}`, '_blank', 'noopener')
             }
 
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboard, 'Boards', 'Boards')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(
+                <ReduxProvider store={store}>
+                    <BoardsMenu getCurrentChannel={() => lastViewedChannel} />
+                </ReduxProvider>, () => null, 'Boards', 'Boards')
             this.registry.registerProduct(
                 '/boards',
                 'product-boards',
@@ -307,6 +350,7 @@ export default class Plugin {
             // @ts-ignore
             return mmStore.getState().entities.teams.currentTeamId
         }
+        store.dispatch(initialLoad())
     }
 
     uninitialize(): void {

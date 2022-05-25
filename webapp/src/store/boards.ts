@@ -190,11 +190,11 @@ const boardsSlice = createSlice({
 export const {updateBoards, setCurrent} = boardsSlice.actions
 export const {reducer} = boardsSlice
 
-export const getBoards = (state: RootState): {[key: string]: Board} => state.boards.boards
+export const getBoards = (state: RootState): {[key: string]: Board} => state.boards?.boards || {}
 
 export const getMySortedBoards = createSelector(
     getBoards,
-    (state: RootState): {[key: string]: BoardMember} => state.boards.myBoardMemberships,
+    (state: RootState): {[key: string]: BoardMember} => state.boards?.myBoardMemberships || {},
     (boards, myBoardMemberships: {[key: string]: BoardMember}) => {
         return Object.values(boards).filter((b) => myBoardMemberships[b.id])
             .sort((a, b) => a.title.localeCompare(b.title))
