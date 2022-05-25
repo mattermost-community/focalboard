@@ -742,8 +742,8 @@ func testUndeleteBlock(t *testing.T, store store.Store, container store.Containe
 	})
 }
 
-func testGetBlocks(t *testing.T, store store.Store, container store.Container) {
-	blocks, err := store.GetAllBlocks(container)
+func testGetBlocks(t *testing.T, storeInstance store.Store, container store.Container) {
+	blocks, err := storeInstance.GetAllBlocks(container)
 	require.NoError(t, err)
 
 	blocksToInsert := []model.Block{
@@ -783,68 +783,82 @@ func testGetBlocks(t *testing.T, store store.Store, container store.Container) {
 			Type:       "test",
 		},
 	}
-	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
-	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+	InsertBlocks(t, storeInstance, container, blocksToInsert, "user-id-1")
+	defer DeleteBlocks(t, storeInstance, container, blocksToInsert, "test")
 
 	t.Run("not existing parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithParentAndType(container, "not-exists", "test")
+		blocks, err = storeInstance.GetBlocksWithParentAndType(container, "not-exists", "test")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("not existing type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithParentAndType(container, "block1", "not-existing")
+		blocks, err = storeInstance.GetBlocksWithParentAndType(container, "block1", "not-existing")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("valid parent and type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithParentAndType(container, "block1", "test")
+		blocks, err = storeInstance.GetBlocksWithParentAndType(container, "block1", "test")
 		require.NoError(t, err)
 		require.Len(t, blocks, 2)
 	})
 
 	t.Run("not existing parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithParent(container, "not-exists")
+		blocks, err = storeInstance.GetBlocksWithParent(container, "not-exists")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("valid parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithParent(container, "block1")
+		blocks, err = storeInstance.GetBlocksWithParent(container, "block1")
 		require.NoError(t, err)
 		require.Len(t, blocks, 3)
 	})
 
+	t.Run("by ids, all existing", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = storeInstance.GetBlocksByIDs(container, []string{"block1", "block3"})
+		require.NoError(t, err)
+		require.Len(t, blocks, 2)
+	})
+
+	t.Run("by ids, some existing", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = storeInstance.GetBlocksByIDs(container, []string{"not-exists", "block3"})
+		require.Error(t, err)
+		require.True(t, store.IsErrNotAllFound(err))
+	})
+
 	t.Run("not existing type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithType(container, "not-exists")
+		blocks, err = storeInstance.GetBlocksWithType(container, "not-exists")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("valid type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithType(container, "test")
+		blocks, err = storeInstance.GetBlocksWithType(container, "test")
 		require.NoError(t, err)
 		require.Len(t, blocks, 4)
 	})
 
 	t.Run("not existing parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithRootID(container, "not-exists")
+		blocks, err = storeInstance.GetBlocksWithRootID(container, "not-exists")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("valid parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithRootID(container, "block1")
+		blocks, err = storeInstance.GetBlocksWithRootID(container, "block1")
 		require.NoError(t, err)
 		require.Len(t, blocks, 4)
 	})

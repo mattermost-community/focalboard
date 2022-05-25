@@ -269,6 +269,21 @@ func (mr *MockStoreMockRecorder) GetBlockHistoryDescendants(arg0, arg1 interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlockHistoryDescendants", reflect.TypeOf((*MockStore)(nil).GetBlockHistoryDescendants), arg0, arg1)
 }
 
+// GetBlocksByIDs mocks base method.
+func (m *MockStore) GetBlocksByIDs(arg0 store.Container, arg1 []string) ([]model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBlocksByIDs", arg0, arg1)
+	ret0, _ := ret[0].([]model.Block)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBlocksByIDs indicates an expected call of GetBlocksByIDs.
+func (mr *MockStoreMockRecorder) GetBlocksByIDs(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksByIDs", reflect.TypeOf((*MockStore)(nil).GetBlocksByIDs), arg0, arg1)
+}
+
 // GetBlocksWithParent mocks base method.
 func (m *MockStore) GetBlocksWithParent(arg0 store.Container, arg1 string) ([]model.Block, error) {
 	m.ctrl.T.Helper()

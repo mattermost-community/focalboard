@@ -36,10 +36,12 @@ describe('src/components/gallery/Gallery', () => {
         },
         cards: {
             current: '',
+            limitTimestamp: 0,
             cards: {
                 [card.id]: card,
             },
             templates: {},
+            cardHiddenWarning: true,
         },
         comments: {
             comments: {},
@@ -154,6 +156,8 @@ describe('src/components/gallery/Gallery', () => {
                     [card3.id]: card3,
                 },
                 templates: {},
+                cardHiddenWarning: true,
+                limitTimestamp: 2,
             },
             comments: {
                 comments: {},
