@@ -335,6 +335,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Where(sq.Eq{"id": board.ID}).
 			Set("modified_by", userID).
 			Set("type", board.Type).
+			Set("channel_id", board.ChannelID).
 			Set("minimum_role", board.MinimumRole).
 			Set("title", board.Title).
 			Set("description", board.Description).

@@ -490,6 +490,7 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 		}
 		boardMember.Roles = "editor"
 		boardMember.SchemeEditor = true
+		boardMember.Synthetic = true
 
 		boardMembers = append(boardMembers, &boardMember)
 	}
@@ -576,6 +577,7 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 				SchemeEditor:    true,
 				SchemeCommenter: false,
 				SchemeViewer:    false,
+				Synthetic:       true,
 			}, nil
 		}
 	}

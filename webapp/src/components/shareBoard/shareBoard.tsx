@@ -17,7 +17,7 @@ import Tooltip from '../../widgets/tooltip'
 import mutator from '../../mutator'
 
 import {ISharing} from '../../blocks/sharing'
-import {BoardMember} from '../../blocks/board'
+import {BoardMember, createBoard} from '../../blocks/board'
 
 import client from '../../octoClient'
 import Dialog from '../dialog'
@@ -133,6 +133,19 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: boardId, shareBoardEnabled: isOn})
         await client.setSharing(boardId, newSharing)
         await loadData()
+    }
+
+    const onUnlinkBoard = async () => {
+        const newBoard = createBoard(board)
+        newBoard.channelId = ''
+        mutator.updateBoard(newBoard, board, 'unlinked channel')
+    }
+
+    const onLinkBoard = async () => {
+        // TODO: Replace this with the logic needed to really select the channel
+        const newBoard = createBoard(board)
+        newBoard.channelId = 'xdfmdh66xjd5traix74zh1jaey'  // This is a channel ID hardcoded here as an example
+        mutator.updateBoard(newBoard, board, 'linked channel')
     }
 
     const onRegenerateToken = async () => {
@@ -316,10 +329,55 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                 </div>
             </BoardPermissionGate>
             <div className='user-items'>
+                {board.channelId && (
+                    <div style={{padding: '0 16px', display: 'flex', flexDirection: 'row'}}>
+                        <div style={{flexGrow: 1, fontWeight: 600}}>
+                            <FormattedMessage
+                                id='share-board.channel-linked'
+                                defaultMessage='This board is linked to the channel {channelName} all the members of that channel has editor access to this board'
+                                values={{channelName: 'TODO-CHANNEL-NAME'}}
+                            />
+                        </div>
+                        <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
+                            <div style={{minWidth: 70, textAlign: 'right', alignItems: 'center', marginRight: 24}}>
+                                <a onClick={onUnlinkBoard}>
+                                    <FormattedMessage
+                                        id='share-board.unlink-channel'
+                                        defaultMessage='Unlink'
+                                    />
+                                </a>
+                            </div>
+                        </BoardPermissionGate>
+                    </div>
+                )}
+                {!board.channelId && (
+                    <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
+                        <div style={{padding: '0 16px', display: 'flex', flexDirection: 'row'}}>
+                            <div style={{flexGrow: 1, fontWeight: 600}}>
+                                <FormattedMessage
+                                    id='share-board.channel-not-linked'
+                                    defaultMessage='This board is NOT linked to any channel, if you want to apply the channel memberships you only need to link it to the channel.'
+                                />
+                            </div>
+                            <div style={{minWidth: 70, textAlign: 'right', alignItems: 'center', marginRight: 24}}>
+                                <a onClick={onLinkBoard}>
+                                    <FormattedMessage
+                                        id='share-board.link-channel'
+                                        defaultMessage='Link'
+                                    />
+                                </a>
+                            </div>
+                        </div>
+                    </BoardPermissionGate>
+                )}
+
                 <TeamPermissionsRow/>
 
                 {boardUsers.map((user) => {
                     if (!members[user.id]) {
+                        return null
+                    }
+                    if (members[user.id].synthetic) {
                         return null
                     }
                     return (

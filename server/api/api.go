@@ -2826,6 +2826,12 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	if patch.ChannelID != nil {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board access"})
+			return
+		}
+	}
 
 	auditRec := a.makeAuditRecord(r, "patchBoard", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
