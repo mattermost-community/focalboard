@@ -36,11 +36,11 @@ type Props = {
     showCard: (cardId?: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
-    hiddenCards: Card[]
+    hiddenCardsCount: number
 }
 
 const Table = (props: Props): JSX.Element => {
-    const {board, cards, activeView, visibleGroups, groupByProperty, views, hiddenCards} = props
+    const {board, cards, activeView, visibleGroups, groupByProperty, views, hiddenCardsCount} = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
     const dispatch = useAppDispatch()
 
@@ -270,9 +270,9 @@ const Table = (props: Props): JSX.Element => {
                 />
             </div>
 
-            {hiddenCards.length > 0 &&
+            {hiddenCardsCount > 0 &&
             <HiddenCardCount
-                hiddenCards={hiddenCards}
+                hiddenCardsCount={hiddenCardsCount}
             />}
         </div>
     )

@@ -85,7 +85,7 @@ describe('components/table/Table', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[]}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -114,7 +114,7 @@ describe('components/table/Table', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[]}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -150,7 +150,7 @@ describe('components/table/Table', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[]}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -162,8 +162,8 @@ describe('components/table/Table', () => {
         const callback = jest.fn()
         const addCard = jest.fn()
         const boardTest = TestBlockFactory.createBoard()
-        const card1 = TestBlockFactory.createCard(boardTest, true)
-        const card2 = TestBlockFactory.createCard(boardTest, true)
+        const card1 = TestBlockFactory.createCard(boardTest)
+        const card2 = TestBlockFactory.createCard(boardTest)
         const mockStore = configureStore([])
 
         const stateTest = {
@@ -201,7 +201,7 @@ describe('components/table/Table', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[card1, card2]}
+                    hiddenCardsCount={2}
                 />
             </ReduxProvider>,
         )
@@ -283,7 +283,7 @@ describe('components/table/Table extended', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[]}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -363,7 +363,7 @@ describe('components/table/Table extended', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[]}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -421,7 +421,7 @@ describe('components/table/Table extended', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[]}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -506,7 +506,7 @@ describe('components/table/Table extended', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[]}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )

@@ -36,7 +36,7 @@ function CenterContent(props: Props) {
     const groupByProperty = useAppSelector(getCurrentViewGroupBy)
     const dateDisplayProperty = useAppSelector(getCurrentViewDisplayBy)
     const clientConfig = useAppSelector(getClientConfig)
-    const hiddenCards = useAppSelector(GetCurrentBoardHiddenCards)
+    const hiddenCardsCount = useAppSelector(GetCurrentBoardHiddenCards).length
     const history = useHistory()
     const dispatch = useAppDispatch()
 
@@ -90,7 +90,7 @@ function CenterContent(props: Props) {
                 groupByProperty={property}
                 dateDisplayProperty={displayProperty}
                 views={views}
-                hiddenCards={hiddenCards}
+                hiddenCardsCount={hiddenCardsCount}
                 showShared={clientConfig?.enablePublicSharedBoards || false}
             />
         )

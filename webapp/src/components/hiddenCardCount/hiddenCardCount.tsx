@@ -6,11 +6,10 @@ import {useIntl} from 'react-intl'
 
 import Button from '../../widgets/buttons/button'
 
-import {Card} from '../../blocks/card'
 import './hiddenCardCount.scss'
 
 type Props = {
-    hiddenCards: Card[]
+    hiddenCardsCount: number
 }
 
 const HiddenCardCount = (props: Props): JSX.Element => {
@@ -18,7 +17,7 @@ const HiddenCardCount = (props: Props): JSX.Element => {
     return (
         <div className='HiddenCardCount'>
             <div className='hidden-card-title'>{intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards Hidden'})}</div>
-            <Button title='hidden-card-count'>{props.hiddenCards.length}</Button>
+            <Button title='hidden-card-count'>{props.hiddenCardsCount}</Button>
         </div>
     )
 }

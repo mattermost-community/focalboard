@@ -40,7 +40,7 @@ type Props = {
     onCardClicked: (e: React.MouseEvent, card: Card) => void
     addCard: (groupByOptionId?: string, show?:boolean) => Promise<void>
     showCard: (cardId?: string) => void
-    hiddenCards: Card[]
+    hiddenCardsCount: number
 }
 
 const ScrollingComponent = withScrolling('div')
@@ -48,7 +48,7 @@ const hStrength = createHorizontalStrength(Utils.isMobile() ? 60 : 250)
 const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
 
 const Kanban = (props: Props) => {
-    const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups, hiddenCards} = props
+    const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups, hiddenCardsCount} = props
 
     if (!groupByProperty) {
         Utils.assertFailure('Board views must have groupByProperty set')
@@ -230,7 +230,7 @@ const Kanban = (props: Props) => {
 
                 {/* Hidden column header */}
 
-                {(hiddenGroups.length > 0 || hiddenCards.length > 0) &&
+                {(hiddenGroups.length > 0 || hiddenCardsCount > 0) &&
                     <div className='octo-board-header-cell narrow'>
                         <FormattedMessage
                             id='BoardComponent.hidden-columns'
@@ -300,7 +300,7 @@ const Kanban = (props: Props) => {
 
                 {/* Hidden columns */}
 
-                {(hiddenGroups.length > 0 || hiddenCards.length > 0) &&
+                {(hiddenGroups.length > 0 || hiddenCardsCount > 0) &&
                 <div className='octo-board-column narrow'>
                     {hiddenGroups.map((group) => (
                         <KanbanHiddenColumnItem
@@ -312,9 +312,9 @@ const Kanban = (props: Props) => {
                             onDrop={(card: Card) => onDropToColumn(group.option, card)}
                         />
                     ))}
-                    {hiddenCards.length > 0 &&
+                    {hiddenCardsCount > 0 &&
                     <div className='ml-1'>
-                        <HiddenCardCount hiddenCards={hiddenCards}/>
+                        <HiddenCardCount hiddenCardsCount={hiddenCardsCount}/>
                     </div>}
                 </div>}
             </div>

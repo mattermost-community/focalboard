@@ -65,7 +65,7 @@ describe('src/components/gallery/Gallery', () => {
                     addCard={jest.fn()}
                     selectedCardIds={[card.id]}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[]}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -85,7 +85,7 @@ describe('src/components/gallery/Gallery', () => {
                     addCard={mockAddCard}
                     selectedCardIds={[card.id]}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[]}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -108,7 +108,7 @@ describe('src/components/gallery/Gallery', () => {
                     addCard={jest.fn()}
                     selectedCardIds={[card.id]}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[]}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -125,7 +125,7 @@ describe('src/components/gallery/Gallery', () => {
                     addCard={jest.fn()}
                     selectedCardIds={[]}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[]}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -141,8 +141,8 @@ describe('src/components/gallery/Gallery', () => {
 
     test('limited card count check', () => {
         const boardTest = TestBlockFactory.createBoard()
-        const card1 = TestBlockFactory.createCard(boardTest, true)
-        const card3 = TestBlockFactory.createCard(boardTest, true)
+        const card1 = TestBlockFactory.createCard(boardTest)
+        const card3 = TestBlockFactory.createCard(boardTest)
         const stateTest: Partial<RootState> = {
             contents: {
                 contents: blocksById(contents),
@@ -178,7 +178,7 @@ describe('src/components/gallery/Gallery', () => {
                     addCard={jest.fn()}
                     selectedCardIds={[card1.id]}
                     onCardClicked={jest.fn()}
-                    hiddenCards={[card1, card3]}
+                    hiddenCardsCount={2}
                 />
             </ReduxProvider>,
         ))

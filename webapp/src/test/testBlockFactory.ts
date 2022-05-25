@@ -112,14 +112,13 @@ class TestBlockFactory {
         return view
     }
 
-    static createCard(board?: Board, limited = false): Card {
+    static createCard(board?: Board): Card {
         const card = createCard()
         card.parentId = board ? board.id : 'parent'
         card.rootId = board ? board.rootId : 'root'
         card.title = 'title'
         card.fields.icon = 'i'
         card.fields.properties.property1 = 'value1'
-        card.limited = limited
         return card
     }
 

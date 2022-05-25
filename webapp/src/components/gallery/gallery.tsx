@@ -23,11 +23,11 @@ type Props = {
     addCard: (show: boolean) => Promise<void>
     selectedCardIds: string[]
     onCardClicked: (e: React.MouseEvent, card: Card) => void
-    hiddenCards: Card[]
+    hiddenCardsCount: number
 }
 
 const Gallery = (props: Props): JSX.Element => {
-    const {activeView, board, cards, hiddenCards} = props
+    const {activeView, board, cards, hiddenCardsCount} = props
 
     const visiblePropertyTemplates =
         activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
@@ -94,10 +94,10 @@ const Gallery = (props: Props): JSX.Element => {
                     />
                 </div>
             }
-            {hiddenCards.length > 0 &&
+            {hiddenCardsCount > 0 &&
             <div className='gallery-hidden-cards'>
                 <HiddenCardCount
-                    hiddenCards={hiddenCards}
+                    hiddenCardsCount={hiddenCardsCount}
                 />
             </div>}
         </div>
