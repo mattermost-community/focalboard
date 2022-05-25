@@ -1,6 +1,8 @@
 package app
 
 import (
+	"sync"
+
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/metrics"
@@ -38,8 +40,8 @@ type App struct {
 	logger        *mlog.Logger
 	pluginAPI     plugin.API
 
-	// ToDo: do we require a mutex?
-	CardLimit int
+	cardLimitMux sync.Mutex
+	CardLimit    int
 }
 
 func (a *App) SetConfig(config *config.Configuration) {
