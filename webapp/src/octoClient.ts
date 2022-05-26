@@ -533,7 +533,7 @@ class OctoClient {
         }
 
         const limits = (await this.getJson(response, {})) as BoardsCloudLimits
-        Utils.log(`Cloud limits: cards=${limits.cards}  views=${limits.views}`)
+        Utils.log(`Cloud limits: cards=${limits.cards}   views=${limits.views}`)
         return limits
     }
 }
