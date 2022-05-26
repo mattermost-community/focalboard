@@ -60,12 +60,12 @@ func (a *App) IsCloud() bool {
 // IsCloudLimited returns true if the server is running in cloud mode
 // and the card limit has been set.
 func (a *App) IsCloudLimited() bool {
-	return a.CardLimit != 0 && a.IsCloud()
+	return a.CardLimit() != 0 && a.IsCloud()
 }
 
 // SetCloudLimits sets the limits of the server.
 func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
-	oldCardLimit := a.CardLimit
+	oldCardLimit := a.CardLimit()
 
 	// if the limit object doesn't come complete, we assume limits are
 	// being disabled
@@ -73,11 +73,9 @@ func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
 	if limits != nil && limits.Boards != nil {
 		cardLimit = *limits.Boards.Cards
 	}
-	a.cardLimitMux.Lock()
-	a.CardLimit = cardLimit
-	a.cardLimitMux.Unlock()
 
 	if oldCardLimit != cardLimit {
+		a.SetCardLimit(cardLimit)
 		return a.doUpdateCardLimitTimestamp()
 	}
 
@@ -87,7 +85,7 @@ func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
 // doUpdateCardLimitTimestamp performs the update without running any
 // checks.
 func (a *App) doUpdateCardLimitTimestamp() error {
-	cardLimitTimestamp, err := a.store.UpdateCardLimitTimestamp(a.CardLimit)
+	cardLimitTimestamp, err := a.store.UpdateCardLimitTimestamp(a.CardLimit())
 	if err != nil {
 		return err
 	}

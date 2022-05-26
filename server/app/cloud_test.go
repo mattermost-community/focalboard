@@ -68,7 +68,7 @@ func TestIsCloudLimited(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		require.Zero(t, th.App.CardLimit)
+		require.Zero(t, th.App.CardLimit())
 		require.False(t, th.App.IsCloudLimited())
 	})
 
@@ -81,7 +81,7 @@ func TestIsCloudLimited(t *testing.T) {
 		}
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 
-		th.App.CardLimit = 5
+		th.App.SetCardLimit(5)
 		require.True(t, th.App.IsCloudLimited())
 	})
 }
@@ -92,22 +92,22 @@ func TestSetCloudLimits(t *testing.T) {
 			th, tearDown := SetupTestHelper(t)
 			defer tearDown()
 
-			require.Zero(t, th.App.CardLimit)
+			require.Zero(t, th.App.CardLimit())
 
 			require.NoError(t, th.App.SetCloudLimits(nil))
-			require.Zero(t, th.App.CardLimit)
+			require.Zero(t, th.App.CardLimit())
 		})
 
 		t.Run("limits not empty but board limits empty", func(t *testing.T) {
 			th, tearDown := SetupTestHelper(t)
 			defer tearDown()
 
-			require.Zero(t, th.App.CardLimit)
+			require.Zero(t, th.App.CardLimit())
 
 			limits := &mmModel.ProductLimits{}
 
 			require.NoError(t, th.App.SetCloudLimits(limits))
-			require.Zero(t, th.App.CardLimit)
+			require.Zero(t, th.App.CardLimit())
 		})
 	})
 
@@ -115,7 +115,7 @@ func TestSetCloudLimits(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		require.Zero(t, th.App.CardLimit)
+		require.Zero(t, th.App.CardLimit())
 
 		newCardLimitTimestamp := int64(27)
 		th.Store.EXPECT().UpdateCardLimitTimestamp(5).Return(newCardLimitTimestamp, nil)
@@ -125,27 +125,27 @@ func TestSetCloudLimits(t *testing.T) {
 		}
 
 		require.NoError(t, th.App.SetCloudLimits(limits))
-		require.Equal(t, 5, th.App.CardLimit)
+		require.Equal(t, 5, th.App.CardLimit())
 	})
 
 	t.Run("if the limits are already set and we unset them, the timestamp will be unset too", func(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		th.App.CardLimit = 20
+		th.App.SetCardLimit(20)
 
 		th.Store.EXPECT().UpdateCardLimitTimestamp(0)
 
 		require.NoError(t, th.App.SetCloudLimits(nil))
 
-		require.Zero(t, th.App.CardLimit)
+		require.Zero(t, th.App.CardLimit())
 	})
 
 	t.Run("if the limits are already set and we try to set the same ones again", func(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		th.App.CardLimit = 20
+		th.App.SetCardLimit(20)
 
 		// the call to update card limit timestamp should not happen
 		// as the limits didn't change
@@ -156,7 +156,7 @@ func TestSetCloudLimits(t *testing.T) {
 		}
 
 		require.NoError(t, th.App.SetCloudLimits(limits))
-		require.Equal(t, 20, th.App.CardLimit)
+		require.Equal(t, 20, th.App.CardLimit())
 	})
 }
 
@@ -169,7 +169,7 @@ func TestUpdateCardLimitTimestamp(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		require.Zero(t, th.App.CardLimit)
+		require.Zero(t, th.App.CardLimit())
 
 		// the license check will not be done as the limit not being
 		// set is enough for the method to return
@@ -185,7 +185,7 @@ func TestUpdateCardLimitTimestamp(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		th.App.CardLimit = 5
+		th.App.SetCardLimit(5)
 
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 		// no call to UpdateCardLimitTimestamp should happen as the
@@ -493,7 +493,7 @@ func TestApplyCloudLimits(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		require.Zero(t, th.App.CardLimit)
+		require.Zero(t, th.App.CardLimit())
 
 		newBlocks, err := th.App.ApplyCloudLimits(container, blocks)
 		require.NoError(t, err)
@@ -514,7 +514,7 @@ func TestApplyCloudLimits(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		th.App.CardLimit = 5
+		th.App.SetCardLimit(5)
 
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(150), nil)
@@ -588,7 +588,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 			RootID:   "board1",
 		}
 
-		th.App.CardLimit = 500
+		th.App.SetCardLimit(500)
 		cardLimitTimestamp := int64(150)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(cardLimitTimestamp, nil)
 		th.Store.EXPECT().GetBlocksByIDs(container, []string{"board1"}).Return([]model.Block{board1}, nil)
@@ -620,7 +620,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 			Fields:   map[string]interface{}{"isTemplate": true},
 		}
 
-		th.App.CardLimit = 500
+		th.App.SetCardLimit(500)
 		cardLimitTimestamp := int64(150)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(cardLimitTimestamp, nil)
 		th.Store.EXPECT().GetBlocksByIDs(container, []string{"board1"}).Return([]model.Block{board1}, nil)
@@ -659,7 +659,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 			RootID:   "board1",
 		}
 
-		th.App.CardLimit = 500
+		th.App.SetCardLimit(500)
 		cardLimitTimestamp := int64(150)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(cardLimitTimestamp, nil)
 		th.Store.EXPECT().GetBlocksByIDs(container, []string{"card1"}).Return([]model.Block{card1}, nil)
@@ -699,7 +699,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 			RootID:   "board1",
 		}
 
-		th.App.CardLimit = 500
+		th.App.SetCardLimit(500)
 		cardLimitTimestamp := int64(150)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(cardLimitTimestamp, nil)
 		th.Store.EXPECT().GetBlocksByIDs(container, []string{"card1"}).Return([]model.Block{card1}, nil)
@@ -789,7 +789,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 			RootID:   "board3",
 		}
 
-		th.App.CardLimit = 500
+		th.App.SetCardLimit(500)
 		cardLimitTimestamp := int64(150)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(cardLimitTimestamp, nil)
 		th.Store.EXPECT().GetBlocksByIDs(container, gomock.InAnyOrder([]string{"card1", "card3"})).Return([]model.Block{card1, card3}, nil)

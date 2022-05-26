@@ -97,7 +97,7 @@ func TestPatchBlocks(t *testing.T) {
 	})
 
 	t.Run("cloud limit error scenario", func(t *testing.T) {
-		th.App.CardLimit = 5
+		th.App.SetCardLimit(5)
 
 		fakeLicense := &mmModel.License{
 			Features: &mmModel.Features{Cloud: mmModel.NewBool(true)},
