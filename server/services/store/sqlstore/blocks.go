@@ -254,9 +254,26 @@ func (s *SQLStore) getSubTree3(db sq.BaseRunner, c store.Container, blockID stri
 
 func (s *SQLStore) getAllBlocks(db sq.BaseRunner, c store.Container) ([]model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"coalesce(workspace_id, '0')": c.WorkspaceID})
+		Select(
+			"b.id",
+			"b.parent_id",
+			"b.root_id",
+			"b.created_by",
+			"b.modified_by",
+			"b."+s.escapeField("schema"),
+			"b.type",
+			"b.title",
+			"b.fields",
+			s.timestampToCharField("b.insert_at", "insertAt"),
+			"b.create_at",
+			"b.update_at",
+			"b.delete_at",
+			"COALESCE(b.workspace_id, '0')",
+		).
+		From(s.tablePrefix + "blocks as b").
+		Join(s.tablePrefix + "blocks as pb on b.root_id = pb.id").
+		Where(sq.Eq{"coalesce(b.workspace_id, '0')": c.WorkspaceID}).
+		Where(sq.Eq{"pb.delete_at": 0})
 
 	rows, err := query.Query()
 	if err != nil {
