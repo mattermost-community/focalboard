@@ -336,7 +336,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	)
 
 	var bErr error
-	blocks, bErr = a.app.ApplyCloudLimits(blocks)
+	blocks, bErr = a.app.ApplyCloudLimits(*container, blocks)
 	if bErr != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", bErr)
 		return
@@ -841,6 +841,10 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("blockID", blockID)
 
 	err = a.app.PatchBlock(*container, blockID, patch, userID)
+	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -882,8 +886,6 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	// ToDo: prevent updates if cloud limited
-
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
@@ -914,6 +916,10 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = a.app.PatchBlocks(*container, patches, userID)
+	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -1003,7 +1009,7 @@ func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
 	)
 
 	var bErr error
-	blocks, bErr = a.app.ApplyCloudLimits(blocks)
+	blocks, bErr = a.app.ApplyCloudLimits(*container, blocks)
 	if bErr != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", bErr)
 		return

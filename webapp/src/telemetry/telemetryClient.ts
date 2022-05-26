@@ -45,6 +45,8 @@ export const TelemetryActions = {
     CloudMoreInfo: 'cloud_more_info',
     ViewLimitReached: 'limit_ViewLimitReached',
     ViewLimitCTAPerformed: 'limit_ViewLimitLinkOpen',
+    LimitCardLimitReached: 'limit_cardLimitReached',
+    LimitCardLimitLinkOpen: 'limit_cardLimitLinkOpen',
 }
 
 interface IEventProps {
