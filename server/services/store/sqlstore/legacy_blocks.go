@@ -24,7 +24,7 @@ func legacyBoardFields(prefix string) []string {
 		"COALESCE(created_by, '')",
 		"modified_by",
 		"type",
-		"\"\"", // substitute for minimum_role column.
+		"''", // substitute for minimum_role column.
 		"title",
 		"description",
 		"icon",
