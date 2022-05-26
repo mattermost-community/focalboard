@@ -14,6 +14,7 @@ import (
 )
 
 var ErrViewsLimitReached = errors.New("views limit reached for board")
+var ErrPatchUpdatesLimitedCards = errors.New("patch updates cards that are limited")
 
 func (a *App) GetBlocks(c store.Container, parentID string, blockType string) ([]model.Block, error) {
 	if blockType != "" && parentID != "" {
@@ -42,7 +43,17 @@ func (a *App) GetParentID(c store.Container, blockID string) (string, error) {
 func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
 	oldBlock, err := a.store.GetBlock(c, blockID)
 	if err != nil {
-		return nil
+		return err
+	}
+
+	if a.IsCloudLimited() {
+		containsLimitedBlocks, lErr := a.ContainsLimitedBlocks(c, []model.Block{*oldBlock})
+		if lErr != nil {
+			return lErr
+		}
+		if containsLimitedBlocks {
+			return ErrPatchUpdatesLimitedCards
+		}
 	}
 
 	err = a.store.PatchBlock(c, blockID, blockPatch, modifiedByID)
@@ -53,7 +64,7 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 	a.metrics.IncrementBlocksPatched(1)
 	block, err := a.store.GetBlock(c, blockID)
 	if err != nil {
-		return nil
+		return err
 	}
 	a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *block)
 	go func() {
@@ -64,17 +75,22 @@ func (a *App) PatchBlock(c store.Container, blockID string, blockPatch *model.Bl
 }
 
 func (a *App) PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch, modifiedByID string) error {
-	oldBlocks := make([]model.Block, 0, len(blockPatches.BlockIDs))
-	for _, blockID := range blockPatches.BlockIDs {
-		oldBlock, err := a.store.GetBlock(c, blockID)
-		if err != nil {
-			return nil
-		}
-		oldBlocks = append(oldBlocks, *oldBlock)
+	oldBlocks, err := a.store.GetBlocksByIDs(c, blockPatches.BlockIDs)
+	if err != nil {
+		return err
 	}
 
-	err := a.store.PatchBlocks(c, blockPatches, modifiedByID)
-	if err != nil {
+	if a.IsCloudLimited() {
+		containsLimitedBlocks, err := a.ContainsLimitedBlocks(c, oldBlocks)
+		if err != nil {
+			return err
+		}
+		if containsLimitedBlocks {
+			return ErrPatchUpdatesLimitedCards
+		}
+	}
+
+	if err := a.store.PatchBlocks(c, blockPatches, modifiedByID); err != nil {
 		return err
 	}
 
@@ -82,7 +98,7 @@ func (a *App) PatchBlocks(c store.Container, blockPatches *model.BlockPatchBatch
 	for i, blockID := range blockPatches.BlockIDs {
 		newBlock, err := a.store.GetBlock(c, blockID)
 		if err != nil {
-			return nil
+			return err
 		}
 		a.wsAdapter.BroadcastBlockChange(c.WorkspaceID, *newBlock)
 		go func(currentIndex int) {
