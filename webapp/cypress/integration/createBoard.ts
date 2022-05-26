@@ -173,7 +173,7 @@ describe('Create and delete board / card', () => {
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.get('.Kanban').
             trigger('dragover', {clientX: 400, clientY: Cypress.config().viewportHeight / 2}).
-            wait(7000).
+            wait(10000).
             trigger('dragend')
 
         cy.get('.Kanban').invoke('scrollLeft').should('equal', 0)

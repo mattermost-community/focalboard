@@ -2024,8 +2024,11 @@ func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
 	workspaceID := vars["workspaceID"]
 
 	if err := a.app.NotifyPortalAdminsUpgradeRequest(workspaceID); err != nil {
-		jsonStringResponse(w, http.StatusOK, "{}")
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
 	}
+
+	jsonStringResponse(w, http.StatusOK, "{}")
 }
 
 func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
