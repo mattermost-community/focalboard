@@ -72,6 +72,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetBlocks(t, store, container)
 	})
+	t.Run("GetAllBlocks", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetAllBlocks(t, store, container)
+	})
 	t.Run("GetBlock", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
@@ -861,6 +866,79 @@ func testGetBlocks(t *testing.T, storeInstance store.Store, container store.Cont
 		blocks, err = storeInstance.GetBlocksWithRootID(container, "block1")
 		require.NoError(t, err)
 		require.Len(t, blocks, 4)
+	})
+}
+
+func testGetAllBlocks(t *testing.T, store store.Store, container store.Container) {
+	t.Run("getting all blocks should not include those from deleted boards", func(t *testing.T) {
+		newBlocks := []model.Block{
+			{
+				ID:         "board1",
+				Type:       model.TypeBoard,
+				ParentID:   "board1",
+				RootID:     "board1",
+				ModifiedBy: "user-id",
+			},
+			{
+				ID:         "card1",
+				Type:       model.TypeCard,
+				ParentID:   "board1",
+				RootID:     "board1",
+				ModifiedBy: "user-id",
+			},
+			{
+				ID:         "text1",
+				Type:       model.TypeCard,
+				ParentID:   "card1",
+				RootID:     "board1",
+				ModifiedBy: "user-id",
+			},
+			{
+				ID:         "board2",
+				Type:       model.TypeBoard,
+				ParentID:   "board2",
+				RootID:     "board2",
+				ModifiedBy: "user-id",
+			},
+			{
+				ID:         "card2",
+				Type:       model.TypeCard,
+				ParentID:   "board2",
+				RootID:     "board2",
+				ModifiedBy: "user-id",
+			},
+			{
+				ID:         "text2",
+				Type:       model.TypeCard,
+				ParentID:   "card2",
+				RootID:     "board2",
+				ModifiedBy: "user-id",
+			},
+		}
+
+		InsertBlocks(t, store, container, newBlocks, "user-id")
+
+		t.Run("should return all blocks", func(t *testing.T) {
+			blocks, err := store.GetAllBlocks(container)
+			require.NoError(t, err)
+			require.Len(t, blocks, 6)
+		})
+
+		t.Run("after deleting a board, should only return the other one", func(t *testing.T) {
+			require.NoError(t, store.DeleteBlock(container, "board1", "user-id"))
+
+			blocks, err := store.GetAllBlocks(container)
+			require.NoError(t, err)
+			require.Len(t, blocks, 3)
+
+			expectedIDs := []string{"board2", "card2", "text2"}
+
+			blockIDs := []string{}
+			for _, block := range blocks {
+				blockIDs = append(blockIDs, block.ID)
+			}
+			require.ElementsMatch(t, expectedIDs, blockIDs)
+		})
 	})
 }
 

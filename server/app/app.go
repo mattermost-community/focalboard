@@ -1,6 +1,8 @@
 package app
 
 import (
+	"sync"
+
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/metrics"
@@ -43,8 +45,8 @@ type App struct {
 	logger        *mlog.Logger
 	pluginAPI     pluginAPI
 
-	// ToDo: do we require a mutex?
-	CardLimit int
+	cardLimitMux sync.RWMutex
+	cardLimit    int
 }
 
 func (a *App) SetConfig(config *config.Configuration) {
@@ -66,4 +68,16 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 	}
 	app.initialize(services.SkipTemplateInit)
 	return app
+}
+
+func (a *App) CardLimit() int {
+	a.cardLimitMux.RLock()
+	defer a.cardLimitMux.RUnlock()
+	return a.cardLimit
+}
+
+func (a *App) SetCardLimit(cardLimit int) {
+	a.cardLimitMux.Lock()
+	defer a.cardLimitMux.Unlock()
+	a.cardLimit = cardLimit
 }
