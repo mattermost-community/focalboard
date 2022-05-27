@@ -3,6 +3,8 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
+import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
+
 import {Constants} from '../../constants'
 import {Card} from '../../blocks/card'
 import {Board, IPropertyTemplate} from '../../blocks/board'
@@ -21,10 +23,11 @@ type Props = {
     addCard: (show: boolean) => Promise<void>
     selectedCardIds: string[]
     onCardClicked: (e: React.MouseEvent, card: Card) => void
+    hiddenCardsCount: number
 }
 
 const Gallery = (props: Props): JSX.Element => {
-    const {activeView, board, cards} = props
+    const {activeView, board, cards, hiddenCardsCount} = props
 
     const visiblePropertyTemplates =
         activeView.fields.visiblePropertyIds.map((id) => board.fields.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
@@ -56,6 +59,7 @@ const Gallery = (props: Props): JSX.Element => {
     const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
 
     return (
+
         <div className='Gallery'>
             {cards.filter((c) => c.parentId === board.id).map((card) => {
                 return (
@@ -90,6 +94,12 @@ const Gallery = (props: Props): JSX.Element => {
                     />
                 </div>
             }
+            {hiddenCardsCount > 0 &&
+            <div className='gallery-hidden-cards'>
+                <HiddenCardCount
+                    hiddenCardsCount={hiddenCardsCount}
+                />
+            </div>}
         </div>
     )
 }

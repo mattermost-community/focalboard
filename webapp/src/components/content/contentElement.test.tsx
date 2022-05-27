@@ -31,6 +31,7 @@ const contentBlock: ContentBlock = {
     createAt: 0,
     updateAt: 0,
     deleteAt: 0,
+    limited: false,
 }
 
 const wrap = (child: ReactNode): ReactElement => (

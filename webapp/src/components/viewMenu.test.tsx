@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 import '@testing-library/jest-dom'
 import {render} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
 import 'isomorphic-fetch'
 
 import React from 'react'
@@ -102,5 +104,33 @@ describe('/components/viewMenu', () => {
 
         const container = render(component)
         expect(container).toMatchSnapshot()
+    })
+
+    it('should check view limits', () => {
+        const mockStore = configureStore([])
+        const store = mockStore(state)
+
+        const mockedallowCreateView = jest.fn()
+        mockedallowCreateView.mockReturnValue(false)
+
+        const component = wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <ViewMenu
+                        board={board}
+                        activeView={activeView}
+                        views={views}
+                        readonly={false}
+                        allowCreateView={mockedallowCreateView}
+                    />
+                </Router>
+            </ReduxProvider>,
+        )
+
+        const container = render(component)
+
+        const buttonElement = container.getByRole('button', {name: 'Duplicate view'})
+        userEvent.click(buttonElement)
+        expect(mockedallowCreateView).toBeCalledTimes(1)
     })
 })

@@ -138,6 +138,7 @@ describe('components/centerPanel', () => {
                     showShared={false}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -156,6 +157,7 @@ describe('components/centerPanel', () => {
                     showShared={true}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -175,6 +177,7 @@ describe('components/centerPanel', () => {
                     showShared={true}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -194,6 +197,7 @@ describe('components/centerPanel', () => {
                     showShared={true}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -214,6 +218,7 @@ describe('components/centerPanel', () => {
                         showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -245,6 +250,7 @@ describe('components/centerPanel', () => {
                         showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -268,6 +274,7 @@ describe('components/centerPanel', () => {
                         showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -295,6 +302,7 @@ describe('components/centerPanel', () => {
                         showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -329,6 +337,7 @@ describe('components/centerPanel', () => {
                         showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -355,6 +364,7 @@ describe('components/centerPanel', () => {
                         showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -382,6 +392,7 @@ describe('components/centerPanel', () => {
                         showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -407,6 +418,7 @@ describe('components/centerPanel', () => {
                         showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -429,6 +441,7 @@ describe('components/centerPanel', () => {
                         showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -454,6 +467,7 @@ describe('components/centerPanel', () => {
                         showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -480,6 +494,7 @@ describe('components/centerPanel', () => {
                         showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))

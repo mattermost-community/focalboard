@@ -80,6 +80,7 @@ type Props = {
     me: IUser|null
     patchProps: (props: Record<string, string>) => void
     currentCard?: string
+    hiddenCardsCount: number
 }
 
 type State = {
@@ -179,7 +180,7 @@ class CenterPanel extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
-        const {groupByProperty, activeView, board, views, cards} = this.props
+        const {groupByProperty, activeView, board, views, cards, hiddenCardsCount} = this.props
         const {visible: visibleGroups, hidden: hiddenGroups} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
 
         return (
@@ -258,6 +259,7 @@ class CenterPanel extends React.Component<Props, State> {
                     onCardClicked={this.cardClicked}
                     addCard={this.addCard}
                     showCard={this.showCard}
+                    hiddenCardsCount={hiddenCardsCount}
                 />}
                 {activeView.fields.viewType === 'table' &&
                     <Table
@@ -273,6 +275,7 @@ class CenterPanel extends React.Component<Props, State> {
                         showCard={this.showCard}
                         addCard={this.addCard}
                         onCardClicked={this.cardClicked}
+                        hiddenCardsCount={hiddenCardsCount}
                     />}
                 {activeView.fields.viewType === 'calendar' &&
                     <CalendarFullView
@@ -296,6 +299,7 @@ class CenterPanel extends React.Component<Props, State> {
                         onCardClicked={this.cardClicked}
                         selectedCardIds={this.state.selectedCardIds}
                         addCard={(show) => this.addCard('', show)}
+                        hiddenCardsCount={hiddenCardsCount}
                     />}
             </div>
         )
