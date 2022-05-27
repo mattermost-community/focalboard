@@ -265,7 +265,7 @@ func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, recei
 	return errUnsupportedOperation
 }
 
-func (s *SQLStore) isUserGuest(db sq.BaseRunner, userID string) (bool, error) {
+func (s *SQLStore) isUserGuest(_ sq.BaseRunner, userID string) (bool, error) {
 	user, err := s.GetUserByID(userID)
 	if err != nil {
 		return false, err
