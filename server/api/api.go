@@ -841,6 +841,10 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("blockID", blockID)
 
 	err = a.app.PatchBlock(*container, blockID, patch, userID)
+	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -882,8 +886,6 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	// ToDo: prevent updates if cloud limited
-
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
@@ -914,6 +916,10 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = a.app.PatchBlocks(*container, patches, userID)
+	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -2018,8 +2024,11 @@ func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
 	workspaceID := vars["workspaceID"]
 
 	if err := a.app.NotifyPortalAdminsUpgradeRequest(workspaceID); err != nil {
-		jsonStringResponse(w, http.StatusOK, "{}")
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
 	}
+
+	jsonStringResponse(w, http.StatusOK, "{}")
 }
 
 func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
