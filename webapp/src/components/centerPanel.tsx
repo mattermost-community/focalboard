@@ -69,6 +69,7 @@ type Props = {
     readonly: boolean
     shownCardId?: string
     showCard: (cardId?: string) => void
+    hiddenCardsCount: number
 }
 
 const CenterPanel = (props: Props) => {
@@ -418,6 +419,7 @@ const CenterPanel = (props: Props) => {
                 onCardClicked={cardClicked}
                 addCard={addCard}
                 showCard={showCard}
+                hiddenCardsCount={props.hiddenCardsCount}
             />}
             {activeView.fields.viewType === 'table' &&
                 <Table
@@ -433,6 +435,7 @@ const CenterPanel = (props: Props) => {
                     showCard={showCard}
                     addCard={addCard}
                     onCardClicked={cardClicked}
+                    hiddenCardsCount={props.hiddenCardsCount}
                 />}
             {activeView.fields.viewType === 'calendar' &&
                 <CalendarFullView
@@ -445,6 +448,7 @@ const CenterPanel = (props: Props) => {
                     addCard={(properties: Record<string, string>) => {
                         addCard('', true, properties)
                     }}
+                    hiddenCardsCount={props.hiddenCardsCount}
                 />}
 
             {activeView.fields.viewType === 'gallery' &&
@@ -456,6 +460,7 @@ const CenterPanel = (props: Props) => {
                     onCardClicked={cardClicked}
                     selectedCardIds={selectedCardIds}
                     addCard={(show) => addCard('', show)}
+                    hiddenCardsCount={props.hiddenCardsCount}
                 />}
         </div>
     )

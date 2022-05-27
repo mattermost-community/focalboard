@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 
 import {getCurrentTeam} from '../store/teams'
 import {getCurrentBoard, isLoadingBoard, getTemplates} from '../store/boards'
-import {refreshCards, getCardLimitTimestamp, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
+import {refreshCards, getCardLimitTimestamp, getCurrentBoardHiddenCardsCount, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {
     getCurrentBoardViews,
     getCurrentViewGroupBy,
@@ -44,6 +44,7 @@ function CenterContent(props: Props) {
     const groupByProperty = useAppSelector(getCurrentViewGroupBy)
     const dateDisplayProperty = useAppSelector(getCurrentViewDisplayBy)
     const clientConfig = useAppSelector(getClientConfig)
+    const hiddenCardsCount = useAppSelector(getCurrentBoardHiddenCardsCount)
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
@@ -100,6 +101,7 @@ function CenterContent(props: Props) {
                 groupByProperty={property}
                 dateDisplayProperty={displayProperty}
                 views={views}
+                hiddenCardsCount={hiddenCardsCount}
             />
         )
     }

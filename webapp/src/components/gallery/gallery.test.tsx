@@ -66,6 +66,11 @@ describe('src/components/gallery/Gallery', () => {
                 props: {},
             },
         }
+        boards: {
+            current: '',
+            boards: {},
+            templates: {},
+        },
     }
     const store = mockStateStore([], state)
     beforeEach(() => {
@@ -82,6 +87,7 @@ describe('src/components/gallery/Gallery', () => {
                     addCard={jest.fn()}
                     selectedCardIds={[card.id]}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -120,6 +126,7 @@ describe('src/components/gallery/Gallery', () => {
                     addCard={mockAddCard}
                     selectedCardIds={[card.id]}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -142,6 +149,7 @@ describe('src/components/gallery/Gallery', () => {
                     addCard={jest.fn()}
                     selectedCardIds={[card.id]}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -158,6 +166,7 @@ describe('src/components/gallery/Gallery', () => {
                     addCard={jest.fn()}
                     selectedCardIds={[]}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -169,5 +178,54 @@ describe('src/components/gallery/Gallery', () => {
         fireEvent.dragOver(drop)
         fireEvent.drop(drop)
         expect(mockedMutator.performAsUndoGroup).toBeCalledTimes(1)
+    })
+
+    test('limited card count check', () => {
+        const boardTest = TestBlockFactory.createBoard()
+        const card1 = TestBlockFactory.createCard(boardTest)
+        const card3 = TestBlockFactory.createCard(boardTest)
+        const stateTest: Partial<RootState> = {
+            contents: {
+                contents: blocksById(contents),
+            },
+            cards: {
+                current: '',
+                cards: {
+                    [card1.id]: card1,
+                    [card3.id]: card3,
+                },
+                templates: {},
+                cardHiddenWarning: true,
+                limitTimestamp: 2,
+            },
+            comments: {
+                comments: {},
+            },
+            boards: {
+                current: boardTest.id,
+                boards: {},
+                templates: {},
+            },
+        }
+        const storeTest = mockStateStore([], stateTest)
+        beforeEach(() => {
+            jest.clearAllMocks()
+        })
+        const {container, getByTitle} = render(wrapDNDIntl(
+            <ReduxProvider store={storeTest}>
+                <Gallery
+                    board={boardTest}
+                    cards={[card1, card3]}
+                    activeView={activeView}
+                    readonly={false}
+                    addCard={jest.fn()}
+                    selectedCardIds={[card1.id]}
+                    onCardClicked={jest.fn()}
+                    hiddenCardsCount={2}
+                />
+            </ReduxProvider>,
+        ))
+        expect(getByTitle('hidden-card-count').innerHTML).toBe('<span>2</span>')
+        expect(container).toMatchSnapshot()
     })
 })

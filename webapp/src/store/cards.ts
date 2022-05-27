@@ -361,7 +361,7 @@ export const getCurrentViewCardsSortedFilteredAndGroupedWithoutLimit = createSel
         if (!view || !board || !users || !cards) {
             return []
         }
-        let result = cards
+        let result = cards.filter((c) => !c.limited)
         if (view.fields.filter) {
             result = CardFilter.applyFilterGroup(view.fields.filter, board.cardProperties, result)
         }
