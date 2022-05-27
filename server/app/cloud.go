@@ -60,12 +60,12 @@ func (a *App) IsCloud() bool {
 // IsCloudLimited returns true if the server is running in cloud mode
 // and the card limit has been set.
 func (a *App) IsCloudLimited() bool {
-	return a.CardLimit != 0 && a.IsCloud()
+	return a.CardLimit() != 0 && a.IsCloud()
 }
 
 // SetCloudLimits sets the limits of the server.
 func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
-	oldCardLimit := a.CardLimit
+	oldCardLimit := a.CardLimit()
 
 	// if the limit object doesn't come complete, we assume limits are
 	// being disabled
@@ -73,9 +73,9 @@ func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
 	if limits != nil && limits.Boards != nil {
 		cardLimit = *limits.Boards.Cards
 	}
-	a.CardLimit = cardLimit
 
 	if oldCardLimit != cardLimit {
+		a.SetCardLimit(cardLimit)
 		return a.doUpdateCardLimitTimestamp()
 	}
 
@@ -85,7 +85,7 @@ func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
 // doUpdateCardLimitTimestamp performs the update without running any
 // checks.
 func (a *App) doUpdateCardLimitTimestamp() error {
-	cardLimitTimestamp, err := a.store.UpdateCardLimitTimestamp(a.CardLimit)
+	cardLimitTimestamp, err := a.store.UpdateCardLimitTimestamp(a.CardLimit())
 	if err != nil {
 		return err
 	}
@@ -202,8 +202,7 @@ func (a *App) ApplyCloudLimits(c store.Container, blocks []model.Block) ([]model
 			continue
 		}
 
-		if block.Type == model.TypeCard &&
-			block.UpdateAt < cardLimitTimestamp {
+		if block.ShouldBeLimited(cardLimitTimestamp) {
 			limitedBlocks[i] = block.GetLimited()
 		} else {
 			limitedBlocks[i] = block
@@ -211,6 +210,80 @@ func (a *App) ApplyCloudLimits(c store.Container, blocks []model.Block) ([]model
 	}
 
 	return limitedBlocks, nil
+}
+
+// ContainsLimitedBlocks checks if a list of block IDs contain any
+// block that references a limited card.
+func (a *App) ContainsLimitedBlocks(c store.Container, blocks []model.Block) (bool, error) {
+	cardLimitTimestamp, err := a.store.GetCardLimitTimestamp()
+	if err != nil {
+		return false, err
+	}
+
+	if cardLimitTimestamp == 0 {
+		return false, nil
+	}
+
+	cards := []model.Block{}
+	cardIDMap := map[string]bool{}
+	for _, block := range blocks {
+		switch block.Type {
+		case model.TypeBoard:
+		case model.TypeCard:
+			cards = append(cards, block)
+		default:
+			cardIDMap[block.ParentID] = true
+		}
+	}
+
+	cardIDs := []string{}
+	// if the card is already present on the set, we don't need to
+	// fetch it from the database
+	for cardID := range cardIDMap {
+		alreadyPresent := false
+		for _, card := range cards {
+			if card.ID == cardID {
+				alreadyPresent = true
+				break
+			}
+		}
+
+		if !alreadyPresent {
+			cardIDs = append(cardIDs, cardID)
+		}
+	}
+
+	if len(cardIDs) > 0 {
+		fetchedCards, fErr := a.store.GetBlocksByIDs(c, cardIDs)
+		if fErr != nil {
+			return false, fErr
+		}
+		cards = append(cards, fetchedCards...)
+	}
+
+	templateMap, err := a.getTemplateMapForBlocks(c, blocks)
+	if err != nil {
+		return false, err
+	}
+
+	for _, card := range cards {
+		isTemplate, ok := templateMap[card.RootID]
+		if !ok {
+			return false, newErrBoardNotFoundInTemplateMap(card.RootID)
+		}
+
+		// if the block belongs to a template, it will never be
+		// limited
+		if isTemplate {
+			continue
+		}
+
+		if card.ShouldBeLimited(cardLimitTimestamp) {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func (a *App) NotifyPortalAdminsUpgradeRequest(workspaceID string) error {

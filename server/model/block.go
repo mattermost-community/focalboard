@@ -201,6 +201,11 @@ func StampModificationMetadata(userID string, blocks []Block, auditRec *audit.Re
 	}
 }
 
+func (b Block) ShouldBeLimited(cardLimitTimestamp int64) bool {
+	return b.Type == TypeCard &&
+		b.UpdateAt < cardLimitTimestamp
+}
+
 // Returns a limited version of the block that doesn't contain the
 // contents of the block, only its IDs and type.
 func (b Block) GetLimited() Block {
