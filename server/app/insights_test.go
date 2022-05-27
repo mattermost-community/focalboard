@@ -64,7 +64,7 @@ func TestGetUserBoardsInsights(t *testing.T) {
 	defer tearDown()
 
 	t.Run("success query", func(t *testing.T) {
-		th.Store.EXPECT().IsUserGuest("user-id").Return(false, nil)
+		th.Store.EXPECT().IsUserGuest("user-id-1").Return(false, nil)
 		fakeLicense := &mmModel.License{Features: &mmModel.Features{}, SkuShortName: mmModel.LicenseShortSkuEnterprise}
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 		th.Store.EXPECT().GetUserWorkspacesInTeam("user-id-1", "team-id").Return(mockInsightsWorkspaces, nil)
@@ -75,7 +75,7 @@ func TestGetUserBoardsInsights(t *testing.T) {
 	})
 
 	t.Run("fail query", func(t *testing.T) {
-		th.Store.EXPECT().IsUserGuest("user-id").Return(false, nil)
+		th.Store.EXPECT().IsUserGuest("user-id-1").Return(false, nil)
 		fakeLicense := &mmModel.License{Features: &mmModel.Features{}, SkuShortName: mmModel.LicenseShortSkuEnterprise}
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 		th.Store.EXPECT().GetUserWorkspacesInTeam("user-id-1", "team-id").Return(mockInsightsWorkspaces, nil)
