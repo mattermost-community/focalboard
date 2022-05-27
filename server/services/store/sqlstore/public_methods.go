@@ -122,6 +122,11 @@ func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBl
 
 }
 
+func (s *SQLStore) GetBlocksByIDs(c store.Container, ids []string) ([]model.Block, error) {
+	return s.getBlocksByIDs(s.db, c, ids)
+
+}
+
 func (s *SQLStore) GetBlocksWithParent(c store.Container, parentID string) ([]model.Block, error) {
 	return s.getBlocksWithParent(s.db, c, parentID)
 

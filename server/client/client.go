@@ -456,3 +456,19 @@ func (c *Client) GetTeamBoardsInsights(teamID string, duration string) ([]model.
 
 	return model.BoardInsightsFromJSON(r.Body), BuildResponse(r)
 }
+
+func (c *Client) GetLimits() (*model.BoardsCloudLimits, *Response) {
+	r, err := c.DoAPIGet("/limits", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var limits *model.BoardsCloudLimits
+	err = json.NewDecoder(r.Body).Decode(&limits)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return limits, BuildResponse(r)
+}

@@ -5,6 +5,7 @@ package store
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
@@ -24,6 +25,7 @@ type Container struct {
 type Store interface {
 	GetBlocksWithParentAndType(c Container, parentID string, blockType string) ([]model.Block, error)
 	GetBlocksWithParent(c Container, parentID string) ([]model.Block, error)
+	GetBlocksByIDs(c Container, ids []string) ([]model.Block, error)
 	GetBlocksWithRootID(c Container, rootID string) ([]model.Block, error)
 	GetBlocksWithType(c Container, blockType string) ([]model.Block, error)
 	GetSubTree2(c Container, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
@@ -149,4 +151,31 @@ func IsErrNotFound(err error) bool {
 
 	var nf *ErrNotFound
 	return errors.As(err, &nf)
+}
+
+// ErrNotAllFound is an error type that can be returned by store APIs
+// when a query that should fetch a certain amount of records
+// unexpectedly fetches less.
+type ErrNotAllFound struct {
+	resources []string
+}
+
+func NewErrNotAllFound(resources []string) *ErrNotAllFound {
+	return &ErrNotAllFound{
+		resources: resources,
+	}
+}
+
+func (na *ErrNotAllFound) Error() string {
+	return fmt.Sprintf("not all instances in {%s} found", strings.Join(na.resources, ", "))
+}
+
+// IsErrNotAllFound returns true if `err` is or wraps a ErrNotAllFound.
+func IsErrNotAllFound(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	var na *ErrNotAllFound
+	return errors.As(err, &na)
 }

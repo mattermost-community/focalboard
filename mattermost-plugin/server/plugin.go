@@ -17,6 +17,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
@@ -154,15 +155,17 @@ func (p *Plugin) OnActivate() error {
 		return err
 	}
 
-	limits, err := p.API.GetCloudLimits()
-	if err != nil {
-		fmt.Println("ERROR FETCHING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
-		return err
-	}
+	if utils.IsCloudLicense(p.API.GetLicense()) {
+		limits, err := p.API.GetCloudLimits()
+		if err != nil {
+			fmt.Println("ERROR FETCHING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
+			return err
+		}
 
-	if err := server.App().SetCloudLimits(limits); err != nil {
-		fmt.Println("ERROR SETTING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
-		return err
+		if err := server.App().SetCloudLimits(limits); err != nil {
+			fmt.Println("ERROR SETTING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
+			return err
+		}
 	}
 
 	p.server = server

@@ -72,6 +72,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetBlocks(t, store, container)
 	})
+	t.Run("GetAllBlocks", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetAllBlocks(t, store, container)
+	})
 	t.Run("GetBlock", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
@@ -742,8 +747,8 @@ func testUndeleteBlock(t *testing.T, store store.Store, container store.Containe
 	})
 }
 
-func testGetBlocks(t *testing.T, store store.Store, container store.Container) {
-	blocks, err := store.GetAllBlocks(container)
+func testGetBlocks(t *testing.T, storeInstance store.Store, container store.Container) {
+	blocks, err := storeInstance.GetAllBlocks(container)
 	require.NoError(t, err)
 
 	blocksToInsert := []model.Block{
@@ -783,70 +788,157 @@ func testGetBlocks(t *testing.T, store store.Store, container store.Container) {
 			Type:       "test",
 		},
 	}
-	InsertBlocks(t, store, container, blocksToInsert, "user-id-1")
-	defer DeleteBlocks(t, store, container, blocksToInsert, "test")
+	InsertBlocks(t, storeInstance, container, blocksToInsert, "user-id-1")
+	defer DeleteBlocks(t, storeInstance, container, blocksToInsert, "test")
 
 	t.Run("not existing parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithParentAndType(container, "not-exists", "test")
+		blocks, err = storeInstance.GetBlocksWithParentAndType(container, "not-exists", "test")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("not existing type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithParentAndType(container, "block1", "not-existing")
+		blocks, err = storeInstance.GetBlocksWithParentAndType(container, "block1", "not-existing")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("valid parent and type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithParentAndType(container, "block1", "test")
+		blocks, err = storeInstance.GetBlocksWithParentAndType(container, "block1", "test")
 		require.NoError(t, err)
 		require.Len(t, blocks, 2)
 	})
 
 	t.Run("not existing parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithParent(container, "not-exists")
+		blocks, err = storeInstance.GetBlocksWithParent(container, "not-exists")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("valid parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithParent(container, "block1")
+		blocks, err = storeInstance.GetBlocksWithParent(container, "block1")
 		require.NoError(t, err)
 		require.Len(t, blocks, 3)
 	})
 
+	t.Run("by ids, all existing", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = storeInstance.GetBlocksByIDs(container, []string{"block1", "block3"})
+		require.NoError(t, err)
+		require.Len(t, blocks, 2)
+	})
+
+	t.Run("by ids, some existing", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = storeInstance.GetBlocksByIDs(container, []string{"not-exists", "block3"})
+		require.Error(t, err)
+		require.True(t, store.IsErrNotAllFound(err))
+	})
+
 	t.Run("not existing type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithType(container, "not-exists")
+		blocks, err = storeInstance.GetBlocksWithType(container, "not-exists")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("valid type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithType(container, "test")
+		blocks, err = storeInstance.GetBlocksWithType(container, "test")
 		require.NoError(t, err)
 		require.Len(t, blocks, 4)
 	})
 
 	t.Run("not existing parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithRootID(container, "not-exists")
+		blocks, err = storeInstance.GetBlocksWithRootID(container, "not-exists")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("valid parent", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithRootID(container, "block1")
+		blocks, err = storeInstance.GetBlocksWithRootID(container, "block1")
 		require.NoError(t, err)
 		require.Len(t, blocks, 4)
+	})
+}
+
+func testGetAllBlocks(t *testing.T, store store.Store, container store.Container) {
+	t.Run("getting all blocks should not include those from deleted boards", func(t *testing.T) {
+		newBlocks := []model.Block{
+			{
+				ID:         "board1",
+				Type:       model.TypeBoard,
+				ParentID:   "board1",
+				RootID:     "board1",
+				ModifiedBy: "user-id",
+			},
+			{
+				ID:         "card1",
+				Type:       model.TypeCard,
+				ParentID:   "board1",
+				RootID:     "board1",
+				ModifiedBy: "user-id",
+			},
+			{
+				ID:         "text1",
+				Type:       model.TypeCard,
+				ParentID:   "card1",
+				RootID:     "board1",
+				ModifiedBy: "user-id",
+			},
+			{
+				ID:         "board2",
+				Type:       model.TypeBoard,
+				ParentID:   "board2",
+				RootID:     "board2",
+				ModifiedBy: "user-id",
+			},
+			{
+				ID:         "card2",
+				Type:       model.TypeCard,
+				ParentID:   "board2",
+				RootID:     "board2",
+				ModifiedBy: "user-id",
+			},
+			{
+				ID:         "text2",
+				Type:       model.TypeCard,
+				ParentID:   "card2",
+				RootID:     "board2",
+				ModifiedBy: "user-id",
+			},
+		}
+
+		InsertBlocks(t, store, container, newBlocks, "user-id")
+
+		t.Run("should return all blocks", func(t *testing.T) {
+			blocks, err := store.GetAllBlocks(container)
+			require.NoError(t, err)
+			require.Len(t, blocks, 6)
+		})
+
+		t.Run("after deleting a board, should only return the other one", func(t *testing.T) {
+			require.NoError(t, store.DeleteBlock(container, "board1", "user-id"))
+
+			blocks, err := store.GetAllBlocks(container)
+			require.NoError(t, err)
+			require.Len(t, blocks, 3)
+
+			expectedIDs := []string{"board2", "card2", "text2"}
+
+			blockIDs := []string{}
+			for _, block := range blocks {
+				blockIDs = append(blockIDs, block.ID)
+			}
+			require.ElementsMatch(t, expectedIDs, blockIDs)
+		})
 	})
 }
 
