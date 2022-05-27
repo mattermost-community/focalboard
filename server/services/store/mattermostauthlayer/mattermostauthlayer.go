@@ -719,3 +719,11 @@ func (s *MattermostAuthLayer) CheckUserIDInTeam(userID string, teamID string) bo
 func (s *MattermostAuthLayer) GetCloudLimits() (*mmModel.ProductLimits, error) {
 	return s.pluginAPI.GetCloudLimits()
 }
+
+func (s *MattermostAuthLayer) IsUserGuest(userID string) (bool, error) {
+	user, err := s.GetUserByID(userID)
+	if err != nil {
+		return false, err
+	}
+	return strings.Contains(user.Roles, "guest"), nil
+}

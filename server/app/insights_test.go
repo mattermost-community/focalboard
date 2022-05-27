@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/stretchr/testify/require"
 )
 
@@ -36,6 +37,9 @@ func TestGetTeamBoardsInsights(t *testing.T) {
 	defer tearDown()
 
 	t.Run("success query", func(t *testing.T) {
+		th.Store.EXPECT().IsUserGuest("user-id").Return(false, nil)
+		fakeLicense := &mmModel.License{Features: &mmModel.Features{}, SkuShortName: mmModel.LicenseShortSkuEnterprise}
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 		th.Store.EXPECT().GetUserWorkspacesInTeam("user-id", "team-id").Return(mockInsightsWorkspaces, nil)
 		th.Store.EXPECT().GetTeamBoardsInsights("10 days", []string{"mock-user-workspace-id"}).Return(mockTeamInsights, nil)
 		results, err := th.App.GetTeamBoardsInsights("user-id", "team-id", "10 days")
@@ -44,6 +48,9 @@ func TestGetTeamBoardsInsights(t *testing.T) {
 	})
 
 	t.Run("fail query", func(t *testing.T) {
+		th.Store.EXPECT().IsUserGuest("user-id").Return(false, nil)
+		fakeLicense := &mmModel.License{Features: &mmModel.Features{}, SkuShortName: mmModel.LicenseShortSkuEnterprise}
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 		th.Store.EXPECT().GetUserWorkspacesInTeam("user-id", "team-id").Return(mockInsightsWorkspaces, nil)
 		th.Store.EXPECT().GetTeamBoardsInsights("10 days", []string{"mock-user-workspace-id"}).Return(nil, insightError{"board-insight-error"})
 		_, err := th.App.GetTeamBoardsInsights("user-id", "team-id", "10 days")
@@ -57,6 +64,9 @@ func TestGetUserBoardsInsights(t *testing.T) {
 	defer tearDown()
 
 	t.Run("success query", func(t *testing.T) {
+		th.Store.EXPECT().IsUserGuest("user-id").Return(false, nil)
+		fakeLicense := &mmModel.License{Features: &mmModel.Features{}, SkuShortName: mmModel.LicenseShortSkuEnterprise}
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 		th.Store.EXPECT().GetUserWorkspacesInTeam("user-id-1", "team-id").Return(mockInsightsWorkspaces, nil)
 		th.Store.EXPECT().GetUserBoardsInsights("user-id-1", "10 days", []string{"mock-user-workspace-id"}).Return(mockTeamInsights, nil)
 		results, err := th.App.GetUserBoardsInsights("user-id-1", "team-id", "10 days")
@@ -65,6 +75,9 @@ func TestGetUserBoardsInsights(t *testing.T) {
 	})
 
 	t.Run("fail query", func(t *testing.T) {
+		th.Store.EXPECT().IsUserGuest("user-id").Return(false, nil)
+		fakeLicense := &mmModel.License{Features: &mmModel.Features{}, SkuShortName: mmModel.LicenseShortSkuEnterprise}
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 		th.Store.EXPECT().GetUserWorkspacesInTeam("user-id-1", "team-id").Return(mockInsightsWorkspaces, nil)
 		th.Store.EXPECT().GetUserBoardsInsights("user-id-1", "10 days", []string{"mock-user-workspace-id"}).Return(nil, insightError{"board-insight-error"})
 		_, err := th.App.GetUserBoardsInsights("user-id-1", "team-id", "10 days")

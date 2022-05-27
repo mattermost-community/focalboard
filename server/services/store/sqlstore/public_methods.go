@@ -257,12 +257,13 @@ func (s *SQLStore) GetTeamBoardsInsights(duration string, channelIDs []string) (
 
 }
 
-func (s *SQLStore) GetUserBoardsInsights(userID string, duration string, channelIDs []string) ([]*model.BoardInsight, error) {
-	return s.getUserBoardsInsights(s.db, userID, duration, channelIDs)
-}
-
 func (s *SQLStore) GetUsedCardsCount() (int, error) {
 	return s.getUsedCardsCount(s.db)
+
+}
+
+func (s *SQLStore) GetUserBoardsInsights(userID string, duration string, channelIDs []string) ([]*model.BoardInsight, error) {
+	return s.getUserBoardsInsights(s.db, userID, duration, channelIDs)
 
 }
 
@@ -364,6 +365,11 @@ func (s *SQLStore) InsertBlocks(c store.Container, blocks []model.Block, userID 
 
 }
 
+func (s *SQLStore) IsUserGuest(userID string) (bool, error) {
+	return s.isUserGuest(s.db, userID)
+
+}
+
 func (s *SQLStore) PatchBlock(c store.Container, blockID string, blockPatch *model.BlockPatch, userID string) error {
 	if s.dbType == sqliteDBType {
 		return s.patchBlock(s.db, c, blockID, blockPatch, userID)
@@ -427,13 +433,14 @@ func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
 
 }
 
-func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
-	return s.sendMessage(s.db, message, postType, receipts)
-}
-
-//nolint:typecheck
 func (s *SQLStore) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
 	return s.saveFileInfo(s.db, fileInfo)
+
+}
+
+func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
+	return s.sendMessage(s.db, message, postType, receipts)
+
 }
 
 func (s *SQLStore) SetSystemSetting(key string, value string) error {

@@ -121,6 +121,7 @@ type Store interface {
 	// Insights
 	GetTeamBoardsInsights(duration string, channelIDs []string) ([]*model.BoardInsight, error)
 	GetUserBoardsInsights(userID string, duration string, channelIDs []string) ([]*model.BoardInsight, error)
+	IsUserGuest(userID string) (bool, error)
 	GetCloudLimits() (*mmModel.ProductLimits, error)
 }
 

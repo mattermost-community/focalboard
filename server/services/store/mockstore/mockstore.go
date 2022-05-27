@@ -682,6 +682,13 @@ func (m *MockStore) GetTeamBoardsInsights(arg0 string, arg1 []string) ([]*model.
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
+
+// GetTeamBoardsInsights indicates an expected call of GetTeamBoardsInsights.
+func (mr *MockStoreMockRecorder) GetTeamBoardsInsights(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamBoardsInsights", reflect.TypeOf((*MockStore)(nil).GetTeamBoardsInsights), arg0, arg1)
+}
+
 // GetUsedCardsCount mocks base method.
 func (m *MockStore) GetUsedCardsCount() (int, error) {
 	m.ctrl.T.Helper()
@@ -691,10 +698,10 @@ func (m *MockStore) GetUsedCardsCount() (int, error) {
 	return ret0, ret1
 }
 
-// GetTeamBoardsInsights indicates an expected call of GetTeamBoardsInsights.
-func (mr *MockStoreMockRecorder) GetTeamBoardsInsights(arg0, arg1 interface{}) *gomock.Call {
+// GetUsedCardsCount indicates an expected call of GetUsedCardsCount.
+func (mr *MockStoreMockRecorder) GetUsedCardsCount() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamBoardsInsights", reflect.TypeOf((*MockStore)(nil).GetTeamBoardsInsights), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsedCardsCount", reflect.TypeOf((*MockStore)(nil).GetUsedCardsCount))
 }
 
 // GetUserBoardsInsights mocks base method.
@@ -710,11 +717,6 @@ func (m *MockStore) GetUserBoardsInsights(arg0, arg1 string, arg2 []string) ([]*
 func (mr *MockStoreMockRecorder) GetUserBoardsInsights(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserBoardsInsights", reflect.TypeOf((*MockStore)(nil).GetUserBoardsInsights), arg0, arg1, arg2)
-}
-// GetUsedCardsCount indicates an expected call of GetUsedCardsCount.
-func (mr *MockStoreMockRecorder) GetUsedCardsCount() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsedCardsCount", reflect.TypeOf((*MockStore)(nil).GetUsedCardsCount))
 }
 
 // GetUserByEmail mocks base method.
@@ -907,6 +909,21 @@ func (m *MockStore) IsErrNotFound(arg0 error) bool {
 func (mr *MockStoreMockRecorder) IsErrNotFound(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsErrNotFound", reflect.TypeOf((*MockStore)(nil).IsErrNotFound), arg0)
+}
+
+// IsUserGuest mocks base method.
+func (m *MockStore) IsUserGuest(arg0 string) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IsUserGuest", arg0)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IsUserGuest indicates an expected call of IsUserGuest.
+func (mr *MockStoreMockRecorder) IsUserGuest(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsUserGuest", reflect.TypeOf((*MockStore)(nil).IsUserGuest), arg0)
 }
 
 // PatchBlock mocks base method.

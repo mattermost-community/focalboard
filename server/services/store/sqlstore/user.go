@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
@@ -262,4 +263,12 @@ func (s *SQLStore) checkUserIDInTeam(db sq.BaseRunner, userID string, teamID str
 
 func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, receipts []string) error {
 	return errUnsupportedOperation
+}
+
+func (s *SQLStore) isUserGuest(db sq.BaseRunner, userID string) (bool, error) {
+	user, err := s.GetUserByID(userID)
+	if err != nil {
+		return false, err
+	}
+	return strings.Contains(user.Roles, "guest"), nil
 }
