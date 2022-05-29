@@ -57,7 +57,6 @@
 		"react-dnd-scrolling": "^1.2.1",
 		"react-dnd-touch-backend": "^14.0.0",
 		"react-dom": "^17.0.2",
-		"react-hot-keys": "^2.7.1",
 		"react-hotkeys-hook": "^3.4.4",
 		"react-intl": "^5.24.7",
 		"react-redux": "^7.2.6",
