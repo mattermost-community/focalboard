@@ -795,6 +795,7 @@ class Mutator {
         } else if (asTemplate) {
             // Template from board
             newBoard.title = 'New board template'
+            newBoard.fields.templateVer = 0 // default it to display edit/delete actions
         } else {
             // Board from template
         }
@@ -831,6 +832,7 @@ class Mutator {
         } else if (asTemplate) {
             // Template from board
             newBoard.title = 'New board template'
+            newBoard.fields.templateVer = 0 // default it to display edit/delete actions
         } else {
             // Board from template
         }
