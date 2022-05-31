@@ -118,7 +118,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
           </div>
           <div>
             <div
-              aria-label="Comments and Description"
+              aria-label="Comments and description"
               class="MenuOption SwitchOption menu-option"
               role="button"
             >
@@ -128,7 +128,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
               <div
                 class="menu-name"
               >
-                Comments and Description
+                Comments and description
               </div>
               <div
                 class="Switch override-main size--small"
@@ -311,7 +311,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
           </div>
           <div>
             <div
-              aria-label="Comments and Description"
+              aria-label="Comments and description"
               class="MenuOption SwitchOption menu-option"
               role="button"
             >
@@ -321,7 +321,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
               <div
                 class="menu-name"
               >
-                Comments and Description
+                Comments and description
               </div>
               <div
                 class="Switch override-main size--small"
