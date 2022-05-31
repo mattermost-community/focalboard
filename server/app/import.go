@@ -37,6 +37,16 @@ func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 	if err == nil && string(peek) == legacyFileBegin {
 		a.logger.Debug("importing legacy archive")
 		_, errImport := a.ImportBoardJSONL(br, opt)
+
+		go func() {
+			if err := a.UpdateCardLimitTimestamp(); err != nil {
+				a.logger.Error(
+					"UpdateCardLimitTimestamp failed after importing a legaacy file",
+					mlog.Err(err),
+				)
+			}
+		}()
+
 		return errImport
 	}
 
@@ -95,6 +105,15 @@ func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 			mlog.String("dir", dir),
 			mlog.String("filename", filename),
 		)
+
+		go func() {
+			if err := a.UpdateCardLimitTimestamp(); err != nil {
+				a.logger.Error(
+					"UpdateCardLimitTimestamp failed after importing an archive",
+					mlog.Err(err),
+				)
+			}
+		}()
 	}
 }
 
