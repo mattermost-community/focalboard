@@ -48,7 +48,7 @@ const formatOptionLabel = (user: any) => {
 }
 
 const UserProperty = (props: Props): JSX.Element => {
-    const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList)
+    const workspaceUsers = useAppSelector<IUser[]>(getWorkspaceUsersList).filter((user) => !user.is_bot)
     const workspaceUsersById = useAppSelector<{[key:string]: IUser}>(getWorkspaceUsers)
 
     if (props.readonly) {
