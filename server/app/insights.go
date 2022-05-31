@@ -1,8 +1,6 @@
 package app
 
 import (
-	"fmt"
-
 	"github.com/mattermost/focalboard/server/model"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/pkg/errors"
@@ -48,14 +46,13 @@ func licenseAndGuestCheck(a *App, userID string) (bool, error) {
 	licenseError := errors.New("invalid license/authorization to use insights API")
 	lic := a.store.GetLicense()
 	if lic == nil {
-		fmt.Println("license is nil")
+		a.logger.Debug("Deployment doesn't have a license")
 		return false, licenseError
 	}
 	isGuest, err := a.store.IsUserGuest(userID)
 	if err != nil {
 		return false, err
 	}
-	fmt.Println(isGuest, lic.SkuShortName)
 	if (lic.SkuShortName != mmModel.LicenseShortSkuProfessional && lic.SkuShortName != mmModel.LicenseShortSkuEnterprise) || isGuest {
 		return false, licenseError
 	}

@@ -154,6 +154,7 @@ func populateIcons(s *SQLStore, db sq.BaseRunner, boardsInsights []*model.BoardI
 		iconQueryString, args, err := iconQuery.ToSql()
 		if err != nil {
 			s.logger.Error(`Query parsing error while getting icons`, mlog.Err(err))
+			return nil, err
 		}
 		row := s.db.QueryRow(iconQueryString, args...)
 		if err != nil {
