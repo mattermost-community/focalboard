@@ -17,11 +17,15 @@ import octoClient from '../../octoClient'
 import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {getCurrentBoard} from '../../store/boards'
 
-type Props = {
+export type PublicProps = {
     onClose: () => void
 }
 
-const ViewLimitModal = (props: Props): JSX.Element => {
+export type Props = PublicProps & {
+    showNotifyAdminSuccess: () => void
+}
+
+export const ViewLimitModal = (props: Props): JSX.Element => {
     const me = useAppSelector(getMe)
     const isAdmin = me ? Utils.isAdmin(me.roles) : false
     const intl = useIntl()
@@ -78,8 +82,8 @@ const ViewLimitModal = (props: Props): JSX.Element => {
         if (isAdmin) {
             (window as any)?.openPricingModal()()
         } else {
-            // TODO show a confirmation message to user on successful completion of this task
             await octoClient.notifyAdminUpgrade()
+            props.showNotifyAdminSuccess()
         }
 
         props.onClose()
@@ -122,5 +126,3 @@ const ViewLimitModal = (props: Props): JSX.Element => {
         </Dialog>
     )
 }
-
-export default ViewLimitModal

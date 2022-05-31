@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
+import {Utils} from '../utils'
+
 import IconButton from './buttons/iconButton'
 import CloseIcon from './icons/close'
 import Tooltip from './tooltip'
@@ -14,6 +16,7 @@ type Props = {
     children: React.ReactNode
     onClose?: () => void
     closeTooltip?: string
+    className?: string
 }
 
 function renderClose(onClose?: () => void, closeTooltip?: string) {
@@ -39,8 +42,13 @@ function renderClose(onClose?: () => void, closeTooltip?: string) {
 }
 
 function NotificationBox(props: Props): JSX.Element {
+    const className = Utils.generateClassName({
+        NotificationBox: true,
+        [props.className || '']: Boolean(props.className),
+    })
+
     return (
-        <div className='NotificationBox'>
+        <div className={className}>
             {props.icon &&
                 <div className='NotificationBox__icon'>
                     {props.icon}

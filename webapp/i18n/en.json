@@ -273,6 +273,7 @@
   "ViewLimitDialog.Heading": "Views per board limit reached",
   "ViewLimitDialog.PrimaryButton.Title.Admin": "Upgrade",
   "ViewLimitDialog.PrimaryButton.Title.RegularUser": "Notify Admin",
+  "ViewLimitDialog.notifyAdmin.Success": "Your admin has been notified",
   "ViewLimitDialog.Subtext.Admin": "Upgrade to our Professional or Enterprise plan to have unlimited views per boards, unlimited cards, and more.",
   "ViewLimitDialog.Subtext.Admin.PricingPageLink": "Learn more about our plans.",
   "ViewLimitDialog.Subtext.RegularUser": "Notify your Admin to upgrade to our Professional or Enterprise plan to have unlimited views per boards, unlimited cards, and more.",
