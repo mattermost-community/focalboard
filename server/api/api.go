@@ -103,7 +103,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	// Insights APIs
 	apiv1.HandleFunc("/teams/{teamID}/boards/insights", a.sessionRequired(a.handleTeamBoardsInsights)).Methods("GET")
-	apiv1.HandleFunc("/users/me/{teamID}/boards/insights", a.sessionRequired(a.handleUserBoardsInsights)).Methods("GET")
+	apiv1.HandleFunc("/users/me/boards/insights", a.sessionRequired(a.handleUserBoardsInsights)).Methods("GET")
 
 	// Get Files API
 
@@ -193,7 +193,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /users/{userID}/boards/insights getUserBoardsInsights
+	// swagger:operation GET /users/me/boards/insights getUserBoardsInsights
 	//
 	// Returns team boards insights
 	//
@@ -204,6 +204,11 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	// - name: duration
 	//   in: query
 	//   description: duration of data to calculate insights for
+	//   required: true
+	//   type: string
+	// - name: teamID
+	//   in: query
+	//   description: teamID of the boards to be considered.
 	//   required: true
 	//   type: string
 	// security:
@@ -224,8 +229,7 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	userID := session.UserID
 	query := r.URL.Query()
 	duration := query.Get("duration")
-	vars := mux.Vars(r)
-	teamID := vars["teamID"]
+	teamID := query.Get("teamID")
 
 	auditRec := a.makeAuditRecord(r, "getUserBoardsInsights", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
