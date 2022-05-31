@@ -32,8 +32,9 @@ import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
 
 import {LimitUnlimited} from '../../boardsCloudLimits'
-import ViewLimitModal from '../viewLimitDialog/viewLimitDialog'
 import {getLimits} from '../../store/limits'
+
+import ViewLimitModalWrapper from '../viewLimitDialog/viewLimitDialogWrapper'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
@@ -243,7 +244,12 @@ const ViewHeader = (props: Props) => {
             </>
             }
 
-            {showViewLimitDialog && <ViewLimitModal onClose={() => setShowViewLimitDialog(false)}/>}
+            {
+                <ViewLimitModalWrapper
+                    show={showViewLimitDialog}
+                    onClose={() => setShowViewLimitDialog(false)}
+                />
+            }
         </div>
     )
 }
