@@ -16,13 +16,17 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, duration string, chan
 	/*
 		Get top private, public boards, combine the list and filter the top 10. Note we can't limit 10 for subqueries.
 	*/
-
+	durationMillis, err := s.durationSelector(duration)
+	if err != nil {
+		s.logger.Debug(`Team insights duration fetching error`, mlog.Err(err))
+		return nil, err
+	}
 	qb := s.getQueryBuilder(db)
 	publicBoards := qb.Select(`blocks.id, blocks.title,
 		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
 		From(s.tablePrefix + "blocks_history as blocks_history").
 		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
-		Where(sq.Gt{"blocks_history.update_at": s.durationSelector(duration)}).
+		Where(sq.Gt{"blocks_history.update_at": durationMillis}).
 		Where(sq.Eq{"blocks_history.workspace_id": channelIDs}).
 		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
 		Where(sq.Eq{"blocks.delete_at": 0}).
@@ -62,12 +66,17 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string,
 	/**
 	Get top 10 private, public boards, combine the list and filter the top 10
 	*/
+	durationMillis, err := s.durationSelector(duration)
+	if err != nil {
+		s.logger.Debug(`User insights duration fetching error`, mlog.Err(err))
+		return nil, err
+	}
 	qb := s.getQueryBuilder(db)
 	publicBoards := qb.Select(`blocks.id, blocks.title,
 		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
 		From(s.tablePrefix + "blocks_history as blocks_history").
 		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
-		Where(sq.Gt{"blocks_history.update_at": s.durationSelector(duration)}).
+		Where(sq.Gt{"blocks_history.update_at": durationMillis}).
 		Where(sq.Eq{"blocks_history.workspace_id": channelIDs}).
 		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
 		Where(sq.Eq{"blocks.delete_at": 0}).
