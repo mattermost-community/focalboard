@@ -157,9 +157,6 @@ func populateIcons(s *SQLStore, db sq.BaseRunner, boardsInsights []*model.BoardI
 			return nil, err
 		}
 		row := s.db.QueryRow(iconQueryString, args...)
-		if err != nil {
-			return nil, err
-		}
 		var fieldsJSON string
 		var fields map[string]interface{}
 		err = row.Scan(
