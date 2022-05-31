@@ -16,7 +16,7 @@ const HiddenCardCount = (props: Props): JSX.Element => {
     const intl = useIntl()
     return (
         <div className='HiddenCardCount'>
-            <div className='hidden-card-title'>{intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards Hidden'})}</div>
+            <div className='hidden-card-title'>{intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards hidden'})}</div>
             <Button title='hidden-card-count'>{props.hiddenCardsCount}</Button>
         </div>
     )

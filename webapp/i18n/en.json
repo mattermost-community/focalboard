@@ -119,6 +119,7 @@
   "DeleteBoardDialog.confirm-cancel": "Cancel",
   "DeleteBoardDialog.confirm-delete": "Delete",
   "DeleteBoardDialog.confirm-info": "Are you sure you want to delete the board “{boardTitle}”? Deleting it will delete all cards in the board.",
+  "DeleteBoardDialog.confirm-info-template": "Are you sure you want to delete the board template “{boardTitle}”?",
   "DeleteBoardDialog.confirm-tite": "Confirm delete board",
   "DeleteBoardDialog.confirm-tite-template": "Confirm delete board template",
   "Dialog.closeDialog": "Close dialog",

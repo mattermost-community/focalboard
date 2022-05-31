@@ -106,7 +106,7 @@ function CenterContent(props: Props) {
             title={
                 <FormattedMessage
                     id='BoardTemplateSelector.plugin.no-content-title'
-                    defaultMessage='Create a Board in {workspaceName}'
+                    defaultMessage='Create a board in {workspaceName}'
                     values={{workspaceName: workspace?.title}}
                 />
             }

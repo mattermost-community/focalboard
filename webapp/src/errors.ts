@@ -45,7 +45,7 @@ function errorDefFromId(id: ErrorId | null): ErrorDef {
     case ErrorId.WorkspaceUndefined: {
         errDef.title = intl.formatMessage({id: 'error.workspace-undefined', defaultMessage: 'Not a valid workspace.'})
         errDef.button1Enabled = true
-        errDef.button1Text = intl.formatMessage({id: 'error.back-to-home', defaultMessage: 'Back to Home'})
+        errDef.button1Text = intl.formatMessage({id: 'error.back-to-home', defaultMessage: 'Back to home'})
         errDef.button1Redirect = window.location.origin
         errDef.button1Fill = true
         break
@@ -61,7 +61,7 @@ function errorDefFromId(id: ErrorId | null): ErrorDef {
     default: {
         errDef.title = intl.formatMessage({id: 'error.unknown', defaultMessage: 'An error occurred.'})
         errDef.button1Enabled = true
-        errDef.button1Text = intl.formatMessage({id: 'error.back-to-boards', defaultMessage: 'Go to the Dashboard'})
+        errDef.button1Text = intl.formatMessage({id: 'error.back-to-boards', defaultMessage: 'Go to the dashboard'})
         errDef.button1Redirect = '/'
         errDef.button1Fill = true
         errDef.button1ClearHistory = true
