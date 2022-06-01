@@ -61,7 +61,7 @@ const ViewHeaderPropertiesMenu = (props: Props) => {
                     <Menu.Switch
                         key={Constants.badgesColumnId}
                         id={Constants.badgesColumnId}
-                        name={intl.formatMessage({id: 'default-properties.badges', defaultMessage: 'Comments and Description'})}
+                        name={intl.formatMessage({id: 'default-properties.badges', defaultMessage: 'Comments and description'})}
                         isOn={visiblePropertyIds.includes(Constants.badgesColumnId)}
                         onClick={toggleVisibility}
                     />}

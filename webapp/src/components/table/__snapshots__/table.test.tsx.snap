@@ -1868,7 +1868,7 @@ exports[`components/table/Table limited card in table view 1`] = `
       <div
         class="hidden-card-title"
       >
-        Cards Hidden
+        Cards hidden
       </div>
       <button
         class="Button"

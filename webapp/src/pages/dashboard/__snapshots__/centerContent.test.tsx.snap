@@ -1012,7 +1012,7 @@ exports[`pages/dashboard/CenterContent search filter - search non-existing works
             </svg>
           </span>
           <h3>
-            Sorry, we could not find any channels matching that term
+            Sorry, we couldn't find any channels matching that term
           </h3>
           <p
             class="small"

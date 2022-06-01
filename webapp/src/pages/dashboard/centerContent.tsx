@@ -92,7 +92,7 @@ const DashboardCenterContent = (): JSX.Element => {
                         userWorkspaces.length === 0 &&
                             <div className='DashboardPage__emptyResult'>
                                 <SearchIllustration/>
-                                <h3>{intl.formatMessage({id: 'DashboardPage.CenterPanel.NoWorkspaces', defaultMessage: 'Sorry, we could not find any channels matching that term'})}</h3>
+                                <h3>{intl.formatMessage({id: 'DashboardPage.CenterPanel.NoWorkspaces', defaultMessage: 'Sorry, we couldn\'t find any channels matching that term'})}</h3>
                                 <p className='small'>{intl.formatMessage({id: 'DashboardPage.CenterPanel.NoWorkspacesDescription', defaultMessage: 'Please try searching for another term'})}</p>
                             </div>
                     }

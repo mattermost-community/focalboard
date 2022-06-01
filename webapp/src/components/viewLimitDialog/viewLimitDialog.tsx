@@ -56,7 +56,7 @@ export const ViewLimitModal = (props: Props): JSX.Element => {
         <React.Fragment>
             <FormattedMessage
                 id='ViewLimitDialog.Subtext.Admin'
-                defaultMessage='Upgrade to our Professional or Enterprise plan to have unlimited views per boards, unlimited cards and more.'
+                defaultMessage='Upgrade to our Professional or Enterprise plan to have unlimited views per boards, unlimited cards, and more.'
             />
             <a
                 href='https://mattermost.com/pricing/'

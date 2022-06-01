@@ -25,7 +25,7 @@ const TopBar = (): JSX.Element => {
                 >
                     <FormattedMessage
                         id='TopBar.give-feedback'
-                        defaultMessage='Give Feedback'
+                        defaultMessage='Give feedback'
                     />
                 </a>
                 <div className='versionFrame'>
@@ -53,7 +53,7 @@ const TopBar = (): JSX.Element => {
             >
                 <FormattedMessage
                     id='TopBar.give-feedback'
-                    defaultMessage='Give Feedback'
+                    defaultMessage='Give feedback'
                 />
             </a>
             <a
