@@ -12,7 +12,8 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, channelIDs []string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
+func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, channelIDs []string,
+	since int64, offset int, limit int) (*model.BoardInsightsList, error) {
 	/*
 		Get top private, public boards, combine the list and filter the top 10. Note we can't limit 10 for subqueries.
 	*/

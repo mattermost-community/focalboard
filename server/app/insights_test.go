@@ -84,7 +84,8 @@ func TestGetUserBoardsInsights(t *testing.T) {
 		fakeLicense := &mmModel.License{Features: &mmModel.Features{}, SkuShortName: mmModel.LicenseShortSkuEnterprise}
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 		th.Store.EXPECT().GetUserWorkspacesInTeam("user-id-1", "team-id").Return(mockInsightsWorkspaces, nil)
-		th.Store.EXPECT().GetUserBoardsInsights("user-id-1", []string{"mock-user-workspace-id"}, int64(0), 0, 10).Return(nil, insightError{"board-insight-error"})
+		th.Store.EXPECT().GetUserBoardsInsights("user-id-1", []string{"mock-user-workspace-id"},
+			int64(0), 0, 10).Return(nil, insightError{"board-insight-error"})
 		_, err := th.App.GetUserBoardsInsights("user-id-1", "team-id", &mmModel.InsightsOpts{StartUnixMilli: 0, Page: 0, PerPage: 10})
 		require.Error(t, err)
 		require.ErrorIs(t, err, insightError{"board-insight-error"})
