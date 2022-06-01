@@ -18,6 +18,7 @@ import mutator from '../mutator'
 import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
 import {addCard, addTemplate, showCardHiddenWarning} from '../store/cards'
+import {getCardLimitTimestamp} from '../store/limits'
 import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
@@ -69,6 +70,7 @@ type Props = {
     readonly: boolean
     addCard: (card: Card) => void
     showCardHiddenWarning: (hidden: boolean) => void
+    limitsEnabled: boolean
     updateView: (view: BoardView) => void
     addTemplate: (template: Card) => void
     shownCardId?: string
@@ -378,7 +380,7 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
-            this.props.showCardHiddenWarning(true)
+            this.props.showCardHiddenWarning(this.props.limitsEnabled)
             await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }
@@ -503,6 +505,7 @@ function mapStateToProps(state: RootState) {
         onboardingTourStep,
         me,
         currentCard,
+        limitsEnabled: getCardLimitTimestamp(state) > 0,
     }
 }
 
