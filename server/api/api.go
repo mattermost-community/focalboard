@@ -144,9 +144,19 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//   description: Team ID
 	//   required: true
 	//   type: string
-	// - name: duration
+	// - name: time_range
 	//   in: query
 	//   description: duration of data to calculate insights for
+	//   required: true
+	//   type: string
+	// - name: page
+	//   in: query
+	//   description: page offset for top boards
+	//   required: true
+	//   type: string
+	// - name: per_page
+	//   in: query
+	//   description: limit for boards in a page.
 	//   required: true
 	//   type: string
 	// security:
@@ -223,14 +233,24 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
-	// - name: duration
+	// - name: team_id
+	//   in: query
+	//   description: teamID of the boards to be considered.
+	//   required: true
+	//   type: string
+	// - name: time_range
 	//   in: query
 	//   description: duration of data to calculate insights for
 	//   required: true
 	//   type: string
-	// - name: teamID
+	// - name: page
 	//   in: query
-	//   description: teamID of the boards to be considered.
+	//   description: page offset for top boards
+	//   required: true
+	//   type: string
+	// - name: per_page
+	//   in: query
+	//   description: limit for boards in a page.
 	//   required: true
 	//   type: string
 	// security:
