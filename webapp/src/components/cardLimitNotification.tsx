@@ -79,7 +79,7 @@ const CardLimitNotification = () => {
         title = intl.formatMessage(
             {
                 id: 'notification-box-cards-hidden.title',
-                defaultMessage: 'This action hide another card',
+                defaultMessage: 'This action hid another card',
             },
         )
     }
