@@ -6,7 +6,7 @@ import {FormattedMessage} from 'react-intl'
 
 import {getCurrentWorkspace} from '../store/workspace'
 import {getCurrentBoard, getTemplates} from '../store/boards'
-import {refreshCards, getCardLimitTimestamp, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
+import {getCardLimitTimestamp, GetCurrentBoardHiddenCardsCount, getCurrentViewCardsSortedFilteredAndGrouped, refreshCards, setCurrent as setCurrentCard, setLimitTimestamp} from '../store/cards'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
@@ -37,6 +37,7 @@ function CenterContent(props: Props) {
     const groupByProperty = useAppSelector(getCurrentViewGroupBy)
     const dateDisplayProperty = useAppSelector(getCurrentViewDisplayBy)
     const clientConfig = useAppSelector(getClientConfig)
+    const hiddenCardsCount = useAppSelector(GetCurrentBoardHiddenCardsCount)
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
@@ -94,6 +95,7 @@ function CenterContent(props: Props) {
                 groupByProperty={property}
                 dateDisplayProperty={displayProperty}
                 views={views}
+                hiddenCardsCount={hiddenCardsCount}
                 showShared={clientConfig?.enablePublicSharedBoards || false}
             />
         )
@@ -104,7 +106,7 @@ function CenterContent(props: Props) {
             title={
                 <FormattedMessage
                     id='BoardTemplateSelector.plugin.no-content-title'
-                    defaultMessage='Create a Board in {workspaceName}'
+                    defaultMessage='Create a board in {workspaceName}'
                     values={{workspaceName: workspace?.title}}
                 />
             }

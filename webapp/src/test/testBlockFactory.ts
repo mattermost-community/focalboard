@@ -119,7 +119,6 @@ class TestBlockFactory {
         card.title = 'title'
         card.fields.icon = 'i'
         card.fields.properties.property1 = 'value1'
-
         return card
     }
 

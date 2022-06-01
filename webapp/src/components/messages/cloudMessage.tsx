@@ -48,7 +48,7 @@ const CloudMessage = React.memo(() => {
         }
     }
 
-    if (Utils.isFocalboardPlugin() || cloudMessageCanceled || !me) {
+    if (Utils.isFocalboardPlugin() || Utils.isFocalboardLegacy() || cloudMessageCanceled || !me) {
         return null
     }
 

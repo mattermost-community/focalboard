@@ -79,7 +79,7 @@ const CardLimitNotification = () => {
         title = intl.formatMessage(
             {
                 id: 'notification-box-cards-hidden.title',
-                defaultMessage: 'Your action hidden another card',
+                defaultMessage: 'This action hid another card',
             },
         )
     }
@@ -132,7 +132,7 @@ const CardLimitNotification = () => {
                             >
                                 <FormattedMessage
                                     id='notification-box-card-limit-reached.link'
-                                    defaultMessage='upgrade to a paid plan'
+                                    defaultMessage='Upgrade to a paid plan'
                                 />
                             </a>),
                     }}
@@ -140,7 +140,7 @@ const CardLimitNotification = () => {
             {!hasPermissionToUpgrade &&
                 <FormattedMessage
                     id='notification-box.card-limit-reached.not-admin.text'
-                    defaultMessage='To access archived cards, contact your admin to upgrade to a paid plan.'
+                    defaultMessage='To access archived cards, contact your Admin to upgrade to a paid plan.'
                 />}
         </NotificationBox>
     )

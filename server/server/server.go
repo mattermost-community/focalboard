@@ -136,6 +136,7 @@ func New(params Params) (*Server, error) {
 		Metrics:       metricsService,
 		Notifications: notificationService,
 		Logger:        params.Logger,
+		PluginAPI:     params.PluginAPI,
 	}
 	app := app.New(params.Cfg, wsAdapter, appServices)
 
