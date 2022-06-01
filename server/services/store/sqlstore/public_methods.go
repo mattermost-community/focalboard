@@ -20,6 +20,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -257,8 +258,8 @@ func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 
 }
 
-func (s *SQLStore) GetTeamBoardsInsights(duration string, channelIDs []string) ([]*model.BoardInsight, error) {
-	return s.getTeamBoardsInsights(s.db, duration, channelIDs)
+func (s *SQLStore) GetTeamBoardsInsights(channelIDs []string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
+	return s.getTeamBoardsInsights(s.db, channelIDs, since, offset, limit)
 
 }
 
@@ -267,8 +268,8 @@ func (s *SQLStore) GetUsedCardsCount() (int, error) {
 
 }
 
-func (s *SQLStore) GetUserBoardsInsights(userID string, duration string, channelIDs []string) ([]*model.BoardInsight, error) {
-	return s.getUserBoardsInsights(s.db, userID, duration, channelIDs)
+func (s *SQLStore) GetUserBoardsInsights(userID string, channelIDs []string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
+	return s.getUserBoardsInsights(s.db, userID, channelIDs, since, offset, limit)
 
 }
 

@@ -121,8 +121,8 @@ type Store interface {
 	GetLicense() *mmModel.License
 
 	// Insights
-	GetTeamBoardsInsights(duration string, channelIDs []string) ([]*model.BoardInsight, error)
-	GetUserBoardsInsights(userID string, duration string, channelIDs []string) ([]*model.BoardInsight, error)
+	GetTeamBoardsInsights(channelIDs []string, since int64, offset int, limit int) (*model.BoardInsightsList, error)
+	GetUserBoardsInsights(userID string, channelIDs []string, since int64, offset int, limit int) (*model.BoardInsightsList, error)
 	IsUserGuest(userID string) (bool, error)
 	GetCloudLimits() (*mmModel.ProductLimits, error)
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (a *App) GetTeamBoardsInsights(userID string, teamID string, duration string) ([]*model.BoardInsight, error) {
+func (a *App) GetTeamBoardsInsights(userID string, teamID string, opts *mmModel.InsightsOpts) (*model.BoardInsightsList, error) {
 	// check if server is properly licensed, and user is not a guest
 	licenseAndGuestCheckFlag, err := licenseAndGuestCheck(a, userID)
 	if !licenseAndGuestCheckFlag {
@@ -21,10 +21,10 @@ func (a *App) GetTeamBoardsInsights(userID string, teamID string, duration strin
 	for index, channel := range channels {
 		channelIDs[index] = channel.ID
 	}
-	return a.store.GetTeamBoardsInsights(duration, channelIDs)
+	return a.store.GetTeamBoardsInsights(channelIDs, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage)
 }
 
-func (a *App) GetUserBoardsInsights(userID string, teamID string, duration string) ([]*model.BoardInsight, error) {
+func (a *App) GetUserBoardsInsights(userID string, teamID string, opts *mmModel.InsightsOpts) (*model.BoardInsightsList, error) {
 	// check if server is properly licensed, and user is not a guest
 	licenseAndGuestCheckFlag, err := licenseAndGuestCheck(a, userID)
 	if !licenseAndGuestCheckFlag {
@@ -39,7 +39,7 @@ func (a *App) GetUserBoardsInsights(userID string, teamID string, duration strin
 	for index, channel := range channels {
 		channelIDs[index] = channel.ID
 	}
-	return a.store.GetUserBoardsInsights(userID, duration, channelIDs)
+	return a.store.GetUserBoardsInsights(userID, channelIDs, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage)
 }
 
 func licenseAndGuestCheck(a *App, userID string) (bool, error) {

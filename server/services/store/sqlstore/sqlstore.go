@@ -3,15 +3,11 @@ package sqlstore
 import (
 	"database/sql"
 	"fmt"
-	"strconv"
-	"strings"
-	"time"
 
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/mattermost-plugin-api/cluster"
 
-	utils "github.com/mattermost/focalboard/server/utils"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -102,24 +98,6 @@ func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam
 
 func (s *SQLStore) getLicense(db sq.BaseRunner) *mmModel.License {
 	return nil
-}
-
-func (s *SQLStore) durationSelector(interval string) (int64, error) {
-	intervalMagnitudeString := strings.Fields(interval)[0]
-	intervalMagnitude, err := strconv.Atoi(intervalMagnitudeString)
-	if err != nil {
-		return 0, err
-	}
-	if strings.Contains(interval, "day") {
-		return utils.GetMillisForTime(time.Now().AddDate(0, 0, -1*intervalMagnitude)), nil
-	}
-	if strings.Contains(interval, "month") {
-		return utils.GetMillisForTime(time.Now().AddDate(0, -1*intervalMagnitude, 0)), nil
-	}
-	if strings.Contains(interval, "year") {
-		return utils.GetMillisForTime(time.Now().AddDate(-1*intervalMagnitude, 0, 0)), nil
-	}
-	return utils.GetMillisForTime(time.Now()), nil
 }
 
 func (s *SQLStore) concatenationSelector(field string, delimiter string) string {

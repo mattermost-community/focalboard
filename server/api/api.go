@@ -20,6 +20,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -167,7 +168,14 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 	query := r.URL.Query()
-	duration := query.Get("duration")
+	timeRange := query.Get("time_range")
+
+	// get unix time for duration
+	startTime, aErr := mmModel.GetStartUnixMilliForTimeRange(timeRange)
+	if aErr != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "Error parsing time_range="+timeRange, aErr)
+		return
+	}
 
 	if !a.app.CheckUserIDInTeam(userID, teamID) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
@@ -176,9 +184,23 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 
 	auditRec := a.makeAuditRecord(r, "getTeamBoardsInsights", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	boardsInsights, err := a.app.GetTeamBoardsInsights(userID, teamID, duration)
+	page, err := strconv.Atoi(query.Get("page"))
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "duration="+duration, err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting page parameter to integer", err)
+		return
+	}
+	perPage, err := strconv.Atoi(query.Get("page"))
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting per_page parameter to integer", err)
+		return
+	}
+	boardsInsights, err := a.app.GetTeamBoardsInsights(userID, teamID, &mmModel.InsightsOpts{
+		StartUnixMilli: startTime,
+		Page:           page,
+		PerPage:        perPage,
+	})
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "time_range="+timeRange, err)
 		return
 	}
 	data, err := json.Marshal(boardsInsights)
@@ -188,7 +210,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	}
 	jsonBytesResponse(w, http.StatusOK, data)
 
-	auditRec.AddMeta("teamBoardInsightCount", len(boardsInsights))
+	auditRec.AddMeta("teamBoardInsightCount", len(boardsInsights.Items))
 	auditRec.Success()
 }
 
@@ -228,14 +250,34 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
 	query := r.URL.Query()
-	duration := query.Get("duration")
-	teamID := query.Get("teamID")
+	teamID := query.Get("team_id")
+	timeRange := query.Get("time_range")
 
+	// get unix time for duration
+	startTime, aErr := mmModel.GetStartUnixMilliForTimeRange(timeRange)
+	if aErr != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "Error parsing time_range="+timeRange, aErr)
+		return
+	}
 	auditRec := a.makeAuditRecord(r, "getUserBoardsInsights", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	boardsInsights, err := a.app.GetUserBoardsInsights(userID, teamID, duration)
+	page, err := strconv.Atoi(query.Get("page"))
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "duration="+duration, err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting page parameter to integer", err)
+		return
+	}
+	perPage, err := strconv.Atoi(query.Get("page"))
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting per_page parameter to integer", err)
+		return
+	}
+	boardsInsights, err := a.app.GetUserBoardsInsights(userID, teamID, &mmModel.InsightsOpts{
+		StartUnixMilli: startTime,
+		Page:           page,
+		PerPage:        perPage,
+	})
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "time_range="+timeRange, err)
 		return
 	}
 	data, err := json.Marshal(boardsInsights)
@@ -245,7 +287,7 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	}
 	jsonBytesResponse(w, http.StatusOK, data)
 
-	auditRec.AddMeta("userBoardInsightCount", len(boardsInsights))
+	auditRec.AddMeta("userBoardInsightCount", len(boardsInsights.Items))
 	auditRec.Success()
 }
 func (a *API) RegisterAdminRoutes(r *mux.Router) {

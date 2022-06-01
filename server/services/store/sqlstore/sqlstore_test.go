@@ -5,10 +5,8 @@ package sqlstore
 
 import (
 	"testing"
-	"time"
 
 	"github.com/mattermost/focalboard/server/services/store/storetests"
-	utils "github.com/mattermost/focalboard/server/utils"
 	"github.com/stretchr/testify/require"
 )
 
@@ -23,43 +21,6 @@ func TestBlocksStore(t *testing.T) {
 	t.Run("NotificationHintStore", func(t *testing.T) { storetests.StoreTestNotificationHintsStore(t, SetupTests) })
 	t.Run("CloudStore", func(t *testing.T) { storetests.StoreTestCloudStore(t, SetupTests) })
 	t.Run("BoardsInsightsStore", func(t *testing.T) { storetests.StoreTestBoardsInsightsStore(t, SetupTests) })
-}
-
-//  tests for  utility functions inside sqlstore.go
-func TestDurationSelector(t *testing.T) {
-	store, tearDown := SetupTests(t)
-	sqlStore := store.(*SQLStore)
-	defer tearDown()
-
-	t.Run("Test day", func(t *testing.T) {
-		timeResultMillis, err := sqlStore.durationSelector("2 days")
-		require.NoError(t, err)
-		timeResult := utils.GetTimeForMillis(timeResultMillis)
-		timeAfter := time.Now().AddDate(0, 0, -1)
-		timeBefore := time.Now().AddDate(0, 0, -3)
-		require.Equal(t, timeResult.Before(timeAfter), true)
-		require.Equal(t, timeResult.After(timeBefore), true)
-	})
-
-	t.Run("Test month", func(t *testing.T) {
-		timeResultMillis, err := sqlStore.durationSelector("2 months")
-		require.NoError(t, err)
-		timeResult := utils.GetTimeForMillis(timeResultMillis)
-		timeAfter := time.Now().AddDate(0, -2, 1)
-		timeBefore := time.Now().AddDate(0, -2, -1)
-		require.Equal(t, timeResult.Before(timeAfter), true)
-		require.Equal(t, timeResult.After(timeBefore), true)
-	})
-
-	t.Run("Test year", func(t *testing.T) {
-		timeResultMillis, err := sqlStore.durationSelector("2 years")
-		require.NoError(t, err)
-		timeResult := utils.GetTimeForMillis(timeResultMillis)
-		timeAfter := time.Now().AddDate(-2, 0, 1)
-		timeBefore := time.Now().AddDate(-2, 0, -1)
-		require.Equal(t, timeResult.Before(timeAfter), true)
-		require.Equal(t, timeResult.After(timeBefore), true)
-	})
 }
 
 func TestConcatenationSelector(t *testing.T) {

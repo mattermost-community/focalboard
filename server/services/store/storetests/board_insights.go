@@ -95,35 +95,35 @@ func getBoardsInsightsTest(t *testing.T, store store.Store, container1 store.Con
 	require.NoError(t, err)
 
 	t.Run("team insights", func(t *testing.T) {
-		topTeamBoards, err := store.GetTeamBoardsInsights("1 day",
-			[]string{testInsightsChannelID1, testInsightsChannelID2})
+		topTeamBoards, err := store.GetTeamBoardsInsights([]string{testInsightsChannelID1, testInsightsChannelID2},
+			0, 0, 10)
 		require.NoError(t, err)
-		require.Len(t, topTeamBoards, 2)
+		require.Len(t, topTeamBoards.Items, 2)
 		require.NoError(t, err)
 		require.Len(t, blocks1, 3)
 		require.Len(t, blocks2, 3)
 
 		// validate board insight content
-		require.Equal(t, topTeamBoards[0].ActivityCount, 3)
-		require.Equal(t, topTeamBoards[1].ActivityCount, 3)
+		require.Equal(t, topTeamBoards.Items[0].ActivityCount, 3)
+		require.Equal(t, topTeamBoards.Items[1].ActivityCount, 3)
 
-		require.Equal(t, topTeamBoards[0].BoardID, block1.ID)
-		require.Equal(t, topTeamBoards[1].BoardID, block2.ID)
+		require.Equal(t, topTeamBoards.Items[0].BoardID, block1.ID)
+		require.Equal(t, topTeamBoards.Items[1].BoardID, block2.ID)
 	})
 
 	t.Run("user insights", func(t *testing.T) {
-		topUser1Boards, err := store.GetUserBoardsInsights(testInsightsUserID1, "1 day",
-			[]string{testInsightsChannelID1, testInsightsChannelID2})
+		topUser1Boards, err := store.GetUserBoardsInsights(testInsightsUserID1,
+			[]string{testInsightsChannelID1, testInsightsChannelID2}, 0, 0, 10)
 		require.NoError(t, err)
-		require.Len(t, topUser1Boards, 1)
-		require.Equal(t, topUser1Boards[0].Icon, "💬")
-		require.Equal(t, topUser1Boards[0].BoardID, block1.ID)
+		require.Len(t, topUser1Boards.Items, 1)
+		require.Equal(t, topUser1Boards.Items[0].Icon, "💬")
+		require.Equal(t, topUser1Boards.Items[0].BoardID, block1.ID)
 
-		topUser2Boards, err := store.GetUserBoardsInsights(testInsightsUserID2, "1 day",
-			[]string{testInsightsChannelID1, testInsightsChannelID2})
+		topUser2Boards, err := store.GetUserBoardsInsights(testInsightsUserID2,
+			[]string{testInsightsChannelID1, testInsightsChannelID2}, 0, 0, 10)
 		require.NoError(t, err)
-		require.Len(t, topUser2Boards, 1)
-		require.Equal(t, topUser2Boards[0].Icon, "💬")
-		require.Equal(t, topUser2Boards[0].BoardID, block2.ID)
+		require.Len(t, topUser2Boards.Items, 1)
+		require.Equal(t, topUser2Boards.Items[0].Icon, "💬")
+		require.Equal(t, topUser2Boards.Items[0].BoardID, block2.ID)
 	})
 }

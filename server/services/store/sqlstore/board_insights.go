@@ -12,21 +12,16 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, duration string, channelIDs []string) ([]*model.BoardInsight, error) {
+func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, channelIDs []string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
 	/*
 		Get top private, public boards, combine the list and filter the top 10. Note we can't limit 10 for subqueries.
 	*/
-	durationMillis, err := s.durationSelector(duration)
-	if err != nil {
-		s.logger.Debug(`Team insights duration fetching error`, mlog.Err(err))
-		return nil, err
-	}
 	qb := s.getQueryBuilder(db)
 	publicBoards := qb.Select(`blocks.id, blocks.title,
 		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
 		From(s.tablePrefix + "blocks_history as blocks_history").
 		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
-		Where(sq.Gt{"blocks_history.update_at": durationMillis}).
+		Where(sq.Gt{"blocks_history.update_at": since}).
 		Where(sq.Eq{"blocks_history.workspace_id": channelIDs}).
 		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
 		Where(sq.Eq{"blocks.delete_at": 0}).
@@ -37,7 +32,8 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, duration string, chan
 		FromSelect(publicBoards, "boards_and_blocks_history").
 		GroupBy("id, title, created_by").
 		OrderBy("activity_count desc").
-		Limit(10)
+		Offset(uint64(offset)).
+		Limit(uint64(limit + 1))
 
 	rows, err := insightsQuery.Query()
 
@@ -58,25 +54,22 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, duration string, chan
 		return nil, err
 	}
 
-	return boardInsights, nil
+	boardInsightsPaginated := model.GetTopBoardInsightsListWithPagination(boardInsights, limit)
+
+	return boardInsightsPaginated, nil
 }
 
 func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string,
-	duration string, channelIDs []string) ([]*model.BoardInsight, error) {
+	channelIDs []string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
 	/**
 	Get top 10 private, public boards, combine the list and filter the top 10
 	*/
-	durationMillis, err := s.durationSelector(duration)
-	if err != nil {
-		s.logger.Debug(`User insights duration fetching error`, mlog.Err(err))
-		return nil, err
-	}
 	qb := s.getQueryBuilder(db)
 	publicBoards := qb.Select(`blocks.id, blocks.title,
 		count(blocks_history.id) as count, blocks_history.modified_by, blocks.created_by`).
 		From(s.tablePrefix + "blocks_history as blocks_history").
 		Join(s.tablePrefix + "blocks as blocks on blocks_history.root_id = blocks.id").
-		Where(sq.Gt{"blocks_history.update_at": durationMillis}).
+		Where(sq.Gt{"blocks_history.update_at": since}).
 		Where(sq.Eq{"blocks_history.workspace_id": channelIDs}).
 		Where(sq.NotEq{"blocks_history.modified_by": "system"}).
 		Where(sq.Eq{"blocks.delete_at": 0}).
@@ -92,7 +85,8 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string,
 		}).
 		// due to lack of position operator, we have to hardcode arguments, and placeholder here
 		Where(s.elementInColumn(5+len(channelIDs), "active_users")).
-		Limit(10)
+		Offset(uint64(offset)).
+		Limit(uint64(limit + 1))
 	userInsightsQueryStr, args, err := userInsightsQuery.ToSql()
 	if err != nil {
 		s.logger.Debug(`User insights query parsing ERROR`, mlog.Err(err))
@@ -121,7 +115,9 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string,
 		return nil, err
 	}
 
-	return boardInsights, nil
+	boardInsightsPaginated := model.GetTopBoardInsightsListWithPagination(boardInsights, limit)
+
+	return boardInsightsPaginated, nil
 }
 
 func boardsInsightsFromRows(rows *sql.Rows) ([]*model.BoardInsight, error) {
