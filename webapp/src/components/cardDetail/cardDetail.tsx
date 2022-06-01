@@ -131,6 +131,54 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     spellCheck={true}
                 />
 
+<<<<<<< HEAD
+=======
+                {/* Hidden (limited) card copy + CTA */}
+
+                {limited && <div className='CardDetail__limited-wrapper'>
+                    <CardSkeleton
+                        className='CardDetail__limited-bg'
+                    />
+                    <p className='CardDetail__limited-title'>
+                        <FormattedMessage
+                            id='CardDetail.limited-title'
+                            defaultMessage='This card is hidden'
+                        />
+                    </p>
+                    <p className='CardDetail__limited-body'>
+                        <FormattedMessage
+                            id='CardDetail.limited-body'
+                            defaultMessage='Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards, and more.'
+                        />
+                        <br/>
+                        <a
+                            className='CardDetail__limited-link'
+                            role='button'
+                            onClick={() => {
+                                props.onClose();
+                                (window as any).openPricingModal()()
+                            }}
+                        >
+                            <FormattedMessage
+                                id='CardDetial.limited-link'
+                                defaultMessage='Learn more about our plans.'
+                            />
+                        </a>
+                    </p>
+                    <Button
+                        className='CardDetail__limited-button'
+                        onClick={() => {
+                            props.onClose();
+                            (window as any).openPricingModal()()
+                        }}
+                        emphasis='primary'
+                        size='large'
+                    >
+                        {intl.formatMessage({id: 'CardDetail.limited-button', defaultMessage: 'Upgrade'})}
+                    </Button>
+                </div>}
+
+>>>>>>> 020d83fa (Update en.json: Bug fix and consistency (#3151))
                 {/* Property list */}
 
                 <CardDetailProperties

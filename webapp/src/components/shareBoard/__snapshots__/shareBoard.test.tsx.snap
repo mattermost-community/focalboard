@@ -185,7 +185,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                 <div
                   class="text-light"
                 >
-                  Users who have permissions will be able to use this link
+                  Users who have permissions will be able to use this link.
                 </div>
               </div>
             </div>
@@ -409,7 +409,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                 <div
                   class="text-light"
                 >
-                  Users who have permissions will be able to use this link
+                  Users who have permissions will be able to use this link.
                 </div>
               </div>
             </div>
@@ -633,7 +633,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
                 <div
                   class="text-light"
                 >
-                  Publish and share a “read only” link with everyone on the web
+                  Publish and share a read-only link with everyone on the web.
                 </div>
               </div>
               <div>
@@ -2167,7 +2167,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
                 <div
                   class="text-light"
                 >
-                  Publish and share a “read only” link with everyone on the web
+                  Publish and share a read-only link with everyone on the web.
                 </div>
               </div>
               <div>
@@ -2414,7 +2414,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
                 <div
                   class="text-light"
                 >
-                  Users who have permissions will be able to use this link
+                  Users who have permissions will be able to use this link.
                 </div>
               </div>
             </div>
@@ -2638,7 +2638,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                 <div
                   class="text-light"
                 >
-                  Users who have permissions will be able to use this link
+                  Users who have permissions will be able to use this link.
                 </div>
               </div>
             </div>
@@ -2862,7 +2862,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                 <div
                   class="text-light"
                 >
-                  Users who have permissions will be able to use this link
+                  Users who have permissions will be able to use this link.
                 </div>
               </div>
             </div>
@@ -3086,7 +3086,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                 <div
                   class="text-light"
                 >
-                  Users who have permissions will be able to use this link
+                  Users who have permissions will be able to use this link.
                 </div>
               </div>
             </div>
