@@ -46,4 +46,4 @@ export const {reducer} = limitsSlice
 export const {setCardLimitTimestamp} = limitsSlice.actions
 
 export const getLimits = (state: RootState): BoardsCloudLimits | undefined => state.limits.limits
-export const getGCardLimitTimestamp = (state: RootState): number => state.limits.limits.card_limit_timestamp
+export const getCardLimitTimestamp = (state: RootState): number => state.limits.limits.card_limit_timestamp
