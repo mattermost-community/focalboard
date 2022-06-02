@@ -199,7 +199,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting page parameter to integer", err)
 		return
 	}
-	perPage, err := strconv.Atoi(query.Get("page"))
+	perPage, err := strconv.Atoi(query.Get("per_page"))
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting per_page parameter to integer", err)
 		return
@@ -286,7 +286,7 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting page parameter to integer", err)
 		return
 	}
-	perPage, err := strconv.Atoi(query.Get("page"))
+	perPage, err := strconv.Atoi(query.Get("per_page"))
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting per_page parameter to integer", err)
 		return
