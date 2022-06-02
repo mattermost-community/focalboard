@@ -386,10 +386,4 @@ export const getCurrentCard = createSelector(
 )
 
 export const getCardLimitTimestamp = (state: RootState): number => state.cards.limitTimestamp
-export const getHiddenByLimitCards = createSelector(
-    getCurrentViewCardsSortedFilteredAndGroupedWithoutLimit,
-    getCurrentViewCardsSortedFilteredAndGrouped,
-    (allCards, shownCards) => allCards.length - shownCards.length,
-)
-
 export const getCardHiddenWarning = (state: RootState): boolean => state.cards.cardHiddenWarning

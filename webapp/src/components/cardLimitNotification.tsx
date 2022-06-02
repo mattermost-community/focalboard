@@ -8,7 +8,7 @@ import AlertIcon from '../widgets/icons/alert'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {IUser, UserConfigPatch} from '../user'
 import {getMe, patchProps, getCardLimitSnoozeUntil, getCardHiddenWarningSnoozeUntil} from '../store/users'
-import {getHiddenByLimitCards, getCardHiddenWarning} from '../store/cards'
+import {getCurrentBoardHiddenCardsCount, getCardHiddenWarning} from '../store/cards'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import octoClient from '../octoClient'
 
@@ -22,7 +22,7 @@ const CardLimitNotification = () => {
     const intl = useIntl()
     const [time, setTime] = useState(Date.now())
 
-    const hiddenCards = useAppSelector<number>(getHiddenByLimitCards)
+    const hiddenCards = useAppSelector<number>(getCurrentBoardHiddenCardsCount)
     const cardHiddenWarning = useAppSelector<boolean>(getCardHiddenWarning)
     const me = useAppSelector<IUser|null>(getMe)
     const snoozedUntil = useAppSelector<number>(getCardLimitSnoozeUntil)
@@ -101,7 +101,7 @@ const CardLimitNotification = () => {
     }, [show])
 
     const onClick = useCallback(() => {
-        // TODO: Show the modal to upgrade
+        (window as any).openPricingModal()()
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardLimitLinkOpen, {})
     }, [])
 
