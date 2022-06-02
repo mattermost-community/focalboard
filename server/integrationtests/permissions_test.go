@@ -129,23 +129,27 @@ type TestData struct {
 }
 
 func setupData(t *testing.T, th *TestHelper) TestData {
-	customTemplate1, err := th.Server.App().CreateBoard(&model.Board{Title: "Custom template 1", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypeOpen}, userAdminID, true)
+	customTemplate1, err := th.Server.App().CreateBoard(
+		&model.Board{Title: "Custom template 1", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypeOpen, MinimumRole: "viewer"},
+		userAdminID,
+		true,
+	)
 	require.NoError(t, err)
 	err = th.Server.App().InsertBlock(model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, userAdminID)
 	require.NoError(t, err)
 	customTemplate2, err := th.Server.App().CreateBoard(
-		&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate},
+		&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate, MinimumRole: "viewer"},
 		userAdminID,
 		true)
 	require.NoError(t, err)
 	err = th.Server.App().InsertBlock(model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, userAdminID)
 	require.NoError(t, err)
 
-	board1, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 1", TeamID: "test-team", Type: model.BoardTypeOpen}, userAdminID, true)
+	board1, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 1", TeamID: "test-team", Type: model.BoardTypeOpen, MinimumRole: "viewer"}, userAdminID, true)
 	require.NoError(t, err)
 	err = th.Server.App().InsertBlock(model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID}, userAdminID)
 	require.NoError(t, err)
-	board2, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 2", TeamID: "test-team", Type: model.BoardTypePrivate}, userAdminID, true)
+	board2, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 2", TeamID: "test-team", Type: model.BoardTypePrivate, MinimumRole: "viewer"}, userAdminID, true)
 	require.NoError(t, err)
 
 	rBoard2, err := th.Server.App().GetBoard(board2.ID)
@@ -540,6 +544,109 @@ func TestPermissionsPatchBoard(t *testing.T) {
 		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"title\": \"test\"}", userCommenter, http.StatusForbidden, 0},
 		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"title\": \"test\"}", userEditor, http.StatusOK, 1},
 		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"title\": \"test\"}", userAdmin, http.StatusOK, 1},
+	}
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+}
+
+func TestPermissionsPatchBoardType(t *testing.T) {
+	ttCases := []TestCase{
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, "{\"type\": \"P\"}", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, "{\"type\": \"P\"}", userAdmin, http.StatusOK, 1},
+	}
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+}
+
+func TestPermissionsPatchBoardMinimumRole(t *testing.T) {
+	patch := toJSON(t, map[string]model.BoardRole{"minimumRole": model.BoardRoleViewer})
+	ttCases := []TestCase{
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userAdmin, http.StatusOK, 1},
 	}
 
 	t.Run("plugin", func(t *testing.T) {
@@ -3093,5 +3200,169 @@ func TestPermissionsBoardArchiveImport(t *testing.T) {
 		ttCases[1].expectedStatusCode = http.StatusOK
 		ttCases[1].totalResults = 1
 		runTestCases(t, ttCases, testData, clients)
+	})
+}
+
+func TestPermissionsMinimumRolesApplied(t *testing.T) {
+	ttCasesF := func(t *testing.T, th *TestHelper, minimumRole model.BoardRole, testData TestData) []TestCase {
+		counter := 0
+		newBlockJSON := func(boardID string) string {
+			counter++
+			return toJSON(t, []*model.Block{{
+				ID:       fmt.Sprintf("%d", counter),
+				Title:    "Board To Create",
+				BoardID:  boardID,
+				Type:     "card",
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+			}})
+		}
+		_, err := th.Server.App().PatchBoard(&model.BoardPatch{MinimumRole: &minimumRole}, testData.privateBoard.ID, userAdminID)
+		require.NoError(t, err)
+		_, err = th.Server.App().PatchBoard(&model.BoardPatch{MinimumRole: &minimumRole}, testData.publicBoard.ID, userAdminID)
+		require.NoError(t, err)
+		_, err = th.Server.App().PatchBoard(&model.BoardPatch{MinimumRole: &minimumRole}, testData.privateTemplate.ID, userAdminID)
+		require.NoError(t, err)
+		_, err = th.Server.App().PatchBoard(&model.BoardPatch{MinimumRole: &minimumRole}, testData.publicTemplate.ID, userAdminID)
+		require.NoError(t, err)
+
+		if minimumRole == "viewer" || minimumRole == "commenter" {
+			return []TestCase{
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userViewer, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userCommenter, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userViewer, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userCommenter, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userViewer, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userCommenter, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userViewer, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userCommenter, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAdmin, http.StatusOK, 1},
+			}
+		} else {
+			return []TestCase{
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userViewer, http.StatusOK, 1},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userCommenter, http.StatusOK, 1},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userViewer, http.StatusOK, 1},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userCommenter, http.StatusOK, 1},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userViewer, http.StatusOK, 1},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userCommenter, http.StatusOK, 1},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAdmin, http.StatusOK, 1},
+
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userViewer, http.StatusOK, 1},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userCommenter, http.StatusOK, 1},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userEditor, http.StatusOK, 1},
+				{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAdmin, http.StatusOK, 1},
+			}
+		}
+	}
+
+	t.Run("plugin", func(t *testing.T) {
+		t.Run("minimum role viewer", func(t *testing.T) {
+			th := SetupTestHelperPluginMode(t)
+			defer th.TearDown()
+			clients := setupClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "viewer", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role commenter", func(t *testing.T) {
+			th := SetupTestHelperPluginMode(t)
+			defer th.TearDown()
+			clients := setupClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "commenter", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role editor", func(t *testing.T) {
+			th := SetupTestHelperPluginMode(t)
+			defer th.TearDown()
+			clients := setupClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "editor", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role admin", func(t *testing.T) {
+			th := SetupTestHelperPluginMode(t)
+			defer th.TearDown()
+			clients := setupClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "admin", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+	})
+	t.Run("local", func(t *testing.T) {
+		t.Run("minimum role viewer", func(t *testing.T) {
+			th := SetupTestHelperLocalMode(t)
+			defer th.TearDown()
+			clients := setupLocalClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "viewer", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role commenter", func(t *testing.T) {
+			th := SetupTestHelperLocalMode(t)
+			defer th.TearDown()
+			clients := setupLocalClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "commenter", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role editor", func(t *testing.T) {
+			th := SetupTestHelperLocalMode(t)
+			defer th.TearDown()
+			clients := setupLocalClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "editor", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
+		t.Run("minimum role admin", func(t *testing.T) {
+			th := SetupTestHelperLocalMode(t)
+			defer th.TearDown()
+			clients := setupLocalClients(th)
+			testData := setupData(t, th)
+			ttCases := ttCasesF(t, th, "admin", testData)
+			runTestCases(t, ttCases, testData, clients)
+		})
 	})
 }

@@ -122,9 +122,8 @@ func (p *Plugin) OnActivate() error {
 	backendParams := notifyBackendParams{
 		cfg:         cfg,
 		client:      client,
-		store:       db,
+		appAPI:      &appAPI{store: db},
 		permissions: permissionsService,
-		wsAdapter:   p.wsPluginAdapter,
 		serverRoot:  baseURL + "/boards",
 		logger:      logger,
 	}
@@ -160,6 +159,8 @@ func (p *Plugin) OnActivate() error {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return err
 	}
+
+	backendParams.appAPI.init(db, server.App())
 
 	p.server = server
 	return server.Start()

@@ -244,13 +244,18 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -743,13 +748,18 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
         <div
           class="octo-spacer"
         />
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
       </div>
     </div>
     <div
@@ -764,7 +774,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -879,6 +889,42 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               style="opacity: 1;"
             >
               <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
                 style="width: 100px;"
@@ -918,6 +964,42 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -1275,13 +1357,18 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -1335,7 +1422,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -1353,7 +1440,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -1493,6 +1579,42 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               style="opacity: 1;"
             >
               <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
                 style="width: 100px;"
@@ -1531,6 +1653,42 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -1906,13 +2064,18 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -1966,7 +2129,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -1984,7 +2147,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -2124,6 +2286,42 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               style="opacity: 1;"
             >
               <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
                 style="width: 100px;"
@@ -2162,6 +2360,42 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -2537,13 +2771,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -2597,7 +2836,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -2615,7 +2854,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -2755,6 +2993,42 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               style="opacity: 1;"
             >
               <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
                 style="width: 100px;"
@@ -2793,6 +3067,42 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -3168,13 +3478,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -3228,7 +3543,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -3246,7 +3561,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -3386,6 +3700,42 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               style="opacity: 1;"
             >
               <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
                 style="width: 100px;"
@@ -3424,6 +3774,42 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -3799,13 +4185,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -3859,7 +4250,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -3877,7 +4268,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -4017,6 +4407,42 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               style="opacity: 1;"
             >
               <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
                 style="width: 100px;"
@@ -4055,6 +4481,42 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -4430,13 +4892,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -4490,7 +4957,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -4508,7 +4975,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -4648,6 +5114,42 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               style="opacity: 1;"
             >
               <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
                 style="width: 100px;"
@@ -4686,6 +5188,42 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -5061,13 +5599,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -5121,7 +5664,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -5139,7 +5682,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -5279,6 +5821,42 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               style="opacity: 1;"
             >
               <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
                 style="width: 100px;"
@@ -5317,6 +5895,42 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -5692,13 +6306,18 @@ exports[`components/centerPanel return centerPanel and select one card and click
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -5752,7 +6371,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -5770,7 +6389,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -5910,6 +6528,42 @@ exports[`components/centerPanel return centerPanel and select one card and click
               style="opacity: 1;"
             >
               <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
                 style="width: 100px;"
@@ -5948,6 +6602,42 @@ exports[`components/centerPanel return centerPanel and select one card and click
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -6323,13 +7013,18 @@ exports[`components/centerPanel return centerPanel and select one card and click
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -6383,7 +7078,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -6401,7 +7096,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -6541,6 +7235,42 @@ exports[`components/centerPanel return centerPanel and select one card and click
               style="opacity: 1;"
             >
               <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
                 style="width: 100px;"
@@ -6579,6 +7309,42 @@ exports[`components/centerPanel return centerPanel and select one card and click
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -6936,13 +7702,18 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -7263,13 +8034,18 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -7755,13 +8531,18 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -8294,13 +9075,18 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -8354,7 +9140,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -8372,7 +9158,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -8511,6 +9296,42 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"

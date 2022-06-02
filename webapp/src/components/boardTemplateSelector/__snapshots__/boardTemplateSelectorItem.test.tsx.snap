@@ -146,6 +146,9 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorItem should trigg
       class="Dialog dialog-back DeleteBoardDialog"
     >
       <div
+        class="backdrop"
+      />
+      <div
         class="wrapper"
       >
         <div

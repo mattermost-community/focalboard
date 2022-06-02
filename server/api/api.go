@@ -1045,12 +1045,13 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
 	if userID == model.SingleUser {
+		ws, _ := a.app.GetRootTeam()
 		now := utils.GetMillis()
 		user = &model.User{
 			ID:       model.SingleUser,
 			Username: model.SingleUser,
 			Email:    model.SingleUser,
-			CreateAt: now,
+			CreateAt: ws.UpdateAt,
 			UpdateAt: now,
 		}
 	} else {
@@ -2758,7 +2759,7 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if patch.Type != nil {
+	if patch.Type != nil || patch.MinimumRole != nil {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board type"})
 			return
@@ -3428,12 +3429,13 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// currently all memberships are created as editors by default
-	// TODO: Support different public roles
 	newBoardMember := &model.BoardMember{
-		UserID:       userID,
-		BoardID:      boardID,
-		SchemeEditor: true,
+		UserID:          userID,
+		BoardID:         boardID,
+		SchemeAdmin:     board.MinimumRole == model.BoardRoleAdmin,
+		SchemeEditor:    board.MinimumRole == model.BoardRoleNone || board.MinimumRole == model.BoardRoleEditor,
+		SchemeCommenter: board.MinimumRole == model.BoardRoleCommenter,
+		SchemeViewer:    board.MinimumRole == model.BoardRoleViewer,
 	}
 
 	auditRec := a.makeAuditRecord(r, "joinBoard", audit.Fail)
@@ -3921,7 +3923,7 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		if patch.Type != nil {
+		if patch.Type != nil || patch.MinimumRole != nil {
 			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board type"})
 				return
