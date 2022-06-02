@@ -109,6 +109,20 @@ func TestSetCloudLimits(t *testing.T) {
 			require.NoError(t, th.App.SetCloudLimits(limits))
 			require.Zero(t, th.App.CardLimit())
 		})
+
+		t.Run("limits not empty but board limits values empty", func(t *testing.T) {
+			th, tearDown := SetupTestHelper(t)
+			defer tearDown()
+
+			require.Zero(t, th.App.CardLimit())
+
+			limits := &mmModel.ProductLimits{
+				Boards: &mmModel.BoardsLimits{},
+			}
+
+			require.NoError(t, th.App.SetCloudLimits(limits))
+			require.Zero(t, th.App.CardLimit())
+		})
 	})
 
 	t.Run("if the limits are not empty, it should update them and calculate the new timestamp", func(t *testing.T) {

@@ -44,8 +44,12 @@ func (a *App) GetBoardsCloudLimits() (*model.BoardsCloudLimits, error) {
 		CardLimitTimestamp: cardLimitTimestamp,
 	}
 	if productLimits != nil && productLimits.Boards != nil {
-		boardsCloudLimits.Cards = *productLimits.Boards.Cards
-		boardsCloudLimits.Views = *productLimits.Boards.Views
+		if productLimits.Boards.Cards != nil {
+			boardsCloudLimits.Cards = *productLimits.Boards.Cards
+		}
+		if productLimits.Boards.Views != nil {
+			boardsCloudLimits.Views = *productLimits.Boards.Views
+		}
 	}
 
 	return boardsCloudLimits, nil
@@ -70,7 +74,7 @@ func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
 	// if the limit object doesn't come complete, we assume limits are
 	// being disabled
 	cardLimit := 0
-	if limits != nil && limits.Boards != nil {
+	if limits != nil && limits.Boards != nil && limits.Boards.Cards != nil {
 		cardLimit = *limits.Boards.Cards
 	}
 
