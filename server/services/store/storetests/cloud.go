@@ -229,6 +229,28 @@ func testUpdateCardLimitTimestamp(t *testing.T, store storeservice.Store, contai
 		require.Equal(t, "0", cardLimitTimestampStr)
 	})
 
+	t.Run("should correctly modify the limit several times in a row", func(t *testing.T) {
+		cardLimitTimestamp, err := store.UpdateCardLimitTimestamp(0)
+		require.NoError(t, err)
+		require.Zero(t, cardLimitTimestamp)
+
+		cardLimitTimestamp, err = store.UpdateCardLimitTimestamp(10)
+		require.NoError(t, err)
+		require.NotZero(t, cardLimitTimestamp)
+
+		cardLimitTimestampStr, err := store.GetSystemSetting(storeservice.CardLimitTimestampSystemKey)
+		require.NoError(t, err)
+		require.NotEqual(t, "0", cardLimitTimestampStr)
+
+		cardLimitTimestamp, err = store.UpdateCardLimitTimestamp(0)
+		require.NoError(t, err)
+		require.Zero(t, cardLimitTimestamp)
+
+		cardLimitTimestampStr, err = store.GetSystemSetting(storeservice.CardLimitTimestampSystemKey)
+		require.NoError(t, err)
+		require.Equal(t, "0", cardLimitTimestampStr)
+	})
+
 	t.Run("should set the correct timestamp", func(t *testing.T) {
 		t.Run("limit 10", func(t *testing.T) {
 			// we fetch the first block
