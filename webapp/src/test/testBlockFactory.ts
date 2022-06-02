@@ -192,6 +192,7 @@ class TestBlockFactory {
             create_at: Date.now(),
             update_at: Date.now(),
             is_bot: false,
+            roles: 'system_user',
         }
     }
 }
