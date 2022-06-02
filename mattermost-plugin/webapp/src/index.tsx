@@ -253,6 +253,17 @@ export default class Plugin {
             }
         }
 
+        // Insights handler
+        if (this.registry?.registerBoardsInsightsHandler) {
+            this.registry?.registerBoardsInsightsHandler(async (timeRange: string, page: number, perPage: number, teamId: string, insightType: string) => {
+                if (insightType === 'MY') {
+                    return await octoClient.getMyTopBoards(timeRange, page, perPage, teamId)
+                } 
+
+                return await octoClient.getTeamTopBoards(timeRange, page, perPage, teamId)
+            });
+        }
+
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BLOCK}`, (e: any) => wsClient.updateBlockHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
