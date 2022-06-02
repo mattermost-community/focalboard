@@ -121,13 +121,8 @@ func (s *SQLStore) updateCardLimitTimestamp(db sq.BaseRunner, cardLimit int) (in
 		return 0, err
 	}
 
-	rowCount, err := result.RowsAffected()
-	if err != nil {
+	if _, err := result.RowsAffected(); err != nil {
 		return 0, err
-	}
-
-	if rowCount < 1 {
-		return 0, store.NewErrNotFound(store.CardLimitTimestampSystemKey)
 	}
 
 	return s.getCardLimitTimestamp(db)
