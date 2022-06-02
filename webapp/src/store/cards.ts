@@ -379,6 +379,11 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
     (cards) => cards.filter((c) => !c.limited),
 )
 
+export const getCurrentBoardHiddenCardsCount = createSelector(
+    getCurrentBoardCards,
+    (cards) => Object.values(cards).filter((c) => c.limited).length,
+)
+
 export const getCurrentCard = createSelector(
     (state: RootState) => state.cards.current,
     getCards,
