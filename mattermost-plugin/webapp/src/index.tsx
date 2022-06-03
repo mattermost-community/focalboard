@@ -254,8 +254,8 @@ export default class Plugin {
         }
 
         // Insights handler
-        if (this.registry?.registerBoardsInsightsHandler) {
-            this.registry?.registerBoardsInsightsHandler(async (timeRange: string, page: number, perPage: number, teamId: string, insightType: string) => {
+        if (this.registry?.registerInsightsHandler) {
+            this.registry?.registerInsightsHandler(async (timeRange: string, page: number, perPage: number, teamId: string, insightType: string) => {
                 if (insightType === 'MY') {
                     return await octoClient.getMyTopBoards(timeRange, page, perPage, teamId)
                 } 
