@@ -257,10 +257,14 @@ export default class Plugin {
         if (this.registry?.registerInsightsHandler) {
             this.registry?.registerInsightsHandler(async (timeRange: string, page: number, perPage: number, teamId: string, insightType: string) => {
                 if (insightType === 'MY') {
-                    return await octoClient.getMyTopBoards(timeRange, page, perPage, teamId)
+                    const data = await octoClient.getMyTopBoards(timeRange, page, perPage, teamId)
+
+                    return data
                 } 
 
-                return await octoClient.getTeamTopBoards(timeRange, page, perPage, teamId)
+                const data = await octoClient.getTeamTopBoards(timeRange, page, perPage, teamId)
+
+                return data
             });
         }
 
