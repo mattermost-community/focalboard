@@ -41,6 +41,7 @@ type Props = {
     addCard: (groupByOptionId?: string, show?:boolean) => Promise<void>
     showCard: (cardId?: string) => void
     hiddenCardsCount: number
+    showHiddenCardCountNotification: (show?: boolean) => void
 }
 
 const ScrollingComponent = withScrolling('div')
@@ -314,7 +315,10 @@ const Kanban = (props: Props) => {
                     ))}
                     {hiddenCardsCount > 0 &&
                     <div className='ml-1'>
-                        <HiddenCardCount hiddenCardsCount={hiddenCardsCount}/>
+                        <HiddenCardCount
+                            hiddenCardsCount={hiddenCardsCount}
+                            showHiddenCardNotification={props.showHiddenCardCountNotification}
+                        />
                     </div>}
                 </div>}
             </div>

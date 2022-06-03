@@ -511,5 +511,28 @@ describe('components/centerPanel', () => {
             userEvent.click(elementEditMenuTemplate)
             expect(container).toMatchSnapshot()
         })
+
+        test('Clicking on the Hidden card count should open a dailog', () => {
+            activeView.fields.viewType = 'table'
+            activeView.fields.defaultTemplateId = '1'
+            const {getByTitle, getByText} = render(wrapDNDIntl(
+                <ReduxProvider store={store}>
+                    <CenterPanel
+                        cards={[card1, card2]}
+                        views={[activeView]}
+                        board={board}
+                        activeView={activeView}
+                        readonly={false}
+                        showCard={jest.fn()}
+                        showShared={true}
+                        groupByProperty={groupProperty}
+                        shownCardId={card1.id}
+                        hiddenCardsCount={2}
+                    />
+                </ReduxProvider>,
+            ))
+            fireEvent.click(getByTitle('hidden-card-count'))
+            expect(getByText('2 cards hidden')).not.toBeNull()
+        })
     })
 })

@@ -385,8 +385,11 @@ export const getCurrentCard = createSelector(
 )
 
 export const getCurrentBoardHiddenCardsCount = createSelector(
-    getCurrentBoardCards,
-    (cards) => Object.values(cards).filter((c) => c.limited).length,
+
+    // getCurrentBoardCards,
+    // (cards) => Object.values(cards).filter((c) => c.limited).length,
+    [],
+    () => 5,
 )
 export const getCardLimitTimestamp = (state: RootState): number => state.cards.limitTimestamp
 export const getCardHiddenWarning = (state: RootState): boolean => state.cards.cardHiddenWarning

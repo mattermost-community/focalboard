@@ -100,6 +100,7 @@ const BoardTemplateSelectorPreview = (props: Props) => {
                 addCard={() => Promise.resolve()}
                 showCard={() => null}
                 hiddenCardsCount={0}
+                showHiddenCardCountNotification={() => null}
             />}
             {activeView?.fields.viewType === 'table' &&
             <Table
@@ -116,6 +117,7 @@ const BoardTemplateSelectorPreview = (props: Props) => {
                 addCard={() => Promise.resolve()}
                 showCard={() => null}
                 hiddenCardsCount={0}
+                showHiddenCardCountNotification={() => null}
             />}
             {activeView?.fields.viewType === 'gallery' &&
             <Gallery
@@ -127,6 +129,7 @@ const BoardTemplateSelectorPreview = (props: Props) => {
                 onCardClicked={() => null}
                 addCard={() => Promise.resolve()}
                 hiddenCardsCount={0}
+                showHiddenCardCountNotification={() => null}
             />}
             {activeView?.fields.viewType === 'calendar' &&
             <CalendarFullView

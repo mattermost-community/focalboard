@@ -57,6 +57,7 @@ import CardLimitNotification from './cardLimitNotification'
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
+import HiddenCardCountNotification from './hiddenCardCountNotification'
 
 type Props = {
     clientConfig?: ClientConfig
@@ -89,6 +90,7 @@ type State = {
     selectedCardIds: string[]
     cardIdToFocusOnRender: string
     showShareDialog: boolean
+    showHiddenCardCountNotification: boolean | undefined
 }
 
 class CenterPanel extends React.Component<Props, State> {
@@ -133,6 +135,7 @@ class CenterPanel extends React.Component<Props, State> {
             selectedCardIds: [],
             cardIdToFocusOnRender: '',
             showShareDialog: false,
+            showHiddenCardCountNotification: false,
         }
     }
 
@@ -262,6 +265,7 @@ class CenterPanel extends React.Component<Props, State> {
                     addCard={this.addCard}
                     showCard={this.showCard}
                     hiddenCardsCount={hiddenCardsCount}
+                    showHiddenCardCountNotification={this.hiddenCardCountNotifyHandler}
                 />}
                 {activeView.fields.viewType === 'table' &&
                     <Table
@@ -278,6 +282,7 @@ class CenterPanel extends React.Component<Props, State> {
                         addCard={this.addCard}
                         onCardClicked={this.cardClicked}
                         hiddenCardsCount={hiddenCardsCount}
+                        showHiddenCardCountNotification={this.hiddenCardCountNotifyHandler}
                     />}
                 {activeView.fields.viewType === 'calendar' &&
                     <CalendarFullView
@@ -302,7 +307,14 @@ class CenterPanel extends React.Component<Props, State> {
                         selectedCardIds={this.state.selectedCardIds}
                         addCard={(show) => this.addCard('', show)}
                         hiddenCardsCount={hiddenCardsCount}
+                        showHiddenCardCountNotification={this.hiddenCardCountNotifyHandler}
                     />}
+
+                {this.state.showHiddenCardCountNotification &&
+                <HiddenCardCountNotification
+                    hiddenCardCount={hiddenCardsCount}
+                    showHiddenCardCountNotification={this.hiddenCardCountNotifyHandler}
+                />}
             </div>
         )
     }
@@ -448,6 +460,12 @@ class CenterPanel extends React.Component<Props, State> {
     private showCard = (cardId?: string) => {
         this.setState({selectedCardIds: []})
         this.props.showCard(cardId)
+    }
+
+    private hiddenCardCountNotifyHandler = (show? :boolean) => {
+        this.setState({
+            showHiddenCardCountNotification: show,
+        })
     }
 
     private async deleteSelectedCards() {
