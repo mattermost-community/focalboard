@@ -417,16 +417,27 @@ CREATE TABLE {{.prefix}}board_members (
 
 CREATE INDEX idx_boardmembers_user_id ON {{.prefix}}board_members(user_id);
 
-{{if .plugin}}
 {{- /* if we're in plugin, migrate channel memberships to the board */ -}}
+{{if .plugin}}
 INSERT INTO {{.prefix}}board_members (
     SELECT B.Id, CM.UserId, CM.Roles, (CM.UserId=B.created_by) OR CM.SchemeAdmin, CM.SchemeUser, FALSE, CM.SchemeGuest
     FROM {{.prefix}}boards AS B
     INNER JOIN ChannelMembers as CM ON CM.ChannelId=B.channel_id
 );
-{{else}}
+{{end}}
+
 {{- /* if we're in personal server or desktop, create memberships for everyone */ -}}
+{{if and (not .plugin) (not .singleUser)}}
+{{- /* for personal server, create a membership per user and board */ -}}
 INSERT INTO {{.prefix}}board_members
      SELECT B.id, U.id, '', B.created_by=U.id, TRUE, FALSE, FALSE
        FROM {{.prefix}}boards AS B, {{.prefix}}users AS U;
+{{end}}
+
+{{if and (not .plugin) .singleUser}}
+{{- /* for personal desktop, as we don't have users, create a membership */ -}}
+{{- /* per board with a fixed user id */ -}}
+INSERT INTO {{.prefix}}board_members
+     SELECT B.id, 'single-user', '', TRUE, TRUE, FALSE, FALSE
+       FROM {{.prefix}}boards AS B;
 {{end}}

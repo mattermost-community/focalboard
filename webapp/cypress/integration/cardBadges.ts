@@ -34,9 +34,9 @@ describe('Card badges', () => {
         cy.log('**Add checkboxes**')
         cy.findByRole('button', {name: 'Add content'}).click()
         cy.findByRole('button', {name: 'checkbox'}).click()
-        cy.findByDisplayValue('').type('three{enter}')
-        cy.findByDisplayValue('').type('four{enter}')
-        cy.findByDisplayValue('').type('{esc}')
+        cy.focused().type('three{enter}')
+        cy.focused().type('four{enter}')
+        cy.focused().type('{esc}')
         cy.findByDisplayValue('three').prev().click()
 
         // Close card dialog

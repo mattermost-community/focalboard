@@ -156,6 +156,7 @@ const CardDialog = (props: Props): JSX.Element => {
         const followBtn = (
             <Button
                 className='cardFollowBtn follow'
+                size='medium'
                 onClick={() => mutator.followBlock(props.cardId, 'card', me!.id)}
             >
                 {intl.formatMessage({id: 'CardDetail.Follow', defaultMessage: 'Follow'})}

@@ -5,7 +5,6 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -30,7 +29,7 @@ func (s *SQLStore) getCategory(db sq.BaseRunner, id string) (*model.Category, er
 	}
 
 	if len(categories) == 0 {
-		return nil, store.NewErrNotFound(id)
+		return nil, model.NewErrNotFound(id)
 	}
 
 	return &categories[0], nil

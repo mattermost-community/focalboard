@@ -1,3 +1,6 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package main
 
 import (
@@ -11,10 +14,15 @@ import (
 )
 
 func TestServeHTTP(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
 	assert := assert.New(t)
-	plugin := Plugin{}
+	plugin := Plugin{
+		server: th.Server,
+	}
 	w := httptest.NewRecorder()
-	r := httptest.NewRequest(http.MethodGet, "/", nil)
+	r := httptest.NewRequest(http.MethodGet, "/hello", nil)
 
 	plugin.ServeHTTP(nil, w, r)
 
@@ -25,11 +33,16 @@ func TestServeHTTP(t *testing.T) {
 	assert.Nil(err)
 	bodyString := string(bodyBytes)
 
-	assert.Equal("Hello, world!", bodyString)
+	assert.Equal("Hello", bodyString)
 }
 
 func TestSetConfiguration(t *testing.T) {
-	plugin := Plugin{}
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	plugin := Plugin{
+		server: th.Server,
+	}
 	boolTrue := true
 	stringRef := ""
 
@@ -46,15 +59,22 @@ func TestSetConfiguration(t *testing.T) {
 
 	directory := "testDirectory"
 	baseFileSettings := &model.FileSettings{
-		DriverName: &driverName,
-		Directory:  &directory,
+		DriverName:  &driverName,
+		Directory:   &directory,
+		MaxFileSize: model.NewInt64(1024 * 1024),
+	}
+
+	days := 365
+	baseDataRetentionSettings := &model.DataRetentionSettings{
+		BoardsRetentionDays: &days,
 	}
 
 	baseConfig := &model.Config{
-		FeatureFlags:   baseFeatureFlags,
-		PluginSettings: *basePluginSettings,
-		SqlSettings:    *baseSQLSettings,
-		FileSettings:   *baseFileSettings,
+		FeatureFlags:          baseFeatureFlags,
+		PluginSettings:        *basePluginSettings,
+		SqlSettings:           *baseSQLSettings,
+		FileSettings:          *baseFileSettings,
+		DataRetentionSettings: *baseDataRetentionSettings,
 	}
 
 	t.Run("test enable telemetry", func(t *testing.T) {

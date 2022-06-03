@@ -60,7 +60,7 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"

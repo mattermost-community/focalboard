@@ -19,7 +19,7 @@ func (pd *PluginDelivery) MentionDeliver(mentionedUser *mm_model.User, extract s
 		return "", fmt.Errorf("cannot find user: %w", err)
 	}
 
-	channel, err := pd.api.GetDirectChannel(mentionedUser.Id, pd.botID)
+	channel, err := pd.getDirectChannel(evt.TeamID, mentionedUser.Id, pd.botID)
 	if err != nil {
 		return "", fmt.Errorf("cannot get direct channel: %w", err)
 	}

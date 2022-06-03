@@ -10,13 +10,33 @@ exports[`components/content/contentElement should match snapshot for checkbox ty
       type="checkbox"
       value="off"
     />
-    <input
-      class="Editable undefined"
-      placeholder="Edit text..."
-      spellcheck="true"
-      title="test-title"
-      value="test-title"
-    />
+    <div
+      class="EditableAreaWrap"
+    >
+      <textarea
+        class="EditableArea Editable "
+        height="0"
+        placeholder="Edit text..."
+        rows="1"
+        spellcheck="true"
+        title="test-title"
+      >
+        test-title
+      </textarea>
+      <div
+        class="EditableAreaContainer"
+      >
+        <textarea
+          aria-hidden="true"
+          class="EditableAreaReference Editable "
+          dir="auto"
+          disabled=""
+          rows="1"
+        >
+          test-title
+        </textarea>
+      </div>
+    </div>
   </div>
 </div>
 `;

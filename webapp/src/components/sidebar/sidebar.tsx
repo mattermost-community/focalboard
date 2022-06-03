@@ -8,7 +8,7 @@ import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
-import {getSortedBoards} from '../../store/boards'
+import {getMySortedBoards} from '../../store/boards'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 
@@ -53,7 +53,7 @@ const Sidebar = (props: Props) => {
     const [isHidden, setHidden] = useState(false)
     const [userHidden, setUserHidden] = useState(false)
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
-    const boards = useAppSelector(getSortedBoards)
+    const boards = useAppSelector(getMySortedBoards)
     const dispatch = useAppDispatch()
     const partialCategories = useAppSelector<Array<CategoryBoards>>(getSidebarCategories)
     const sidebarCategories = addMissingItems(partialCategories, boards)

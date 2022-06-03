@@ -16,10 +16,14 @@ import {wrapIntl} from '../../testUtils'
 
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
 
+import client from '../../octoClient'
+
 import GlobalHeaderSettingsMenu from './globalHeaderSettingsMenu'
 
 jest.mock('../../telemetry/telemetryClient')
+jest.mock('../../octoClient')
 const mockedTelemetry = mocked(TelemetryClient, true)
+const mockedOctoClient = mocked(client, true)
 
 describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
     const mockStore = configureStore([])
@@ -105,5 +109,29 @@ describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
 
         userEvent.click(container.querySelector('[aria-label="Asana"]') as Element)
         expect(mockedTelemetry.trackEvent).toBeCalledWith(TelemetryCategory, TelemetryActions.ImportAsana)
+    })
+
+    test('Product Tour option restarts the tour', () => {
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <GlobalHeaderSettingsMenu history={history}/>
+            </ReduxProvider>,
+        )
+
+        const {container} = render(component)
+        act(() => {
+            userEvent.click(container.querySelector('.menu-entry') as Element)
+        })
+        act(() => {
+            userEvent.click(container.querySelector('.product-tour') as Element)
+        })
+
+        expect(mockedOctoClient.patchUserConfig).toBeCalledWith('user-id', {
+            updatedFields: {
+                'focalboard_onboardingTourStarted': '1',
+                'focalboard_onboardingTourStep': '0',
+                'focalboard_tourCategory': 'onboarding',
+            },
+        })
     })
 })

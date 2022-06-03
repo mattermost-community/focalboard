@@ -24,6 +24,7 @@
             width: 16px;
             min-width: 16px;
             height: 16px;
+            z-index: 1;
 
             i {
                 font-size: 16px;
@@ -76,11 +77,9 @@
         }
     }
 
-    div:nth-child(3) {
-        div {
-            overflow-y: unset;
-            overflow-x: unset;
-        }
+    .ValueSelector__menu-list {
+        overflow-y: unset;
+        overflow-x: unset;
     }
 }
 

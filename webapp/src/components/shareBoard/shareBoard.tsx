@@ -36,6 +36,8 @@ import SearchIcon from '../../widgets/icons/search'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
+import {useHasPermissions} from '../../hooks/permissions'
+
 import TeamPermissionsRow from './teamPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
 
@@ -105,10 +107,14 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const intl = useIntl()
     const match = useRouteMatch<{teamId?: string, boardId: string, viewId: string}>()
 
+    const hasSharePermissions = useHasPermissions(board.teamId, boardId, [Permission.ShareBoard])
+
     const loadData = async () => {
-        const newSharing = await client.getSharing(boardId)
-        setSharing(newSharing)
-        setWasCopiedPublic(false)
+        if( hasSharePermissions ){
+            const newSharing = await client.getSharing(boardId)
+            setSharing(newSharing)
+            setWasCopiedPublic(false)
+        }
     }
 
     const createSharingInfo = () => {
@@ -258,6 +264,23 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         </span>
     )
 
+    const formatOptionLabel = (user: IUser) => {
+        return(
+            <div className='user-item'>
+                {Utils.isFocalboardPlugin() &&
+                    <img
+                        src={Utils.getProfilePicture(user.id)}
+                        className='user-item__img'
+                    />
+                }
+                <div className='ml-3'>
+                    <strong>{user.username}</strong>
+                    <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
+                </div>
+            </div>
+        )
+    }
+
     const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
 
     return (
@@ -278,6 +301,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             loadOptions={(inputValue: string) => client.searchTeamUsers(inputValue)}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
+                            formatOptionLabel={formatOptionLabel}
                             getOptionValue={(u) => u.id}
                             getOptionLabel={(u) => u.username}
                             isMulti={false}

@@ -44,7 +44,7 @@ const RegistrationLink = (props: Props) => {
         }
     }
 
-    const registrationUrl = Utils.buildURL('/register?t=' + signupToken, true)
+    const registrationUrl = `${Utils.getBaseURL(true).replace(/\/$/, '')}/register?t=${signupToken}`
 
     return (
         <Modal

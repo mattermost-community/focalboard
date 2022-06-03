@@ -16,6 +16,7 @@ type Params struct {
 	Logger           *mlog.Logger
 	DB               *sql.DB
 	IsPlugin         bool
+	IsSingleUser     bool
 	NewMutexFn       MutexFactory
 	PluginAPI        *plugin.API
 }

@@ -48,7 +48,7 @@
             }
         }
 
-        * > .menu-option {
+        .menu-option {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -86,13 +86,13 @@
                 fill: rgba(var(--center-channel-color-rgb), 0.7);
             }
 
-            > .Icon {
+            .Icon {
                 opacity: 0.56;
                 width: 18px;
                 height: 18px;
             }
 
-            > .IconButton .Icon {
+            .IconButton .Icon {
                 margin-right: 0;
             }
         }
@@ -157,7 +157,7 @@
 
             flex: 0 0 auto;
 
-            * > .menu-option {
+            .menu-option {
                 min-height: 44px;
                 width: 100%;
                 padding: 0 20px;

@@ -1498,6 +1498,19 @@ ul.nav-tabs {
   "description" : "FileUploadResponse is the response to a file upload",
   "x-go-package" : "github.com/mattermost/focalboard/server/api"
 };
+    defs["inline_response_200"] = {
+  "type" : "object",
+  "properties" : {
+    "boardID" : {
+      "type" : "string",
+      "description" : "Board ID"
+    },
+    "teamID" : {
+      "type" : "string",
+      "description" : "Team ID"
+    }
+  }
+};
     defs["LoginRequest"] = {
   "required" : [ "password", "type" ],
   "type" : "object",
@@ -18877,7 +18890,7 @@ public class DefaultApiExample {
         String teamID = teamID_example; // String | Team ID
 
         try {
-            OnboardingResponse result = apiInstance.onboard(teamID);
+            inline_response_200 result = apiInstance.onboard(teamID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#onboard");
@@ -18897,7 +18910,7 @@ public class DefaultApiExample {
         String teamID = teamID_example; // String | Team ID
 
         try {
-            OnboardingResponse result = apiInstance.onboard(teamID);
+            inline_response_200 result = apiInstance.onboard(teamID);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#onboard");
@@ -18925,7 +18938,7 @@ String *teamID = teamID_example; // Team ID (default to null)
 
 // Onboards a user on Boards.
 [apiInstance onboardWith:teamID
-              completionHandler: ^(OnboardingResponse output, NSError* error) {
+              completionHandler: ^(inline_response_200 output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
     }
@@ -18988,7 +19001,7 @@ namespace Example
 
             try {
                 // Onboards a user on Boards.
-                OnboardingResponse result = apiInstance.onboard(teamID);
+                inline_response_200 result = apiInstance.onboard(teamID);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.onboard: " + e.Message );
@@ -19161,7 +19174,7 @@ Team ID
   "content" : {
     "application/json" : {
       "schema" : {
-        "$ref" : "#/components/schemas/OnboardingResponse"
+        "$ref" : "#/components/schemas/inline_response_200"
       }
     }
   }

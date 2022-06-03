@@ -1,35 +1,36 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/viewHeader/ViewHeaderSearch return input after click on search button 1`] = `
-<div>
-  <input
-    class="Editable undefined"
-    placeholder="Search text"
-    value=""
-  />
-</div>
-`;
-
 exports[`components/viewHeader/ViewHeaderSearch return search menu 1`] = `
 <div>
-  <button
-    class="Button"
-    type="button"
+  <div
+    class="board-search-field"
   >
-    <span>
-      Search
-    </span>
-  </button>
+    <i
+      class="CompassIcon icon-magnify board-search-icon"
+    />
+    <input
+      class="Editable "
+      placeholder="Search cards"
+      value=""
+    />
+  </div>
 </div>
 `;
 
-exports[`components/viewHeader/ViewHeaderSearch search text after input after click on search button and search text 1`] = `
+exports[`components/viewHeader/ViewHeaderSearch search text after input 1`] = `
 <div>
-  <input
-    class="Editable undefined"
-    placeholder="Search text"
-    title="Hello"
-    value="Hello"
-  />
+  <div
+    class="board-search-field"
+  >
+    <i
+      class="CompassIcon icon-magnify board-search-icon"
+    />
+    <input
+      class="Editable "
+      placeholder="Search cards"
+      title="Hello"
+      value="Hello"
+    />
+  </div>
 </div>
 `;
