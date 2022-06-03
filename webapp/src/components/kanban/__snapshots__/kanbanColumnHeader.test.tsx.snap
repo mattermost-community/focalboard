@@ -11,7 +11,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
       class="Label propColorDefault "
     >
       <input
-        class="Editable undefined"
+        class="Editable "
         placeholder="New Select"
         spellcheck="true"
         title="Title"
@@ -63,7 +63,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="HideIcon Icon"
@@ -92,7 +92,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -294,7 +294,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -336,7 +336,7 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
       class="Label propColorDefault "
     >
       <input
-        class="Editable undefined"
+        class="Editable "
         placeholder="New Select"
         spellcheck="true"
         title="New Title"
@@ -396,7 +396,7 @@ exports[`src/components/kanban/kanbanColumnHeader should match snapshot 1`] = `
       class="Label propColorDefault "
     >
       <input
-        class="Editable undefined"
+        class="Editable "
         placeholder="New Select"
         spellcheck="true"
         title="Title"
@@ -456,7 +456,7 @@ exports[`src/components/kanban/kanbanColumnHeader should match snapshot readonly
       class="Label propColorDefault "
     >
       <input
-        class="Editable readonly undefined"
+        class="Editable readonly "
         placeholder="New Select"
         readonly=""
         spellcheck="true"

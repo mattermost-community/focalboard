@@ -1,7 +1,6 @@
 package storetests
 
 import (
-	"database/sql"
 	"testing"
 	"time"
 
@@ -68,10 +67,10 @@ func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, fu
 		defer tearDown()
 		testDeleteMember(t, store)
 	})
-	t.Run("SearchBoardsForUserAndTeam", func(t *testing.T) {
+	t.Run("SearchBoardsForUser", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testSearchBoardsForUserAndTeam(t, store)
+		testSearchBoardsForUser(t, store)
 	})
 	t.Run("GetBoardHistory", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -106,7 +105,7 @@ func testGetBoard(t *testing.T, store store.Store) {
 
 	t.Run("nonexisting board", func(t *testing.T) {
 		rBoard, err := store.GetBoard("nonexistent-id")
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, rBoard)
 	})
 }
@@ -237,7 +236,7 @@ func testInsertBoard(t *testing.T, store store.Store) {
 		require.Error(t, err)
 
 		rBoard, err := store.GetBoard(board.ID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, rBoard)
 	})
 
@@ -479,7 +478,7 @@ func testDeleteBoard(t *testing.T, store store.Store) {
 		require.NoError(t, store.DeleteBoard(boardID, userID))
 
 		r2Board, err := store.GetBoard(boardID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, r2Board)
 	})
 }
@@ -569,7 +568,7 @@ func testGetMemberForBoard(t *testing.T, store store.Store) {
 
 	t.Run("should return a no rows error for nonexisting membership", func(t *testing.T) {
 		bm, err := store.GetMemberForBoard(boardID, userID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, bm)
 	})
 
@@ -674,7 +673,7 @@ func testDeleteMember(t *testing.T, store store.Store) {
 		require.NoError(t, store.DeleteMember(boardID, userID))
 
 		rbm, err := store.GetMemberForBoard(boardID, userID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, rbm)
 
 		memberHistory, err = store.GetBoardMemberHistory(boardID, userID, 0)
@@ -683,13 +682,13 @@ func testDeleteMember(t *testing.T, store store.Store) {
 	})
 }
 
-func testSearchBoardsForUserAndTeam(t *testing.T, store store.Store) {
+func testSearchBoardsForUser(t *testing.T, store store.Store) {
 	teamID1 := "team-id-1"
 	teamID2 := "team-id-2"
 	userID := "user-id-1"
 
 	t.Run("should return empty if user is not a member of any board and there are no public boards on the team", func(t *testing.T) {
-		boards, err := store.SearchBoardsForUserAndTeam("", userID, teamID1)
+		boards, err := store.SearchBoardsForUser("", userID)
 		require.NoError(t, err)
 		require.Empty(t, boards)
 	})
@@ -751,21 +750,21 @@ func testSearchBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "",
-			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID},
+			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID, board5.ID},
 		},
 		{
 			Name:             "should find all with term board",
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "board",
-			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID},
+			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID, board5.ID},
 		},
 		{
 			Name:             "should find only public as per the term, wether user is a member or not",
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "public",
-			ExpectedBoardIDs: []string{board1.ID, board2.ID},
+			ExpectedBoardIDs: []string{board1.ID, board2.ID, board5.ID},
 		},
 		{
 			Name:             "should find only private as per the term, wether user is a member or not",
@@ -773,13 +772,6 @@ func testSearchBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			UserID:           userID,
 			Term:             "priv",
 			ExpectedBoardIDs: []string{board3.ID},
-		},
-		{
-			Name:             "should find the only board in team 2",
-			TeamID:           teamID2,
-			UserID:           userID,
-			Term:             "",
-			ExpectedBoardIDs: []string{board5.ID},
 		},
 		{
 			Name:             "should find no board in team 2 with a non matching term",
@@ -792,7 +784,7 @@ func testSearchBoardsForUserAndTeam(t *testing.T, store store.Store) {
 
 	for _, tc := range testCases {
 		t.Run(tc.Name, func(t *testing.T) {
-			boards, err := store.SearchBoardsForUserAndTeam(tc.Term, tc.UserID, tc.TeamID)
+			boards, err := store.SearchBoardsForUser(tc.Term, tc.UserID)
 			require.NoError(t, err)
 
 			boardIDs := []string{}

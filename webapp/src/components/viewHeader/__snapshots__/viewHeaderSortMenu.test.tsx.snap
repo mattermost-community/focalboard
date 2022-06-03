@@ -31,7 +31,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -52,7 +52,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -78,7 +78,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -101,7 +101,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -124,7 +124,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -156,7 +156,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -179,7 +179,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -208,7 +208,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"

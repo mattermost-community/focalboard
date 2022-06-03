@@ -87,12 +87,12 @@ function customHistory() {
             }
 
             const pathName = event.data.message?.pathName
-            if (!pathName || !pathName.startsWith(windowAny.frontendBaseURL)) {
+            if (!pathName || !pathName.startsWith('/boards')) {
                 return
             }
 
             Utils.log(`Navigating Boards to ${pathName}`)
-            history.replace(pathName.replace(windowAny.frontendBaseURL, ''))
+            history.replace(pathName.replace('/boards', ''))
         })
     }
     return {
@@ -187,13 +187,13 @@ export default class Plugin {
             // This handles the user selecting a team from the team sidebar.
             const currentTeamID = mmStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
-                prevTeamID = currentTeamID
-                store.dispatch(setTeam(currentTeamID))
-                if (window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
+                if (prevTeamID && window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
                     console.log("REDIRECTING HERE")
                     browserHistory.push(`/team/${currentTeamID}`)
                     wsClient.subscribeToTeam(currentTeamID)
                 }
+                prevTeamID = currentTeamID
+                store.dispatch(setTeam(currentTeamID))
             }
         })
 

@@ -77,7 +77,6 @@
   "GalleryCard.copyLink": "Copiar enlace",
   "GalleryCard.delete": "Borrar",
   "GalleryCard.duplicate": "Duplicar",
-  "General.BoardCount": "{contar, plural, un{# Board} otro {# Boards}}",
   "GroupBy.ungroup": "Desagrupar",
   "KanbanCard.copiedLink": "¡Copiado!",
   "KanbanCard.copyLink": "Copiar enlace",

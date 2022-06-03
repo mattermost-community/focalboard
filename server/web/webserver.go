@@ -140,7 +140,7 @@ func fileExists(path string) bool {
 
 // errorOrWarn returns a `warn` level if this server instance is running unit tests, otherwise `error`.
 func errorOrWarn() mlog.Level {
-	unitTesting := strings.ToLower(strings.TrimSpace(os.Getenv("FB_UNIT_TESTING")))
+	unitTesting := strings.ToLower(strings.TrimSpace(os.Getenv("FOCALBOARD_UNIT_TESTING")))
 	if unitTesting == "1" || unitTesting == "y" || unitTesting == "t" {
 		return mlog.LvlWarn
 	}

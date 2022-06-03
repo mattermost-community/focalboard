@@ -75,7 +75,9 @@ const SidebarBoardItem = (props: Props) => {
                 icon={category.id === props.categoryBoards.id ? <Check/> : <Folder/>}
                 onClick={async (toCategoryID) => {
                     const fromCategoryID = props.categoryBoards.id
-                    await mutator.moveBoardToCategory(teamID, boardID, toCategoryID, fromCategoryID)
+                    if (fromCategoryID !== toCategoryID) {
+                        await mutator.moveBoardToCategory(teamID, boardID, toCategoryID, fromCategoryID)
+                    }
                 }}
             />
         ))

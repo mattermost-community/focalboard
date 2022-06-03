@@ -141,3 +141,13 @@ export const getOnboardingTourCategory = createSelector(
     getMe,
     (me): string => (me ? me.props?.focalboard_tourCategory : ''),
 )
+
+export const getCloudMessageCanceled = createSelector(
+    getMe,
+    (me): boolean => {
+        if (!me) {
+            return false
+        }
+        return Boolean(me.props?.focalboard_cloudMessageCanceled)
+    },
+)

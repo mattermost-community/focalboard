@@ -23,7 +23,26 @@ import (
 )
 
 func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, blockID string) error {
-	return s.addUpdateCategoryBoard(s.db, userID, categoryID, blockID)
+	if s.dbType == model.SqliteDBType {
+		return s.addUpdateCategoryBoard(s.db, userID, categoryID, blockID)
+	}
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.addUpdateCategoryBoard(tx, userID, categoryID, blockID)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "AddUpdateCategoryBoard"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 
 }
 
@@ -648,13 +667,37 @@ func (s *SQLStore) RemoveDefaultTemplates(boards []*model.Board) error {
 
 }
 
+func (s *SQLStore) RunDataRetention(globalRetentionDate int64, batchSize int64) (int64, error) {
+	if s.dbType == model.SqliteDBType {
+		return s.runDataRetention(s.db, globalRetentionDate, batchSize)
+	}
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return 0, txErr
+	}
+	result, err := s.runDataRetention(tx, globalRetentionDate, batchSize)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "RunDataRetention"))
+		}
+		return 0, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return 0, err
+	}
+
+	return result, nil
+
+}
+
 func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error) {
 	return s.saveMember(s.db, bm)
 
 }
 
-func (s *SQLStore) SearchBoardsForUserAndTeam(term string, userID string, teamID string) ([]*model.Board, error) {
-	return s.searchBoardsForUserAndTeam(s.db, term, userID, teamID)
+func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Board, error) {
+	return s.searchBoardsForUser(s.db, term, userID)
 
 }
 

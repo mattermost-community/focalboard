@@ -10,6 +10,8 @@ import {FetchMock} from '../../../test/fetchMock'
 import 'isomorphic-fetch'
 import {wrapDNDIntl} from '../../../testUtils'
 
+import {ColumnResizeProvider} from '../tableColumnResizeContext'
+
 import CalculationRow from './calculationRow'
 
 global.fetch = FetchMock.fn
@@ -56,14 +58,14 @@ describe('components/table/calculation/CalculationRow', () => {
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, card])))
 
         const component = wrapDNDIntl(
-            <CalculationRow
-                board={board}
-                cards={[card, card2]}
-                activeView={view}
-                resizingColumn={''}
-                offset={0}
-                readonly={false}
-            />,
+            <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+                <CalculationRow
+                    board={board}
+                    cards={[card, card2]}
+                    activeView={view}
+                    readonly={false}
+                />
+            </ColumnResizeProvider>
         )
 
         const {container} = render(component)
@@ -78,14 +80,14 @@ describe('components/table/calculation/CalculationRow', () => {
         }
 
         const component = wrapDNDIntl(
-            <CalculationRow
-                board={board}
-                cards={[card, card2]}
-                activeView={view}
-                resizingColumn={''}
-                offset={0}
-                readonly={false}
-            />,
+            <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+                <CalculationRow
+                    board={board}
+                    cards={[card, card2]}
+                    activeView={view}
+                    readonly={false}
+                />
+            </ColumnResizeProvider>
         )
 
         const {container} = render(component)

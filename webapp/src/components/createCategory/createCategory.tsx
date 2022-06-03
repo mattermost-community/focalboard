@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState} from 'react'
+import React, {useState, KeyboardEvent} from 'react'
 
 import {useIntl} from 'react-intl'
 
@@ -20,12 +20,18 @@ type Props = {
 const CreateCategory = (props: Props): JSX.Element => {
     const intl = useIntl()
 
-    const placeholder = intl.formatMessage({id: 'Categories.CreateCategoryDialog.Placeholder', defaultMessage: 'Name your category'})
-    const cancelText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CancelText', defaultMessage: 'Cancel'})
-    const createText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CreateText', defaultMessage: 'Create'})
-    const updateText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.UpdateText', defaultMessage: 'Update'})
+    const placeholder = intl.formatMessage({id: 'Categories.CreateCategoryDialog.Placeholder', defaultMessage: 'Name your category' })
+    const cancelText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CancelText', defaultMessage: 'Cancel' })
+    const createText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CreateText', defaultMessage: 'Create' })
+    const updateText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.UpdateText', defaultMessage: 'Update' })
 
     const [name, setName] = useState(props.initialValue || '')
+
+    const handleKeypress = (e: KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            props.onCreate(name)
+        }
+    }
 
     return (
         <Dialog
@@ -42,6 +48,7 @@ const CreateCategory = (props: Props): JSX.Element => {
                     onChange={(e) => setName(e.target.value)}
                     autoFocus={true}
                     maxLength={100}
+                    onKeyUp={handleKeypress}
                 />
                 <div className='createCategoryActions'>
                     <Button
