@@ -793,6 +793,20 @@ class OctoClient {
         return (await this.getJson(response, [])) as Subscription[]
     }
 
+    // TODO: replace the any with the Channel type (we need to define it)
+    async getUserChannels(teamId: string): Promise<any | undefined> {
+        const path = `/api/v2/teams/${teamId}/channels`
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'GET',
+        })
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {}))
+    }
+
     // onboarding
     async prepareOnboarding(teamId: string): Promise<PrepareOnboardingResponse | undefined> {
         const path = `/api/v2/teams/${teamId}/onboard`

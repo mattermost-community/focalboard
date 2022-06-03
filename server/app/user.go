@@ -1,6 +1,9 @@
 package app
 
-import "github.com/mattermost/focalboard/server/model"
+import (
+	"github.com/mattermost/focalboard/server/model"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
+)
 
 func (a *App) GetTeamUsers(teamID string) ([]*model.User, error) {
 	return a.store.GetUsersByTeam(teamID)
@@ -21,4 +24,8 @@ func (a *App) UpdateUserConfig(userID string, patch model.UserPropPatch) (map[st
 	}
 
 	return user.Props, nil
+}
+
+func (a *App) GetUserChannels(teamID string, userID string) ([]*mmModel.Channel, error) {
+	return a.store.GetUserChannels(teamID, userID)
 }

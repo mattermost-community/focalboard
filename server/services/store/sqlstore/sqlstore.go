@@ -33,6 +33,14 @@ type SQLStore struct {
 // a cluster mutex.
 type MutexFactory func(name string) (*cluster.Mutex, error)
 
+type NotSupportedError struct {
+	msg string
+}
+
+func (pe NotSupportedError) Error() string {
+	return pe.msg
+}
+
 // New creates a new SQL implementation of the store.
 func New(params Params) (*SQLStore, error) {
 	if err := params.CheckValid(); err != nil {
@@ -125,4 +133,8 @@ func (s *SQLStore) getLicense(db sq.BaseRunner) *mmModel.License {
 
 func (s *SQLStore) getCloudLimits(db sq.BaseRunner) (*mmModel.ProductLimits, error) {
 	return nil, nil
+}
+
+func (s *SQLStore) getUserChannels(db sq.BaseRunner, teamID, userID string) ([]*mmModel.Channel, error) {
+	return nil, NotSupportedError{"get user channels not supported on standalone mode"}
 }

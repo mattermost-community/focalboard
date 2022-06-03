@@ -33,12 +33,15 @@ import {getSelectBaseStyle} from '../../theme'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import IconButton from '../../widgets/buttons/iconButton'
 import SearchIcon from '../../widgets/icons/search'
+import PrivateIcon from '../../widgets/icons/lockOutline'
+import PublicIcon from '../../widgets/icons/globe'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import {useHasPermissions} from '../../hooks/permissions'
 
 import TeamPermissionsRow from './teamPermissionsRow'
+import ChannelPermissionsRow from './channelPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
 
 import './shareBoard.scss'
@@ -141,10 +144,9 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         mutator.updateBoard(newBoard, board, 'unlinked channel')
     }
 
-    const onLinkBoard = async () => {
-        // TODO: Replace this with the logic needed to really select the channel
+    const onLinkBoard = async (channelID: string) => {
         const newBoard = createBoard(board)
-        newBoard.channelId = 'xdfmdh66xjd5traix74zh1jaey'  // This is a channel ID hardcoded here as an example
+        newBoard.channelId = channelID  // This is a channel ID hardcoded here as an example
         mutator.updateBoard(newBoard, board, 'linked channel')
     }
 
@@ -277,18 +279,37 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         </span>
     )
 
-    const formatOptionLabel = (user: IUser) => {
+    // TODO: replace any with Channel type
+    const formatOptionLabel = (userOrChannel: IUser | any) => {
+        if (userOrChannel.username) {
+            const user = userOrChannel
+            return(
+                <div className='user-item'>
+                    {Utils.isFocalboardPlugin() &&
+                        <img
+                            src={Utils.getProfilePicture(user.id)}
+                            className='user-item__img'
+                        />
+                    }
+                    <div className='ml-3'>
+                        <strong>{user.username}</strong>
+                        <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
+                    </div>
+                </div>
+            )
+        }
+
+        if (!Utils.isFocalboardPlugin()) {
+            return null
+        }
+
+        const channel = userOrChannel
         return(
             <div className='user-item'>
-                {Utils.isFocalboardPlugin() &&
-                    <img
-                        src={Utils.getProfilePicture(user.id)}
-                        className='user-item__img'
-                    />
-                }
+                {channel.type === 'P' && <PrivateIcon/>}
+                {channel.type === 'O' && <PublicIcon/>}
                 <div className='ml-3'>
-                    <strong>{user.username}</strong>
-                    <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
+                    <strong>{channel.display_name}</strong>
                 </div>
             </div>
         )
@@ -311,17 +332,23 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             value={selectedUser}
                             className={'userSearchInput'}
                             cacheOptions={true}
-                            loadOptions={(inputValue: string) => client.searchTeamUsers(inputValue)}
+                            loadOptions={async (inputValue: string) => {
+                                const users = await client.searchTeamUsers(inputValue)
+                                const channels = await client.getUserChannels(match.params.teamId)
+                                return [...users, ...channels]
+                            }
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
                             formatOptionLabel={formatOptionLabel}
                             getOptionValue={(u) => u.id}
-                            getOptionLabel={(u) => u.username}
+                            getOptionLabel={(u) => u.username || u.display_name}
                             isMulti={false}
                             onChange={(newValue) => {
-                                if (newValue) {
+                                if (newValue?.username) {
                                     mutator.createBoardMember(boardId, newValue.id)
                                     setSelectedUser(null)
+                                } else if (newValue) {
+                                    onLinkBoard(newValue.id)
                                 }
                             }}
                         />
@@ -329,49 +356,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                 </div>
             </BoardPermissionGate>
             <div className='user-items'>
-                {board.channelId && (
-                    <div style={{padding: '0 16px', display: 'flex', flexDirection: 'row'}}>
-                        <div style={{flexGrow: 1, fontWeight: 600}}>
-                            <FormattedMessage
-                                id='share-board.channel-linked'
-                                defaultMessage='This board is linked to the channel {channelName} all the members of that channel has editor access to this board'
-                                values={{channelName: 'TODO-CHANNEL-NAME'}}
-                            />
-                        </div>
-                        <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
-                            <div style={{minWidth: 70, textAlign: 'right', alignItems: 'center', marginRight: 24}}>
-                                <a onClick={onUnlinkBoard}>
-                                    <FormattedMessage
-                                        id='share-board.unlink-channel'
-                                        defaultMessage='Unlink'
-                                    />
-                                </a>
-                            </div>
-                        </BoardPermissionGate>
-                    </div>
-                )}
-                {!board.channelId && (
-                    <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
-                        <div style={{padding: '0 16px', display: 'flex', flexDirection: 'row'}}>
-                            <div style={{flexGrow: 1, fontWeight: 600}}>
-                                <FormattedMessage
-                                    id='share-board.channel-not-linked'
-                                    defaultMessage='This board is NOT linked to any channel, if you want to apply the channel memberships you only need to link it to the channel.'
-                                />
-                            </div>
-                            <div style={{minWidth: 70, textAlign: 'right', alignItems: 'center', marginRight: 24}}>
-                                <a onClick={onLinkBoard}>
-                                    <FormattedMessage
-                                        id='share-board.link-channel'
-                                        defaultMessage='Link'
-                                    />
-                                </a>
-                            </div>
-                        </div>
-                    </BoardPermissionGate>
-                )}
-
                 <TeamPermissionsRow/>
+                <ChannelPermissionsRow/>
 
                 {boardUsers.map((user) => {
                     if (!members[user.id]) {

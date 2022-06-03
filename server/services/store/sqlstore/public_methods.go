@@ -499,6 +499,11 @@ func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.
 
 }
 
+func (s *SQLStore) GetUserChannels(teamID string, userID string) ([]*mmModel.Channel, error) {
+	return s.getUserChannels(s.db, teamID, userID)
+
+}
+
 func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	return s.getUsersByTeam(s.db, teamID)
 

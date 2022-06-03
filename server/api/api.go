@@ -90,6 +90,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	}
 
 	// Board APIs
+	apiv2.HandleFunc("/teams/{teamID}/channels", a.sessionRequired(a.handleGetMyChannels)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
@@ -2164,6 +2165,78 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, data)
 
 	auditRec.AddMeta("userCount", len(users))
+	auditRec.Success()
+}
+
+func (a *API) handleGetMyChannels(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /teams/{teamID}/channels getMyChannels
+	//
+	// Returns the user available channels
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Channel"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		return
+	}
+
+	teamID := mux.Vars(r)["teamID"]
+	userID := getUserID(r)
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getMyChannels", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("teamID", teamID)
+
+	// retrieve boards list
+	channels, err := a.app.GetUserChannels(teamID, userID)
+	if err != nil {
+		fmt.Println(err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("GetUserChannels",
+		mlog.String("teamID", teamID),
+		mlog.Int("channelsCount", len(channels)),
+	)
+
+	data, err := json.Marshal(channels)
+	if err != nil {
+		fmt.Println(err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.AddMeta("channelsCount", len(channels))
 	auditRec.Success()
 }
 

@@ -172,78 +172,6 @@ const HeaderComponent = () => {
     )
 }
 
-const BoardsMenu = (props: {getCurrentChannel: () => string}) => {
-    const boards = useAppSelector(getMySortedBoards)
-    if (!boards) {
-        return null
-    }
-    const team = useAppSelector(getCurrentTeam)
-    if (!team) {
-        return null
-    }
-    const currentChannel = props.getCurrentChannel()
-    const channelBoards = boards.filter((b) => b.channelId === currentChannel)
-    const handleBoardClicked = (boardID: string) => {
-        window.open(`${windowAny.frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
-    }
-
-    return (
-        <div
-            style={{padding: 20}}
-            className='focalboard-body'
-        >
-            <div style={{display: 'flex'}}>
-                {/* TODO: translate this */}
-                <span style={{flexGrow: 1, fontSize: 16, fontWeight: 600}}>{'Linked Channels'}</span>
-                <Button
-                    onClick={() => console.log("TODO")}
-                    icon={<AddIcon/>}
-                    emphasis='primary'
-                >
-                    {/* TODO: translate this */}
-                    {'Add'}
-                </Button>
-                <SearchDialog
-                    onClose={() => console.log('close')}
-                    title='whatever'
-                    searchHandler={async (query) => query.split(' ')}
-                />
-            </div>
-            {channelBoards.map((b) => (
-                <div
-                    key={b.id}
-                    onClick={() => handleBoardClicked(b.id)}
-                    style={{padding: 15, textAlign: 'left', border: '1px solid #cccccc', borderRadius: 5, marginTop: 10, cursor: 'pointer'}}
-                >
-                    <div style={{fontSize: 16, display: 'flex'}}>
-                        {b.icon && <span style={{marginRight: 10}}>{b.icon}</span>}
-                        <span style={{fontWeight: 600, flexGrow: 1}}>{b.title}</span>
-                        <MenuWrapper stopPropagationOnToggle={true}>
-                            <IconButton icon={<OptionsIcon/>}/>
-                            <Menu
-                                fixed={true}
-                                position='left'
-                            >
-                                <Menu.Text
-                                    key={`unlinkBoard-${b.id}`}
-                                    id='unlinkBoard'
-                                    name={'Unlink Board'}
-                                    icon={<DeleteIcon/>}
-                                    onClick={() => {
-                                        console.log("TODO: DELETE")
-                                    }}
-                                />
-                            </Menu>
-                        </MenuWrapper>
-                    </div>
-                    <div>{b.description}</div>
-                    {/* TODO: Translate this later */}
-                    <div style={{color: '#cccccc'}}>{'Last Update at: '}{b.updateAt}</div>
-                </div>))}
-        </div>
-    )
-}
-
 export default class Plugin {
     channelHeaderButtonId?: string
     rhsId?: string
@@ -327,7 +255,7 @@ export default class Plugin {
 
             if (this.registry.registerAppBarComponent) {
                 const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
-                this.registry.registerAppBarComponent(appBarIconURL, goToFocalboard, 'Open Boards')
+                this.registry.registerAppBarComponent(appBarIconURL, () => mmStore.dispatch(toggleRHSPlugin), 'Boards')
             }
 
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)

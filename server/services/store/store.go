@@ -150,4 +150,5 @@ type Store interface {
 
 	GetLicense() *mmModel.License
 	GetCloudLimits() (*mmModel.ProductLimits, error)
+	GetUserChannels(teamID, userID string) ([]*mmModel.Channel, error)
 }

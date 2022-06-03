@@ -1015,6 +1015,21 @@ func (mr *MockStoreMockRecorder) GetUserCategoryBoards(arg0, arg1 interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserCategoryBoards", reflect.TypeOf((*MockStore)(nil).GetUserCategoryBoards), arg0, arg1)
 }
 
+// GetUserChannels mocks base method.
+func (m *MockStore) GetUserChannels(arg0, arg1 string) ([]*model0.Channel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserChannels", arg0, arg1)
+	ret0, _ := ret[0].([]*model0.Channel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserChannels indicates an expected call of GetUserChannels.
+func (mr *MockStoreMockRecorder) GetUserChannels(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserChannels", reflect.TypeOf((*MockStore)(nil).GetUserChannels), arg0, arg1)
+}
+
 // GetUsersByTeam mocks base method.
 func (m *MockStore) GetUsersByTeam(arg0 string) ([]*model.User, error) {
 	m.ctrl.T.Helper()

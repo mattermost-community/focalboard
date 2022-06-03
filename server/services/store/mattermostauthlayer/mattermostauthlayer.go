@@ -736,3 +736,12 @@ func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string) ([]
 	}
 	return boards, nil
 }
+
+func (s *MattermostAuthLayer) GetUserChannels(teamID, userID string) ([]*mmModel.Channel, error) {
+	// TODO: Review why I can't return the *model.AppError right away
+	channels, err := s.pluginAPI.GetChannelsForTeamForUser(teamID, userID, false)
+	if err != nil {
+		return nil, err
+	}
+	return channels, nil
+}
