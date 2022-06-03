@@ -76,8 +76,9 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string,
 		Where(sq.Eq{"blocks.delete_at": 0}).
 		GroupBy("blocks.title, blocks.workspace_id, blocks.created_by, blocks.id, blocks_history.modified_by")
 
-	userInsightsQuery := qb.Select("*").FromSelect(qb.Select(fmt.Sprintf("id, title, workspace_id, sum(count) as activity_count, %s as active_users, created_by",
-		s.concatenationSelector("distinct modified_by", ","))).
+	userInsightsQuery := qb.Select("*").FromSelect(qb.Select(
+		fmt.Sprintf("id, title, workspace_id,sum(count) as activity_count, %s as active_users, created_by",
+			s.concatenationSelector("distinct modified_by", ","))).
 		FromSelect(publicBoards, "boards_and_blocks_history").
 		GroupBy("id, title, workspace_id, created_by").
 		OrderBy("activity_count desc"), "team_insights").
