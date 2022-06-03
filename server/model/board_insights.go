@@ -45,6 +45,9 @@ type BoardInsight struct {
 	// ID of user who created the board
 	// required: true
 	CreatedBy string `json:"createdBy"`
+
+	// WorkspaceID of the board
+	WorkspaceID string `json:"workspaceID"`
 }
 
 func BoardInsightsFromJSON(data io.Reader) []BoardInsight {
