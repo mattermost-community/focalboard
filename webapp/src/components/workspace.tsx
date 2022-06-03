@@ -7,6 +7,7 @@ import {FormattedMessage} from 'react-intl'
 import {getCurrentWorkspace} from '../store/workspace'
 import {getCurrentBoard, getTemplates} from '../store/boards'
 import {getCardLimitTimestamp, getCurrentBoardHiddenCardsCount, getCurrentViewCardsSortedFilteredAndGrouped, refreshCards, setCurrent as setCurrentCard, setLimitTimestamp} from '../store/cards'
+import {setCardLimitTimestamp} from '../store/limits'
 import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentView, getCurrentViewDisplayBy} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
@@ -59,7 +60,10 @@ function CenterContent(props: Props) {
         wsClient.addOnConfigChange(onConfigChangeHandler)
 
         const onCardLimitTimestampChangeHandler = (_: WSClient, timestamp: number) => {
+            // we need to update both the value used to filter the
+            // cards on their store and the limits block value
             dispatch(setLimitTimestamp({timestamp, templates}))
+            dispatch(setCardLimitTimestamp(timestamp))
             if (cardLimitTimestamp > timestamp) {
                 dispatch(refreshCards(timestamp))
             }
