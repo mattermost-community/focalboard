@@ -169,7 +169,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
         >
           <span>
             Count
-             
+
           </span>
         </div>
         <div
@@ -177,7 +177,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
         >
           <span>
             Count Empty
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -188,7 +188,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
         >
           <span>
             Count Not Empty
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -199,7 +199,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
         >
           <span>
             Percent Empty
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -210,7 +210,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
         >
           <span>
             Percent Not Empty
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -221,7 +221,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
         >
           <span>
             Count Value
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -232,7 +232,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with menu open 
         >
           <span>
             Count Unique Values
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -335,7 +335,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         >
           <span>
             Count
-             
+
           </span>
         </div>
         <div
@@ -343,7 +343,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         >
           <span>
             Count Empty
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -354,7 +354,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         >
           <span>
             Count Not Empty
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -365,7 +365,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         >
           <span>
             Percent Empty
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -376,7 +376,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         >
           <span>
             Percent Not Empty
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -387,7 +387,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         >
           <span>
             Count Value
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
@@ -398,7 +398,7 @@ exports[`components/kanban/calculations/KanbanCalculationOptions with submenu op
         >
           <span>
             Count Unique Values
-             
+
             <i
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
