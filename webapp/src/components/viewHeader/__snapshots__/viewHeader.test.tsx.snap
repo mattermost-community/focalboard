@@ -9,7 +9,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="viewSelector"
     >
       <input
-        class="Editable undefined"
+        class="Editable "
         placeholder="Untitled View"
         spellcheck="true"
         title="view title"
@@ -94,14 +94,18 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
         </span>
       </button>
     </div>
-    <button
-      class="Button"
-      type="button"
+    <div
+      class="board-search-field"
     >
-      <span>
-        Search
-      </span>
-    </button>
+      <i
+        class="CompassIcon icon-magnify board-search-icon"
+      />
+      <input
+        class="Editable "
+        placeholder="Search cards"
+        value=""
+      />
+    </div>
     <div
       class="ModalWrapper"
     >
@@ -155,7 +159,7 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
       class="viewSelector"
     >
       <input
-        class="Editable readonly undefined"
+        class="Editable readonly "
         placeholder="Untitled View"
         readonly=""
         spellcheck="true"
@@ -182,14 +186,18 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
     <div
       class="octo-spacer"
     />
-    <button
-      class="Button"
-      type="button"
+    <div
+      class="board-search-field"
     >
-      <span>
-        Search
-      </span>
-    </button>
+      <i
+        class="CompassIcon icon-magnify board-search-icon"
+      />
+      <input
+        class="Editable "
+        placeholder="Search cards"
+        value=""
+      />
+    </div>
   </div>
 </div>
 `;
@@ -203,7 +211,7 @@ exports[`components/viewHeader/viewHeader return viewHeader without permissions 
       class="viewSelector"
     >
       <input
-        class="Editable readonly undefined"
+        class="Editable readonly "
         placeholder="Untitled View"
         readonly=""
         spellcheck="true"
@@ -230,14 +238,18 @@ exports[`components/viewHeader/viewHeader return viewHeader without permissions 
     <div
       class="octo-spacer"
     />
-    <button
-      class="Button"
-      type="button"
+    <div
+      class="board-search-field"
     >
-      <span>
-        Search
-      </span>
-    </button>
+      <i
+        class="CompassIcon icon-magnify board-search-icon"
+      />
+      <input
+        class="Editable "
+        placeholder="Search cards"
+        value=""
+      />
+    </div>
     <div
       class="ModalWrapper"
     >

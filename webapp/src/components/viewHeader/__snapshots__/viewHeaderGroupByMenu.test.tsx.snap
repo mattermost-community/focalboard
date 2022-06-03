@@ -36,7 +36,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -63,7 +63,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -89,7 +89,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -118,7 +118,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -141,7 +141,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -164,7 +164,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -193,7 +193,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -251,7 +251,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -278,7 +278,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -304,7 +304,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -333,7 +333,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -356,7 +356,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -379,7 +379,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -408,7 +408,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -467,7 +467,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -496,7 +496,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -519,7 +519,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -542,7 +542,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -571,7 +571,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -653,7 +653,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -680,7 +680,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -707,7 +707,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -733,7 +733,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -762,7 +762,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -785,7 +785,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -808,7 +808,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -837,7 +837,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"

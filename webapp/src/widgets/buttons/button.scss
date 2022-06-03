@@ -109,6 +109,26 @@
         color: rgb(var(--button-bg-rgb));
     }
 
+    &.size--xsmall {
+        font-size: 12px;
+        padding: 0 10px;
+        height: 24px;
+
+        .CompassIcon {
+            font-size: 14.4px;
+            width: 12px;
+            height: 12px;
+
+            &:first-child {
+                margin-right: 6px;
+            }
+
+            &:last-child {
+                margin-left: 6px;
+            }
+        }
+    }
+
     &.size--small {
         font-size: 12px;
         padding: 0 16px;

@@ -40,6 +40,16 @@ const (
 	userAdmin        string = "admin"
 )
 
+var (
+	userAnonID         = userAnon
+	userNoTeamMemberID = userNoTeamMember
+	userTeamMemberID   = userTeamMember
+	userViewerID       = userViewer
+	userCommenterID    = userCommenter
+	userEditorID       = userEditor
+	userAdminID        = userAdmin
+)
+
 type LicenseType int
 
 const (
@@ -125,7 +135,8 @@ func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *
 	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
 		panic(err)
 	}
-	innerStore, err := server.NewStore(cfg, logger)
+	singleUser := len(singleUserToken) > 0
+	innerStore, err := server.NewStore(cfg, singleUser, logger)
 	if err != nil {
 		panic(err)
 	}
@@ -161,7 +172,7 @@ func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *
 	return srv
 }
 
-func newTestServerPluginMode() *server.Server {
+func NewTestServerPluginMode() *server.Server {
 	cfg, err := getTestConfig()
 	if err != nil {
 		panic(err)
@@ -173,7 +184,7 @@ func newTestServerPluginMode() *server.Server {
 	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
 		panic(err)
 	}
-	innerStore, err := server.NewStore(cfg, logger)
+	innerStore, err := server.NewStore(cfg, false, logger)
 	if err != nil {
 		panic(err)
 	}
@@ -197,6 +208,43 @@ func newTestServerPluginMode() *server.Server {
 	return srv
 }
 
+func newTestServerLocalMode() *server.Server {
+	cfg, err := getTestConfig()
+	if err != nil {
+		panic(err)
+	}
+	cfg.EnablePublicSharedBoards = true
+
+	logger, _ := mlog.NewLogger()
+	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
+		panic(err)
+	}
+
+	db, err := server.NewStore(cfg, false, logger)
+	if err != nil {
+		panic(err)
+	}
+
+	permissionsService := localpermissions.New(db, logger)
+
+	params := server.Params{
+		Cfg:                cfg,
+		DBStore:            db,
+		Logger:             logger,
+		PermissionsService: permissionsService,
+	}
+
+	srv, err := server.New(params)
+	if err != nil {
+		panic(err)
+	}
+
+	// Reduce password has strength for unit tests to dramatically speed up account creation and login
+	auth.PasswordHashStrength = 4
+
+	return srv
+}
+
 func SetupTestHelperWithToken(t *testing.T) *TestHelper {
 	sessionToken := "TESTTOKEN"
 	th := &TestHelper{T: t}
@@ -212,7 +260,14 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 
 func SetupTestHelperPluginMode(t *testing.T) *TestHelper {
 	th := &TestHelper{T: t}
-	th.Server = newTestServerPluginMode()
+	th.Server = NewTestServerPluginMode()
+	th.Start()
+	return th
+}
+
+func SetupTestHelperLocalMode(t *testing.T) *TestHelper {
+	th := &TestHelper{T: t}
+	th.Server = newTestServerLocalMode()
 	th.Start()
 	return th
 }

@@ -194,8 +194,11 @@ func (pa *PluginAdapter) getUserIDsForTeam(teamID string) []string {
 
 	userIDs := []string{}
 	for userID := range userMap {
-		userIDs = append(userIDs, userID)
+		if pa.auth.DoesUserHaveTeamAccess(userID, teamID) {
+			userIDs = append(userIDs, userID)
+		}
 	}
+
 	return userIDs
 }
 
@@ -223,7 +226,7 @@ func (pa *PluginAdapter) getUserIDsForTeamAndBoard(teamID, boardID string, ensur
 	userIDs := []string{}
 	for _, member := range members {
 		for userID := range userMap {
-			if userID == member.UserID {
+			if userID == member.UserID && pa.auth.DoesUserHaveTeamAccess(userID, teamID) {
 				userIDs = append(userIDs, userID)
 			}
 		}
@@ -378,29 +381,14 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 	}
 }
 
-func (pa *PluginAdapter) sendMessageToAllSkipCluster(payload map[string]interface{}) {
+// sendMessageToAll will send a websocket message to all clients on all nodes.
+func (pa *PluginAdapter) sendMessageToAll(event string, payload map[string]interface{}) {
 	// Empty &mmModel.WebsocketBroadcast will send to all users
-	pa.api.PublishWebSocketEvent(websocketActionUpdateConfig, payload, &mmModel.WebsocketBroadcast{})
-}
-
-func (pa *PluginAdapter) sendMessageToAll(payload map[string]interface{}) {
-	go func() {
-		clusterMessage := &ClusterMessage{Payload: payload}
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
-	}()
-
-	pa.sendMessageToAllSkipCluster(payload)
+	pa.api.PublishWebSocketEvent(event, payload, &mmModel.WebsocketBroadcast{})
 }
 
 func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) {
-	pa.sendMessageToAll(utils.StructToMap(pluginConfig))
-}
-
-// sendTeamMessageSkipCluster sends a message to all the users
-// with a websocket client subscribed to a given team.
-func (pa *PluginAdapter) sendTeamMessageSkipCluster(event, teamID string, payload map[string]interface{}) {
-	userIDs := pa.getUserIDsForTeam(teamID)
-	pa.sendUserMessageSkipCluster(event, payload, userIDs...)
+	pa.sendMessageToAll(websocketActionUpdateConfig, utils.StructToMap(pluginConfig))
 }
 
 // sendUserMessageSkipCluster sends the message to specific users.
@@ -408,6 +396,13 @@ func (pa *PluginAdapter) sendUserMessageSkipCluster(event string, payload map[st
 	for _, userID := range userIDs {
 		pa.api.PublishWebSocketEvent(event, payload, &mmModel.WebsocketBroadcast{UserId: userID})
 	}
+}
+
+// sendTeamMessageSkipCluster sends a message to all the users
+// with a websocket client subscribed to a given team.
+func (pa *PluginAdapter) sendTeamMessageSkipCluster(event, teamID string, payload map[string]interface{}) {
+	userIDs := pa.getUserIDsForTeam(teamID)
+	pa.sendUserMessageSkipCluster(event, payload, userIDs...)
 }
 
 // sendTeamMessage sends and propagates a message that is aimed
@@ -524,7 +519,7 @@ func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {
 }
 
 func (pa *PluginAdapter) BroadcastBoardChange(teamID string, board *model.Board) {
-	pa.logger.Info("BroadcastingBoardChange",
+	pa.logger.Debug("BroadcastingBoardChange",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", board.ID),
 	)
@@ -550,7 +545,7 @@ func (pa *PluginAdapter) BroadcastBoardDelete(teamID, boardID string) {
 }
 
 func (pa *PluginAdapter) BroadcastMemberChange(teamID, boardID string, member *model.BoardMember) {
-	pa.logger.Info("BroadcastingMemberChange",
+	pa.logger.Debug("BroadcastingMemberChange",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", boardID),
 		mlog.String("userID", member.UserID),
@@ -566,7 +561,7 @@ func (pa *PluginAdapter) BroadcastMemberChange(teamID, boardID string, member *m
 }
 
 func (pa *PluginAdapter) BroadcastMemberDelete(teamID, boardID, userID string) {
-	pa.logger.Info("BroadcastingMemberDelete",
+	pa.logger.Debug("BroadcastingMemberDelete",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", boardID),
 		mlog.String("userID", userID),

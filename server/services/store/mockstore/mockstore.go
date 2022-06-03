@@ -1014,20 +1014,6 @@ func (mr *MockStoreMockRecorder) InsertBoardWithAdmin(arg0, arg1 interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertBoardWithAdmin", reflect.TypeOf((*MockStore)(nil).InsertBoardWithAdmin), arg0, arg1)
 }
 
-// IsErrNotFound mocks base method.
-func (m *MockStore) IsErrNotFound(arg0 error) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsErrNotFound", arg0)
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// IsErrNotFound indicates an expected call of IsErrNotFound.
-func (mr *MockStoreMockRecorder) IsErrNotFound(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsErrNotFound", reflect.TypeOf((*MockStore)(nil).IsErrNotFound), arg0)
-}
-
 // PatchBlock mocks base method.
 func (m *MockStore) PatchBlock(arg0 string, arg1 *model.BlockPatch, arg2 string) error {
 	m.ctrl.T.Helper()
@@ -1128,6 +1114,21 @@ func (mr *MockStoreMockRecorder) RemoveDefaultTemplates(arg0 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveDefaultTemplates", reflect.TypeOf((*MockStore)(nil).RemoveDefaultTemplates), arg0)
 }
 
+// RunDataRetention mocks base method.
+func (m *MockStore) RunDataRetention(arg0, arg1 int64) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RunDataRetention", arg0, arg1)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RunDataRetention indicates an expected call of RunDataRetention.
+func (mr *MockStoreMockRecorder) RunDataRetention(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunDataRetention", reflect.TypeOf((*MockStore)(nil).RunDataRetention), arg0, arg1)
+}
+
 // SaveMember mocks base method.
 func (m *MockStore) SaveMember(arg0 *model.BoardMember) (*model.BoardMember, error) {
 	m.ctrl.T.Helper()
@@ -1143,19 +1144,19 @@ func (mr *MockStoreMockRecorder) SaveMember(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveMember", reflect.TypeOf((*MockStore)(nil).SaveMember), arg0)
 }
 
-// SearchBoardsForUserAndTeam mocks base method.
-func (m *MockStore) SearchBoardsForUserAndTeam(arg0, arg1, arg2 string) ([]*model.Board, error) {
+// SearchBoardsForUser mocks base method.
+func (m *MockStore) SearchBoardsForUser(arg0, arg1 string) ([]*model.Board, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchBoardsForUserAndTeam", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "SearchBoardsForUser", arg0, arg1)
 	ret0, _ := ret[0].([]*model.Board)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SearchBoardsForUserAndTeam indicates an expected call of SearchBoardsForUserAndTeam.
-func (mr *MockStoreMockRecorder) SearchBoardsForUserAndTeam(arg0, arg1, arg2 interface{}) *gomock.Call {
+// SearchBoardsForUser indicates an expected call of SearchBoardsForUser.
+func (mr *MockStoreMockRecorder) SearchBoardsForUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchBoardsForUserAndTeam", reflect.TypeOf((*MockStore)(nil).SearchBoardsForUserAndTeam), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchBoardsForUser", reflect.TypeOf((*MockStore)(nil).SearchBoardsForUser), arg0, arg1)
 }
 
 // SearchUsersByTeam mocks base method.

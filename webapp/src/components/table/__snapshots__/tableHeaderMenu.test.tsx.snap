@@ -18,7 +18,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -41,7 +41,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -64,7 +64,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -87,7 +87,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -110,7 +110,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -131,7 +131,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -152,7 +152,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -181,7 +181,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
           role="button"
         >
           <div
-            class=""
+            class="d-flex"
           >
             <div
               class="noicon"
@@ -220,7 +220,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -243,7 +243,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -266,7 +266,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -289,7 +289,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
             role="button"
           >
             <div
-              class=""
+              class="d-flex"
             >
               <div
                 class="noicon"
@@ -319,7 +319,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
           role="button"
         >
           <div
-            class=""
+            class="d-flex"
           >
             <div
               class="noicon"

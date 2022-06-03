@@ -10,33 +10,14 @@ exports[`components/content/checkboxElement should change title 1`] = `
       type="checkbox"
       value="off"
     />
-    <div
-      class="EditableAreaWrap"
-    >
-      <textarea
-        class="EditableArea Editable undefined"
-        height="0"
-        placeholder="Edit text..."
-        rows="1"
-        spellcheck="true"
-        title="new title"
-      >
-        new title
-      </textarea>
-      <div
-        class="EditableAreaContainer"
-      >
-        <textarea
-          aria-hidden="true"
-          class="EditableAreaReference Editable undefined"
-          dir="auto"
-          disabled=""
-          rows="1"
-        >
-          new title
-        </textarea>
-      </div>
-    </div>
+    <input
+      class="Editable "
+      placeholder="Edit text..."
+      spellcheck="true"
+      title="new title"
+      type="text"
+      value="new title"
+    />
   </div>
 </div>
 `;
@@ -51,33 +32,13 @@ exports[`components/content/checkboxElement should match snapshot 1`] = `
       type="checkbox"
       value="off"
     />
-    <div
-      class="EditableAreaWrap"
-    >
-      <textarea
-        class="EditableArea Editable undefined"
-        height="0"
-        placeholder="Edit text..."
-        rows="1"
-        spellcheck="true"
-        title="test-title"
-      >
-        test-title
-      </textarea>
-      <div
-        class="EditableAreaContainer"
-      >
-        <textarea
-          aria-hidden="true"
-          class="EditableAreaReference Editable undefined"
-          dir="auto"
-          disabled=""
-          rows="1"
-        >
-          test-title
-        </textarea>
-      </div>
-    </div>
+    <input
+      class="Editable "
+      placeholder="Edit text..."
+      spellcheck="true"
+      title="test-title"
+      value="test-title"
+    />
   </div>
 </div>
 `;
@@ -93,34 +54,14 @@ exports[`components/content/checkboxElement should match snapshot when read only
       type="checkbox"
       value="off"
     />
-    <div
-      class="EditableAreaWrap"
-    >
-      <textarea
-        class="EditableArea Editable readonly undefined"
-        height="0"
-        placeholder="Edit text..."
-        readonly=""
-        rows="1"
-        spellcheck="true"
-        title="test-title"
-      >
-        test-title
-      </textarea>
-      <div
-        class="EditableAreaContainer"
-      >
-        <textarea
-          aria-hidden="true"
-          class="EditableAreaReference Editable readonly undefined"
-          dir="auto"
-          disabled=""
-          rows="1"
-        >
-          test-title
-        </textarea>
-      </div>
-    </div>
+    <input
+      class="Editable readonly "
+      placeholder="Edit text..."
+      readonly=""
+      spellcheck="true"
+      title="test-title"
+      value="test-title"
+    />
   </div>
 </div>
 `;
@@ -135,33 +76,13 @@ exports[`components/content/checkboxElement should toggle value 1`] = `
       type="checkbox"
       value="on"
     />
-    <div
-      class="EditableAreaWrap"
-    >
-      <textarea
-        class="EditableArea Editable undefined"
-        height="0"
-        placeholder="Edit text..."
-        rows="1"
-        spellcheck="true"
-        title="test-title"
-      >
-        test-title
-      </textarea>
-      <div
-        class="EditableAreaContainer"
-      >
-        <textarea
-          aria-hidden="true"
-          class="EditableAreaReference Editable undefined"
-          dir="auto"
-          disabled=""
-          rows="1"
-        >
-          test-title
-        </textarea>
-      </div>
-    </div>
+    <input
+      class="Editable "
+      placeholder="Edit text..."
+      spellcheck="true"
+      title="test-title"
+      value="test-title"
+    />
   </div>
 </div>
 `;

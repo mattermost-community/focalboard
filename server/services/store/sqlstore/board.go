@@ -3,7 +3,6 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -32,6 +31,7 @@ func boardFields(prefix string) []string {
 		"COALESCE(created_by, '')",
 		"modified_by",
 		"type",
+		"minimum_role",
 		"title",
 		"description",
 		"icon",
@@ -68,6 +68,7 @@ func boardHistoryFields() []string {
 		"COALESCE(created_by, '')",
 		"COALESCE(modified_by, '')",
 		"type",
+		"minimum_role",
 		"COALESCE(title, '')",
 		"COALESCE(description, '')",
 		"COALESCE(icon, '')",
@@ -85,13 +86,14 @@ func boardHistoryFields() []string {
 }
 
 var boardMemberFields = []string{
-	"board_id",
-	"user_id",
-	"roles",
-	"scheme_admin",
-	"scheme_editor",
-	"scheme_commenter",
-	"scheme_viewer",
+	"COALESCE(B.minimum_role, '')",
+	"BM.board_id",
+	"BM.user_id",
+	"BM.roles",
+	"BM.scheme_admin",
+	"BM.scheme_editor",
+	"BM.scheme_commenter",
+	"BM.scheme_viewer",
 }
 
 func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
@@ -109,6 +111,7 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			&board.CreatedBy,
 			&board.ModifiedBy,
 			&board.Type,
+			&board.MinimumRole,
 			&board.Title,
 			&board.Description,
 			&board.Icon,
@@ -150,6 +153,7 @@ func (s *SQLStore) boardMembersFromRows(rows *sql.Rows) ([]*model.BoardMember, e
 		var boardMember model.BoardMember
 
 		err := rows.Scan(
+			&boardMember.MinimumRole,
 			&boardMember.BoardID,
 			&boardMember.UserID,
 			&boardMember.Roles,
@@ -212,8 +216,12 @@ func (s *SQLStore) getBoardByCondition(db sq.BaseRunner, conditions ...interface
 }
 
 func (s *SQLStore) getBoardsByCondition(db sq.BaseRunner, conditions ...interface{}) ([]*model.Board, error) {
+	return s.getBoardsFieldsByCondition(db, boardFields(""), conditions...)
+}
+
+func (s *SQLStore) getBoardsFieldsByCondition(db sq.BaseRunner, fields []string, conditions ...interface{}) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
-		Select(boardFields("")...).
+		Select(fields...).
 		From(s.tablePrefix + "boards")
 	for _, c := range conditions {
 		query = query.Where(c)
@@ -269,7 +277,7 @@ func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID stri
 }
 
 func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, error) {
-	propertiesBytes, err := json.Marshal(board.Properties)
+	propertiesBytes, err := s.MarshalJSONB(board.Properties)
 	if err != nil {
 		s.logger.Error(
 			"failed to marshal board.Properties",
@@ -280,7 +288,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		return nil, err
 	}
 
-	cardPropertiesBytes, err := json.Marshal(board.CardProperties)
+	cardPropertiesBytes, err := s.MarshalJSONB(board.CardProperties)
 	if err != nil {
 		s.logger.Error(
 			"failed to marshal board.CardProperties",
@@ -292,7 +300,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	}
 
 	existingBoard, err := s.getBoard(db, board.ID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil && !model.IsErrNotFound(err) {
 		return nil, fmt.Errorf("insertBoard error occurred while fetching existing board %s: %w", board.ID, err)
 	}
 
@@ -309,6 +317,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		"modified_by":      userID,
 		"type":             board.Type,
 		"title":            board.Title,
+		"minimum_role":     board.MinimumRole,
 		"description":      board.Description,
 		"icon":             board.Icon,
 		"show_description": board.ShowDescription,
@@ -326,6 +335,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Where(sq.Eq{"id": board.ID}).
 			Set("modified_by", userID).
 			Set("type", board.Type).
+			Set("minimum_role", board.MinimumRole).
 			Set("title", board.Title).
 			Set("description", board.Description).
 			Set("icon", board.Icon).
@@ -383,11 +393,11 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		return err
 	}
 
-	propertiesBytes, err := json.Marshal(board.Properties)
+	propertiesBytes, err := s.MarshalJSONB(board.Properties)
 	if err != nil {
 		return err
 	}
-	cardPropertiesBytes, err := json.Marshal(board.CardProperties)
+	cardPropertiesBytes, err := s.MarshalJSONB(board.CardProperties)
 	if err != nil {
 		return err
 	}
@@ -399,6 +409,7 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		"created_by":       board.CreatedBy,
 		"modified_by":      userID,
 		"type":             board.Type,
+		"minimum_role":     board.MinimumRole,
 		"title":            board.Title,
 		"description":      board.Description,
 		"icon":             board.Icon,
@@ -466,7 +477,7 @@ func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.B
 	}
 
 	oldMember, err := s.getMemberForBoard(db, bm.BoardID, bm.UserID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil && !model.IsErrNotFound(err) {
 		return nil, err
 	}
 
@@ -537,9 +548,10 @@ func (s *SQLStore) deleteMember(db sq.BaseRunner, boardID, userID string) error 
 func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (*model.BoardMember, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardMemberFields...).
-		From(s.tablePrefix + "board_members").
-		Where(sq.Eq{"board_id": boardID}).
-		Where(sq.Eq{"user_id": userID})
+		From(s.tablePrefix + "board_members AS BM").
+		LeftJoin(s.tablePrefix + "boards AS B ON B.id=BM.board_id").
+		Where(sq.Eq{"BM.board_id": boardID}).
+		Where(sq.Eq{"BM.user_id": userID})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -563,8 +575,9 @@ func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (
 func (s *SQLStore) getMembersForUser(db sq.BaseRunner, userID string) ([]*model.BoardMember, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardMemberFields...).
-		From(s.tablePrefix + "board_members").
-		Where(sq.Eq{"user_id": userID})
+		From(s.tablePrefix + "board_members AS BM").
+		LeftJoin(s.tablePrefix + "boards AS B ON B.id=BM.board_id").
+		Where(sq.Eq{"BM.user_id": userID})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -584,8 +597,9 @@ func (s *SQLStore) getMembersForUser(db sq.BaseRunner, userID string) ([]*model.
 func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*model.BoardMember, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardMemberFields...).
-		From(s.tablePrefix + "board_members").
-		Where(sq.Eq{"board_id": boardID})
+		From(s.tablePrefix + "board_members AS BM").
+		LeftJoin(s.tablePrefix + "boards AS B ON B.id=BM.board_id").
+		Where(sq.Eq{"BM.board_id": boardID})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -597,17 +611,16 @@ func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*mode
 	return s.boardMembersFromRows(rows)
 }
 
-// searchBoardsForUserAndTeam returns all boards that match with the
+// searchBoardsForUser returns all boards that match with the
 // term that are either private and which the user is a member of, or
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
-func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, teamID string) ([]*model.Board, error) {
+func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term, userID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
 		Distinct().
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
-		Where(sq.Eq{"b.team_id": teamID}).
 		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
@@ -635,7 +648,7 @@ func (s *SQLStore) searchBoardsForUserAndTeam(db sq.BaseRunner, term, userID, te
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`searchBoardsForUserAndTeam ERROR`, mlog.Err(err))
+		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
@@ -694,12 +707,12 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		return nil // undeleting not deleted board is not considered an error (for now)
 	}
 
-	propertiesJSON, err := json.Marshal(board.Properties)
+	propertiesJSON, err := s.MarshalJSONB(board.Properties)
 	if err != nil {
 		return err
 	}
 
-	cardPropertiesJSON, err := json.Marshal(board.CardProperties)
+	cardPropertiesJSON, err := s.MarshalJSONB(board.CardProperties)
 	if err != nil {
 		return err
 	}
@@ -713,6 +726,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		"modified_by",
 		"type",
 		"title",
+		"minimum_role",
 		"description",
 		"icon",
 		"show_description",
@@ -732,6 +746,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		board.CreatedBy,
 		modifiedBy,
 		board.Type,
+		board.MinimumRole,
 		board.Title,
 		board.Description,
 		board.Icon,

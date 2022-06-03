@@ -6,6 +6,7 @@ import {useIntl} from 'react-intl'
 
 import {ImageBlock, createImageBlock} from '../../blocks/imageBlock'
 import {sendFlashMessage} from '../flashMessages'
+import {Block} from '../../blocks/block'
 import octoClient from '../../octoClient'
 import mutator from '../../mutator'
 
@@ -45,13 +46,18 @@ export default function useImagePaste(boardId: string, cardId: string, contentOr
             sendFlashMessage({content: intl.formatMessage({id: 'imagePaste.upload-failed', defaultMessage: 'Some files not uploaded. File size limit reached'}), severity: 'normal'})
         }
 
-        mutator.performAsUndoGroup(async () => {
-            const newContentBlocks = await mutator.insertBlocks(boardId, blocksToInsert, 'pasted images')
+        const afterRedo = async (newBlocks: Block[]) => {
             const newContentOrder = JSON.parse(JSON.stringify(contentOrder))
-            newContentOrder.push(...newContentBlocks.map((b: ImageBlock) => b.id))
+            newContentOrder.push(...newBlocks.map((b: Block) => b.id))
+            await octoClient.patchBlock(boardId, cardId, {updatedFields: {contentOrder: newContentOrder}})
+        }
 
-            await mutator.changeCardContentOrder(boardId, cardId, contentOrder, newContentOrder, 'paste image')
-        })
+        const beforeUndo = async () => {
+            const newContentOrder = JSON.parse(JSON.stringify(contentOrder))
+            await octoClient.patchBlock(boardId, cardId, {updatedFields: {contentOrder: newContentOrder}})
+        }
+
+        await mutator.insertBlocks(boardId, blocksToInsert, 'pasted images', afterRedo, beforeUndo)
     }, [cardId, contentOrder, boardId])
 
     const onDrop = useCallback((event: DragEvent): void => {

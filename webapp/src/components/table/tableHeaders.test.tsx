@@ -10,6 +10,7 @@ import {wrapDNDIntl} from '../../testUtils'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
+import {ColumnResizeProvider} from './tableColumnResizeContext'
 import TableHeaders from './tableHeaders'
 
 describe('components/table/TableHeaders', () => {
@@ -19,16 +20,15 @@ describe('components/table/TableHeaders', () => {
 
     test('should match snapshot', async () => {
         const component = wrapDNDIntl(
-            <TableHeaders
-                board={board}
-                cards={[card]}
-                activeView={view}
-                views={[view]}
-                readonly={false}
-                resizingColumn=''
-                offset={0}
-                columnRefs={new Map()}
-            />,
+            <ColumnResizeProvider columnWidths={{}} onResizeColumn={() => {}}>
+                <TableHeaders
+                    board={board}
+                    cards={[card]}
+                    activeView={view}
+                    views={[view]}
+                    readonly={false}
+                />
+            </ColumnResizeProvider>
         )
 
         const {container} = render(component)

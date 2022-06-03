@@ -34,7 +34,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu 1`] = `
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -57,7 +57,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu 1`] = `
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -86,7 +86,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu 1`] = `
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -143,7 +143,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -166,7 +166,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -195,7 +195,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -252,7 +252,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -275,7 +275,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -304,7 +304,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"

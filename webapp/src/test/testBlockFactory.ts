@@ -14,6 +14,7 @@ import {Category, CategoryBoards} from '../store/sidebar'
 import {Utils} from '../utils'
 import {CheckboxBlock, createCheckboxBlock} from '../blocks/checkboxBlock'
 import {Block} from '../blocks/block'
+import {IUser} from "../user"
 
 class TestBlockFactory {
     static createBoard(): Board {
@@ -179,6 +180,18 @@ class TestBlockFactory {
         return {
             ...TestBlockFactory.createCategory(),
             boardIDs: [],
+        }
+    }
+
+    static createUser(): IUser {
+        return {
+            id: 'user-id-1',
+            username: 'Dwight Schrute',
+            email: 'dwight.schrute@dundermifflin.com',
+            props: {},
+            create_at: Date.now(),
+            update_at: Date.now(),
+            is_bot: false,
         }
     }
 }

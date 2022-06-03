@@ -87,7 +87,7 @@ export function useEditable(
         error = !props.validator(value || '')
     }
     return {
-        className: 'Editable ' + (error ? 'error ' : '') + (readonly ? 'readonly ' : '') + className,
+        className: 'Editable ' + (error ? 'error ' : '') + (readonly ? 'readonly ' : '') + (className? className : ''),
         placeholder: placeholderText,
         onChange: (e: React.ChangeEvent<ElementType>) => {
             onChange(e.target.value)

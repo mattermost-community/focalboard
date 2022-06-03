@@ -69,6 +69,9 @@ const sidebarSlice = createSlice({
                     }
                 }
             })
+            
+            // sort categories alphabetically
+            state.categoryAttributes.sort((a, b) => a.name.localeCompare(b.name))
         },
         updateBoardCategories: (state, action: PayloadAction<Array<BoardCategoryWebsocketData>>) => {
             action.payload.forEach((boardCategory) => {

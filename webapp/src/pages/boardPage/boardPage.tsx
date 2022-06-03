@@ -5,6 +5,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {useRouteMatch} from 'react-router-dom'
 
 import Workspace from '../../components/workspace'
+import CloudMessage from '../../components/messages/cloudMessage'
 import octoClient from '../../octoClient'
 import {Utils} from '../../utils'
 import wsClient from '../../wsclient'
@@ -59,9 +60,8 @@ const BoardPage = (props: Props): JSX.Element => {
             if (!me) {
                 return
             }
-
             dispatch(fetchUserBlockSubscriptions(me!.id))
-        }, [teamId])
+        }, [me?.id])
     }
 
     // TODO: Make this less brittle. This only works because this is the root render function
@@ -143,6 +143,7 @@ const BoardPage = (props: Props): JSX.Element => {
                 readonly={props.readonly || false}
                 loadAction={loadAction}
             />
+            <CloudMessage/>
 
             {!mobileWarningClosed &&
                 <div className='mobileWarning'>
