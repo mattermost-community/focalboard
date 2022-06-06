@@ -1,43 +1,38 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, ReactNode} from 'react'
+import React  from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {IntlProvider, useIntl} from 'react-intl'
+import {IntlProvider} from 'react-intl'
 
 import {getMessages} from '../../../../webapp/src/i18n'
 import {getLanguage} from '../../../../webapp/src/store/language'
 
 import store from '../../../../webapp/src/store'
-import octoClient from '../../../../webapp/src/octoClient'
 import mutator from '../../../../webapp/src/mutator'
 import {getCurrentTeam, getAllTeams, Team} from '../../../../webapp/src/store/teams'
-import {getMySortedBoards} from '../../../../webapp/src/store/boards'
-import {BoardTypeOpen, BoardTypePrivate, createBoard, Board} from '../../../../webapp/src/blocks/board'
-import {useAppSelector} from '../../../../webapp/src/store/hooks'
+import {getMySortedBoards, setLinkToChannel} from '../../../../webapp/src/store/boards'
+import {createBoard, Board} from '../../../../webapp/src/blocks/board'
+import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
 import AddIcon from '../../../../webapp/src/widgets/icons/add'
 import Button from '../../../../webapp/src/widgets/buttons/button'
 import IconButton from '../../../../webapp/src/widgets/buttons/iconButton'
 import OptionsIcon from '../../../../webapp/src/widgets/icons/options'
 import DeleteIcon from '../../../../webapp/src/widgets/icons/delete'
-import Globe from '../../../../webapp/src/widgets/icons/globe'
-import LockOutline from '../../../../webapp/src/widgets/icons/lockOutline'
 import Menu from '../../../../webapp/src/widgets/menu'
 import MenuWrapper from '../../../../webapp/src/widgets/menuWrapper'
-import SearchDialog from '../../../../webapp/src/components/searchDialog/searchDialog'
 
 import '../../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../../webapp/src/styles/main.scss'
 import '../../../../webapp/src/styles/labels.scss'
 
 const RHSChannelBoards = (props: {getCurrentChannel: () => string}) => {
-    const [searchingChannel, setSearchingChannel] = useState(false)
-    const intl = useIntl()
     const boards = useAppSelector(getMySortedBoards)
     const teamsById:Record<string, Team> = {}
     useAppSelector(getAllTeams).forEach((t) => {
         teamsById[t.id] = t
     })
     const team = useAppSelector(getCurrentTeam)
+    const dispatch = useAppDispatch()
     if (!boards) {
         return null
     }
@@ -56,37 +51,6 @@ const RHSChannelBoards = (props: {getCurrentChannel: () => string}) => {
         mutator.updateBoard(newBoard, board, 'unlinked channel')
     }
 
-    const selectBoard = async (board: Board): Promise<void> => {
-        const newBoard = createBoard(board)
-        newBoard.channelId = props.getCurrentChannel()
-        mutator.updateBoard(newBoard, board, 'unlinked channel')
-    }
-
-    const searchHandler = async (query: string): Promise<Array<ReactNode>> => {
-        if (query.trim().length === 0 || !team) {
-            return []
-        }
-
-        const items = await octoClient.search(team.id, query)
-        const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
-        return items.map((item) => {
-            const resultTitle = item.title || untitledBoardTitle
-            const teamTitle = teamsById[item.teamId].title
-            return (
-                <div
-                    key={item.id}
-                    className='blockSearchResult'
-                    onClick={() => selectBoard(item)}
-                >
-                    {item.type === BoardTypeOpen && <Globe/>}
-                    {item.type === BoardTypePrivate && <LockOutline/>}
-                    <span className='resultTitle'>{resultTitle}</span>
-                    <span className='teamTitle'>{teamTitle}</span>
-                </div>
-            )
-        })
-    }
-
     return (
         <div
             style={{padding: 20}}
@@ -96,19 +60,13 @@ const RHSChannelBoards = (props: {getCurrentChannel: () => string}) => {
                 {/* TODO: translate this */}
                 <span style={{flexGrow: 1, fontSize: 16, fontWeight: 600}}>{'Linked Channels'}</span>
                 <Button
-                    onClick={() => setSearchingChannel(true)}
+                    onClick={() => dispatch(setLinkToChannel(props.getCurrentChannel()))}
                     icon={<AddIcon/>}
                     emphasis='primary'
                 >
                     {/* TODO: translate this */}
                     {'Add'}
                 </Button>
-                {searchingChannel &&
-                    <SearchDialog
-                        onClose={() => setSearchingChannel(false)}
-                        title='whatever'
-                        searchHandler={searchHandler}
-                    />}
             </div>
             {channelBoards.map((b) => (
                 <div
@@ -145,13 +103,13 @@ const RHSChannelBoards = (props: {getCurrentChannel: () => string}) => {
     )
 }
 
-const ConnectedRHSchannelBoards = (props: {getCurrentChannel: () => string}) => (
+const ConnectedRHSChannelBoards = (props: {getCurrentChannel: () => string}) => (
     <ReduxProvider store={store}>
-        <IntlRHSchannelBoards getCurrentChannel={props.getCurrentChannel}/>
+        <IntlRHSChannelBoards getCurrentChannel={props.getCurrentChannel}/>
     </ReduxProvider>
 )
 
-const IntlRHSchannelBoards = (props: {getCurrentChannel: () => string}) => {
+const IntlRHSChannelBoards = (props: {getCurrentChannel: () => string}) => {
     const language = useAppSelector<string>(getLanguage)
 
     return (
@@ -164,4 +122,4 @@ const IntlRHSchannelBoards = (props: {getCurrentChannel: () => string}) => {
     )
 }
 
-export default ConnectedRHSchannelBoards
+export default ConnectedRHSChannelBoards

@@ -20,21 +20,11 @@ windowAny.isFocalboardPlugin = true
 
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
-import {setTeam, getCurrentTeam} from '../../../webapp/src/store/teams'
+import {setTeam} from '../../../webapp/src/store/teams'
 import {initialLoad} from '../../../webapp/src/store/initialLoad'
-import {getMySortedBoards} from '../../../webapp/src/store/boards'
 import {Utils} from '../../../webapp/src/utils'
-import {useAppSelector} from '../../../webapp/src/store/hooks'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
-import AddIcon from '../../../webapp/src/widgets/icons/add'
-import Button from '../../../webapp/src/widgets/buttons/button'
-import IconButton from '../../../webapp/src/widgets/buttons/iconButton'
-import OptionsIcon from '../../../webapp/src/widgets/icons/options'
-import DeleteIcon from '../../../webapp/src/widgets/icons/delete'
-import Menu from '../../../webapp/src/widgets/menu'
-import MenuWrapper from '../../../webapp/src/widgets/menuWrapper'
-import SearchDialog from '../../../webapp/src/components/searchDialog/searchDialog'
 import {setMattermostTheme} from '../../../webapp/src/theme'
 
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
@@ -46,6 +36,7 @@ import octoClient from '../../../webapp/src/octoClient'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
 import RHSChannelBoards from './components/rhsChannelBoards'
+import BoardSelector from './components/boardSelector'
 import wsClient, {
     MMWebSocketClient,
     ACTION_UPDATE_BLOCK,
@@ -175,6 +166,7 @@ const HeaderComponent = () => {
 export default class Plugin {
     channelHeaderButtonId?: string
     rhsId?: string
+    boardSelectorId?: string
     registry?: PluginRegistry
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
@@ -261,6 +253,8 @@ export default class Plugin {
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         }
 
+        this.boardSelectorId = this.registry.registerRootComponent(BoardSelector)
+
         const config = await octoClient.getClientConfig()
         if (config?.telemetry) {
             let rudderKey = TELEMETRY_RUDDER_KEY
@@ -339,6 +333,9 @@ export default class Plugin {
         }
         if (this.rhsId) {
             this.registry?.unregisterComponent(this.rhsId)
+        }
+        if (this.boardSelectorId) {
+            this.registry?.unregisterComponent(this.boardSelectorId)
         }
 
         // unregister websocket handlers
