@@ -157,7 +157,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/hello", a.handleHello).Methods("GET")
 
 	// limits
-	apiv1.HandleFunc("/limits", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
+	apiv2.HandleFunc("/limits", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
