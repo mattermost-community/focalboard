@@ -681,6 +681,21 @@ func (mr *MockAPIMockRecorder) GetChannelsForTeamForUser(arg0, arg1, arg2 interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChannelsForTeamForUser", reflect.TypeOf((*MockAPI)(nil).GetChannelsForTeamForUser), arg0, arg1, arg2)
 }
 
+// GetCloudLimits mocks base method.
+func (m *MockAPI) GetCloudLimits() (*model.ProductLimits, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCloudLimits")
+	ret0, _ := ret[0].(*model.ProductLimits)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCloudLimits indicates an expected call of GetCloudLimits.
+func (mr *MockAPIMockRecorder) GetCloudLimits() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCloudLimits", reflect.TypeOf((*MockAPI)(nil).GetCloudLimits))
+}
+
 // GetCommand mocks base method.
 func (m *MockAPI) GetCommand(arg0 string) (*model.Command, error) {
 	m.ctrl.T.Helper()
