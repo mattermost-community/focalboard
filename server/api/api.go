@@ -1913,6 +1913,31 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", contentType)
 
+	fileInfo, err := a.app.GetFileInfo(filename)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	if fileInfo != nil && fileInfo.Archived {
+		fileMetadata := map[string]interface{}{
+			"archived":  true,
+			"name":      fileInfo.Name,
+			"size":      fileInfo.Size,
+			"extension": fileInfo.Extension,
+		}
+
+		data, jsonErr := json.Marshal(fileMetadata)
+		if jsonErr != nil {
+			a.logger.Error("failed to marshal archived file metadata", mlog.String("filename", filename), mlog.Err(jsonErr))
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", jsonErr)
+			return
+		}
+
+		jsonBytesResponse(w, http.StatusBadRequest, data)
+		return
+	}
+
 	fileReader, err := a.app.GetFileReader(board.TeamID, boardID, filename)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)

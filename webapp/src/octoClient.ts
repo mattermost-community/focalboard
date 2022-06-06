@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block, BlockPatch} from './blocks/block'
+import {Block, BlockPatch, FileInfo} from './blocks/block'
 import {Board, BoardsAndBlocks, BoardsAndBlocksPatch, BoardPatch, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
@@ -556,18 +556,23 @@ class OctoClient {
         return undefined
     }
 
-    async getFileAsDataUrl(boardId: string, fileId: string): Promise<string> {
+    async getFileAsDataUrl(boardId: string, fileId: string): Promise<FileInfo> {
         let path = '/api/v2/files/teams/' + this.teamId + '/' + boardId + '/' + fileId
         const readToken = Utils.getReadToken()
         if (readToken) {
             path += `?read_token=${readToken}`
         }
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return ''
+        let fileURL: FileInfo = {}
+
+        if (response.status === 200) {
+            const blob = await response.blob()
+            fileURL.url = URL.createObjectURL(blob)
+        } else if (response.status === 400) {
+            fileURL = await this.getJson(response, {}) as FileInfo
         }
-        const blob = await response.blob()
-        return URL.createObjectURL(blob)
+
+        return fileURL
     }
 
     async getTeam(): Promise<Team | null> {
