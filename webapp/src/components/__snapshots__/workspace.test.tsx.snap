@@ -225,6 +225,37 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
       <div
         class="BoardComponent"
       >
+        <div>
+          <div
+            class="NotificationBox__icon"
+          >
+            <i
+              class="CompassIcon icon-alert-outline AlertIcon"
+            />
+          </div>
+          <div
+            class="content"
+          >
+            <p
+              class="title"
+            >
+              5 cards hidden from board
+            </p>
+            To access archived cards, contact your Admin to upgrade to a paid plan.
+          </div>
+          <div
+            class="octo-tooltip tooltip-top"
+            data-tooltip="Snooze for 10 days"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="top-head"
         >
@@ -620,6 +651,11 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
             <div
               class="octo-board-header-cell narrow"
             >
+              Hidden columns
+            </div>
+            <div
+              class="octo-board-header-cell narrow"
+            >
               <button
                 type="button"
               >
@@ -784,6 +820,31 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </span>
               </button>
             </div>
+            <div
+              class="octo-board-column narrow"
+            >
+              <div
+                class="ml-1"
+              >
+                <div
+                  class="HiddenCardCount"
+                >
+                  <div
+                    class="hidden-card-title"
+                  >
+                    Cards hidden
+                  </div>
+                  <button
+                    title="hidden-card-count"
+                    type="button"
+                  >
+                    <span>
+                      5
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -803,6 +864,37 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
       <div
         class="BoardComponent"
       >
+        <div>
+          <div
+            class="NotificationBox__icon"
+          >
+            <i
+              class="CompassIcon icon-alert-outline AlertIcon"
+            />
+          </div>
+          <div
+            class="content"
+          >
+            <p
+              class="title"
+            >
+              5 cards hidden from board
+            </p>
+            To access archived cards, contact your Admin to upgrade to a paid plan.
+          </div>
+          <div
+            class="octo-tooltip tooltip-top"
+            data-tooltip="Snooze for 10 days"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="top-head"
         >
@@ -1037,6 +1129,11 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 class="octo-spacer"
               />
             </div>
+            <div
+              class="octo-board-header-cell narrow"
+            >
+              Hidden columns
+            </div>
           </div>
           <div
             class="octo-board-body"
@@ -1139,6 +1236,31 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
             <div
               class="octo-board-column"
             />
+            <div
+              class="octo-board-column narrow"
+            >
+              <div
+                class="ml-1"
+              >
+                <div
+                  class="HiddenCardCount"
+                >
+                  <div
+                    class="hidden-card-title"
+                  >
+                    Cards hidden
+                  </div>
+                  <button
+                    title="hidden-card-count"
+                    type="button"
+                  >
+                    <span>
+                      5
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1458,6 +1580,37 @@ exports[`src/components/workspace should match snapshot 1`] = `
       <div
         class="BoardComponent"
       >
+        <div>
+          <div
+            class="NotificationBox__icon"
+          >
+            <i
+              class="CompassIcon icon-alert-outline AlertIcon"
+            />
+          </div>
+          <div
+            class="content"
+          >
+            <p
+              class="title"
+            >
+              5 cards hidden from board
+            </p>
+            To access archived cards, contact your Admin to upgrade to a paid plan.
+          </div>
+          <div
+            class="octo-tooltip tooltip-top"
+            data-tooltip="Snooze for 10 days"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="top-head"
         >
@@ -1853,6 +2006,11 @@ exports[`src/components/workspace should match snapshot 1`] = `
             <div
               class="octo-board-header-cell narrow"
             >
+              Hidden columns
+            </div>
+            <div
+              class="octo-board-header-cell narrow"
+            >
               <button
                 type="button"
               >
@@ -2017,6 +2175,31 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </span>
               </button>
             </div>
+            <div
+              class="octo-board-column narrow"
+            >
+              <div
+                class="ml-1"
+              >
+                <div
+                  class="HiddenCardCount"
+                >
+                  <div
+                    class="hidden-card-title"
+                  >
+                    Cards hidden
+                  </div>
+                  <button
+                    title="hidden-card-count"
+                    type="button"
+                  >
+                    <span>
+                      5
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -2036,6 +2219,37 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
       <div
         class="BoardComponent"
       >
+        <div>
+          <div
+            class="NotificationBox__icon"
+          >
+            <i
+              class="CompassIcon icon-alert-outline AlertIcon"
+            />
+          </div>
+          <div
+            class="content"
+          >
+            <p
+              class="title"
+            >
+              5 cards hidden from board
+            </p>
+            To access archived cards, contact your Admin to upgrade to a paid plan.
+          </div>
+          <div
+            class="octo-tooltip tooltip-top"
+            data-tooltip="Snooze for 10 days"
+          >
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="top-head"
         >
@@ -2270,6 +2484,11 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 class="octo-spacer"
               />
             </div>
+            <div
+              class="octo-board-header-cell narrow"
+            >
+              Hidden columns
+            </div>
           </div>
           <div
             class="octo-board-body"
@@ -2372,6 +2591,31 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
             <div
               class="octo-board-column"
             />
+            <div
+              class="octo-board-column narrow"
+            >
+              <div
+                class="ml-1"
+              >
+                <div
+                  class="HiddenCardCount"
+                >
+                  <div
+                    class="hidden-card-title"
+                  >
+                    Cards hidden
+                  </div>
+                  <button
+                    title="hidden-card-count"
+                    type="button"
+                  >
+                    <span>
+                      5
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
