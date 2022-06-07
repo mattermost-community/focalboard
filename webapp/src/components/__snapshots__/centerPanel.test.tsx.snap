@@ -5,40 +5,6 @@ exports[`components/centerPanel return centerPanel and click on card to show car
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -609,40 +575,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -1272,40 +1204,6 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -1756,40 +1654,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -2419,40 +2283,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -3082,40 +2912,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -3745,40 +3541,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -4408,40 +4170,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -5071,40 +4799,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -5734,40 +5428,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -6397,40 +6057,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -7060,40 +6686,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -7723,40 +7315,6 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -8064,40 +7622,6 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -8635,40 +8159,6 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
@@ -9206,40 +8696,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
   <div
     class="BoardComponent"
   >
-    <div>
-      <div
-        class="NotificationBox__icon"
-      >
-        <i
-          class="CompassIcon icon-alert-outline AlertIcon"
-        />
-      </div>
-      <div
-        class="content"
-      >
-        <p
-          class="title"
-        >
-          5 cards hidden from board
-        </p>
-        Card limit reached, to view older cards, 
-        <a>
-          Upgrade to a paid plan
-        </a>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="Snooze for 10 days"
-      >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-close CloseIcon"
-          />
-        </button>
-      </div>
-    </div>
     <div
       class="top-head"
     >
