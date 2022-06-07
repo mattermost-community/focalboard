@@ -838,6 +838,8 @@ func testGetBlocks(t *testing.T, storeInstance store.Store, container store.Cont
 		blocks, err = storeInstance.GetBlocksByIDs(container, []string{"not-exists", "block3"})
 		require.Error(t, err)
 		require.True(t, store.IsErrNotAllFound(err))
+		require.Len(t, blocks, 1)
+		require.Equal(t, "block3", blocks[0].ID)
 	})
 
 	t.Run("not existing type", func(t *testing.T) {
@@ -924,14 +926,14 @@ func testGetAllBlocks(t *testing.T, store store.Store, container store.Container
 			require.Len(t, blocks, 6)
 		})
 
-		t.Run("after deleting a board, should only return the other one", func(t *testing.T) {
+		t.Run("after deleting a board, should still return its blocks", func(t *testing.T) {
 			require.NoError(t, store.DeleteBlock(container, "board1", "user-id"))
 
 			blocks, err := store.GetAllBlocks(container)
 			require.NoError(t, err)
-			require.Len(t, blocks, 3)
+			require.Len(t, blocks, 5)
 
-			expectedIDs := []string{"board2", "card2", "text2"}
+			expectedIDs := []string{"card1", "text1", "board2", "card2", "text2"}
 
 			blockIDs := []string{}
 			for _, block := range blocks {

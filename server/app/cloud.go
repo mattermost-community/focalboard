@@ -145,7 +145,7 @@ func (a *App) getTemplateMapForBlocks(c store.Container, blocks []model.Block) (
 
 	if len(boardIDs) != 0 {
 		fetchedBoards, err := a.store.GetBlocksByIDs(c, boardIDs)
-		if err != nil {
+		if err != nil && !store.IsErrNotAllFound(err) {
 			return nil, err
 		}
 		boards = append(boards, fetchedBoards...)
@@ -195,17 +195,16 @@ func (a *App) ApplyCloudLimits(c store.Container, blocks []model.Block) ([]model
 		}
 
 		isTemplate, ok := templateMap[block.RootID]
-		if !ok {
-			return nil, newErrBoardNotFoundInTemplateMap(block.RootID)
-		}
 
 		// if the block belongs to a template, it will never be
 		// limited
-		if isTemplate {
+		if ok && isTemplate {
 			limitedBlocks[i] = block
 			continue
 		}
 
+		// if the block doesn't belong to a template or belongs to a
+		// deleted board we limit it depending on the timestamp
 		if block.ShouldBeLimited(cardLimitTimestamp) {
 			limitedBlocks[i] = block.GetLimited()
 		} else {
