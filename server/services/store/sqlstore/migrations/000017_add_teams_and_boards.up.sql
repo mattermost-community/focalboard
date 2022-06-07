@@ -52,7 +52,7 @@ UPDATE {{.prefix}}blocks AS b
 /* TODO: Migrate the columnCalculations at app level and remove it from the boards and boards_history tables */
 
 {{- /* add boards tables */ -}}
-CREATE TABLE {{.prefix}}boards (
+CREATE TABLE IF NOT EXISTS {{.prefix}}boards (
     id VARCHAR(36) NOT NULL PRIMARY KEY,
 
     {{if .postgres}}insert_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),{{end}}
@@ -89,7 +89,7 @@ CREATE TABLE {{.prefix}}boards (
 
 CREATE INDEX idx_board_team_id ON {{.prefix}}boards(team_id, is_template);
 
-CREATE TABLE {{.prefix}}boards_history (
+CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
     id VARCHAR(36) NOT NULL,
 
     {{if .postgres}}insert_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),{{end}}
@@ -282,7 +282,7 @@ DELETE FROM {{.prefix}}blocks WHERE type = 'board';
 DELETE FROM {{.prefix}}blocks_history WHERE type = 'board';
 
 {{- /* add board_members */ -}}
-CREATE TABLE {{.prefix}}board_members (
+CREATE TABLE IF NOT EXISTS {{.prefix}}board_members (
     board_id VARCHAR(36) NOT NULL,
     user_id VARCHAR(36) NOT NULL,
     roles VARCHAR(64),
