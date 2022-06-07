@@ -114,8 +114,6 @@ type Store interface {
 	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error)
 
 	SendMessage(message, postType string, receipts []string) error
-	GetFileInfo(id string) (*mmModel.FileInfo, error)
-	SaveFileInfo(fileInfo *mmModel.FileInfo) error
 
 	// @withTransaction
 	AddUpdateCategoryBoard(userID, categoryID, blockID string) error

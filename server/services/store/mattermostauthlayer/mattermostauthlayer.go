@@ -3,8 +3,6 @@ package mattermostauthlayer
 import (
 	"database/sql"
 	"encoding/json"
-	"net/http"
-
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -506,23 +504,6 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 //
 //	return team, nil
 //}
-
-func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmModel.FileInfo, error) {
-	fileInfo, appErr := s.pluginAPI.GetFileInfo(id)
-	if appErr != nil {
-		// Not finding fileinfo is fine because we don't have data for
-		// any existing files already uploaded in Boards before this code
-		// was deployed.
-		if appErr.StatusCode == http.StatusNotFound {
-			return nil, nil
-		}
-
-		s.logger.Error("error fetching fileinfo", mlog.String("id", id), mlog.Err(appErr))
-		return nil, appErr
-	}
-
-	return fileInfo, nil
-}
 
 func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 	return s.pluginAPI.GetLicense()

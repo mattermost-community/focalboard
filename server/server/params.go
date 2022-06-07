@@ -16,7 +16,6 @@ import (
 )
 
 type Params struct {
-<<<<<<< HEAD
 	Cfg                *config.Configuration
 	SingleUserToken    string
 	DBStore            store.Store
@@ -26,17 +25,7 @@ type Params struct {
 	NotifyBackends     []notify.Backend
 	PermissionsService permissions.PermissionsService
 	PluginAPI          plugin.API
-=======
-	Cfg             *config.Configuration
-	SingleUserToken string
-	DBStore         store.Store
-	Logger          *mlog.Logger
-	ServerID        string
-	WSAdapter       ws.Adapter
-	NotifyBackends  []notify.Backend
-	PluginAPI       plugin.API
-	Client          *pluginapi.Client
->>>>>>> f13d4856 (View limits (#3089))
+	Client             *pluginapi.Client
 }
 
 func (p Params) CheckValid() error {
