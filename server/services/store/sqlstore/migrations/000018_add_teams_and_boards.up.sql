@@ -274,8 +274,8 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
 
 
 {{- /* Update block references to boards*/ -}}
-UPDATE {{.prefix}}blocks as B SET B.board_id=B.root_id;
-UPDATE {{.prefix}}blocks_history as B SET B.board_id=B.root_id;
+UPDATE {{.prefix}}blocks SET board_id=root_id;
+UPDATE {{.prefix}}blocks_history SET board_id=root_id;
 
 {{- /* Remove boards, including templates */ -}}
 DELETE FROM {{.prefix}}blocks WHERE type = 'board';
