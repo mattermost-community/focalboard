@@ -18,6 +18,12 @@ const ErrorPage = () => {
     const errid = queryString.get('id')
     const errorDef = errorDefFromId(errid as ErrorId)
 
+    if (errid === ErrorId.WorkspaceUndefined) {
+        UserSettings.lastWorkspaceId = null
+        history.push('/dashboard')
+        return
+    }
+
     const handleButtonClick = useCallback((path: string | (()=>string), clearHistory: boolean) => {
         let url = '/'
         if (typeof path === 'function') {
