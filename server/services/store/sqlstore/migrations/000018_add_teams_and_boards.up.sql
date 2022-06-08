@@ -52,7 +52,7 @@ UPDATE {{.prefix}}blocks AS b
 /* TODO: Migrate the columnCalculations at app level and remove it from the boards and boards_history tables */
 
 {{- /* add boards tables */ -}}
-CREATE TABLE {{.prefix}}boards (
+CREATE TABLE IF NOT EXISTS {{.prefix}}boards (
     id VARCHAR(36) NOT NULL PRIMARY KEY,
 
     {{if .postgres}}insert_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),{{end}}
@@ -89,7 +89,7 @@ CREATE TABLE {{.prefix}}boards (
 
 CREATE INDEX idx_board_team_id ON {{.prefix}}boards(team_id, is_template);
 
-CREATE TABLE {{.prefix}}boards_history (
+CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
     id VARCHAR(36) NOT NULL,
 
     {{if .postgres}}insert_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),{{end}}
@@ -274,137 +274,15 @@ CREATE TABLE {{.prefix}}boards_history (
 
 
 {{- /* Update block references to boards*/ -}}
-{{if .sqlite}}
-  UPDATE {{.prefix}}blocks as B
-     SET board_id=(SELECT id FROM {{.prefix}}blocks WHERE id=B.parent_id AND type='board')
-   WHERE EXISTS (SELECT id FROM {{.prefix}}blocks WHERE id=B.parent_id AND type='board');
-
-  UPDATE {{.prefix}}blocks as B
-     SET board_id=(SELECT GP.id FROM {{.prefix}}blocks as GP JOIN {{.prefix}}blocks AS P ON GP.id=P.parent_id WHERE P.id=B.parent_id AND GP.type = 'board')
-   WHERE EXISTS (SELECT GP.id FROM {{.prefix}}blocks as GP JOIN {{.prefix}}blocks AS P ON GP.id=P.parent_id WHERE P.id=B.parent_id AND GP.type = 'board');
-
-  UPDATE {{.prefix}}blocks as B
-     SET board_id=(SELECT GGP.id FROM {{.prefix}}blocks as GGP JOIN {{.prefix}}blocks as GP ON GGP.id=GP.parent_id JOIN {{.prefix}}blocks as P ON GP.id=P.parent_id WHERE P.id=B.parent_id AND GGP.type = 'board')
-   WHERE EXISTS (SELECT GGP.id FROM {{.prefix}}blocks as GGP JOIN {{.prefix}}blocks as GP ON GGP.id=GP.parent_id JOIN {{.prefix}}blocks as P ON GP.id=P.parent_id WHERE P.id=B.parent_id AND GGP.type = 'board');
-
-  UPDATE {{.prefix}}blocks_history as B
-     SET board_id=(SELECT id FROM {{.prefix}}blocks_history WHERE id=B.parent_id AND type='board')
-   WHERE EXISTS (SELECT id FROM {{.prefix}}blocks_history WHERE id=B.parent_id AND type='board');
-
-  UPDATE {{.prefix}}blocks_history as B
-     SET board_id=(SELECT GP.id FROM {{.prefix}}blocks_history as GP JOIN {{.prefix}}blocks_history AS P ON GP.id=P.parent_id WHERE P.id=B.parent_id AND GP.type = 'board')
-   WHERE EXISTS (SELECT GP.id FROM {{.prefix}}blocks_history as GP JOIN {{.prefix}}blocks_history AS P ON GP.id=P.parent_id WHERE P.id=B.parent_id AND GP.type = 'board');
-
-  UPDATE {{.prefix}}blocks_history as B
-     SET board_id=(SELECT GGP.id FROM {{.prefix}}blocks_history as GGP JOIN {{.prefix}}blocks_history as GP ON GGP.id=GP.parent_id JOIN {{.prefix}}blocks_history as P ON GP.id=P.parent_id WHERE P.id=B.parent_id AND GGP.type = 'board')
-   WHERE EXISTS (SELECT GGP.id FROM {{.prefix}}blocks_history as GGP JOIN {{.prefix}}blocks_history as GP ON GGP.id=GP.parent_id JOIN {{.prefix}}blocks_history as P ON GP.id=P.parent_id WHERE P.id=B.parent_id AND GGP.type = 'board');
-{{end}}
-{{if .mysql}}
-    UPDATE {{.prefix}}blocks as B
-INNER JOIN {{.prefix}}blocks as P
-        ON B.parent_id=P.id
-       SET B.board_id=P.id
-     WHERE P.type = 'board';
-
-    UPDATE {{.prefix}}blocks as B
-INNER JOIN {{.prefix}}blocks as P
-        ON B.parent_id=P.id
-INNER JOIN {{.prefix}}blocks as GP
-        ON P.parent_id=GP.id
-       SET B.board_id=GP.id
-     WHERE GP.type = 'board';
-
-    UPDATE {{.prefix}}blocks as B
-INNER JOIN {{.prefix}}blocks as P
-        ON B.parent_id=P.id
-INNER JOIN {{.prefix}}blocks as GP
-        ON P.parent_id=GP.id
-INNER JOIN {{.prefix}}blocks as GPP
-        ON GP.parent_id=GPP.id
-       SET B.board_id=GPP.id
-     WHERE GPP.type = 'board';
-
-    UPDATE {{.prefix}}blocks_history as B
-INNER JOIN {{.prefix}}blocks_history as P
-        ON B.parent_id=P.id
-       SET B.board_id=P.id
-     WHERE P.type = 'board';
-
-    UPDATE {{.prefix}}blocks_history as B
-INNER JOIN {{.prefix}}blocks_history as P
-        ON B.parent_id=P.id
-INNER JOIN {{.prefix}}blocks_history as GP
-        ON P.parent_id=GP.id
-       SET B.board_id=GP.id
-     WHERE GP.type = 'board';
-
-    UPDATE {{.prefix}}blocks_history as B
-INNER JOIN {{.prefix}}blocks_history as P
-        ON B.parent_id=P.id
-INNER JOIN {{.prefix}}blocks_history as GP
-        ON P.parent_id=GP.id
-INNER JOIN {{.prefix}}blocks_history as GPP
-        ON GP.parent_id=GPP.id
-       SET B.board_id=GPP.id
-     WHERE GPP.type = 'board';
-{{end}}
-{{if .postgres}}
-  UPDATE {{.prefix}}blocks as B
-     SET board_id=P.id
-    FROM {{.prefix}}blocks as P
-   WHERE B.parent_id=P.id
-     AND P.type = 'board';
-
-  UPDATE {{.prefix}}blocks as B
-     SET board_id=GP.id
-    FROM {{.prefix}}blocks as P,
-         {{.prefix}}blocks as GP
-   WHERE B.parent_id=P.id
-     AND P.parent_id=GP.id
-     AND GP.type = 'board';
-
-  UPDATE {{.prefix}}blocks as B
-     SET board_id=GGP.id
-    FROM {{.prefix}}blocks as P,
-         {{.prefix}}blocks as GP,
-         {{.prefix}}blocks as GGP
-   WHERE B.parent_id=P.id
-     AND P.parent_id=GP.id
-     AND GP.parent_id=GGP.id
-     AND GGP.type = 'board';
-
-  UPDATE {{.prefix}}blocks_history as B
-     SET board_id=P.id
-    FROM {{.prefix}}blocks_history as P
-   WHERE B.parent_id=P.id
-     AND P.type = 'board';
-
-  UPDATE {{.prefix}}blocks_history as B
-     SET board_id=GP.id
-    FROM {{.prefix}}blocks_history as P,
-         {{.prefix}}blocks_history as GP
-   WHERE B.parent_id=P.id
-     AND P.parent_id=GP.id
-     AND GP.type = 'board';
-
-  UPDATE {{.prefix}}blocks_history as B
-     SET board_id=GGP.id
-    FROM {{.prefix}}blocks_history as P,
-         {{.prefix}}blocks_history as GP,
-         {{.prefix}}blocks_history as GGP
-   WHERE B.parent_id=P.id
-     AND P.parent_id=GP.id
-     AND GP.parent_id=GGP.id
-     AND GGP.type = 'board';
-{{end}}
-
+UPDATE {{.prefix}}blocks SET board_id=root_id;
+UPDATE {{.prefix}}blocks_history SET board_id=root_id;
 
 {{- /* Remove boards, including templates */ -}}
 DELETE FROM {{.prefix}}blocks WHERE type = 'board';
 DELETE FROM {{.prefix}}blocks_history WHERE type = 'board';
 
 {{- /* add board_members */ -}}
-CREATE TABLE {{.prefix}}board_members (
+CREATE TABLE IF NOT EXISTS {{.prefix}}board_members (
     board_id VARCHAR(36) NOT NULL,
     user_id VARCHAR(36) NOT NULL,
     roles VARCHAR(64),
