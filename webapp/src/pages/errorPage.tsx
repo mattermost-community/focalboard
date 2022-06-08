@@ -21,7 +21,7 @@ const ErrorPage = () => {
     if (errid === ErrorId.WorkspaceUndefined) {
         UserSettings.lastWorkspaceId = null
         history.push('/dashboard')
-        return
+        return null
     }
 
     const handleButtonClick = useCallback((path: string | (()=>string), clearHistory: boolean) => {
