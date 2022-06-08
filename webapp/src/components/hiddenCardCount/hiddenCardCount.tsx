@@ -10,7 +10,7 @@ import './hiddenCardCount.scss'
 
 type Props = {
     hiddenCardsCount: number
-    showHiddenCardNotification: (show?: boolean) => void
+    showHiddenCardNotification: (show: boolean) => void
 }
 
 const HiddenCardCount = (props: Props): JSX.Element => {

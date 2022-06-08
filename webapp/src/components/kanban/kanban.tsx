@@ -41,7 +41,7 @@ type Props = {
     addCard: (groupByOptionId?: string, show?:boolean) => Promise<void>
     showCard: (cardId?: string) => void
     hiddenCardsCount: number
-    showHiddenCardCountNotification: (show?: boolean) => void
+    showHiddenCardCountNotification: (show: boolean) => void
 }
 
 const ScrollingComponent = withScrolling('div')

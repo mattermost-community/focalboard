@@ -24,7 +24,7 @@ type Props = {
     selectedCardIds: string[]
     onCardClicked: (e: React.MouseEvent, card: Card) => void
     hiddenCardsCount: number
-    showHiddenCardCountNotification: (show?: boolean) => void
+    showHiddenCardCountNotification: (show: boolean) => void
 }
 
 const Gallery = (props: Props): JSX.Element => {

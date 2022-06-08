@@ -37,7 +37,7 @@ type Props = {
     addCard: (groupByOptionId?: string) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
     hiddenCardsCount: number
-    showHiddenCardCountNotification: (show?: boolean) => void
+    showHiddenCardCountNotification: (show: boolean) => void
 }
 
 const Table = (props: Props): JSX.Element => {
