@@ -183,7 +183,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	// get unix time for duration
 	startTime, aErr := mmModel.GetStartUnixMilliForTimeRange(timeRange)
 	if aErr != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "Error parsing time_range="+timeRange, aErr)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Error parsing time_range="+timeRange, aErr)
 		return
 	}
 
@@ -196,12 +196,12 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	page, err := strconv.Atoi(query.Get("page"))
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting page parameter to integer", err)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting page parameter to integer", err)
 		return
 	}
 	perPage, err := strconv.Atoi(query.Get("per_page"))
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting per_page parameter to integer", err)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting per_page parameter to integer", err)
 		return
 	}
 	boardsInsights, err := a.app.GetTeamBoardsInsights(userID, teamID, &mmModel.InsightsOpts{
@@ -276,19 +276,19 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	// get unix time for duration
 	startTime, aErr := mmModel.GetStartUnixMilliForTimeRange(timeRange)
 	if aErr != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "Error parsing time_range="+timeRange, aErr)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Error parsing time_range="+timeRange, aErr)
 		return
 	}
 	auditRec := a.makeAuditRecord(r, "getUserBoardsInsights", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	page, err := strconv.Atoi(query.Get("page"))
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting page parameter to integer", err)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting page parameter to integer", err)
 		return
 	}
 	perPage, err := strconv.Atoi(query.Get("per_page"))
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "error converting per_page parameter to integer", err)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting per_page parameter to integer", err)
 		return
 	}
 	boardsInsights, err := a.app.GetUserBoardsInsights(userID, teamID, &mmModel.InsightsOpts{
