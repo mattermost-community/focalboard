@@ -13,7 +13,6 @@ ALTER TABLE {{.prefix}}blocks_history ADD COLUMN board_id VARCHAR(36);
 {{- /* cleanup incorrect data format in column calculations */ -}}
 {{- /* then move from 'board' type to 'view' type*/ -}}
 {{if .mysql}}
-SELECT 'I am mysql';
 UPDATE {{.prefix}}blocks SET fields = JSON_SET(fields, '$.columnCalculations', cast('{}' as json)) WHERE fields->'$.columnCalculations' = cast('[]' as json);
 
 UPDATE {{.prefix}}blocks b
@@ -26,7 +25,6 @@ UPDATE {{.prefix}}blocks b
   AND b.type = 'view';
 {{end}}
 {{if .postgres}}
-SELECT 'I am postgres';
 UPDATE {{.prefix}}blocks SET fields = fields::jsonb - 'columnCalculations' || '{"columnCalculations": {}}' WHERE fields->>'columnCalculations' = '[]';
 
 WITH subquery AS (
