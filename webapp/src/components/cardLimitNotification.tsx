@@ -66,16 +66,15 @@ const CardLimitNotification = (props: Props) => {
 
     let show = false
     let onClose = onCloseHidden
-    let title = ''
+    let title = intl.formatMessage(
+        {
+            id: 'notification-box-card-limit-reached.title',
+            defaultMessage: '{cards} cards hidden from board',
+        },
+        {cards: hiddenCards},
+    )
 
     if (!show && props.showHiddenCardNotification) {
-        title = intl.formatMessage(
-            {
-                id: 'notification-box-card-limit-reached.title',
-                defaultMessage: '{cards} cards hidden from board',
-            },
-            {cards: hiddenCards},
-        )
         show = true
     }
 
