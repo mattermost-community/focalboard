@@ -4163,13 +4163,13 @@ func stringResponse(w http.ResponseWriter, message string) {
 	_, _ = fmt.Fprint(w, message)
 }
 
-func jsonStringResponse(w http.ResponseWriter, code int, message string) { //nolint:unparam
+func jsonStringResponse(w http.ResponseWriter, code int, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	fmt.Fprint(w, message)
 }
 
-func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) { //nolint:unparam
+func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, _ = w.Write(json)
