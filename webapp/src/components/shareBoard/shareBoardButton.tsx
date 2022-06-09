@@ -4,7 +4,7 @@
 import React, {useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import Button from '../../widgets/buttons/button'
+// import Button from '../../widgets/buttons/button'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard} from '../../store/boards'
@@ -13,6 +13,8 @@ import LockOutline from '../../widgets/icons/lockOutline'
 import {BoardTypeOpen} from '../../blocks/board'
 
 import './shareBoardButton.scss'
+
+import Button from '@mui/material/Button'
 
 import ShareBoardDialog from './shareBoard'
 
@@ -33,11 +35,25 @@ const ShareBoardButton = (props: Props) => {
 
     return (
         <div className='ShareBoardButton'>
+            {/*<Button*/}
+            {/*    title='Share board'*/}
+            {/*    size='medium'*/}
+            {/*    emphasis='primary'*/}
+            {/*    icon={iconForBoardType()}*/}
+            {/*    onClick={() => {*/}
+            {/*        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardOpenModal, {board: board.id})*/}
+            {/*        setShowShareDialog(!showShareDialog)*/}
+            {/*    }}*/}
+            {/*>*/}
+            {/*    <FormattedMessage*/}
+            {/*        id='CenterPanel.Share'*/}
+            {/*        defaultMessage='Share'*/}
+            {/*    />*/}
+            {/*</Button>*/}
+
             <Button
-                title='Share board'
-                size='medium'
-                emphasis='primary'
-                icon={iconForBoardType()}
+                variant="contained"
+                startIcon={iconForBoardType()}
                 onClick={() => {
                     TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardOpenModal, {board: board.id})
                     setShowShareDialog(!showShareDialog)
@@ -47,7 +63,8 @@ const ShareBoardButton = (props: Props) => {
                     id='CenterPanel.Share'
                     defaultMessage='Share'
                 />
-            </Button>
+            </Button>;
+
             {showShareDialog &&
                 <ShareBoardDialog
                     onClose={() => setShowShareDialog(false)}
