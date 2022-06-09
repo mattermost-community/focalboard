@@ -22,6 +22,8 @@ const (
 	testBoardID  = "test-board-id"
 )
 
+var errDummy = errors.New("hello")
+
 type TestError struct{}
 
 func (err *TestError) Error() string { return "Mocked File backend error" }
@@ -296,7 +298,7 @@ func TestGetFileInfo(t *testing.T) {
 	})
 
 	t.Run("should return archived file infoerror", func(t *testing.T) {
-		th.Store.EXPECT().GetFileInfo("filename").Return(nil, errors.New("hello!"))
+		th.Store.EXPECT().GetFileInfo("filename").Return(nil, errDummy)
 
 		fetchedFileInfo, err := th.App.GetFileInfo("Afilename")
 		assert.Error(t, err)

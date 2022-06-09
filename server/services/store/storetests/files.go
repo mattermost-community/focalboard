@@ -1,11 +1,12 @@
 package storetests
 
 import (
+	"testing"
+
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func StoreTestFileStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
