@@ -563,16 +563,16 @@ class OctoClient {
             path += `?read_token=${readToken}`
         }
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        let fileURL: FileInfo = {}
+        let fileInfo: FileInfo = {}
 
         if (response.status === 200) {
             const blob = await response.blob()
-            fileURL.url = URL.createObjectURL(blob)
+            fileInfo.url = URL.createObjectURL(blob)
         } else if (response.status === 400) {
-            fileURL = await this.getJson(response, {}) as FileInfo
+            fileInfo = await this.getJson(response, {}) as FileInfo
         }
 
-        return fileURL
+        return fileInfo
     }
 
     async getTeam(): Promise<Team | null> {
