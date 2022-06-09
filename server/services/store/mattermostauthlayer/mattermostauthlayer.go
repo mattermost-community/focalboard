@@ -386,3 +386,7 @@ func mmUserToFbUser(mmUser *mmModel.User) model.User {
 func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 	return s.pluginAPI.GetLicense()
 }
+
+func (s *MattermostAuthLayer) GetCloudLimits() (*mmModel.ProductLimits, error) {
+	return s.pluginAPI.GetCloudLimits()
+}
