@@ -446,6 +446,45 @@ func TestGetTemplateMapForBlocks(t *testing.T) {
 		require.Contains(t, templateMap, "board3")
 		require.True(t, templateMap["board3"])
 	})
+
+	t.Run("should not fail if the board is not present nor in the database", func(t *testing.T) {
+		th, tearDown := SetupTestHelper(t)
+		defer tearDown()
+
+		blocks := []model.Block{
+			{
+				ID:       "card1",
+				Type:     model.TypeCard,
+				ParentID: "board1",
+				RootID:   "board1",
+			},
+			{
+				ID:       "card2",
+				Type:     model.TypeCard,
+				ParentID: "board2",
+				RootID:   "board2",
+			},
+		}
+
+		board2 := model.Block{
+			ID:       "board2",
+			Type:     model.TypeBoard,
+			ParentID: "board2",
+			RootID:   "board2",
+			Fields:   map[string]interface{}{"isTemplate": true},
+		}
+
+		th.Store.EXPECT().
+			GetBlocksByIDs(container, gomock.InAnyOrder([]string{"board1", "board2"})).
+			Return([]model.Block{board2}, nil)
+
+		templateMap, err := th.App.getTemplateMapForBlocks(container, blocks)
+		require.NoError(t, err)
+		require.Len(t, templateMap, 1)
+		require.NotContains(t, templateMap, "board1")
+		require.Contains(t, templateMap, "board2")
+		require.True(t, templateMap["board2"])
+	})
 }
 
 func TestApplyCloudLimits(t *testing.T) {
@@ -521,7 +560,7 @@ func TestApplyCloudLimits(t *testing.T) {
 					return block
 				}
 			}
-			require.FailNow(t, "block %s not found", id)
+			require.FailNow(t, "block \""+id+"\" not found")
 			return model.Block{} // this should never be reached
 		}
 
@@ -536,8 +575,87 @@ func TestApplyCloudLimits(t *testing.T) {
 		newBlocks, err := th.App.ApplyCloudLimits(container, blocks)
 		require.NoError(t, err)
 
+		require.Len(t, newBlocks, 6)
 		// boards are never limited
 		require.False(t, findBlock(newBlocks, "board1").Limited)
+		// should be limited as it's beyond the threshold
+		require.True(t, findBlock(newBlocks, "card1").Limited)
+		// only cards are limited
+		require.False(t, findBlock(newBlocks, "text1").Limited)
+		// should not be limited as it's not beyond the threshold
+		require.False(t, findBlock(newBlocks, "card2").Limited)
+		// cards belonging to templates are never limited
+		require.False(t, findBlock(newBlocks, "template").Limited)
+		require.False(t, findBlock(newBlocks, "card-from-template").Limited)
+	})
+
+	t.Run("if a block belongs to a deleted board, it should be limited normally", func(t *testing.T) {
+		findBlock := func(blocks []model.Block, id string) model.Block {
+			for _, block := range blocks {
+				if block.ID == id {
+					return block
+				}
+			}
+			require.FailNow(t, "block \""+id+"\" not found")
+			return model.Block{} // this should never be reached
+		}
+
+		bblocks := []model.Block{
+			{
+				ID:       "card1",
+				Type:     model.TypeCard,
+				ParentID: "board1",
+				RootID:   "board1",
+				UpdateAt: 100,
+			},
+			{
+				ID:       "text1",
+				Type:     model.TypeText,
+				ParentID: "card1",
+				RootID:   "board1",
+				UpdateAt: 100,
+			},
+			{
+				ID:       "card2",
+				Type:     model.TypeCard,
+				ParentID: "board1",
+				RootID:   "board1",
+				UpdateAt: 200,
+			},
+			{
+				ID:       "template",
+				Type:     model.TypeBoard,
+				ParentID: "template",
+				RootID:   "template",
+				UpdateAt: 1,
+				Fields:   map[string]interface{}{"isTemplate": true},
+			},
+			{
+				ID:       "card-from-template",
+				Type:     model.TypeCard,
+				ParentID: "template",
+				RootID:   "template",
+				UpdateAt: 1,
+			},
+		}
+
+		th, tearDown := SetupTestHelper(t)
+		defer tearDown()
+
+		th.App.SetCardLimit(5)
+
+		mockError := store.NewErrNotAllFound([]string{"board1"})
+
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
+		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(150), nil)
+		th.Store.EXPECT().
+			GetBlocksByIDs(container, []string{"board1"}).
+			Return([]model.Block{}, mockError)
+
+		newBlocks, err := th.App.ApplyCloudLimits(container, bblocks)
+		require.NoError(t, err)
+
+		require.Len(t, newBlocks, 5)
 		// should be limited as it's beyond the threshold
 		require.True(t, findBlock(newBlocks, "card1").Limited)
 		// only cards are limited

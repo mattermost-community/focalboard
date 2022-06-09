@@ -17,8 +17,7 @@ import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
-import {addCard, addTemplate, showCardHiddenWarning} from '../store/cards'
-import {getCardLimitTimestamp} from '../store/limits'
+import {addCard, addTemplate, showCardHiddenWarning, getCardLimitTimestamp} from '../store/cards'
 import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
@@ -371,6 +370,11 @@ class CenterPanel extends React.Component<Props, State> {
             card.fields.icon = BlockIcons.shared.randomIcon()
         }
         mutator.performAsUndoGroup(async () => {
+            // this avoids the race condition of the new limits
+            // arriving while we're deciding if we need to show the
+            // banner
+            const limitsEnabled = this.props.limitsEnabled
+
             const newCard = await mutator.insertBlock(
                 card,
                 'add card',
@@ -389,7 +393,7 @@ class CenterPanel extends React.Component<Props, State> {
                     this.showCard(undefined)
                 },
             )
-            this.props.showCardHiddenWarning(this.props.limitsEnabled)
+            this.props.showCardHiddenWarning(limitsEnabled)
             await mutator.changeViewCardOrder(activeView, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }
