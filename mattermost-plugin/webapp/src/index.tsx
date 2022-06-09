@@ -163,6 +163,14 @@ const HeaderComponent = () => {
     )
 }
 
+const BoardSelectorWithHistory= () => {
+    return (
+        <ErrorBoundary>
+            <BoardSelector history={browserHistory}/>
+        </ErrorBoundary>
+    )
+}
+
 export default class Plugin {
     channelHeaderButtonId?: string
     rhsId?: string
@@ -253,7 +261,7 @@ export default class Plugin {
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         }
 
-        this.boardSelectorId = this.registry.registerRootComponent(BoardSelector)
+        this.boardSelectorId = this.registry.registerRootComponent(BoardSelectorWithHistory)
 
         const config = await octoClient.getClientConfig()
         if (config?.telemetry) {

@@ -1,8 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {ReactNode} from 'react'
+import React, {useState, useMemo, useCallback} from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {IntlProvider, useIntl} from 'react-intl'
+import {IntlProvider, useIntl, FormattedMessage} from 'react-intl'
+import {useHistory} from 'react-router'
+import {debounce} from 'lodash'
 
 import {getMessages} from '../../../../webapp/src/i18n'
 import {getLanguage} from '../../../../webapp/src/store/language'
@@ -11,27 +13,129 @@ import store from '../../../../webapp/src/store'
 import octoClient from '../../../../webapp/src/octoClient'
 import mutator from '../../../../webapp/src/mutator'
 import {getCurrentTeam, getAllTeams, Team} from '../../../../webapp/src/store/teams'
-import {BoardTypeOpen, BoardTypePrivate, createBoard, Board} from '../../../../webapp/src/blocks/board'
+import {createBoard, BoardsAndBlocks, Board} from '../../../../webapp/src/blocks/board'
+import {createBoardView} from '../../../../webapp/src/blocks/boardView'
 import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
-import Globe from '../../../../webapp/src/widgets/icons/globe'
-import LockOutline from '../../../../webapp/src/widgets/icons/lockOutline'
-import SearchDialog from '../../../../webapp/src/components/searchDialog/searchDialog'
+import {EmptySearch, EmptyResults} from '../../../../webapp/src/components/searchDialog/searchDialog'
+import Dialog from '../../../../webapp/src/components/dialog'
+import SearchIcon from '../../../../webapp/src/widgets/icons/search'
+import Button from '../../../../webapp/src/widgets/buttons/button'
 import {getCurrentLinkToChannel, setLinkToChannel} from '../../../../webapp/src/store/boards'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../../webapp/src/telemetry/telemetryClient'
 
 import '../../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../../webapp/src/styles/main.scss'
 import '../../../../webapp/src/styles/labels.scss'
 
-const BoardSelector = () => {
+import './boardSelector.scss'
+
+type ResultItemProps = {
+    item: Board
+    currentChannel: string
+    linkBoard: (board: Board) => void
+    unlinkBoard: (board: Board) => void
+}
+
+const ResultItem = (props: ResultItemProps) => {
+    const {item, currentChannel} = props
     const intl = useIntl()
+    const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
+    const resultTitle = item.title || untitledBoardTitle
+    return (
+        <div
+            className='blockSearchResult'
+            style={{padding: '5px 0'}}
+        >
+            <span className='icon'>{item.icon}</span>
+            <div
+                className='resultLine'
+                style={{flexGrow: 1, width: '80%', alignSelf: 'center'}}
+            >
+                <div
+                    className='resultTitle'
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                    }}
+                >
+                    {resultTitle}
+                </div>
+                <div
+                    className='resultDescription'
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        opacity: 0.7,
+                    }}
+                >
+                    {item.description}
+                </div>
+            </div>
+            <div
+                className='linkUnlinkButton'
+                style={{display: 'flex', alignSelf: 'center'}}
+            >
+                {item.channelId === currentChannel &&
+                    <Button
+                        onClick={() => props.unlinkBoard(item)}
+                    >
+                        <FormattedMessage 
+                            id='boardSelector.unlink'
+                            defaultMessage='Unlink'
+                        />
+                    </Button>}
+                {item.channelId !== currentChannel &&
+                    <Button
+                        onClick={() => props.linkBoard(item)}
+                        filled={true}
+                    >
+                        <FormattedMessage 
+                            id='boardSelector.link'
+                            defaultMessage='Link'
+                        />
+                    </Button>}
+            </div>
+        </div>
+    )
+}
+
+type Props = {
+    history: History<unknown>
+}
+
+const BoardSelector = (props: Props) => {
+    const history = props.history
+    console.log(history)
     const teamsById:Record<string, Team> = {}
     useAppSelector(getAllTeams).forEach((t) => {
         teamsById[t.id] = t
     })
+    const intl = useIntl()
     const team = useAppSelector(getCurrentTeam)
     const currentChannel = useAppSelector(getCurrentLinkToChannel)
     const dispatch = useAppDispatch()
-    console.log(currentChannel)
+
+    const [results, setResults] = useState<Array<Board>>([])
+    const [isSearching, setIsSearching] = useState<boolean>(false)
+    const [searchQuery, setSearchQuery] = useState<string>('')
+
+    const searchHandler = useCallback(async (query: string): Promise<void> => {
+        setSearchQuery(query)
+
+        if (query.trim().length === 0 || !team) {
+            return []
+        }
+        const items = await octoClient.search(team.id, query)
+
+        setResults(items)
+        setIsSearching(false)
+    }, [team?.id]
+
+    const debouncedSearchHandler = useMemo(() => debounce(searchHandler, 200), [searchHandler])
+
+    const emptyResult = results.length === 0 && !isSearching && searchQuery
 
     if (!team) {
         return null
@@ -40,48 +144,107 @@ const BoardSelector = () => {
         return null
     }
 
-    const selectBoard = async (board: Board): Promise<void> => {
+    const linkBoard = async (board: Board): Promise<void> => {
         const newBoard = createBoard(board)
         newBoard.channelId = currentChannel
         await mutator.updateBoard(newBoard, board, 'linked channel')
-        dispatch(setLinkToChannel(''))
-    }
-
-    const searchHandler = async (query: string): Promise<Array<ReactNode>> => {
-        if (query.trim().length === 0 || !team) {
-            return []
+        for (const result of results) {
+            if (result.id == board.id) {
+                result.channelId = currentChannel
+                setResults([...results])
+            }
         }
-
-        const items = await octoClient.search(team.id, query)
-        const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
-        return items.map((item) => {
-            const resultTitle = item.title || untitledBoardTitle
-            const teamTitle = teamsById[item.teamId].title
-            return (
-                <div
-                    key={item.id}
-                    className='blockSearchResult'
-                    onClick={() => selectBoard(item)}
-                >
-                    {item.type === BoardTypeOpen && <Globe/>}
-                    {item.type === BoardTypePrivate && <LockOutline/>}
-                    <span className='resultTitle'>{resultTitle}</span>
-                    <span className='teamTitle'>{teamTitle}</span>
-                </div>
-            )
-        })
     }
 
+    const unlinkBoard = async (board: Board): Promise<void> => {
+        const newBoard = createBoard(board)
+        newBoard.channelId = ''
+        await mutator.updateBoard(newBoard, board, 'unlinked channel')
+        for (const result of results) {
+            if (result.id == board.id) {
+                result.channelId = ''
+                setResults([...results])
+            }
+        }
+    }
+
+    const newLinkedBoard = async (): Promise<void> => {
+        const board = createBoard()
+        board.teamId = team.id
+        board.channelId = currentChannel
+
+        const view = createBoardView()
+        view.fields.viewType = 'board'
+        view.parentId = board.id
+        view.boardId = board.id
+        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
+
+        await mutator.createBoardsAndBlocks(
+            {boards: [board], blocks: [view]},
+            'add linked board',
+            async (bab: BoardsAndBlocks) => {
+                const newBoard = bab.boards[0]
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoard?.id})
+                history.push(`/team/${team.id}/${newBoard.id}`)
+            },
+            () => null,
+        )
+    }
+
+    // TODO: Replace the BoardSwitcherDialog with something custom here
     return (
-        <div
-            style={{padding: 20}}
-            className='BoardSelector focalboard-body'
-        >
-            <SearchDialog
+        <div className='focalboard-body'>
+            <Dialog
+                className='BoardSelector BoardSwitcherDialog'
                 onClose={() => dispatch(setLinkToChannel(''))}
-                title='whatever'
-                searchHandler={searchHandler}
-            />
+            >
+                <div className='BoardSwitcherDialogBody'>
+                    <div className='head'>
+                        <h3 className='text-heading4'>
+                            <FormattedMessage
+                                id='boardSelector.title'
+                                defaultMessage='TODO TODO TODO'
+                            />
+                            <Button
+                                onClick={() => newLinkedBoard()}
+                            >
+                                <FormattedMessage 
+                                    id='boardSelector.create-new-board'
+                                    defaultMessage='Create new board'
+                                />
+                            </Button>
+                        </h3>
+                        <div className='queryWrapper'>
+                            <SearchIcon/>
+                            <input
+                                className='searchQuery'
+                                placeholder='Search for boards'
+                                type='text'
+                                onChange={(e) => debouncedSearchHandler(e.target.value)}
+                                autoFocus={true}
+                                maxLength={100}
+                            />
+                        </div>
+                    </div>
+                    <div className='searchResults'>
+                        {/*When there are results to show*/}
+                        {searchQuery && results.length > 0 &&
+                            results.map((result) => (<ResultItem
+                                key={result.id}
+                                item={result}
+                                linkBoard={linkBoard}
+                                unlinkBoard={unlinkBoard}
+                                currentChannel={currentChannel}
+                            />))}
+
+                        {/*when user searched for something and there were no results*/}
+                        {emptyResult && <EmptyResults/>}
+
+                        {/*default state, when user didn't search for anything. This is the initial screen*/}
+                        {!emptyResult && !searchQuery && <EmptySearch/>}
+                    </div>
+                </div>
+            </Dialog>
         </div>
     )
 }
