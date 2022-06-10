@@ -82,11 +82,13 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string,
 		FromSelect(publicBoards, "boards_and_blocks_history").
 		GroupBy("id, title, workspace_id, created_by").
 		OrderBy("activity_count desc"), "team_insights").
-		Where(sq.Eq{
-			"created_by": userID,
+		Where(sq.Or{
+			sq.Eq{
+				"created_by": userID,
+			},
+			// due to lack of position operator, we have to hardcode arguments, and placeholder here
+			sq.Expr(s.elementInColumn(5+len(channelIDs), "active_users")),
 		}).
-		// due to lack of position operator, we have to hardcode arguments, and placeholder here
-		Where(s.elementInColumn(5+len(channelIDs), "active_users")).
 		Offset(uint64(offset)).
 		Limit(uint64(limit + 1))
 	userInsightsQueryStr, args, err := userInsightsQuery.ToSql()

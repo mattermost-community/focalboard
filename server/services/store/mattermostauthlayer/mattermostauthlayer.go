@@ -463,6 +463,54 @@ func (s *MattermostAuthLayer) GetUserWorkspacesInTeam(userID string, teamID stri
 	}
 
 	defer s.CloseRows(rows)
+
+	publicWorkspaces, err := getPublicWorkspacesInTeam(teamID, s)
+	if err != nil {
+		s.logger.Error("ERROR getPublicWorkspacesInTeam", mlog.Err(err))
+		return nil, err
+	}
+	memberWorkspaces, err := s.userWorkspacesFromRows(rows)
+	if err != nil {
+		s.logger.Error("ERROR userWorkspacesFromRows", mlog.Err(err))
+		return nil, err
+	}
+	accessibleWorkspaces := append(publicWorkspaces, memberWorkspaces...)
+	return accessibleWorkspaces, nil
+}
+
+func getPublicWorkspacesInTeam(teamID string, s *MattermostAuthLayer) ([]model.UserWorkspace, error) {
+	var query sq.SelectBuilder
+
+	var nonTemplateFilter string
+
+	switch s.dbType {
+	case mysqlDBType:
+		nonTemplateFilter = "focalboard_blocks.fields LIKE '%\"isTemplate\":false%'"
+	case postgresDBType:
+		nonTemplateFilter = "focalboard_blocks.fields ->> 'isTemplate' = 'false'"
+	default:
+		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
+	}
+
+	query = s.getQueryBuilder().
+		Select("pc.ID", "pc.DisplayName", "COUNT(focalboard_blocks.id), 'O' as Type, pc.Name").
+		From("PublicChannels as pc").
+		// select channels without a corresponding workspace
+		LeftJoin(
+			"focalboard_blocks ON focalboard_blocks.workspace_id = pc.ID AND "+
+				"focalboard_blocks.type = 'board' AND "+
+				nonTemplateFilter,
+		).
+		Where(sq.Eq{"pc.TeamID": teamID}).
+		GroupBy("pc.Id", "pc.DisplayName")
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("ERROR GetUserWorkspaces", mlog.Err(err))
+		return nil, err
+	}
+
+	defer s.CloseRows(rows)
 	return s.userWorkspacesFromRows(rows)
 }
 
