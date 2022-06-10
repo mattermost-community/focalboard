@@ -96,7 +96,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopiedPublic, setWasCopiedPublic] = useState(false)
     const [wasCopiedInternal, setWasCopiedInternal] = useState(false)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
-    const [selectedUser, setSelectedUser] = useState<IUser|null>(null)
+    const [selectedUser, setSelectedUser] = useState<IUser|any|null>(null)
 
     // members of the current board
     const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
@@ -334,9 +334,9 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             cacheOptions={true}
                             loadOptions={async (inputValue: string) => {
                                 const users = await client.searchTeamUsers(inputValue)
-                                const channels = await client.getUserChannels(match.params.teamId)
+                                const channels = await client.getUserChannels(match.params.teamId || '')
                                 return [...users, ...channels]
-                            }
+                            }}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
                             formatOptionLabel={formatOptionLabel}

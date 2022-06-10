@@ -120,7 +120,7 @@ const boardsSlice = createSlice({
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
         },
-        setLinkToChannel: (state, action: PayloadAction<string>) {
+        setLinkToChannel: (state, action: PayloadAction<string>) => {
             state.linkToChannel = action.payload
         },
         updateBoards: (state, action: PayloadAction<Board[]>) => {

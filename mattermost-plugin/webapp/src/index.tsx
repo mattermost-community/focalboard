@@ -163,14 +163,6 @@ const HeaderComponent = () => {
     )
 }
 
-const BoardSelectorWithHistory= () => {
-    return (
-        <ErrorBoundary>
-            <BoardSelector history={browserHistory}/>
-        </ErrorBoundary>
-    )
-}
-
 export default class Plugin {
     channelHeaderButtonId?: string
     rhsId?: string
@@ -215,16 +207,11 @@ export default class Plugin {
 
         if (this.registry.registerProduct) {
             windowAny.frontendBaseURL = subpath + '/boards'
-            const goToFocalboard = () => {
-                const currentTeam = mmStore.getState().entities.teams.currentTeamId
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelHeader, {teamID: currentTeam})
-                window.open(`${windowAny.frontendBaseURL}/team/${currentTeam}`, '_blank', 'noopener')
-            }
 
             /* TODO: translate Channel Boards string down there*/
             const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
                 () => (
-                    <RHSChannelBoards getCurrentChannel={() => lastViewedChannel}/>
+                    <RHSChannelBoards getCurrentChannel={() => mmStore.getState().entities.channels.channels[lastViewedChannel]}/>
                 ),
                 <div><FocalboardIcon/>{'Channel Boards'}</div>,
             )
@@ -261,7 +248,7 @@ export default class Plugin {
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         }
 
-        this.boardSelectorId = this.registry.registerRootComponent(BoardSelectorWithHistory)
+        this.boardSelectorId = this.registry.registerRootComponent(BoardSelector)
 
         const config = await octoClient.getClientConfig()
         if (config?.telemetry) {

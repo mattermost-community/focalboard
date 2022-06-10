@@ -2,35 +2,28 @@
 // See LICENSE.txt for license information.
 import React  from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {IntlProvider} from 'react-intl'
+import {FormattedMessage, IntlProvider} from 'react-intl'
 
 import {getMessages} from '../../../../webapp/src/i18n'
 import {getLanguage} from '../../../../webapp/src/store/language'
 
 import store from '../../../../webapp/src/store'
-import mutator from '../../../../webapp/src/mutator'
-import {getCurrentTeam, getAllTeams, Team} from '../../../../webapp/src/store/teams'
+import {getCurrentTeam} from '../../../../webapp/src/store/teams'
 import {getMySortedBoards, setLinkToChannel} from '../../../../webapp/src/store/boards'
-import {createBoard, Board} from '../../../../webapp/src/blocks/board'
 import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
 import AddIcon from '../../../../webapp/src/widgets/icons/add'
 import Button from '../../../../webapp/src/widgets/buttons/button'
-import IconButton from '../../../../webapp/src/widgets/buttons/iconButton'
-import OptionsIcon from '../../../../webapp/src/widgets/icons/options'
-import DeleteIcon from '../../../../webapp/src/widgets/icons/delete'
-import Menu from '../../../../webapp/src/widgets/menu'
-import MenuWrapper from '../../../../webapp/src/widgets/menuWrapper'
+
+import RHSChannelBoardItem from './rhsChannelBoardItem'
 
 import '../../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../../webapp/src/styles/main.scss'
 import '../../../../webapp/src/styles/labels.scss'
 
-const RHSChannelBoards = (props: {getCurrentChannel: () => string}) => {
+// TODO replace the anys for Channel struct
+
+const RHSChannelBoards = (props: {getCurrentChannel: () => any}) => {
     const boards = useAppSelector(getMySortedBoards)
-    const teamsById:Record<string, Team> = {}
-    useAppSelector(getAllTeams).forEach((t) => {
-        teamsById[t.id] = t
-    })
     const team = useAppSelector(getCurrentTeam)
     const dispatch = useAppDispatch()
     if (!boards) {
@@ -40,15 +33,28 @@ const RHSChannelBoards = (props: {getCurrentChannel: () => string}) => {
         return null
     }
     const currentChannel = props.getCurrentChannel()
-    const channelBoards = boards.filter((b) => b.channelId === currentChannel)
-    const handleBoardClicked = (boardID: string) => {
-        window.open(`${(window as any).frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
-    }
+    const channelBoards = boards.filter((b) => b.channelId === currentChannel.id)
 
-    const onUnlinkBoard = async (board: Board) => {
-        const newBoard = createBoard(board)
-        newBoard.channelId = ''
-        mutator.updateBoard(newBoard, board, 'unlinked channel')
+    if (channelBoards.length === 0) {
+        return (
+        <div
+            style={{padding: 20}}
+            className='focalboard-body'
+        >
+            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100%', width: '100%', overflow: 'hidden'}}>
+                <div>{'TODO: Image for no boards'}</div>
+                <Button
+                    onClick={() => dispatch(setLinkToChannel(props.getCurrentChannel().id))}
+                    emphasis='primary'
+                >
+                    <FormattedMessage
+                        id='rhs-boards.link-boards-to-channel'
+                        defaultMessage='Link Boards to {channelName}'
+                        values={{channelName: currentChannel.display_name}}
+                    />
+                </Button>
+            </div>
+        </div>
     }
 
     return (
@@ -56,60 +62,45 @@ const RHSChannelBoards = (props: {getCurrentChannel: () => string}) => {
             style={{padding: 20}}
             className='focalboard-body'
         >
-            <div style={{display: 'flex'}}>
-                {/* TODO: translate this */}
-                <span style={{flexGrow: 1, fontSize: 16, fontWeight: 600}}>{'Linked Channels'}</span>
+            <div style={{display: 'flex', alignItems: 'center', minHeight: 40}}>
+                <span style={{flexGrow: 1, fontSize: 16, fontWeight: 600}}>
+                    <FormattedMessage
+                        id='rhs-boards.linked-boards'
+                        defaultMessage='Linked Boards'
+                    />
+                </span>
                 <Button
-                    onClick={() => dispatch(setLinkToChannel(props.getCurrentChannel()))}
+                    onClick={() => dispatch(setLinkToChannel(props.getCurrentChannel().id))}
                     icon={<AddIcon/>}
                     emphasis='primary'
                 >
-                    {/* TODO: translate this */}
-                    {'Add'}
+                    <FormattedMessage
+                        id='rhs-boards.add'
+                        defaultMessage='Add'
+                    />
                 </Button>
             </div>
+            <div
+                style={{overflowY: 'scroll'}}
+                className='rhs-boards-list'
+            >
             {channelBoards.map((b) => (
-                <div
+                <RHSChannelBoardItem
                     key={b.id}
-                    onClick={() => handleBoardClicked(b.id)}
-                    style={{padding: 15, textAlign: 'left', border: '1px solid #cccccc', borderRadius: 5, marginTop: 10, cursor: 'pointer'}}
-                >
-                    <div style={{fontSize: 16, display: 'flex'}}>
-                        {b.icon && <span style={{marginRight: 10}}>{b.icon}</span>}
-                        <span style={{fontWeight: 600, flexGrow: 1}}>{b.title}</span>
-                        <MenuWrapper stopPropagationOnToggle={true}>
-                            <IconButton icon={<OptionsIcon/>}/>
-                            <Menu
-                                fixed={true}
-                                position='left'
-                            >
-                                <Menu.Text
-                                    key={`unlinkBoard-${b.id}`}
-                                    id='unlinkBoard'
-                                    name={'Unlink Board'}
-                                    icon={<DeleteIcon/>}
-                                    onClick={() => {
-                                        onUnlinkBoard(b)
-                                    }}
-                                />
-                            </Menu>
-                        </MenuWrapper>
-                    </div>
-                    <div>{b.description}</div>
-                    {/* TODO: Translate this later */}
-                    <div style={{color: '#cccccc'}}>{'Last Update at: '}{b.updateAt}</div>
-                </div>))}
+                    board={b}
+                />))}
+            </div>
         </div>
     )
 }
 
-const ConnectedRHSChannelBoards = (props: {getCurrentChannel: () => string}) => (
+const ConnectedRHSChannelBoards = (props: {getCurrentChannel: () => any}) => (
     <ReduxProvider store={store}>
         <IntlRHSChannelBoards getCurrentChannel={props.getCurrentChannel}/>
     </ReduxProvider>
 )
 
-const IntlRHSChannelBoards = (props: {getCurrentChannel: () => string}) => {
+const IntlRHSChannelBoards = (props: {getCurrentChannel: () => any}) => {
     const language = useAppSelector<string>(getLanguage)
 
     return (

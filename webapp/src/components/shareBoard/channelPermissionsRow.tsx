@@ -33,7 +33,7 @@ const ChannelPermissionsRow = (): JSX.Element => {
                     {channel.type === 'P' && <PrivateIcon/>}
                     {channel.type === 'O' && <PublicIcon/>}
                 </span>
-                <div className='ml-3'><strong>{channel.display_name</strong></div>
+                <div className='ml-3'><strong>{channel.display_name}</strong></div>
             </div>
             <div>
                 <span>

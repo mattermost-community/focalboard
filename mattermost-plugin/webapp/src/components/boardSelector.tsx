@@ -3,7 +3,6 @@
 import React, {useState, useMemo, useCallback} from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {IntlProvider, useIntl, FormattedMessage} from 'react-intl'
-import {useHistory} from 'react-router'
 import {debounce} from 'lodash'
 
 import {getMessages} from '../../../../webapp/src/i18n'
@@ -27,87 +26,11 @@ import '../../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../../webapp/src/styles/main.scss'
 import '../../../../webapp/src/styles/labels.scss'
 
+import BoardSelectorItem from './boardSelectorItem'
+
 import './boardSelector.scss'
 
-type ResultItemProps = {
-    item: Board
-    currentChannel: string
-    linkBoard: (board: Board) => void
-    unlinkBoard: (board: Board) => void
-}
-
-const ResultItem = (props: ResultItemProps) => {
-    const {item, currentChannel} = props
-    const intl = useIntl()
-    const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
-    const resultTitle = item.title || untitledBoardTitle
-    return (
-        <div
-            className='blockSearchResult'
-            style={{padding: '5px 0'}}
-        >
-            <span className='icon'>{item.icon}</span>
-            <div
-                className='resultLine'
-                style={{flexGrow: 1, width: '80%', alignSelf: 'center'}}
-            >
-                <div
-                    className='resultTitle'
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                    }}
-                >
-                    {resultTitle}
-                </div>
-                <div
-                    className='resultDescription'
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        opacity: 0.7,
-                    }}
-                >
-                    {item.description}
-                </div>
-            </div>
-            <div
-                className='linkUnlinkButton'
-                style={{display: 'flex', alignSelf: 'center'}}
-            >
-                {item.channelId === currentChannel &&
-                    <Button
-                        onClick={() => props.unlinkBoard(item)}
-                    >
-                        <FormattedMessage 
-                            id='boardSelector.unlink'
-                            defaultMessage='Unlink'
-                        />
-                    </Button>}
-                {item.channelId !== currentChannel &&
-                    <Button
-                        onClick={() => props.linkBoard(item)}
-                        filled={true}
-                    >
-                        <FormattedMessage 
-                            id='boardSelector.link'
-                            defaultMessage='Link'
-                        />
-                    </Button>}
-            </div>
-        </div>
-    )
-}
-
-type Props = {
-    history: History<unknown>
-}
-
-const BoardSelector = (props: Props) => {
-    const history = props.history
-    console.log(history)
+const BoardSelector = () => {
     const teamsById:Record<string, Team> = {}
     useAppSelector(getAllTeams).forEach((t) => {
         teamsById[t.id] = t
@@ -125,13 +48,13 @@ const BoardSelector = (props: Props) => {
         setSearchQuery(query)
 
         if (query.trim().length === 0 || !team) {
-            return []
+            return
         }
         const items = await octoClient.search(team.id, query)
 
         setResults(items)
         setIsSearching(false)
-    }, [team?.id]
+    }, [team?.id])
 
     const debouncedSearchHandler = useMemo(() => debounce(searchHandler, 200), [searchHandler])
 
@@ -182,16 +105,18 @@ const BoardSelector = (props: Props) => {
         await mutator.createBoardsAndBlocks(
             {boards: [board], blocks: [view]},
             'add linked board',
-            async (bab: BoardsAndBlocks) => {
+            async (bab: BoardsAndBlocks): Promise<void> {
+                const windowAny: any = window
                 const newBoard = bab.boards[0]
+                // TODO: Maybe create a new event for create linked board
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoard?.id})
-                history.push(`/team/${team.id}/${newBoard.id}`)
+                windowAny.WebappUtils.browserHistory.push(`/boards/team/${team.id}/${newBoard.id}`)
+                dispatch(setLinkToChannel(''))
             },
             () => null,
         )
     }
 
-    // TODO: Replace the BoardSwitcherDialog with something custom here
     return (
         <div className='focalboard-body'>
             <Dialog
@@ -200,25 +125,31 @@ const BoardSelector = (props: Props) => {
             >
                 <div className='BoardSwitcherDialogBody'>
                     <div className='head'>
-                        <h3 className='text-heading4'>
-                            <FormattedMessage
-                                id='boardSelector.title'
-                                defaultMessage='TODO TODO TODO'
-                            />
+                        <div style={{display: 'flex', alignItems: 'center', marginRight: 35, marginTop: 5}}>
+                            <h3
+                                style={{flexGrow: 1}}
+                                className='text-heading4'
+                            >
+                                <FormattedMessage
+                                    id='boardSelector.title'
+                                    defaultMessage='Link Boards'
+                                />
+                            </h3>
                             <Button
                                 onClick={() => newLinkedBoard()}
+                                emphasis='secondary'
                             >
                                 <FormattedMessage 
-                                    id='boardSelector.create-new-board'
-                                    defaultMessage='Create new board'
+                                    id='boardSelector.create-a-board'
+                                    defaultMessage='Create a Board'
                                 />
                             </Button>
-                        </h3>
+                        </div>
                         <div className='queryWrapper'>
                             <SearchIcon/>
                             <input
                                 className='searchQuery'
-                                placeholder='Search for boards'
+                                placeholder={intl.formatMessage({id: 'boardSelector.search-for-boards', defaultMessage:'Search for boards'})}
                                 type='text'
                                 onChange={(e) => debouncedSearchHandler(e.target.value)}
                                 autoFocus={true}
@@ -229,7 +160,7 @@ const BoardSelector = (props: Props) => {
                     <div className='searchResults'>
                         {/*When there are results to show*/}
                         {searchQuery && results.length > 0 &&
-                            results.map((result) => (<ResultItem
+                            results.map((result) => (<BoardSelectorItem
                                 key={result.id}
                                 item={result}
                                 linkBoard={linkBoard}
