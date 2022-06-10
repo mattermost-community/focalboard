@@ -15,6 +15,7 @@ export interface PluginRegistry {
     registerWebSocketEventHandler(event: string, handler: (e: any) => void)
     unregisterWebSocketEventHandler(event: string)
     registerAppBarComponent(iconURL: string, action: (channel: Channel, member: ChannelMembership) => void, tooltipText: React.ReactNode)
+    registerInsightsHandler(handler: (timeRange: string, page: number, perPage: number, teamId: string, insightType: string) => void)
 
     // Add more if needed from https://developers.mattermost.com/extend/plugins/webapp/reference
 }
