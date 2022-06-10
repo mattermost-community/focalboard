@@ -28,7 +28,9 @@ const (
 	postgresDBType = "postgres"
 	mysqlDBType    = "mysql"
 
-	directChannelType = "D"
+	directChannelType         = "D"
+	nonTemplateFilterMySQL    = "focalboard_blocks.fields LIKE '%\"isTemplate\":false%'"
+	nonTemplateFilterPostgres = "focalboard_blocks.fields ->> 'isTemplate' = 'false'"
 )
 
 var (
@@ -435,9 +437,9 @@ func (s *MattermostAuthLayer) GetUserWorkspacesInTeam(userID string, teamID stri
 
 	switch s.dbType {
 	case mysqlDBType:
-		nonTemplateFilter = "focalboard_blocks.fields LIKE '%\"isTemplate\":false%'"
+		nonTemplateFilter = nonTemplateFilterMySQL
 	case postgresDBType:
-		nonTemplateFilter = "focalboard_blocks.fields ->> 'isTemplate' = 'false'"
+		nonTemplateFilter = nonTemplateFilterPostgres
 	default:
 		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
 	}
@@ -464,7 +466,7 @@ func (s *MattermostAuthLayer) GetUserWorkspacesInTeam(userID string, teamID stri
 
 	defer s.CloseRows(rows)
 
-	publicWorkspaces, err := getPublicWorkspacesInTeam(teamID, s)
+	accessibleWorkspaces, err := getPublicWorkspacesInTeam(teamID, s)
 	if err != nil {
 		s.logger.Error("ERROR getPublicWorkspacesInTeam", mlog.Err(err))
 		return nil, err
@@ -474,7 +476,7 @@ func (s *MattermostAuthLayer) GetUserWorkspacesInTeam(userID string, teamID stri
 		s.logger.Error("ERROR userWorkspacesFromRows", mlog.Err(err))
 		return nil, err
 	}
-	accessibleWorkspaces := append(publicWorkspaces, memberWorkspaces...)
+	accessibleWorkspaces = append(accessibleWorkspaces, memberWorkspaces...)
 	return accessibleWorkspaces, nil
 }
 
@@ -485,9 +487,9 @@ func getPublicWorkspacesInTeam(teamID string, s *MattermostAuthLayer) ([]model.U
 
 	switch s.dbType {
 	case mysqlDBType:
-		nonTemplateFilter = "focalboard_blocks.fields LIKE '%\"isTemplate\":false%'"
+		nonTemplateFilter = nonTemplateFilterMySQL
 	case postgresDBType:
-		nonTemplateFilter = "focalboard_blocks.fields ->> 'isTemplate' = 'false'"
+		nonTemplateFilter = nonTemplateFilterPostgres
 	default:
 		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
 	}
