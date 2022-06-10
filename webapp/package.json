@@ -63,6 +63,7 @@
 		"react-redux": "^7.2.6",
 		"react-router-dom": "^5.2.1",
 		"react-select": "^5.2.2",
+		"resizable-panels-react": "github:harshilsharma63/resizable-panel-react",
 		"trim-newlines": "^4.0.2"
 	},
 	"jest": {

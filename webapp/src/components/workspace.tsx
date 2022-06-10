@@ -4,6 +4,10 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
+import ResizablePanels from 'resizable-panels-react'
+
+import {debounce} from "lodash"
+
 import {getCurrentTeam} from '../store/teams'
 import {getCurrentBoard, isLoadingBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
@@ -19,8 +23,15 @@ import {Utils} from '../utils'
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 
-import Sidebar from './sidebar/sidebar'
 import './workspace.scss'
+import Sidebar from "./sidebar/sidebar"
+
+import {UserConfigPatch} from "../user"
+import octoClient from "../octoClient"
+import {getMe} from "../store/users"
+
+const defaultLHSWidth = 240 //pixels
+
 
 type Props = {
     readonly: boolean
@@ -130,28 +141,68 @@ const Workspace = (props: Props) => {
         setBoardTemplateSelectorOpen(false)
     }, [board, viewId])
 
+    const me = useAppSelector(getMe)
+    if (me) {
+        console.log(`me.props.lhsSize: ${me.props.lhsSize}`)
+    }
+
+    const lhsWidthPercentage = me && me.props.lhsSize ? parseFloat(me.props.lhsSize) : defaultLHSWidth * 100 / window.innerWidth
+    const centerPanelWidthPercentage = 100 - lhsWidthPercentage
+
+    const saveLHSSize = debounce((size: number) => {
+        if (!me) {
+            return
+        }
+
+        const userConfigPatch: UserConfigPatch = {
+            updatedFields: {
+                lhsSize: size.toString()
+            }
+        }
+
+        octoClient.patchUserConfig(me.id, userConfigPatch)
+    }, 200)
+
+    const handlePanelResize = (panelSize: Array<number>): void => {
+        if (panelSize.length == 0) {
+            return
+        }
+
+        saveLHSSize(panelSize[0])
+    }
+
     return (
         <div className='Workspace'>
-            {!props.readonly &&
-                <Sidebar
-                    onBoardTemplateSelectorOpen={openBoardTemplateSelector}
-                    activeBoardId={board?.id}
-                />
-            }
-            <div className='mainFrame'>
-                {boardTemplateSelectorOpen &&
-                    <BoardTemplateSelector onClose={closeBoardTemplateSelector}/>}
-                {(board?.isTemplate) &&
-                <div className='banner'>
-                    <FormattedMessage
-                        id='Workspace.editing-board-template'
-                        defaultMessage="You're editing a board template."
+            <ResizablePanels
+                displayDirection="row"
+                width="100%"
+                panelsSize={[lhsWidthPercentage, centerPanelWidthPercentage]}
+                sizeUnitMeasure="%"
+                resizerColor="#353b48"
+                resizerSize="8px"
+                onResize={handlePanelResize}
+            >
+                {!props.readonly &&
+                    <Sidebar
+                        onBoardTemplateSelectorOpen={openBoardTemplateSelector}
+                        activeBoardId={board?.id}
                     />
-                </div>}
-                <CenterContent
-                    readonly={props.readonly}
-                />
-            </div>
+                }
+                <div className='mainFrame'>
+                    {boardTemplateSelectorOpen &&
+                        <BoardTemplateSelector onClose={closeBoardTemplateSelector}/>}
+                    {(board?.isTemplate) &&
+                        <div className='banner'>
+                            <FormattedMessage
+                                id='Workspace.editing-board-template'
+                                defaultMessage="You're editing a board template."
+                            />
+                        </div>}
+                    <CenterContent
+                        readonly={props.readonly}
+                    />
+                </div>
+            </ResizablePanels>
         </div>
     )
 }

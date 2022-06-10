@@ -36,7 +36,7 @@ import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
 import {addMissingItems} from './utils'
 
-type Props = {
+export type SidebarProps = {
     activeBoardId?: string
     onBoardTemplateSelectorOpen?: () => void
 }
@@ -49,7 +49,7 @@ function getWindowDimensions() {
     }
 }
 
-const Sidebar = (props: Props) => {
+const Sidebar = (props: SidebarProps) => {
     const [isHidden, setHidden] = useState(false)
     const [userHidden, setUserHidden] = useState(false)
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
