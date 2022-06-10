@@ -105,6 +105,14 @@ describe('components/centerPanel', () => {
                 [board.id]: {userId: 'user_id_1', schemeAdmin: true},
             },
         },
+        limits: {
+            limits: {
+                cards: 0,
+                used_cards: 0,
+                card_limit_timestamp: 0,
+                views: 0,
+            },
+        },
         cards: {
             templates: [card1, card2],
             cards: [card1, card2],

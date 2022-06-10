@@ -221,8 +221,17 @@ describe('components/table/Table', () => {
                     [card2.id]: card2,
                 },
             },
+            teams: {
+                current: {id: 'team-id'},
+            },
             boards: {
                 current: boardTest.id,
+                boards: {
+                    [boardTest.id]: boardTest,
+                },
+                myBoardMemberships: {
+                    [boardTest.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
         }
 
