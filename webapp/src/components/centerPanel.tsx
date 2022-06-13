@@ -73,6 +73,7 @@ const CenterPanel = (props: Props) => {
     const [selectedCardIds, setSelectedCardIds] = useState<string[]>([])
     const [cardIdToFocusOnRender, setCardIdToFocusOnRender] = useState('')
 
+
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
@@ -343,7 +344,6 @@ const CenterPanel = (props: Props) => {
         () => getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty),
         [cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty],
     )
-
     return (
         <div
             className='BoardComponent'

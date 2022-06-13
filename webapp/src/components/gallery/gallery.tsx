@@ -23,6 +23,8 @@ type Props = {
     addCard: (show: boolean) => Promise<void>
     selectedCardIds: string[]
     onCardClicked: (e: React.MouseEvent, card: Card) => void
+    hiddenCardsCount: number
+    showHiddenCardCountNotification: (show: boolean) => void
 }
 
 const Gallery = (props: Props): JSX.Element => {
@@ -97,6 +99,13 @@ const Gallery = (props: Props): JSX.Element => {
                     </div>
                 </BoardPermissionGate>
             }
+            {hiddenCardsCount > 0 &&
+            <div className='gallery-hidden-cards'>
+                <HiddenCardCount
+                    hiddenCardsCount={hiddenCardsCount}
+                    showHiddenCardNotification={props.showHiddenCardCountNotification}
+                />
+            </div>}
         </div>
     )
 }

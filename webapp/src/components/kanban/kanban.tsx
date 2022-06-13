@@ -40,6 +40,8 @@ type Props = {
     onCardClicked: (e: React.MouseEvent, card: Card) => void
     addCard: (groupByOptionId?: string, show?:boolean) => Promise<void>
     showCard: (cardId?: string) => void
+    hiddenCardsCount: number
+    showHiddenCardCountNotification: (show: boolean) => void
 }
 
 const ScrollingComponent = withScrolling('div')
@@ -316,6 +318,13 @@ const Kanban = (props: Props) => {
                             onDrop={(card: Card) => onDropToColumn(group.option, card)}
                         />
                     ))}
+                    {hiddenCardsCount > 0 &&
+                    <div className='ml-1'>
+                        <HiddenCardCount
+                            hiddenCardsCount={hiddenCardsCount}
+                            showHiddenCardNotification={props.showHiddenCardCountNotification}
+                        />
+                    </div>}
                 </div>}
             </div>
         </ScrollingComponent>
