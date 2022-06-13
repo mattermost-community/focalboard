@@ -4179,7 +4179,7 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 }
 
 func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/limits cloudLimits
+	// swagger:operation GET /limits cloudLimits
 	//
 	// Fetches the cloud limits of the server.
 	//
