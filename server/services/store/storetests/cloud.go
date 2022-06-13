@@ -155,6 +155,14 @@ func testGetUsedCardsCount(t *testing.T, store storeservice.Store) {
 		require.NoError(t, err)
 		require.Equal(t, 5, count)
 	})
+
+	t.Run("should not take into account cards from deleted boards", func(t *testing.T) {
+		require.NoError(t, store.DeleteBoard("board2", "user-id"))
+
+		count, err := store.GetUsedCardsCount()
+		require.NoError(t, err)
+		require.Equal(t, 3, count)
+	})
 }
 
 func testGetCardLimitTimestamp(t *testing.T, store storeservice.Store) {
