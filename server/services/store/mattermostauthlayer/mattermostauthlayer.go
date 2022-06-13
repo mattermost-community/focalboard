@@ -445,7 +445,7 @@ func (s *MattermostAuthLayer) GetUserWorkspacesInTeam(userID string, teamID stri
 	}
 
 	query = s.getQueryBuilder().
-		Select("Channels.ID", "Channels.DisplayName", "COUNT(focalboard_blocks.id), Channels.Type, Channels.Name").
+		Select("Channels.ID", "Channels.DisplayName", "COUNT(focalboard_blocks.id)", "Channels.Type", "Channels.Name").
 		From("ChannelMembers").
 		// select channels without a corresponding workspace
 		LeftJoin(
@@ -495,7 +495,7 @@ func getPublicWorkspacesInTeam(teamID string, s *MattermostAuthLayer) ([]model.U
 	}
 
 	query = s.getQueryBuilder().
-		Select("pc.ID", "pc.DisplayName", "COUNT(focalboard_blocks.id), 'O' as Type, pc.Name").
+		Select("pc.ID", "pc.DisplayName", "COUNT(focalboard_blocks.id)", "'O' as Type", "pc.Name").
 		From("PublicChannels as pc").
 		// select channels without a corresponding workspace
 		LeftJoin(
