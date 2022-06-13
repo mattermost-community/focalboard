@@ -135,6 +135,6 @@ func (s *SQLStore) getCloudLimits(db sq.BaseRunner) (*mmModel.ProductLimits, err
 	return nil, nil
 }
 
-func (s *SQLStore) getUserChannels(db sq.BaseRunner, teamID, userID string) ([]*mmModel.Channel, error) {
-	return nil, NotSupportedError{"get user channels not supported on standalone mode"}
+func (s *SQLStore) searchUserChannels(db sq.BaseRunner, teamID, userID, query string) ([]*mmModel.Channel, error) {
+	return nil, NotSupportedError{"search user channels not supported on standalone mode"}
 }

@@ -499,11 +499,6 @@ func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.
 
 }
 
-func (s *SQLStore) GetUserChannels(teamID string, userID string) ([]*mmModel.Channel, error) {
-	return s.getUserChannels(s.db, teamID, userID)
-
-}
-
 func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	return s.getUsersByTeam(s.db, teamID)
 
@@ -733,6 +728,11 @@ func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
 
 func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Board, error) {
 	return s.searchBoardsForUser(s.db, term, userID)
+
+}
+
+func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string) ([]*mmModel.Channel, error) {
+	return s.searchUserChannels(s.db, teamID, userID, query)
 
 }
 

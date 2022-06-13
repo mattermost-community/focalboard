@@ -9,6 +9,7 @@ import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
 import {Category, CategoryBoards} from './store/sidebar'
+import {Channel} from './store/channels'
 import {Team} from './store/teams'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
@@ -793,9 +794,8 @@ class OctoClient {
         return (await this.getJson(response, [])) as Subscription[]
     }
 
-    // TODO: replace the any with the Channel type (we need to define it)
-    async getUserChannels(teamId: string): Promise<any | undefined> {
-        const path = `/api/v2/teams/${teamId}/channels`
+    async searchUserChannels(teamId: string, searchQuery: string): Promise<Channel | undefined> {
+        const path = `/api/v2/teams/${teamId}/channels?search=${searchQuery}`
         const response = await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
             method: 'GET',

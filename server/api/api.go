@@ -90,7 +90,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	}
 
 	// Board APIs
-	apiv2.HandleFunc("/teams/{teamID}/channels", a.sessionRequired(a.handleGetMyChannels)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/channels", a.sessionRequired(a.handleSearchMyChannels)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
@@ -2168,8 +2168,8 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func (a *API) handleGetMyChannels(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /teams/{teamID}/channels getMyChannels
+func (a *API) handleSearchMyChannels(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /teams/{teamID}/channels searchMyChannels
 	//
 	// Returns the user available channels
 	//
@@ -2181,6 +2181,11 @@ func (a *API) handleGetMyChannels(w http.ResponseWriter, r *http.Request) {
 	//   in: path
 	//   description: Team ID
 	//   required: true
+	//   type: string
+	// - name: search
+	//   in: query
+	//   description: string to filter channels list
+	//   required: false
 	//   type: string
 	// security:
 	// - BearerAuth: []
@@ -2201,6 +2206,9 @@ func (a *API) handleGetMyChannels(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	query := r.URL.Query()
+	searchQuery := query.Get("search")
+
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
@@ -2209,12 +2217,12 @@ func (a *API) handleGetMyChannels(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auditRec := a.makeAuditRecord(r, "getMyChannels", audit.Fail)
+	auditRec := a.makeAuditRecord(r, "searchMyChannels", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("teamID", teamID)
 
 	// retrieve boards list
-	channels, err := a.app.GetUserChannels(teamID, userID)
+	channels, err := a.app.SearchUserChannels(teamID, userID, searchQuery)
 	if err != nil {
 		fmt.Println(err)
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)

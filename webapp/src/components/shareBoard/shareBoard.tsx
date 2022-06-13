@@ -334,7 +334,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             cacheOptions={true}
                             loadOptions={async (inputValue: string) => {
                                 const users = await client.searchTeamUsers(inputValue)
-                                const channels = await client.getUserChannels(match.params.teamId || '')
+                                const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
                                 return [
                                     {label: intl.formatMessage({id: 'shareBoard.members-select-group', defaultMessage: 'Members'}), options: users},
                                     {label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels},
