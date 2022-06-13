@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/content/ImageElement archived file 1`] = `
+exports[`components/content/archivedFile should match snapshot 1`] = `
 <div>
   <div
     class="ArchivedFile"
@@ -14,24 +14,14 @@ exports[`components/content/ImageElement archived file 1`] = `
       <p
         class="filename"
       >
-        Filename
+        stuff to put in jell-o
       </p>
       <p>
         TXT
          
-        161.1 KiB
+        2.0 KiB
       </p>
     </div>
   </div>
-</div>
-`;
-
-exports[`components/content/ImageElement should match snapshot 1`] = `
-<div>
-  <img
-    alt="test-title"
-    class="ImageElement"
-    src="test.jpg"
-  />
 </div>
 `;

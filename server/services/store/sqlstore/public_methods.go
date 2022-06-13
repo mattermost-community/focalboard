@@ -369,6 +369,11 @@ func (s *SQLStore) GetCloudLimits() (*mmModel.ProductLimits, error) {
 
 }
 
+func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
+	return s.getFileInfo(s.db, id)
+
+}
+
 func (s *SQLStore) GetLicense() *mmModel.License {
 	return s.getLicense(s.db)
 
@@ -708,6 +713,11 @@ func (s *SQLStore) RunDataRetention(globalRetentionDate int64, batchSize int64) 
 	}
 
 	return result, nil
+
+}
+
+func (s *SQLStore) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
+	return s.saveFileInfo(s.db, fileInfo)
 
 }
 

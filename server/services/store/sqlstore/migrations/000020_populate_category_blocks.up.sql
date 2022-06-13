@@ -1,4 +1,4 @@
-CREATE TABLE {{.prefix}}category_boards (
+CREATE TABLE IF NOT EXISTS {{.prefix}}category_boards (
     id varchar(36) NOT NULL,
     user_id varchar(36) NOT NULL,
     category_id varchar(36) NOT NULL,
