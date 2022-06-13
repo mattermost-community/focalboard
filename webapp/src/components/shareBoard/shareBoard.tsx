@@ -10,6 +10,7 @@ import {CSSObject} from '@emotion/serialize'
 
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
+import {Channel} from '../../store/channels'
 import {getMe, getBoardUsersList} from '../../store/users'
 
 import {Utils, IDType} from '../../utils'
@@ -21,6 +22,7 @@ import {BoardMember, createBoard} from '../../blocks/board'
 
 import client from '../../octoClient'
 import Dialog from '../dialog'
+import ConfirmationDialog from '../confirmationDialogBox'
 import {IUser} from '../../user'
 import Switch from '../../widgets/switch'
 import Button from '../../widgets/buttons/button'
@@ -95,6 +97,7 @@ function isLastAdmin(members: BoardMember[]) {
 export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopiedPublic, setWasCopiedPublic] = useState(false)
     const [wasCopiedInternal, setWasCopiedInternal] = useState(false)
+    const [showLinkChannelConfirmation, setShowLinkChannelConfirmation] = useState<Channel|null>(null)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
     const [selectedUser, setSelectedUser] = useState<IUser|any|null>(null)
 
@@ -138,15 +141,14 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         await loadData()
     }
 
-    const onUnlinkBoard = async () => {
+    const onLinkBoard = async (channel: Channel, confirmed: bool) => {
+        if (channel.type === 'O' && !confirmed) {
+            setShowLinkChannelConfirmation(channel)
+            return
+        }
+        setShowLinkChannelConfirmation(null)
         const newBoard = createBoard(board)
-        newBoard.channelId = ''
-        mutator.updateBoard(newBoard, board, 'unlinked channel')
-    }
-
-    const onLinkBoard = async (channelID: string) => {
-        const newBoard = createBoard(board)
-        newBoard.channelId = channelID  // This is a channel ID hardcoded here as an example
+        newBoard.channelId = channel.id  // This is a channel ID hardcoded here as an example
         mutator.updateBoard(newBoard, board, 'linked channel')
     }
 
@@ -323,6 +325,16 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             className='ShareBoardDialog'
             toolbar={toolbar}
         >
+            {showLinkChannelConfirmation &&
+                <ConfirmationDialog
+                    dialogBox={{
+                        heading: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel', defaultMessage: 'You\'re adding a public channel'}),
+                        subText: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel-subtext', defaultMessage: 'Anyone who joins that public channel will now get “Editor” access to the board, are you sure you want to proceed?'}),
+                        confirmButtonText: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel-button', defaultMessage: 'Yes, add public channel'}),
+                        onConfirm: () => onLinkBoard(showLinkChannelConfirmation, true),
+                        onClose: () => setShowLinkChannelConfirmation(null),
+                    }}
+                />}
             <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
                 <div className='share-input__container'>
                     <div className='share-input'>
@@ -351,7 +363,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                     mutator.createBoardMember(boardId, newValue.id)
                                     setSelectedUser(null)
                                 } else if (newValue) {
-                                    onLinkBoard(newValue.id)
+                                    onLinkBoard(newValue)
                                 }
                             }}
                         />

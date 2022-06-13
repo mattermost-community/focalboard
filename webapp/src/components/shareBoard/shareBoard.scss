@@ -6,6 +6,12 @@
         position: relative;
     }
 
+    .confirmation-dialog-box {
+        .dialog {
+            position: fixed;
+        }
+    }
+
     .toolbar {
         padding: 0;
 
