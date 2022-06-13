@@ -4,13 +4,13 @@ go 1.18
 
 replace github.com/mattermost/focalboard/server => ../server
 
-replace github.com/mattermost/mattermost-server/v6 => github.com/mattermost/mattermost-server/v6 v6.0.0-20220601144141-e54977931ccd
+replace github.com/mattermost/mattermost-server/v6 => github.com/mattermost/mattermost-server/v6 v6.0.0-20220613202234-182ae1234a49
 
 require (
 	github.com/golang/mock v1.6.0
 	github.com/mattermost/focalboard/server v0.0.0-00010101000000-000000000000
 	github.com/mattermost/mattermost-plugin-api v0.0.27
-	github.com/mattermost/mattermost-server/v6 v6.7.0
+	github.com/mattermost/mattermost-server/v6 v6.3.0
 	github.com/stretchr/testify v1.7.1
 )
 
@@ -135,7 +135,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.12.1 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
-	github.com/prometheus/common v0.32.1 // indirect
+	github.com/prometheus/common v0.33.0 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/reflog/dateconstraints v0.2.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
