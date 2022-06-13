@@ -7,6 +7,8 @@ import {useIntl, FormattedMessage} from 'react-intl'
 import {Board} from '../../../../webapp/src/blocks/board'
 import Button from '../../../../webapp/src/widgets/buttons/button'
 
+import './boardSelectorItem.scss'
+
 type Props = {
     item: Board
     currentChannel: string
@@ -20,46 +22,19 @@ const BoardSelectorItem = (props: Props) => {
     const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
     const resultTitle = item.title || untitledBoardTitle
     return (
-        <div
-            className='blockSearchResult'
-            style={{padding: '5px 0'}}
-        >
+        <div className='BoardSelectorItem'>
             <span className='icon'>{item.icon}</span>
-            <div
-                className='resultLine'
-                style={{flexGrow: 1, width: '80%', alignSelf: 'center'}}
-            >
-                <div
-                    className='resultTitle'
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                    }}
-                >
-                    {resultTitle}
-                </div>
-                <div
-                    className='resultDescription'
-                    style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        opacity: 0.7,
-                    }}
-                >
-                    {item.description}
-                </div>
+            <div className='resultLine'>
+                <div className='resultTitle'>{resultTitle}</div>
+                <div className='resultDescription'>{item.description}</div>
             </div>
-            <div
-                className='linkUnlinkButton'
-                style={{display: 'flex', alignSelf: 'center'}}
-            >
+            <div className='linkUnlinkButton'>
                 {item.channelId === currentChannel &&
                     <Button
                         onClick={() => props.unlinkBoard(item)}
+                        emphasis='secondary'
                     >
-                        <FormattedMessage 
+                        <FormattedMessage
                             id='boardSelector.unlink'
                             defaultMessage='Unlink'
                         />
@@ -67,7 +42,7 @@ const BoardSelectorItem = (props: Props) => {
                 {item.channelId !== currentChannel &&
                     <Button
                         onClick={() => props.linkBoard(item)}
-                        filled={true}
+                        emphasis='primary'
                     >
                         <FormattedMessage 
                             id='boardSelector.link'

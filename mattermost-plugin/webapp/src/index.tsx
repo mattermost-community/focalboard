@@ -207,13 +207,20 @@ export default class Plugin {
 
         if (this.registry.registerProduct) {
             windowAny.frontendBaseURL = subpath + '/boards'
+            const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
 
             /* TODO: translate Channel Boards string down there*/
             const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
                 () => (
                     <RHSChannelBoards getCurrentChannel={() => mmStore.getState().entities.channels.channels[lastViewedChannel]}/>
                 ),
-                <div><FocalboardIcon/>{'Channel Boards'}</div>,
+                <div>
+                    <img
+                        className='boards-rhs-header-logo'
+                        src={appBarIconURL}
+                    />
+                    {'Channel Boards'}
+                </div>,
             )
             this.rhsId = rhsId
 

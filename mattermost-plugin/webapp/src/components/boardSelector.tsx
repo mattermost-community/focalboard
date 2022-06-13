@@ -22,10 +22,6 @@ import Button from '../../../../webapp/src/widgets/buttons/button'
 import {getCurrentLinkToChannel, setLinkToChannel} from '../../../../webapp/src/store/boards'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../../webapp/src/telemetry/telemetryClient'
 
-import '../../../../webapp/src/styles/focalboard-variables.scss'
-import '../../../../webapp/src/styles/main.scss'
-import '../../../../webapp/src/styles/labels.scss'
-
 import BoardSelectorItem from './boardSelectorItem'
 
 import './boardSelector.scss'
@@ -120,16 +116,13 @@ const BoardSelector = () => {
     return (
         <div className='focalboard-body'>
             <Dialog
-                className='BoardSelector BoardSwitcherDialog'
+                className='BoardSelector'
                 onClose={() => dispatch(setLinkToChannel(''))}
             >
-                <div className='BoardSwitcherDialogBody'>
+                <div className='BoardSelectorBody'>
                     <div className='head'>
-                        <div style={{display: 'flex', alignItems: 'center', marginRight: 35, marginTop: 5}}>
-                            <h3
-                                style={{flexGrow: 1}}
-                                className='text-heading4'
-                            >
+                        <div className='heading'>
+                            <h3 className='text-heading4'>
                                 <FormattedMessage
                                     id='boardSelector.title'
                                     defaultMessage='Link Boards'

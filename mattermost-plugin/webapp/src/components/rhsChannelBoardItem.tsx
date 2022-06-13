@@ -5,7 +5,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 
 import mutator from '../../../../webapp/src/mutator'
 import {Utils} from '../../../../webapp/src/utils'
-import {getCurrentTeam, getAllTeams, Team} from '../../../../webapp/src/store/teams'
+import {getCurrentTeam} from '../../../../webapp/src/store/teams'
 import {createBoard, Board} from '../../../../webapp/src/blocks/board'
 import {useAppSelector} from '../../../../webapp/src/store/hooks'
 import IconButton from '../../../../webapp/src/widgets/buttons/iconButton'
@@ -14,6 +14,7 @@ import DeleteIcon from '../../../../webapp/src/widgets/icons/delete'
 import Menu from '../../../../webapp/src/widgets/menu'
 import MenuWrapper from '../../../../webapp/src/widgets/menuWrapper'
 
+import './rhsChannelBoardItem.scss'
 
 type Props = {
     board: Board
@@ -39,21 +40,22 @@ const RHSChannelBoardItem = (props: Props) => {
         mutator.updateBoard(newBoard, board, 'unlinked channel')
     }
 
+    const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
+
     return (
         <div
             onClick={() => handleBoardClicked(board.id)}
-            style={{padding: 15, textAlign: 'left', border: '1px solid #cccccc', borderRadius: 5, marginTop: 10, cursor: 'pointer'}}
+            className='RHSChannelBoardItem'
         >
-            <div style={{fontSize: 16, display: 'flex'}}>
-                {board.icon && <span style={{marginRight: 10}}>{board.icon}</span>}
-                <span style={{fontWeight: 600, flexGrow: 1}}>{board.title}</span>
+            <div className='board-info'>
+                {board.icon && <span className='icon'>{board.icon}</span>}
+                <span className='title'>{board.title || untitledBoardTitle}</span>
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu
                         fixed={true}
                         position='left'
                     >
-                        {/* TODO: Translate this later */}
                         <Menu.Text
                             key={`unlinkBoard-${board.id}`}
                             id='unlinkBoard'
@@ -67,7 +69,7 @@ const RHSChannelBoardItem = (props: Props) => {
                 </MenuWrapper>
             </div>
             <div>{board.description}</div>
-            <div style={{color: '#cccccc'}}>
+            <div className='date'>
                 <FormattedMessage
                     id='rhs-boards.last-update-at'
                     defaultMessage='Last Update at: {datetime}'

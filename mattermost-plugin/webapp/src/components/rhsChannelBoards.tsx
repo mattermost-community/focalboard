@@ -16,9 +16,9 @@ import Button from '../../../../webapp/src/widgets/buttons/button'
 
 import RHSChannelBoardItem from './rhsChannelBoardItem'
 
-import '../../../../webapp/src/styles/focalboard-variables.scss'
-import '../../../../webapp/src/styles/main.scss'
-import '../../../../webapp/src/styles/labels.scss'
+import './rhsChannelBoards.scss'
+
+const boardsScreenshots = (window as any).baseURL + '/public/boards-screenshots.png'
 
 // TODO replace the anys for Channel struct
 
@@ -37,15 +37,26 @@ const RHSChannelBoards = (props: {getCurrentChannel: () => any}) => {
 
     if (channelBoards.length === 0) {
         return (
-        <div
-            style={{padding: 20}}
-            className='focalboard-body'
-        >
-            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: '100%', width: '100%', overflow: 'hidden'}}>
-                <div>{'TODO: Image for no boards'}</div>
+        <div className='focalboard-body'>
+            <div className='RHSChannelBoards empty'>
+                <h2>
+                    <FormattedMessage
+                        id='rhs-boards.no-boards-linked-to-channel'
+                        defaultMessage='No Boards are linked to {channelName} yet'
+                        values={{channelName: currentChannel.display_name}}
+                    />
+                </h2>
+                <div className='empty-paragraph'>
+                    <FormattedMessage
+                        id='rhs-boards.no-boards-linked-to-channel-description'
+                        defaultMessage='Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view.'
+                    />
+                </div>
+                <div className='boards-screenshots'><img src={boardsScreenshots}/></div>
                 <Button
                     onClick={() => dispatch(setLinkToChannel(props.getCurrentChannel().id))}
                     emphasis='primary'
+                    size='medium'
                 >
                     <FormattedMessage
                         id='rhs-boards.link-boards-to-channel'
@@ -58,37 +69,33 @@ const RHSChannelBoards = (props: {getCurrentChannel: () => any}) => {
     }
 
     return (
-        <div
-            style={{padding: 20}}
-            className='focalboard-body'
-        >
-            <div style={{display: 'flex', alignItems: 'center', minHeight: 40}}>
-                <span style={{flexGrow: 1, fontSize: 16, fontWeight: 600}}>
-                    <FormattedMessage
-                        id='rhs-boards.linked-boards'
-                        defaultMessage='Linked Boards'
-                    />
-                </span>
-                <Button
-                    onClick={() => dispatch(setLinkToChannel(props.getCurrentChannel().id))}
-                    icon={<AddIcon/>}
-                    emphasis='primary'
-                >
-                    <FormattedMessage
-                        id='rhs-boards.add'
-                        defaultMessage='Add'
-                    />
-                </Button>
-            </div>
-            <div
-                style={{overflowY: 'scroll'}}
-                className='rhs-boards-list'
-            >
-            {channelBoards.map((b) => (
-                <RHSChannelBoardItem
-                    key={b.id}
-                    board={b}
-                />))}
+        <div className='focalboard-body'>
+            <div className='RHSChannelBoards'>
+                <div className='rhs-boards-header'>
+                    <span className='linked-boards'>
+                        <FormattedMessage
+                            id='rhs-boards.linked-boards'
+                            defaultMessage='Linked Boards'
+                        />
+                    </span>
+                    <Button
+                        onClick={() => dispatch(setLinkToChannel(props.getCurrentChannel().id))}
+                        icon={<AddIcon/>}
+                        emphasis='primary'
+                    >
+                        <FormattedMessage
+                            id='rhs-boards.add'
+                            defaultMessage='Add'
+                        />
+                    </Button>
+                </div>
+                <div className='rhs-boards-list'>
+                    {channelBoards.map((b) => (
+                        <RHSChannelBoardItem
+                            key={b.id}
+                            board={b}
+                        />))}
+                </div>
             </div>
         </div>
     )
