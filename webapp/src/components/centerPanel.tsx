@@ -88,6 +88,7 @@ type State = {
     selectedCardIds: string[]
     cardIdToFocusOnRender: string
     showShareDialog: boolean
+    showHiddenCardCountNotification: boolean
 }
 
 class CenterPanel extends React.Component<Props, State> {
@@ -132,6 +133,7 @@ class CenterPanel extends React.Component<Props, State> {
             selectedCardIds: [],
             cardIdToFocusOnRender: '',
             showShareDialog: false,
+            showHiddenCardCountNotification: false,
         }
     }
 
@@ -192,25 +194,24 @@ class CenterPanel extends React.Component<Props, State> {
                     this.backgroundClicked(e)
                 }}
             >
-                <CardLimitNotification/>
                 <Hotkeys
                     keyName='ctrl+d,del,esc,backspace'
                     onKeyDown={this.keydownHandler}
                 />
                 {this.props.shownCardId &&
-                    <RootPortal>
-                        <CardDialog
-                            board={board}
-                            activeView={activeView}
-                            views={views}
-                            cards={cards}
-                            key={this.props.shownCardId}
-                            cardId={this.props.shownCardId}
-                            onClose={() => this.showCard(undefined)}
-                            showCard={(cardId) => this.showCard(cardId)}
-                            readonly={this.props.readonly}
-                        />
-                    </RootPortal>}
+                <RootPortal>
+                    <CardDialog
+                        board={board}
+                        activeView={activeView}
+                        views={views}
+                        cards={cards}
+                        key={this.props.shownCardId}
+                        cardId={this.props.shownCardId}
+                        onClose={() => this.showCard(undefined)}
+                        showCard={(cardId) => this.showCard(cardId)}
+                        readonly={this.props.readonly}
+                    />
+                </RootPortal>}
 
                 <div className='top-head'>
                     <TopBar/>
@@ -222,12 +223,12 @@ class CenterPanel extends React.Component<Props, State> {
                         />
                         <div className='shareButtonWrapper'>
                             {!this.props.readonly &&
-                                (
-                                    <ShareBoardButton
-                                        boardId={this.props.board.id}
-                                        enableSharedBoards={this.props.clientConfig?.enablePublicSharedBoards || false}
-                                    />
-                                )
+                             (
+                                 <ShareBoardButton
+                                     boardId={this.props.board.id}
+                                     enableSharedBoards={this.props.clientConfig?.enablePublicSharedBoards || false}
+                                 />
+                             )
                             }
                             <ShareBoardTourStep/>
                         </div>
@@ -261,47 +262,55 @@ class CenterPanel extends React.Component<Props, State> {
                     addCard={this.addCard}
                     showCard={this.showCard}
                     hiddenCardsCount={hiddenCardsCount}
+                    showHiddenCardCountNotification={this.hiddenCardCountNotifyHandler}
                 />}
                 {activeView.fields.viewType === 'table' &&
-                    <Table
-                        board={this.props.board}
-                        activeView={this.props.activeView}
-                        cards={this.props.cards}
-                        groupByProperty={this.props.groupByProperty}
-                        views={this.props.views}
-                        visibleGroups={visibleGroups}
-                        selectedCardIds={this.state.selectedCardIds}
-                        readonly={this.props.readonly}
-                        cardIdToFocusOnRender={this.state.cardIdToFocusOnRender}
-                        showCard={this.showCard}
-                        addCard={this.addCard}
-                        onCardClicked={this.cardClicked}
-                        hiddenCardsCount={hiddenCardsCount}
-                    />}
+                <Table
+                    board={this.props.board}
+                    activeView={this.props.activeView}
+                    cards={this.props.cards}
+                    groupByProperty={this.props.groupByProperty}
+                    views={this.props.views}
+                    visibleGroups={visibleGroups}
+                    selectedCardIds={this.state.selectedCardIds}
+                    readonly={this.props.readonly}
+                    cardIdToFocusOnRender={this.state.cardIdToFocusOnRender}
+                    showCard={this.showCard}
+                    addCard={this.addCard}
+                    onCardClicked={this.cardClicked}
+                    hiddenCardsCount={hiddenCardsCount}
+                    showHiddenCardCountNotification={this.hiddenCardCountNotifyHandler}
+                />}
                 {activeView.fields.viewType === 'calendar' &&
-                    <CalendarFullView
-                        board={this.props.board}
-                        cards={this.props.cards}
-                        activeView={this.props.activeView}
-                        readonly={this.props.readonly}
-                        dateDisplayProperty={this.props.dateDisplayProperty}
-                        showCard={this.showCard}
-                        addCard={(properties: Record<string, string>) => {
-                            this.addCard('', true, properties)
-                        }}
-                    />}
+                <CalendarFullView
+                    board={this.props.board}
+                    cards={this.props.cards}
+                    activeView={this.props.activeView}
+                    readonly={this.props.readonly}
+                    dateDisplayProperty={this.props.dateDisplayProperty}
+                    showCard={this.showCard}
+                    addCard={(properties: Record<string, string>) => {
+                        this.addCard('', true, properties)
+                    }}
+                />}
 
                 {activeView.fields.viewType === 'gallery' &&
-                    <Gallery
-                        board={this.props.board}
-                        cards={this.props.cards}
-                        activeView={this.props.activeView}
-                        readonly={this.props.readonly}
-                        onCardClicked={this.cardClicked}
-                        selectedCardIds={this.state.selectedCardIds}
-                        addCard={(show) => this.addCard('', show)}
-                        hiddenCardsCount={hiddenCardsCount}
-                    />}
+                <Gallery
+                    board={this.props.board}
+                    cards={this.props.cards}
+                    activeView={this.props.activeView}
+                    readonly={this.props.readonly}
+                    onCardClicked={this.cardClicked}
+                    selectedCardIds={this.state.selectedCardIds}
+                    addCard={(show) => this.addCard('', show)}
+                    hiddenCardsCount={hiddenCardsCount}
+                    showHiddenCardCountNotification={this.hiddenCardCountNotifyHandler}
+                />}
+
+                <CardLimitNotification
+                    showHiddenCardNotification={this.state.showHiddenCardCountNotification}
+                    hiddenCardCountNotificationHandler={this.hiddenCardCountNotifyHandler}
+                />
             </div>
         )
     }
@@ -452,6 +461,12 @@ class CenterPanel extends React.Component<Props, State> {
     private showCard = (cardId?: string) => {
         this.setState({selectedCardIds: []})
         this.props.showCard(cardId)
+    }
+
+    private hiddenCardCountNotifyHandler = (show :boolean) => {
+        this.setState({
+            showHiddenCardCountNotification: show,
+        })
     }
 
     private async deleteSelectedCards() {

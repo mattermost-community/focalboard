@@ -68,6 +68,7 @@ describe('src/components/gallery/Gallery', () => {
                     selectedCardIds={[card.id]}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ))
@@ -88,6 +89,7 @@ describe('src/components/gallery/Gallery', () => {
                     selectedCardIds={[card.id]}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ))
@@ -111,6 +113,7 @@ describe('src/components/gallery/Gallery', () => {
                     selectedCardIds={[card.id]}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ))
@@ -128,6 +131,7 @@ describe('src/components/gallery/Gallery', () => {
                     selectedCardIds={[]}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ))
@@ -183,6 +187,7 @@ describe('src/components/gallery/Gallery', () => {
                     selectedCardIds={[card1.id]}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={2}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ))
