@@ -21,6 +21,7 @@ windowAny.isFocalboardPlugin = true
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import {setTeam} from '../../../webapp/src/store/teams'
+import {setChannel} from '../../../webapp/src/store/channels'
 import {initialLoad} from '../../../webapp/src/store/initialLoad'
 import {Utils} from '../../../webapp/src/utils'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
@@ -36,6 +37,7 @@ import octoClient from '../../../webapp/src/octoClient'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
 import RHSChannelBoards from './components/rhsChannelBoards'
+import RHSChannelBoardsHeader from './components/rhsChannelBoardsHeader'
 import BoardSelector from './components/boardSelector'
 import wsClient, {
     MMWebSocketClient,
@@ -183,12 +185,19 @@ export default class Plugin {
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
         let prevTeamID: string
+
+        const currentChannel = mmStore.getState().entities.channels.currentChannelId
+        const currentChannelObj = mmStore.getState().entities.channels.channels[currentChannel]
+        store.dispatch(setChannel(currentChannelObj))
+
         mmStore.subscribe(() => {
             const currentUserId = mmStore.getState().entities.users.currentUserId
             const currentChannel = mmStore.getState().entities.channels.currentChannelId
             if (lastViewedChannel !== currentChannel && currentChannel) {
                 localStorage.setItem('focalboardLastViewedChannel:' + currentUserId, currentChannel)
                 lastViewedChannel = currentChannel
+                const currentChannelObj = mmStore.getState().entities.channels.channels[lastViewedChannel]
+                store.dispatch(setChannel(currentChannelObj))
             }
 
             // Watch for change in active team.
@@ -207,20 +216,18 @@ export default class Plugin {
 
         if (this.registry.registerProduct) {
             windowAny.frontendBaseURL = subpath + '/boards'
-            const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
 
             /* TODO: translate Channel Boards string down there*/
             const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
                 () => (
-                    <RHSChannelBoards getCurrentChannel={() => mmStore.getState().entities.channels.channels[lastViewedChannel]}/>
+                    <RHSChannelBoards/>
                 ),
-                <div>
-                    <img
-                        className='boards-rhs-header-logo'
-                        src={appBarIconURL}
-                    />
-                    {'Channel Boards'}
-                </div>,
+                <ErrorBoundary>
+                    <ReduxProvider store={store}>
+                        <RHSChannelBoardsHeader/>
+                    </ReduxProvider>
+                </ErrorBoundary>
+                ,
             )
             this.rhsId = rhsId
 

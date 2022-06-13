@@ -9,6 +9,7 @@ import {getLanguage} from '../../../../webapp/src/store/language'
 
 import store from '../../../../webapp/src/store'
 import {getCurrentTeam} from '../../../../webapp/src/store/teams'
+import {getCurrentChannel} from '../../../../webapp/src/store/channels'
 import {getMySortedBoards, setLinkToChannel} from '../../../../webapp/src/store/boards'
 import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
 import AddIcon from '../../../../webapp/src/widgets/icons/add'
@@ -20,19 +21,21 @@ import './rhsChannelBoards.scss'
 
 const boardsScreenshots = (window as any).baseURL + '/public/boards-screenshots.png'
 
-// TODO replace the anys for Channel struct
-
-const RHSChannelBoards = (props: {getCurrentChannel: () => any}) => {
+const RHSChannelBoards = () => {
     const boards = useAppSelector(getMySortedBoards)
     const team = useAppSelector(getCurrentTeam)
+    const currentChannel = useAppSelector(getCurrentChannel);
     const dispatch = useAppDispatch()
+
     if (!boards) {
         return null
     }
     if (!team) {
         return null
     }
-    const currentChannel = props.getCurrentChannel()
+    if (!currentChannel) {
+        return null
+    }
     const channelBoards = boards.filter((b) => b.channelId === currentChannel.id)
 
     if (channelBoards.length === 0) {
@@ -54,7 +57,7 @@ const RHSChannelBoards = (props: {getCurrentChannel: () => any}) => {
                 </div>
                 <div className='boards-screenshots'><img src={boardsScreenshots}/></div>
                 <Button
-                    onClick={() => dispatch(setLinkToChannel(props.getCurrentChannel().id))}
+                    onClick={() => dispatch(setLinkToChannel(currentChannel.id))}
                     emphasis='primary'
                     size='medium'
                 >
@@ -79,7 +82,7 @@ const RHSChannelBoards = (props: {getCurrentChannel: () => any}) => {
                         />
                     </span>
                     <Button
-                        onClick={() => dispatch(setLinkToChannel(props.getCurrentChannel().id))}
+                        onClick={() => dispatch(setLinkToChannel(currentChannel.id))}
                         icon={<AddIcon/>}
                         emphasis='primary'
                     >
@@ -101,13 +104,13 @@ const RHSChannelBoards = (props: {getCurrentChannel: () => any}) => {
     )
 }
 
-const ConnectedRHSChannelBoards = (props: {getCurrentChannel: () => any}) => (
+const ConnectedRHSChannelBoards = () => (
     <ReduxProvider store={store}>
-        <IntlRHSChannelBoards getCurrentChannel={props.getCurrentChannel}/>
+        <IntlRHSChannelBoards/>
     </ReduxProvider>
 )
 
-const IntlRHSChannelBoards = (props: {getCurrentChannel: () => any}) => {
+const IntlRHSChannelBoards = () => {
     const language = useAppSelector<string>(getLanguage)
 
     return (
@@ -115,7 +118,7 @@ const IntlRHSChannelBoards = (props: {getCurrentChannel: () => any}) => {
             locale={language.split(/[_]/)[0]}
             messages={getMessages(language)}
         >
-            <RHSChannelBoards getCurrentChannel={props.getCurrentChannel}/>
+            <RHSChannelBoards/>
         </IntlProvider>
     )
 }
