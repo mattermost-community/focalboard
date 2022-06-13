@@ -581,6 +581,21 @@ func (mr *MockStoreMockRecorder) GetCategory(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategory", reflect.TypeOf((*MockStore)(nil).GetCategory), arg0)
 }
 
+// GetFileInfo mocks base method.
+func (m *MockStore) GetFileInfo(arg0 string) (*model0.FileInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFileInfo", arg0)
+	ret0, _ := ret[0].(*model0.FileInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFileInfo indicates an expected call of GetFileInfo.
+func (mr *MockStoreMockRecorder) GetFileInfo(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFileInfo", reflect.TypeOf((*MockStore)(nil).GetFileInfo), arg0)
+}
+
 // GetLicense mocks base method.
 func (m *MockStore) GetLicense() *model0.License {
 	m.ctrl.T.Helper()
@@ -1127,6 +1142,20 @@ func (m *MockStore) RunDataRetention(arg0, arg1 int64) (int64, error) {
 func (mr *MockStoreMockRecorder) RunDataRetention(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunDataRetention", reflect.TypeOf((*MockStore)(nil).RunDataRetention), arg0, arg1)
+}
+
+// SaveFileInfo mocks base method.
+func (m *MockStore) SaveFileInfo(arg0 *model0.FileInfo) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SaveFileInfo", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SaveFileInfo indicates an expected call of SaveFileInfo.
+func (mr *MockStoreMockRecorder) SaveFileInfo(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveFileInfo", reflect.TypeOf((*MockStore)(nil).SaveFileInfo), arg0)
 }
 
 // SaveMember mocks base method.
