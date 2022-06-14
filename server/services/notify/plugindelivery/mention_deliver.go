@@ -23,12 +23,13 @@ func (pd *PluginDelivery) MentionDeliver(mentionedUser *mm_model.User, extract s
 	if err != nil {
 		return "", fmt.Errorf("cannot get direct channel: %w", err)
 	}
-	link := utils.MakeCardLink(pd.serverRoot, evt.Board.TeamID, evt.Board.ID, evt.Card.ID)
+	link := utils.MakeCardLink(pd.serverRoot, evt.Workspace, evt.Board.ID, evt.Card.ID)
+	boardLink := utils.MakeBoardLink(pd.serverRoot, evt.Workspace, evt.Board.ID)
 
 	post := &mm_model.Post{
 		UserId:    pd.botID,
 		ChannelId: channel.Id,
-		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),
+		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged, boardLink, evt.Board.Title),
 	}
 	return mentionedUser.Id, pd.api.CreatePost(post)
 }
