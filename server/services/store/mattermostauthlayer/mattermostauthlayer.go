@@ -429,7 +429,7 @@ func (s *MattermostAuthLayer) GetUserWorkspaces(userID string) ([]model.UserWork
 }
 
 func (s *MattermostAuthLayer) GetUserWorkspacesInTeam(userID string, teamID string) ([]model.UserWorkspace, error) {
-	var query sq.SelectBuilder
+	var memberWorkspacesQuery, accessibleWorkspacesQuery sq.SelectBuilder
 
 	var nonTemplateFilter string
 
@@ -442,7 +442,7 @@ func (s *MattermostAuthLayer) GetUserWorkspacesInTeam(userID string, teamID stri
 		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
 	}
 
-	query = s.getQueryBuilder().
+	memberWorkspacesQuery = s.getQueryBuilder().
 		Select("Channels.ID", "Channels.DisplayName", "COUNT(focalboard_blocks.id)", "Channels.Type", "Channels.Name").
 		From("ChannelMembers").
 		// select channels without a corresponding workspace
@@ -456,44 +456,8 @@ func (s *MattermostAuthLayer) GetUserWorkspacesInTeam(userID string, teamID stri
 		Where(sq.Eq{"Channels.TeamID": teamID}).
 		GroupBy("Channels.Id", "Channels.DisplayName")
 
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error("ERROR GetUserWorkspaces", mlog.Err(err))
-		return nil, err
-	}
-
-	defer s.CloseRows(rows)
-
-	accessibleWorkspaces, err := getPublicWorkspacesInTeam(teamID, s)
-	if err != nil {
-		s.logger.Error("ERROR getPublicWorkspacesInTeam", mlog.Err(err))
-		return nil, err
-	}
-	memberWorkspaces, err := s.userWorkspacesFromRows(rows)
-	if err != nil {
-		s.logger.Error("ERROR userWorkspacesFromRows", mlog.Err(err))
-		return nil, err
-	}
-	accessibleWorkspaces = append(accessibleWorkspaces, memberWorkspaces...)
-	return accessibleWorkspaces, nil
-}
-
-func getPublicWorkspacesInTeam(teamID string, s *MattermostAuthLayer) ([]model.UserWorkspace, error) {
-	var query sq.SelectBuilder
-
-	var nonTemplateFilter string
-
-	switch s.dbType {
-	case mysqlDBType:
-		nonTemplateFilter = nonTemplateFilterMySQL
-	case postgresDBType:
-		nonTemplateFilter = nonTemplateFilterPostgres
-	default:
-		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
-	}
-
-	query = s.getQueryBuilder().
-		Select("pc.ID", "pc.DisplayName", "COUNT(focalboard_blocks.id)", "'O' as Type", "pc.Name").
+	accessibleWorkspacesQuery = s.getQueryBuilder().
+		Select("pc.ID", "pc.DisplayName", "COUNT(focalboard_blocks.id)", "'O' as Type", "pc.Name").Prefix(" UNION ALL ").
 		From("PublicChannels as pc").
 		// select channels without a corresponding workspace
 		LeftJoin(
@@ -504,14 +468,22 @@ func getPublicWorkspacesInTeam(teamID string, s *MattermostAuthLayer) ([]model.U
 		Where(sq.Eq{"pc.TeamID": teamID}).
 		GroupBy("pc.Id", "pc.DisplayName")
 
-	rows, err := query.Query()
+	workspacesQuery := memberWorkspacesQuery.SuffixExpr(accessibleWorkspacesQuery)
+
+	rows, err := workspacesQuery.Query()
 	if err != nil {
 		s.logger.Error("ERROR GetUserWorkspaces", mlog.Err(err))
 		return nil, err
 	}
 
 	defer s.CloseRows(rows)
-	return s.userWorkspacesFromRows(rows)
+	memberWorkspaces, err := s.userWorkspacesFromRows(rows)
+	if err != nil {
+		s.logger.Error("ERROR userWorkspacesFromRows", mlog.Err(err))
+		return nil, err
+	}
+
+	return memberWorkspaces, nil
 }
 
 type UserWorkspaceRawModel struct {
