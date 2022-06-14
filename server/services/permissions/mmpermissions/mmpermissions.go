@@ -12,6 +12,7 @@ import (
 
 type APIInterface interface {
 	HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool
+	HasPermissionToChannel(userID string, channelID string, permission *mmModel.Permission) bool
 	LogError(string, ...interface{})
 }
 
@@ -32,6 +33,13 @@ func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel
 		return false
 	}
 	return s.api.HasPermissionToTeam(userID, teamID, permission)
+}
+
+func (s *Service) HasPermissionToChannel(userID, channelID string, permission *mmModel.Permission) bool {
+	if userID == "" || channelID == "" || permission == nil {
+		return false
+	}
+	return s.api.HasPermissionToChannel(userID, channelID, permission)
 }
 
 func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmModel.Permission) bool {

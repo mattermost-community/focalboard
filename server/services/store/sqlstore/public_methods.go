@@ -364,6 +364,11 @@ func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
 
 }
 
+func (s *SQLStore) GetChannel(teamID string, channelID string) (*mmModel.Channel, error) {
+	return s.getChannel(s.db, teamID, channelID)
+
+}
+
 func (s *SQLStore) GetCloudLimits() (*mmModel.ProductLimits, error) {
 	return s.getCloudLimits(s.db)
 

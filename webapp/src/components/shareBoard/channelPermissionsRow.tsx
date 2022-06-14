@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {useIntl, FormattedMessage} from 'react-intl'
 
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -10,8 +10,10 @@ import Menu from '../../widgets/menu'
 import {createBoard} from '../../blocks/board'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard} from '../../store/boards'
+import {Channel} from '../../store/channels'
 import {Utils} from '../../utils'
 import mutator from '../../mutator'
+import octoClient from '../../octoClient'
 
 import PrivateIcon from '../../widgets/icons/lockOutline'
 import PublicIcon from '../../widgets/icons/globe'
@@ -21,6 +23,7 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 const ChannelPermissionsRow = (): JSX.Element => {
     const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
+    const [linkedChannel, setLinkedChannel] = useState<Channel|null>(null)
 
     const onUnlinkBoard = async () => {
         const newBoard = createBoard(board)
@@ -28,14 +31,15 @@ const ChannelPermissionsRow = (): JSX.Element => {
         mutator.updateBoard(newBoard, board, 'unlinked channel')
     }
 
-    // TODO: get the real channel, meanwhile use a fake one
-    const channel = {
-        display_name: 'fake channel',
-        name: 'fake-channel',
-        type: 'P',
-    }
+    useEffect(() => {
+        if (!Utils.isFocalboardPlugin() || !board.channelId) {
+            setLinkedChannel(null);
+            return
+        }
+        octoClient.getChannel(board.teamId, board.channelId).then((c) => setLinkedChannel(c))
+    }, [board.channelId])
 
-    if (!Utils.isFocalboardPlugin() || !board.channelId) {
+    if (!linkedChannel) {
         return <></>
     }
 
@@ -43,10 +47,10 @@ const ChannelPermissionsRow = (): JSX.Element => {
         <div className='user-item'>
             <div className='user-item__content'>
                 <span className='user-item__img'>
-                    {channel.type === 'P' && <PrivateIcon/>}
-                    {channel.type === 'O' && <PublicIcon/>}
+                    {linkedChannel.type === 'P' && <PrivateIcon/>}
+                    {linkedChannel.type === 'O' && <PublicIcon/>}
                 </span>
-                <div className='ml-3'><strong>{channel.display_name}</strong></div>
+                <div className='ml-3'><strong>{linkedChannel.display_name}</strong></div>
             </div>
             <div>
                 <MenuWrapper>

@@ -29,3 +29,7 @@ func (a *App) UpdateUserConfig(userID string, patch model.UserPropPatch) (map[st
 func (a *App) SearchUserChannels(teamID string, userID string, query string) ([]*mmModel.Channel, error) {
 	return a.store.SearchUserChannels(teamID, userID, query)
 }
+
+func (a *App) GetChannel(teamID string, channelID string) (*mmModel.Channel, error) {
+	return a.store.GetChannel(teamID, channelID)
+}

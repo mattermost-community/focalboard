@@ -756,3 +756,11 @@ func (s *MattermostAuthLayer) SearchUserChannels(teamID, userID, query string) (
 	}
 	return result, nil
 }
+
+func (s *MattermostAuthLayer) GetChannel(teamID, channelID string) (*mmModel.Channel, error) {
+	channel, err := s.pluginAPI.GetChannel(channelID)
+	if err != nil {
+		return nil, err
+	}
+	return channel, nil
+}

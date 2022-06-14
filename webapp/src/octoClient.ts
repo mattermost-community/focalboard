@@ -807,6 +807,19 @@ class OctoClient {
         return (await this.getJson(response, {}))
     }
 
+    async getChannel(teamId: string, channelId: string): Promise<Channel | undefined> {
+        const path = `/api/v2/teams/${teamId}/channels/${channelId}`
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'GET',
+        })
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {}))
+    }
+
     // onboarding
     async prepareOnboarding(teamId: string): Promise<PrepareOnboardingResponse | undefined> {
         const path = `/api/v2/teams/${teamId}/onboard`
