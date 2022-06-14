@@ -16,6 +16,7 @@ import {createBoard, BoardsAndBlocks, Board} from '../../../../webapp/src/blocks
 import {createBoardView} from '../../../../webapp/src/blocks/boardView'
 import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
 import {EmptySearch, EmptyResults} from '../../../../webapp/src/components/searchDialog/searchDialog'
+import ConfirmationDialog from '../../../../webapp/src/components/confirmationDialogBox'
 import Dialog from '../../../../webapp/src/components/dialog'
 import SearchIcon from '../../../../webapp/src/widgets/icons/search'
 import Button from '../../../../webapp/src/widgets/buttons/button'
@@ -39,6 +40,7 @@ const BoardSelector = () => {
     const [results, setResults] = useState<Array<Board>>([])
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [searchQuery, setSearchQuery] = useState<string>('')
+    const [showLinkBoardConfirmation, setShowLinkBoardConfirmation] = useState<Board|null>(null)
 
     const searchHandler = useCallback(async (query: string): Promise<void> => {
         setSearchQuery(query)
@@ -63,7 +65,11 @@ const BoardSelector = () => {
         return null
     }
 
-    const linkBoard = async (board: Board): Promise<void> => {
+    const linkBoard = async (board: Board, confirmed: boolean): Promise<void> => {
+        if (!confirmed) {
+            setShowLinkBoardConfirmation(board)
+            return
+        }
         const newBoard = createBoard(board)
         newBoard.channelId = currentChannel
         await mutator.updateBoard(newBoard, board, 'linked channel')
@@ -73,6 +79,7 @@ const BoardSelector = () => {
                 setResults([...results])
             }
         }
+        setShowLinkBoardConfirmation(null)
     }
 
     const unlinkBoard = async (board: Board): Promise<void> => {
@@ -119,6 +126,19 @@ const BoardSelector = () => {
                 className='BoardSelector'
                 onClose={() => dispatch(setLinkToChannel(''))}
             >
+                {showLinkBoardConfirmation &&
+                    <ConfirmationDialog
+                        dialogBox={{
+                            heading: intl.formatMessage({id: 'boardSelector.confirm-link-board', defaultMessage: 'Link Board to Channel'}),
+                            subText: intl.formatMessage({
+                                id: 'boardSelector.confirm-link-board-subtext',
+                                defaultMessage: 'Linking the "{boardName}" board to this channel would give all members of this channel "Editor" access to the board. Are you sure you want to link it?'
+                            }, {boardName: showLinkBoardConfirmation.title}),
+                            confirmButtonText: intl.formatMessage({id: 'boardSelector.confirm-link-board-button', defaultMessage: 'Yes, link board'}),
+                            onConfirm: () => linkBoard(showLinkBoardConfirmation, true),
+                            onClose: () => setShowLinkBoardConfirmation(null),
+                        }}
+                    />}
                 <div className='BoardSelectorBody'>
                     <div className='head'>
                         <div className='heading'>

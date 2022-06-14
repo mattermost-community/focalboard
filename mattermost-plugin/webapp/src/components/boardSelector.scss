@@ -20,6 +20,10 @@
 
     .wrapper {
         .dialog {
+            position: relative;
+            width: 600px;
+            height: 450px;
+
             .toolbar {
                 flex-direction: row-reverse;
                 padding: 0;
@@ -28,13 +32,12 @@
                 top: 18px;
             }
         }
-    }
-
-    .wrapper {
-        .dialog {
-            position: relative;
-            width: 600px;
-            height: 450px;
+        .confirmation-dialog-box {
+            .dialog {
+                position: fixed;
+                width: 500px;
+                height: auto;
+            }
         }
     }
 
