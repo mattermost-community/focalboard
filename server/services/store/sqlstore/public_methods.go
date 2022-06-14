@@ -24,11 +24,6 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) CheckUserIDInTeam(userID string, teamID string) bool {
-	return s.checkUserIDInTeam(s.db, userID, teamID)
-
-}
-
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
 	return s.cleanUpSessions(s.db, expireTime)
 
@@ -315,6 +310,11 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 
 func (s *SQLStore) GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error) {
 	return s.getWorkspaceTeam(s.db, workspaceID)
+
+}
+
+func (s *SQLStore) HasPermissionToTeam(userID string, teamID string) bool {
+	return s.hasPermissionToTeam(s.db, userID, teamID)
 
 }
 

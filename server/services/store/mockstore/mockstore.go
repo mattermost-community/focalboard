@@ -37,20 +37,6 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
-// CheckUserIDInTeam mocks base method.
-func (m *MockStore) CheckUserIDInTeam(arg0, arg1 string) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CheckUserIDInTeam", arg0, arg1)
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// CheckUserIDInTeam indicates an expected call of CheckUserIDInTeam.
-func (mr *MockStoreMockRecorder) CheckUserIDInTeam(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckUserIDInTeam", reflect.TypeOf((*MockStore)(nil).CheckUserIDInTeam), arg0, arg1)
-}
-
 // CleanUpSessions mocks base method.
 func (m *MockStore) CleanUpSessions(arg0 int64) error {
 	m.ctrl.T.Helper()
@@ -867,6 +853,20 @@ func (m *MockStore) GetWorkspaceTeam(arg0 string) (*model0.Team, error) {
 func (mr *MockStoreMockRecorder) GetWorkspaceTeam(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWorkspaceTeam", reflect.TypeOf((*MockStore)(nil).GetWorkspaceTeam), arg0)
+}
+
+// HasPermissionToTeam mocks base method.
+func (m *MockStore) HasPermissionToTeam(arg0, arg1 string) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HasPermissionToTeam", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// HasPermissionToTeam indicates an expected call of HasPermissionToTeam.
+func (mr *MockStoreMockRecorder) HasPermissionToTeam(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPermissionToTeam", reflect.TypeOf((*MockStore)(nil).HasPermissionToTeam), arg0, arg1)
 }
 
 // HasWorkspaceAccess mocks base method.

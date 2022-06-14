@@ -762,7 +762,7 @@ func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 	return s.pluginAPI.GetLicense()
 }
 
-func (s *MattermostAuthLayer) CheckUserIDInTeam(userID string, teamID string) bool {
+func (s *MattermostAuthLayer) HasPermissionToTeam(userID string, teamID string) bool {
 	return s.pluginAPI.HasPermissionToTeam(userID, teamID, mmModel.PermissionViewTeam)
 }
 

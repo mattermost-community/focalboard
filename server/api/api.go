@@ -172,8 +172,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
+	session := r.Context().Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
@@ -187,7 +186,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !a.app.CheckUserIDInTeam(userID, teamID) {
+	if !a.app.HasPermissionToTeam(userID, teamID) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
 		return
 	}
@@ -266,8 +265,7 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
+	session := r.Context().Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
 	query := r.URL.Query()
 	teamID := query.Get("team_id")

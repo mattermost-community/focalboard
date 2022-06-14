@@ -19,6 +19,6 @@ func (a *App) UpdateUserConfig(userID string, patch model.UserPropPatch) (map[st
 	return user.Props, nil
 }
 
-func (a *App) CheckUserIDInTeam(userID string, teamID string) bool {
-	return a.store.CheckUserIDInTeam(userID, teamID)
+func (a *App) HasPermissionToTeam(userID string, teamID string) bool {
+	return a.store.HasPermissionToTeam(userID, teamID)
 }
