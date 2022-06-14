@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/plugin"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -24,17 +23,28 @@ func (pe NotSupportedError) Error() string {
 	return pe.msg
 }
 
+// PluginAPI is the interface required my the MattermostAuthLayer to interact with
+// the mattermost-server. You can use plugin-api or product-api adapter implementations.
+type PluginAPI interface {
+	GetDirectChannel(userID1, userID2 string) (*mmModel.Channel, *mmModel.AppError)
+	GetUser(userID string) (*mmModel.User, *mmModel.AppError)
+	UpdateUser(user *mmModel.User) (*mmModel.User, *mmModel.AppError)
+	GetUserByEmail(email string) (*mmModel.User, *mmModel.AppError)
+	GetUserByUsername(username string) (*mmModel.User, *mmModel.AppError)
+	GetLicense() *mmModel.License
+}
+
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
 	dbType    string
 	mmDB      *sql.DB
 	logger    *mlog.Logger
-	pluginAPI plugin.API
+	pluginAPI PluginAPI
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API) (*MattermostAuthLayer, error) {
+func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI PluginAPI) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
 		Store:     store,
 		dbType:    dbType,

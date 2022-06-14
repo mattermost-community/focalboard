@@ -13,7 +13,6 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -33,8 +32,18 @@ type PluginAdapterInterface interface {
 	HandleClusterEvent(ev mmModel.PluginClusterEvent)
 }
 
+// PluginAPI is the interface required my the PluginAdapter to interact with
+// the mattermost-server. You can use plugin-api or product-api adapter implementations.
+type PluginAPI interface {
+	PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mmModel.WebsocketBroadcast)
+	LogError(msg string, keyValuePairs ...interface{})
+	LogWarn(msg string, keyValuePairs ...interface{})
+	LogDebug(msg string, keyValuePairs ...interface{})
+	PublishPluginClusterEvent(ev mmModel.PluginClusterEvent, opts mmModel.PluginClusterEventSendOptions) error
+}
+
 type PluginAdapter struct {
-	api            plugin.API
+	api            PluginAPI
 	auth           auth.AuthInterface
 	staleThreshold time.Duration
 	store          Store
@@ -49,7 +58,7 @@ type PluginAdapter struct {
 	listenersByBlock map[string][]*PluginAdapterClient
 }
 
-func NewPluginAdapter(api plugin.API, auth auth.AuthInterface, store Store, logger *mlog.Logger) *PluginAdapter {
+func NewPluginAdapter(api PluginAPI, auth auth.AuthInterface, store Store, logger *mlog.Logger) *PluginAdapter {
 	return &PluginAdapter{
 		api:               api,
 		auth:              auth,

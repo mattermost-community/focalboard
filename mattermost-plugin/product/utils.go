@@ -1,32 +1,18 @@
-package main
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
+package product
 
 import (
-	"encoding/json"
 	"fmt"
 	"math"
-	"net/http"
 	"net/url"
 	"path"
 	"strings"
-	"sync"
 
-	"github.com/mattermost/focalboard/server/auth"
-	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
-	"github.com/mattermost/focalboard/server/services/notify"
-	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
-	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
-	"github.com/mattermost/focalboard/server/services/store/sqlstore"
-	"github.com/mattermost/focalboard/server/ws"
-
-	pluginapi "github.com/mattermost/mattermost-plugin-api"
-	"github.com/mattermost/mattermost-plugin-api/cluster"
-
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/markdown"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -47,125 +33,7 @@ type BoardsEmbed struct {
 	ReadToken    string `json:"readToken,omitempty"`
 }
 
-// Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
-type Plugin struct {
-	plugin.MattermostPlugin
-
-	// configurationLock synchronizes access to the configuration.
-	configurationLock sync.RWMutex
-
-	// configuration is the active plugin configuration. Consult getConfiguration and
-	// setConfiguration for usage.
-	configuration *configuration
-
-	server          *server.Server
-	wsPluginAdapter ws.PluginAdapterInterface
-}
-
-func (p *Plugin) OnActivate() error {
-	mmconfig := p.API.GetUnsanitizedConfig()
-
-	client := pluginapi.NewClient(p.API, p.Driver)
-	sqlDB, err := client.Store.GetMasterDB()
-	if err != nil {
-		return fmt.Errorf("error initializing the DB: %w", err)
-	}
-
-	logger, _ := mlog.NewLogger()
-	pluginTargetFactory := newPluginTargetFactory(&client.Log)
-	factories := &mlog.Factories{
-		TargetFactory: pluginTargetFactory.createTarget,
-	}
-	cfgJSON := defaultLoggingConfig()
-	err = logger.Configure("", cfgJSON, factories)
-	if err != nil {
-		return err
-	}
-
-	baseURL := ""
-	if mmconfig.ServiceSettings.SiteURL != nil {
-		baseURL = *mmconfig.ServiceSettings.SiteURL
-	}
-	serverID := client.System.GetDiagnosticID()
-	cfg := p.createBoardsConfig(*mmconfig, baseURL, serverID)
-
-	storeParams := sqlstore.Params{
-		DBType:           cfg.DBType,
-		ConnectionString: cfg.DBConfigString,
-		TablePrefix:      cfg.DBTablePrefix,
-		Logger:           logger,
-		DB:               sqlDB,
-		IsPlugin:         true,
-		NewMutexFn: func(name string) (*cluster.Mutex, error) {
-			return cluster.NewMutex(p.API, name)
-		},
-		PluginAPI: p.API,
-	}
-
-	var db store.Store
-	db, err = sqlstore.New(storeParams)
-	if err != nil {
-		return fmt.Errorf("error initializing the DB: %w", err)
-	}
-	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API)
-		if err2 != nil {
-			return fmt.Errorf("error initializing the DB: %w", err2)
-		}
-		db = layeredStore
-	}
-
-	permissionsService := mmpermissions.New(db, p.API)
-
-	p.wsPluginAdapter = ws.NewPluginAdapter(p.API, auth.New(cfg, db, permissionsService), db, logger)
-
-	backendParams := notifyBackendParams{
-		cfg:         cfg,
-		client:      client,
-		store:       db,
-		permissions: permissionsService,
-		wsAdapter:   p.wsPluginAdapter,
-		serverRoot:  baseURL + "/boards",
-		logger:      logger,
-	}
-
-	var notifyBackends []notify.Backend
-
-	mentionsBackend, err := createMentionsNotifyBackend(backendParams)
-	if err != nil {
-		return fmt.Errorf("error creating mention notifications backend: %w", err)
-	}
-	notifyBackends = append(notifyBackends, mentionsBackend)
-
-	subscriptionsBackend, err2 := createSubscriptionsNotifyBackend(backendParams)
-	if err2 != nil {
-		return fmt.Errorf("error creating subscription notifications backend: %w", err2)
-	}
-	notifyBackends = append(notifyBackends, subscriptionsBackend)
-	mentionsBackend.AddListener(subscriptionsBackend)
-
-	params := server.Params{
-		Cfg:                cfg,
-		SingleUserToken:    "",
-		DBStore:            db,
-		Logger:             logger,
-		ServerID:           serverID,
-		WSAdapter:          p.wsPluginAdapter,
-		NotifyBackends:     notifyBackends,
-		PermissionsService: permissionsService,
-	}
-
-	server, err := server.New(params)
-	if err != nil {
-		fmt.Println("ERROR INITIALIZING THE SERVER", err)
-		return err
-	}
-
-	p.server = server
-	return server.Start()
-}
-
-func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, serverID string) *config.Configuration {
+func createBoardsConfig(mmconfig mmModel.Config, baseURL string, serverID string) *config.Configuration {
 	filesS3Config := config.AmazonS3Config{}
 	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
 		filesS3Config.AccessKeyID = *mmconfig.FileSettings.AmazonS3AccessKeyId
@@ -284,138 +152,6 @@ func parseFeatureFlags(configFeatureFlags map[string]string) map[string]string {
 		}
 	}
 	return featureFlags
-}
-
-func (p *Plugin) OnWebSocketConnect(webConnID, userID string) {
-	p.wsPluginAdapter.OnWebSocketConnect(webConnID, userID)
-}
-
-func (p *Plugin) OnWebSocketDisconnect(webConnID, userID string) {
-	p.wsPluginAdapter.OnWebSocketDisconnect(webConnID, userID)
-}
-
-func (p *Plugin) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
-	p.wsPluginAdapter.WebSocketMessageHasBeenPosted(webConnID, userID, req)
-}
-
-func (p *Plugin) OnDeactivate() error {
-	return p.server.Shutdown()
-}
-
-func (p *Plugin) OnPluginClusterEvent(_ *plugin.Context, ev mmModel.PluginClusterEvent) {
-	p.wsPluginAdapter.HandleClusterEvent(ev)
-}
-
-// ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.
-func (p *Plugin) ServeHTTP(_ *plugin.Context, w http.ResponseWriter, r *http.Request) {
-	router := p.server.GetRootRouter()
-	router.ServeHTTP(w, r)
-}
-
-func defaultLoggingConfig() string {
-	return `
-	{
-		"def": {
-			"type": "focalboard_plugin_adapter",
-			"options": {},
-			"format": "plain",
-			"format_options": {
-				"delim": " ",
-				"min_level_len": 0,
-				"min_msg_len": 0,
-				"enable_color": false,
-				"enable_caller": true
-			},
-			"levels": [
-				{"id": 5, "name": "debug"},
-				{"id": 4, "name": "info", "color": 36},
-				{"id": 3, "name": "warn"},
-				{"id": 2, "name": "error", "color": 31},
-				{"id": 1, "name": "fatal", "stacktrace": true},
-				{"id": 0, "name": "panic", "stacktrace": true}
-			]
-		},
-		"errors_file": {
-			"Type": "file",
-			"Format": "plain",
-			"Levels": [
-				{"ID": 2, "Name": "error", "Stacktrace": true}
-			],
-			"Options": {
-				"Compress": true,
-				"Filename": "focalboard_errors.log",
-				"MaxAgeDays": 0,
-				"MaxBackups": 5,
-				"MaxSizeMB": 10
-			},
-			"MaxQueueSize": 1000
-		}
-	}`
-}
-
-func (p *Plugin) MessageWillBePosted(_ *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) {
-	return postWithBoardsEmbed(post), ""
-}
-
-func (p *Plugin) MessageWillBeUpdated(_ *plugin.Context, newPost, _ *mmModel.Post) (*mmModel.Post, string) {
-	return postWithBoardsEmbed(newPost), ""
-}
-
-func postWithBoardsEmbed(post *mmModel.Post) *mmModel.Post {
-	if _, ok := post.GetProps()["boards"]; ok {
-		post.AddProp("boards", nil)
-	}
-
-	firstLink, newPostMessage := getFirstLinkAndShortenAllBoardsLink(post.Message)
-	post.Message = newPostMessage
-
-	if firstLink == "" {
-		return post
-	}
-
-	u, err := url.Parse(firstLink)
-
-	if err != nil {
-		return post
-	}
-
-	// Trim away the first / because otherwise after we split the string, the first element in the array is a empty element
-	urlPath := u.Path
-	urlPath = strings.TrimPrefix(urlPath, "/")
-	urlPath = strings.TrimSuffix(urlPath, "/")
-	pathSplit := strings.Split(strings.ToLower(urlPath), "/")
-	queryParams := u.Query()
-
-	if len(pathSplit) == 0 {
-		return post
-	}
-
-	teamID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
-
-	if teamID != "" && boardID != "" && viewID != "" && cardID != "" {
-		b, _ := json.Marshal(BoardsEmbed{
-			TeamID:       teamID,
-			BoardID:      boardID,
-			ViewID:       viewID,
-			CardID:       cardID,
-			ReadToken:    queryParams.Get("r"),
-			OriginalPath: u.RequestURI(),
-		})
-
-		BoardsPostEmbed := &mmModel.PostEmbed{
-			Type: mmModel.PostEmbedBoards,
-			Data: string(b),
-		}
-
-		if post.Metadata == nil {
-			post.Metadata = &mmModel.PostMetadata{}
-		}
-
-		post.Metadata.Embeds = []*mmModel.PostEmbed{BoardsPostEmbed}
-		post.AddProp("boards", string(b))
-	}
-
-	return post
 }
 
 func getFirstLinkAndShortenAllBoardsLink(postMessage string) (firstLink, newPostMessage string) {
